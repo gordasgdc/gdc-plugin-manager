@@ -1,6 +1,11 @@
 {
   "apps" : [
     {
+      "id" : "Clapperboard Digital",
+      "name" : "Clapperboard Digital",
+      "url" : "https://gordasgdc.github.io/clapperboard-digital/"
+    },
+    {
       "id" : "DataMover",
       "name" : "DataMover",
       "url" : "https://gordasgdc.github.io/datamover/"
