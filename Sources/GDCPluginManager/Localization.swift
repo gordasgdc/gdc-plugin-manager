@@ -40,6 +40,8 @@ enum L {
         "sidebar.fuse": [.ro: "Fuse", .en: "Fuse", .es: "Fuse"],
         "sidebar.license": [.ro: "Licență", .en: "License", .es: "Licencia"],
         "sidebar.help": [.ro: "Ajutor", .en: "Help", .es: "Ayuda"],
+        "sidebar.courses": [.ro: "Cursuri", .en: "Courses", .es: "Cursos"],
+        "sidebar.apps": [.ro: "Aplicații", .en: "Apps", .es: "Aplicaciones"],
 
         "catalog.loading": [.ro: "Se încarcă catalogul…", .en: "Loading catalog…", .es: "Cargando catálogo…"],
         "catalog.empty": [.ro: "Niciun produs în această categorie.", .en: "No items in this category.", .es: "No hay elementos en esta categoría."],
@@ -54,6 +56,13 @@ enum L {
         "card.version": [.ro: "versiunea", .en: "version", .es: "versión"],
         "card.buy": [.ro: "Cumpără", .en: "Buy", .es: "Comprar"],
         "card.free": [.ro: "Gratuit", .en: "Free", .es: "Gratis"],
+        "card.trial": [.ro: "Probă", .en: "Trial", .es: "Prueba"],
+
+        "courses.empty": [.ro: "Niciun curs disponibil momentan.", .en: "No courses available right now.", .es: "Ningún curso disponible por ahora."],
+        "courses.contact": [.ro: "Contactează", .en: "Contact", .es: "Contactar"],
+
+        "apps.empty": [.ro: "Nicio aplicație listată momentan.", .en: "No apps listed right now.", .es: "Ninguna aplicación listada por ahora."],
+        "apps.open": [.ro: "Deschide", .en: "Open", .es: "Abrir"],
 
         "resolve.running.title": [.ro: "DaVinci Resolve rulează", .en: "DaVinci Resolve is running", .es: "DaVinci Resolve está abierto"],
         "resolve.running.body": [.ro: "Închide DaVinci Resolve înainte de a instala sau elimina plugin-uri — Resolve le încarcă doar la pornire.", .en: "Quit DaVinci Resolve before installing or removing plugins — Resolve only loads them at launch.", .es: "Cierra DaVinci Resolve antes de instalar o eliminar plugins — Resolve solo los carga al iniciar."],

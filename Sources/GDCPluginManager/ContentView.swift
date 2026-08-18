@@ -5,6 +5,8 @@ import GDCPluginManagerCore
 enum SidebarSection: Hashable {
     case all
     case type(PluginType)
+    case courses
+    case apps
     case license
     case help
 }
@@ -28,6 +30,11 @@ struct ContentView: View {
                         .tag(SidebarSection.type(type))
                 }
                 Divider()
+                Label(L.t("sidebar.courses"), systemImage: "graduationcap")
+                    .tag(SidebarSection.courses)
+                Label(L.t("sidebar.apps"), systemImage: "app.badge")
+                    .tag(SidebarSection.apps)
+                Divider()
                 Label(L.t("sidebar.license"), systemImage: "key.fill")
                     .tag(SidebarSection.license)
                 Label(L.t("sidebar.help"), systemImage: "questionmark.circle")
@@ -45,6 +52,10 @@ struct ContentView: View {
                         LicensePane()
                     case .help:
                         HelpView()
+                    case .courses:
+                        CoursesGrid(courses: catalog.courses)
+                    case .apps:
+                        AppsGrid(apps: catalog.apps)
                     case .all, .none:
                         CatalogGrid(items: catalog.items)
                     case .type(let type):
@@ -152,7 +163,11 @@ private struct PluginCard: View {
                     .font(.system(size: 22))
                     .foregroundStyle(.tint)
                 Spacer()
-                if item.isFree {
+                if item.isFree && item.isTrial {
+                    Text(L.t("card.trial"))
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.blue)
+                } else if item.isFree {
                     Text(L.t("card.free"))
                         .font(.subheadline.weight(.semibold))
                         .foregroundStyle(.green)
@@ -249,5 +264,103 @@ private struct PluginCard: View {
         } catch {
             errorMessage = error.localizedDescription
         }
+    }
+}
+
+private struct CoursesGrid: View {
+    let courses: [Course]
+
+    private let columns = [GridItem(.adaptive(minimum: 260, maximum: 340), spacing: 14)]
+
+    var body: some View {
+        ScrollView {
+            if courses.isEmpty {
+                Text(L.t("courses.empty")).foregroundStyle(.secondary).padding(40)
+            } else {
+                LazyVGrid(columns: columns, spacing: 14) {
+                    ForEach(courses) { course in
+                        CourseCard(course: course)
+                    }
+                }
+                .padding(16)
+            }
+        }
+    }
+}
+
+private struct CourseCard: View {
+    let course: Course
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Image(systemName: "graduationcap.fill")
+                .font(.system(size: 22))
+                .foregroundStyle(.tint)
+            Text(course.name).font(.headline)
+            Text(course.description)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+
+            VStack(alignment: .leading, spacing: 6) {
+                ForEach(course.options) { option in
+                    HStack {
+                        Text(option.label).font(.caption)
+                        Spacer()
+                        Text(option.priceDisplay).font(.caption).foregroundStyle(.secondary)
+                        Button(L.t("courses.contact")) { NSWorkspace.shared.open(contactURL(for: option)) }
+                            .controlSize(.small)
+                    }
+                }
+            }
+        }
+        .padding(12)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(RoundedRectangle(cornerRadius: 10).fill(.background.secondary))
+    }
+
+    private func contactURL(for option: CourseOption) -> URL {
+        let text = "Salut! Vreau să rezerv cursul \(course.name) — \(option.label) (\(option.priceDisplay))."
+        return URL(string: "https://wa.me/34643109970?text=" + text.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)!
+    }
+}
+
+private struct AppsGrid: View {
+    let apps: [AppLink]
+
+    private let columns = [GridItem(.adaptive(minimum: 220, maximum: 280), spacing: 14)]
+
+    var body: some View {
+        ScrollView {
+            if apps.isEmpty {
+                Text(L.t("apps.empty")).foregroundStyle(.secondary).padding(40)
+            } else {
+                LazyVGrid(columns: columns, spacing: 14) {
+                    ForEach(apps) { app in
+                        AppCard(app: app)
+                    }
+                }
+                .padding(16)
+            }
+        }
+    }
+}
+
+private struct AppCard: View {
+    let app: AppLink
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Image(systemName: "app.badge")
+                .font(.system(size: 22))
+                .foregroundStyle(.tint)
+            Text(app.name).font(.headline)
+            Spacer(minLength: 0)
+            if let url = URL(string: app.url) {
+                Button(L.t("apps.open")) { NSWorkspace.shared.open(url) }
+            }
+        }
+        .padding(12)
+        .frame(maxWidth: .infinity, minHeight: 96, alignment: .leading)
+        .background(RoundedRectangle(cornerRadius: 10).fill(.background.secondary))
     }
 }

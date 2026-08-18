@@ -135,11 +135,11 @@ struct GenerateSerialView: View {
             )
             generatedCode = code
 
-            try? SalesLog.append(SalesLog.Entry(
+            try? SalesLog.append(
                 productID: selectedID, productName: selectedItemName, customer: customerName,
                 email: email, priceEUR: price, expiresDisplay: expiresDisplay,
                 machineID: trimmedMachineID, serial: code
-            ))
+            )
         } catch {
             errorMessage = error.localizedDescription
         }

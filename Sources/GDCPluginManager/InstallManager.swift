@@ -52,30 +52,50 @@ final class InstallManager: ObservableObject {
         return installed != item.version
     }
 
-    func install(_ item: PluginItem) async throws {
-        let data = try await fetchPrivateFileData(path: item.filePath)
+    /// A pack (multiple files, e.g. a whole folder of LUTs published
+    /// together) installs into its own subfolder named after the
+    /// product, so it stays visually grouped in Resolve's own LUT/DCTL
+    /// browser instead of scattering loose files at the root next to
+    /// everything else. A single-file item installs flat, exactly as
+    /// before — no behavior change for anything already published.
+    private func destinationDirectory(for item: PluginItem) -> URL {
+        let base = item.type.installDirectory
+        return item.isPack ? base.appendingPathComponent(item.id) : base
+    }
 
-        let actualSHA = SHA256.hash(data: data).compactMap { String(format: "%02x", $0) }.joined()
-        guard actualSHA.lowercased() == item.sha256.lowercased() else {
-            throw InstallError.checksumMismatch
+    func install(_ item: PluginItem) async throws {
+        let destinationDir = destinationDirectory(for: item)
+        var tempURLs: [URL] = []
+        defer { for url in tempURLs { try? FileManager.default.removeItem(at: url) } }
+
+        // Verify every file's checksum BEFORE writing anything, so a bad
+        // file in a pack doesn't leave a half-installed folder behind.
+        for file in item.files {
+            let data = try await fetchPrivateFileData(path: file.path)
+            let actualSHA = SHA256.hash(data: data).compactMap { String(format: "%02x", $0) }.joined()
+            guard actualSHA.lowercased() == file.sha256.lowercased() else {
+                throw InstallError.checksumMismatch
+            }
+            let tempURL = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+            try data.write(to: tempURL)
+            tempURLs.append(tempURL)
         }
 
-        let tempURL = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
-        try data.write(to: tempURL)
-        defer { try? FileManager.default.removeItem(at: tempURL) }
-
-        let destinationDir = item.type.installDirectory
-        let destinationURL = destinationDir.appendingPathComponent(item.filename)
-
-        try writeFile(from: tempURL, to: destinationURL, creatingDirectory: destinationDir)
+        for (file, tempURL) in zip(item.files, tempURLs) {
+            let destinationURL = destinationDir.appendingPathComponent(file.filename)
+            try writeFile(from: tempURL, to: destinationURL, creatingDirectory: destinationDir)
+        }
 
         installedVersions[item.id] = item.version
         saveState()
     }
 
     func remove(_ item: PluginItem) throws {
-        let destinationURL = item.type.installDirectory.appendingPathComponent(item.filename)
-        try deleteFile(at: destinationURL)
+        if item.isPack {
+            try deleteDirectory(at: destinationDirectory(for: item))
+        } else if let file = item.files.first {
+            try deleteFile(at: destinationDirectory(for: item).appendingPathComponent(file.filename))
+        }
         installedVersions.removeValue(forKey: item.id)
         saveState()
     }
@@ -133,7 +153,18 @@ final class InstallManager: ObservableObject {
         do {
             try fm.removeItem(at: url)
         } catch {
-            try elevatedRemove(at: url)
+            try elevatedRemove(at: url, recursive: false)
+        }
+    }
+
+    /// Removes a whole pack subfolder (and everything in it).
+    private func deleteDirectory(at url: URL) throws {
+        let fm = FileManager.default
+        guard fm.fileExists(atPath: url.path) else { return }
+        do {
+            try fm.removeItem(at: url)
+        } catch {
+            try elevatedRemove(at: url, recursive: true)
         }
     }
 
@@ -147,8 +178,8 @@ final class InstallManager: ObservableObject {
         try runElevated(script)
     }
 
-    private func elevatedRemove(at url: URL) throws {
-        try runElevated("rm -f \(shellQuote(url.path))")
+    private func elevatedRemove(at url: URL, recursive: Bool) throws {
+        try runElevated("rm -\(recursive ? "rf" : "f") \(shellQuote(url.path))")
     }
 
     private func runElevated(_ shellScript: String) throws {
