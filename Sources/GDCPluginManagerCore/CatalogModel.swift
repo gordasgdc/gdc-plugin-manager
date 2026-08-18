@@ -12,6 +12,14 @@ public enum PluginType: String, Codable, CaseIterable, Identifiable {
     /// scripting (Resolve Studio, Resolve running) or, failing that,
     /// leaves the verified files here with manual-import instructions.
     case powerGrade
+    /// A DaVinci Resolve Studio OFX plugin — an `.ofx.bundle` folder
+    /// (Contents/MacOS/<binary>, Contents/Info.plist, …), installed as
+    /// one whole unit, never touched file-by-file. Resolve identifies it
+    /// by that exact bundle folder name, so — unlike a LUT/DCTL pack,
+    /// which installs into a subfolder named after the catalog id — an
+    /// OFX product's install folder must keep its original bundle name
+    /// (see `PluginItem.bundleFolderName`).
+    case ofx
 
     public var id: String { rawValue }
 
@@ -21,6 +29,21 @@ public enum PluginType: String, Codable, CaseIterable, Identifiable {
         case .lut: return "LUT"
         case .fuse: return "Fuse"
         case .powerGrade: return "PowerGrade"
+        case .ofx: return "OFX"
+        }
+    }
+
+    /// One distinct, representative SF Symbol per category — used as the
+    /// sidebar icon for the whole category, and as a card's icon when
+    /// the vendor hasn't set a custom `iconSymbol` for that particular
+    /// product.
+    public var defaultSymbol: String {
+        switch self {
+        case .dctl: return "wand.and.stars"
+        case .lut: return "eyedropper.halffull"
+        case .fuse: return "puzzlepiece.extension"
+        case .powerGrade: return "paintpalette"
+        case .ofx: return "camera.filters"
         }
     }
 
@@ -52,6 +75,14 @@ public enum PluginType: String, Codable, CaseIterable, Identifiable {
         case .powerGrade:
             return FileManager.default.urls(for: .moviesDirectory, in: .userDomainMask).first!
                 .appendingPathComponent("GDC PowerGrades")
+        case .ofx:
+            // The standard cross-host OFX location on macOS (used by
+            // Resolve, Nuke, Fusion standalone, etc.) — confirmed via
+            // Blackmagic's own forum guidance: root /Library, never the
+            // per-user ~/Library. Requires an admin-elevated write (see
+            // InstallManager.elevatedCopy), same as the other top-level
+            // /Library paths above.
+            return URL(fileURLWithPath: "/Library/OFX/Plugins")
         }
     }
 }
@@ -114,10 +145,16 @@ public struct PluginItem: Codable, Identifiable, Hashable {
     /// (the button is hidden, not disabled, when nil), and freely
     /// editable after publishing without touching the product's files.
     public let youtubeURL: String?
+    /// OFX only: the exact original `.ofx.bundle` folder name, as picked
+    /// in Furnizor — Resolve identifies an OFX plugin by that literal
+    /// folder name, so (unlike a LUT/DCTL pack, which installs under a
+    /// folder named after `id`) this must be preserved verbatim. nil for
+    /// every other type, where the `id`-named subfolder is used instead.
+    public let bundleFolderName: String?
 
     public init(id: String, name: String, type: PluginType, description: String, version: String,
                 files: [PluginFile], iconSymbol: String?, priceEUR: Double, isFree: Bool = false, isTrial: Bool = false,
-                youtubeURL: String? = nil) {
+                youtubeURL: String? = nil, bundleFolderName: String? = nil) {
         self.id = id
         self.name = name
         self.type = type
@@ -129,14 +166,15 @@ public struct PluginItem: Codable, Identifiable, Hashable {
         self.isFree = isFree
         self.isTrial = isTrial
         self.youtubeURL = youtubeURL
+        self.bundleFolderName = bundleFolderName
     }
 
     // Custom decode: supports both the current `files` array AND the
     // original single-file catalog format (`filePath` + `sha256`, no
-    // `isFree`/`isTrial`/`youtubeURL`), so any entry ever published still
-    // decodes cleanly.
+    // `isFree`/`isTrial`/`youtubeURL`/`bundleFolderName`), so any entry
+    // ever published still decodes cleanly.
     private enum CodingKeys: String, CodingKey {
-        case id, name, type, description, version, files, filePath, sha256, iconSymbol, priceEUR, isFree, isTrial, youtubeURL
+        case id, name, type, description, version, files, filePath, sha256, iconSymbol, priceEUR, isFree, isTrial, youtubeURL, bundleFolderName
     }
 
     public init(from decoder: Decoder) throws {
@@ -159,6 +197,7 @@ public struct PluginItem: Codable, Identifiable, Hashable {
         isFree = try c.decodeIfPresent(Bool.self, forKey: .isFree) ?? false
         isTrial = try c.decodeIfPresent(Bool.self, forKey: .isTrial) ?? false
         youtubeURL = try c.decodeIfPresent(String.self, forKey: .youtubeURL)
+        bundleFolderName = try c.decodeIfPresent(String.self, forKey: .bundleFolderName)
     }
 
     // Written explicitly (not synthesized) because CodingKeys carries
@@ -178,6 +217,7 @@ public struct PluginItem: Codable, Identifiable, Hashable {
         try c.encode(isFree, forKey: .isFree)
         try c.encode(isTrial, forKey: .isTrial)
         try c.encodeIfPresent(youtubeURL, forKey: .youtubeURL)
+        try c.encodeIfPresent(bundleFolderName, forKey: .bundleFolderName)
     }
 
     /// True for a multi-file pack (e.g. a whole folder of LUTs published

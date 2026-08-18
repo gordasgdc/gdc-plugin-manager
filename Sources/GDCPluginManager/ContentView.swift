@@ -29,7 +29,7 @@ struct ContentView: View {
                 Label(L.t("sidebar.all"), systemImage: "square.grid.2x2")
                     .tag(SidebarSection.all)
                 ForEach(PluginType.allCases) { type in
-                    Label(type.label, systemImage: symbol(for: type))
+                    Label(type.label, systemImage: type.defaultSymbol)
                         .tag(SidebarSection.type(type))
                 }
                 Divider()
@@ -88,14 +88,6 @@ struct ContentView: View {
         }
     }
 
-    private func symbol(for type: PluginType) -> String {
-        switch type {
-        case .dctl: return "wand.and.stars"
-        case .lut: return "eyedropper.halffull"
-        case .fuse: return "puzzlepiece.extension"
-        case .powerGrade: return "paintpalette"
-        }
-    }
 }
 
 private struct UpdateBanner: View {
@@ -163,8 +155,9 @@ private struct PluginCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
+            typeBadge
             HStack(alignment: .top) {
-                Image(systemName: item.iconSymbol ?? "shippingbox")
+                Image(systemName: item.iconSymbol ?? item.type.defaultSymbol)
                     .font(.system(size: 22))
                     .foregroundStyle(.tint)
                 Spacer()
@@ -219,6 +212,20 @@ private struct PluginCard: View {
         } message: {
             Text(resolveWarningBody)
         }
+    }
+
+    /// Centered tag at the top of the card naming the product's type
+    /// (LUT / DCTL / Fuse / PowerGrade / OFX) — a quick, consistent way
+    /// to tell categories apart in a mixed grid.
+    private var typeBadge: some View {
+        Text(item.type.label.uppercased())
+            .font(.system(size: 9, weight: .bold))
+            .tracking(0.5)
+            .foregroundStyle(.secondary)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 3)
+            .background(Capsule().fill(Color.secondary.opacity(0.15)))
+            .frame(maxWidth: .infinity, alignment: .center)
     }
 
     /// Tutorial link, editable anytime from Furnizor without touching the
@@ -410,6 +417,14 @@ private struct AppCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
+            Text(L.t("apps.badge"))
+                .font(.system(size: 9, weight: .bold))
+                .tracking(0.5)
+                .foregroundStyle(.secondary)
+                .padding(.horizontal, 8)
+                .padding(.vertical, 3)
+                .background(Capsule().fill(Color.secondary.opacity(0.15)))
+                .frame(maxWidth: .infinity, alignment: .center)
             Image(systemName: "app.badge")
                 .font(.system(size: 22))
                 .foregroundStyle(.tint)
