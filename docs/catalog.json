@@ -4,27 +4,9 @@
       "id" : "gdc-resolve-encoder",
       "name" : "GDC Resolve Encoder\nGDC Resolve Encoder\nGDC Resolve Encoder\n",
       "url" : "https://gordasgdc.github.io/gdc-resolve-encoder/"
-    },
-    {
-      "id" : "app-test",
-      "name" : "Test App",
-      "url" : "https://github.com/gordasgdc"
     }
   ],
-  "courses" : [
-    {
-      "description" : "Curs de test pentru color grading.",
-      "id" : "curs-test",
-      "name" : "Curs Test Color Grading",
-      "options" : [
-        {
-          "id" : "49FC22AF-1FD5-4520-9EF8-49A0E31F91D8",
-          "label" : "1 oră",
-          "priceEUR" : 40
-        }
-      ]
-    }
-  ],
+  "courses" : [ ],
   "items" : [
     {
       "description" : "GDC contine luturi de transformare din profilul camerei in Rec709 cu un inalt standard de mapare",
