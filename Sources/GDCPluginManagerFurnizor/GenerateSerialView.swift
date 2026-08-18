@@ -102,7 +102,8 @@ struct GenerateSerialView: View {
 
     private func loadItems() {
         if let catalog = try? CatalogEditor.load() {
-            items = catalog.items.sorted { $0.name < $1.name }
+            // Free items need no license at all - nothing to generate.
+            items = catalog.items.filter { !$0.isFree }.sorted { $0.name < $1.name }
         }
     }
 

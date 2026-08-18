@@ -33,10 +33,11 @@ final class LicenseManager: ObservableObject {
     var isLicensed: Bool { !licensedProducts.isEmpty }
 
     /// The check before install/update/remove for one specific item —
-    /// it needs its own license. No app-wide trial: the app is free,
-    /// only products cost money.
+    /// free items need no license at all; everything else needs its own.
+    /// No app-wide trial: the app is free, only paid products need
+    /// unlocking, and free ones are just... free.
     func isUnlocked(for item: PluginItem) -> Bool {
-        licensedProducts[item.id] != nil
+        item.isFree || licensedProducts[item.id] != nil
     }
 
     /// Validates a pasted code against every product currently in the

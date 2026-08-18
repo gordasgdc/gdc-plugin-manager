@@ -29,7 +29,13 @@ final class CatalogService: ObservableObject {
         defer { isLoading = false }
 
         do {
-            let (data, response) = try await URLSession.shared.data(from: Self.catalogURL)
+            // GitHub Pages serves catalog.json with `cache-control: max-age=600`
+            // — the default cache policy would silently honor that and could
+            // serve a stale response even when the user explicitly asks to
+            // refresh, so every refresh() call bypasses the local HTTP cache.
+            var request = URLRequest(url: Self.catalogURL, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData)
+            request.setValue("no-cache", forHTTPHeaderField: "Cache-Control")
+            let (data, response) = try await URLSession.shared.data(for: request)
             guard let http = response as? HTTPURLResponse, (200...299).contains(http.statusCode) else {
                 throw URLError(.badServerResponse)
             }
