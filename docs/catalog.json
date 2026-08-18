@@ -1,4 +1,16 @@
 {
-  "updatedAt": "2026-08-18",
-  "items": []
+  "items" : [
+    {
+      "description" : "Produs de test pentru fluxul de publicare al aplicatiei de furnizor.",
+      "filePath" : "test-vendor-flow/1.0.0/GDC-Test-Passthrough.dctl",
+      "iconSymbol" : "wand.and.stars",
+      "id" : "test-vendor-flow",
+      "name" : "Test Vendor Flow",
+      "priceEUR" : 0,
+      "sha256" : "f186b9bbb8f3d62e280db1b83b3da7d1ae74b25a81f3d3ccb64fc3c8ec91cb1e",
+      "type" : "dctl",
+      "version" : "1.0.0"
+    }
+  ],
+  "updatedAt" : "2026-08-18"
 }
