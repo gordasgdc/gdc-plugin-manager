@@ -2,7 +2,7 @@
   "apps" : [
     {
       "id" : "gdc-resolve-encoder",
-      "name" : "GDC Resolve Encoder\nGDC Resolve Encoder\nGDC Resolve Encoder\n",
+      "name" : "GDC Resolve Encoder",
       "url" : "https://gordasgdc.github.io/gdc-resolve-encoder/"
     }
   ],
