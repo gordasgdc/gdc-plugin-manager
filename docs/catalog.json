@@ -1,4 +1,21 @@
 {
+  "apps" : [
+
+  ],
+  "courses" : [
+    {
+      "description" : "Curs de test pentru color grading.",
+      "id" : "curs-test",
+      "name" : "Curs Test Color Grading",
+      "options" : [
+        {
+          "id" : "49FC22AF-1FD5-4520-9EF8-49A0E31F91D8",
+          "label" : "1 oră",
+          "priceEUR" : 40
+        }
+      ]
+    }
+  ],
   "items" : [
     {
       "description" : "GDC contine luturi de transformare din profilul camerei in Rec709 cu un inalt standard de mapare",
@@ -71,6 +88,7 @@
       "iconSymbol" : "wand.and.stars",
       "id" : "GDC",
       "isFree" : true,
+      "isTrial" : false,
       "name" : "GDC",
       "priceEUR" : 0,
       "type" : "lut",
@@ -179,6 +197,7 @@
       "iconSymbol" : "wand.and.stars",
       "id" : "IntermediateWorkflow",
       "isFree" : false,
+      "isTrial" : false,
       "name" : "Intermediate Workflow",
       "priceEUR" : 378,
       "type" : "lut",
@@ -291,6 +310,7 @@
       "iconSymbol" : "wand.and.stars",
       "id" : "LiniarWorkflow",
       "isFree" : false,
+      "isTrial" : false,
       "name" : "LiniarWorkflow",
       "priceEUR" : 487,
       "type" : "lut",
