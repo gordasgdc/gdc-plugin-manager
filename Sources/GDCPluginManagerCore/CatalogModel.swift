@@ -4,6 +4,14 @@ public enum PluginType: String, Codable, CaseIterable, Identifiable {
     case dctl
     case lut
     case fuse
+    /// A `.drx` grade + thumbnail pair for DaVinci Resolve's Gallery.
+    /// Unlike dctl/lut/fuse, Resolve doesn't scan a folder for these —
+    /// there is no such folder. `installDirectory` here is just a local
+    /// staging area; the real "install" is done by PowerGradeImporter,
+    /// which either imports straight into Resolve's Gallery via
+    /// scripting (Resolve Studio, Resolve running) or, failing that,
+    /// leaves the verified files here with manual-import instructions.
+    case powerGrade
 
     public var id: String { rawValue }
 
@@ -12,6 +20,7 @@ public enum PluginType: String, Codable, CaseIterable, Identifiable {
         case .dctl: return "DCTL"
         case .lut: return "LUT"
         case .fuse: return "Fuse"
+        case .powerGrade: return "PowerGrade"
         }
     }
 
@@ -21,6 +30,9 @@ public enum PluginType: String, Codable, CaseIterable, Identifiable {
     /// - DCTL and LUT share the same folder (Resolve tells them apart by
     ///   file extension).
     /// - Fuses live under Resolve's own Fusion folder.
+    /// - PowerGrades have no such folder (see the `powerGrade` case
+    ///   doc) — this is only a staging directory under the user's own
+    ///   Movies folder, not something Resolve scans.
     public var installDirectory: URL {
         let libraryDir = FileManager.default.urls(for: .libraryDirectory, in: .localDomainMask).first!
         switch self {
@@ -37,6 +49,9 @@ public enum PluginType: String, Codable, CaseIterable, Identifiable {
                 .appendingPathComponent("DaVinci Resolve")
                 .appendingPathComponent("Fusion")
                 .appendingPathComponent("Fuses")
+        case .powerGrade:
+            return FileManager.default.urls(for: .moviesDirectory, in: .userDomainMask).first!
+                .appendingPathComponent("GDC PowerGrades")
         }
     }
 }

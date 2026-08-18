@@ -11,6 +11,7 @@ struct HelpView: View {
                 section(icon: "square.grid.2x2", title: "help.what.title", body: "help.what.body")
                 section(icon: "cart", title: "help.buy.title", body: "help.buy.body")
                 section(icon: "arrow.down.circle", title: "help.install.title", body: "help.install.body")
+                section(icon: "paintpalette", title: "help.powergrade.title", body: "help.powergrade.body")
                 section(icon: "desktopcomputer", title: "help.machine.title", body: "help.machine.body")
                 section(icon: "arrow.triangle.2.circlepath", title: "help.updates.title", body: "help.updates.body")
                 section(icon: "questionmark.circle", title: "help.support.title", body: "help.support.body")
