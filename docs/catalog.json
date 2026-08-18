@@ -99,7 +99,8 @@
       "name" : "CST_bazic",
       "priceEUR" : 0,
       "type" : "dctl",
-      "version" : "1.0.0"
+      "version" : "1.0.0",
+      "youtubeURL" : "https://www.youtube.com/@cristigordas"
     },
     {
       "description" : "GDC contine luturi de transformare din profilul camerei in Rec709 cu un inalt standard de mapare",
