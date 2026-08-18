@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GDC Plugin Manager</title>
+<meta name="description" content="GDC Plugin Manager — instalează, actualizează și elimină DCTL-uri, LUT-uri și Fuse-uri GDC pentru DaVinci Resolve, cu un singur click. Trial gratuit de 7 zile.">
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#070f0e;
+    --bg-2:#0b1615;
+    --panel:#0f1c1a;
+    --panel-2:#132420;
+    --border:#1e3430;
+    --text:#eef8f6;
+    --muted:#9db8b3;
+    --faint:#5f8580;
+    --accent:#35d6be;
+    --accent-ink:#04211c;
+    --accent-dim:#1f7d6e;
+    --violet:#2f8f9e;
+    --violet-2:#4fc4d6;
+    --mono: 'IBM Plex Mono', ui-monospace, monospace;
+    --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+  body{
+    background:
+      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(53,214,190,.22), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 100% 10%, rgba(79,196,214,.14), transparent 55%),
+      var(--bg);
+    color:var(--text); font-family:var(--sans);
+    line-height:1.6; -webkit-font-smoothing:antialiased;
+  }
+  a{ color:inherit; }
+  img,svg{ display:block; max-width:100%; }
+  .wrap{ max-width:1080px; margin:0 auto; padding:0 24px; }
+  ::selection{ background:var(--accent); color:var(--accent-ink); }
+
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(7,15,14,.82); backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--border);
+  }
+  .nav{ display:flex; align-items:center; justify-content:space-between; padding:16px 24px; max-width:1080px; margin:0 auto; }
+  .brand{ display:flex; align-items:center; gap:10px; font-family:var(--mono); font-weight:700; font-size:15px; letter-spacing:.02em; }
+  .brand .mark{ width:28px; height:28px; border-radius:8px; background:linear-gradient(145deg,var(--violet-2),var(--violet)); display:flex; align-items:center; justify-content:center; box-shadow:0 0 0 1px rgba(255,255,255,.08) inset; }
+  .brand .mark svg{ width:16px; height:16px; }
+  .nav-links{ display:flex; align-items:center; gap:26px; }
+  .nav-links a{ font-size:13.5px; color:var(--muted); text-decoration:none; transition:color .15s ease; }
+  .nav-links a:hover{ color:var(--text); }
+  .nav-cta{
+    font-family:var(--mono); font-size:12.5px; font-weight:600; color:var(--accent-ink);
+    background:var(--accent); padding:9px 16px; border-radius:8px; text-decoration:none; white-space:nowrap;
+  }
+  @media (max-width:760px){ .nav-links a:not(.nav-cta){ display:none; } }
+
+  .hero{ padding:96px 0 70px; position:relative; overflow:hidden; }
+  .hero-grid{ display:grid; grid-template-columns:1.05fr .95fr; gap:56px; align-items:center; }
+  @media (max-width:860px){ .hero-grid{ grid-template-columns:1fr; } }
+  .eyebrow{
+    font-family:var(--mono); font-size:12px; font-weight:600; color:var(--accent);
+    letter-spacing:.12em; text-transform:uppercase; margin-bottom:18px; display:flex; align-items:center; gap:8px;
+  }
+  .eyebrow::before{ content:''; width:16px; height:1px; background:var(--accent); }
+  h1{
+    font-family:var(--mono); font-size:clamp(32px,5vw,50px); font-weight:700; line-height:1.1;
+    letter-spacing:-.01em; margin-bottom:20px;
+  }
+  h1 .accent{ background:linear-gradient(135deg,var(--accent),var(--violet-2)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .hero p.lead{ font-size:16.5px; color:var(--muted); max-width:48ch; margin-bottom:30px; }
+  .hero-actions{ display:flex; gap:12px; flex-wrap:wrap; margin-bottom:26px; }
+  .btn{
+    font-family:var(--mono); font-size:13.5px; font-weight:600; padding:14px 24px; border-radius:9px;
+    text-decoration:none; display:inline-flex; align-items:center; gap:8px; transition:all .18s ease; cursor:pointer; border:1px solid transparent;
+  }
+  .btn-primary{ background:var(--accent); color:var(--accent-ink); }
+  .btn-primary:hover{ background:#5fe6d2; transform:translateY(-1px); box-shadow:0 10px 30px -8px rgba(53,214,190,.5); }
+  .btn-ghost{ background:var(--panel); color:var(--text); border-color:var(--border); }
+  .btn-ghost:hover{ border-color:var(--violet-2); }
+  .hero-meta{ display:flex; gap:18px; flex-wrap:wrap; font-family:var(--mono); font-size:12px; color:var(--faint); }
+  .hero-meta span{ display:flex; align-items:center; gap:6px; }
+  .dot{ width:6px; height:6px; border-radius:50%; background:#5fd98a; }
+
+  .catalog-demo{
+    background:var(--panel); border:1px solid var(--border); border-radius:16px;
+    padding:28px; box-shadow:0 40px 80px -30px rgba(0,0,0,.7); position:relative; overflow:hidden;
+  }
+  .catalog-demo .tt-bar{ display:flex; gap:6px; margin-bottom:20px; }
+  .tt-bar span{ width:9px; height:9px; border-radius:50%; background:var(--border); }
+  .demo-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .demo-card{ background:var(--panel-2); border:1px solid var(--border); border-radius:10px; padding:14px; }
+  .demo-card .ic{ width:26px; height:26px; border-radius:7px; background:linear-gradient(145deg,var(--violet-2),var(--violet)); margin-bottom:10px; }
+  .demo-card .ln{ height:7px; border-radius:4px; background:rgba(255,255,255,.08); margin-bottom:6px; }
+  .demo-card .ln.w60{ width:60%; }
+  .demo-card .ln.w40{ width:40%; }
+  .demo-card .btn-mini{ margin-top:10px; display:inline-block; font-family:var(--mono); font-size:10.5px; font-weight:600; color:var(--accent-ink); background:var(--accent); padding:5px 10px; border-radius:6px; }
+
+  .reveal{ opacity:0; transform:translateY(16px); transition:opacity .6s ease, transform .6s ease; }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+
+  section{ padding:68px 0; border-top:1px solid var(--border); }
+  .section-head{ margin-bottom:38px; max-width:60ch; }
+  .section-tag{ font-family:var(--mono); font-size:11.5px; color:var(--accent); letter-spacing:.1em; text-transform:uppercase; margin-bottom:10px; }
+  h2{ font-family:var(--mono); font-size:clamp(22px,3vw,30px); font-weight:700; margin-bottom:10px; letter-spacing:-.01em; }
+  section > .wrap > p.section-desc{ color:var(--muted); font-size:15px; max-width:60ch; }
+
+  .feature-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:18px; margin-top:36px; }
+  @media (max-width:700px){ .feature-grid{ grid-template-columns:1fr; } }
+  .feature-card{
+    background:var(--panel); border:1px solid var(--border); border-radius:14px; padding:26px;
+    transition:border-color .2s ease, transform .2s ease;
+  }
+  .feature-card:hover{ border-color:var(--violet-2); transform:translateY(-2px); }
+  .feature-icon{
+    width:44px; height:44px; border-radius:11px; display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(145deg,var(--violet-2),var(--violet)); margin-bottom:16px; font-size:20px;
+  }
+  .feature-card h3{ font-size:16.5px; font-weight:700; margin-bottom:8px; }
+  .feature-card p{ font-size:14px; color:var(--muted); }
+
+  .steps{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-top:36px; counter-reset:step; }
+  @media (max-width:760px){ .steps{ grid-template-columns:1fr; } }
+  .step{ position:relative; padding-left:44px; }
+  .step::before{
+    counter-increment:step; content:counter(step);
+    position:absolute; left:0; top:0; width:30px; height:30px; border-radius:50%;
+    background:var(--panel-2); border:1px solid var(--border); color:var(--accent);
+    font-family:var(--mono); font-weight:700; font-size:13px; display:flex; align-items:center; justify-content:center;
+  }
+  .step h4{ font-size:15px; font-weight:700; margin-bottom:6px; }
+  .step p{ font-size:13.5px; color:var(--muted); }
+
+  .price-card{
+    margin-top:36px; background:linear-gradient(150deg,var(--panel-2),var(--panel));
+    border:1px solid var(--border); border-radius:18px; padding:40px; display:flex; align-items:center; justify-content:space-between; gap:32px; flex-wrap:wrap;
+  }
+  .price-tag{ font-family:var(--mono); font-size:44px; font-weight:700; color:var(--accent); }
+  .price-tag sub{ font-size:14px; color:var(--muted); font-weight:500; }
+  .price-note{ font-size:13.5px; color:var(--muted); margin-top:4px; }
+
+  footer{ border-top:1px solid var(--border); padding:36px 0; }
+  .footer-row{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; font-size:13px; color:var(--faint); }
+  .footer-row a{ color:var(--muted); text-decoration:none; }
+  .footer-row a:hover{ color:var(--text); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <div class="brand">
+      <span class="mark">
+        <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="4" stroke="#fff" stroke-width="2"/><circle cx="12" cy="4" r="2.4" fill="#fff"/></svg>
+      </span>
+      GDC Plugin Manager
+    </div>
+    <div class="nav-links">
+      <a href="#features">Funcții</a>
+      <a href="#how">Cum funcționează</a>
+      <a href="#price">Preț</a>
+      <a class="nav-cta" href="https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager.pkg">Descarcă</a>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">macOS · DaVinci Resolve</div>
+      <h1>Produsele GDC pentru<br>Resolve, <span class="accent">la un click distanță</span>.</h1>
+      <p class="lead">DCTL-uri, LUT-uri și Fuse-uri instalate direct în folderele pe care DaVinci Resolve le citește la pornire — fără să cauți manual foldere ascunse și fără să copiezi fișiere cu mâna. Instalezi, actualizezi și elimini dintr-o singură aplicație nativă.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager.pkg">⬇ Descarcă gratuit</a>
+        <a class="btn btn-ghost" href="#how">Vezi cum funcționează</a>
+      </div>
+      <div class="hero-meta">
+        <span><span class="dot"></span> Trial 7 zile, fără card</span>
+        <span><span class="dot"></span> Nativ Apple Silicon</span>
+        <span><span class="dot"></span> Română · English · Español</span>
+      </div>
+    </div>
+    <div class="catalog-demo reveal">
+      <div class="tt-bar"><span></span><span></span><span></span></div>
+      <div class="demo-grid">
+        <div class="demo-card"><div class="ic"></div><div class="ln w60"></div><div class="ln w40"></div><span class="btn-mini">Instalează</span></div>
+        <div class="demo-card"><div class="ic"></div><div class="ln w60"></div><div class="ln w40"></div><span class="btn-mini">Instalează</span></div>
+        <div class="demo-card"><div class="ic"></div><div class="ln w60"></div><div class="ln w40"></div><span class="btn-mini">Instalează</span></div>
+        <div class="demo-card"><div class="ic"></div><div class="ln w60"></div><div class="ln w40"></div><span class="btn-mini">Instalează</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="features">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="section-tag">Funcții</div>
+      <h2>Tot ce ține de plugin-uri, într-un singur loc</h2>
+      <p class="section-desc">Aplicația știe exact unde vrea DaVinci Resolve fiecare tip de fișier și le pune acolo pentru tine.</p>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card reveal">
+        <div class="feature-icon">✨</div>
+        <h3>DCTL</h3>
+        <p>Efecte de culoare scrise ca DCTL, instalate direct în folderul de LUT-uri/DCTL-uri al Resolve — apar imediat în panoul Color.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">◑</div>
+        <h3>LUT</h3>
+        <p>LUT-uri (.cube) pentru grading rapid, gata de folosit din galeria Resolve fără instalare manuală.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">🧩</div>
+        <h3>Fuse</h3>
+        <p>Plugin-uri Fusion (.fuse), plasate exact în folderul de Fuses citit de motorul Fusion al Resolve.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">⟳</div>
+        <h3>Actualizări cu un click</h3>
+        <p>Aplicația compară versiunea instalată cu cea din catalog și îți arată clar când e ceva nou de actualizat.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="section-tag">Instalare</div>
+      <h2>Gata de folosit în două minute</h2>
+    </div>
+    <div class="steps">
+      <div class="step reveal">
+        <h4>Descarcă și deschide</h4>
+        <p>Descarcă pachetul .pkg, apoi click-dreapta → Deschide (o singură dată, e nesemnat cu certificat plătit Apple).</p>
+      </div>
+      <div class="step reveal">
+        <h4>Alege ce instalezi</h4>
+        <p>Catalogul se încarcă automat. Apasă Instalează pe orice DCTL, LUT sau Fuse — aplicația cere parola de administrator doar dacă e nevoie.</p>
+      </div>
+      <div class="step reveal">
+        <h4>Folosește 7 zile gratuit</h4>
+        <p>Trial-ul pornește automat. Tot catalogul e disponibil — activezi o licență direct din pagina Licență, oricând vrei.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="price">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="section-tag">Preț</div>
+      <h2>Un singur preț, acces la tot catalogul</h2>
+    </div>
+    <div class="price-card reveal">
+      <div>
+        <div class="price-tag">acces pe viață <sub>/ o singură dată</sub></div>
+        <div class="price-note">Fără abonament. Deblochează tot catalogul curent și viitor de produse GDC pentru DaVinci Resolve, pe un calculator.</div>
+      </div>
+      <a class="btn btn-primary" href="https://wa.me/34643109970?text=Salut!%20Vreau%20s%C4%83%20cump%C4%83r%20GDC%20Plugin%20Manager%20(acces%20pe%20via%C8%9B%C4%83).">💬 Scrie-mi pe WhatsApp</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap footer-row">
+    <span>© 2026 Cristi Gordas (GDC)</span>
+    <span>
+      <a href="https://github.com/gordasgdc/gdc-plugin-manager">GitHub</a> ·
+      <a href="https://github.com/gordasgdc/gdc-plugin-manager/releases/latest">Toate versiunile</a> ·
+      <a href="https://github.com/gordasgdc/gdc-plugin-manager/blob/main/installer/License.txt">Termeni și Condiții</a>
+    </span>
+  </div>
+</footer>
+
+<script>
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: .15 });
+  revealEls.forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
