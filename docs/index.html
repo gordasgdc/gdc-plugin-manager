@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GDC Plugin Manager</title>
-<meta name="description" content="GDC Plugin Manager — instalează, actualizează și elimină DCTL-uri, LUT-uri și Fuse-uri GDC pentru DaVinci Resolve, cu un singur click. Trial gratuit de 7 zile.">
+<meta name="description" content="GDC Plugin Manager — aplicație gratuită, doar pentru Mac. Instalează, actualizează și elimină DCTL-uri, LUT-uri și Fuse-uri GDC pentru DaVinci Resolve, cu un singur click. Fiecare produs se deblochează printr-o donație.">
 <link rel="icon" href="data:,">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -143,6 +143,27 @@
   .price-tag sub{ font-size:14px; color:var(--muted); font-weight:500; }
   .price-note{ font-size:13.5px; color:var(--muted); margin-top:4px; }
 
+  .catalog-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:16px; margin-top:36px; }
+  .catalog-card{
+    background:var(--panel); border:1px solid var(--border); border-radius:14px; padding:22px;
+    display:flex; flex-direction:column; gap:8px; transition:border-color .2s ease, transform .2s ease;
+  }
+  .catalog-card:hover{ border-color:var(--violet-2); transform:translateY(-2px); }
+  .catalog-card .cc-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
+  .catalog-card .cc-type{
+    font-family:var(--mono); font-size:10.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
+    color:var(--accent-ink); background:var(--accent); padding:3px 8px; border-radius:6px;
+  }
+  .catalog-card .cc-price{ font-family:var(--mono); font-weight:700; color:var(--accent); text-align:right; }
+  .catalog-card .cc-price small{ display:block; font-family:var(--sans); font-weight:500; font-size:10.5px; color:var(--faint); }
+  .catalog-card h3{ font-size:16px; font-weight:700; }
+  .catalog-card p{ font-size:13.5px; color:var(--muted); flex-grow:1; }
+  .catalog-card .cc-buy{
+    align-self:flex-start; margin-top:6px; font-family:var(--mono); font-size:12px; font-weight:600;
+    color:var(--accent-ink); background:var(--accent); padding:8px 14px; border-radius:7px; text-decoration:none;
+  }
+  .catalog-empty{ color:var(--muted); font-size:14.5px; padding:20px 0; }
+
   footer{ border-top:1px solid var(--border); padding:36px 0; }
   .footer-row{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; font-size:13px; color:var(--faint); }
   .footer-row a{ color:var(--muted); text-decoration:none; }
@@ -162,8 +183,8 @@
     <div class="nav-links">
       <a href="#features">Funcții</a>
       <a href="#how">Cum funcționează</a>
-      <a href="#price">Preț</a>
-      <a class="nav-cta" href="https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager.pkg">Descarcă</a>
+      <a href="#catalog">Catalog</a>
+      <a class="nav-cta" href="https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager.pkg">Descarcă gratuit</a>
     </div>
   </div>
 </header>
@@ -171,16 +192,16 @@
 <section class="hero">
   <div class="wrap hero-grid">
     <div>
-      <div class="eyebrow">macOS · DaVinci Resolve</div>
+      <div class="eyebrow">Doar pentru Mac · DaVinci Resolve</div>
       <h1>Produsele GDC pentru<br>Resolve, <span class="accent">la un click distanță</span>.</h1>
-      <p class="lead">DCTL-uri, LUT-uri și Fuse-uri instalate direct în folderele pe care DaVinci Resolve le citește la pornire — fără să cauți manual foldere ascunse și fără să copiezi fișiere cu mâna. Instalezi, actualizezi și elimini dintr-o singură aplicație nativă.</p>
+      <p class="lead">DCTL-uri, LUT-uri și Fuse-uri instalate direct în folderele pe care DaVinci Resolve le citește la pornire — fără să cauți manual foldere ascunse și fără să copiezi fișiere cu mâna. Aplicația e complet gratuită; cumperi (printr-o donație) doar produsele pe care le vrei.</p>
       <div class="hero-actions">
         <a class="btn btn-primary" href="https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager.pkg">⬇ Descarcă gratuit</a>
         <a class="btn btn-ghost" href="#how">Vezi cum funcționează</a>
       </div>
       <div class="hero-meta">
-        <span><span class="dot"></span> Trial 7 zile, fără card</span>
-        <span><span class="dot"></span> Nativ Apple Silicon</span>
+        <span><span class="dot"></span> Aplicație 100% gratuită</span>
+        <span><span class="dot"></span> Doar Mac, nativ Apple Silicon</span>
         <span><span class="dot"></span> Română · English · Español</span>
       </div>
     </div>
@@ -240,29 +261,26 @@
         <p>Descarcă pachetul .pkg, apoi click-dreapta → Deschide (o singură dată, e nesemnat cu certificat plătit Apple).</p>
       </div>
       <div class="step reveal">
-        <h4>Alege ce instalezi</h4>
-        <p>Catalogul se încarcă automat. Apasă Instalează pe orice DCTL, LUT sau Fuse — aplicația cere parola de administrator doar dacă e nevoie.</p>
+        <h4>Răsfoiește catalogul, gratuit</h4>
+        <p>Catalogul se încarcă automat, fără cont și fără nicio taxă. Vezi fiecare produs, descrierea și prețul lui.</p>
       </div>
       <div class="step reveal">
-        <h4>Folosește 7 zile gratuit</h4>
-        <p>Trial-ul pornește automat. Tot catalogul e disponibil — activezi o licență direct din pagina Licență, oricând vrei.</p>
+        <h4>Deblochezi doar ce vrei</h4>
+        <p>Apeși Cumpără pe produsul dorit — o donație, o singură dată, care mă ajută să dezvolt în continuare. Primești un cod, îl activezi din pagina Licență, apoi Instalezi cu un click.</p>
       </div>
     </div>
   </div>
 </section>
 
-<section id="price">
+<section id="catalog">
   <div class="wrap">
     <div class="section-head reveal">
-      <div class="section-tag">Preț</div>
-      <h2>Un singur preț, acces la tot catalogul</h2>
+      <div class="section-tag">Catalog</div>
+      <h2>Fiecare produs, deblocat separat</h2>
+      <p class="section-desc">Aplicația e gratuită. Prețul de pe fiecare produs e o donație, o singură dată, care mă ajută să dezvolt în continuare — nu un abonament. Lista de mai jos se încarcă live din catalogul aplicației.</p>
     </div>
-    <div class="price-card reveal">
-      <div>
-        <div class="price-tag">acces pe viață <sub>/ o singură dată</sub></div>
-        <div class="price-note">Fără abonament. Deblochează tot catalogul curent și viitor de produse GDC pentru DaVinci Resolve, pe un calculator.</div>
-      </div>
-      <a class="btn btn-primary" href="https://wa.me/34643109970?text=Salut!%20Vreau%20s%C4%83%20cump%C4%83r%20GDC%20Plugin%20Manager%20(acces%20pe%20via%C8%9B%C4%83).">💬 Scrie-mi pe WhatsApp</a>
+    <div id="catalog-list" class="catalog-grid reveal">
+      <p class="catalog-empty">Se încarcă catalogul…</p>
     </div>
   </div>
 </section>
@@ -284,6 +302,37 @@
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
   }, { threshold: .15 });
   revealEls.forEach(el => io.observe(el));
+
+  // Live catalog, pulled directly from the app's own public catalog.json
+  // (same file the desktop app fetches) - so this list never drifts out
+  // of sync with what's actually for sale.
+  const typeLabels = { dctl: 'DCTL', lut: 'LUT', fuse: 'Fuse' };
+  fetch('./catalog.json')
+    .then(r => r.json())
+    .then(data => {
+      const el = document.getElementById('catalog-list');
+      const items = (data.items || []);
+      if (items.length === 0) {
+        el.innerHTML = '<p class="catalog-empty">Catalogul e gol momentan — reveniți curând, produsele apar aici imediat ce sunt publicate.</p>';
+        return;
+      }
+      el.innerHTML = items.map(item => {
+        const price = new Intl.NumberFormat('ro-RO', { style: 'currency', currency: 'EUR' }).format(item.priceEUR || 0);
+        const msg = encodeURIComponent(`Salut! Vreau să deblochez ${item.name} cu o donație de ${price}.`);
+        return `<div class="catalog-card">
+          <div class="cc-top">
+            <span class="cc-type">${typeLabels[item.type] || item.type}</span>
+            <span class="cc-price">${price}<small>donație</small></span>
+          </div>
+          <h3>${item.name}</h3>
+          <p>${item.description || ''}</p>
+          <a class="cc-buy" href="https://wa.me/34643109970?text=${msg}">Cumpără</a>
+        </div>`;
+      }).join('');
+    })
+    .catch(() => {
+      document.getElementById('catalog-list').innerHTML = '<p class="catalog-empty">Nu am putut încărca catalogul chiar acum — vezi catalogul complet direct din aplicație.</p>';
+    });
 </script>
 
 </body>
