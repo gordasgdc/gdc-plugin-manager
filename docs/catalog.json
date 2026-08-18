@@ -1,6 +1,114 @@
 {
   "items" : [
     {
+      "description" : "Flux de lucru profesional Intermediate la cel mai inalt nivel in industrie",
+      "files" : [
+        {
+          "path" : "IntermediateWorkflow/1.0.0/ACEScct to Intermediate.dctl",
+          "sha256" : "8f7ca7d95f79d2cea3204162a15bf4372233f2b43c971fa020574b5b2cf84a63"
+        },
+        {
+          "path" : "IntermediateWorkflow/1.0.0/ARRI LogC3 to Intermediate.dctl",
+          "sha256" : "06d3c01a43b24f40a27fb1528dfdd022ae3ac7fb3eb8fab15da6b73863814eb1"
+        },
+        {
+          "path" : "IntermediateWorkflow/1.0.0/ARRI LogC4 to Intermediate.dctl",
+          "sha256" : "bf0792d4a18668c6a2726d1640db1d39eb7e892158e50442c267b9bf7071cd03"
+        },
+        {
+          "path" : "IntermediateWorkflow/1.0.0/Apple Log to Intermediate.dctl",
+          "sha256" : "b7c4cbc2021fb33f4a736f3941b886d37362c0fd7cc94a994d7eab7484d32eb1"
+        },
+        {
+          "path" : "IntermediateWorkflow/1.0.0/Blackmagic Film Gen4 to Intermediate.dctl",
+          "sha256" : "6deeb9912bb3ba82e6c766c60244ca878bbb5311715387cf1b493dc4f25e9ad8"
+        },
+        {
+          "path" : "IntermediateWorkflow/1.0.0/Blackmagic Film Gen5 to Intermediate.dctl",
+          "sha256" : "db788bd2c29ee3e0a5abc09776e5561735aeda467152085c3f078a82390cdf26"
+        },
+        {
+          "path" : "IntermediateWorkflow/1.0.0/Canon CLog to Intermediate.dctl",
+          "sha256" : "a6baf74e20e35cbae75a55db46656c3f97af1324109434df66cbb7a224a3cb57"
+        },
+        {
+          "path" : "IntermediateWorkflow/1.0.0/Canon CLog2 to Intermediate.dctl",
+          "sha256" : "038dfc4b56af1dbeb15a03418fa55836cf6daf76253cfeb97b8c20867d905740"
+        },
+        {
+          "path" : "IntermediateWorkflow/1.0.0/Canon CLog3 to Intermediate.dctl",
+          "sha256" : "3aa16d1d4b8566679ea8dff9932fac0b1d78878e7a5df4e4a0eded9e6fa1aff6"
+        },
+        {
+          "path" : "IntermediateWorkflow/1.0.0/DJI Mavic 3 Pro Cine DLog to Intermediate.dctl",
+          "sha256" : "15bcc5bf236fc7e92cbbd75cb82f02ee7cfda9d123a5782774161dbdc1702dcb"
+        },
+        {
+          "path" : "IntermediateWorkflow/1.0.0/DJI Mavic 3 Pro DLogM to Intermediate.dctl",
+          "sha256" : "73c9a3f6e633dc68fc8a028644fd156c4f1b4c90104a41e2d126ffff96a3b61a"
+        },
+        {
+          "path" : "IntermediateWorkflow/1.0.0/DJI Phantom P4 DLog to Intermediate.dctl",
+          "sha256" : "a53557f4ce5574a46ebc2272cb76f013ddd84534917259c4e2b68cb4c30e8873"
+        },
+        {
+          "path" : "IntermediateWorkflow/1.0.0/FilmLight TLog to Intermediate.dctl",
+          "sha256" : "d97b261a8d12bd1a2e23da2dc074666e57e16f205f8e66d8ab8f8d6f0019eb16"
+        },
+        {
+          "path" : "IntermediateWorkflow/1.0.0/Fujifilm FLog to Intermediate.dctl",
+          "sha256" : "05a12df4178f1b12845631b494899663cb7fb966ee0d1f4060caf13aeb7f19c6"
+        },
+        {
+          "path" : "IntermediateWorkflow/1.0.0/Fujifilm FLog2 to Intermediate.dctl",
+          "sha256" : "e7b3b6eff6b0e48c1bde1c6c6bc6add6ac2c5bed1a99f79142439db18083fd49"
+        },
+        {
+          "path" : "IntermediateWorkflow/1.0.0/Fujifilm_FLog2C_to_Intermediate.dctl",
+          "sha256" : "f11c4b9fcbfc8e5d086bd769777bfaf9d13d3383987acfb272fe19e46d27b858"
+        },
+        {
+          "path" : "IntermediateWorkflow/1.0.0/Nikon NLog to Intermediate.dctl",
+          "sha256" : "f249026e818ab016be604cd334984a03dc6c0d976f6013840126c21e1f26d0e8"
+        },
+        {
+          "path" : "IntermediateWorkflow/1.0.0/Panasonic VLog to Intermediate.dctl",
+          "sha256" : "be1100caf74e8749930561bcbbe40b1d8419e9f92e2c1153e4d14ab5e0e8935a"
+        },
+        {
+          "path" : "IntermediateWorkflow/1.0.0/RED Log3G10 to Intermediate.dctl",
+          "sha256" : "5b7dc52e7fe991cdb10594f656b557e7d71d60432d0b65be5eebce764f46a7c8"
+        },
+        {
+          "path" : "IntermediateWorkflow/1.0.0/Rec709_22_to_Intermediate.dctl",
+          "sha256" : "a1578d1894e664e7920b9710f3f8e5831b02c5259f53d36cdbdf872f4e40d784"
+        },
+        {
+          "path" : "IntermediateWorkflow/1.0.0/Rec709_24_to_Intermediate.dctl",
+          "sha256" : "b5efaf56cb137bee39e149a5f7948ca8b2db776b52a76f8675a8d52a1ef5ae9d"
+        },
+        {
+          "path" : "IntermediateWorkflow/1.0.0/Sony SLog2 to Intermediate.dctl",
+          "sha256" : "0b04edff399cd6e438a19f172895c0bf9a0c40ae504aade1d7d0e3332be7888a"
+        },
+        {
+          "path" : "IntermediateWorkflow/1.0.0/Sony SLog3 to Intermediate.dctl",
+          "sha256" : "0a12dd51f301490db218956f5670d7c0dce6070bddda1d1bfc970593851d831d"
+        },
+        {
+          "path" : "IntermediateWorkflow/1.0.0/sRGB_to_Intermediate.dctl",
+          "sha256" : "c9ccd4cc2234773e33c9d40dff5b7ae39be1b6c18184246be99f8fc88fc204c2"
+        }
+      ],
+      "iconSymbol" : "wand.and.stars",
+      "id" : "IntermediateWorkflow",
+      "isFree" : false,
+      "name" : "Intermediate Workflow",
+      "priceEUR" : 378,
+      "type" : "dctl",
+      "version" : "1.0.0"
+    },
+    {
       "description" : "Flux de lucru profesional liniar la cel mai inalt nivel in industrie",
       "files" : [
         {
