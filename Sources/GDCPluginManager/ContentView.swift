@@ -319,7 +319,7 @@ private struct CourseCard: View {
     }
 
     private func contactURL(for option: CourseOption) -> URL {
-        let text = "Salut! Vreau să rezerv cursul \(course.name) — \(option.label) (\(option.priceDisplay))."
+        let text = String(format: L.t("courses.contact.message"), course.name, option.label, option.priceDisplay)
         return URL(string: "https://wa.me/34643109970?text=" + text.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)!
     }
 }
