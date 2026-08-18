@@ -7,7 +7,7 @@ import CryptoKit
 /// property, same SHA-512-prefix-6-bytes, same Base32, no dashes) so a
 /// machine ID shown here matches exactly what `sell.py --machine-id`
 /// expects, the same way gdc-resolve-encoder's C++ side already works.
-enum MachineID {
+public enum MachineID {
     /// The raw hardware UUID this Mac reports — the same value across
     /// reboots and reinstalls (tied to the logic board, not the disk).
     private static func rawPlatformUUID() -> String {
@@ -25,14 +25,14 @@ enum MachineID {
     /// The 6-byte SHA-512-prefix hash used both for on-screen display
     /// and for license-code machine-locking — one source of truth so
     /// LicenseCore's validation always matches what's shown on screen.
-    static var hashBytes: [UInt8] {
+    public static var hashBytes: [UInt8] {
         Array(SHA512.hash(data: Data(rawPlatformUUID().utf8)).prefix(6))
     }
 
     /// A short, readable, Base32 string (no dashes) — what the user
     /// copies from Preferences → License and sends before buying, and
     /// what `sell.py --machine-id <this>` expects.
-    static var display: String {
+    public static var display: String {
         LicenseCore.base32Encode(Data(hashBytes))
     }
 }

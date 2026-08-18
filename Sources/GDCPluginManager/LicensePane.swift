@@ -1,12 +1,17 @@
 import SwiftUI
 import AppKit
+import GDCPluginManagerCore
 
-/// The License destination in the main sidebar — same content/shape as
-/// CursorPro GDC's LicensePane, adapted from a Preferences-window pane
-/// to a plain sidebar destination since this app is a normal windowed
-/// app (Dock icon, no menu-bar-accessory mode), not a background utility.
+/// The License destination in the main sidebar. The app itself is free;
+/// this shows how many products are owned, this Mac's machine ID, an
+/// activation field that works for ANY product's code (it tries every
+/// product currently in the catalog — see LicenseManager.activate), a
+/// list of individually-owned products, and a generic "contact to buy"
+/// card (each catalog card also has its own per-product Buy button, this
+/// is the fallback/general contact point).
 struct LicensePane: View {
     @ObservedObject private var license = LicenseManager.shared
+    @ObservedObject private var catalog = CatalogService.shared
     @State private var codeField = ""
     @State private var justActivated = false
     @State private var justCopiedMachineID = false
@@ -14,7 +19,7 @@ struct LicensePane: View {
     private static let machineID = MachineID.display
 
     private static var whatsAppURL: URL {
-        let text = "Salut! Vreau să cumpăr GDC Plugin Manager (acces pe viață). ID calculator: \(machineID)"
+        let text = "Salut! Vreau să deblochez un produs GDC Plugin Manager printr-o donație. ID calculator: \(machineID)"
         return URL(string: "https://wa.me/34643109970?text=" + text.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)!
     }
 
@@ -25,13 +30,14 @@ struct LicensePane: View {
 
                 statusCard
 
-                if !license.isLicensed {
-                    machineIDCard
-                    activationCard
-                    buyCard
-                } else {
-                    Button(L.t("license.deactivate"), role: .destructive) { license.deactivate() }
+                if !license.licensedProducts.isEmpty {
+                    myLicensesCard
                 }
+
+                machineIDCard
+                activationCard
+                buyCard
+
                 Spacer(minLength: 0)
             }
             .padding(24)
@@ -41,9 +47,9 @@ struct LicensePane: View {
 
     private var statusCard: some View {
         HStack(alignment: .top, spacing: 14) {
-            Image(systemName: license.isLicensed ? "checkmark.seal.fill" : (license.isTrialActive ? "clock.fill" : "exclamationmark.triangle.fill"))
+            Image(systemName: license.isLicensed ? "checkmark.seal.fill" : "info.circle.fill")
                 .font(.system(size: 28))
-                .foregroundStyle(license.isLicensed ? .green : (license.isTrialActive ? .orange : .red))
+                .foregroundStyle(license.isLicensed ? .green : .secondary)
                 .frame(width: 36)
 
             VStack(alignment: .leading, spacing: 4) {
@@ -61,18 +67,37 @@ struct LicensePane: View {
     }
 
     private var statusTitle: String {
-        if license.isLicensed { return L.t("license.status.licensed") }
-        if license.isTrialActive { return L.t("license.status.trial") }
-        return L.t("license.status.expired")
+        license.isLicensed ? L.t("license.status.owned") : L.t("license.status.none")
     }
 
     private var statusBody: String {
-        if license.isLicensed { return L.t("license.status.licensed.body") }
-        if license.isTrialActive {
-            let days = license.trialDaysRemaining
-            return days <= 1 ? L.t("license.status.trial.lastDay") : String(format: L.t("license.status.trial.daysLeft"), days)
+        if license.isLicensed {
+            return String(format: L.t("license.status.owned.body"), license.licensedProducts.count)
         }
-        return L.t("license.status.expired.body")
+        return L.t("license.status.none.body")
+    }
+
+    private var myLicensesCard: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text(L.t("license.mylicenses.title")).font(.headline)
+            ForEach(Array(license.licensedProducts.keys).sorted(), id: \.self) { productID in
+                HStack {
+                    Text(productName(for: productID))
+                    Spacer()
+                    Button(L.t("license.deactivate"), role: .destructive) {
+                        license.deactivate(productID: productID)
+                    }
+                    .controlSize(.small)
+                }
+            }
+        }
+        .padding(16)
+        .background(RoundedRectangle(cornerRadius: 12).fill(Color(nsColor: .controlBackgroundColor)))
+        .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color(nsColor: .separatorColor), lineWidth: 1))
+    }
+
+    private func productName(for productID: String) -> String {
+        catalog.items.first(where: { $0.id == productID })?.name ?? productID
     }
 
     private var machineIDCard: some View {
@@ -115,10 +140,10 @@ struct LicensePane: View {
             }
 
             Button(L.t("license.activate")) {
-                justActivated = license.activate(code: codeField)
+                justActivated = license.activate(code: codeField, candidateProductIDs: catalog.items.map(\.id))
                 if justActivated { codeField = "" }
             }
-            .disabled(codeField.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+            .disabled(codeField.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || catalog.items.isEmpty)
         }
         .padding(16)
         .background(RoundedRectangle(cornerRadius: 12).fill(Color(nsColor: .controlBackgroundColor)))

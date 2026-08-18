@@ -1,4 +1,5 @@
 import Foundation
+import GDCPluginManagerCore
 
 /// Fetches the plugin catalog from GitHub Pages, with a local cache so
 /// the app still shows something (marked stale) if offline.

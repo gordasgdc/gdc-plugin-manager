@@ -7,7 +7,7 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
-swift build -c release
+swift build -c release --product GDCPluginManager
 
 BUILD_OUT="/tmp/GDCPluginManager.app.build-$$"
 rm -rf "$BUILD_OUT"

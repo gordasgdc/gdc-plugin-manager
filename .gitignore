@@ -5,3 +5,8 @@ dist/
 .DS_Store
 # local-only test scaffolding (hardcoded absolute paths, not meant to ship)
 test-assets/
+
+# NEVER commit the real token - this repo is public. The file with the
+# real token stays local-only; PrivateCatalogAuth.swift.example is the
+# tracked template. See README for how to set this up on a new machine.
+Sources/GDCPluginManager/PrivateCatalogAuth.swift
