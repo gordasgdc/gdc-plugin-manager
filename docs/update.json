@@ -1,7 +1,7 @@
 {
-  "version": "1.1.0",
+  "version": "1.2.0",
   "release_date": "2026-08-18",
-  "changes": "Aplicatia e acum gratuita - doar produsele individuale se cumpara. Verificare automata de actualizari si pagina de Ajutor noua.",
+  "changes": "PowerGrade-uri instalate automat in Gallery Resolve; categorie noua OFX (plugin-uri DaVinci Resolve Studio); iconite si culori distincte per categorie; buton de tutorial video per produs; selector de limba RO/EN/ES; pagina web tradusa; Cursuri, Aplicatii si istoric Clienti in Furnizor.",
   "download_url": {
     "mac": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager.pkg"
   },
