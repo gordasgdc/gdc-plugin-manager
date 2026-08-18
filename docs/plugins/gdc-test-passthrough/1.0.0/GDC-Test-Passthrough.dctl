@@ -1,0 +1,10 @@
+// GDC Plugin Manager - fisier de test folosit pentru verificarea
+// end-to-end a instalarii (nu e un produs real de vanzare).
+// DCTL minimal, valid: doar trece pixelul neschimbat.
+
+DEFINE_UI_PARAMS(strength, Strength, DCTLUI_SLIDER_FLOAT, 0.5, 0.0, 1.0, 0.01)
+
+__DEVICE__ float3 transform(int p_Width, int p_Height, int p_X, int p_Y, float p_R, float p_G, float p_B)
+{
+    return make_float3(p_R, p_G, p_B);
+}
