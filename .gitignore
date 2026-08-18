@@ -9,7 +9,7 @@ test-assets/
 # NEVER commit the real token - this repo is public. The file with the
 # real token stays local-only; PrivateCatalogAuth.swift.example is the
 # tracked template. See README for how to set this up on a new machine.
-Sources/GDCPluginManager/PrivateCatalogAuth.swift
+Sources/GDCPluginManagerCore/PrivateCatalogAuth.swift
 
 # Same reasoning as above: the Supabase service_role key bypasses Row
 # Level Security entirely (full read access to devices/download_events,
