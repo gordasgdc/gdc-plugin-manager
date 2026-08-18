@@ -22,6 +22,7 @@ struct ContentView: View {
 
     @State private var selection: SidebarSection? = .all
     @State private var resolveWarningVisible = false
+    @State private var showOnboarding = false
 
     var body: some View {
         NavigationSplitView {
@@ -89,6 +90,12 @@ struct ContentView: View {
         .task {
             await catalog.refresh()
             await updateChecker.check()
+            if !UserDefaults.standard.bool(forKey: "gdcpm_onboarded") {
+                showOnboarding = true
+            }
+        }
+        .sheet(isPresented: $showOnboarding) {
+            OnboardingView(isPresented: $showOnboarding)
         }
     }
 
@@ -309,6 +316,7 @@ private struct PluginCard: View {
         Task {
             do {
                 let outcome = try await installs.install(item)
+                AnalyticsClient.logDownload(productID: item.id, productName: item.name)
                 switch outcome {
                 case .installedToGallery(let albumName):
                     statusMessage = String(format: L.t("powergrade.imported"), albumName)

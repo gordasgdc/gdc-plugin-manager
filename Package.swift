@@ -25,7 +25,8 @@ let package = Package(
         .executableTarget(
             name: "GDCPluginManagerFurnizor",
             dependencies: ["GDCPluginManagerCore"],
-            path: "Sources/GDCPluginManagerFurnizor"
+            path: "Sources/GDCPluginManagerFurnizor",
+            exclude: ["SupabaseAdminConfig.swift.example"]
         )
     ]
 )

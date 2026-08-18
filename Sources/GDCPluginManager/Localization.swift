@@ -94,6 +94,13 @@ enum L {
 
         "settings.language.title": [.ro: "Limbă", .en: "Language", .es: "Idioma"],
 
+        "onboarding.title": [.ro: "Bine ai venit!", .en: "Welcome!", .es: "¡Bienvenido!"],
+        "onboarding.body": [.ro: "Aplicația rămâne complet gratuită și fără cont — asta e doar opțional, ca să te pot contacta dacă apare ceva important legat de produsele tale. Poți sări peste.", .en: "The app stays completely free and account-free — this is just optional, so I can reach you if something important comes up about your products. Feel free to skip it.", .es: "La aplicación sigue siendo completamente gratuita y sin cuenta — esto es solo opcional, para poder contactarte si surge algo importante sobre tus productos. Puedes saltarlo."],
+        "onboarding.name": [.ro: "Nume", .en: "Name", .es: "Nombre"],
+        "onboarding.email": [.ro: "Email (opțional)", .en: "Email (optional)", .es: "Email (opcional)"],
+        "onboarding.skip": [.ro: "Sari peste", .en: "Skip", .es: "Omitir"],
+        "onboarding.send": [.ro: "Trimite", .en: "Send", .es: "Enviar"],
+
         "license.pane.title": [.ro: "Licență", .en: "License", .es: "Licencia"],
         "license.status.none": [.ro: "Niciun produs deblocat încă", .en: "No products unlocked yet", .es: "Ningún producto desbloqueado todavía"],
         "license.status.none.body": [.ro: "Aplicația e gratuită — răsfoiește catalogul și cumpără doar ce vrei să folosești.", .en: "The app is free — browse the catalog and buy only what you want to use.", .es: "La aplicación es gratuita — explora el catálogo y compra solo lo que quieras usar."],
