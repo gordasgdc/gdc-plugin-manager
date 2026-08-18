@@ -60,6 +60,7 @@ enum L {
 
         "courses.empty": [.ro: "Niciun curs disponibil momentan.", .en: "No courses available right now.", .es: "Ningún curso disponible por ahora."],
         "courses.contact": [.ro: "Contactează", .en: "Contact", .es: "Contactar"],
+        "courses.contact.message": [.ro: "Salut! Vreau să rezerv cursul %@ — %@ (%@).", .en: "Hi! I'd like to book the course %@ — %@ (%@).", .es: "¡Hola! Quiero reservar el curso %@ — %@ (%@)."],
 
         "apps.empty": [.ro: "Nicio aplicație listată momentan.", .en: "No apps listed right now.", .es: "Ninguna aplicación listada por ahora."],
         "apps.open": [.ro: "Deschide", .en: "Open", .es: "Abrir"],
