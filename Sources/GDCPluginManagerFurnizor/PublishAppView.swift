@@ -11,6 +11,7 @@ struct PublishAppView: View {
     @State private var id = ""
     @State private var name = ""
     @State private var url = ""
+    @State private var youtubeURL = ""
 
     @State private var isBusy = false
     @State private var errorMessage: String?
@@ -29,6 +30,7 @@ struct PublishAppView: View {
                             .disabled(editingID != nil)
                         TextField("Nume aplicație", text: $name).textFieldStyle(.roundedBorder)
                         TextField("Link (https://…)", text: $url).textFieldStyle(.roundedBorder)
+                        TextField("Link tutorial YouTube (opțional, nelistat)", text: $youtubeURL).textFieldStyle(.roundedBorder)
                     }
                     .padding(8)
                 }
@@ -100,6 +102,7 @@ struct PublishAppView: View {
         id = app.id
         name = app.name
         url = app.url
+        youtubeURL = app.youtubeURL ?? ""
         successMessage = nil
         errorMessage = nil
     }
@@ -109,6 +112,7 @@ struct PublishAppView: View {
         id = ""
         name = ""
         url = ""
+        youtubeURL = ""
     }
 
     private func publish() async {
@@ -117,7 +121,9 @@ struct PublishAppView: View {
         isBusy = true
         defer { isBusy = false }
 
-        let app = AppLink(id: id.trimmingCharacters(in: .whitespaces), name: name, url: url)
+        let trimmedYouTube = youtubeURL.trimmingCharacters(in: .whitespaces)
+        let app = AppLink(id: id.trimmingCharacters(in: .whitespaces), name: name, url: url,
+                           youtubeURL: trimmedYouTube.isEmpty ? nil : trimmedYouTube)
 
         do {
             try GitOps.pull(at: RepoCheckoutPaths.publicCatalogRepo)
