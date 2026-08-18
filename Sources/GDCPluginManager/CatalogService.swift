@@ -39,20 +39,40 @@ final class CatalogService: ObservableObject {
             request.setValue("no-cache", forHTTPHeaderField: "Cache-Control")
             let (data, response) = try await URLSession.shared.data(for: request)
             guard let http = response as? HTTPURLResponse, (200...299).contains(http.statusCode) else {
-                throw URLError(.badServerResponse)
+                let code = (response as? HTTPURLResponse)?.statusCode ?? -1
+                throw CatalogFetchError.badStatus(code)
             }
-            let catalog = try JSONDecoder().decode(Catalog.self, from: data)
-            items = catalog.items
-            courses = catalog.courses
-            apps = catalog.apps
-            saveToCache(data: data)
+            do {
+                let catalog = try JSONDecoder().decode(Catalog.self, from: data)
+                items = catalog.items
+                courses = catalog.courses
+                apps = catalog.apps
+                saveToCache(data: data)
+            } catch {
+                throw CatalogFetchError.decodeFailed
+            }
         } catch {
             // Keep whatever was already loaded from cache — only surface
-            // the error if we have nothing at all to show.
-            if items.isEmpty {
+            // the error if we have nothing at all to show. Distinguish
+            // WHY it failed instead of always blaming "check your
+            // internet" — a decode failure (old app version, catalog
+            // grew a type it doesn't know) or a bad server response need
+            // a different fix than an actual network outage.
+            guard items.isEmpty else { return }
+            switch error {
+            case CatalogFetchError.decodeFailed:
+                loadError = L.t("catalog.error.parse")
+            case CatalogFetchError.badStatus(let code):
+                loadError = String(format: L.t("catalog.error.server"), code)
+            default:
                 loadError = L.t("catalog.error")
             }
         }
+    }
+
+    private enum CatalogFetchError: Error {
+        case badStatus(Int)
+        case decodeFailed
     }
 
     private func loadFromCache() {
