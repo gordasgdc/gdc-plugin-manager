@@ -1,25 +1,6 @@
 {
   "items" : [
-    {
-      "description" : "",
-      "files" : [
-        {
-          "path" : "ARRilogC3Rec709/1.0.0/ARRI_LogC3-to-Gamma24_Rec709_D65-Classic_33.cube",
-          "sha256" : "29212a71808ab22f2819b904b3730fa4231b5841d883e43ec17610096dc38879"
-        },
-        {
-          "path" : "ARRilogC3Rec709/1.0.0/ARRI_LogC3-to-Gamma24_Rec709_D65-v1_33.cube",
-          "sha256" : "241aff344709aa90b468f8658144888db38f29f9aa1b3c0d917cf327ca3b354e"
-        }
-      ],
-      "iconSymbol" : "wand.and.stars",
-      "id" : "ARRilogC3Rec709",
-      "isFree" : true,
-      "name" : "ARRi logC3 to Rec709",
-      "priceEUR" : 0,
-      "type" : "lut",
-      "version" : "1.0.0"
-    }
+
   ],
   "updatedAt" : "2026-08-18"
 }
