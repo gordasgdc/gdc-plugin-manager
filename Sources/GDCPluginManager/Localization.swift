@@ -72,7 +72,7 @@ enum L {
         "card.buy": [.ro: "Cumpără", .en: "Buy", .es: "Comprar"],
         "card.free": [.ro: "Gratuit", .en: "Free", .es: "Gratis"],
         "card.trial": [.ro: "Probă", .en: "Trial", .es: "Prueba"],
-        "card.tutorial": [.ro: "Tutorial video", .en: "Video tutorial", .es: "Tutorial en vídeo"],
+        "card.tutorial": [.ro: "Vezi tutorialul explicativ pentru acest produs", .en: "See the explainer tutorial for this product", .es: "Ver el tutorial explicativo de este producto"],
 
         "courses.empty": [.ro: "Niciun curs disponibil momentan.", .en: "No courses available right now.", .es: "Ningún curso disponible por ahora."],
         "courses.contact": [.ro: "Contactează", .en: "Contact", .es: "Contactar"],
