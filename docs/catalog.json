@@ -1,6 +1,10 @@
 {
   "apps" : [
-
+    {
+      "id" : "app-test",
+      "name" : "Test App",
+      "url" : "https://github.com/gordasgdc"
+    }
   ],
   "courses" : [
     {
