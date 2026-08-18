@@ -28,6 +28,7 @@ struct LicensePane: View {
             VStack(alignment: .leading, spacing: 20) {
                 Text(L.t("license.pane.title")).font(.title2).fontWeight(.semibold)
 
+                languageCard
                 statusCard
 
                 if !license.licensedProducts.isEmpty {
@@ -43,6 +44,24 @@ struct LicensePane: View {
             .padding(24)
             .frame(maxWidth: 520, alignment: .leading)
         }
+    }
+
+    private var languageCard: some View {
+        HStack {
+            Text(L.t("settings.language.title")).font(.headline)
+            Spacer()
+            Picker("", selection: Binding(get: { L.current }, set: { L.current = $0 })) {
+                ForEach(AppLanguage.allCases) { lang in
+                    Text(lang.displayName).tag(lang)
+                }
+            }
+            .labelsHidden()
+            .pickerStyle(.segmented)
+            .frame(width: 220)
+        }
+        .padding(16)
+        .background(RoundedRectangle(cornerRadius: 12).fill(Color(nsColor: .controlBackgroundColor)))
+        .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color(nsColor: .separatorColor), lineWidth: 1))
     }
 
     private var statusCard: some View {
