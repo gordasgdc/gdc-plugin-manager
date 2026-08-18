@@ -11,27 +11,6 @@
   ],
   "items" : [
     {
-      "description" : "",
-      "files" : [
-        {
-          "path" : "ACEStest/1.0.0/IDT & CC - Input Device Transform & Color Correction.drx",
-          "sha256" : "b3a2961cea5010c4b8debd5ad923a5aebb693600ab4b767f744891d6e8c2d1e4"
-        },
-        {
-          "path" : "ACEStest/1.0.0/IDT - Input Device Transform.drx",
-          "sha256" : "35c7f0e123947f0f751ed4ec8f5ffd5e485aef435eec8f29a5a6a7908fcab48b"
-        }
-      ],
-      "iconSymbol" : "wand.and.stars",
-      "id" : "ACEStest",
-      "isFree" : true,
-      "isTrial" : false,
-      "name" : "ACEStest",
-      "priceEUR" : 0,
-      "type" : "powerGrade",
-      "version" : "1.0.0"
-    },
-    {
       "description" : "GDC contine luturi de transformare din profilul camerei in Rec709 cu un inalt standard de mapare",
       "files" : [
         {
