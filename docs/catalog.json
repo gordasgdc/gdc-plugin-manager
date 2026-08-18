@@ -11,6 +11,11 @@
       "url" : "https://gordasgdc.github.io/datamover/"
     },
     {
+      "id" : "GDC Production Manager",
+      "name" : "GDC Production Manager",
+      "url" : "https://gordasgdc.github.io/gdc-production-manager/"
+    },
+    {
       "id" : "gdc-resolve-encoder",
       "name" : "GDC Resolve Encoder",
       "url" : "https://gordasgdc.github.io/gdc-resolve-encoder/"
