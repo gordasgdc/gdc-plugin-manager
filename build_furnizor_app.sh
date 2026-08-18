@@ -29,7 +29,16 @@ if [ -d "$INSTALLED" ]; then
 fi
 LSREGISTER="/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister"
 "$LSREGISTER" -u "$INSTALLED" 2>/dev/null || true
-rm -rf "$INSTALLED"
-mv "$BUILD_OUT" "$INSTALLED"
+# sudo on purpose - see build_app.sh for why: a root-owned leftover
+# (e.g. from a previous .pkg install) would otherwise fail with
+# "Permission denied" instead of just asking for the admin password.
+if [ -e "$INSTALLED" ] && [ ! -O "$INSTALLED" ]; then
+    sudo rm -rf "$INSTALLED"
+    sudo mv "$BUILD_OUT" "$INSTALLED"
+    sudo chown -R "$(id -u):$(id -g)" "$INSTALLED"
+else
+    rm -rf "$INSTALLED"
+    mv "$BUILD_OUT" "$INSTALLED"
+fi
 "$LSREGISTER" -f "$INSTALLED" 2>/dev/null || true
 echo "Installed to $INSTALLED"

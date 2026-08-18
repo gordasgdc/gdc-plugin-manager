@@ -32,7 +32,19 @@ if [ -d "$INSTALLED" ]; then
 fi
 LSREGISTER="/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister"
 "$LSREGISTER" -u "$INSTALLED" 2>/dev/null || true
-rm -rf "$INSTALLED"
-mv "$BUILD_OUT" "$INSTALLED"
+# sudo on purpose: a previous .pkg-based install (or Installer.app) can
+# leave /Applications/GDCPluginManager.app root-owned, which makes a
+# plain `rm`/`mv` fail with "Permission denied" - asking for the admin
+# password up front here means the script always works, prompting only
+# when actually needed (sudo -n checks first, no prompt if already owned
+# by the current user).
+if [ -e "$INSTALLED" ] && [ ! -O "$INSTALLED" ]; then
+    sudo rm -rf "$INSTALLED"
+    sudo mv "$BUILD_OUT" "$INSTALLED"
+    sudo chown -R "$(id -u):$(id -g)" "$INSTALLED"
+else
+    rm -rf "$INSTALLED"
+    mv "$BUILD_OUT" "$INSTALLED"
+fi
 "$LSREGISTER" -f "$INSTALLED" 2>/dev/null || true
 echo "Installed to $INSTALLED"
