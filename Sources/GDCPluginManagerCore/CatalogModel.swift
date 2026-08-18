@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 
 public enum PluginType: String, Codable, CaseIterable, Identifiable {
     case dctl
@@ -44,6 +45,22 @@ public enum PluginType: String, Codable, CaseIterable, Identifiable {
         case .fuse: return "puzzlepiece.extension"
         case .powerGrade: return "paintpalette"
         case .ofx: return "camera.filters"
+        }
+    }
+
+    /// One distinct, well-separated color per category — used to tint a
+    /// product's icon and its type badge, so categories read apart at a
+    /// glance in a mixed grid. Deliberately not reused as a semantic
+    /// color anywhere else in the client UI (badge.free is green,
+    /// badge.trial is blue — different meaning, different spot on the
+    /// card, kept distinguishable by label text regardless).
+    public var tintColor: Color {
+        switch self {
+        case .dctl: return .yellow
+        case .lut: return .green
+        case .fuse: return .pink
+        case .powerGrade: return .purple
+        case .ofx: return .cyan
         }
     }
 
