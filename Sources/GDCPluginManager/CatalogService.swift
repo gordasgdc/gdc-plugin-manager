@@ -10,6 +10,8 @@ final class CatalogService: ObservableObject {
     static let catalogURL = URL(string: "https://gordasgdc.github.io/gdc-plugin-manager/catalog.json")!
 
     @Published private(set) var items: [PluginItem] = []
+    @Published private(set) var courses: [Course] = []
+    @Published private(set) var apps: [AppLink] = []
     @Published private(set) var isLoading = false
     @Published private(set) var loadError: String?
 
@@ -41,6 +43,8 @@ final class CatalogService: ObservableObject {
             }
             let catalog = try JSONDecoder().decode(Catalog.self, from: data)
             items = catalog.items
+            courses = catalog.courses
+            apps = catalog.apps
             saveToCache(data: data)
         } catch {
             // Keep whatever was already loaded from cache — only surface
@@ -55,6 +59,8 @@ final class CatalogService: ObservableObject {
         guard let data = try? Data(contentsOf: cacheFileURL),
               let catalog = try? JSONDecoder().decode(Catalog.self, from: data) else { return }
         items = catalog.items
+        courses = catalog.courses
+        apps = catalog.apps
     }
 
     private func saveToCache(data: Data) {

@@ -3,8 +3,25 @@ import AppKit
 import CryptoKit
 import GDCPluginManagerCore
 
+/// Whether a product needs a purchased license, is genuinely free, or is
+/// a watermarked trial of a paid sibling (published as its own separate
+/// catalog entry — the watermark itself lives inside the file, prepared
+/// by hand before publishing; the app only needs to know which badge to
+/// show and, either way, that no license is required to install it).
+enum AccessMode: String, CaseIterable, Identifiable {
+    case paid, free, trial
+    var id: String { rawValue }
+    var label: String {
+        switch self {
+        case .paid: return "Plătit"
+        case .free: return "Gratuit"
+        case .trial: return "Probă (watermark)"
+        }
+    }
+}
+
 struct PublishView: View {
-    @State private var pickedFileURL: URL?
+    @State private var pickedURL: URL?
     @State private var isUpdate = false
     @State private var existingItems: [PluginItem] = []
 
@@ -14,13 +31,14 @@ struct PublishView: View {
     @State private var type: PluginType = .dctl
     @State private var version = "1.0.0"
     @State private var priceText = "0"
-    @State private var isFree = false
+    @State private var accessMode: AccessMode = .paid
     @State private var iconSymbol = "wand.and.stars"
 
     @State private var isBusy = false
     @State private var statusLines: [String] = []
     @State private var errorMessage: String?
     @State private var successMessage: String?
+    @State private var showDeleteConfirm = false
 
     var body: some View {
         ScrollView {
@@ -43,6 +61,22 @@ struct PublishView: View {
                         }
                     }
                     .onChange(of: id) { fillFromExisting() }
+
+                    if !id.trimmingCharacters(in: .whitespaces).isEmpty {
+                        Button("Șterge acest produs definitiv", role: .destructive) {
+                            showDeleteConfirm = true
+                        }
+                        .disabled(isBusy)
+                        .confirmationDialog(
+                            "Ștergi definitiv „\(name)”?",
+                            isPresented: $showDeleteConfirm, titleVisibility: .visible
+                        ) {
+                            Button("Șterge definitiv", role: .destructive) { Task { await deleteProduct() } }
+                            Button("Anulează", role: .cancel) {}
+                        } message: {
+                            Text("Fișierele sunt eliminate din repo-ul privat și produsul dispare din catalog la clienți. Nu poate fi anulat.")
+                        }
+                    }
                 }
 
                 GroupBox {
@@ -65,10 +99,22 @@ struct PublishView: View {
 
                         TextField("Versiune", text: $version).textFieldStyle(.roundedBorder)
 
-                        Toggle("Gratuit — clientul instalează direct, fără cod de activare", isOn: $isFree)
+                        Picker("Acces", selection: $accessMode) {
+                            ForEach(AccessMode.allCases) { mode in
+                                Text(mode.label).tag(mode)
+                            }
+                        }
+                        .pickerStyle(.segmented)
 
-                        if !isFree {
+                        switch accessMode {
+                        case .paid:
                             TextField("Preț (EUR, donație)", text: $priceText).textFieldStyle(.roundedBorder)
+                        case .free:
+                            Text("Clientul instalează direct, fără cod de activare.")
+                                .font(.caption).foregroundStyle(.secondary)
+                        case .trial:
+                            Text("Clientul instalează direct, fără cod — apare pe card cu eticheta „Probă”. Include watermark-ul direct în fișier înainte de publicare; publică-l separat de versiunea plătită (ex. „Nume Produs (Probă)”).")
+                                .font(.caption).foregroundStyle(.secondary)
                         }
                         TextField("Icon (SF Symbol, opțional)", text: $iconSymbol).textFieldStyle(.roundedBorder)
                     }
@@ -103,28 +149,73 @@ struct PublishView: View {
 
     private var fileRow: some View {
         HStack {
-            Text(pickedFileURL?.lastPathComponent ?? "Niciun fișier ales")
-                .foregroundStyle(pickedFileURL == nil ? .secondary : .primary)
+            Text(fileRowLabel)
+                .foregroundStyle(pickedURL == nil ? .secondary : .primary)
             Spacer()
-            Button("Alege fișier…") { pickFile() }
+            Button("Alege fișier sau folder…") { pickFileOrFolder() }
         }
+    }
+
+    private var fileRowLabel: String {
+        guard let url = pickedURL else { return "Niciun fișier sau folder ales" }
+        if isDirectory(url) {
+            let count = (try? collectFiles(under: url).count) ?? 0
+            return "Folder „\(url.lastPathComponent)” — \(count) fișier(e)"
+        }
+        return url.lastPathComponent
     }
 
     private var isFormValid: Bool {
         !id.trimmingCharacters(in: .whitespaces).isEmpty
             && !name.trimmingCharacters(in: .whitespaces).isEmpty
             && !version.trimmingCharacters(in: .whitespaces).isEmpty
-            && (isFree || Double(priceText) != nil)
-            && pickedFileURL != nil
+            && (accessMode != .paid || Double(priceText) != nil)
+            && pickedURL != nil
     }
 
-    private func pickFile() {
+    /// Lets the vendor pick either ONE file (a single DCTL/LUT) or a
+    /// whole FOLDER (a pack — e.g. a folder of several LUTs made
+    /// together) — both publish as one product, a folder just becomes a
+    /// multi-file product that installs into its own subfolder in
+    /// Resolve, keeping the pack grouped instead of scattering loose
+    /// files at the root.
+    private func pickFileOrFolder() {
         let panel = NSOpenPanel()
-        panel.canChooseDirectories = false
+        panel.canChooseFiles = true
+        panel.canChooseDirectories = true
         panel.allowsMultipleSelection = false
         if panel.runModal() == .OK {
-            pickedFileURL = panel.url
+            pickedURL = panel.url
         }
+    }
+
+    private func isDirectory(_ url: URL) -> Bool {
+        var isDir: ObjCBool = false
+        FileManager.default.fileExists(atPath: url.path, isDirectory: &isDir)
+        return isDir.boolValue
+    }
+
+    /// Returns every file under `root` with its path relative to `root`
+    /// (e.g. "WeddingStyle1.cube", or "warm/Sunset.cube" for a nested
+    /// subfolder) — or just `[(root, root.lastPathComponent)]` if `root`
+    /// is itself a single file, so callers don't need to branch.
+    private func collectFiles(under root: URL) throws -> [(fileURL: URL, relativePath: String)] {
+        guard isDirectory(root) else {
+            return [(root, root.lastPathComponent)]
+        }
+        guard let enumerator = FileManager.default.enumerator(
+            at: root, includingPropertiesForKeys: [.isDirectoryKey], options: [.skipsHiddenFiles]
+        ) else { return [] }
+
+        var results: [(URL, String)] = []
+        let rootPathLength = root.path.count
+        for case let fileURL as URL in enumerator {
+            let values = try fileURL.resourceValues(forKeys: [.isDirectoryKey])
+            if values.isDirectory == true { continue }
+            let relativePath = String(fileURL.path.dropFirst(rootPathLength + 1))
+            results.append((fileURL, relativePath))
+        }
+        return results.sorted { $0.1 < $1.1 }
     }
 
     private func loadExistingIfNeeded() {
@@ -137,10 +228,10 @@ struct PublishView: View {
         name = item.name
         description = item.description
         type = item.type
-        isFree = item.isFree
+        accessMode = item.isTrial ? .trial : (item.isFree ? .free : .paid)
         priceText = String(item.priceEUR)
         iconSymbol = item.iconSymbol ?? ""
-        // version left for the user to bump; file must be re-picked either way.
+        // version left for the user to bump; file(s) must be re-picked either way.
     }
 
     private func publish() async {
@@ -150,28 +241,39 @@ struct PublishView: View {
         isBusy = true
         defer { isBusy = false }
 
-        guard let fileURL = pickedFileURL else { return }
-        let price = isFree ? 0 : (Double(priceText) ?? 0)
+        guard let pickedURL else { return }
+        let isFreeFlag = accessMode != .paid
+        let isTrialFlag = accessMode == .trial
+        let price = isFreeFlag ? 0 : (Double(priceText) ?? 0)
         let trimmedID = id.trimmingCharacters(in: .whitespaces)
 
         do {
-            log("Calculez sha256…")
-            let data = try Data(contentsOf: fileURL)
-            let sha = SHA256.hash(data: data).compactMap { String(format: "%02x", $0) }.joined()
+            let picked = try collectFiles(under: pickedURL)
+            guard !picked.isEmpty else {
+                errorMessage = "Folderul ales nu conține niciun fișier."
+                return
+            }
 
             log("Actualizez repo-ul privat (pull)…")
             try GitOps.pull(at: RepoCheckoutPaths.privateFilesRepo)
 
-            let relativePath = "\(trimmedID)/\(version)/\(fileURL.lastPathComponent)"
-            let destURL = RepoCheckoutPaths.privateFilesRepo.appendingPathComponent(relativePath)
-            try FileManager.default.createDirectory(at: destURL.deletingLastPathComponent(), withIntermediateDirectories: true)
-            if FileManager.default.fileExists(atPath: destURL.path) {
-                try FileManager.default.removeItem(at: destURL)
-            }
-            try FileManager.default.copyItem(at: fileURL, to: destURL)
-            log("Fișier copiat în \(relativePath)")
+            var pluginFiles: [PluginFile] = []
+            for (localURL, relativePath) in picked {
+                let data = try Data(contentsOf: localURL)
+                let sha = SHA256.hash(data: data).compactMap { String(format: "%02x", $0) }.joined()
 
-            log("Trimit fișierul (commit + push, repo privat)…")
+                let repoRelativePath = "\(trimmedID)/\(version)/\(relativePath)"
+                let destURL = RepoCheckoutPaths.privateFilesRepo.appendingPathComponent(repoRelativePath)
+                try FileManager.default.createDirectory(at: destURL.deletingLastPathComponent(), withIntermediateDirectories: true)
+                if FileManager.default.fileExists(atPath: destURL.path) {
+                    try FileManager.default.removeItem(at: destURL)
+                }
+                try FileManager.default.copyItem(at: localURL, to: destURL)
+                pluginFiles.append(PluginFile(path: repoRelativePath, sha256: sha))
+                log("Fișier copiat în \(repoRelativePath)")
+            }
+
+            log("Trimit fișierele (commit + push, repo privat)…")
             try GitOps.commitAndPush(at: RepoCheckoutPaths.privateFilesRepo, message: "\(trimmedID) \(version)")
 
             log("Actualizez catalogul (pull, repo public)…")
@@ -179,8 +281,9 @@ struct PublishView: View {
 
             let item = PluginItem(
                 id: trimmedID, name: name, type: type, description: description,
-                version: version, filePath: relativePath, sha256: sha,
-                iconSymbol: iconSymbol.isEmpty ? nil : iconSymbol, priceEUR: price, isFree: isFree
+                version: version, files: pluginFiles,
+                iconSymbol: iconSymbol.isEmpty ? nil : iconSymbol, priceEUR: price,
+                isFree: isFreeFlag, isTrial: isTrialFlag
             )
             try CatalogEditor.upsert(item)
             log("Catalog actualizat local")
@@ -188,12 +291,69 @@ struct PublishView: View {
             log("Public catalogul (commit + push, repo public)…")
             try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Catalog: \(name) \(version)")
 
-            successMessage = "„\(name)” e publicat — apare la clienți la următorul refresh de catalog."
+            let fileWord = pluginFiles.count > 1 ? "\(pluginFiles.count) fișiere" : "1 fișier"
+            successMessage = "„\(name)” e publicat (\(fileWord)) — apare la clienți la următorul refresh de catalog."
             loadExistingIfNeeded()
         } catch {
             errorMessage = error.localizedDescription
             log("EROARE: \(error.localizedDescription)")
         }
+    }
+
+    /// Removes a product entirely — for something published by mistake.
+    /// Deletes its whole folder (every version) from the private files
+    /// repo AND its entry from the public catalog, so it's gone both as
+    /// a downloadable file and as a storefront listing.
+    private func deleteProduct() async {
+        errorMessage = nil
+        successMessage = nil
+        statusLines = []
+        isBusy = true
+        defer { isBusy = false }
+
+        guard let item = existingItems.first(where: { $0.id == id }) else { return }
+        let deletedName = item.name
+        let deletedID = item.id
+
+        do {
+            log("Actualizez repo-ul privat (pull)…")
+            try GitOps.pull(at: RepoCheckoutPaths.privateFilesRepo)
+
+            let productFolder = RepoCheckoutPaths.privateFilesRepo.appendingPathComponent(deletedID)
+            if FileManager.default.fileExists(atPath: productFolder.path) {
+                try FileManager.default.removeItem(at: productFolder)
+                log("Șters folderul \(deletedID)/ (toate versiunile)")
+            }
+            log("Trimit ștergerea (commit + push, repo privat)…")
+            try GitOps.commitAndPush(at: RepoCheckoutPaths.privateFilesRepo, message: "Sterg \(deletedID)")
+
+            log("Actualizez catalogul (pull, repo public)…")
+            try GitOps.pull(at: RepoCheckoutPaths.publicCatalogRepo)
+            try CatalogEditor.remove(id: deletedID)
+            log("Eliminat din catalog local")
+
+            log("Public catalogul (commit + push, repo public)…")
+            try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Sterg din catalog: \(deletedName)")
+
+            successMessage = "„\(deletedName)” a fost șters complet — dispare la următorul refresh de catalog."
+            clearForm()
+            loadExistingIfNeeded()
+        } catch {
+            errorMessage = error.localizedDescription
+            log("EROARE: \(error.localizedDescription)")
+        }
+    }
+
+    private func clearForm() {
+        id = ""
+        name = ""
+        description = ""
+        type = .dctl
+        version = "1.0.0"
+        priceText = "0"
+        accessMode = .paid
+        iconSymbol = "wand.and.stars"
+        pickedURL = nil
     }
 
     private func log(_ line: String) {
