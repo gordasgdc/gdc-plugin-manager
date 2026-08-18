@@ -1,0 +1,7 @@
+.build/
+.swiftpm/
+dist/
+*.build-*/
+.DS_Store
+# local-only test scaffolding (hardcoded absolute paths, not meant to ship)
+test-assets/

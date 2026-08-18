@@ -1,0 +1,75 @@
+ACORD DE LICENȚĂ PENTRU UTILIZATORUL FINAL (EULA)
+GDC Plugin Manager
+
+Prin instalarea sau utilizarea aplicației GDC Plugin Manager ("Aplicația"),
+sunteți de acord cu termenii de mai jos.
+
+1. CE FACE APLICAȚIA
+
+GDC Plugin Manager este un instrument pentru macOS care instalează, actualizează
+și elimină, cu un singur click, produse DCTL, LUT și Fuse create de Cristinel
+Gordaș (GDC) pentru DaVinci Resolve. Aplicația copiază fișierele acestor
+produse direct în folderele de plugin-uri pe care DaVinci Resolve le citește
+la pornire:
+
+  - DCTL și LUT: ~/Library/Application Support/Blackmagic Design/DaVinci Resolve/LUT
+  - Fuse (Fusion): ~/Library/Application Support/Blackmagic Design/DaVinci Resolve/Fusion/Fuses
+
+Pentru unele dintre aceste locații poate fi necesară parola de administrator a
+calculatorului dumneavoastră; Aplicația o cere doar atunci când scrierea directă
+eșuează din lipsă de permisiuni, folosind fereastra standard de autorizare a
+macOS — nu stochează și nu transmite niciodată această parolă.
+
+2. LICENȚA ȘI PERIOADA DE PROBĂ
+
+Vi se acordă o licență neexclusivă, netransferabilă, de utilizare a Aplicației
+pe propriile calculatoare, pentru uz personal sau profesional.
+
+Aplicația oferă o perioadă de probă gratuită de 7 (șapte) zile de la prima
+lansare, timp în care catalogul de produse poate fi instalat, actualizat și
+eliminat fără restricții. După expirarea probei, instalarea și actualizarea
+de produse noi se blochează până la activarea unei licențe; produsele deja
+instalate în DaVinci Resolve rămân neatinse și continuă să funcționeze normal.
+
+3. ACHIZIȚIONAREA LICENȚEI
+
+Licența se achiziționează o singură dată ("acces pe viață") și deblochează
+instalarea întregului catalog curent și viitor de produse GDC pentru DaVinci
+Resolve, pe un singur calculator (identificat printr-un ID unic, nelegat de
+date personale). Achiziția se face prin contactarea directă a autorului, din
+pagina „Licență" a Aplicației. Codul de activare este legat de calculatorul
+pe care a fost generat și nu poate fi transferat pe alt calculator fără a
+contacta autorul pentru o nouă activare.
+
+4. FĂRĂ GARANȚIE
+
+Aplicația și produsele instalate prin ea sunt oferite "ca atare", fără nicio
+garanție explicită sau implicită. Autorul nu răspunde pentru eventuale
+probleme apărute în DaVinci Resolve sau în proiectele dumneavoastră ca urmare
+a instalării, actualizării sau eliminării unui produs prin Aplicație. Vă
+recomandăm să închideți DaVinci Resolve înainte de orice operație de
+instalare/actualizare/eliminare — Aplicația vă avertizează automat dacă
+Resolve este deschis, deoarece plugin-urile sunt încărcate doar la pornirea
+programului.
+
+5. DATE ȘI CONFIDENȚIALITATE
+
+Aplicația se conectează la internet doar pentru: (a) a descărca lista de
+produse disponibile (catalogul) și fișierele produselor selectate de
+dumneavoastră pentru instalare, și (b) a verifica, opțional, dacă există o
+versiune nouă a Aplicației. Nu sunt colectate, stocate sau transmise date
+personale, fișiere din proiectele dumneavoastră DaVinci Resolve sau conținut
+media. Codul de activare este verificat local, pe calculatorul dumneavoastră.
+
+6. RAMBURSĂRI
+
+Pentru nemulțumiri legate de o achiziție, contactați direct autorul; cererile
+sunt analizate individual, de la caz la caz.
+
+7. MODIFICĂRI ALE ACESTOR TERMENI
+
+Acești termeni pot fi actualizați în versiuni viitoare ale Aplicației.
+Continuarea utilizării Aplicației după o actualizare reprezintă acceptarea
+noilor termeni.
+
+Contact: Cristinel Gordaș — dumitrugdc@gmail.com

@@ -1,0 +1,10 @@
+{
+  "version": "1.0.0",
+  "release_date": "2026-08-18",
+  "changes": "Prima versiune: catalog, instalare/actualizare/eliminare DCTL, LUT si Fuse, licenta cu proba de 7 zile.",
+  "download_url": {
+    "mac": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager.pkg"
+  },
+  "mandatory": false,
+  "min_version": "1.0.0"
+}
