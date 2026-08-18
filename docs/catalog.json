@@ -21,6 +21,11 @@
       "url" : "https://gordasgdc.github.io/datamover/"
     },
     {
+      "id" : "GDC Metadata View Premium",
+      "name" : "GDC Metadata View Premium",
+      "url" : "https://gordasgdc.github.io/GDC_Metadata_View_Premium/"
+    },
+    {
       "id" : "GDC Production Manager",
       "name" : "GDC Production Manager",
       "url" : "https://gordasgdc.github.io/gdc-production-manager/"
