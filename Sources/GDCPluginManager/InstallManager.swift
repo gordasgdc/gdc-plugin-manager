@@ -2,6 +2,22 @@ import Foundation
 import CryptoKit
 import GDCPluginManagerCore
 
+/// What actually happened after `install(_:)`/`remove(_:)` — for
+/// everything except PowerGrade this is always the plain case (the
+/// existing file-copy flow can't do anything else); PowerGrade can also
+/// finish with files verified and on disk but needing one manual step,
+/// because Resolve's scripting bridge wasn't available (see
+/// PowerGradeImporter.swift).
+enum InstallOutcome {
+    case installed
+    case installedNeedsManualStep(folder: URL)
+}
+
+enum RemoveOutcome: Equatable {
+    case removed
+    case removedNeedsManualGalleryCleanup
+}
+
 enum InstallError: Error, LocalizedError {
     case downloadFailed
     case authenticationFailed
@@ -63,7 +79,8 @@ final class InstallManager: ObservableObject {
         return item.isPack ? base.appendingPathComponent(item.id) : base
     }
 
-    func install(_ item: PluginItem) async throws {
+    @discardableResult
+    func install(_ item: PluginItem) async throws -> InstallOutcome {
         let destinationDir = destinationDirectory(for: item)
         var tempURLs: [URL] = []
         defer { for url in tempURLs { try? FileManager.default.removeItem(at: url) } }
@@ -81,16 +98,35 @@ final class InstallManager: ObservableObject {
             tempURLs.append(tempURL)
         }
 
+        var writtenURLs: [URL] = []
         for (file, tempURL) in zip(item.files, tempURLs) {
             let destinationURL = destinationDir.appendingPathComponent(file.filename)
             try writeFile(from: tempURL, to: destinationURL, creatingDirectory: destinationDir)
+            writtenURLs.append(destinationURL)
         }
 
         installedVersions[item.id] = item.version
         saveState()
+
+        guard item.type == .powerGrade else { return .installed }
+        switch PowerGradeImporter.importIntoGallery(id: item.id, files: writtenURLs, stagingFolder: destinationDir) {
+        case .importedToGallery:
+            return .installed
+        case .stagedOnly(let folder):
+            return .installedNeedsManualStep(folder: folder)
+        }
     }
 
-    func remove(_ item: PluginItem) throws {
+    @discardableResult
+    func remove(_ item: PluginItem) throws -> RemoveOutcome {
+        var galleryOutcome: RemoveOutcome = .removed
+        if item.type == .powerGrade {
+            switch PowerGradeImporter.removeFromGallery(id: item.id) {
+            case .removedFromGallery: galleryOutcome = .removed
+            case .removedFilesOnly: galleryOutcome = .removedNeedsManualGalleryCleanup
+            }
+        }
+
         if item.isPack {
             try deleteDirectory(at: destinationDirectory(for: item))
         } else if let file = item.files.first {
@@ -98,6 +134,7 @@ final class InstallManager: ObservableObject {
         }
         installedVersions.removeValue(forKey: item.id)
         saveState()
+        return galleryOutcome
     }
 
     // MARK: - Authenticated fetch from the private files repo

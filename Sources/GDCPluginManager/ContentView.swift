@@ -90,6 +90,7 @@ struct ContentView: View {
         case .dctl: return "wand.and.stars"
         case .lut: return "eyedropper.halffull"
         case .fuse: return "puzzlepiece.extension"
+        case .powerGrade: return "paintpalette"
         }
     }
 }
@@ -154,6 +155,7 @@ private struct PluginCard: View {
 
     @State private var isBusy = false
     @State private var errorMessage: String?
+    @State private var statusMessage: String?
     @State private var showResolveWarning = false
 
     var body: some View {
@@ -194,17 +196,28 @@ private struct PluginCard: View {
             if let errorMessage {
                 Text(errorMessage).font(.caption2).foregroundStyle(.red)
             }
+            if let statusMessage {
+                Text(statusMessage).font(.caption2).foregroundStyle(.blue)
+            }
 
             actionButton
         }
         .padding(12)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(RoundedRectangle(cornerRadius: 10).fill(.background.secondary))
-        .alert(L.t("resolve.running.title"), isPresented: $showResolveWarning) {
+        .alert(resolveWarningTitle, isPresented: $showResolveWarning) {
             Button(L.t("resolve.running.ok")) {}
         } message: {
-            Text(L.t("resolve.running.body"))
+            Text(resolveWarningBody)
         }
+    }
+
+    private var resolveWarningTitle: String {
+        item.type == .powerGrade ? L.t("resolve.notrunning.title") : L.t("resolve.running.title")
+    }
+
+    private var resolveWarningBody: String {
+        item.type == .powerGrade ? L.t("resolve.notrunning.body") : L.t("resolve.running.body")
     }
 
     @ViewBuilder
@@ -237,19 +250,34 @@ private struct PluginCard: View {
     }
 
     private func runGuarded(_ action: @escaping () -> Void) {
-        if ResolveProcessCheck.isRunning {
+        // Every other type must be closed (it only reads its plugin
+        // folder at launch); PowerGrade is the opposite — it needs a
+        // running, scriptable Resolve to import into (see
+        // PowerGradeImporter.swift). Without Resolve running, the action
+        // still proceeds for PowerGrade — it just falls back to staging
+        // the files with a manual-import message instead of failing.
+        if item.type != .powerGrade && ResolveProcessCheck.isRunning {
             showResolveWarning = true
             return
+        }
+        if item.type == .powerGrade && !ResolveProcessCheck.isRunning {
+            showResolveWarning = true
         }
         action()
     }
 
     private func install() {
         errorMessage = nil
+        statusMessage = nil
         isBusy = true
         Task {
             do {
-                try await installs.install(item)
+                let outcome = try await installs.install(item)
+                if case .installedNeedsManualStep(let folder) = outcome {
+                    statusMessage = String(format: L.t("powergrade.manualstep"), folder.path)
+                } else if item.type == .powerGrade {
+                    statusMessage = L.t("powergrade.imported")
+                }
             } catch {
                 errorMessage = error.localizedDescription
             }
@@ -259,8 +287,12 @@ private struct PluginCard: View {
 
     private func remove() {
         errorMessage = nil
+        statusMessage = nil
         do {
-            try installs.remove(item)
+            let outcome = try installs.remove(item)
+            if item.type == .powerGrade, outcome == .removedNeedsManualGalleryCleanup {
+                statusMessage = L.t("powergrade.manualremove")
+            }
         } catch {
             errorMessage = error.localizedDescription
         }
