@@ -16,6 +16,9 @@ struct ContentView: View {
     @StateObject private var installs = InstallManager.shared
     @ObservedObject private var license = LicenseManager.shared
     @StateObject private var updateChecker = UpdateChecker.shared
+    // Observed here (the root view) so a language switch, made from
+    // LicensePane's picker, redraws the entire app — not just that pane.
+    @ObservedObject private var languageStore = LanguageStore.shared
 
     @State private var selection: SidebarSection? = .all
     @State private var resolveWarningVisible = false

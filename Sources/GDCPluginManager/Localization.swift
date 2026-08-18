@@ -12,18 +12,33 @@ enum AppLanguage: String, CaseIterable, Identifiable {
     }
 }
 
+/// Backs `L.current` with an `@Published` value so SwiftUI actually
+/// redraws when the language changes — a plain UserDefaults-backed
+/// computed property (the original implementation) persists correctly
+/// but gives SwiftUI nothing to observe, so no view would ever refresh
+/// after a language switch without this.
+final class LanguageStore: ObservableObject {
+    static let shared = LanguageStore()
+
+    @Published var current: AppLanguage {
+        didSet { UserDefaults.standard.set(current.rawValue, forKey: "gdcpm_lang") }
+    }
+
+    private init() {
+        if let raw = UserDefaults.standard.string(forKey: "gdcpm_lang"), let lang = AppLanguage(rawValue: raw) {
+            current = lang
+        } else {
+            current = .ro
+        }
+    }
+}
+
 /// Tiny in-app translation table, independent of system locale — same
 /// RO-default / EN / ES pattern as CursorPro GDC / GDC License Manager.
 enum L {
     static var current: AppLanguage {
-        get {
-            if let raw = UserDefaults.standard.string(forKey: "gdcpm_lang"),
-               let lang = AppLanguage(rawValue: raw) {
-                return lang
-            }
-            return .ro
-        }
-        set { UserDefaults.standard.set(newValue.rawValue, forKey: "gdcpm_lang") }
+        get { LanguageStore.shared.current }
+        set { LanguageStore.shared.current = newValue }
     }
 
     static func t(_ key: String) -> String {
@@ -74,6 +89,8 @@ enum L {
         "powergrade.imported": [.ro: "Adăugat automat în Gallery, albumul „%@”.", .en: "Added automatically to the Gallery, in the \"%@\" album.", .es: "Añadido automáticamente a la Gallery, en el álbum \"%@\"."],
         "powergrade.manualstep": [.ro: "Fișierele sunt verificate în %@ — deschide Gallery-ul din Resolve și importă-le manual (album nou, PowerGrade → Import).", .en: "The files are verified in %@ — open Resolve's Gallery and import them manually (new PowerGrade album → Import).", .es: "Los archivos están verificados en %@ — abre la Gallery de Resolve e impórtalos manualmente (álbum PowerGrade nuevo → Importar)."],
         "powergrade.manualremove": [.ro: "Fișierele locale au fost șterse — elimină-le și din Gallery manual (Resolve închis sau scripting indisponibil).", .en: "The local files were removed — remove them from the Gallery manually too (Resolve was closed or scripting wasn't available).", .es: "Los archivos locales se eliminaron — elimínalos también de la Gallery manualmente (Resolve estaba cerrado o el scripting no estaba disponible)."],
+
+        "settings.language.title": [.ro: "Limbă", .en: "Language", .es: "Idioma"],
 
         "license.pane.title": [.ro: "Licență", .en: "License", .es: "Licencia"],
         "license.status.none": [.ro: "Niciun produs deblocat încă", .en: "No products unlocked yet", .es: "Ningún producto desbloqueado todavía"],
