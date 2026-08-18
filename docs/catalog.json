@@ -41,68 +41,6 @@
   ],
   "items" : [
     {
-      "description" : "Flux de lucru bazic. transformare din profilul camerei in DWG si din DWG in  Rec709",
-      "files" : [
-        {
-          "path" : "CST_bazic/1.0.0/CST - ARRI LOG C3 TO DWG_I.Still.drx",
-          "sha256" : "543450110fab44e73dc90b16f6d84d2bf90824fbb8e735ae5945a846f8bb9245"
-        },
-        {
-          "path" : "CST_bazic/1.0.0/CST - BMD FILM GEN 5 TO DWG_I.Still.drx",
-          "sha256" : "40f59b2e56652bdc2977e3860f57d9e5456c91e8cf1af118dd8f4b48483c0bf9"
-        },
-        {
-          "path" : "CST_bazic/1.0.0/CST - CANON C-LOG 2 TO DWG_I.Still.drx",
-          "sha256" : "e02592d2f1fabe3197e88f7d642aea46483a58673001ba76952f2f466f749407"
-        },
-        {
-          "path" : "CST_bazic/1.0.0/CST - DJI D-LOG TO DWG_I.Still.drx",
-          "sha256" : "a62f81e67e307c3367d6f758f125b6f3f0a7b2202c309aee7e698132689699f7"
-        },
-        {
-          "path" : "CST_bazic/1.0.0/CST - DWG TO REC709 2-2_I.Still.drx",
-          "sha256" : "9037d4d23a7e115b2fd04d7a554bdae39b0ef8a65aa38fe6978881bded609ead"
-        },
-        {
-          "path" : "CST_bazic/1.0.0/CST - DWG TO REC709 2-4_I.Still.drx",
-          "sha256" : "e4fd4e5d112608bf393d32ac033dfe9d06f8847390baeab8edb1363b78d23dae"
-        },
-        {
-          "path" : "CST_bazic/1.0.0/CST - FUJIFILM F-LOG TO DWG_I.Still.drx",
-          "sha256" : "e26d134480270d38be80c4626780ea5dbc5ce8194ab33cc8fd7b5e1f14926a40"
-        },
-        {
-          "path" : "CST_bazic/1.0.0/CST - NIKON N-LOG TO DWG_I.Still.drx",
-          "sha256" : "6d18efa8a95236f587651f70ae1b1041824d39d7b7bad6612d0d44e96c526239"
-        },
-        {
-          "path" : "CST_bazic/1.0.0/CST - PANASONIC V-LOG TO DWG_I.Still.drx",
-          "sha256" : "a86abe05451a442a8c04ce8f7640e055a899d664228e3181c39f5dec18f5f06f"
-        },
-        {
-          "path" : "CST_bazic/1.0.0/CST - REC 709 TO DWG_I.Still.drx",
-          "sha256" : "a099d536da6cfe61d6003463eeedc3fd442ec29677de02ccf9857b57f598c84d"
-        },
-        {
-          "path" : "CST_bazic/1.0.0/CST - RED LOG3G10 TO DWG_I.Still.drx",
-          "sha256" : "b8973914a9b631be0284b79cbed85dc1f4e732237714ae1686e675b15644f094"
-        },
-        {
-          "path" : "CST_bazic/1.0.0/CST - SONY S-LOG3 TO DWG_I.Still.drx",
-          "sha256" : "fd22a98a7ba6abea2433bf0516f8b2445e70a6b5d51106c900f1124087008a54"
-        }
-      ],
-      "iconSymbol" : "wand.and.stars",
-      "id" : "CST_bazic",
-      "isFree" : true,
-      "isTrial" : false,
-      "name" : "CST_bazic",
-      "priceEUR" : 0,
-      "type" : "dctl",
-      "version" : "1.0.0",
-      "youtubeURL" : "https://www.youtube.com/@cristigordas"
-    },
-    {
       "description" : "GDC contine luturi de transformare din profilul camerei in Rec709 cu un inalt standard de mapare",
       "files" : [
         {
