@@ -168,22 +168,28 @@ private struct PluginCard: View {
                     .font(.system(size: 22))
                     .foregroundStyle(.tint)
                 Spacer()
-                if item.isFree && item.isTrial {
-                    Text(L.t("card.trial"))
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(.blue)
-                } else if item.isFree {
-                    Text(L.t("card.free"))
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(.green)
-                } else {
-                    VStack(alignment: .trailing, spacing: 0) {
-                        Text(item.priceDisplay)
+                // Stacked vertically (info button above the price/status
+                // badge, not on top of it) — an absolute corner overlay
+                // here used to land right on top of the badge.
+                VStack(alignment: .trailing, spacing: 6) {
+                    infoButton
+                    if item.isFree && item.isTrial {
+                        Text(L.t("card.trial"))
                             .font(.subheadline.weight(.semibold))
-                            .foregroundStyle(.secondary)
-                        Text(L.t("card.donation"))
-                            .font(.caption2)
-                            .foregroundStyle(.tertiary)
+                            .foregroundStyle(.blue)
+                    } else if item.isFree {
+                        Text(L.t("card.free"))
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(.green)
+                    } else {
+                        VStack(alignment: .trailing, spacing: 0) {
+                            Text(item.priceDisplay)
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundStyle(.secondary)
+                            Text(L.t("card.donation"))
+                                .font(.caption2)
+                                .foregroundStyle(.tertiary)
+                        }
                     }
                 }
             }
@@ -208,7 +214,6 @@ private struct PluginCard: View {
         .padding(12)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(RoundedRectangle(cornerRadius: 10).fill(.background.secondary))
-        .overlay(alignment: .topTrailing) { infoButton }
         .alert(resolveWarningTitle, isPresented: $showResolveWarning) {
             Button(L.t("resolve.running.ok")) {}
         } message: {
@@ -226,10 +231,8 @@ private struct PluginCard: View {
                 Image(systemName: "info.circle.fill")
                     .font(.system(size: 16))
                     .foregroundStyle(.secondary)
-                    .background(Circle().fill(.background).frame(width: 16, height: 16))
             }
             .buttonStyle(.plain)
-            .padding(8)
             .help(L.t("card.tutorial"))
         }
     }
