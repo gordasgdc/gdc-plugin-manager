@@ -14,6 +14,7 @@ struct PublishView: View {
     @State private var type: PluginType = .dctl
     @State private var version = "1.0.0"
     @State private var priceText = "0"
+    @State private var isFree = false
     @State private var iconSymbol = "wand.and.stars"
 
     @State private var isBusy = false
@@ -62,9 +63,12 @@ struct PublishView: View {
                         }
                         .disabled(isUpdate)
 
-                        HStack {
-                            TextField("Versiune", text: $version).textFieldStyle(.roundedBorder)
-                            TextField("Preț (EUR)", text: $priceText).textFieldStyle(.roundedBorder)
+                        TextField("Versiune", text: $version).textFieldStyle(.roundedBorder)
+
+                        Toggle("Gratuit — clientul instalează direct, fără cod de activare", isOn: $isFree)
+
+                        if !isFree {
+                            TextField("Preț (EUR, donație)", text: $priceText).textFieldStyle(.roundedBorder)
                         }
                         TextField("Icon (SF Symbol, opțional)", text: $iconSymbol).textFieldStyle(.roundedBorder)
                     }
@@ -110,7 +114,7 @@ struct PublishView: View {
         !id.trimmingCharacters(in: .whitespaces).isEmpty
             && !name.trimmingCharacters(in: .whitespaces).isEmpty
             && !version.trimmingCharacters(in: .whitespaces).isEmpty
-            && Double(priceText) != nil
+            && (isFree || Double(priceText) != nil)
             && pickedFileURL != nil
     }
 
@@ -133,6 +137,7 @@ struct PublishView: View {
         name = item.name
         description = item.description
         type = item.type
+        isFree = item.isFree
         priceText = String(item.priceEUR)
         iconSymbol = item.iconSymbol ?? ""
         // version left for the user to bump; file must be re-picked either way.
@@ -145,7 +150,8 @@ struct PublishView: View {
         isBusy = true
         defer { isBusy = false }
 
-        guard let fileURL = pickedFileURL, let price = Double(priceText) else { return }
+        guard let fileURL = pickedFileURL else { return }
+        let price = isFree ? 0 : (Double(priceText) ?? 0)
         let trimmedID = id.trimmingCharacters(in: .whitespaces)
 
         do {
@@ -174,7 +180,7 @@ struct PublishView: View {
             let item = PluginItem(
                 id: trimmedID, name: name, type: type, description: description,
                 version: version, filePath: relativePath, sha256: sha,
-                iconSymbol: iconSymbol.isEmpty ? nil : iconSymbol, priceEUR: price
+                iconSymbol: iconSymbol.isEmpty ? nil : iconSymbol, priceEUR: price, isFree: isFree
             )
             try CatalogEditor.upsert(item)
             log("Catalog actualizat local")

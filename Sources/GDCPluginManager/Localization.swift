@@ -53,6 +53,7 @@ enum L {
         "card.remove": [.ro: "Elimină", .en: "Remove", .es: "Eliminar"],
         "card.version": [.ro: "versiunea", .en: "version", .es: "versión"],
         "card.buy": [.ro: "Cumpără", .en: "Buy", .es: "Comprar"],
+        "card.free": [.ro: "Gratuit", .en: "Free", .es: "Gratis"],
 
         "resolve.running.title": [.ro: "DaVinci Resolve rulează", .en: "DaVinci Resolve is running", .es: "DaVinci Resolve está abierto"],
         "resolve.running.body": [.ro: "Închide DaVinci Resolve înainte de a instala sau elimina plugin-uri — Resolve le încarcă doar la pornire.", .en: "Quit DaVinci Resolve before installing or removing plugins — Resolve only loads them at launch.", .es: "Cierra DaVinci Resolve antes de instalar o eliminar plugins — Resolve solo los carga al iniciar."],

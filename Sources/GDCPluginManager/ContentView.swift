@@ -152,13 +152,19 @@ private struct PluginCard: View {
                     .font(.system(size: 22))
                     .foregroundStyle(.tint)
                 Spacer()
-                VStack(alignment: .trailing, spacing: 0) {
-                    Text(item.priceDisplay)
+                if item.isFree {
+                    Text(L.t("card.free"))
                         .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(.secondary)
-                    Text(L.t("card.donation"))
-                        .font(.caption2)
-                        .foregroundStyle(.tertiary)
+                        .foregroundStyle(.green)
+                } else {
+                    VStack(alignment: .trailing, spacing: 0) {
+                        Text(item.priceDisplay)
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(.secondary)
+                        Text(L.t("card.donation"))
+                            .font(.caption2)
+                            .foregroundStyle(.tertiary)
+                    }
                 }
             }
             Text(item.name).font(.headline)
