@@ -72,14 +72,18 @@ final class InstallManager: ObservableObject {
     }
 
     /// A pack (multiple files, e.g. a whole folder of LUTs published
-    /// together) installs into its own subfolder named after the
-    /// product, so it stays visually grouped in Resolve's own LUT/DCTL
-    /// browser instead of scattering loose files at the root next to
-    /// everything else. A single-file item installs flat, exactly as
-    /// before — no behavior change for anything already published.
+    /// together) installs into its own subfolder, so it stays visually
+    /// grouped in Resolve's own browser instead of scattering loose
+    /// files at the root next to everything else. That subfolder is
+    /// named after the product id for LUT/DCTL/Fuse packs — but for an
+    /// OFX bundle it MUST keep its exact original `.ofx.bundle` folder
+    /// name (`bundleFolderName`) instead, since that literal name is how
+    /// Resolve identifies it. A single-file item installs flat, exactly
+    /// as before — no behavior change for anything already published.
     private func destinationDirectory(for item: PluginItem) -> URL {
         let base = item.type.installDirectory
-        return item.isPack ? base.appendingPathComponent(item.id) : base
+        guard item.isPack else { return base }
+        return base.appendingPathComponent(item.bundleFolderName ?? item.id)
     }
 
     @discardableResult

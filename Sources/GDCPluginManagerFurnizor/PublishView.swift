@@ -39,6 +39,9 @@ struct PublishView: View {
     /// and re-uploading the files — only used when `isUpdate` is true and
     /// no new file/folder was picked.
     @State private var existingFiles: [PluginFile] = []
+    /// OFX only: the existing product's exact bundle folder name, kept
+    /// for the same metadata-only-edit reason as `existingFiles` above.
+    @State private var existingBundleFolderName: String?
 
     @State private var isBusy = false
     @State private var statusLines: [String] = []
@@ -105,6 +108,12 @@ struct PublishView: View {
                             }
                         }
                         .disabled(isUpdate)
+                        .onChange(of: type) { iconSymbol = type.defaultSymbol }
+
+                        if type == .ofx {
+                            Text("Alege folderul întreg „NumePlugin.ofx.bundle” (nu doar fișierul din interior) — Resolve identifică plugin-ul după numele exact al acelui folder.")
+                                .font(.caption).foregroundStyle(.secondary)
+                        }
 
                         TextField("Versiune", text: $version).textFieldStyle(.roundedBorder)
 
@@ -190,6 +199,7 @@ struct PublishView: View {
             && !version.trimmingCharacters(in: .whitespaces).isEmpty
             && (accessMode != .paid || Double(priceText) != nil)
             && (pickedURL != nil || (isUpdate && !existingFiles.isEmpty))
+            && (type != .ofx || pickedURL == nil || isDirectory(pickedURL!))
     }
 
     /// Lets the vendor pick either ONE file (a single DCTL/LUT) or a
@@ -252,6 +262,7 @@ struct PublishView: View {
         iconSymbol = item.iconSymbol ?? ""
         youtubeURL = item.youtubeURL ?? ""
         existingFiles = item.files
+        existingBundleFolderName = item.bundleFolderName
         pickedURL = nil
         // version left for the user to bump if they're also replacing
         // files; a metadata-only edit (e.g. just the YouTube link) can
@@ -271,6 +282,15 @@ struct PublishView: View {
         let price = isFreeFlag ? 0 : (Double(priceText) ?? 0)
         let trimmedID = id.trimmingCharacters(in: .whitespaces)
         let trimmedYouTube = youtubeURL.trimmingCharacters(in: .whitespaces)
+
+        // OFX only: the exact bundle folder name Resolve will look for.
+        // A newly-picked folder wins; otherwise (metadata-only edit)
+        // reuse whatever the existing product was published with.
+        let bundleFolderName: String? = {
+            guard type == .ofx else { return nil }
+            if let pickedURL { return pickedURL.lastPathComponent }
+            return existingBundleFolderName
+        }()
 
         do {
             var pluginFiles: [PluginFile]
@@ -320,7 +340,8 @@ struct PublishView: View {
                 version: version, files: pluginFiles,
                 iconSymbol: iconSymbol.isEmpty ? nil : iconSymbol, priceEUR: price,
                 isFree: isFreeFlag, isTrial: isTrialFlag,
-                youtubeURL: trimmedYouTube.isEmpty ? nil : trimmedYouTube
+                youtubeURL: trimmedYouTube.isEmpty ? nil : trimmedYouTube,
+                bundleFolderName: bundleFolderName
             )
             try CatalogEditor.upsert(item)
             log("Catalog actualizat local")
@@ -392,6 +413,7 @@ struct PublishView: View {
         iconSymbol = "wand.and.stars"
         youtubeURL = ""
         existingFiles = []
+        existingBundleFolderName = nil
         pickedURL = nil
     }
 
