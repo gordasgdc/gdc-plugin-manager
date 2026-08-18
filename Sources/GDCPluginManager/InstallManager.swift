@@ -10,6 +10,9 @@ import GDCPluginManagerCore
 /// PowerGradeImporter.swift).
 enum InstallOutcome {
     case installed
+    /// PowerGrade only: imported straight into Resolve's Gallery, into
+    /// this product's own album (see PowerGradeImporter.albumName(for:)).
+    case installedToGallery(albumName: String)
     case installedNeedsManualStep(folder: URL)
 }
 
@@ -109,9 +112,9 @@ final class InstallManager: ObservableObject {
         saveState()
 
         guard item.type == .powerGrade else { return .installed }
-        switch PowerGradeImporter.importIntoGallery(id: item.id, files: writtenURLs, stagingFolder: destinationDir) {
-        case .importedToGallery:
-            return .installed
+        switch PowerGradeImporter.importIntoGallery(productName: item.name, files: writtenURLs, stagingFolder: destinationDir) {
+        case .importedToGallery(let albumName):
+            return .installedToGallery(albumName: albumName)
         case .stagedOnly(let folder):
             return .installedNeedsManualStep(folder: folder)
         }
@@ -121,7 +124,7 @@ final class InstallManager: ObservableObject {
     func remove(_ item: PluginItem) throws -> RemoveOutcome {
         var galleryOutcome: RemoveOutcome = .removed
         if item.type == .powerGrade {
-            switch PowerGradeImporter.removeFromGallery(id: item.id) {
+            switch PowerGradeImporter.removeFromGallery(productName: item.name) {
             case .removedFromGallery: galleryOutcome = .removed
             case .removedFilesOnly: galleryOutcome = .removedNeedsManualGalleryCleanup
             }

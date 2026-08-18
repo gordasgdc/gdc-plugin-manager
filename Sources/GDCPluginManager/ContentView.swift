@@ -273,10 +273,13 @@ private struct PluginCard: View {
         Task {
             do {
                 let outcome = try await installs.install(item)
-                if case .installedNeedsManualStep(let folder) = outcome {
+                switch outcome {
+                case .installedToGallery(let albumName):
+                    statusMessage = String(format: L.t("powergrade.imported"), albumName)
+                case .installedNeedsManualStep(let folder):
                     statusMessage = String(format: L.t("powergrade.manualstep"), folder.path)
-                } else if item.type == .powerGrade {
-                    statusMessage = L.t("powergrade.imported")
+                case .installed:
+                    break
                 }
             } catch {
                 errorMessage = error.localizedDescription

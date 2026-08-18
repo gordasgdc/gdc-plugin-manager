@@ -5,6 +5,14 @@ import Foundation
 /// `.drx` grade automatically, since Resolve has no plugin-style folder
 /// for these (see `PluginType.powerGrade` in CatalogModel.swift).
 ///
+/// Each published product gets its OWN PowerGrade album, named after the
+/// product (see `albumName(for:)`) — never one shared bucket everything
+/// gets dumped into. A pack (several `.drx` files published together)
+/// imports every one of them into that same product album, so it stays
+/// grouped exactly like a LUT/DCTL pack stays grouped in its own
+/// subfolder. This mirrors what Cristi asked for after the first version
+/// shipped: "nu pot crea separat altul care sa contina mai multe .drx?".
+///
 /// This only works when Resolve Studio is running with external
 /// scripting enabled. Whenever any precondition fails (Free edition,
 /// Resolve closed, python3 missing, script error/timeout), every method
@@ -29,17 +37,15 @@ import Foundation
 ///   moments later) — so the album lookup below retries once before
 ///   deciding "doesn't exist yet" and creating a duplicate.
 /// - There is no API to delete a Gallery album — only the stills inside
-///   one. `remove(...)` therefore only ever removes the one still that
-///   belongs to the given product (tagged with its catalog id via
-///   `SetLabel` at import time), never the shared "GDC PowerGrades"
-///   album itself.
+///   one. `remove(...)` therefore only ever empties the product's own
+///   album (deletes every still in it), never removes the album itself
+///   — an empty, oddly-named leftover album is the worst case, cleared
+///   by hand from the Gallery if it bothers you.
 enum PowerGradeImporter {
-    static let albumName = "GDC PowerGrades"
-
     enum ImportResult {
-        /// Imported straight into Resolve's Gallery, under the shared
-        /// "GDC PowerGrades" PowerGrade album.
-        case importedToGallery
+        /// Imported straight into Resolve's Gallery, into this
+        /// product's own PowerGrade album.
+        case importedToGallery(albumName: String)
         /// Scripting wasn't available (or failed) — the verified files
         /// are sitting at this folder, waiting for a manual import.
         case stagedOnly(folder: URL)
@@ -47,24 +53,35 @@ enum PowerGradeImporter {
 
     enum RemoveResult {
         case removedFromGallery
-        /// Scripting wasn't available (or the still wasn't found) — the
-        /// local staged files were still deleted; only the Gallery copy
-        /// (if any) remains and needs removing by hand.
+        /// Scripting wasn't available (or the album/stills weren't
+        /// found) — the local staged files were still deleted; only the
+        /// Gallery copy (if any) remains and needs removing by hand.
         case removedFilesOnly
     }
 
+    /// Every product gets its own album, namespaced with "GDC
+    /// PowerGrades — " so it can never collide with one of Cristi's own
+    /// personal albums (his Gallery already has one literally named
+    /// "GDC" — confirmed live before picking this prefix).
+    static func albumName(for productName: String) -> String {
+        "GDC PowerGrades — " + productName.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
     /// `files` are the already-downloaded, checksum-verified local
-    /// copies for this product (its `.drx` + paired thumbnail, already
-    /// sitting in `stagingFolder`).
-    static func importIntoGallery(id: String, files: [URL], stagingFolder: URL) -> ImportResult {
+    /// copies for this product (its `.drx` file(s), possibly paired with
+    /// thumbnails), already sitting in `stagingFolder`. Every `.drx` in
+    /// the list is imported — not just the first — so a multi-grade pack
+    /// lands together in the product's album.
+    static func importIntoGallery(productName: String, files: [URL], stagingFolder: URL) -> ImportResult {
+        let albumName = albumName(for: productName)
         guard ResolveProcessCheck.isRunning else { return .stagedOnly(folder: stagingFolder) }
-        guard let drxPath = files.first(where: { $0.pathExtension.lowercased() == "drx" })?.path else {
-            return .stagedOnly(folder: stagingFolder)
-        }
+        let drxPaths = files.filter { $0.pathExtension.lowercased() == "drx" }.map(\.path)
+        guard !drxPaths.isEmpty else { return .stagedOnly(folder: stagingFolder) }
         guard let pythonPath = findPython3(), FileManager.default.fileExists(atPath: scriptModulesPath) else {
             return .stagedOnly(folder: stagingFolder)
         }
 
+        let drxPathsLiteral = drxPaths.map { "r\"\($0)\"" }.joined(separator: ", ")
         let script = """
         import sys
         sys.path.append(r"\(scriptModulesPath)")
@@ -94,15 +111,8 @@ enum PowerGradeImporter {
                 target = albums[-1]
                 gallery.SetAlbumName(target, \(pyString(albumName)))
 
-            before_count = len(target.GetStills())
-            ok = target.ImportStills([r"\(drxPath)"])
-            if not ok:
-                print("FAIL:import_returned_false")
-                sys.exit(0)
-            after_count = len(target.GetStills())
-            if after_count > before_count:
-                target.SetLabel(after_count - 1, \(pyString(id)))
-            print("OK")
+            ok = target.ImportStills([\(drxPathsLiteral)])
+            print("OK" if ok else "FAIL:import_returned_false")
         except Exception as e:
             print("FAIL:" + str(e))
         """
@@ -110,10 +120,15 @@ enum PowerGradeImporter {
         guard let output = runPython(pythonPath: pythonPath, script: script), output.hasPrefix("OK") else {
             return .stagedOnly(folder: stagingFolder)
         }
-        return .importedToGallery
+        return .importedToGallery(albumName: albumName)
     }
 
-    static func removeFromGallery(id: String) -> RemoveResult {
+    /// Removes every still from this product's own album (the album
+    /// itself can't be deleted — see file header) — safe because each
+    /// product owns its album exclusively, so clearing it can never
+    /// touch another product's grades or one of Cristi's own albums.
+    static func removeFromGallery(productName: String) -> RemoveResult {
+        let albumName = albumName(for: productName)
         guard ResolveProcessCheck.isRunning,
               let pythonPath = findPython3(), FileManager.default.fileExists(atPath: scriptModulesPath) else {
             return .removedFilesOnly
@@ -141,16 +156,10 @@ enum PowerGradeImporter {
                 sys.exit(0)
 
             stills = target.GetStills()
-            match_index = None
-            for i in range(len(stills)):
-                if target.GetLabel(i) == \(pyString(id)):
-                    match_index = i
-                    break
-            if match_index is None:
-                print("FAIL:still_not_found")
+            if len(stills) == 0:
+                print("OK")
                 sys.exit(0)
-
-            ok = target.DeleteStills([match_index])
+            ok = target.DeleteStills(list(range(len(stills))))
             print("OK" if ok else "FAIL:delete_returned_false")
         except Exception as e:
             print("FAIL:" + str(e))
@@ -177,8 +186,9 @@ enum PowerGradeImporter {
 
     /// A Python string literal for the given Swift string, safe to splice
     /// into the embedded scripts above (single-quoted, backslash/quote
-    /// escaped) — every value passed this way (album name, catalog id)
-    /// is our own data, never anything from the downloaded product file.
+    /// escaped) — every value passed this way is our own data (album
+    /// name derived from the product name), never anything from the
+    /// downloaded product file.
     private static func pyString(_ value: String) -> String {
         "'" + value.replacingOccurrences(of: "\\", with: "\\\\").replacingOccurrences(of: "'", with: "\\'") + "'"
     }
