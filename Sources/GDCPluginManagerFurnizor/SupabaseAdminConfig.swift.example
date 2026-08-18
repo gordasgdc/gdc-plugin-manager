@@ -1,0 +1,16 @@
+import Foundation
+
+/// TEMPLATE — copy this file to SupabaseAdminConfig.swift (gitignored,
+/// never commit the real key to this public repo) and paste in the
+/// project's `service_role` key from Supabase → Project Settings → API.
+///
+/// This key bypasses Row Level Security entirely — full read access to
+/// `devices` (names, emails, machine ids) and `download_events`. It must
+/// stay on this Mac only, exactly like PrivateCatalogAuth.swift's GitHub
+/// token: never in the client app (which only ever holds the RLS-limited
+/// anon key), never committed, rotate it in the Supabase dashboard if it
+/// ever leaks.
+enum SupabaseAdminConfig {
+    /// PASTE THE service_role KEY HERE before building the Furnizor app.
+    static let serviceRoleKey = "PASTE_SERVICE_ROLE_KEY_HERE"
+}

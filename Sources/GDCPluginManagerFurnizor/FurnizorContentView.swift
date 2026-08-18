@@ -4,6 +4,7 @@ enum FurnizorSection: Hashable {
     case publish
     case generateSerial
     case salesHistory
+    case analytics
     case courses
     case apps
 }
@@ -17,6 +18,7 @@ struct FurnizorContentView: View {
                 Label("Publică produs", systemImage: "arrow.up.doc").tag(FurnizorSection.publish)
                 Label("Generează serial", systemImage: "key").tag(FurnizorSection.generateSerial)
                 Label("Clienți", systemImage: "person.2").tag(FurnizorSection.salesHistory)
+                Label("Statistici", systemImage: "chart.bar").tag(FurnizorSection.analytics)
                 Divider()
                 Label("Cursuri", systemImage: "graduationcap").tag(FurnizorSection.courses)
                 Label("Aplicații", systemImage: "square.grid.2x2").tag(FurnizorSection.apps)
@@ -30,6 +32,8 @@ struct FurnizorContentView: View {
                 GenerateSerialView()
             case .salesHistory:
                 SalesHistoryView()
+            case .analytics:
+                AnalyticsView()
             case .courses:
                 PublishCourseView()
             case .apps:
