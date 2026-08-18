@@ -29,8 +29,12 @@ struct ContentView: View {
                 Label(L.t("sidebar.all"), systemImage: "square.grid.2x2")
                     .tag(SidebarSection.all)
                 ForEach(PluginType.allCases) { type in
-                    Label(type.label, systemImage: type.defaultSymbol)
-                        .tag(SidebarSection.type(type))
+                    Label {
+                        Text(type.label)
+                    } icon: {
+                        Image(systemName: type.defaultSymbol).foregroundStyle(type.tintColor)
+                    }
+                    .tag(SidebarSection.type(type))
                 }
                 Divider()
                 Label(L.t("sidebar.courses"), systemImage: "graduationcap")
@@ -159,7 +163,7 @@ private struct PluginCard: View {
             HStack(alignment: .top) {
                 Image(systemName: item.iconSymbol ?? item.type.defaultSymbol)
                     .font(.system(size: 22))
-                    .foregroundStyle(.tint)
+                    .foregroundStyle(item.type.tintColor)
                 Spacer()
                 // Stacked vertically (info button above the price/status
                 // badge, not on top of it) — an absolute corner overlay
@@ -221,10 +225,10 @@ private struct PluginCard: View {
         Text(item.type.label.uppercased())
             .font(.system(size: 9, weight: .bold))
             .tracking(0.5)
-            .foregroundStyle(.secondary)
+            .foregroundStyle(item.type.tintColor)
             .padding(.horizontal, 8)
             .padding(.vertical, 3)
-            .background(Capsule().fill(Color.secondary.opacity(0.15)))
+            .background(Capsule().fill(item.type.tintColor.opacity(0.15)))
             .frame(maxWidth: .infinity, alignment: .center)
     }
 
@@ -415,19 +419,24 @@ private struct AppsGrid: View {
 private struct AppCard: View {
     let app: AppLink
 
+    /// Apps aren't a `PluginType` case, so they get their own fixed tint
+    /// here instead of `PluginType.tintColor` — matches the blue Cristi
+    /// asked for, distinct from every plugin category's color.
+    private let tint = Color.blue
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(L.t("apps.badge"))
                 .font(.system(size: 9, weight: .bold))
                 .tracking(0.5)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(tint)
                 .padding(.horizontal, 8)
                 .padding(.vertical, 3)
-                .background(Capsule().fill(Color.secondary.opacity(0.15)))
+                .background(Capsule().fill(tint.opacity(0.15)))
                 .frame(maxWidth: .infinity, alignment: .center)
             Image(systemName: "app.badge")
                 .font(.system(size: 22))
-                .foregroundStyle(.tint)
+                .foregroundStyle(tint)
             Text(app.name).font(.headline)
             Spacer(minLength: 0)
             if let url = URL(string: app.url) {
