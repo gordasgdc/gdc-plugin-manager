@@ -18,13 +18,18 @@ import CryptoKit
 /// Verification only ever uses the PUBLIC key — the private key that
 /// signs new codes stays on Cristi's machine in `gdc-license-system/`,
 /// never in this app.
-enum LicenseCore {
-    struct Payload {
-        let expiresAt: Int64 // unix seconds, 0 = never expires
-        let machineLocked: Bool
+public enum LicenseCore {
+    public struct Payload {
+        public let expiresAt: Int64 // unix seconds, 0 = never expires
+        public let machineLocked: Bool
+
+        public init(expiresAt: Int64, machineLocked: Bool) {
+            self.expiresAt = expiresAt
+            self.machineLocked = machineLocked
+        }
     }
 
-    enum ValidationError: Error {
+    public enum ValidationError: Error {
         case malformedCode
         case badSignature
         case wrongProduct
@@ -35,13 +40,17 @@ enum LicenseCore {
     /// Base64 of the Ed25519 PUBLIC key from gdc-license-system's
     /// keygen.py (`public_key.txt`). Safe to embed: with asymmetric
     /// crypto, only the never-distributed private key can forge a
-    /// signature this validates.
-    private static let publicKeyBase64 = "I1h23MNMRbOhc0ObKJrfa3oFHKA9w+SzbNrroAIy8hs="
+    /// signature this validates. Shared by both the client app (to
+    /// verify) and, indirectly, the vendor app (whose private key must
+    /// match this one — see GDCPluginManagerFurnizor/LicenseGenerator.swift).
+    static let publicKeyBase64 = "I1h23MNMRbOhc0ObKJrfa3oFHKA9w+SzbNrroAIy8hs="
 
-    private static let payloadSize = 22
+    /// Exposed so the vendor app's LicenseGenerator can build the exact
+    /// same payload shape when signing new codes.
+    public static let payloadSize = 22
 
     /// Validates a serial the user typed/pasted against `expectedProductID`.
-    static func validate(serial: String, expectedProductID: String) -> Result<Payload, ValidationError> {
+    public static func validate(serial: String, expectedProductID: String) -> Result<Payload, ValidationError> {
         guard let packed = base32Decode(serial), packed.count == payloadSize + 64 else {
             return .failure(.malformedCode)
         }
@@ -80,7 +89,9 @@ enum LicenseCore {
         return .success(Payload(expiresAt: expiresAt, machineLocked: isMachineLocked))
     }
 
-    private static func productHash(for productID: String) -> [UInt8] {
+    /// Exposed so the vendor app's LicenseGenerator computes the exact
+    /// same product hash when signing a new code for a given product ID.
+    public static func productHash(for productID: String) -> [UInt8] {
         Array(SHA512.hash(data: Data(productID.utf8)).prefix(4))
     }
 
@@ -88,7 +99,7 @@ enum LicenseCore {
 
     private static let base32Alphabet = Array("ABCDEFGHIJKLMNOPQRSTUVWXYZ234567")
 
-    static func base32Encode(_ data: Data) -> String {
+    public static func base32Encode(_ data: Data) -> String {
         var bits = 0, value = 0
         var output = ""
         for byte in data {
@@ -105,7 +116,9 @@ enum LicenseCore {
         return output
     }
 
-    private static func base32Decode(_ string: String) -> Data? {
+    /// Exposed so the vendor app's LicenseGenerator can decode a pasted
+    /// machine-ID string into the 6 raw bytes it needs to embed.
+    public static func base32Decode(_ string: String) -> Data? {
         let cleaned = string.uppercased()
             .replacingOccurrences(of: "-", with: "")
             .replacingOccurrences(of: " ", with: "")

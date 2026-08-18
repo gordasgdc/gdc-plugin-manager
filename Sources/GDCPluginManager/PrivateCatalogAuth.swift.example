@@ -1,0 +1,30 @@
+import Foundation
+
+/// TEMPLATE — copy this file to PrivateCatalogAuth.swift (gitignored,
+/// never commit the real token to this public repo) and paste in a
+/// fine-grained GitHub PAT scoped to ONLY gdc-plugin-manager-files,
+/// permission Contents: Read-only.
+///
+/// Embedded read-only GitHub token for the private product-files repo
+/// (gordasgdc/gdc-plugin-manager-files). The public catalog metadata
+/// (docs/catalog.json) stays public on GitHub Pages — only the actual
+/// product FILES require this to fetch.
+///
+/// This is a deliberately-accepted "obscurity, not real security"
+/// trade-off (discussed and chosen over building a small download-gating
+/// server): anyone who reverse-engineers this binary can extract this
+/// token and read the product files directly, bypassing the app's
+/// license check entirely. Blast radius is bounded by scoping the token
+/// to `Contents: Read-only` on ONLY this one private repo — nothing else
+/// is reachable with it, and it can be rotated (edit here, rebuild,
+/// redistribute) if it ever leaks. If sales volume ever justifies it,
+/// replace this with a server that verifies a license before handing
+/// out a short-lived download link instead.
+enum PrivateCatalogAuth {
+    static let owner = "gordasgdc"
+    static let repo = "gdc-plugin-manager-files"
+
+    /// PASTE THE FINE-GRAINED PAT HERE (Contents: Read-only, scoped to
+    /// gdc-plugin-manager-files only) before building the client app.
+    static let token = "PASTE_TOKEN_HERE"
+}

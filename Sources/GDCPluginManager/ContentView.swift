@@ -1,15 +1,19 @@
 import SwiftUI
+import AppKit
+import GDCPluginManagerCore
 
 enum SidebarSection: Hashable {
     case all
     case type(PluginType)
     case license
+    case help
 }
 
 struct ContentView: View {
     @StateObject private var catalog = CatalogService.shared
     @StateObject private var installs = InstallManager.shared
     @ObservedObject private var license = LicenseManager.shared
+    @StateObject private var updateChecker = UpdateChecker.shared
 
     @State private var selection: SidebarSection? = .all
     @State private var resolveWarningVisible = false
@@ -26,18 +30,26 @@ struct ContentView: View {
                 Divider()
                 Label(L.t("sidebar.license"), systemImage: "key.fill")
                     .tag(SidebarSection.license)
-                    .foregroundStyle(license.isUnlocked ? Color.primary : Color.orange)
+                Label(L.t("sidebar.help"), systemImage: "questionmark.circle")
+                    .tag(SidebarSection.help)
             }
             .navigationSplitViewColumnWidth(180)
         } detail: {
-            Group {
-                switch selection {
-                case .license, .none:
-                    LicensePane()
-                case .all:
-                    CatalogGrid(items: catalog.items)
-                case .type(let type):
-                    CatalogGrid(items: catalog.items.filter { $0.type == type })
+            VStack(spacing: 0) {
+                if let update = updateChecker.availableUpdate {
+                    UpdateBanner(update: update)
+                }
+                Group {
+                    switch selection {
+                    case .license:
+                        LicensePane()
+                    case .help:
+                        HelpView()
+                    case .all, .none:
+                        CatalogGrid(items: catalog.items)
+                    case .type(let type):
+                        CatalogGrid(items: catalog.items.filter { $0.type == type })
+                    }
                 }
             }
         }
@@ -45,7 +57,10 @@ struct ContentView: View {
         .toolbar {
             ToolbarItem {
                 Button {
-                    Task { await catalog.refresh() }
+                    Task {
+                        await catalog.refresh()
+                        await updateChecker.check()
+                    }
                 } label: {
                     Label(L.t("catalog.refresh"), systemImage: "arrow.clockwise")
                 }
@@ -55,6 +70,7 @@ struct ContentView: View {
         .environmentObject(installs)
         .task {
             await catalog.refresh()
+            await updateChecker.check()
         }
     }
 
@@ -64,6 +80,33 @@ struct ContentView: View {
         case .lut: return "eyedropper.halffull"
         case .fuse: return "puzzlepiece.extension"
         }
+    }
+}
+
+private struct UpdateBanner: View {
+    let update: UpdateInfo
+    @ObservedObject private var updateChecker = UpdateChecker.shared
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: "arrow.down.circle.fill").foregroundStyle(.tint)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(L.t("update.title")).font(.subheadline).fontWeight(.semibold)
+                Text("v\(update.version)" + (update.changes.map { " — \($0)" } ?? ""))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(2)
+            }
+            Spacer()
+            if let urlString = update.download_url["mac"], let url = URL(string: urlString) {
+                Button(L.t("update.download")) { NSWorkspace.shared.open(url) }
+            }
+            Button(L.t("update.dismiss")) { updateChecker.dismiss() }
+                .buttonStyle(.plain)
+                .foregroundStyle(.secondary)
+        }
+        .padding(12)
+        .background(Color.accentColor.opacity(0.12))
     }
 }
 
@@ -101,13 +144,23 @@ private struct PluginCard: View {
     @State private var isBusy = false
     @State private var errorMessage: String?
     @State private var showResolveWarning = false
-    @State private var pendingAction: (() -> Void)?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Image(systemName: item.iconSymbol ?? "shippingbox")
-                .font(.system(size: 22))
-                .foregroundStyle(.tint)
+            HStack(alignment: .top) {
+                Image(systemName: item.iconSymbol ?? "shippingbox")
+                    .font(.system(size: 22))
+                    .foregroundStyle(.tint)
+                Spacer()
+                VStack(alignment: .trailing, spacing: 0) {
+                    Text(item.priceDisplay)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.secondary)
+                    Text(L.t("card.donation"))
+                        .font(.caption2)
+                        .foregroundStyle(.tertiary)
+                }
+            }
             Text(item.name).font(.headline)
             Text(item.description)
                 .font(.caption)
@@ -135,10 +188,8 @@ private struct PluginCard: View {
 
     @ViewBuilder
     private var actionButton: some View {
-        if !license.isUnlocked {
-            Button(L.t("card.install")) {}
-                .disabled(true)
-                .help(L.t("trial.locked.body"))
+        if !license.isUnlocked(for: item) {
+            Button(L.t("card.buy")) { NSWorkspace.shared.open(buyURL) }
         } else if isBusy {
             ProgressView().controlSize(.small)
         } else if installs.hasUpdate(item) {
@@ -157,6 +208,11 @@ private struct PluginCard: View {
         } else {
             Button(L.t("card.install")) { runGuarded { install() } }
         }
+    }
+
+    private var buyURL: URL {
+        let text = "Salut! Vreau să deblochez \(item.name) cu o donație de \(item.priceDisplay). ID calculator: \(MachineID.display)"
+        return URL(string: "https://wa.me/34643109970?text=" + text.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)!
     }
 
     private func runGuarded(_ action: @escaping () -> Void) {

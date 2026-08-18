@@ -1,14 +1,17 @@
 import Foundation
 import CryptoKit
+import GDCPluginManagerCore
 
 enum InstallError: Error, LocalizedError {
     case downloadFailed
+    case authenticationFailed
     case checksumMismatch
     case writeFailed(String)
 
     var errorDescription: String? {
         switch self {
         case .downloadFailed: return "Download failed."
+        case .authenticationFailed: return "Couldn't authenticate with the file server — contact support, the access token may need renewing."
         case .checksumMismatch: return "Downloaded file doesn't match the expected checksum."
         case .writeFailed(let detail): return "Couldn't write the file: \(detail)"
         }
@@ -50,16 +53,16 @@ final class InstallManager: ObservableObject {
     }
 
     func install(_ item: PluginItem) async throws {
-        let (tempURL, _) = try await URLSession.shared.download(from: item.url)
-        defer { try? FileManager.default.removeItem(at: tempURL) }
+        let data = try await fetchPrivateFileData(path: item.filePath)
 
-        if let expectedSHA = item.sha256, !expectedSHA.isEmpty {
-            let data = try Data(contentsOf: tempURL)
-            let actualSHA = SHA256.hash(data: data).compactMap { String(format: "%02x", $0) }.joined()
-            guard actualSHA.lowercased() == expectedSHA.lowercased() else {
-                throw InstallError.checksumMismatch
-            }
+        let actualSHA = SHA256.hash(data: data).compactMap { String(format: "%02x", $0) }.joined()
+        guard actualSHA.lowercased() == item.sha256.lowercased() else {
+            throw InstallError.checksumMismatch
         }
+
+        let tempURL = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try data.write(to: tempURL)
+        defer { try? FileManager.default.removeItem(at: tempURL) }
 
         let destinationDir = item.type.installDirectory
         let destinationURL = destinationDir.appendingPathComponent(item.filename)
@@ -75,6 +78,34 @@ final class InstallManager: ObservableObject {
         try deleteFile(at: destinationURL)
         installedVersions.removeValue(forKey: item.id)
         saveState()
+    }
+
+    // MARK: - Authenticated fetch from the private files repo
+
+    /// Fetches one file's raw bytes from the private gdc-plugin-manager-files
+    /// repo via GitHub's Contents API, using the embedded read-only token
+    /// (see PrivateCatalogAuth.swift). `catalog.json` itself is NOT fetched
+    /// this way — only the actual product files, which never sit at a
+    /// plain public URL.
+    private func fetchPrivateFileData(path: String) async throws -> Data {
+        guard let encodedPath = path.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed),
+              let url = URL(string: "https://api.github.com/repos/\(PrivateCatalogAuth.owner)/\(PrivateCatalogAuth.repo)/contents/\(encodedPath)") else {
+            throw InstallError.downloadFailed
+        }
+        var request = URLRequest(url: url)
+        request.setValue("Bearer \(PrivateCatalogAuth.token)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/vnd.github.raw+json", forHTTPHeaderField: "Accept")
+        request.setValue("2022-11-28", forHTTPHeaderField: "X-GitHub-Api-Version")
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+        guard let http = response as? HTTPURLResponse else { throw InstallError.downloadFailed }
+        if http.statusCode == 401 || http.statusCode == 403 {
+            throw InstallError.authenticationFailed
+        }
+        guard (200...299).contains(http.statusCode) else {
+            throw InstallError.downloadFailed
+        }
+        return data
     }
 
     // MARK: - Filesystem, with an admin-elevation fallback

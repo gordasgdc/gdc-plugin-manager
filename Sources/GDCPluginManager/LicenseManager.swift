@@ -1,95 +1,118 @@
 import Foundation
+import GDCPluginManagerCore
 
-/// Owns GDC Plugin Manager's trial/license state: starts a 7-day trial on
-/// first launch, persists an activated code once entered, and exposes
-/// whether install/update/remove should currently be allowed. Same shape
-/// as CursorPro GDC's LicenseManager, just a different product ID and a
-/// 7-day trial (matching DataMover / GDC Production Manager, not
-/// CursorPro GDC's 3-day one).
+/// Owns GDC Plugin Manager's per-product license state. The app itself
+/// is free — anyone can install and browse the catalog UI — only
+/// installing/updating a specific product requires that product's own
+/// license. Same crypto/format as every other GDC product
+/// (LicenseCore.swift), just applied once per item instead of once
+/// globally for the whole app.
 final class LicenseManager: ObservableObject {
     static let shared = LicenseManager()
-    static let productID = "gdc-plugin-manager"
-    static let trialDurationDays = 7
 
-    @Published private(set) var isLicensed = false
-    @Published private(set) var licenseExpiresAt: Int64 = 0 // 0 = perpetual
-    @Published private(set) var licenseMachineLocked = false
+    /// [productID: verified payload] — rebuilt from disk at launch and
+    /// after every successful activation. A product ID appears here only
+    /// if its stored serial still validates (expiry/machine-lock are
+    /// re-checked on every load, never cached as a bare bool).
+    @Published private(set) var licensedProducts: [String: LicenseCore.Payload] = [:]
     @Published var activationError: String?
 
-    private let defaults = UserDefaults.standard
-    private let trialStartKey = "gdcpm_trial_start"
-
-    private var activationFileURL: URL? {
+    /// [productID: raw serial code] — the only thing persisted; payloads
+    /// are always re-derived by re-validating on load, same discipline
+    /// as the old single-license file.
+    private var storeFileURL: URL? {
         FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first?
             .appendingPathComponent("GDCPluginManager", isDirectory: true)
-            .appendingPathComponent("license.txt")
+            .appendingPathComponent("licenses.json")
     }
 
     private init() {
-        if defaults.object(forKey: trialStartKey) == nil {
-            defaults.set(Date().timeIntervalSince1970, forKey: trialStartKey)
-        }
-        loadSavedLicense()
+        loadSavedLicenses()
     }
 
-    var trialStartDate: Date {
-        Date(timeIntervalSince1970: defaults.double(forKey: trialStartKey))
+    var isLicensed: Bool { !licensedProducts.isEmpty }
+
+    /// The check before install/update/remove for one specific item —
+    /// it needs its own license. No app-wide trial: the app is free,
+    /// only products cost money.
+    func isUnlocked(for item: PluginItem) -> Bool {
+        licensedProducts[item.id] != nil
     }
 
-    /// Whole days left in the trial, rounded up.
-    var trialDaysRemaining: Int {
-        let elapsed = Date().timeIntervalSince(trialStartDate)
-        let remaining = Double(Self.trialDurationDays) * 86400 - elapsed
-        return max(0, Int(ceil(remaining / 86400)))
-    }
-
-    var isTrialActive: Bool { trialDaysRemaining > 0 }
-
-    /// The single source of truth checked before install/update/remove.
-    var isUnlocked: Bool { isLicensed || isTrialActive }
-
+    /// Validates a pasted code against every product currently in the
+    /// catalog. A serial only embeds a HASH of its product ID (see
+    /// LicenseCore's format comment), not the ID itself, so there's no
+    /// way to know which product a code is for without trying
+    /// candidates — cheap and entirely local for a catalog this size.
     @discardableResult
-    func activate(code: String) -> Bool {
+    func activate(code: String, candidateProductIDs: [String]) -> Bool {
         activationError = nil
         let trimmed = code.trimmingCharacters(in: .whitespacesAndNewlines)
-        switch LicenseCore.validate(serial: trimmed, expectedProductID: Self.productID) {
-        case .success(let payload):
-            saveLicense(code: trimmed)
-            applyLicense(payload: payload)
-            return true
-        case .failure(let error):
-            activationError = Self.message(for: error)
+
+        guard !candidateProductIDs.isEmpty else {
+            activationError = L.t("license.error.catalogNotLoaded")
             return false
         }
+
+        // Malformed/bad-signature/wrong-machine/expired are all
+        // independent of *which* product ID we check against — the
+        // first candidate's answer is authoritative for all of them.
+        // Only .wrongProduct is candidate-specific, so that's the only
+        // case worth looping on.
+        var lastError: LicenseCore.ValidationError = .wrongProduct
+        for productID in candidateProductIDs {
+            switch LicenseCore.validate(serial: trimmed, expectedProductID: productID) {
+            case .success(let payload):
+                saveLicense(productID: productID, code: trimmed)
+                licensedProducts[productID] = payload
+                return true
+            case .failure(.wrongProduct):
+                lastError = .wrongProduct
+                continue
+            case .failure(let otherError):
+                activationError = Self.message(for: otherError)
+                return false
+            }
+        }
+        activationError = Self.message(for: lastError)
+        return false
     }
 
-    func deactivate() {
-        isLicensed = false
-        licenseExpiresAt = 0
-        licenseMachineLocked = false
-        if let url = activationFileURL {
-            try? FileManager.default.removeItem(at: url)
+    func deactivate(productID: String) {
+        licensedProducts.removeValue(forKey: productID)
+        guard let url = storeFileURL,
+              var store = loadStore() else { return }
+        store.removeValue(forKey: productID)
+        try? writeStore(store, to: url)
+    }
+
+    private func loadSavedLicenses() {
+        guard let store = loadStore() else { return }
+        for (productID, code) in store {
+            if case .success(let payload) = LicenseCore.validate(serial: code, expectedProductID: productID) {
+                licensedProducts[productID] = payload
+            }
         }
     }
 
-    private func loadSavedLicense() {
-        guard let url = activationFileURL,
-              let code = try? String(contentsOf: url, encoding: .utf8) else { return }
-        if case .success(let payload) = LicenseCore.validate(serial: code, expectedProductID: Self.productID) {
-            applyLicense(payload: payload)
-        }
+    private func saveLicense(productID: String, code: String) {
+        guard let url = storeFileURL else { return }
+        var store = loadStore() ?? [:]
+        store[productID] = code
+        try? writeStore(store, to: url)
     }
 
-    private func applyLicense(payload: LicenseCore.Payload) {
-        isLicensed = true
-        licenseExpiresAt = payload.expiresAt
-        licenseMachineLocked = payload.machineLocked
+    private func loadStore() -> [String: String]? {
+        guard let url = storeFileURL,
+              let data = try? Data(contentsOf: url),
+              let decoded = try? JSONDecoder().decode([String: String].self, from: data) else { return nil }
+        return decoded
     }
 
-    private func saveLicense(code: String) {
-        guard let url = activationFileURL else { return }
-        try? FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
-        try? code.write(to: url, atomically: true, encoding: .utf8)
+    private func writeStore(_ store: [String: String], to url: URL) throws {
+        try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
+        let data = try JSONEncoder().encode(store)
+        try data.write(to: url)
     }
 
     private static func message(for error: LicenseCore.ValidationError) -> String {
