@@ -6,6 +6,11 @@
       "url" : "https://gordasgdc.github.io/clapperboard-digital/"
     },
     {
+      "id" : "CursorPro GDC",
+      "name" : "CursorPro GDC",
+      "url" : "https://gordasgdc.github.io/cursorpro-gdc/"
+    },
+    {
       "id" : "DataMover",
       "name" : "DataMover",
       "url" : "https://gordasgdc.github.io/datamover/"
