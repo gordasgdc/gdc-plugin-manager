@@ -1,15 +1,4 @@
 {
   "updatedAt": "2026-08-18",
-  "items": [
-    {
-      "id": "gdc-test-passthrough",
-      "name": "TEST — nu instala (verificare internă)",
-      "type": "dctl",
-      "description": "Intrare temporară pentru testul end-to-end al aplicației. Va fi eliminată din catalog imediat după test.",
-      "version": "1.0.0",
-      "url": "https://gordasgdc.github.io/gdc-plugin-manager/plugins/gdc-test-passthrough/1.0.0/GDC-Test-Passthrough.dctl",
-      "sha256": "f186b9bbb8f3d62e280db1b83b3da7d1ae74b25a81f3d3ccb64fc3c8ec91cb1e",
-      "iconSymbol": "ladybug"
-    }
-  ]
+  "items": []
 }
