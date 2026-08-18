@@ -61,6 +61,8 @@ enum L {
         "catalog.loading": [.ro: "Se încarcă catalogul…", .en: "Loading catalog…", .es: "Cargando catálogo…"],
         "catalog.empty": [.ro: "Niciun produs în această categorie.", .en: "No items in this category.", .es: "No hay elementos en esta categoría."],
         "catalog.error": [.ro: "Nu am putut încărca catalogul. Verifică conexiunea la internet.", .en: "Couldn't load the catalog. Check your internet connection.", .es: "No se pudo cargar el catálogo. Comprueba tu conexión a internet."],
+        "catalog.error.parse": [.ro: "Nu am putut înțelege catalogul primit — încearcă să actualizezi aplicația la ultima versiune.", .en: "Couldn't understand the catalog we received — try updating the app to the latest version.", .es: "No se pudo interpretar el catálogo recibido — intenta actualizar la aplicación a la última versión."],
+        "catalog.error.server": [.ro: "Serverul catalogului a răspuns cu o eroare (cod %d) — încearcă din nou peste puțin.", .en: "The catalog server responded with an error (code %d) — try again in a bit.", .es: "El servidor del catálogo respondió con un error (código %d) — inténtalo de nuevo en un momento."],
         "catalog.refresh": [.ro: "Reîmprospătează", .en: "Refresh", .es: "Actualizar"],
 
         "card.install": [.ro: "Instalează", .en: "Install", .es: "Instalar"],
