@@ -1,17 +1,4 @@
 {
-  "items" : [
-    {
-      "description" : "Produs de test pentru fluxul gratuit (fara licenta).",
-      "filePath" : "test-free-flow/1.0.0/GDC-Test-Passthrough.dctl",
-      "iconSymbol" : "wand.and.stars",
-      "id" : "test-free-flow",
-      "isFree" : true,
-      "name" : "Test Free Flow",
-      "priceEUR" : 0,
-      "sha256" : "f186b9bbb8f3d62e280db1b83b3da7d1ae74b25a81f3d3ccb64fc3c8ec91cb1e",
-      "type" : "dctl",
-      "version" : "1.0.0"
-    }
-  ],
+  "items" : [ ],
   "updatedAt" : "2026-08-18"
 }
