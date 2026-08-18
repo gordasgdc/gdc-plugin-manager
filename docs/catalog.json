@@ -400,7 +400,8 @@
       "name" : "LiniarWorkflow",
       "priceEUR" : 487,
       "type" : "lut",
-      "version" : "1.0.0"
+      "version" : "1.0.0",
+      "youtubeURL" : "https://www.youtube.com/@cristigordas"
     }
   ],
   "updatedAt" : "2026-08-18"
