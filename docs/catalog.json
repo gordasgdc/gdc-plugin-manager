@@ -1,6 +1,11 @@
 {
   "apps" : [
     {
+      "id" : "DataMover",
+      "name" : "DataMover",
+      "url" : "https://gordasgdc.github.io/datamover/"
+    },
+    {
       "id" : "gdc-resolve-encoder",
       "name" : "GDC Resolve Encoder",
       "url" : "https://gordasgdc.github.io/gdc-resolve-encoder/"
