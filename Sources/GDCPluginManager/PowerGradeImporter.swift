@@ -59,12 +59,13 @@ enum PowerGradeImporter {
         case removedFilesOnly
     }
 
-    /// Every product gets its own album, namespaced with "GDC
-    /// PowerGrades — " so it can never collide with one of Cristi's own
-    /// personal albums (his Gallery already has one literally named
-    /// "GDC" — confirmed live before picking this prefix).
+    /// Every product gets its own album, namespaced with "GDC — " so it
+    /// can never collide with one of Cristi's own personal albums (his
+    /// Gallery already has one literally named "GDC" with no suffix —
+    /// confirmed live before picking this prefix; "GDC — X" is always a
+    /// different string).
     static func albumName(for productName: String) -> String {
-        "GDC PowerGrades — " + productName.trimmingCharacters(in: .whitespacesAndNewlines)
+        "GDC — " + productName.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
     /// `files` are the already-downloaded, checksum-verified local
