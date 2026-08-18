@@ -14,12 +14,12 @@ import Foundation
 /// key that lives only in the Furnizor app (never distributed) — see
 /// GDCPluginManagerFurnizor/SupabaseAdminConfig.swift.
 public enum SupabaseConfig {
-    /// PASTE the Project URL from Supabase → Project Settings → API.
-    public static let projectURL = "PASTE_SUPABASE_PROJECT_URL_HERE"
+    /// Project URL from Supabase → Project Settings → API.
+    public static let projectURL = "https://jvxrclpyngdcqnbwvtfn.supabase.co"
 
-    /// PASTE the "anon public" key from the same page. Safe to commit —
-    /// see the type-level doc above.
-    public static let anonKey = "PASTE_SUPABASE_ANON_KEY_HERE"
+    /// The "anon public" key from the same page. Safe to commit — see
+    /// the type-level doc above.
+    public static let anonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp2eHJjbHB5bmdkY3FuYnd2dGZuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcwODMxMDksImV4cCI6MjEwMjY1OTEwOX0.uCLgrVPLhovwdBc82KermRbtWykquWoJmg9WmGk2L-s"
 
     /// PostgREST's base path for a given table's REST endpoint.
     public static func restURL(table: String) -> URL {
