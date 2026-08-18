@@ -109,9 +109,15 @@ public struct PluginItem: Codable, Identifiable, Hashable {
     /// watermark itself lives inside the file — the app has no notion of
     /// it beyond this label.
     public let isTrial: Bool
+    /// Link to an unlisted YouTube tutorial for this product, shown as a
+    /// small "i" info button on its card — nil until Cristi adds one
+    /// (the button is hidden, not disabled, when nil), and freely
+    /// editable after publishing without touching the product's files.
+    public let youtubeURL: String?
 
     public init(id: String, name: String, type: PluginType, description: String, version: String,
-                files: [PluginFile], iconSymbol: String?, priceEUR: Double, isFree: Bool = false, isTrial: Bool = false) {
+                files: [PluginFile], iconSymbol: String?, priceEUR: Double, isFree: Bool = false, isTrial: Bool = false,
+                youtubeURL: String? = nil) {
         self.id = id
         self.name = name
         self.type = type
@@ -122,14 +128,15 @@ public struct PluginItem: Codable, Identifiable, Hashable {
         self.priceEUR = priceEUR
         self.isFree = isFree
         self.isTrial = isTrial
+        self.youtubeURL = youtubeURL
     }
 
     // Custom decode: supports both the current `files` array AND the
     // original single-file catalog format (`filePath` + `sha256`, no
-    // `isFree`/`isTrial`), so any entry ever published still decodes
-    // cleanly.
+    // `isFree`/`isTrial`/`youtubeURL`), so any entry ever published still
+    // decodes cleanly.
     private enum CodingKeys: String, CodingKey {
-        case id, name, type, description, version, files, filePath, sha256, iconSymbol, priceEUR, isFree, isTrial
+        case id, name, type, description, version, files, filePath, sha256, iconSymbol, priceEUR, isFree, isTrial, youtubeURL
     }
 
     public init(from decoder: Decoder) throws {
@@ -151,6 +158,7 @@ public struct PluginItem: Codable, Identifiable, Hashable {
         priceEUR = try c.decode(Double.self, forKey: .priceEUR)
         isFree = try c.decodeIfPresent(Bool.self, forKey: .isFree) ?? false
         isTrial = try c.decodeIfPresent(Bool.self, forKey: .isTrial) ?? false
+        youtubeURL = try c.decodeIfPresent(String.self, forKey: .youtubeURL)
     }
 
     // Written explicitly (not synthesized) because CodingKeys carries
@@ -169,6 +177,7 @@ public struct PluginItem: Codable, Identifiable, Hashable {
         try c.encode(priceEUR, forKey: .priceEUR)
         try c.encode(isFree, forKey: .isFree)
         try c.encode(isTrial, forKey: .isTrial)
+        try c.encodeIfPresent(youtubeURL, forKey: .youtubeURL)
     }
 
     /// True for a multi-file pack (e.g. a whole folder of LUTs published
@@ -224,8 +233,14 @@ public struct AppLink: Codable, Identifiable, Hashable {
     public let id: String
     public let name: String
     public let url: String
+    /// Same optional YouTube tutorial link as `PluginItem.youtubeURL` —
+    /// a missing key in older catalog entries decodes as nil automatically
+    /// (Swift's Codable synthesis treats a missing key as nil for an
+    /// Optional property), so this needs no custom CodingKeys/init here.
+    public let youtubeURL: String?
 
-    public init(id: String, name: String, url: String) {
+    public init(id: String, name: String, url: String, youtubeURL: String? = nil) {
+        self.youtubeURL = youtubeURL
         self.id = id
         self.name = name
         self.url = url

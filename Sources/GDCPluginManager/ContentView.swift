@@ -208,10 +208,29 @@ private struct PluginCard: View {
         .padding(12)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(RoundedRectangle(cornerRadius: 10).fill(.background.secondary))
+        .overlay(alignment: .topTrailing) { infoButton }
         .alert(resolveWarningTitle, isPresented: $showResolveWarning) {
             Button(L.t("resolve.running.ok")) {}
         } message: {
             Text(resolveWarningBody)
+        }
+    }
+
+    /// Tutorial link, editable anytime from Furnizor without touching the
+    /// product's files — hidden entirely (not disabled) until one exists,
+    /// so a not-yet-recorded tutorial doesn't clutter every card.
+    @ViewBuilder
+    private var infoButton: some View {
+        if let urlString = item.youtubeURL, let url = URL(string: urlString) {
+            Button { NSWorkspace.shared.open(url) } label: {
+                Image(systemName: "info.circle.fill")
+                    .font(.system(size: 16))
+                    .foregroundStyle(.secondary)
+                    .background(Circle().fill(.background).frame(width: 16, height: 16))
+            }
+            .buttonStyle(.plain)
+            .padding(8)
+            .help(L.t("card.tutorial"))
         }
     }
 
@@ -400,5 +419,21 @@ private struct AppCard: View {
         .padding(12)
         .frame(maxWidth: .infinity, minHeight: 96, alignment: .leading)
         .background(RoundedRectangle(cornerRadius: 10).fill(.background.secondary))
+        .overlay(alignment: .topTrailing) { infoButton }
+    }
+
+    @ViewBuilder
+    private var infoButton: some View {
+        if let urlString = app.youtubeURL, let url = URL(string: urlString) {
+            Button { NSWorkspace.shared.open(url) } label: {
+                Image(systemName: "info.circle.fill")
+                    .font(.system(size: 16))
+                    .foregroundStyle(.secondary)
+                    .background(Circle().fill(.background).frame(width: 16, height: 16))
+            }
+            .buttonStyle(.plain)
+            .padding(8)
+            .help(L.t("card.tutorial"))
+        }
     }
 }

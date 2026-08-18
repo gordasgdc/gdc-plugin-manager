@@ -33,6 +33,12 @@ struct PublishView: View {
     @State private var priceText = "0"
     @State private var accessMode: AccessMode = .paid
     @State private var iconSymbol = "wand.and.stars"
+    @State private var youtubeURL = ""
+    /// Files of the product being updated, kept so a metadata-only edit
+    /// (e.g. adding/changing the YouTube link) doesn't force re-picking
+    /// and re-uploading the files — only used when `isUpdate` is true and
+    /// no new file/folder was picked.
+    @State private var existingFiles: [PluginFile] = []
 
     @State private var isBusy = false
     @State private var statusLines: [String] = []
@@ -51,7 +57,10 @@ struct PublishView: View {
                 }
                 .pickerStyle(.segmented)
                 .frame(maxWidth: 360)
-                .onChange(of: isUpdate) { loadExistingIfNeeded() }
+                .onChange(of: isUpdate) {
+                    loadExistingIfNeeded()
+                    if !isUpdate { clearForm() }
+                }
 
                 if isUpdate {
                     Picker("Produs existent", selection: $id) {
@@ -117,6 +126,11 @@ struct PublishView: View {
                                 .font(.caption).foregroundStyle(.secondary)
                         }
                         TextField("Icon (SF Symbol, opțional)", text: $iconSymbol).textFieldStyle(.roundedBorder)
+                        TextField("Link tutorial YouTube (opțional, nelistat)", text: $youtubeURL).textFieldStyle(.roundedBorder)
+                        if isUpdate {
+                            Text("Poți edita doar linkul YouTube (sau alte câmpuri) fără să alegi din nou fișierele — cele existente rămân neschimbate dacă nu alegi altele.")
+                                .font(.caption).foregroundStyle(.secondary)
+                        }
                     }
                     .padding(8)
                 }
@@ -150,19 +164,24 @@ struct PublishView: View {
     private var fileRow: some View {
         HStack {
             Text(fileRowLabel)
-                .foregroundStyle(pickedURL == nil ? .secondary : .primary)
+                .foregroundStyle(pickedURL == nil && existingFiles.isEmpty ? .secondary : .primary)
             Spacer()
             Button("Alege fișier sau folder…") { pickFileOrFolder() }
         }
     }
 
     private var fileRowLabel: String {
-        guard let url = pickedURL else { return "Niciun fișier sau folder ales" }
-        if isDirectory(url) {
-            let count = (try? collectFiles(under: url).count) ?? 0
-            return "Folder „\(url.lastPathComponent)” — \(count) fișier(e)"
+        if let url = pickedURL {
+            if isDirectory(url) {
+                let count = (try? collectFiles(under: url).count) ?? 0
+                return "Folder „\(url.lastPathComponent)” — \(count) fișier(e)"
+            }
+            return url.lastPathComponent
         }
-        return url.lastPathComponent
+        if isUpdate && !existingFiles.isEmpty {
+            return "Păstrez fișierele existente (\(existingFiles.count)) — alege altele doar dacă vrei să le înlocuiești"
+        }
+        return "Niciun fișier sau folder ales"
     }
 
     private var isFormValid: Bool {
@@ -170,7 +189,7 @@ struct PublishView: View {
             && !name.trimmingCharacters(in: .whitespaces).isEmpty
             && !version.trimmingCharacters(in: .whitespaces).isEmpty
             && (accessMode != .paid || Double(priceText) != nil)
-            && pickedURL != nil
+            && (pickedURL != nil || (isUpdate && !existingFiles.isEmpty))
     }
 
     /// Lets the vendor pick either ONE file (a single DCTL/LUT) or a
@@ -231,7 +250,12 @@ struct PublishView: View {
         accessMode = item.isTrial ? .trial : (item.isFree ? .free : .paid)
         priceText = String(item.priceEUR)
         iconSymbol = item.iconSymbol ?? ""
-        // version left for the user to bump; file(s) must be re-picked either way.
+        youtubeURL = item.youtubeURL ?? ""
+        existingFiles = item.files
+        pickedURL = nil
+        // version left for the user to bump if they're also replacing
+        // files; a metadata-only edit (e.g. just the YouTube link) can
+        // leave it as-is and skip picking a file entirely.
     }
 
     private func publish() async {
@@ -241,40 +265,52 @@ struct PublishView: View {
         isBusy = true
         defer { isBusy = false }
 
-        guard let pickedURL else { return }
+        guard pickedURL != nil || (isUpdate && !existingFiles.isEmpty) else { return }
         let isFreeFlag = accessMode != .paid
         let isTrialFlag = accessMode == .trial
         let price = isFreeFlag ? 0 : (Double(priceText) ?? 0)
         let trimmedID = id.trimmingCharacters(in: .whitespaces)
+        let trimmedYouTube = youtubeURL.trimmingCharacters(in: .whitespaces)
 
         do {
-            let picked = try collectFiles(under: pickedURL)
-            guard !picked.isEmpty else {
-                errorMessage = "Folderul ales nu conține niciun fișier."
-                return
-            }
-
-            log("Actualizez repo-ul privat (pull)…")
-            try GitOps.pull(at: RepoCheckoutPaths.privateFilesRepo)
-
-            var pluginFiles: [PluginFile] = []
-            for (localURL, relativePath) in picked {
-                let data = try Data(contentsOf: localURL)
-                let sha = SHA256.hash(data: data).compactMap { String(format: "%02x", $0) }.joined()
-
-                let repoRelativePath = "\(trimmedID)/\(version)/\(relativePath)"
-                let destURL = RepoCheckoutPaths.privateFilesRepo.appendingPathComponent(repoRelativePath)
-                try FileManager.default.createDirectory(at: destURL.deletingLastPathComponent(), withIntermediateDirectories: true)
-                if FileManager.default.fileExists(atPath: destURL.path) {
-                    try FileManager.default.removeItem(at: destURL)
+            var pluginFiles: [PluginFile]
+            if let pickedURL {
+                // New files picked (new product, or replacing an
+                // existing product's files) — copy + push to the
+                // private repo as before.
+                let picked = try collectFiles(under: pickedURL)
+                guard !picked.isEmpty else {
+                    errorMessage = "Folderul ales nu conține niciun fișier."
+                    return
                 }
-                try FileManager.default.copyItem(at: localURL, to: destURL)
-                pluginFiles.append(PluginFile(path: repoRelativePath, sha256: sha))
-                log("Fișier copiat în \(repoRelativePath)")
-            }
 
-            log("Trimit fișierele (commit + push, repo privat)…")
-            try GitOps.commitAndPush(at: RepoCheckoutPaths.privateFilesRepo, message: "\(trimmedID) \(version)")
+                log("Actualizez repo-ul privat (pull)…")
+                try GitOps.pull(at: RepoCheckoutPaths.privateFilesRepo)
+
+                pluginFiles = []
+                for (localURL, relativePath) in picked {
+                    let data = try Data(contentsOf: localURL)
+                    let sha = SHA256.hash(data: data).compactMap { String(format: "%02x", $0) }.joined()
+
+                    let repoRelativePath = "\(trimmedID)/\(version)/\(relativePath)"
+                    let destURL = RepoCheckoutPaths.privateFilesRepo.appendingPathComponent(repoRelativePath)
+                    try FileManager.default.createDirectory(at: destURL.deletingLastPathComponent(), withIntermediateDirectories: true)
+                    if FileManager.default.fileExists(atPath: destURL.path) {
+                        try FileManager.default.removeItem(at: destURL)
+                    }
+                    try FileManager.default.copyItem(at: localURL, to: destURL)
+                    pluginFiles.append(PluginFile(path: repoRelativePath, sha256: sha))
+                    log("Fișier copiat în \(repoRelativePath)")
+                }
+
+                log("Trimit fișierele (commit + push, repo privat)…")
+                try GitOps.commitAndPush(at: RepoCheckoutPaths.privateFilesRepo, message: "\(trimmedID) \(version)")
+            } else {
+                // Metadata-only update (e.g. just the YouTube link) — no
+                // new files, so the private files repo isn't touched at all.
+                pluginFiles = existingFiles
+                log("Fără fișiere noi — păstrez cele \(existingFiles.count) existente.")
+            }
 
             log("Actualizez catalogul (pull, repo public)…")
             try GitOps.pull(at: RepoCheckoutPaths.publicCatalogRepo)
@@ -283,7 +319,8 @@ struct PublishView: View {
                 id: trimmedID, name: name, type: type, description: description,
                 version: version, files: pluginFiles,
                 iconSymbol: iconSymbol.isEmpty ? nil : iconSymbol, priceEUR: price,
-                isFree: isFreeFlag, isTrial: isTrialFlag
+                isFree: isFreeFlag, isTrial: isTrialFlag,
+                youtubeURL: trimmedYouTube.isEmpty ? nil : trimmedYouTube
             )
             try CatalogEditor.upsert(item)
             log("Catalog actualizat local")
@@ -353,6 +390,8 @@ struct PublishView: View {
         priceText = "0"
         accessMode = .paid
         iconSymbol = "wand.and.stars"
+        youtubeURL = ""
+        existingFiles = []
         pickedURL = nil
     }
 
