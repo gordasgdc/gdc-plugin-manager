@@ -7,7 +7,10 @@ import GDCPluginManagerCore
 final class CatalogService: ObservableObject {
     static let shared = CatalogService()
 
-    static let catalogURL = URL(string: "https://gordasgdc.github.io/gdc-plugin-manager/catalog.json")!
+    // gordas.dev e domeniul custom pt. gdc-plugin-manager (root) — URL direct,
+    // fara sa mai depindem de redirect-ul GitHub gordasgdc.github.io -> gordas.dev
+    // (care trecea prin Worker-ul de routing si dadea 404 pe fisiere de root).
+    static let catalogURL = URL(string: "https://gordas.dev/catalog.json")!
 
     @Published private(set) var items: [PluginItem] = []
     @Published private(set) var courses: [Course] = []
