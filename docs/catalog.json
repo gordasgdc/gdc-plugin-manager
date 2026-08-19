@@ -99,7 +99,7 @@
       "name" : "CST_bazic",
       "priceEUR" : 0,
       "type" : "powerGrade",
-      "version" : "1.0.0",
+      "version" : "1.0.1",
       "youtubeURL" : "https://www.youtube.com/@cristigordas"
     },
     {
@@ -404,5 +404,5 @@
       "youtubeURL" : "https://www.youtube.com/@cristigordas"
     }
   ],
-  "updatedAt" : "2026-08-18"
+  "updatedAt" : "2026-08-19"
 }
