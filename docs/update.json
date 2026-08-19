@@ -1,7 +1,7 @@
 {
-  "version": "1.2.0",
-  "release_date": "2026-08-18",
-  "changes": "PowerGrade-uri instalate automat in Gallery Resolve; categorie noua OFX (plugin-uri DaVinci Resolve Studio); iconite si culori distincte per categorie; buton de tutorial video per produs; selector de limba RO/EN/ES; pagina web tradusa; Cursuri, Aplicatii si istoric Clienti in Furnizor.",
+  "version": "1.2.1",
+  "release_date": "2026-08-19",
+  "changes": "Fix: URL-urile de catalog/update foloseau adresa veche (gordasgdc.github.io), care redirecta gresit dupa mutarea domeniului gordas.dev pe acest proiect. Catalogul se actualizeaza acum corect (produsele PowerGrade nu mai apar gresit la DCTL).",
   "download_url": {
     "mac": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager.pkg"
   },
