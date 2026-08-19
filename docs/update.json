@@ -1,7 +1,7 @@
 {
-  "version": "1.2.2",
+  "version": "1.2.3",
   "release_date": "2026-08-19",
-  "changes": "Lansare client Windows (WPF/.NET 8) — acelasi catalog, licente si instalare ca pe Mac, cu import automat PowerGrade in Gallery-ul DaVinci Resolve. Pe Mac: importul PowerGrade nu mai depinde de python3 instalat separat (Apple l-a scos din macOS implicit) — vine bundle-uit in aplicatie.",
+  "changes": "Fix: iconita lipsea din aplicatia Windows (exe/fereastra) si de pe pagina web (favicon suprimat intentionat, ramas asa din greseala) — ambele arata acum logo-ul corect.",
   "download_url": {
     "mac": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager.pkg",
     "windows": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Windows.zip"
