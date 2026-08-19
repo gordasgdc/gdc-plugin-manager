@@ -18,3 +18,7 @@ Sources/GDCPluginManagerCore/PrivateCatalogAuth.swift
 # insert-only anon key (see GDCPluginManagerCore/SupabaseConfig.swift,
 # which IS safe to commit).
 Sources/GDCPluginManagerFurnizor/SupabaseAdminConfig.swift
+
+# Python portabil bundle-uit — ~66MB, resursa binara redistribuibila, nu
+# cod sursa. Ruleaza ./fetch_python_runtime.sh o data pe masina noua.
+PythonRuntime/

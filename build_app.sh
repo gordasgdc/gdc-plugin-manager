@@ -7,6 +7,10 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
+if [ ! -x "PythonRuntime/bin/python3" ]; then
+    ./fetch_python_runtime.sh
+fi
+
 swift build -c release --product GDCPluginManager
 
 BUILD_OUT="/tmp/GDCPluginManager.app.build-$$"
@@ -17,6 +21,12 @@ mkdir -p "$BUILD_OUT/Contents/Resources"
 cp .build/release/GDCPluginManager "$BUILD_OUT/Contents/MacOS/GDCPluginManager"
 cp Info.plist "$BUILD_OUT/Contents/Info.plist"
 cp AppIcon.icns "$BUILD_OUT/Contents/Resources/AppIcon.icns"
+
+# Python portabil (cpython-build-standalone, arm64, ~66MB) — bundle-uit ca
+# PowerGradeImporter sa NU mai depinda de python3 de sistem (Apple a scos
+# /usr/bin/python3 din macOS implicit pe versiunile recente; vine doar cu
+# Command Line Tools). Vezi PowerGradeImporter.swift findPython3().
+cp -R PythonRuntime "$BUILD_OUT/Contents/Resources/PythonRuntime"
 
 # Same local trusted certificate reused across every GDC Mac app this
 # session - this app needs no TCC-gated permissions, so a dedicated cert

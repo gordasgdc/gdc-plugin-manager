@@ -1,9 +1,10 @@
 {
-  "version": "1.2.1",
+  "version": "1.2.2",
   "release_date": "2026-08-19",
-  "changes": "Fix: URL-urile de catalog/update foloseau adresa veche (gordasgdc.github.io), care redirecta gresit dupa mutarea domeniului gordas.dev pe acest proiect. Catalogul se actualizeaza acum corect (produsele PowerGrade nu mai apar gresit la DCTL).",
+  "changes": "Lansare client Windows (WPF/.NET 8) — acelasi catalog, licente si instalare ca pe Mac, cu import automat PowerGrade in Gallery-ul DaVinci Resolve. Pe Mac: importul PowerGrade nu mai depinde de python3 instalat separat (Apple l-a scos din macOS implicit) — vine bundle-uit in aplicatie.",
   "download_url": {
-    "mac": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager.pkg"
+    "mac": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager.pkg",
+    "windows": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Windows.zip"
   },
   "mandatory": false,
   "min_version": "1.0.0"

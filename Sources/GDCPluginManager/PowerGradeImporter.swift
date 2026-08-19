@@ -178,7 +178,21 @@ enum PowerGradeImporter {
     private static var scriptModulesPath: String { scriptAPIPath + "Modules/" }
     private static let scriptLibPath = "/Applications/DaVinci Resolve/DaVinci Resolve.app/Contents/Libraries/Fusion/fusionscript.so"
 
+    /// Python portabil bundle-uit in Contents/Resources/PythonRuntime (vezi
+    /// build_app.sh) — clientul NU mai depinde de python3 de sistem, care
+    /// Apple l-a scos din /usr/bin implicit pe macOS recente (vine doar cu
+    /// Command Line Tools, pe care majoritatea clientilor nu le au).
+    private static var bundledPythonPath: String? {
+        guard let resourcePath = Bundle.main.resourcePath else { return nil }
+        return resourcePath + "/PythonRuntime/bin/python3"
+    }
+
     private static func findPython3() -> String? {
+        if let bundled = bundledPythonPath, FileManager.default.isExecutableFile(atPath: bundled) {
+            return bundled
+        }
+        // Fallback pentru cazul (neasteptat) in care bundle-ul lipseste sau
+        // e corupt — acelasi candidati de sistem ca inainte.
         for candidate in ["/usr/bin/python3", "/opt/homebrew/bin/python3", "/usr/local/bin/python3"] {
             if FileManager.default.isExecutableFile(atPath: candidate) { return candidate }
         }
