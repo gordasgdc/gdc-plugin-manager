@@ -34,6 +34,12 @@
       "id" : "gdc-resolve-encoder",
       "name" : "GDC Resolve Encoder",
       "url" : "https://gordasgdc.github.io/gdc-resolve-encoder/"
+    },
+    {
+      "id" : "Simulator DOF",
+      "name" : "Simulator DOF",
+      "url" : "https://gordas.dev/depth-of-field/",
+      "youtubeURL" : "https://www.youtube.com/@cristigordas"
     }
   ],
   "courses" : [
