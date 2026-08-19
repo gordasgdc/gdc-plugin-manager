@@ -16,7 +16,7 @@ struct UpdateInfo: Decodable {
 final class UpdateChecker: ObservableObject {
     static let shared = UpdateChecker()
 
-    static let updateURL = URL(string: "https://gordasgdc.github.io/gdc-plugin-manager/update.json")!
+    static let updateURL = URL(string: "https://gordas.dev/update.json")!
 
     @Published private(set) var availableUpdate: UpdateInfo?
 
