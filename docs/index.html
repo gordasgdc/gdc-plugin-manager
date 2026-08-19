@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title id="page-title">GDC Plugin Manager</title>
-<meta id="meta-desc" name="description" content="GDC Plugin Manager — aplicație gratuită, doar pentru Mac. Instalează, actualizează și elimină DCTL-uri, LUT-uri și Fuse-uri GDC pentru DaVinci Resolve, cu un singur click. Fiecare produs se deblochează printr-o donație.">
+<meta id="meta-desc" name="description" content="GDC Plugin Manager — aplicație gratuită pentru Mac și Windows. Instalează, actualizează și elimină DCTL-uri, LUT-uri și Fuse-uri GDC pentru DaVinci Resolve, cu un singur click. Fiecare produs se deblochează printr-o donație.">
 <link rel="icon" href="data:,">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -183,7 +183,7 @@
         <button data-lang="en">EN</button>
         <button data-lang="es">ES</button>
       </div>
-      <a class="nav-cta" data-i18n="nav.download" href="https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager.pkg">Descarcă gratuit</a>
+      <a class="nav-cta" data-i18n="nav.download" href="#download">Descarcă gratuit</a>
     </div>
   </div>
 </header>
@@ -191,16 +191,17 @@
 <section class="hero">
   <div class="wrap hero-grid">
     <div>
-      <div class="eyebrow" data-i18n="hero.eyebrow">Doar pentru Mac · DaVinci Resolve</div>
+      <div class="eyebrow" data-i18n="hero.eyebrow">Mac și Windows · DaVinci Resolve</div>
       <h1 id="hero-h1" data-i18n-html="hero.h1">Produsele GDC pentru<br>Resolve, <span class="accent">la un click distanță</span>.</h1>
       <p class="lead" data-i18n="hero.lead">DCTL-uri, LUT-uri și Fuse-uri instalate direct în folderele pe care DaVinci Resolve le citește la pornire — fără să cauți manual foldere ascunse și fără să copiezi fișiere cu mâna. Aplicația e complet gratuită; cumperi (printr-o donație) doar produsele pe care le vrei.</p>
-      <div class="hero-actions">
-        <a class="btn btn-primary" data-i18n="hero.download" href="https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager.pkg">⬇ Descarcă gratuit</a>
+      <div class="hero-actions" id="download">
+        <a class="btn btn-primary" data-i18n="hero.download" href="https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager.pkg">⬇ Descarcă pentru Mac</a>
+        <a class="btn btn-ghost" data-i18n="hero.download.windows" href="https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Windows.zip">⬇ Descarcă pentru Windows</a>
         <a class="btn btn-ghost" data-i18n="hero.how" href="#how">Vezi cum funcționează</a>
       </div>
       <div class="hero-meta">
         <span><span class="dot"></span> <span data-i18n="hero.meta1">Aplicație 100% gratuită</span></span>
-        <span><span class="dot"></span> <span data-i18n="hero.meta2">Doar Mac, nativ Apple Silicon</span></span>
+        <span><span class="dot"></span> <span data-i18n="hero.meta2">Mac (Apple Silicon) și Windows</span></span>
         <span><span class="dot"></span> Română · English · Español</span>
       </div>
     </div>
@@ -257,7 +258,7 @@
     <div class="steps">
       <div class="step reveal">
         <h4 data-i18n="step1.h4">Descarcă și deschide</h4>
-        <p data-i18n="step1.p">Descarcă pachetul .pkg, apoi click-dreapta → Deschide (o singură dată, e nesemnat cu certificat plătit Apple).</p>
+        <p data-i18n="step1.p">Mac: descarcă .pkg, apoi click-dreapta → Deschide (o singură dată, e nesemnat cu certificat plătit Apple). Windows: descarcă arhiva .zip, dezarhiveaz-o și rulează GDCPluginManager.exe.</p>
       </div>
       <div class="step reveal">
         <h4 data-i18n="step2.h4">Răsfoiește catalogul, gratuit</h4>
@@ -340,13 +341,13 @@
   const translations = {
     ro: {
       'page.title': 'GDC Plugin Manager',
-      'meta.description': 'GDC Plugin Manager — aplicație gratuită, doar pentru Mac. Instalează, actualizează și elimină DCTL-uri, LUT-uri și Fuse-uri GDC pentru DaVinci Resolve, cu un singur click. Fiecare produs se deblochează printr-o donație.',
+      'meta.description': 'GDC Plugin Manager — aplicație gratuită pentru Mac și Windows. Instalează, actualizează și elimină DCTL-uri, LUT-uri și Fuse-uri GDC pentru DaVinci Resolve, cu un singur click. Fiecare produs se deblochează printr-o donație.',
       'nav.features': 'Funcții', 'nav.how': 'Cum funcționează', 'nav.catalog': 'Catalog', 'nav.download': 'Descarcă gratuit',
-      'hero.eyebrow': 'Doar pentru Mac · DaVinci Resolve',
+      'hero.eyebrow': 'Mac și Windows · DaVinci Resolve',
       'hero.h1': 'Produsele GDC pentru<br>Resolve, <span class="accent">la un click distanță</span>.',
       'hero.lead': 'DCTL-uri, LUT-uri și Fuse-uri instalate direct în folderele pe care DaVinci Resolve le citește la pornire — fără să cauți manual foldere ascunse și fără să copiezi fișiere cu mâna. Aplicația e complet gratuită; cumperi (printr-o donație) doar produsele pe care le vrei.',
-      'hero.download': '⬇ Descarcă gratuit', 'hero.how': 'Vezi cum funcționează',
-      'hero.meta1': 'Aplicație 100% gratuită', 'hero.meta2': 'Doar Mac, nativ Apple Silicon',
+      'hero.download': '⬇ Descarcă pentru Mac', 'hero.download.windows': '⬇ Descarcă pentru Windows', 'hero.how': 'Vezi cum funcționează',
+      'hero.meta1': 'Aplicație 100% gratuită', 'hero.meta2': 'Mac (Apple Silicon) și Windows',
       'features.tag': 'Funcții', 'features.h2': 'Tot ce ține de plugin-uri, într-un singur loc',
       'features.desc': 'Aplicația știe exact unde vrea DaVinci Resolve fiecare tip de fișier și le pune acolo pentru tine.',
       'feature.dctl.h3': 'DCTL', 'feature.dctl.p': 'Efecte de culoare scrise ca DCTL, instalate direct în folderul de LUT-uri/DCTL-uri al Resolve — apar imediat în panoul Color.',
@@ -365,13 +366,13 @@
     },
     en: {
       'page.title': 'GDC Plugin Manager',
-      'meta.description': 'GDC Plugin Manager — free, Mac-only app. Install, update and remove GDC DCTLs, LUTs and Fuses for DaVinci Resolve with a single click. Every product unlocks with a donation.',
+      'meta.description': 'GDC Plugin Manager — free app for Mac and Windows. Install, update and remove GDC DCTLs, LUTs and Fuses for DaVinci Resolve with a single click. Every product unlocks with a donation.',
       'nav.features': 'Features', 'nav.how': 'How it works', 'nav.catalog': 'Catalog', 'nav.download': 'Download free',
-      'hero.eyebrow': 'Mac only · DaVinci Resolve',
+      'hero.eyebrow': 'Mac and Windows · DaVinci Resolve',
       'hero.h1': 'GDC products for<br>Resolve, <span class="accent">one click away</span>.',
       'hero.lead': 'DCTLs, LUTs and Fuses installed straight into the folders DaVinci Resolve reads on launch — no hunting for hidden folders, no copying files by hand. The app itself is completely free; you only pay (via a donation) for the products you want.',
-      'hero.download': '⬇ Download free', 'hero.how': 'See how it works',
-      'hero.meta1': '100% free app', 'hero.meta2': 'Mac only, native Apple Silicon',
+      'hero.download': '⬇ Download for Mac', 'hero.download.windows': '⬇ Download for Windows', 'hero.how': 'See how it works',
+      'hero.meta1': '100% free app', 'hero.meta2': 'Mac (Apple Silicon) and Windows',
       'features.tag': 'Features', 'features.h2': 'Everything plugin-related, in one place',
       'features.desc': 'The app knows exactly where DaVinci Resolve wants each file type and puts it there for you.',
       'feature.dctl.h3': 'DCTL', 'feature.dctl.p': 'Color effects written as DCTL, installed straight into Resolve\'s LUT/DCTL folder — they show up immediately in the Color page.',
@@ -379,7 +380,7 @@
       'feature.fuse.h3': 'Fuse', 'feature.fuse.p': 'Fusion plugins (.fuse), placed exactly in the Fuses folder Resolve\'s Fusion engine reads from.',
       'feature.updates.h3': 'One-click updates', 'feature.updates.p': 'The app compares the installed version against the catalog and clearly shows you when there\'s something new to update.',
       'how.tag': 'Install', 'how.h2': 'Ready to use in two minutes',
-      'step1.h4': 'Download and open', 'step1.p': 'Download the .pkg, then right-click → Open (just once — it isn\'t signed with a paid Apple certificate).',
+      'step1.h4': 'Download and open', 'step1.p': 'Mac: download the .pkg, then right-click → Open (just once — it isn\'t signed with a paid Apple certificate). Windows: download the .zip, unzip it and run GDCPluginManager.exe.',
       'step2.h4': 'Browse the catalog, free', 'step2.p': 'The catalog loads automatically, no account and no fee. See every product, its description and its price.',
       'step3.h4': 'Unlock only what you want', 'step3.p': 'Press Buy on the product you want — a one-time donation that helps me keep developing. You get a code, activate it from the License page, then Install with one click.',
       'catalog.tag': 'Catalog', 'catalog.h2': 'Every product, unlocked separately',
@@ -390,13 +391,13 @@
     },
     es: {
       'page.title': 'GDC Plugin Manager',
-      'meta.description': 'GDC Plugin Manager — aplicación gratuita, solo para Mac. Instala, actualiza y elimina DCTLs, LUTs y Fuses GDC para DaVinci Resolve con un solo clic. Cada producto se desbloquea mediante una donación.',
+      'meta.description': 'GDC Plugin Manager — aplicación gratuita para Mac y Windows. Instala, actualiza y elimina DCTLs, LUTs y Fuses GDC para DaVinci Resolve con un solo clic. Cada producto se desbloquea mediante una donación.',
       'nav.features': 'Funciones', 'nav.how': 'Cómo funciona', 'nav.catalog': 'Catálogo', 'nav.download': 'Descargar gratis',
-      'hero.eyebrow': 'Solo para Mac · DaVinci Resolve',
+      'hero.eyebrow': 'Mac y Windows · DaVinci Resolve',
       'hero.h1': 'Los productos GDC para<br>Resolve, <span class="accent">a un clic de distancia</span>.',
       'hero.lead': 'DCTLs, LUTs y Fuses instalados directamente en las carpetas que DaVinci Resolve lee al iniciar — sin buscar carpetas ocultas ni copiar archivos a mano. La aplicación es completamente gratuita; solo pagas (mediante una donación) por los productos que quieras.',
-      'hero.download': '⬇ Descargar gratis', 'hero.how': 'Ver cómo funciona',
-      'hero.meta1': 'Aplicación 100% gratuita', 'hero.meta2': 'Solo Mac, nativo Apple Silicon',
+      'hero.download': '⬇ Descargar para Mac', 'hero.download.windows': '⬇ Descargar para Windows', 'hero.how': 'Ver cómo funciona',
+      'hero.meta1': 'Aplicación 100% gratuita', 'hero.meta2': 'Mac (Apple Silicon) y Windows',
       'features.tag': 'Funciones', 'features.h2': 'Todo lo relacionado con plugins, en un solo lugar',
       'features.desc': 'La aplicación sabe exactamente dónde quiere DaVinci Resolve cada tipo de archivo y lo coloca ahí por ti.',
       'feature.dctl.h3': 'DCTL', 'feature.dctl.p': 'Efectos de color escritos como DCTL, instalados directamente en la carpeta de LUTs/DCTLs de Resolve — aparecen de inmediato en el panel Color.',
@@ -404,7 +405,7 @@
       'feature.fuse.h3': 'Fuse', 'feature.fuse.p': 'Plugins de Fusion (.fuse), colocados exactamente en la carpeta de Fuses que lee el motor Fusion de Resolve.',
       'feature.updates.h3': 'Actualizaciones con un clic', 'feature.updates.p': 'La aplicación compara la versión instalada con la del catálogo y te muestra claramente cuándo hay algo nuevo que actualizar.',
       'how.tag': 'Instalación', 'how.h2': 'Listo para usar en dos minutos',
-      'step1.h4': 'Descarga y abre', 'step1.p': 'Descarga el paquete .pkg y luego clic derecho → Abrir (una sola vez, no está firmado con certificado de pago de Apple).',
+      'step1.h4': 'Descarga y abre', 'step1.p': 'Mac: descarga el paquete .pkg y luego clic derecho → Abrir (una sola vez, no está firmado con certificado de pago de Apple). Windows: descarga el .zip, descomprímelo y ejecuta GDCPluginManager.exe.',
       'step2.h4': 'Explora el catálogo, gratis', 'step2.p': 'El catálogo se carga automáticamente, sin cuenta y sin ninguna tarifa. Ve cada producto, su descripción y su precio.',
       'step3.h4': 'Desbloquea solo lo que quieras', 'step3.p': 'Pulsa Comprar en el producto que quieras — una donación única que me ayuda a seguir desarrollando. Recibes un código, lo activas desde la página Licencia y luego Instalas con un clic.',
       'catalog.tag': 'Catálogo', 'catalog.h2': 'Cada producto, desbloqueado por separado',
