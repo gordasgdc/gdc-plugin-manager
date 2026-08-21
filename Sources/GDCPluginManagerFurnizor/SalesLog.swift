@@ -93,6 +93,20 @@ enum SalesLog {
         try content.write(to: fileURL, atomically: true, encoding: .utf8)
     }
 
+    /// Corrects a bookkeeping mistake (wrong name, email, or price typed
+    /// in at generation time) — replaces the row matching `serial` with
+    /// `updated` in place. Purely a log edit, exactly like `delete`: the
+    /// serial itself keeps validating however it was signed, unaffected
+    /// by anything in this file.
+    static func update(serial: String, with updated: Entry) throws {
+        let all = readAll().reversed() // chronological order, oldest first
+        var content = columns.joined(separator: ",") + "\n"
+        for entry in all {
+            content += rowString(for: entry.serial == serial ? updated : entry) + "\n"
+        }
+        try content.write(to: fileURL, atomically: true, encoding: .utf8)
+    }
+
     private static func rowString(for entry: Entry) -> String {
         [
             entry.dateUTC, entry.productID, entry.productName, entry.customer, entry.email,

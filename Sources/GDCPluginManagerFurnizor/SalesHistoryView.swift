@@ -10,6 +10,7 @@ struct SalesHistoryView: View {
     @State private var searchText = ""
     @State private var pendingDelete: SalesLog.Entry?
     @State private var justCopiedSerial: String?
+    @State private var editingEntry: SalesLog.Entry?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -56,6 +57,10 @@ struct SalesHistoryView: View {
                                 justCopiedSerial = entry.serial
                             }
                             .controlSize(.small)
+                            Button("Editează") {
+                                editingEntry = entry
+                            }
+                            .controlSize(.small)
                             Button("Șterge", role: .destructive) {
                                 pendingDelete = entry
                             }
@@ -81,6 +86,14 @@ struct SalesHistoryView: View {
         } message: {
             Text("Elimină doar rândul din jurnal — codul rămâne activ dacă a fost deja folosit de client.")
         }
+        .sheet(item: $editingEntry) { entry in
+            EditSalesEntryView(entry: entry) {
+                loadEntries()
+                editingEntry = nil
+            } onCancel: {
+                editingEntry = nil
+            }
+        }
         .task { loadEntries() }
     }
 
@@ -103,5 +116,80 @@ struct SalesHistoryView: View {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm"
         return formatter.string(from: date)
+    }
+}
+
+/// Corrects a bookkeeping mistake (wrong name / email / price typed in
+/// at generation time). Editable: customer, email, price, "expiră"
+/// display text. NOT editable: dateUTC, productID/Name, machineID,
+/// serial — changing those would desync the row from the actual signed
+/// code (see SalesLog.update's doc comment).
+private struct EditSalesEntryView: View {
+    let entry: SalesLog.Entry
+    let onSaved: () -> Void
+    let onCancel: () -> Void
+
+    @State private var customer: String
+    @State private var email: String
+    @State private var priceText: String
+    @State private var expiresDisplay: String
+    @State private var errorMessage: String?
+
+    init(entry: SalesLog.Entry, onSaved: @escaping () -> Void, onCancel: @escaping () -> Void) {
+        self.entry = entry
+        self.onSaved = onSaved
+        self.onCancel = onCancel
+        _customer = State(initialValue: entry.customer)
+        _email = State(initialValue: entry.email)
+        _priceText = State(initialValue: String(format: "%.2f", entry.priceEUR))
+        _expiresDisplay = State(initialValue: entry.expiresDisplay)
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            Text("Editează „\(entry.productName)”").font(.title3).fontWeight(.semibold)
+
+            Text("Produs, dată, ID mașină și cod serial nu se pot schimba de aici — doar datele de client de mai jos.")
+                .font(.caption).foregroundStyle(.secondary)
+
+            TextField("Client", text: $customer).textFieldStyle(.roundedBorder)
+            TextField("Email", text: $email).textFieldStyle(.roundedBorder)
+            TextField("Preț (EUR)", text: $priceText).textFieldStyle(.roundedBorder)
+            TextField("Expiră (text afișat)", text: $expiresDisplay).textFieldStyle(.roundedBorder)
+
+            if let errorMessage {
+                Text(errorMessage).foregroundStyle(.red).font(.caption)
+            }
+
+            HStack {
+                Spacer()
+                Button("Anulează") { onCancel() }
+                Button("Salvează") { save() }
+                    .buttonStyle(.borderedProminent)
+                    .disabled(customer.trimmingCharacters(in: .whitespaces).isEmpty || Double(priceText) == nil)
+            }
+        }
+        .padding(24)
+        .frame(width: 420)
+    }
+
+    private func save() {
+        guard let price = Double(priceText) else {
+            errorMessage = "Prețul trebuie să fie un număr."
+            return
+        }
+        let updated = SalesLog.Entry(
+            dateUTC: entry.dateUTC, productID: entry.productID, productName: entry.productName,
+            customer: customer.trimmingCharacters(in: .whitespaces),
+            email: email.trimmingCharacters(in: .whitespaces),
+            priceEUR: price, expiresDisplay: expiresDisplay,
+            machineID: entry.machineID, serial: entry.serial
+        )
+        do {
+            try SalesLog.update(serial: entry.serial, with: updated)
+            onSaved()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
     }
 }
