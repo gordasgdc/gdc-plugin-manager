@@ -338,26 +338,74 @@ public struct EducationalResource: Codable, Identifiable, Hashable {
     }
 }
 
+/// A community announcement — workshop, course cohort, or festival —
+/// shown in the client's "Evenimente" section. Just informational: a
+/// date range as free text (no calendar logic needed), a location, and
+/// an outbound link for details/registration. No files, no license.
+public struct Event: Codable, Identifiable, Hashable {
+    public let id: String
+    public let title: String
+    public let description: String
+    /// Free text on purpose (e.g. "15-17 martie 2026") — a festival or
+    /// multi-day workshop doesn't fit a single Date, and the vendor
+    /// tool has no need for calendar math on it.
+    public let dateDisplay: String
+    public let location: String
+    public let externalURL: String
+    public let youtubeURL: String?
+
+    public init(id: String, title: String, description: String, dateDisplay: String, location: String, externalURL: String, youtubeURL: String? = nil) {
+        self.id = id
+        self.title = title
+        self.description = description
+        self.dateDisplay = dateDisplay
+        self.location = location
+        self.externalURL = externalURL
+        self.youtubeURL = youtubeURL
+    }
+}
+
+/// A partner equipment shop (photo/video gear) shown in the client's
+/// "Magazine partenere" section — name, description, direct link.
+/// Nothing to install, no license.
+public struct PartnerStore: Codable, Identifiable, Hashable {
+    public let id: String
+    public let name: String
+    public let description: String
+    public let url: String
+
+    public init(id: String, name: String, description: String, url: String) {
+        self.id = id
+        self.name = name
+        self.description = description
+        self.url = url
+    }
+}
+
 public struct Catalog: Codable {
     public let updatedAt: String?
     public let items: [PluginItem]
     public let courses: [Course]
     public let apps: [AppLink]
     public let educationalResources: [EducationalResource]
+    public let events: [Event]
+    public let partnerStores: [PartnerStore]
 
-    public init(updatedAt: String?, items: [PluginItem], courses: [Course] = [], apps: [AppLink] = [], educationalResources: [EducationalResource] = []) {
+    public init(updatedAt: String?, items: [PluginItem], courses: [Course] = [], apps: [AppLink] = [], educationalResources: [EducationalResource] = [], events: [Event] = [], partnerStores: [PartnerStore] = []) {
         self.updatedAt = updatedAt
         self.items = items
         self.courses = courses
         self.apps = apps
         self.educationalResources = educationalResources
+        self.events = events
+        self.partnerStores = partnerStores
     }
 
     // Custom decode: every collection defaults to `[]` if absent, so a
     // catalog published before a given field existed keeps decoding
     // cleanly after this update ships to clients.
     private enum CodingKeys: String, CodingKey {
-        case updatedAt, items, courses, apps, educationalResources
+        case updatedAt, items, courses, apps, educationalResources, events, partnerStores
     }
 
     public init(from decoder: Decoder) throws {
@@ -367,5 +415,7 @@ public struct Catalog: Codable {
         courses = try c.decodeIfPresent([Course].self, forKey: .courses) ?? []
         apps = try c.decodeIfPresent([AppLink].self, forKey: .apps) ?? []
         educationalResources = try c.decodeIfPresent([EducationalResource].self, forKey: .educationalResources) ?? []
+        events = try c.decodeIfPresent([Event].self, forKey: .events) ?? []
+        partnerStores = try c.decodeIfPresent([PartnerStore].self, forKey: .partnerStores) ?? []
     }
 }

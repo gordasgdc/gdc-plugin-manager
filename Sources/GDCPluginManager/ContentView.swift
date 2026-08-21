@@ -7,6 +7,8 @@ enum SidebarSection: Hashable {
     case type(PluginType)
     case courses
     case educationalResources
+    case events
+    case partnerStores
     case apps
     case license
     case help
@@ -43,6 +45,10 @@ struct ContentView: View {
                     .tag(SidebarSection.courses)
                 Label(L.t("sidebar.educationalResources"), systemImage: "book")
                     .tag(SidebarSection.educationalResources)
+                Label(L.t("sidebar.events"), systemImage: "calendar")
+                    .tag(SidebarSection.events)
+                Label(L.t("sidebar.partnerStores"), systemImage: "storefront")
+                    .tag(SidebarSection.partnerStores)
                 Label(L.t("sidebar.apps"), systemImage: "app.badge")
                     .tag(SidebarSection.apps)
                 Divider()
@@ -67,6 +73,10 @@ struct ContentView: View {
                         CoursesGrid(courses: catalog.courses)
                     case .educationalResources:
                         EducationalResourcesGrid(resources: catalog.educationalResources)
+                    case .events:
+                        EventsGrid(events: catalog.events)
+                    case .partnerStores:
+                        PartnerStoresGrid(stores: catalog.partnerStores)
                     case .apps:
                         AppsGrid(apps: catalog.apps)
                     case .all, .none:
@@ -464,6 +474,107 @@ private struct EducationalResourceCard: View {
         }
         .padding(12)
         .frame(maxWidth: .infinity, minHeight: 140, alignment: .leading)
+        .background(RoundedRectangle(cornerRadius: 10).fill(.background.secondary))
+    }
+}
+
+private struct EventsGrid: View {
+    let events: [Event]
+
+    private let columns = [GridItem(.adaptive(minimum: 260, maximum: 340), spacing: 14)]
+
+    var body: some View {
+        ScrollView {
+            if events.isEmpty {
+                Text(L.t("events.empty")).foregroundStyle(.secondary).padding(40)
+            } else {
+                LazyVGrid(columns: columns, spacing: 14) {
+                    ForEach(events) { event in
+                        EventCard(event: event)
+                    }
+                }
+                .padding(16)
+            }
+        }
+    }
+}
+
+private struct EventCard: View {
+    let event: Event
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Image(systemName: "calendar")
+                    .font(.system(size: 22))
+                    .foregroundStyle(.tint)
+                Spacer()
+                if let urlString = event.youtubeURL, let url = URL(string: urlString) {
+                    Button { NSWorkspace.shared.open(url) } label: {
+                        Image(systemName: "play.circle")
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+            Text(event.title).font(.headline)
+            Text("\(event.dateDisplay) · \(event.location)")
+                .font(.caption).foregroundStyle(.secondary)
+            Text(event.description)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            Spacer(minLength: 0)
+            if let url = URL(string: event.externalURL) {
+                Button(L.t("events.details")) { NSWorkspace.shared.open(url) }
+                    .controlSize(.small)
+            }
+        }
+        .padding(12)
+        .frame(maxWidth: .infinity, minHeight: 140, alignment: .leading)
+        .background(RoundedRectangle(cornerRadius: 10).fill(.background.secondary))
+    }
+}
+
+private struct PartnerStoresGrid: View {
+    let stores: [PartnerStore]
+
+    private let columns = [GridItem(.adaptive(minimum: 260, maximum: 340), spacing: 14)]
+
+    var body: some View {
+        ScrollView {
+            if stores.isEmpty {
+                Text(L.t("stores.empty")).foregroundStyle(.secondary).padding(40)
+            } else {
+                LazyVGrid(columns: columns, spacing: 14) {
+                    ForEach(stores) { store in
+                        PartnerStoreCard(store: store)
+                    }
+                }
+                .padding(16)
+            }
+        }
+    }
+}
+
+private struct PartnerStoreCard: View {
+    let store: PartnerStore
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Image(systemName: "storefront.fill")
+                .font(.system(size: 22))
+                .foregroundStyle(.tint)
+            Text(store.name).font(.headline)
+            Text(store.description)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            Spacer(minLength: 0)
+            if let url = URL(string: store.url) {
+                Button(L.t("stores.visit")) { NSWorkspace.shared.open(url) }
+                    .controlSize(.small)
+            }
+        }
+        .padding(12)
+        .frame(maxWidth: .infinity, minHeight: 120, alignment: .leading)
         .background(RoundedRectangle(cornerRadius: 10).fill(.background.secondary))
     }
 }

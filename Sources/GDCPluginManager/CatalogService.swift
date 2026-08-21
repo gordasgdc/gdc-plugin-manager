@@ -16,6 +16,8 @@ final class CatalogService: ObservableObject {
     @Published private(set) var courses: [Course] = []
     @Published private(set) var apps: [AppLink] = []
     @Published private(set) var educationalResources: [EducationalResource] = []
+    @Published private(set) var events: [Event] = []
+    @Published private(set) var partnerStores: [PartnerStore] = []
     @Published private(set) var isLoading = false
     @Published private(set) var loadError: String?
 
@@ -52,6 +54,8 @@ final class CatalogService: ObservableObject {
                 courses = catalog.courses
                 apps = catalog.apps
                 educationalResources = catalog.educationalResources
+                events = catalog.events
+                partnerStores = catalog.partnerStores
                 saveToCache(data: data)
             } catch {
                 throw CatalogFetchError.decodeFailed
@@ -87,6 +91,8 @@ final class CatalogService: ObservableObject {
         courses = catalog.courses
         apps = catalog.apps
         educationalResources = catalog.educationalResources
+        events = catalog.events
+        partnerStores = catalog.partnerStores
     }
 
     private func saveToCache(data: Data) {
