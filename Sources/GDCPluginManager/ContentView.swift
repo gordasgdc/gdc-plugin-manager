@@ -272,6 +272,8 @@ private struct PluginCard: View {
         } else if installs.hasUpdate(item) {
             HStack {
                 Button(L.t("card.update")) { runGuarded { install() } }
+                    .buttonStyle(.borderedProminent)
+                    .tint(.orange)
                 Button(L.t("card.remove"), role: .destructive) { runGuarded { remove() } }
             }
         } else if installs.isInstalled(item) {
