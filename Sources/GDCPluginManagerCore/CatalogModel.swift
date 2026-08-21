@@ -304,24 +304,60 @@ public struct AppLink: Codable, Identifiable, Hashable {
     }
 }
 
+/// A book, online course, or guide sold by a third party (Amazon,
+/// Gumroad, Udemy, …) — unlike `Course`, this is NOT bookable via
+/// WhatsApp: the client just shows it and links straight out to
+/// `externalURL` to buy. No files, no license, no install.
+public struct EducationalResource: Codable, Identifiable, Hashable {
+    public enum Kind: String, Codable, CaseIterable, Identifiable {
+        case course, book, guide
+        public var id: String { rawValue }
+        public var label: String {
+            switch self {
+            case .course: return "Curs"
+            case .book: return "Carte"
+            case .guide: return "Ghid"
+            }
+        }
+    }
+
+    public let id: String
+    public let name: String
+    public let description: String
+    public let kind: Kind
+    public let externalURL: String
+    public let youtubeURL: String?
+
+    public init(id: String, name: String, description: String, kind: Kind, externalURL: String, youtubeURL: String? = nil) {
+        self.id = id
+        self.name = name
+        self.description = description
+        self.kind = kind
+        self.externalURL = externalURL
+        self.youtubeURL = youtubeURL
+    }
+}
+
 public struct Catalog: Codable {
     public let updatedAt: String?
     public let items: [PluginItem]
     public let courses: [Course]
     public let apps: [AppLink]
+    public let educationalResources: [EducationalResource]
 
-    public init(updatedAt: String?, items: [PluginItem], courses: [Course] = [], apps: [AppLink] = []) {
+    public init(updatedAt: String?, items: [PluginItem], courses: [Course] = [], apps: [AppLink] = [], educationalResources: [EducationalResource] = []) {
         self.updatedAt = updatedAt
         self.items = items
         self.courses = courses
         self.apps = apps
+        self.educationalResources = educationalResources
     }
 
-    // Custom decode: `courses`/`apps` default to `[]` if absent, so the
-    // catalog already live today (real products, no courses/apps keys
-    // yet) keeps decoding cleanly after this update ships to clients.
+    // Custom decode: every collection defaults to `[]` if absent, so a
+    // catalog published before a given field existed keeps decoding
+    // cleanly after this update ships to clients.
     private enum CodingKeys: String, CodingKey {
-        case updatedAt, items, courses, apps
+        case updatedAt, items, courses, apps, educationalResources
     }
 
     public init(from decoder: Decoder) throws {
@@ -330,5 +366,6 @@ public struct Catalog: Codable {
         items = try c.decodeIfPresent([PluginItem].self, forKey: .items) ?? []
         courses = try c.decodeIfPresent([Course].self, forKey: .courses) ?? []
         apps = try c.decodeIfPresent([AppLink].self, forKey: .apps) ?? []
+        educationalResources = try c.decodeIfPresent([EducationalResource].self, forKey: .educationalResources) ?? []
     }
 }

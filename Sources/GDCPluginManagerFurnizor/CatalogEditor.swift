@@ -5,12 +5,14 @@ enum CatalogEditorError: Error, LocalizedError {
     case itemNotFound(String)
     case courseNotFound(String)
     case appNotFound(String)
+    case educationalResourceNotFound(String)
 
     var errorDescription: String? {
         switch self {
         case .itemNotFound(let id): return "Nu există niciun produs cu id-ul „\(id)” în catalog."
         case .courseNotFound(let id): return "Nu există niciun curs cu id-ul „\(id)” în catalog."
         case .appNotFound(let id): return "Nu există nicio aplicație cu id-ul „\(id)” în catalog."
+        case .educationalResourceNotFound(let id): return "Nu există niciun material cu id-ul „\(id)” în catalog."
         }
     }
 }
@@ -35,7 +37,7 @@ enum CatalogEditor {
         var items = catalog.items.filter { $0.id != item.id }
         items.append(item)
         items.sort { $0.name < $1.name }
-        try write(items: items, courses: catalog.courses, apps: catalog.apps)
+        try write(items: items, courses: catalog.courses, apps: catalog.apps, educationalResources: catalog.educationalResources)
     }
 
     /// Removes an item entirely — for a product published by mistake, or
@@ -48,7 +50,7 @@ enum CatalogEditor {
         guard items.count != catalog.items.count else {
             throw CatalogEditorError.itemNotFound(id)
         }
-        try write(items: items, courses: catalog.courses, apps: catalog.apps)
+        try write(items: items, courses: catalog.courses, apps: catalog.apps, educationalResources: catalog.educationalResources)
     }
 
     // MARK: - Courses
@@ -58,7 +60,7 @@ enum CatalogEditor {
         var courses = catalog.courses.filter { $0.id != course.id }
         courses.append(course)
         courses.sort { $0.name < $1.name }
-        try write(items: catalog.items, courses: courses, apps: catalog.apps)
+        try write(items: catalog.items, courses: courses, apps: catalog.apps, educationalResources: catalog.educationalResources)
     }
 
     static func removeCourse(id: String) throws {
@@ -67,7 +69,7 @@ enum CatalogEditor {
         guard courses.count != catalog.courses.count else {
             throw CatalogEditorError.courseNotFound(id)
         }
-        try write(items: catalog.items, courses: courses, apps: catalog.apps)
+        try write(items: catalog.items, courses: courses, apps: catalog.apps, educationalResources: catalog.educationalResources)
     }
 
     // MARK: - App links
@@ -77,7 +79,7 @@ enum CatalogEditor {
         var apps = catalog.apps.filter { $0.id != app.id }
         apps.append(app)
         apps.sort { $0.name < $1.name }
-        try write(items: catalog.items, courses: catalog.courses, apps: apps)
+        try write(items: catalog.items, courses: catalog.courses, apps: apps, educationalResources: catalog.educationalResources)
     }
 
     static func removeApp(id: String) throws {
@@ -86,15 +88,34 @@ enum CatalogEditor {
         guard apps.count != catalog.apps.count else {
             throw CatalogEditorError.appNotFound(id)
         }
-        try write(items: catalog.items, courses: catalog.courses, apps: apps)
+        try write(items: catalog.items, courses: catalog.courses, apps: apps, educationalResources: catalog.educationalResources)
+    }
+
+    // MARK: - Educational resources (books / online courses / guides sold externally)
+
+    static func upsertEducationalResource(_ resource: EducationalResource) throws {
+        let catalog = (try? load()) ?? Catalog(updatedAt: nil, items: [])
+        var resources = catalog.educationalResources.filter { $0.id != resource.id }
+        resources.append(resource)
+        resources.sort { $0.name < $1.name }
+        try write(items: catalog.items, courses: catalog.courses, apps: catalog.apps, educationalResources: resources)
+    }
+
+    static func removeEducationalResource(id: String) throws {
+        let catalog = try load()
+        let resources = catalog.educationalResources.filter { $0.id != id }
+        guard resources.count != catalog.educationalResources.count else {
+            throw CatalogEditorError.educationalResourceNotFound(id)
+        }
+        try write(items: catalog.items, courses: catalog.courses, apps: catalog.apps, educationalResources: resources)
     }
 
     // MARK: - Write
 
-    private static func write(items: [PluginItem], courses: [Course], apps: [AppLink]) throws {
+    private static func write(items: [PluginItem], courses: [Course], apps: [AppLink], educationalResources: [EducationalResource]) throws {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
-        let catalog = Catalog(updatedAt: formatter.string(from: Date()), items: items, courses: courses, apps: apps)
+        let catalog = Catalog(updatedAt: formatter.string(from: Date()), items: items, courses: courses, apps: apps, educationalResources: educationalResources)
 
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]

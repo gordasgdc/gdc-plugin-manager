@@ -56,6 +56,7 @@ enum L {
         "sidebar.license": [.ro: "Licență", .en: "License", .es: "Licencia"],
         "sidebar.help": [.ro: "Ajutor", .en: "Help", .es: "Ayuda"],
         "sidebar.courses": [.ro: "Cursuri", .en: "Courses", .es: "Cursos"],
+        "sidebar.educationalResources": [.ro: "Materiale", .en: "Materials", .es: "Materiales"],
         "sidebar.apps": [.ro: "Aplicații", .en: "Apps", .es: "Aplicaciones"],
 
         "catalog.loading": [.ro: "Se încarcă catalogul…", .en: "Loading catalog…", .es: "Cargando catálogo…"],
@@ -79,6 +80,8 @@ enum L {
         "courses.empty": [.ro: "Niciun curs disponibil momentan.", .en: "No courses available right now.", .es: "Ningún curso disponible por ahora."],
         "courses.contact": [.ro: "Contactează", .en: "Contact", .es: "Contactar"],
         "courses.contact.message": [.ro: "Salut! Vreau să rezerv cursul %@ — %@ (%@).", .en: "Hi! I'd like to book the course %@ — %@ (%@).", .es: "¡Hola! Quiero reservar el curso %@ — %@ (%@)."],
+        "resources.empty": [.ro: "Niciun material disponibil momentan.", .en: "No materials available right now.", .es: "Ningún material disponible por ahora."],
+        "resources.buy": [.ro: "Cumpără", .en: "Buy", .es: "Comprar"],
 
         "apps.empty": [.ro: "Nicio aplicație listată momentan.", .en: "No apps listed right now.", .es: "Ninguna aplicación listada por ahora."],
         "apps.open": [.ro: "Deschide", .en: "Open", .es: "Abrir"],
