@@ -6,6 +6,7 @@ enum SidebarSection: Hashable {
     case all
     case type(PluginType)
     case courses
+    case educationalResources
     case apps
     case license
     case help
@@ -40,6 +41,8 @@ struct ContentView: View {
                 Divider()
                 Label(L.t("sidebar.courses"), systemImage: "graduationcap")
                     .tag(SidebarSection.courses)
+                Label(L.t("sidebar.educationalResources"), systemImage: "book")
+                    .tag(SidebarSection.educationalResources)
                 Label(L.t("sidebar.apps"), systemImage: "app.badge")
                     .tag(SidebarSection.apps)
                 Divider()
@@ -62,6 +65,8 @@ struct ContentView: View {
                         HelpView()
                     case .courses:
                         CoursesGrid(courses: catalog.courses)
+                    case .educationalResources:
+                        EducationalResourcesGrid(resources: catalog.educationalResources)
                     case .apps:
                         AppsGrid(apps: catalog.apps)
                     case .all, .none:
@@ -402,6 +407,64 @@ private struct CourseCard: View {
     private func contactURL(for option: CourseOption) -> URL {
         let text = String(format: L.t("courses.contact.message"), course.name, option.label, option.priceDisplay)
         return WhatsAppLink.url(text: text)
+    }
+}
+
+private struct EducationalResourcesGrid: View {
+    let resources: [EducationalResource]
+
+    private let columns = [GridItem(.adaptive(minimum: 260, maximum: 340), spacing: 14)]
+
+    var body: some View {
+        ScrollView {
+            if resources.isEmpty {
+                Text(L.t("resources.empty")).foregroundStyle(.secondary).padding(40)
+            } else {
+                LazyVGrid(columns: columns, spacing: 14) {
+                    ForEach(resources) { resource in
+                        EducationalResourceCard(resource: resource)
+                    }
+                }
+                .padding(16)
+            }
+        }
+    }
+}
+
+private struct EducationalResourceCard: View {
+    let resource: EducationalResource
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Image(systemName: "book.fill")
+                    .font(.system(size: 22))
+                    .foregroundStyle(.tint)
+                Spacer()
+                Text(resource.kind.label)
+                    .font(.caption2).fontWeight(.semibold)
+                    .padding(.horizontal, 8).padding(.vertical, 3)
+                    .background(Capsule().fill(.tint.opacity(0.18)))
+                if let urlString = resource.youtubeURL, let url = URL(string: urlString) {
+                    Button { NSWorkspace.shared.open(url) } label: {
+                        Image(systemName: "play.circle")
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+            Text(resource.name).font(.headline)
+            Text(resource.description)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            Spacer(minLength: 0)
+            if let url = URL(string: resource.externalURL) {
+                Button(L.t("resources.buy")) { NSWorkspace.shared.open(url) }
+                    .controlSize(.small)
+            }
+        }
+        .padding(12)
+        .frame(maxWidth: .infinity, minHeight: 140, alignment: .leading)
+        .background(RoundedRectangle(cornerRadius: 10).fill(.background.secondary))
     }
 }
 
