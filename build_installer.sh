@@ -79,5 +79,9 @@ rm -rf "$PAYLOAD_ROOT" "$COMPONENT_PKG"
 # (so the landing page's link always resolves to whatever is newest).
 cp "$FINAL_PKG" "$DIST_DIR/GDCPluginManager.pkg"
 
+echo "==> Copying first-run launcher (removes Gatekeeper quarantine automatically)…"
+cp "Instalare_GDCPluginManager.command" "$DIST_DIR/Instalare_GDCPluginManager.command"
+chmod +x "$DIST_DIR/Instalare_GDCPluginManager.command"
+
 echo "==> Done: $FINAL_PKG"
-echo "==> Also: $DIST_DIR/GDCPluginManager.pkg (upload both to the GitHub release)"
+echo "==> Also: $DIST_DIR/GDCPluginManager.pkg and $DIST_DIR/Instalare_GDCPluginManager.command (upload all three to the GitHub release)"
