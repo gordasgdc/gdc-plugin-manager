@@ -1,0 +1,160 @@
+import SwiftUI
+import GDCPluginManagerCore
+
+/// Manages the "Magazine partenere" catalog section — photo/video gear
+/// shops. Just name, description, direct link; no files, no license,
+/// only ever touches docs/catalog.json in the public repo checkout.
+struct PublishPartnerStoreView: View {
+    @State private var existingStores: [PartnerStore] = []
+    @State private var editingID: String?
+
+    @State private var id = ""
+    @State private var name = ""
+    @State private var description = ""
+    @State private var url = ""
+
+    @State private var isBusy = false
+    @State private var errorMessage: String?
+    @State private var successMessage: String?
+    @State private var pendingDelete: PartnerStore?
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 18) {
+                Text("Magazine partenere").font(.title2).fontWeight(.semibold)
+
+                GroupBox {
+                    VStack(alignment: .leading, spacing: 12) {
+                        TextField("ID (ex. magazin-fotovideo-x, nu se mai poate schimba)", text: $id)
+                            .textFieldStyle(.roundedBorder)
+                            .disabled(editingID != nil)
+                        TextField("Nume magazin", text: $name).textFieldStyle(.roundedBorder)
+                        TextField("Descriere", text: $description).textFieldStyle(.roundedBorder)
+                        TextField("Link direct", text: $url).textFieldStyle(.roundedBorder)
+                    }
+                    .padding(8)
+                }
+
+                if let errorMessage {
+                    Text(errorMessage).foregroundStyle(.red)
+                }
+                if let successMessage {
+                    Label(successMessage, systemImage: "checkmark.circle.fill").foregroundStyle(.green)
+                }
+
+                HStack {
+                    if isBusy { ProgressView().controlSize(.small) }
+                    Button(editingID == nil ? "Publică" : "Actualizează") { Task { await publish() } }
+                        .disabled(isBusy || !isFormValid)
+                    if editingID != nil {
+                        Button("Magazin nou") { clearForm() }
+                    }
+                }
+
+                if !existingStores.isEmpty {
+                    Divider()
+                    Text("Magazine publicate").font(.headline)
+                    ForEach(existingStores) { store in
+                        HStack {
+                            VStack(alignment: .leading) {
+                                Text(store.name).fontWeight(.medium)
+                                Text(store.url).font(.caption).foregroundStyle(.secondary)
+                            }
+                            Spacer()
+                            Button("Editează") { load(store) }
+                            Button("Șterge", role: .destructive) { pendingDelete = store }
+                        }
+                        .padding(.vertical, 4)
+                    }
+                }
+
+                Spacer(minLength: 0)
+            }
+            .padding(24)
+            .frame(maxWidth: 640, alignment: .leading)
+        }
+        .confirmationDialog(
+            "Ștergi definitiv magazinul „\(pendingDelete?.name ?? "")”?",
+            isPresented: Binding(get: { pendingDelete != nil }, set: { if !$0 { pendingDelete = nil } }),
+            titleVisibility: .visible
+        ) {
+            Button("Șterge definitiv", role: .destructive) { Task { await delete() } }
+            Button("Anulează", role: .cancel) { pendingDelete = nil }
+        }
+        .task { loadExisting() }
+    }
+
+    private var isFormValid: Bool {
+        !id.trimmingCharacters(in: .whitespaces).isEmpty
+            && !name.trimmingCharacters(in: .whitespaces).isEmpty
+            && !url.trimmingCharacters(in: .whitespaces).isEmpty
+            && URL(string: url.trimmingCharacters(in: .whitespaces)) != nil
+    }
+
+    private func loadExisting() {
+        if let catalog = try? CatalogEditor.load() {
+            existingStores = catalog.partnerStores.sorted { $0.name < $1.name }
+        }
+    }
+
+    private func load(_ store: PartnerStore) {
+        editingID = store.id
+        id = store.id
+        name = store.name
+        description = store.description
+        url = store.url
+        successMessage = nil
+        errorMessage = nil
+    }
+
+    private func clearForm() {
+        editingID = nil
+        id = ""
+        name = ""
+        description = ""
+        url = ""
+    }
+
+    private func publish() async {
+        errorMessage = nil
+        successMessage = nil
+        isBusy = true
+        defer { isBusy = false }
+
+        let store = PartnerStore(
+            id: id.trimmingCharacters(in: .whitespaces), name: name,
+            description: description, url: url.trimmingCharacters(in: .whitespaces)
+        )
+
+        do {
+            try GitOps.pull(at: RepoCheckoutPaths.publicCatalogRepo)
+            try CatalogEditor.upsertPartnerStore(store)
+            try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Magazin partener: \(store.name)")
+            successMessage = "„\(store.name)” e publicat — apare la clienți la următorul refresh de catalog."
+            clearForm()
+            loadExisting()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    private func delete() async {
+        guard let store = pendingDelete else { return }
+        pendingDelete = nil
+        errorMessage = nil
+        successMessage = nil
+        isBusy = true
+        defer { isBusy = false }
+
+        do {
+            try GitOps.pull(at: RepoCheckoutPaths.publicCatalogRepo)
+            try CatalogEditor.removePartnerStore(id: store.id)
+            try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Sterg magazinul: \(store.name)")
+            successMessage = "„\(store.name)” a fost șters."
+            if editingID == store.id { clearForm() }
+            loadExisting()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+}

@@ -7,6 +7,8 @@ enum FurnizorSection: Hashable {
     case analytics
     case courses
     case educationalResources
+    case events
+    case partnerStores
     case apps
 }
 
@@ -27,6 +29,8 @@ struct FurnizorContentView: View {
                 Divider()
                 Label("Cursuri", systemImage: "graduationcap").tag(FurnizorSection.courses)
                 Label("Materiale", systemImage: "book").tag(FurnizorSection.educationalResources)
+                Label("Evenimente", systemImage: "calendar").tag(FurnizorSection.events)
+                Label("Magazine partenere", systemImage: "storefront").tag(FurnizorSection.partnerStores)
                 Label("Aplicații", systemImage: "square.grid.2x2").tag(FurnizorSection.apps)
             }
             .navigationSplitViewColumnWidth(200)
@@ -48,6 +52,10 @@ struct FurnizorContentView: View {
                     PublishCourseView()
                 case .educationalResources:
                     PublishEducationalResourceView()
+                case .events:
+                    PublishEventView()
+                case .partnerStores:
+                    PublishPartnerStoreView()
                 case .apps:
                     PublishAppView()
                 }
