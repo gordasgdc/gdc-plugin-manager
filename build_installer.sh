@@ -83,5 +83,20 @@ echo "==> Copying first-run launcher (removes Gatekeeper quarantine automaticall
 cp "Instalare_GDCPluginManager.command" "$DIST_DIR/Instalare_GDCPluginManager.command"
 chmod +x "$DIST_DIR/Instalare_GDCPluginManager.command"
 
+# Bundle .pkg + launcher into one zip. The website's download button
+# links to THIS zip, not the bare .pkg — a direct .pkg link means the
+# user never sees Instalare_GDCPluginManager.command, defeating the
+# whole point of the launcher.
+echo "==> Building GDCPluginManager-Mac.zip (pkg + launcher)…"
+ZIP_STAGE="$DIST_DIR/zip_stage"
+rm -rf "$ZIP_STAGE"
+mkdir -p "$ZIP_STAGE"
+cp "$DIST_DIR/GDCPluginManager.pkg" "$ZIP_STAGE/"
+cp "$DIST_DIR/Instalare_GDCPluginManager.command" "$ZIP_STAGE/"
+chmod +x "$ZIP_STAGE/Instalare_GDCPluginManager.command"
+( cd "$ZIP_STAGE" && zip -q -r "../GDCPluginManager-Mac.zip" . )
+rm -rf "$ZIP_STAGE"
+
 echo "==> Done: $FINAL_PKG"
-echo "==> Also: $DIST_DIR/GDCPluginManager.pkg and $DIST_DIR/Instalare_GDCPluginManager.command (upload all three to the GitHub release)"
+echo "==> Also: $DIST_DIR/GDCPluginManager.pkg, $DIST_DIR/Instalare_GDCPluginManager.command, $DIST_DIR/GDCPluginManager-Mac.zip"
+echo "    Upload GDCPluginManager-Mac.zip to the GitHub release (that's what the website links to)."
