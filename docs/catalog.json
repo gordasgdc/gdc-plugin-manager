@@ -52,6 +52,16 @@
   "courses" : [
 
   ],
+  "educationalResources" : [
+    {
+      "description" : "",
+      "externalURL" : "https://www.youtube.com/watch?v=lq8z603zMbw",
+      "id" : "ARTA",
+      "kind" : "course",
+      "name" : "ARTA",
+      "youtubeURL" : "https://www.youtube.com/"
+    }
+  ],
   "items" : [
     {
       "description" : "Flux de lucru bazic. transformare din profilul camerei in DWG si din DWG in  Rec709",
