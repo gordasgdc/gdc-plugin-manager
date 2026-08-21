@@ -289,7 +289,7 @@ private struct PluginCard: View {
 
     private var buyURL: URL {
         let text = "Salut! Vreau să deblochez \(item.name) cu o donație de \(item.priceDisplay). ID calculator: \(MachineID.display)"
-        return URL(string: "https://wa.me/34643109970?text=" + text.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)!
+        return WhatsAppLink.url(text: text)
     }
 
     private func runGuarded(_ action: @escaping () -> Void) {
@@ -399,7 +399,7 @@ private struct CourseCard: View {
 
     private func contactURL(for option: CourseOption) -> URL {
         let text = String(format: L.t("courses.contact.message"), course.name, option.label, option.priceDisplay)
-        return URL(string: "https://wa.me/34643109970?text=" + text.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)!
+        return WhatsAppLink.url(text: text)
     }
 }
 
