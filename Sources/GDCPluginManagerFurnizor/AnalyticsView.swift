@@ -31,6 +31,7 @@ struct AnalyticsView: View {
 
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
+                    revenueSection
                     if !events.isEmpty || !isLoading {
                         productTotalsSection
                         dailyHistorySection
@@ -41,6 +42,64 @@ struct AnalyticsView: View {
             }
         }
         .task { await load() }
+    }
+
+    // MARK: - Revenue (from SalesLog — the same data as tab-ul "Clienți")
+
+    private struct ProductRevenue: Identifiable {
+        let id: String // product name (SalesLog keeps no separate product_id column)
+        let productName: String
+        let count: Int
+        let totalEUR: Double
+    }
+
+    private var salesEntries: [SalesLog.Entry] { SalesLog.readAll() }
+
+    private var totalRevenueEUR: Double { salesEntries.reduce(0) { $0 + $1.priceEUR } }
+
+    private var revenueByProduct: [ProductRevenue] {
+        var totals: [String: (count: Int, sum: Double)] = [:]
+        for entry in salesEntries {
+            totals[entry.productName, default: (0, 0)].count += 1
+            totals[entry.productName, default: (0, 0)].sum += entry.priceEUR
+        }
+        return totals.map { ProductRevenue(id: $0.key, productName: $0.key, count: $0.value.count, totalEUR: $0.value.sum) }
+            .sorted { $0.totalEUR > $1.totalEUR }
+    }
+
+    private var mostPopularByLicenses: ProductRevenue? {
+        revenueByProduct.max { $0.count < $1.count }
+    }
+
+    private var revenueSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Venituri").font(.headline)
+            HStack(spacing: 24) {
+                statCard(title: "Venituri totale", value: totalRevenueEUR.formatted(.currency(code: "EUR")))
+                statCard(title: "Licențe acordate", value: "\(salesEntries.count)")
+                statCard(title: "Cel mai popular", value: mostPopularByLicenses?.productName ?? "—")
+            }
+            if revenueByProduct.isEmpty {
+                Text("Niciun cod generat încă.").foregroundStyle(.secondary)
+            } else {
+                Table(revenueByProduct) {
+                    TableColumn("Produs") { row in Text(row.productName) }
+                    TableColumn("Licențe") { row in Text("\(row.count)") }
+                    TableColumn("Venituri") { row in Text(row.totalEUR.formatted(.currency(code: "EUR"))) }
+                }
+                .frame(minHeight: CGFloat(min(revenueByProduct.count, 8)) * 28 + 40)
+            }
+        }
+    }
+
+    private func statCard(title: String, value: String) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(title).font(.caption).foregroundStyle(.secondary)
+            Text(value).font(.title3).fontWeight(.semibold)
+        }
+        .padding(12)
+        .frame(minWidth: 140, alignment: .leading)
+        .background(RoundedRectangle(cornerRadius: 10).fill(Color(nsColor: .controlBackgroundColor)))
     }
 
     // MARK: - Totals per product
