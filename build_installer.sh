@@ -88,13 +88,15 @@ chmod +x "$DIST_DIR/Instalare_GDCPluginManager.command"
 # user never sees Instalare_GDCPluginManager.command, defeating the
 # whole point of the launcher.
 echo "==> Building GDCPluginManager-Mac.zip (pkg + launcher)…"
+# Only the .command is visible at the archive root — pkg goes in a
+# subfolder, so there's no confusion about what to double-click first.
 ZIP_STAGE="$DIST_DIR/zip_stage"
 rm -rf "$ZIP_STAGE"
-mkdir -p "$ZIP_STAGE"
-cp "$DIST_DIR/GDCPluginManager.pkg" "$ZIP_STAGE/"
+mkdir -p "$ZIP_STAGE/Aplicatie"
+cp "$DIST_DIR/GDCPluginManager.pkg" "$ZIP_STAGE/Aplicatie/"
 cp "$DIST_DIR/Instalare_GDCPluginManager.command" "$ZIP_STAGE/"
 chmod +x "$ZIP_STAGE/Instalare_GDCPluginManager.command"
-( cd "$ZIP_STAGE" && zip -q -r "../GDCPluginManager-Mac.zip" . )
+( cd "$ZIP_STAGE" && zip -q -r -y "../GDCPluginManager-Mac.zip" . )
 rm -rf "$ZIP_STAGE"
 
 echo "==> Done: $FINAL_PKG"

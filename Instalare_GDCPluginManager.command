@@ -8,7 +8,16 @@
 # Nu re-semneaza nimic (nu e nevoie pentru un .pkg descarcat).
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-PKG_PATH="$(find "${DIR}" -maxdepth 1 -iname "*.pkg" -print -quit)"
+# In arhiva de distributie, .pkg-ul sta intr-un subfolder "Aplicatie/" —
+# asta e singurul fisier vizibil in radacina, ca sa nu existe confuzie
+# despre pe ce sa apese cineva. Fallback pe acelasi folder pentru rulare
+# locala directa din dist/ (build_installer.sh, fara subfolder).
+if [ -d "${DIR}/Aplicatie" ]; then
+    SEARCH_DIR="${DIR}/Aplicatie"
+else
+    SEARCH_DIR="${DIR}"
+fi
+PKG_PATH="$(find "${SEARCH_DIR}" -maxdepth 1 -iname "*.pkg" -print -quit)"
 
 if [ -n "${PKG_PATH}" ] && [ -f "${PKG_PATH}" ]; then
     echo "==> Pregatesc $(basename "${PKG_PATH}") pentru prima lansare..."
@@ -17,6 +26,6 @@ if [ -n "${PKG_PATH}" ] && [ -f "${PKG_PATH}" ]; then
     sleep 1
     osascript -e 'tell application "Terminal" to close front window' 2>/dev/null &
 else
-    echo "Eroare: nu am gasit niciun instalator .pkg in acest folder (${DIR})."
+    echo "Eroare: nu am gasit niciun instalator .pkg (cautat in Aplicatie/ si in ${DIR})."
     read -p "Apasa Enter pentru a inchide..."
 fi
