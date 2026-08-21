@@ -20,11 +20,11 @@ import Foundation
 /// redistribute) if it ever leaks. If sales volume ever justifies it,
 /// replace this with a server that verifies a license before handing
 /// out a short-lived download link instead.
-enum PrivateCatalogAuth {
-    static let owner = "gordasgdc"
-    static let repo = "gdc-plugin-manager-files"
+public enum PrivateCatalogAuth {
+    public static let owner = "gordasgdc"
+    public static let repo = "gdc-plugin-manager-files"
 
     /// PASTE THE FINE-GRAINED PAT HERE (Contents: Read-only, scoped to
     /// gdc-plugin-manager-files only) before building the client app.
-    static let token = "PASTE_TOKEN_HERE"
+    public static let token = "PASTE_TOKEN_HERE"
 }
