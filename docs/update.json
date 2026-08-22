@@ -1,7 +1,7 @@
 {
-  "version": "1.2.5",
+  "version": "1.2.6",
   "release_date": "2026-08-22",
-  "changes": "Windows: fix critic la PowerGrade (token gol in CI + Python retrogradat la 3.10 pt. compatibilitate cu fusionscript.dll). OFX: pastreaza structura de foldere la instalare pe ambele platforme, permisiuni corecte. DCTL: subfolder dedicat DCTL/ in loc sa fie amestecat cu LUT-urile.",
+  "changes": "Windows: logging de diagnostic + verificare reala pe disc pentru instalarea LUT/DCTL/Fuse/OFX (statusul 'Instalat' nu mai poate aparea daca fisierul nu e chiar acolo).",
   "download_url": {
     "mac": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager.pkg",
     "windows": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Windows.zip"
