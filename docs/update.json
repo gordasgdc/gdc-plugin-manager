@@ -1,7 +1,7 @@
 {
-  "version": "1.2.6",
-  "release_date": "2026-08-22",
-  "changes": "Windows: logging de diagnostic + verificare reala pe disc pentru instalarea LUT/DCTL/Fuse/OFX (statusul 'Instalat' nu mai poate aparea daca fisierul nu e chiar acolo).",
+  "version": "1.2.7",
+  "release_date": "2026-08-23",
+  "changes": "Windows: adaugat os.add_dll_directory() pentru incarcarea fusionscript.dll (PowerGrade) - Python 3.8+ nu mai cauta implicit in PATH dupa DLL-urile dependente ale unei extensii native.",
   "download_url": {
     "mac": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager.pkg",
     "windows": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Windows.zip"
