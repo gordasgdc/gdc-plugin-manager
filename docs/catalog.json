@@ -402,40 +402,6 @@
       "youtubeURL" : "https://www.youtube.com/@cristigordas"
     },
     {
-      "bundleFolderName" : "OpenDRT.ofx.bundle",
-      "description" : "OpenDRT",
-      "files" : [
-        {
-          "path" : "OpenDRT/1.0.0/Contents/Info.plist",
-          "sha256" : "cefba49a6cf304411d8607e7aa849a46b05efed9736ddd848fd212b1923cdda4"
-        },
-        {
-          "path" : "OpenDRT/1.0.0/Contents/MacOS/OpenDRT.ofx",
-          "sha256" : "43f0e3b720f027b4d8d08c7222f4e3eaca7b40df085fe77fd6c7a7e165688627"
-        },
-        {
-          "path" : "OpenDRT/1.0.0/Contents/Resources/com.dec18studios.OpenDRT.png",
-          "sha256" : "10681f28faf33834a5082c281833dde7805e0c037edbb8782c4cd9fa1f9130ba"
-        },
-        {
-          "path" : "OpenDRT/1.0.0/Contents/Resources/dec18-studios-plugins.install.json",
-          "sha256" : "f33b93545284b4fa55a85ded91fbc364c4d338536eb1462fc00298bbc87b6f67"
-        },
-        {
-          "path" : "OpenDRT/1.0.0/Contents/_CodeSignature/CodeResources",
-          "sha256" : "8a374a3ad5a299768eb46150bac7caeea3cae0b1091310796775dfd920047eaf"
-        }
-      ],
-      "iconSymbol" : "camera.filters",
-      "id" : "OpenDRT",
-      "isFree" : true,
-      "isTrial" : false,
-      "name" : "OpenDRT",
-      "priceEUR" : 0,
-      "type" : "ofx",
-      "version" : "1.0.0"
-    },
-    {
       "description" : "Razvan",
       "files" : [
         {
