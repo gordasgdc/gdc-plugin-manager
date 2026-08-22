@@ -206,6 +206,23 @@
       "version" : "2.0.0"
     },
     {
+      "description" : "FalseColorSkinDetect",
+      "files" : [
+        {
+          "path" : "FalseColorSkinDetect/1.0.0/aGDC Saturation Seperator.dctle",
+          "sha256" : "4411296aa79882a091f657bd354f714786c6225b786de0b53237758c98ed6667"
+        }
+      ],
+      "iconSymbol" : "wand.and.stars",
+      "id" : "FalseColorSkinDetect",
+      "isFree" : true,
+      "isTrial" : false,
+      "name" : "FalseColorSkinDetect",
+      "priceEUR" : 0,
+      "type" : "dctl",
+      "version" : "1.0.0"
+    },
+    {
       "description" : "GDC contine luturi de transformare din profilul camerei in Rec709 cu un inalt standard de mapare",
       "files" : [
         {
