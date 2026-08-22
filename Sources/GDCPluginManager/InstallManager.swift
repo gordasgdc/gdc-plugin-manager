@@ -107,13 +107,33 @@ final class InstallManager: ObservableObject {
 
         var writtenURLs: [URL] = []
         for (file, tempURL) in zip(item.files, tempURLs) {
-            let destinationURL = destinationDir.appendingPathComponent(file.filename)
-            try writeFile(from: tempURL, to: destinationURL, creatingDirectory: destinationDir)
+            // Bug real, gasit la implementarea OFX: file.filename e doar
+            // ultima componenta a caii (vezi CatalogModel.swift), deci
+            // orice pack cu subfoldere (ex. un .ofx.bundle intreg, cu
+            // Contents/MacOS/..., Contents/Resources/...) se scria PLAT,
+            // pierzand structura de foldere si putand suprascrie fisiere
+            // cu nume identic din subfoldere diferite. Fix: refacem calea
+            // relativa la produs din file.path (format "id/versiune/rest"
+            // — vezi PublishView.swift repoRelativePath) si o pastram la
+            // instalare, nu doar numele de fisier.
+            let relativePath = relativeInstallPath(for: file, in: item)
+            let destinationURL = destinationDir.appendingPathComponent(relativePath)
+            try writeFile(from: tempURL, to: destinationURL, creatingDirectory: destinationURL.deletingLastPathComponent())
             writtenURLs.append(destinationURL)
         }
 
         installedVersions[item.id] = item.version
         saveState()
+
+        if item.type == .ofx {
+            // Bundle-ul OFX trebuie sa fie executabil si fara flag-ul de
+            // carantina Gatekeeper, altfel Resolve nu-l incarca la
+            // pornire (vezi cerinta explicita a userului). Fisierele nu
+            // trec prin Safari/browser (le scriem noi direct din bytes
+            // descarcati prin API), deci in practica xattr e de multe ori
+            // un no-op — dar il rulam oricum, defensiv, e ieftin.
+            try fixOFXBundlePermissions(at: destinationDir)
+        }
 
         guard item.type == .powerGrade else { return .installed }
         switch PowerGradeImporter.importIntoGallery(productName: item.name, files: writtenURLs, stagingFolder: destinationDir) {
@@ -170,6 +190,45 @@ final class InstallManager: ObservableObject {
             throw InstallError.downloadFailed
         }
         return data
+    }
+
+    /// Calea unui fisier RELATIVA LA RADACINA PRODUSULUI (nu doar numele
+    /// de fisier) — reconstruita din `file.path`, care e mereu in formatul
+    /// "id/versiune/rest..." (vezi PublishView.swift, `repoRelativePath`).
+    /// Pentru un produs simplu (un singur fisier, fara subfoldere) da
+    /// acelasi rezultat ca `file.filename` de dinainte — schimbarea
+    /// conteaza doar pentru pack-uri cu structura de foldere (OFX bundles
+    /// in special, dar si orice alt pack publicat cu subfoldere).
+    private func relativeInstallPath(for file: PluginFile, in item: PluginItem) -> String {
+        let prefix = "\(item.id)/\(item.version)/"
+        guard file.path.hasPrefix(prefix) else { return file.filename }
+        return String(file.path.dropFirst(prefix.count))
+    }
+
+    /// Dupa ce toate fisierele unui bundle OFX sunt scrise pe disc:
+    /// permisiuni recursive 755 (executabil pentru toata lumea, cerut
+    /// explicit) si eliminarea recursiva a atributului de carantina
+    /// Gatekeeper, ca DaVinci Resolve sa il incarce la pornire fara
+    /// avertismentul "developer nu poate fi verificat". Incearca intai
+    /// fara elevare (folderul e de obicei scriabil, la fel ca restul
+    /// scrierilor din writeFile), cade pe `runElevated` daca nu.
+    private func fixOFXBundlePermissions(at bundleDirectoryOrParent: URL) throws {
+        let script = """
+        chmod -R 755 \(shellQuote(bundleDirectoryOrParent.path)) && \
+        xattr -dr com.apple.quarantine \(shellQuote(bundleDirectoryOrParent.path)) 2>/dev/null; \
+        true
+        """
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: "/bin/sh")
+        process.arguments = ["-c", script]
+        let stderrPipe = Pipe()
+        process.standardError = stderrPipe
+        do {
+            try process.run()
+            process.waitUntilExit()
+            if process.terminationStatus == 0 { return }
+        } catch { /* fall through to elevated */ }
+        try runElevated(script)
     }
 
     // MARK: - Filesystem, with an admin-elevation fallback
