@@ -161,24 +161,6 @@
       "version" : "1.0.0"
     },
     {
-      "description" : "GDC contine luturi de transformare din profilul camerei in Rec709 cu un inalt standard de mapare",
-      "files" : [
-        {
-          "path" : "GDC/1.0.0/Arri Alexa LogC to Rec709.dat",
-          "sha256" : "c3f601405dfdc950359d8a1e4a6e95c4bc9e6598cfcfeef3fd37df7761b70a66"
-        }
-      ],
-      "iconSymbol" : "eyedropper.halffull",
-      "id" : "GDC",
-      "isFree" : true,
-      "isTrial" : false,
-      "name" : "GDC",
-      "priceEUR" : 0,
-      "type" : "lut",
-      "version" : "1.0.0",
-      "youtubeURL" : "https://www.youtube.com/@cristigordas"
-    },
-    {
       "description" : "Flux de lucru profesional Intermediate la cel mai inalt nivel in industrie",
       "files" : [
         {
