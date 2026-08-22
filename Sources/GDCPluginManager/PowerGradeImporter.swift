@@ -41,6 +41,11 @@ import Foundation
 ///   album (deletes every still in it), never removes the album itself
 ///   — an empty, oddly-named leftover album is the worst case, cleared
 ///   by hand from the Gallery if it bothers you.
+// WARNING: PowerGrade import happens EXCLUSIVELY through Resolve's official
+// Scripting API below — never write directly into Resolve's internal Gallery
+// database files (no "index.xml"/.drx path is documented by Blackmagic for
+// either platform). A direct write risks corrupting the user's project database.
+// See CLAUDE.md "PowerGrade: EXCLUSIV prin Scripting API".
 enum PowerGradeImporter {
     enum ImportResult {
         /// Imported straight into Resolve's Gallery, into this

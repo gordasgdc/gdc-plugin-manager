@@ -228,6 +228,12 @@ struct PublishView: View {
     /// (e.g. "WeddingStyle1.cube", or "warm/Sunset.cube" for a nested
     /// subfolder) — or just `[(root, root.lastPathComponent)]` if `root`
     /// is itself a single file, so callers don't need to branch.
+    // ARCHITECTURE NOTE: this already preserves full nested subfolder structure
+    // (relativePath, not just basename) — required for OFX bundles to keep their
+    // Contents/MacOS/, Contents/Resources/ layout intact. If you ever "simplify"
+    // this to just filenames, InstallManager.swift's relativeInstallPath(for:in:)
+    // depends on file.path staying "id/version/full/relative/path" — sync any
+    // change here with InstallManager.swift AND the Windows port (InstallManager.cs).
     private func collectFiles(under root: URL) throws -> [(fileURL: URL, relativePath: String)] {
         guard isDirectory(root) else {
             return [(root, root.lastPathComponent)]
