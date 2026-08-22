@@ -76,12 +76,27 @@ public enum PluginType: String, Codable, CaseIterable, Identifiable {
     public var installDirectory: URL {
         let libraryDir = FileManager.default.urls(for: .libraryDirectory, in: .localDomainMask).first!
         switch self {
-        case .dctl, .lut:
+        case .lut:
             return libraryDir
                 .appendingPathComponent("Application Support")
                 .appendingPathComponent("Blackmagic Design")
                 .appendingPathComponent("DaVinci Resolve")
                 .appendingPathComponent("LUT")
+        case .dctl:
+            // Bug real, gasit revizuind cerinta userului: DCTL-urile
+            // stateau in acelasi folder ca LUT-urile obisnuite (.../LUT/),
+            // fara subfolderul "DCTL" dedicat pe care Resolve il cauta
+            // specific pentru fisierele .dctl. Fara acest subfolder, un
+            // .dctl copiat plat in LUT/ nu apare corect ca nod DCTL in
+            // pagina Color. Instalarile vechi (dinainte de acest fix) au
+            // ramas orfane in LUT/ - un reinstall/update le muta automat
+            // in noua locatie corecta.
+            return libraryDir
+                .appendingPathComponent("Application Support")
+                .appendingPathComponent("Blackmagic Design")
+                .appendingPathComponent("DaVinci Resolve")
+                .appendingPathComponent("LUT")
+                .appendingPathComponent("DCTL")
         case .fuse:
             return libraryDir
                 .appendingPathComponent("Application Support")

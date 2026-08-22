@@ -212,6 +212,14 @@ final class InstallManager: ObservableObject {
     /// avertismentul "developer nu poate fi verificat". Incearca intai
     /// fara elevare (folderul e de obicei scriabil, la fel ca restul
     /// scrierilor din writeFile), cade pe `runElevated` daca nu.
+    ///
+    /// La primul fallback elevat, chown-uim si RADACINA /Library/OFX/Plugins
+    /// (nu doar bundle-ul curent) pe userul curent — asta e cererea userului
+    /// de "o singura parola, nu la fiecare instalare OFX", dar implementata
+    /// cu chown in loc de chmod 777: viitoarele instalari scriu direct, fara
+    /// elevare, dar folderul ramane inaccesibil altor useri de pe masina
+    /// (777 ar fi world-writable, risc de securitate inutil pe o masina
+    /// multi-user).
     private func fixOFXBundlePermissions(at bundleDirectoryOrParent: URL) throws {
         let script = """
         chmod -R 755 \(shellQuote(bundleDirectoryOrParent.path)) && \
@@ -228,7 +236,11 @@ final class InstallManager: ObservableObject {
             process.waitUntilExit()
             if process.terminationStatus == 0 { return }
         } catch { /* fall through to elevated */ }
-        try runElevated(script)
+
+        let currentUser = NSUserName()
+        let ofxRoot = PluginType.ofx.installDirectory.path
+        let elevatedScript = script + " && chown -R \(shellQuote(currentUser)):staff \(shellQuote(ofxRoot)) 2>/dev/null; true"
+        try runElevated(elevatedScript)
     }
 
     // MARK: - Filesystem, with an admin-elevation fallback
