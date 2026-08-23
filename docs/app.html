@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#070f0e">
+<title>GDC Manager</title>
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<!-- =============================================================================
+     GDC Manager — interfata de aplicatie pentru mobil (PWA / APK)
+     -----------------------------------------------------------------------------
+     ASTA e ecranul pe care il vede utilizatorul cand deschide APK-ul, NU
+     index.html (care ramane pagina de prezentare pentru vizitatorii din browser).
+     Legatura se face prin "start_url" din manifest.webmanifest.
+
+     Tot continutul vine din /catalog.json, exact acelasi fisier pe care il
+     citeste si aplicatia de desktop. Consecinta: un produs, curs sau eveniment
+     nou apare aici automat, fara APK nou.
+
+     CUM SE ADAUGA UN TAB NOU:
+       1. adauga un <button class="tab" data-tab="nume"> in <nav class="tabbar">
+       2. adauga <section id="view-nume" class="view">
+       3. adauga randarea in renderAll()
+     La orice modificare aici, incrementeaza CACHE_VERSION din sw.js.
+============================================================================= -->
+
+<style>
+  :root{
+    /* Paleta preluata din index.html, ca aplicatia si site-ul sa arate la fel. */
+    --bg:#070f0e; --bg-2:#0b1615; --panel:#0f1c1a; --panel-2:#132420;
+    --border:#1e3430; --text:#eef8f6; --muted:#9db8b3; --faint:#5f8580;
+    --accent:#35d6be; --accent-ink:#04211c; --accent-dim:#1f7d6e;
+    --warn:#e8b64c; --sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+    --mono:'IBM Plex Mono',ui-monospace,monospace;
+    /* Inaltimile barelor fixe; folosite ca padding pe zona de continut. */
+    --topbar-h:56px; --tabbar-h:60px;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+  html,body{ height:100%; }
+  body{
+    background:var(--bg); color:var(--text); font-family:var(--sans);
+    line-height:1.5; -webkit-font-smoothing:antialiased; overscroll-behavior-y:none;
+  }
+  a{ color:inherit; text-decoration:none; }
+  img{ display:block; max-width:100%; }
+  button{ font-family:inherit; cursor:pointer; border:none; background:none; color:inherit; }
+
+  /* ── Bara de sus: identitate, stare conexiune, cont ──────────────────────── */
+  .topbar{
+    position:fixed; top:0; left:0; right:0; z-index:20; height:calc(var(--topbar-h) + env(safe-area-inset-top));
+    padding:env(safe-area-inset-top) 16px 0; display:flex; align-items:center; gap:12px;
+    background:rgba(7,15,14,.92); backdrop-filter:blur(12px); border-bottom:1px solid var(--border);
+  }
+  .brand{ display:flex; align-items:center; gap:10px; flex:1; min-width:0; }
+  .brand img{ width:30px; height:30px; border-radius:8px; }
+  .brand-txt strong{ display:block; font-size:15px; font-weight:700; letter-spacing:-.01em; }
+  .brand-txt span{ display:block; font-size:11px; color:var(--faint); font-family:var(--mono); }
+  .status{ display:flex; align-items:center; gap:6px; font-size:11px; color:var(--muted); font-family:var(--mono); }
+  .dot{ width:7px; height:7px; border-radius:50%; background:var(--accent); box-shadow:0 0 0 3px rgba(53,214,190,.15); }
+  .status.off .dot{ background:var(--warn); box-shadow:0 0 0 3px rgba(232,182,76,.15); }
+  .acct{ width:34px; height:34px; border-radius:50%; border:1px solid var(--border);
+         background:var(--panel); display:grid; place-items:center; flex-shrink:0; }
+
+  /* ── Zona de continut ───────────────────────────────────────────────────── */
+  main{
+    padding:calc(var(--topbar-h) + env(safe-area-inset-top) + 12px) 14px
+            calc(var(--tabbar-h) + env(safe-area-inset-bottom) + 20px);
+    min-height:100%;
+  }
+  .view{ display:none; }
+  .view.active{ display:block; animation:fade .18s ease; }
+  @keyframes fade{ from{ opacity:0; transform:translateY(4px); } to{ opacity:1; transform:none; } }
+
+  .section-title{
+    display:flex; align-items:baseline; justify-content:space-between; gap:8px;
+    margin:18px 2px 10px; font-size:12px; text-transform:uppercase;
+    letter-spacing:.08em; color:var(--faint); font-family:var(--mono);
+  }
+  .section-title:first-child{ margin-top:2px; }
+  .section-title b{ color:var(--muted); font-weight:600; }
+
+  /* ── Card compact de produs (rand cu iconita, nume, meta, stare) ─────────── */
+  .card{
+    display:flex; align-items:center; gap:12px; padding:12px;
+    background:var(--panel); border:1px solid var(--border); border-radius:14px; margin-bottom:8px;
+  }
+  .card:active{ background:var(--panel-2); }
+  .ico{
+    width:42px; height:42px; border-radius:11px; flex-shrink:0; display:grid; place-items:center;
+    background:linear-gradient(150deg,rgba(53,214,190,.16),rgba(53,214,190,.04));
+    border:1px solid rgba(53,214,190,.18); color:var(--accent);
+  }
+  .ico svg{ width:20px; height:20px; }
+  .card-body{ flex:1; min-width:0; }
+  .card-body h3{ font-size:14.5px; font-weight:600; letter-spacing:-.01em;
+                 white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .card-body p{ font-size:11.5px; color:var(--faint); font-family:var(--mono); margin-top:2px;
+                white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .chev{ color:var(--faint); flex-shrink:0; }
+
+  /* ── Etichete de stare ──────────────────────────────────────────────────── */
+  .badge{
+    font-size:10.5px; font-weight:700; padding:4px 8px; border-radius:999px;
+    font-family:var(--mono); white-space:nowrap; flex-shrink:0; letter-spacing:.02em;
+  }
+  .badge.free{ background:rgba(53,214,190,.14); color:var(--accent); }
+  .badge.paid{ background:rgba(232,182,76,.14); color:var(--warn); }
+  .badge.trial{ background:rgba(79,196,214,.14); color:#4fc4d6; }
+
+  /* ── Filtre pe tip (Toate / LUT / DCTL / PowerGrade) ─────────────────────── */
+  .chips{ display:flex; gap:7px; overflow-x:auto; padding:2px 2px 12px; scrollbar-width:none; }
+  .chips::-webkit-scrollbar{ display:none; }
+  .chip{
+    padding:7px 13px; border-radius:999px; border:1px solid var(--border);
+    background:var(--panel); font-size:12.5px; color:var(--muted); white-space:nowrap; font-weight:500;
+  }
+  .chip.on{ background:var(--accent); color:var(--accent-ink); border-color:var(--accent); font-weight:700; }
+
+  /* ── Card mare, cu coperta (cursuri, evenimente, magazine) ───────────────── */
+  .rich{ background:var(--panel); border:1px solid var(--border); border-radius:16px;
+         overflow:hidden; margin-bottom:12px; }
+  .rich img{ width:100%; aspect-ratio:16/9; object-fit:cover; background:var(--bg-2); }
+  .rich .pad{ padding:13px 14px 15px; }
+  .rich h3{ font-size:15.5px; font-weight:700; letter-spacing:-.01em; }
+  .rich .meta{ font-size:11.5px; color:var(--accent); font-family:var(--mono); margin-top:5px;
+               display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+  .rich p{ font-size:13px; color:var(--muted); margin-top:8px;
+           display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+  .rich .go{ display:inline-flex; align-items:center; gap:6px; margin-top:12px; font-size:13px;
+             font-weight:600; color:var(--accent); }
+
+  /* ── Stari speciale: gol, eroare, incarcare ─────────────────────────────── */
+  .empty{ text-align:center; padding:52px 24px; color:var(--faint); }
+  .empty svg{ width:38px; height:38px; margin:0 auto 12px; opacity:.5; }
+  .empty p{ font-size:13.5px; }
+  .skel{ height:66px; border-radius:14px; margin-bottom:8px;
+         background:linear-gradient(90deg,var(--panel) 25%,var(--panel-2) 50%,var(--panel) 75%);
+         background-size:200% 100%; animation:sh 1.3s infinite; }
+  @keyframes sh{ to{ background-position:-200% 0; } }
+
+  .notice{ background:rgba(232,182,76,.1); border:1px solid rgba(232,182,76,.25);
+           border-radius:12px; padding:11px 13px; font-size:12.5px; color:var(--muted); margin-bottom:14px; }
+  .notice b{ color:var(--warn); }
+
+  /* ── Bara de tab-uri de jos ─────────────────────────────────────────────── */
+  .tabbar{
+    position:fixed; bottom:0; left:0; right:0; z-index:20; display:grid; grid-template-columns:repeat(4,1fr);
+    height:calc(var(--tabbar-h) + env(safe-area-inset-bottom)); padding-bottom:env(safe-area-inset-bottom);
+    background:rgba(7,15,14,.94); backdrop-filter:blur(12px); border-top:1px solid var(--border);
+  }
+  .tab{ display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;
+        color:var(--faint); font-size:10.5px; font-weight:600; transition:color .15s; }
+  .tab svg{ width:21px; height:21px; }
+  .tab.on{ color:var(--accent); }
+
+  /* ── Fereastra de cont ──────────────────────────────────────────────────── */
+  .sheet{ position:fixed; inset:0; z-index:40; display:none; }
+  .sheet.open{ display:block; }
+  .sheet-bg{ position:absolute; inset:0; background:rgba(0,0,0,.6); }
+  .sheet-panel{
+    position:absolute; left:0; right:0; bottom:0; background:var(--bg-2);
+    border-top:1px solid var(--border); border-radius:20px 20px 0 0;
+    padding:20px 18px calc(24px + env(safe-area-inset-bottom));
+    animation:up .22s cubic-bezier(.2,.8,.3,1);
+  }
+  @keyframes up{ from{ transform:translateY(100%); } to{ transform:none; } }
+  .sheet-panel h2{ font-size:17px; font-weight:700; margin-bottom:4px; }
+  .sheet-panel .row{ display:flex; justify-content:space-between; gap:12px; padding:11px 0;
+                     border-bottom:1px solid var(--border); font-size:13.5px; }
+  .sheet-panel .row:last-of-type{ border-bottom:none; }
+  .sheet-panel .row span{ color:var(--muted); }
+  .sheet-panel .row b{ font-family:var(--mono); font-weight:600; font-size:12.5px; }
+  .btn{ display:block; width:100%; text-align:center; margin-top:16px; padding:13px;
+        border-radius:12px; background:var(--accent); color:var(--accent-ink); font-weight:700; font-size:14.5px; }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <img src="/icons/icon-192.png" alt="">
+    <div class="brand-txt">
+      <strong>GDC Manager</strong>
+      <span id="updated">se incarca…</span>
+    </div>
+  </div>
+  <div class="status" id="status"><span class="dot"></span><span id="status-txt">online</span></div>
+  <button class="acct" id="acct-btn" aria-label="Cont">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" width="17" height="17">
+      <circle cx="12" cy="8" r="3.5"/><path d="M4.5 20c0-3.6 3.4-5.5 7.5-5.5s7.5 1.9 7.5 5.5"/>
+    </svg>
+  </button>
+</header>
+
+<main>
+  <!-- Tab 1: produsele — aplicatii desktop + plugin-uri/LUT/DCTL -->
+  <section class="view active" id="view-produse">
+    <div class="chips" id="chips"></div>
+    <div id="produse-list"><div class="skel"></div><div class="skel"></div><div class="skel"></div></div>
+  </section>
+
+  <!-- Tab 2: cursuri si resurse educationale -->
+  <section class="view" id="view-cursuri"><div id="cursuri-list"></div></section>
+
+  <!-- Tab 3: evenimente si workshop-uri -->
+  <section class="view" id="view-evenimente"><div id="evenimente-list"></div></section>
+
+  <!-- Tab 4: magazine partenere -->
+  <section class="view" id="view-magazin"><div id="magazin-list"></div></section>
+</main>
+
+<nav class="tabbar">
+  <button class="tab on" data-tab="produse">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3.5 7.5 12 3l8.5 4.5v9L12 21l-8.5-4.5z"/><path d="M3.5 7.5 12 12l8.5-4.5M12 12v9"/></svg>
+    Produse
+  </button>
+  <button class="tab" data-tab="cursuri">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H19v16H5.5A1.5 1.5 0 0 1 4 18.5z"/><path d="M8 4v16"/></svg>
+    Cursuri
+  </button>
+  <button class="tab" data-tab="evenimente">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>
+    Evenimente
+  </button>
+  <button class="tab" data-tab="magazin">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 8h16l-1 12H5z"/><path d="M8.5 8V6a3.5 3.5 0 0 1 7 0v2"/></svg>
+    Magazin
+  </button>
+</nav>
+
+<div class="sheet" id="sheet">
+  <div class="sheet-bg" id="sheet-bg"></div>
+  <div class="sheet-panel">
+    <h2>Contul tau</h2>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:12px">Starea aplicatiei pe acest telefon.</p>
+    <div class="row"><span>Licente</span><b id="acct-lic">se gestioneaza pe desktop</b></div>
+    <div class="row"><span>Catalog</span><b id="acct-cat">—</b></div>
+    <div class="row"><span>Conexiune</span><b id="acct-net">—</b></div>
+    <div class="row"><span>Versiune</span><b>1.0.0</b></div>
+    <a class="btn" href="/#download">Descarca aplicatia de desktop</a>
+  </div>
+</div>
+
+<script>
+/* =============================================================================
+   Logica aplicatiei. Fara framework si fara dependinte externe: tot fisierul
+   trebuie sa functioneze offline, din cache-ul service worker-ului.
+============================================================================= */
+
+// Iconite pentru tipurile de continut. Cheile sunt numele SF Symbols folosite de
+// aplicatia de desktop in catalog.json — pe web nu exista SF Symbols, asa ca le
+// mapam la SVG-uri proprii. Necunoscutele cad pe 'default'.
+const ICONS = {
+  'eyedropper.halffull':'<path d="M17 3.5a2.5 2.5 0 0 1 3.5 3.5l-8 8-3.5-3.5z"/><path d="M8.5 12.5 4 17v3h3l4.5-4.5"/>',
+  'wand.and.stars':'<path d="M4 20 16 8"/><path d="M14 4l1 2.5L17.5 7.5 15 8.5 14 11l-1-2.5L10.5 7.5 13 6.5z"/><path d="M19 13l.7 1.6 1.8.7-1.8.7L19 17.6l-.7-1.6-1.8-.7 1.8-.7z"/>',
+  'paintpalette':'<path d="M12 3.5c-4.7 0-8.5 3.6-8.5 8s3.8 8 8.5 8c1.4 0 2-1 1.5-1.9-.6-1.1.2-2.3 1.5-2.3h1.5c2.5 0 4.5-2 4.5-4.4 0-4-3.8-7.4-9-7.4z"/><circle cx="8" cy="10" r="1.1" fill="currentColor" stroke="none"/><circle cx="12" cy="7.5" r="1.1" fill="currentColor" stroke="none"/><circle cx="16" cy="10" r="1.1" fill="currentColor" stroke="none"/>',
+  'app':'<rect x="3.5" y="3.5" width="17" height="17" rx="4"/><path d="M8.5 12h7M12 8.5v7"/>',
+  'default':'<rect x="3.5" y="3.5" width="17" height="17" rx="4"/>'
+};
+const svg = (k) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${ICONS[k]||ICONS.default}</svg>`;
+const CHEV = '<svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>';
+
+// Etichetele tipurilor din catalog.json, pentru afisare.
+const TYPE_LABEL = { lut:'LUT', dctl:'DCTL', powerGrade:'PowerGrade', fuse:'Fuse', app:'Aplicatie' };
+
+// Escapare HTML: continutul vine din catalog.json, deci nu il injectam brut.
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+let CATALOG = null;
+let filter = 'toate';
+
+// ── Incarcarea catalogului ──────────────────────────────────────────────────
+// Service worker-ul trateaza catalog.json ca network-first, deci primim mereu
+// varianta proaspata cand exista retea, si ultima varianta salvata cand nu.
+async function load() {
+  try {
+    const res = await fetch('/catalog.json', { cache: 'no-cache' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    CATALOG = await res.json();
+    renderAll();
+  } catch (err) {
+    console.warn('Catalog indisponibil:', err);
+    document.getElementById('produse-list').innerHTML = emptyState(
+      'Nu am putut incarca catalogul. Verifica conexiunea si trage in jos pentru reincercare.'
+    );
+  }
+}
+
+const emptyState = (txt) => `<div class="empty">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></svg>
+  <p>${esc(txt)}</p></div>`;
+
+// ── Randare ─────────────────────────────────────────────────────────────────
+function renderAll() {
+  const c = CATALOG;
+  document.getElementById('updated').textContent = 'catalog ' + (c.updatedAt || '');
+  document.getElementById('acct-cat').textContent = c.updatedAt || '—';
+  renderProduse(); renderCursuri(); renderEvenimente(); renderMagazin();
+}
+
+function renderProduse() {
+  const apps = CATALOG.apps || [], items = CATALOG.items || [];
+
+  // Chip-urile de filtrare se construiesc din tipurile care exista efectiv.
+  const types = [...new Set(items.map(i => i.type))];
+  document.getElementById('chips').innerHTML =
+    ['toate', 'aplicatii', ...types].map(t =>
+      `<button class="chip ${t===filter?'on':''}" data-f="${esc(t)}">${
+        t==='toate' ? 'Toate' : t==='aplicatii' ? 'Aplicatii' : (TYPE_LABEL[t]||t)
+      }</button>`).join('');
+
+  let html = '';
+  if (filter === 'toate' || filter === 'aplicatii') {
+    html += `<div class="section-title">Aplicatii desktop <b>${apps.length}</b></div>`;
+    html += apps.map(a => `
+      <a class="card" href="${esc(a.url)}" target="_blank" rel="noopener">
+        <div class="ico">${svg('app')}</div>
+        <div class="card-body"><h3>${esc(a.name)}</h3><p>Mac &middot; Windows</p></div>
+        ${CHEV}
+      </a>`).join('');
+  }
+
+  const shown = items.filter(i => filter==='toate' || filter===i.type);
+  if (shown.length) {
+    html += `<div class="section-title">Plugin-uri, LUT &amp; DCTL <b>${shown.length}</b></div>`;
+    html += shown.map(i => {
+      // Statusul afisat vine STRICT din date: nu inventam "Descarcat"/"Nou",
+      // fiindca instalarea si licenta se gestioneaza in aplicatia de desktop.
+      const badge = i.isFree ? '<span class="badge free">Gratuit</span>'
+                  : i.isTrial ? '<span class="badge trial">Trial</span>'
+                  : `<span class="badge paid">${esc(i.priceEUR)} &euro;</span>`;
+      const n = (i.files || []).length;
+      return `<div class="card">
+        <div class="ico">${svg(i.iconSymbol)}</div>
+        <div class="card-body">
+          <h3>${esc(i.name)}</h3>
+          <p>${esc(TYPE_LABEL[i.type] || i.type)} &middot; v${esc(i.version)} &middot; ${n} fisier${n===1?'':'e'}</p>
+        </div>${badge}
+      </div>`;
+    }).join('');
+  }
+
+  document.getElementById('produse-list').innerHTML = html || emptyState('Niciun produs pentru filtrul ales.');
+}
+
+function renderCursuri() {
+  // catalog.json are doua liste separate: 'courses' si 'educationalResources'.
+  const all = [...(CATALOG.courses || []), ...(CATALOG.educationalResources || [])];
+  const el = document.getElementById('cursuri-list');
+  if (!all.length) { el.innerHTML = emptyState('Nu sunt cursuri publicate momentan.'); return; }
+  el.innerHTML = `<div class="section-title">Cursuri si resurse <b>${all.length}</b></div>` +
+    all.map(r => richCard({
+      cover: r.coverImage, title: r.name || r.title,
+      meta: r.kind === 'course' ? 'Curs' : 'Resursa educationala',
+      desc: r.description, url: r.externalURL || r.youtubeURL, cta: 'Deschide'
+    })).join('');
+}
+
+function renderEvenimente() {
+  const evs = CATALOG.events || [];
+  const el = document.getElementById('evenimente-list');
+  if (!evs.length) { el.innerHTML = emptyState('Niciun eveniment programat momentan.'); return; }
+  el.innerHTML = `<div class="section-title">Evenimente si workshop-uri <b>${evs.length}</b></div>` +
+    evs.map(e => richCard({
+      cover: e.coverImage, title: e.title,
+      // 'dateDisplay' contine adesea si localitatea ("26-29 octombrie, Sighisoara"),
+      // asa ca adaugam 'location' doar cand nu e deja acolo — altfel apare de doua ori.
+      meta: [e.dateDisplay, (e.dateDisplay || '').includes(e.location || '\u0000') ? '' : e.location]
+              .filter(Boolean).join(' &middot; '),
+      desc: e.description, url: e.externalURL, cta: 'Detalii si inscriere'
+    })).join('');
+}
+
+function renderMagazin() {
+  const st = CATALOG.partnerStores || [];
+  const el = document.getElementById('magazin-list');
+  if (!st.length) { el.innerHTML = emptyState('Niciun magazin partener momentan.'); return; }
+  el.innerHTML = `<div class="section-title">Magazine partenere <b>${st.length}</b></div>` +
+    st.map(s => richCard({
+      cover: s.coverImage, title: s.name, meta: 'Partener',
+      desc: s.description, url: s.url, cta: 'Viziteaza magazinul'
+    })).join('');
+}
+
+/** Card mare, cu coperta optionala. Coperta lipsa => cardul se randeaza fara ea. */
+function richCard({ cover, title, meta, desc, url, cta }) {
+  const img = cover ? `<img src="${esc(cover)}" alt="" loading="lazy" onerror="this.remove()">` : '';
+  const link = url ? `<a class="go" href="${esc(url)}" target="_blank" rel="noopener">${esc(cta)} &rarr;</a>` : '';
+  return `<div class="rich">${img}<div class="pad">
+    <h3>${esc(title)}</h3>
+    ${meta ? `<div class="meta">${meta}</div>` : ''}
+    ${desc ? `<p>${esc(desc)}</p>` : ''}
+    ${link}
+  </div></div>`;
+}
+
+// ── Interactiuni ────────────────────────────────────────────────────────────
+
+// Tab-uri
+document.querySelectorAll('.tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(b => b.classList.toggle('on', b === btn));
+    const name = btn.dataset.tab;
+    document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.id === 'view-' + name));
+    // Hash-ul permite scurtaturile din manifest (ex: /app.html#evenimente).
+    history.replaceState(null, '', '#' + name);
+    window.scrollTo(0, 0);
+  });
+});
+
+// Filtre de tip
+document.getElementById('chips').addEventListener('click', (e) => {
+  const chip = e.target.closest('.chip');
+  if (!chip) return;
+  filter = chip.dataset.f;
+  renderProduse();
+});
+
+// Starea conexiunii, in bara de sus si in fereastra de cont
+function netState() {
+  const on = navigator.onLine;
+  document.getElementById('status').classList.toggle('off', !on);
+  document.getElementById('status-txt').textContent = on ? 'online' : 'offline';
+  document.getElementById('acct-net').textContent = on ? 'online' : 'offline (date din cache)';
+  if (on && !CATALOG) load();   // reincarcam catalogul cand revine reteaua
+}
+window.addEventListener('online', netState);
+window.addEventListener('offline', netState);
+
+// Fereastra de cont
+const sheet = document.getElementById('sheet');
+document.getElementById('acct-btn').onclick = () => sheet.classList.add('open');
+document.getElementById('sheet-bg').onclick = () => sheet.classList.remove('open');
+
+// Deschiderea pe un tab anume, prin hash (scurtaturile din manifest)
+const initial = location.hash.replace('#', '');
+if (initial) {
+  const btn = document.querySelector(`.tab[data-tab="${CSS.escape(initial)}"]`);
+  if (btn) btn.click();
+}
+
+// Service worker: aceeasi inregistrare ca pe pagina de prezentare.
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
+}
+
+netState();
+load();
+</script>
+</body>
+</html>

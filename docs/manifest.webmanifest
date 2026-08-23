@@ -1,28 +1,88 @@
 {
-  "_comentariu": "Manifest PWA pentru gordas.dev (aplicatia companion GDC). Scope-ul e RADACINA domeniului, ca sa acopere toate produsele (/datamover/, /cursorpro-gdc/, /CGConvertor/ etc.) fara sa apara bara de browser in APK. Daca schimbi 'name' sau 'start_url', actualizeaza si twa/twa-manifest.json.",
+  "_comentariu": "Manifest PWA pentru gordas.dev. start_url = /app.html (interfata de aplicatie), NU index.html (pagina de prezentare, ramane pentru vizitatorii din browser). Scope-ul e radacina domeniului, ca paginile de produs (/datamover/ etc.) sa se deschida tot in aplicatie. Daca schimbi start_url, actualizeaza si twa/twa-manifest.json si reconstruieste APK-ul.",
   "id": "/",
-  "name": "GDC — Plugin Manager, cursuri si resurse",
+  "name": "GDC Manager",
   "short_name": "GDC",
   "description": "Catalogul GDC pe telefon: plugin-uri, LUT-uri si DCTL-uri pentru DaVinci Resolve, cursuri, resurse educationale, evenimente si magazine partenere.",
   "lang": "ro",
   "dir": "ltr",
-  "start_url": "/?source=pwa",
+  "start_url": "/app.html?source=pwa",
   "scope": "/",
   "display": "standalone",
-  "display_override": ["standalone", "minimal-ui", "browser"],
+  "display_override": [
+    "standalone",
+    "minimal-ui",
+    "browser"
+  ],
   "orientation": "portrait-primary",
   "background_color": "#070f0e",
   "theme_color": "#070f0e",
-  "categories": ["productivity", "education", "photo", "video"],
+  "categories": [
+    "productivity",
+    "education",
+    "photo",
+    "video"
+  ],
   "icons": [
-    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "/icons/icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
-    { "src": "/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ],
   "shortcuts": [
-    { "name": "Catalog produse", "short_name": "Catalog", "url": "/?source=pwa#catalog", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }] },
-    { "name": "Descarca aplicatia", "short_name": "Descarca", "url": "/?source=pwa#download", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }] }
+    {
+      "name": "Produsele mele",
+      "short_name": "Produse",
+      "url": "/app.html?source=pwa#produse",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Cursuri",
+      "short_name": "Cursuri",
+      "url": "/app.html?source=pwa#cursuri",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Evenimente",
+      "short_name": "Evenimente",
+      "url": "/app.html?source=pwa#evenimente",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
   ],
   "prefer_related_applications": false
 }

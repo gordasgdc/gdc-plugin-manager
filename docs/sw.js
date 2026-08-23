@@ -20,7 +20,7 @@
    aplicatie imediat ce publici catalogul — FARA APK nou si fara reinstalare.
 ============================================================================= */
 
-const CACHE_VERSION = 'v1';                  // <-- INCREMENTEAZA la fiecare update de pagina
+const CACHE_VERSION = 'v2';                  // <-- INCREMENTEAZA la fiecare update de pagina
 const SHELL_CACHE   = `gdc-shell-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `gdc-runtime-${CACHE_VERSION}`;
 
@@ -28,6 +28,7 @@ const RUNTIME_CACHE = `gdc-runtime-${CACHE_VERSION}`;
 const SHELL_ASSETS = [
   '/',
   '/index.html',
+  '/app.html',        // interfata de aplicatie (PWA/APK) — trebuie sa mearga offline
   '/offline.html',
   '/catalog.json',
   '/manifest.webmanifest',

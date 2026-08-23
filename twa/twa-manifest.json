@@ -1,7 +1,7 @@
 {
   "packageId": "dev.gordas.gdc",
   "host": "gordas.dev",
-  "name": "GDC \u2014 Plugin Manager, cursuri si resurse",
+  "name": "GDC Manager",
   "launcherName": "GDC",
   "display": "standalone",
   "themeColor": "#070f0e",
@@ -12,7 +12,7 @@
   "navigationDividerColorDark": "#1e3430",
   "backgroundColor": "#070f0e",
   "enableNotifications": true,
-  "startUrl": "/?source=twa",
+  "startUrl": "/app.html?source=twa",
   "iconUrl": "https://gordas.dev/icons/icon-512.png",
   "maskableIconUrl": "https://gordas.dev/icons/icon-maskable-512.png",
   "splashScreenFadeOutDuration": 300,
@@ -20,19 +20,19 @@
     "path": "./android.keystore",
     "alias": "gdc"
   },
-  "appVersionName": "1.0.0",
-  "appVersionCode": 1,
+  "appVersionName": "1.1.0",
+  "appVersionCode": 2,
   "shortcuts": [
     {
-      "name": "Catalog produse",
-      "shortName": "Catalog",
-      "url": "/?source=twa#catalog",
+      "name": "Produsele mele",
+      "shortName": "Produse",
+      "url": "/app.html?source=twa#produse",
       "chosenIconUrl": "https://gordas.dev/icons/icon-192.png"
     },
     {
-      "name": "Descarca aplicatia",
-      "shortName": "Descarca",
-      "url": "/?source=twa#download",
+      "name": "Evenimente",
+      "shortName": "Evenimente",
+      "url": "/app.html?source=twa#evenimente",
       "chosenIconUrl": "https://gordas.dev/icons/icon-192.png"
     }
   ],
