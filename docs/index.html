@@ -59,7 +59,28 @@
     font-family:var(--mono); font-size:12.5px; font-weight:600; color:var(--accent-ink);
     background:var(--accent); padding:9px 16px; border-radius:8px; text-decoration:none; white-space:nowrap;
   }
-  @media (max-width:760px){ .nav-links a:not(.nav-cta){ display:none; } }
+  /* Bara de sus pe ecrane mici.
+     WARNING — specificitate: `.nav-links a` (0,1,1) bate `.nav-cta` (0,1,0),
+     iar `.brand .mark` (0,2,0) bate `.brand span` (0,1,1). Orice regula de
+     mobil pentru butonul de descarcare TREBUIE scrisa `.nav-links a.nav-cta`,
+     altfel pare ca n-are efect (exact asa a scapat overflow-ul de mai jos).
+     La 375px suma reala era brand 142 + limbi 111 + buton 154 = 407px, deci
+     tot site-ul avea scroll orizontal. */
+  .nav{ gap:12px; }
+  .nav-links{ min-width:0; flex-shrink:1; }
+  @media (max-width:760px){
+    .nav-links a:not(.nav-cta){ display:none; }
+    .nav-links{ gap:10px; }
+    .nav{ padding:14px 16px; gap:10px; }
+    .nav-links a.nav-cta{ padding:9px 12px; font-size:11.5px; }
+  }
+  @media (max-width:560px){
+    /* Numele scris al brandului dispare, silueta (.mark) ramane — ea e
+       ancora vizuala, textul e redundant langa titlul paginii. */
+    .brand .brand-name{ display:none; }
+    .lang-switch button{ padding:5px 7px; font-size:11px; }
+    .nav-links a.nav-cta{ padding:8px 10px; font-size:11px; }
+  }
 
   .hero{ padding:96px 0 70px; position:relative; overflow:hidden; }
   .hero-grid{ display:grid; grid-template-columns:1.05fr .95fr; gap:56px; align-items:center; }
@@ -154,6 +175,56 @@
   .catalog-card p{ font-size:14.5px; line-height:1.6; color:var(--muted); flex-grow:1; }
   .catalog-empty{ color:var(--muted); font-size:14.5px; padding:20px 0; }
 
+  /* --- Navigatia pe categorii ----------------------------------------
+     Pastilele se genereaza din catalog: o categorie fara continut nu-si
+     primeste pastila deloc (vezi renderCatalog). Asa pagina nu anunta
+     niciodata "nu exista evenimente" — pe o pagina de vanzare, o sectiune
+     goala face mai mult rau decat una lipsa. */
+  .cat-filter{ display:flex; flex-wrap:wrap; gap:8px; margin-top:28px; }
+  .cat-pill{
+    font-family:var(--mono); font-size:12px; font-weight:600; color:var(--muted);
+    background:var(--panel); border:1px solid var(--border); border-radius:999px;
+    padding:8px 15px; cursor:pointer; text-decoration:none; transition:all .15s ease;
+  }
+  .cat-pill:hover{ color:var(--text); border-color:var(--violet-2); }
+  .cat-pill.active{ color:var(--accent-ink); background:var(--accent); border-color:var(--accent); }
+  .cat-pill .cnt{ opacity:.6; margin-left:6px; font-size:11px; }
+
+  .cat-block{ margin-top:46px; scroll-margin-top:90px; }
+  .cat-block h3{
+    font-family:var(--mono); font-size:19px; font-weight:700; margin-bottom:6px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .cat-block .cat-lead{ color:var(--muted); font-size:14.5px; max-width:62ch; margin-bottom:6px; }
+
+  /* Carduri: mai mult aer decat inainte (padding 22 -> 18/20 dar gap mai
+     mare si descriere mai lizibila) si un CTA mereu la baza cardului,
+     aliniat indiferent cat de lunga e descrierea (marginea auto). */
+  .cc-meta{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; font-family:var(--mono); font-size:11.5px; color:var(--faint); }
+  .cc-price{ font-family:var(--mono); font-size:13px; font-weight:700; color:var(--accent); }
+  .cc-badge{
+    font-family:var(--mono); font-size:10.5px; font-weight:700; letter-spacing:.05em; text-transform:uppercase;
+    padding:3px 8px; border-radius:6px; background:var(--panel-2); border:1px solid var(--border); color:var(--muted);
+  }
+  .cc-badge.free{ color:#5fd98a; border-color:rgba(95,217,138,.35); }
+  .cc-badge.trial{ color:var(--violet-2); border-color:rgba(79,196,214,.35); }
+  .cc-cta{
+    margin-top:auto; padding-top:14px;
+    font-family:var(--mono); font-size:12px; font-weight:600;
+    color:var(--accent); text-decoration:none; display:inline-flex; align-items:center; gap:6px;
+  }
+  .cc-cta:hover{ color:var(--text); }
+  .cc-cta::after{ content:'\2192'; transition:transform .15s ease; }
+  .cc-cta:hover::after{ transform:translateX(3px); }
+  .cc-opts{ display:flex; flex-direction:column; gap:5px; font-size:13px; color:var(--muted); }
+  .cc-opts div{ display:flex; justify-content:space-between; gap:10px; }
+
+  /* Coperta patrata pentru iconite (plugin-uri, logo-uri de magazin) vs
+     lata pentru cursuri/materiale/evenimente — acelasi impartire ca
+     preseturile .icon/.cover din ImageProcessor. */
+  .cc-cover.square img{ height:180px; object-fit:contain; padding:14px; background:var(--panel-2); }
+  .cc-cover.wide img{ height:180px; }
+
   /* --- Coperta de produs --------------------------------------------
      E un <button>, nu un <div> cu onclick: asa primeste focus la Tab si
      se deschide cu Enter/Space, fara sa reimplementam noi accesibilitatea. */
@@ -222,7 +293,7 @@
       <span class="mark">
         <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="4" stroke="#fff" stroke-width="2"/><circle cx="12" cy="4" r="2.4" fill="#fff"/></svg>
       </span>
-      GDC Plugin Manager
+      <span class="brand-name">GDC Plugin Manager</span>
     </div>
     <div class="nav-links">
       <a href="#features" data-i18n="nav.features">Funcții</a>
@@ -333,10 +404,14 @@
   <div class="wrap">
     <div class="section-head reveal">
       <div class="section-tag" data-i18n="catalog.tag">Catalog</div>
-      <h2 data-i18n="catalog.h2">Fiecare produs, deblocat separat</h2>
-      <p class="section-desc" data-i18n="catalog.desc">Aplicația e gratuită. Prețurile și cumpărarea se fac direct din aplicație — lista de mai jos se încarcă live din catalog, doar ca să vezi ce e disponibil.</p>
+      <h2 data-i18n="catalog.h2">Tot ce îți trebuie pentru Resolve, într-un singur loc</h2>
+      <p class="section-desc" data-i18n="catalog.desc">Aplicația e gratuită și o descarci fără cont. Catalogul de mai jos se încarcă live — exact ce vezi aici găsești și în aplicație, gata de instalat cu un click.</p>
     </div>
-    <div id="catalog-list" class="catalog-grid reveal">
+    <!-- Pastilele de categorie si blocurile de mai jos se genereaza din
+         catalog.json (vezi renderCatalog). O categorie fara continut nu
+         apare deloc — nici pastila, nici blocul. -->
+    <div id="cat-filter" class="cat-filter reveal"></div>
+    <div id="catalog-list">
       <p class="catalog-empty" data-i18n="catalog.loading">Se încarcă catalogul…</p>
     </div>
   </div>
@@ -371,11 +446,70 @@
   }, { threshold: .15 });
   revealEls.forEach(el => io.observe(el));
 
+  /* =====================================================================
+     PROCESS: cum se leaga site-ul de aplicatii si de Furnizor
+     =====================================================================
+
+     Lantul de date, cap-coada:
+
+       Furnizor (Mac, SwiftUI)
+         -> scrie docs/catalog.json in checkout-ul repo-ului PUBLIC
+         -> scrie coperile in docs/covers/<id>.<ext>
+         -> git commit + push
+       GitHub Pages publica docs/ la https://gordas.dev
+         -> aceasta pagina face fetch('./catalog.json')
+         -> clientii Mac/Windows fac fetch la aceeasi adresa
+
+     Pagina si aplicatiile citesc ACELASI fisier. Nu exista o baza de date
+     separata si nici un catalog al site-ului: daca ceva apare in aplicatie
+     dar nu aici (sau invers), cauza e in codul de randare de mai jos, nu in
+     date.
+
+     ---------------------------------------------------------------------
+     PROCESS: ce trebuie actualizat AICI cand se adauga ceva in aplicatii
+     ---------------------------------------------------------------------
+
+     1. CATEGORIE NOUA in catalog (un camp nou de nivel inalt in
+        catalog.json, ex. "bundles"):
+          a) adauga o intrare in CATEGORIES (mai jos), cu `key` EXACT cat
+             numele campului din JSON;
+          b) scrie-i o functie de card (dupa modelul pluginCard/eventCard);
+          c) adauga cheile 'cat.<key>.name' si 'cat.<key>.lead' in TOATE
+             cele trei limbi din `translations` (ro/en/es) — o cheie
+             lipsa se randeaza ca numele cheii, vizibil in pagina;
+          d) alege `cover`: 'square' pentru iconite/logo-uri (presetul
+             .icon din ImageProcessor, 512x512), 'wide' pentru materiale
+             vizuale (presetul .cover, max 1600px).
+        WARNING: fara pasul (a) categoria pur si simplu nu apare pe site,
+        si nimic nu semnaleaza omisiunea — nici eroare, nici loc gol.
+
+     2. CAMP NOU pe un produs existent (ex. inca un badge): modifica doar
+        functia de card a categoriei respective. Trece-l prin esc().
+
+     3. TIP NOU de plugin (PluginType nou in Swift/C#): adauga-l in
+        `typeLabels`, altfel se afiseaza numele brut din JSON (ex.
+        "powerGrade" in loc de "PowerGrade").
+
+     4. VERSIUNE NOUA de aplicatie: nu se atinge nimic aici. Butoanele de
+        descarcare folosesc releases/latest/download/... (vezi comentariul
+        de la initDirectDownload), deci se actualizeaza singure. Vezi si
+        docs/update.json pentru notificarea de update din clienti.
+
+     ---------------------------------------------------------------------
+     WARNING: tot ce vine din catalog.json e DATE, nu HTML
+     ---------------------------------------------------------------------
+     Fiecare valoare interpolata intr-un template trece prin esc(), si
+     fiecare URL prin coverURL()/safeLink() (doar http/https). Catalogul e
+     scris de noi, dar un apostrof intr-o descriere ar strica randarea, iar
+     un "javascript:" intr-un camp de link ar deveni executabil.
+     ===================================================================== */
+
   // Live catalog, pulled directly from the app's own public catalog.json
   // (same file the desktop app fetches) - so this list never drifts out
   // of sync with what's actually for sale.
   const typeLabels = { dctl: 'DCTL', lut: 'LUT', fuse: 'Fuse', powerGrade: 'PowerGrade' };
-  let lastCatalogItems = null;
+  // Tot catalogul, nu doar items: pagina randeaza acum toate categoriile.
+  let lastCatalog = null;
 
   // Catalogul e scris de noi, dar tot il tratam ca date, nu ca HTML: numele
   // si descrierile intra prin innerHTML, deci un apostrof sau un "<" dintr-o
@@ -399,34 +533,188 @@
     return './' + coverImage.replace(/^\.?\//, '');
   }
 
+  // Cele sase categorii ale catalogului, in ordinea in care apar pe pagina:
+  // intai ce se instaleaza (motivul principal pentru care cineva descarca
+  // aplicatia), apoi ce se invata, apoi ce e informativ.
+  //
+  // `cover` spune ce forma are coperta: 'square' pentru iconite/logo-uri
+  // (presetul .icon din ImageProcessor, 512x512), 'wide' pentru materiale
+  // vizuale (presetul .cover, max 1600px).
+  //
+  // WARNING: `key` trebuie sa fie EXACT numele campului din catalog.json.
+  // Daca adaugi o categorie noua in Furnizor, adaug-o si aici, altfel nu
+  // apare niciodata pe site (si nimic nu semnaleaza omisiunea).
+  const CATEGORIES = [
+    { key: 'items',                cover: 'square', card: pluginCard },
+    { key: 'courses',              cover: 'wide',   card: courseCard },
+    { key: 'educationalResources', cover: 'wide',   card: resourceCard },
+    { key: 'events',               cover: 'wide',   card: eventCard },
+    { key: 'partnerStores',        cover: 'square', card: storeCard },
+    { key: 'apps',                 cover: 'square', card: appCard },
+  ];
+
+  // Coperta ca <button> focusabil, sau nimic daca produsul n-are imagine.
+  // Nu punem placeholder gri: un card fara imagine arata mai bine curat
+  // decat cu o cutie goala.
+  function coverHTML(entry, shape) {
+    const url = coverURL(entry.coverImage);
+    if (!url) return '';
+    const label = esc(entry.name || entry.title || '');
+    return `<button class="cc-cover ${shape}" type="button" data-full="${esc(url)}" data-caption="${label}">
+      <img src="${esc(url)}" alt="${label}" loading="lazy">
+    </button>`;
+  }
+
+  // Link extern sigur: acelasi filtru ca la imagini — doar http/https ajung
+  // intr-un href, ca un "javascript:" din catalog sa nu devina executabil.
+  function safeLink(url) {
+    return (url && /^https?:\/\//i.test(url)) ? url : null;
+  }
+
+  function priceHTML(entry) {
+    if (entry.isTrial) return `<span class="cc-badge trial">${t('badge.trial')}</span>`;
+    if (entry.isFree)  return `<span class="cc-badge free">${t('badge.free')}</span>`;
+    const price = Number(entry.priceEUR || 0);
+    return `<span class="cc-price">${price.toFixed(0)} EUR</span>`;
+  }
+
+  function pluginCard(item) {
+    return `<div class="catalog-card">
+      ${coverHTML(item, 'square')}
+      <div class="cc-top">
+        <span class="cc-type">${esc(typeLabels[item.type] || item.type)}</span>
+        ${priceHTML(item)}
+      </div>
+      <h3>${esc(item.name)}</h3>
+      <p>${esc(item.description || '')}</p>
+      <div class="cc-meta"><span>${t('card.version')} ${esc(item.version || '')}</span></div>
+      <a class="cc-cta" href="#download">${t('cta.getApp')}</a>
+    </div>`;
+  }
+
+  function courseCard(course) {
+    const opts = (course.options || []).map(o =>
+      `<div><span>${esc(o.label)}</span><span>${Number(o.priceEUR || 0).toFixed(0)} EUR</span></div>`
+    ).join('');
+    return `<div class="catalog-card">
+      ${coverHTML(course, 'wide')}
+      <h3>${esc(course.name)}</h3>
+      <p>${esc(course.description || '')}</p>
+      ${opts ? `<div class="cc-opts">${opts}</div>` : ''}
+      <a class="cc-cta" href="#download">${t('cta.book')}</a>
+    </div>`;
+  }
+
+  function resourceCard(res) {
+    const link = safeLink(res.externalURL);
+    const kindLabels = { course: t('kind.course'), book: t('kind.book'), guide: t('kind.guide') };
+    return `<div class="catalog-card">
+      ${coverHTML(res, 'wide')}
+      <div class="cc-top"><span class="cc-type">${esc(kindLabels[res.kind] || res.kind || '')}</span></div>
+      <h3>${esc(res.name)}</h3>
+      <p>${esc(res.description || '')}</p>
+      ${link ? `<a class="cc-cta" href="${esc(link)}" target="_blank" rel="noopener noreferrer">${t('cta.view')}</a>` : ''}
+    </div>`;
+  }
+
+  function eventCard(ev) {
+    const link = safeLink(ev.externalURL);
+    const meta = [ev.dateDisplay, ev.location].filter(Boolean).map(esc).join(' · ');
+    return `<div class="catalog-card">
+      ${coverHTML(ev, 'wide')}
+      <h3>${esc(ev.title)}</h3>
+      ${meta ? `<div class="cc-meta"><span>${meta}</span></div>` : ''}
+      <p>${esc(ev.description || '')}</p>
+      ${link ? `<a class="cc-cta" href="${esc(link)}" target="_blank" rel="noopener noreferrer">${t('cta.details')}</a>` : ''}
+    </div>`;
+  }
+
+  function storeCard(store) {
+    const link = safeLink(store.url);
+    return `<div class="catalog-card">
+      ${coverHTML(store, 'square')}
+      <h3>${esc(store.name)}</h3>
+      <p>${esc(store.description || '')}</p>
+      ${link ? `<a class="cc-cta" href="${esc(link)}" target="_blank" rel="noopener noreferrer">${t('cta.visit')}</a>` : ''}
+    </div>`;
+  }
+
+  function appCard(app) {
+    const link = safeLink(app.url);
+    return `<div class="catalog-card">
+      ${coverHTML(app, 'square')}
+      <h3>${esc(app.name)}</h3>
+      <p>${esc(app.description || t('apps.generic'))}</p>
+      ${link ? `<a class="cc-cta" href="${esc(link)}" target="_blank" rel="noopener noreferrer">${t('cta.open')}</a>` : ''}
+    </div>`;
+  }
+
   function renderCatalog() {
     const el = document.getElementById('catalog-list');
-    if (lastCatalogItems === null) {
+    const filter = document.getElementById('cat-filter');
+
+    if (lastCatalog === null) {
+      filter.innerHTML = '';
       el.innerHTML = `<p class="catalog-empty">${t('catalog.loading')}</p>`;
-    } else if (lastCatalogItems === 'error') {
-      el.innerHTML = `<p class="catalog-empty">${t('catalog.error')}</p>`;
-    } else if (lastCatalogItems.length === 0) {
-      el.innerHTML = `<p class="catalog-empty">${t('catalog.empty')}</p>`;
-    } else {
-      el.innerHTML = lastCatalogItems.map(item => {
-        const cover = coverURL(item.coverImage);
-        // Produsele fara coperta raman exact cum erau - nu punem un
-        // placeholder gri doar ca sa fie randurile egale.
-        const coverHTML = cover
-          ? `<button class="cc-cover" type="button" data-full="${esc(cover)}" data-caption="${esc(item.name)}">
-               <img src="${esc(cover)}" alt="${esc(item.name)}" loading="lazy">
-             </button>`
-          : '';
-        return `<div class="catalog-card">
-          ${coverHTML}
-          <div class="cc-top">
-            <span class="cc-type">${esc(typeLabels[item.type] || item.type)}</span>
-          </div>
-          <h3>${esc(item.name)}</h3>
-          <p>${esc(item.description || '')}</p>
-        </div>`;
-      }).join('');
+      return;
     }
+    if (lastCatalog === 'error') {
+      filter.innerHTML = '';
+      el.innerHTML = `<p class="catalog-empty">${t('catalog.error')}</p>`;
+      return;
+    }
+
+    // Doar categoriile care chiar au continut. O sectiune goala pe o pagina
+    // de vanzare face mai mult rau decat una lipsa.
+    const present = CATEGORIES
+      .map(cat => ({ ...cat, entries: lastCatalog[cat.key] || [] }))
+      .filter(cat => cat.entries.length > 0);
+
+    if (present.length === 0) {
+      filter.innerHTML = '';
+      el.innerHTML = `<p class="catalog-empty">${t('catalog.empty')}</p>`;
+      return;
+    }
+
+    filter.innerHTML = present.map((cat, i) =>
+      `<a class="cat-pill${i === 0 ? ' active' : ''}" href="#cat-${cat.key}" data-cat="${cat.key}">
+        ${t('cat.' + cat.key + '.name')}<span class="cnt">${cat.entries.length}</span>
+      </a>`
+    ).join('');
+
+    el.innerHTML = present.map(cat => `
+      <div class="cat-block reveal in" id="cat-${cat.key}">
+        <h3>${t('cat.' + cat.key + '.name')}</h3>
+        <p class="cat-lead">${t('cat.' + cat.key + '.lead')}</p>
+        <div class="catalog-grid">${cat.entries.map(cat.card).join('')}</div>
+      </div>`
+    ).join('');
+
+    wireCategorySpy();
+  }
+
+  // Pastila activa urmareste sectiunea vizibila (scroll-spy). Observatorul
+  // se re-creeaza la fiecare randare pentru ca blocurile sunt inlocuite in
+  // intregime la schimbarea limbii — un observator vechi ar tine referinte
+  // la noduri care nu mai sunt in pagina.
+  let catObserver = null;
+  function wireCategorySpy() {
+    if (catObserver) catObserver.disconnect();
+    const blocks = document.querySelectorAll('.cat-block');
+    if (!blocks.length) return;
+    catObserver = new IntersectionObserver((entries) => {
+      // Luam intrarea cea mai vizibila, nu prima care intersecteaza:
+      // altfel, cand doua sectiuni sunt simultan pe ecran, pastila ar
+      // sari inainte si inapoi la fiecare pixel de scroll.
+      const visible = entries.filter(e => e.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (!visible) return;
+      const key = visible.target.id.replace(/^cat-/, '');
+      document.querySelectorAll('.cat-pill').forEach(p => {
+        p.classList.toggle('active', p.dataset.cat === key);
+      });
+    }, { rootMargin: '-90px 0px -55% 0px', threshold: [0.1, 0.5, 1] });
+    blocks.forEach(b => catObserver.observe(b));
   }
 
   // Lightbox: un singur <dialog> refolosit pentru toate imaginile, cu
@@ -480,8 +768,8 @@
 
   fetch('./catalog.json')
     .then(r => r.json())
-    .then(data => { lastCatalogItems = (data.items || []); renderCatalog(); })
-    .catch(() => { lastCatalogItems = 'error'; renderCatalog(); });
+    .then(data => { lastCatalog = data || {}; renderCatalog(); })
+    .catch(() => { lastCatalog = 'error'; renderCatalog(); });
 
   // Language switch — same RO-default / EN / ES set as the desktop app
   // (Localization.swift), independent of the browser's own locale unless
@@ -507,10 +795,31 @@
       'step1.h4': 'Descarcă și deschide', 'step1.p': 'Mac: descarcă arhiva .zip, dezarhiveaz-o, apoi dublu-click pe Instalare_GDCPluginManager.command (o singură dată). Windows: descarcă arhiva .zip, dezarhiveaz-o și rulează GDCPluginManagerSetup.exe — se instalează normal, cu scurtătură în Start Menu.',
       'step2.h4': 'Răsfoiește catalogul, gratuit', 'step2.p': 'Catalogul se încarcă automat, fără cont și fără nicio taxă. Vezi fiecare produs, descrierea și prețul lui.',
       'step3.h4': 'Deblochezi doar ce vrei', 'step3.p': 'Apeși Cumpără pe produsul dorit — o donație, o singură dată, care mă ajută să dezvolt în continuare. Primești un cod, îl activezi din pagina Licență, apoi Instalezi cu un click.',
-      'catalog.tag': 'Catalog', 'catalog.h2': 'Fiecare produs, deblocat separat',
-      'catalog.desc': 'Aplicația e gratuită. Prețurile și cumpărarea se fac direct din aplicație — lista de mai jos se încarcă live din catalog, doar ca să vezi ce e disponibil.',
+      'catalog.tag': 'Catalog', 'catalog.h2': 'Tot ce îți trebuie pentru Resolve, într-un singur loc',
+      'catalog.desc': 'Aplicația e gratuită și o descarci fără cont. Catalogul de mai jos se încarcă live — exact ce vezi aici găsești și în aplicație, gata de instalat cu un click.',
       'catalog.loading': 'Se încarcă catalogul…', 'catalog.empty': 'Catalogul e gol momentan — reveniți curând, produsele apar aici imediat ce sunt publicate.',
       'catalog.error': 'Nu am putut încărca catalogul chiar acum — vezi catalogul complet direct din aplicație.',
+      // Copy de CATEGORIE (al site-ului). Descrierile fiecarui produs in
+      // parte vin din catalog.json, scrise in Furnizor — nu de aici.
+      'cat.items.name': 'Plugin-uri & Preseturi',
+      'cat.items.lead': 'DCTL-uri, LUT-uri, Fuse-uri și PowerGrade-uri făcute pentru lucrul real pe proiect. Se instalează singure în Resolve, la locul potrivit, fără să cauți foldere și fără să repari nimic manual.',
+      'cat.courses.name': 'Cursuri',
+      'cat.courses.lead': 'Sesiuni 1-la-1 sau pe grupuri mici, pe ce ai tu nevoie: color grading, flux de lucru, organizarea proiectului. Alegi durata, restul stabilim împreună.',
+      'cat.educationalResources.name': 'Materiale',
+      'cat.educationalResources.lead': 'Cărți, cursuri online și ghiduri pe care le folosesc și le recomand — selectate, nu adunate la grămadă.',
+      'cat.events.name': 'Evenimente',
+      'cat.events.lead': 'Workshop-uri, cohorte de curs și festivaluri. Le anunț aici primele, cu tot cu link de înscriere.',
+      'cat.partnerStores.name': 'Magazine partenere',
+      'cat.partnerStores.lead': 'Magazine de echipament foto-video în care am încredere, pentru când ai nevoie de hardware, nu de software.',
+      'cat.apps.name': 'Aplicații',
+      'cat.apps.lead': 'Celelalte aplicații GDC — unelte mici care rezolvă câte o problemă concretă din fluxul de lucru.',
+      'badge.free': 'Gratuit', 'badge.trial': 'Probă',
+      'card.version': 'versiunea',
+      'kind.course': 'Curs', 'kind.book': 'Carte', 'kind.guide': 'Ghid',
+      'cta.getApp': 'Descarcă aplicația', 'cta.book': 'Rezervă din aplicație',
+      'cta.view': 'Vezi materialul', 'cta.details': 'Detalii și înscriere',
+      'cta.visit': 'Vizitează magazinul', 'cta.open': 'Deschide',
+      'apps.generic': 'Aplicație GDC, disponibilă separat.',
       'footer.releases': 'Toate versiunile', 'footer.terms': 'Termeni și Condiții',
     },
     en: {
@@ -533,10 +842,29 @@
       'step1.h4': 'Download and open', 'step1.p': 'Mac: download the .zip, unzip it, then double-click Instalare_GDCPluginManager.command (just once). Windows: download the .zip, unzip it and run GDCPluginManagerSetup.exe — installs normally, with a Start Menu shortcut.',
       'step2.h4': 'Browse the catalog, free', 'step2.p': 'The catalog loads automatically, no account and no fee. See every product, its description and its price.',
       'step3.h4': 'Unlock only what you want', 'step3.p': 'Press Buy on the product you want — a one-time donation that helps me keep developing. You get a code, activate it from the License page, then Install with one click.',
-      'catalog.tag': 'Catalog', 'catalog.h2': 'Every product, unlocked separately',
-      'catalog.desc': 'The app itself is free. Pricing and purchasing happen inside the app — the list below loads live from the catalog, just so you can see what\'s available.',
+      'catalog.tag': 'Catalog', 'catalog.h2': 'Everything you need for Resolve, in one place',
+      'catalog.desc': 'The app is free and needs no account. The catalog below loads live — what you see here is exactly what you get in the app, ready to install in one click.',
       'catalog.loading': 'Loading catalog…', 'catalog.empty': 'The catalog is empty right now — check back soon, products show up here as soon as they\'re published.',
       'catalog.error': 'Couldn\'t load the catalog right now — see the full catalog directly in the app.',
+      'cat.items.name': 'Plugins & Presets',
+      'cat.items.lead': 'DCTLs, LUTs, Fuses and PowerGrades built for real project work. They install themselves into Resolve, in the right place, with no folder hunting and nothing to fix by hand.',
+      'cat.courses.name': 'Courses',
+      'cat.courses.lead': 'One-to-one or small-group sessions on what you actually need: color grading, workflow, project organisation. You pick the length, we sort out the rest together.',
+      'cat.educationalResources.name': 'Learning material',
+      'cat.educationalResources.lead': 'Books, online courses and guides I use and recommend — picked, not piled up.',
+      'cat.events.name': 'Events',
+      'cat.events.lead': 'Workshops, course cohorts and festivals. Announced here first, with the sign-up link included.',
+      'cat.partnerStores.name': 'Partner stores',
+      'cat.partnerStores.lead': 'Photo and video gear shops I trust, for when what you need is hardware, not software.',
+      'cat.apps.name': 'Apps',
+      'cat.apps.lead': 'The other GDC apps — small tools that each solve one concrete workflow problem.',
+      'badge.free': 'Free', 'badge.trial': 'Trial',
+      'card.version': 'version',
+      'kind.course': 'Course', 'kind.book': 'Book', 'kind.guide': 'Guide',
+      'cta.getApp': 'Get the app', 'cta.book': 'Book from the app',
+      'cta.view': 'View material', 'cta.details': 'Details and sign-up',
+      'cta.visit': 'Visit the store', 'cta.open': 'Open',
+      'apps.generic': 'A GDC app, available separately.',
       'footer.releases': 'All releases', 'footer.terms': 'Terms and Conditions',
     },
     es: {
@@ -559,10 +887,29 @@
       'step1.h4': 'Descarga y abre', 'step1.p': 'Mac: descarga el .zip, descomprímelo y haz doble clic en Instalare_GDCPluginManager.command (una sola vez). Windows: descarga el .zip, descomprímelo y ejecuta GDCPluginManagerSetup.exe — se instala normalmente, con acceso directo en el menú Inicio.',
       'step2.h4': 'Explora el catálogo, gratis', 'step2.p': 'El catálogo se carga automáticamente, sin cuenta y sin ninguna tarifa. Ve cada producto, su descripción y su precio.',
       'step3.h4': 'Desbloquea solo lo que quieras', 'step3.p': 'Pulsa Comprar en el producto que quieras — una donación única que me ayuda a seguir desarrollando. Recibes un código, lo activas desde la página Licencia y luego Instalas con un clic.',
-      'catalog.tag': 'Catálogo', 'catalog.h2': 'Cada producto, desbloqueado por separado',
-      'catalog.desc': 'La aplicación es gratuita. Los precios y la compra se hacen directamente desde la aplicación — la lista de abajo se carga en vivo desde el catálogo, solo para que veas qué hay disponible.',
+      'catalog.tag': 'Catálogo', 'catalog.h2': 'Todo lo que necesitas para Resolve, en un solo lugar',
+      'catalog.desc': 'La aplicación es gratuita y no necesita cuenta. El catálogo de abajo se carga en vivo — lo que ves aquí es exactamente lo que obtienes en la app, listo para instalar con un clic.',
       'catalog.loading': 'Cargando catálogo…', 'catalog.empty': 'El catálogo está vacío por ahora — vuelve pronto, los productos aparecen aquí en cuanto se publican.',
       'catalog.error': 'No se pudo cargar el catálogo ahora mismo — consulta el catálogo completo directamente en la aplicación.',
+      'cat.items.name': 'Plugins y Presets',
+      'cat.items.lead': 'DCTLs, LUTs, Fuses y PowerGrades hechos para el trabajo real en proyecto. Se instalan solos en Resolve, en el sitio correcto, sin buscar carpetas ni arreglar nada a mano.',
+      'cat.courses.name': 'Cursos',
+      'cat.courses.lead': 'Sesiones uno a uno o en grupos pequeños sobre lo que de verdad necesitas: etalonaje, flujo de trabajo, organización del proyecto. Tú eliges la duración, el resto lo vemos juntos.',
+      'cat.educationalResources.name': 'Materiales',
+      'cat.educationalResources.lead': 'Libros, cursos online y guías que uso y recomiendo — seleccionados, no amontonados.',
+      'cat.events.name': 'Eventos',
+      'cat.events.lead': 'Talleres, ediciones de cursos y festivales. Se anuncian aquí primero, con el enlace de inscripción incluido.',
+      'cat.partnerStores.name': 'Tiendas asociadas',
+      'cat.partnerStores.lead': 'Tiendas de equipo fotográfico y de vídeo en las que confío, para cuando lo que necesitas es hardware, no software.',
+      'cat.apps.name': 'Aplicaciones',
+      'cat.apps.lead': 'Las demás aplicaciones GDC — herramientas pequeñas que resuelven cada una un problema concreto del flujo de trabajo.',
+      'badge.free': 'Gratis', 'badge.trial': 'Prueba',
+      'card.version': 'versión',
+      'kind.course': 'Curso', 'kind.book': 'Libro', 'kind.guide': 'Guía',
+      'cta.getApp': 'Descarga la app', 'cta.book': 'Reserva desde la app',
+      'cta.view': 'Ver material', 'cta.details': 'Detalles e inscripción',
+      'cta.visit': 'Visita la tienda', 'cta.open': 'Abrir',
+      'apps.generic': 'Una aplicación GDC, disponible por separado.',
       'footer.releases': 'Todas las versiones', 'footer.terms': 'Términos y Condiciones',
     },
   };
