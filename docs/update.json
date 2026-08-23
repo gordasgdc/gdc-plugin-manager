@@ -1,7 +1,7 @@
 {
-  "version": "1.2.7",
+  "version": "1.2.8",
   "release_date": "2026-08-23",
-  "changes": "Windows: adaugat os.add_dll_directory() pentru incarcarea fusionscript.dll (PowerGrade) - Python 3.8+ nu mai cauta implicit in PATH dupa DLL-urile dependente ale unei extensii native.",
+  "changes": "Imagini de prezentare in catalog: fiecare produs, curs, material, eveniment si magazin poate avea acum o coperta, cu previzualizare marita la click. Descrieri mai lizibile pe carduri. Windows: reparat butonul de descarcare din bannerul de actualizare, care lipsea.",
   "download_url": {
     "mac": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager.pkg",
     "windows": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Windows.zip"
