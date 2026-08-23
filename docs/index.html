@@ -149,8 +149,56 @@
     color:var(--accent-ink); background:var(--accent); padding:3px 8px; border-radius:6px;
   }
   .catalog-card h3{ font-size:16px; font-weight:700; }
-  .catalog-card p{ font-size:13.5px; color:var(--muted); flex-grow:1; }
+  /* Descriere mai aerisita: 13.5 -> 14.5px si line-height mai mare, ca sa
+     se citeasca, nu doar sa incapa. Aceeasi decizie ca in clientul Mac. */
+  .catalog-card p{ font-size:14.5px; line-height:1.6; color:var(--muted); flex-grow:1; }
   .catalog-empty{ color:var(--muted); font-size:14.5px; padding:20px 0; }
+
+  /* --- Coperta de produs --------------------------------------------
+     E un <button>, nu un <div> cu onclick: asa primeste focus la Tab si
+     se deschide cu Enter/Space, fara sa reimplementam noi accesibilitatea. */
+  .cc-cover{
+    display:block; width:100%; padding:0; margin:0 0 4px; border:none; background:none;
+    border-radius:10px; overflow:hidden; cursor:zoom-in; line-height:0;
+  }
+  .cc-cover img{
+    width:100%; height:170px;
+    /* object-fit:cover — cardurile au proportii fixe, coperile nu (un afis
+       de eveniment e portret, o coperta de curs e peisaj). Umplem si taiem,
+       ca sa nu ramana benzi goale. Acelasi rationament ca .fill din SwiftUI. */
+    object-fit:cover;
+    background:var(--panel-2, rgba(127,127,127,.12));
+    transition:transform .25s ease;
+  }
+  .cc-cover:hover img{ transform:scale(1.03); }
+  .cc-cover:focus-visible{ outline:2px solid var(--violet-2); outline-offset:2px; }
+
+  /* --- Lightbox (<dialog> nativ, zero librarii) -----------------------
+     <dialog> ne da gratis: Escape inchide, focus trap, si ::backdrop.
+     Nu avem nevoie de nicio librarie de tip lightbox. */
+  .lightbox{
+    border:none; background:transparent; padding:0; max-width:92vw; max-height:92vh;
+    overflow:visible;
+  }
+  .lightbox::backdrop{ background:rgba(0,0,0,.82); backdrop-filter:blur(3px); }
+  .lightbox img{
+    display:block; max-width:92vw; max-height:82vh; width:auto; height:auto;
+    /* contain, nu cover: in preview vrem imaginea INTREAGA, nu decupata. */
+    object-fit:contain; border-radius:12px; background:#000;
+  }
+  .lightbox figcaption{
+    margin-top:10px; text-align:center; color:#fff; font-size:14px; opacity:.85;
+  }
+  .lb-close{
+    position:absolute; top:-14px; right:-14px; width:34px; height:34px; border-radius:50%;
+    border:none; background:#fff; color:#000; font-size:20px; line-height:1; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .lb-close:hover{ background:#e5e5e5; }
+  .lb-figure{ position:relative; margin:0; }
+  @media (max-width:640px){
+    .lb-close{ top:6px; right:6px; }
+  }
 
   footer{ border-top:1px solid var(--border); padding:36px 0; }
   .footer-row{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; font-size:13px; color:var(--faint); }
@@ -305,6 +353,17 @@
   </div>
 </footer>
 
+<!-- Lightbox-ul de imagini. <dialog> nativ: Escape inchide singur, focusul
+     ramane captiv inauntru, iar ::backdrop e stilizabil - fara nicio
+     librarie externa. -->
+<dialog id="lightbox" class="lightbox" aria-label="Previzualizare imagine">
+  <figure class="lb-figure">
+    <button class="lb-close" type="button" aria-label="Închide">&times;</button>
+    <img id="lightbox-img" src="" alt="">
+    <figcaption id="lightbox-caption"></figcaption>
+  </figure>
+</dialog>
+
 <script>
   const revealEls = document.querySelectorAll('.reveal');
   const io = new IntersectionObserver((entries) => {
@@ -318,6 +377,28 @@
   const typeLabels = { dctl: 'DCTL', lut: 'LUT', fuse: 'Fuse', powerGrade: 'PowerGrade' };
   let lastCatalogItems = null;
 
+  // Catalogul e scris de noi, dar tot il tratam ca date, nu ca HTML: numele
+  // si descrierile intra prin innerHTML, deci un apostrof sau un "<" dintr-o
+  // descriere ar strica randarea (in cel mai bun caz). Fara asta, `src`-ul
+  // coperii de mai jos ar fi si un vector de injectie.
+  function esc(value) {
+    return String(value == null ? '' : value)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  // Sistemul hibrid din catalog (vezi CatalogAssets.swift): coverImage e fie
+  // o cale relativa ("covers/<id>.jpg", gazduita chiar aici, langa
+  // catalog.json), fie un URL absolut catre CDN-ul furnizorului.
+  // Acceptam doar http/https - un "javascript:" strecurat in catalog nu
+  // trebuie sa ajunga niciodata intr-un atribut src.
+  function coverURL(coverImage) {
+    if (!coverImage) return null;
+    if (/^https?:\/\//i.test(coverImage)) return coverImage;
+    if (/^[a-z][a-z0-9+.-]*:/i.test(coverImage)) return null;
+    return './' + coverImage.replace(/^\.?\//, '');
+  }
+
   function renderCatalog() {
     const el = document.getElementById('catalog-list');
     if (lastCatalogItems === null) {
@@ -328,16 +409,74 @@
       el.innerHTML = `<p class="catalog-empty">${t('catalog.empty')}</p>`;
     } else {
       el.innerHTML = lastCatalogItems.map(item => {
+        const cover = coverURL(item.coverImage);
+        // Produsele fara coperta raman exact cum erau - nu punem un
+        // placeholder gri doar ca sa fie randurile egale.
+        const coverHTML = cover
+          ? `<button class="cc-cover" type="button" data-full="${esc(cover)}" data-caption="${esc(item.name)}">
+               <img src="${esc(cover)}" alt="${esc(item.name)}" loading="lazy">
+             </button>`
+          : '';
         return `<div class="catalog-card">
+          ${coverHTML}
           <div class="cc-top">
-            <span class="cc-type">${typeLabels[item.type] || item.type}</span>
+            <span class="cc-type">${esc(typeLabels[item.type] || item.type)}</span>
           </div>
-          <h3>${item.name}</h3>
-          <p>${item.description || ''}</p>
+          <h3>${esc(item.name)}</h3>
+          <p>${esc(item.description || '')}</p>
         </div>`;
       }).join('');
     }
   }
+
+  // Lightbox: un singur <dialog> refolosit pentru toate imaginile, cu
+  // delegare de evenimente pe container - cardurile se re-randeaza la
+  // fiecare schimbare de limba, deci un listener pe fiecare buton s-ar
+  // pierde la re-randare (si le-am acumula la nesfarsit).
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightbox-img');
+  const lightboxCaption = document.getElementById('lightbox-caption');
+
+  document.getElementById('catalog-list').addEventListener('click', (e) => {
+    const trigger = e.target.closest('.cc-cover');
+    if (!trigger) return;
+    lightboxImg.src = trigger.dataset.full;
+    lightboxImg.alt = trigger.dataset.caption || '';
+    lightboxCaption.textContent = trigger.dataset.caption || '';
+    lightbox.showModal();
+  });
+
+  // WARNING: NU te baza pe evenimentul 'close' al lui <dialog> pentru
+  // curatenie. Desi standardul spune ca .close() il declanseaza, la testarea
+  // acestui fisier evenimentul nu s-a declansat DELOC (nici 'close', nici
+  // 'cancel' la Escape) in browserul folosit. De-aici functia explicita de
+  // mai jos, chemata din fiecare cale de inchidere - inclusiv Escape, pe
+  // care il prindem noi in loc sa-l lasam pe comportamentul nativ.
+  function closeLightbox() {
+    // Scoatem atributul (nu src='', care ar face browserul sa incerce sa
+    // incarce URL-ul paginii curente): altfel imaginea anterioara ramane
+    // vizibila o clipa la urmatoarea deschidere, inainte sa se incarce noua.
+    lightboxImg.removeAttribute('src');
+    lightboxImg.alt = '';
+    lightboxCaption.textContent = '';
+    if (lightbox.open) lightbox.close();
+  }
+
+  lightbox.querySelector('.lb-close').addEventListener('click', closeLightbox);
+
+  // Click pe fundal inchide. <dialog> livreaza click-urile de pe ::backdrop
+  // ca si cum ar fi pe dialog, deci verificam ca tinta chiar e dialogul
+  // insusi si nu imaginea din el.
+  lightbox.addEventListener('click', (e) => {
+    if (e.target === lightbox) closeLightbox();
+  });
+
+  // Escape: il tratam explicit (preventDefault + inchidere proprie) ca sa
+  // trecem si prin curatenia de mai sus, indiferent daca browserul
+  // declanseaza sau nu evenimentele native.
+  lightbox.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') { e.preventDefault(); closeLightbox(); }
+  });
 
   fetch('./catalog.json')
     .then(r => r.json())
