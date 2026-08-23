@@ -9,9 +9,44 @@ struct UpdateInfo: Decodable {
     let min_version: String?
 }
 
-/// Checks docs/update.json (same static-JSON pattern as gdc-production-manager)
-/// for a newer app version than what's installed. Purely informational —
-/// never blocks anything, just offers a banner + download link.
+/// Verifica docs/update.json (acelasi pattern de JSON static ca in
+/// gdc-production-manager) pentru o versiune de APLICATIE mai noua decat
+/// cea instalata. Pur informativ — nu blocheaza niciodata nimic, doar
+/// arata un banner cu link de descarcare.
+///
+/// =====================================================================
+/// PROCESS: doua fluxuri de actualizare COMPLET DIFERITE, a nu se confunda
+/// =====================================================================
+///
+/// 1. PRODUSE (LUT / DCTL / OFX / Fuse / PowerGrade) — in-app, 1 click.
+///      sursa:    catalog.json (`PluginItem.version`)
+///      compara:  InstallManager.hasUpdate(_:) — versiunea din catalog vs
+///                cea salvata local in installedVersions
+///      actiune:  butonul "Actualizeaza" de pe card -> InstallManager.install
+///      rezultat: fisierele se descarca si se scriu direct, fara browser.
+///    Asta E deja complet automat: dupa ce Furnizor publica o versiune
+///    noua, clientii o vad la urmatorul refresh de catalog si o iau cu un
+///    click.
+///
+/// 2. APLICATIA IN SINE — NU e self-update, deschide browserul.
+///      sursa:    update.json (campul `version`, comun Mac + Windows)
+///      compara:  isNewer(_:than:) vs CFBundleShortVersionString
+///      actiune:  butonul "Descarca" din UpdateBanner -> NSWorkspace.open
+///      rezultat: se deschide browserul, userul descarca arhiva si
+///                reinstaleaza manual.
+///
+/// WARNING: pasul 2 NU e un self-updater. Ca sa devina 1-click in-app ar
+/// trebui descarcare in fundal + inlocuirea bundle-ului .app + repornire —
+/// o aplicatie nu-si poate suprascrie propriul bundle cat timp ruleaza,
+/// deci ar fi nevoie de un helper separat care asteapta iesirea. Nu e
+/// implementat; daca cineva cere "update cu 1 click", asta e piesa care
+/// lipseste.
+///
+/// WARNING: `update.json` are UN SINGUR camp `version`, comun ambelor
+/// platforme. Orice rebuild real trebuie sa creasca versiunea in Info.plist
+/// (Mac), in .csproj + installer.iss (Windows) SI in update.json. Refolosirea
+/// aceluiasi tag cu `--clobber` lasa update.json in urma si notificarea nu
+/// se mai declanseaza niciodata pentru cei care au deja aplicatia instalata.
 @MainActor
 final class UpdateChecker: ObservableObject {
     static let shared = UpdateChecker()
