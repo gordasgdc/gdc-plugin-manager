@@ -147,7 +147,9 @@ private struct CatalogGrid: View {
     let items: [PluginItem]
     @EnvironmentObject private var catalog: CatalogService
 
-    private let columns = [GridItem(.adaptive(minimum: 220, maximum: 280), spacing: 14)]
+    // 240 (de la 220): cardul are acum și copertă, iar descrierea urcă la
+    // 5 rânduri — sub 240 textul se rupe urât.
+    private let columns = [GridItem(.adaptive(minimum: 240, maximum: 300), spacing: 14)]
 
     var body: some View {
         ScrollView {
@@ -182,10 +184,17 @@ private struct PluginCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             typeBadge
+            // Coperta produsului (preset .icon, pătrat 512×512). Dacă
+            // produsul n-are una, cade pe simbolul SF — cardul păstrează
+            // aceeași înălțime, deci grila rămâne aliniată.
+            CoverThumbnail(
+                url: item.coverImageURL,
+                fallbackSymbol: item.iconSymbol ?? item.type.defaultSymbol,
+                tint: item.type.tintColor,
+                height: 128,
+                lightboxTitle: item.name
+            )
             HStack(alignment: .top) {
-                Image(systemName: item.iconSymbol ?? item.type.defaultSymbol)
-                    .font(.system(size: 22))
-                    .foregroundStyle(item.type.tintColor)
                 Spacer()
                 // Stacked vertically (info button above the price/status
                 // badge, not on top of it) — an absolute corner overlay
@@ -216,7 +225,10 @@ private struct PluginCard: View {
             Text(item.description)
                 .font(.caption)
                 .foregroundStyle(.secondary)
-                .lineLimit(3)
+                // 5 rânduri, nu 3: descrierile reale de produs erau tăiate
+                // la jumătate de frază.
+                .lineLimit(5)
+                .fixedSize(horizontal: false, vertical: true)
             Text("\(L.t("card.version")) \(item.version)")
                 .font(.caption2)
                 .foregroundStyle(.tertiary)
@@ -366,7 +378,10 @@ private struct PluginCard: View {
 private struct CoursesGrid: View {
     let courses: [Course]
 
-    private let columns = [GridItem(.adaptive(minimum: 260, maximum: 340), spacing: 14)]
+    // Mai lat decât înainte (260→300): cardurile au acum copertă și
+    // descrierea se vede întreagă, deci au nevoie de spațiu ca să nu se
+    // înghesuie textul pe rânduri de 3 cuvinte.
+    private let columns = [GridItem(.adaptive(minimum: 300, maximum: 400), spacing: 16)]
 
     var body: some View {
         ScrollView {
@@ -389,13 +404,20 @@ private struct CourseCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Image(systemName: "graduationcap.fill")
-                .font(.system(size: 22))
-                .foregroundStyle(.tint)
+            CoverThumbnail(
+                url: course.coverImageURL,
+                fallbackSymbol: "graduationcap.fill",
+                tint: .accentColor,
+                height: 150,
+                lightboxTitle: course.name
+            )
             Text(course.name).font(.headline)
             Text(course.description)
                 .font(.caption)
                 .foregroundStyle(.secondary)
+                // Fără limită de rânduri + fixedSize: descrierea se vede
+                // întreagă, nu trunchiată de layout.
+                .fixedSize(horizontal: false, vertical: true)
 
             VStack(alignment: .leading, spacing: 6) {
                 ForEach(course.options) { option in
@@ -423,7 +445,10 @@ private struct CourseCard: View {
 private struct EducationalResourcesGrid: View {
     let resources: [EducationalResource]
 
-    private let columns = [GridItem(.adaptive(minimum: 260, maximum: 340), spacing: 14)]
+    // Mai lat decât înainte (260→300): cardurile au acum copertă și
+    // descrierea se vede întreagă, deci au nevoie de spațiu ca să nu se
+    // înghesuie textul pe rânduri de 3 cuvinte.
+    private let columns = [GridItem(.adaptive(minimum: 300, maximum: 400), spacing: 16)]
 
     var body: some View {
         ScrollView {
@@ -446,10 +471,14 @@ private struct EducationalResourceCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
+            CoverThumbnail(
+                url: resource.coverImageURL,
+                fallbackSymbol: "book.fill",
+                tint: .accentColor,
+                height: 170,
+                lightboxTitle: resource.name
+            )
             HStack {
-                Image(systemName: "book.fill")
-                    .font(.system(size: 22))
-                    .foregroundStyle(.tint)
                 Spacer()
                 Text(resource.kind.label)
                     .font(.caption2).fontWeight(.semibold)
@@ -466,6 +495,7 @@ private struct EducationalResourceCard: View {
             Text(resource.description)
                 .font(.caption)
                 .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
             Spacer(minLength: 0)
             if let url = URL(string: resource.externalURL) {
                 Button(L.t("resources.buy")) { NSWorkspace.shared.open(url) }
@@ -473,7 +503,7 @@ private struct EducationalResourceCard: View {
             }
         }
         .padding(12)
-        .frame(maxWidth: .infinity, minHeight: 140, alignment: .leading)
+        .frame(maxWidth: .infinity, minHeight: 200, alignment: .leading)
         .background(RoundedRectangle(cornerRadius: 10).fill(.background.secondary))
     }
 }
@@ -481,7 +511,10 @@ private struct EducationalResourceCard: View {
 private struct EventsGrid: View {
     let events: [Event]
 
-    private let columns = [GridItem(.adaptive(minimum: 260, maximum: 340), spacing: 14)]
+    // Mai lat decât înainte (260→300): cardurile au acum copertă și
+    // descrierea se vede întreagă, deci au nevoie de spațiu ca să nu se
+    // înghesuie textul pe rânduri de 3 cuvinte.
+    private let columns = [GridItem(.adaptive(minimum: 300, maximum: 400), spacing: 16)]
 
     var body: some View {
         ScrollView {
@@ -504,10 +537,18 @@ private struct EventCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
+            // Afișul evenimentului. Mai înalt decât la restul cardurilor:
+            // afișul chiar poartă informație (dată, program, invitați), deci
+            // merită spațiu — și e cazul în care lightbox-ul contează cel
+            // mai mult.
+            CoverThumbnail(
+                url: event.coverImageURL,
+                fallbackSymbol: "calendar",
+                tint: .accentColor,
+                height: 190,
+                lightboxTitle: event.title
+            )
             HStack {
-                Image(systemName: "calendar")
-                    .font(.system(size: 22))
-                    .foregroundStyle(.tint)
                 Spacer()
                 if let urlString = event.youtubeURL, let url = URL(string: urlString) {
                     Button { NSWorkspace.shared.open(url) } label: {
@@ -522,6 +563,7 @@ private struct EventCard: View {
             Text(event.description)
                 .font(.caption)
                 .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
             Spacer(minLength: 0)
             if let url = URL(string: event.externalURL) {
                 Button(L.t("events.details")) { NSWorkspace.shared.open(url) }
@@ -529,7 +571,7 @@ private struct EventCard: View {
             }
         }
         .padding(12)
-        .frame(maxWidth: .infinity, minHeight: 140, alignment: .leading)
+        .frame(maxWidth: .infinity, minHeight: 220, alignment: .leading)
         .background(RoundedRectangle(cornerRadius: 10).fill(.background.secondary))
     }
 }
@@ -537,7 +579,10 @@ private struct EventCard: View {
 private struct PartnerStoresGrid: View {
     let stores: [PartnerStore]
 
-    private let columns = [GridItem(.adaptive(minimum: 260, maximum: 340), spacing: 14)]
+    // Mai lat decât înainte (260→300): cardurile au acum copertă și
+    // descrierea se vede întreagă, deci au nevoie de spațiu ca să nu se
+    // înghesuie textul pe rânduri de 3 cuvinte.
+    private let columns = [GridItem(.adaptive(minimum: 300, maximum: 400), spacing: 16)]
 
     var body: some View {
         ScrollView {
@@ -560,13 +605,18 @@ private struct PartnerStoreCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Image(systemName: "storefront.fill")
-                .font(.system(size: 22))
-                .foregroundStyle(.tint)
+            CoverThumbnail(
+                url: store.coverImageURL,
+                fallbackSymbol: "storefront.fill",
+                tint: .accentColor,
+                height: 130,
+                lightboxTitle: store.name
+            )
             Text(store.name).font(.headline)
             Text(store.description)
                 .font(.caption)
                 .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
             Spacer(minLength: 0)
             if let url = URL(string: store.url) {
                 Button(L.t("stores.visit")) { NSWorkspace.shared.open(url) }
@@ -574,7 +624,7 @@ private struct PartnerStoreCard: View {
             }
         }
         .padding(12)
-        .frame(maxWidth: .infinity, minHeight: 120, alignment: .leading)
+        .frame(maxWidth: .infinity, minHeight: 180, alignment: .leading)
         .background(RoundedRectangle(cornerRadius: 10).fill(.background.secondary))
     }
 }

@@ -77,6 +77,10 @@ enum L {
         "card.buy": [.ro: "Cumpără", .en: "Buy", .es: "Comprar"],
         "card.free": [.ro: "Gratuit", .en: "Free", .es: "Gratis"],
         "card.trial": [.ro: "Probă", .en: "Trial", .es: "Prueba"],
+        // Coperți de produs + preview mărit (vezi CoverImageViews.swift).
+        "cover.zoom.hint": [.ro: "Click pentru a mări imaginea", .en: "Click to enlarge", .es: "Clic para ampliar"],
+        "cover.failed": [.ro: "Imaginea nu a putut fi încărcată", .en: "The image could not be loaded", .es: "No se pudo cargar la imagen"],
+        "cover.reset": [.ro: "Mărime normală", .en: "Actual size", .es: "Tamaño normal"],
         "card.tutorial": [.ro: "Vezi tutorialul explicativ pentru acest produs", .en: "See the explainer tutorial for this product", .es: "Ver el tutorial explicativo de este producto"],
 
         "courses.empty": [.ro: "Niciun curs disponibil momentan.", .en: "No courses available right now.", .es: "Ningún curso disponible por ahora."],
