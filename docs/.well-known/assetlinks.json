@@ -1,11 +1,13 @@
 [
   {
-    "relation": ["delegate_permission/common.handle_all_urls"],
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
     "target": {
       "namespace": "android_app",
       "package_name": "dev.gordas.gdc",
       "sha256_cert_fingerprints": [
-        "AA:BB:CC:DD:EE:FF:00:11:22:33:44:55:66:77:88:99:AA:BB:CC:DD:EE:FF:00:11:22:33:44:55:66:77:88:99"
+        "7E:0D:54:86:A5:32:77:34:6F:F9:1C:D7:BA:DC:8A:23:86:49:52:79:83:E6:36:2B:8E:9D:73:41:B4:F2:34:E6"
       ]
     }
   }

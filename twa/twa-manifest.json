@@ -1,7 +1,7 @@
 {
   "packageId": "dev.gordas.gdc",
   "host": "gordas.dev",
-  "name": "GDC — Plugin Manager, cursuri si resurse",
+  "name": "GDC \u2014 Plugin Manager, cursuri si resurse",
   "launcherName": "GDC",
   "display": "standalone",
   "themeColor": "#070f0e",
@@ -16,18 +16,33 @@
   "iconUrl": "https://gordas.dev/icons/icon-512.png",
   "maskableIconUrl": "https://gordas.dev/icons/icon-maskable-512.png",
   "splashScreenFadeOutDuration": 300,
-  "signingKey": { "path": "./android.keystore", "alias": "datamover" },
+  "signingKey": {
+    "path": "./android.keystore",
+    "alias": "gdc"
+  },
   "appVersionName": "1.0.0",
   "appVersionCode": 1,
   "shortcuts": [
-    { "name": "Catalog produse", "shortName": "Catalog", "url": "/?source=twa#catalog", "chosenIconUrl": "https://gordas.dev/icons/icon-192.png" },
-    { "name": "Descarca aplicatia", "shortName": "Descarca", "url": "/?source=twa#download", "chosenIconUrl": "https://gordas.dev/icons/icon-192.png" }
+    {
+      "name": "Catalog produse",
+      "shortName": "Catalog",
+      "url": "/?source=twa#catalog",
+      "chosenIconUrl": "https://gordas.dev/icons/icon-192.png"
+    },
+    {
+      "name": "Descarca aplicatia",
+      "shortName": "Descarca",
+      "url": "/?source=twa#download",
+      "chosenIconUrl": "https://gordas.dev/icons/icon-192.png"
+    }
   ],
   "generatorApp": "bubblewrap-cli",
   "webManifestUrl": "https://gordas.dev/manifest.webmanifest",
   "fallbackType": "customtabs",
   "features": {},
-  "alphaDependencies": { "enabled": false },
+  "alphaDependencies": {
+    "enabled": false
+  },
   "enableSiteSettingsShortcut": true,
   "isChromeOSOnly": false,
   "isMetaQuest": false,

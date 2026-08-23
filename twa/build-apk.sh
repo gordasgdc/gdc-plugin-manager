@@ -18,7 +18,7 @@ set -euo pipefail
 cd "$(dirname "$0")"
 REPO_ROOT="$(cd .. && pwd)"
 KEYSTORE="android.keystore"
-KEY_ALIAS="datamover"
+KEY_ALIAS="gdc"
 ASSETLINKS="$REPO_ROOT/docs/.well-known/assetlinks.json"
 
 echo "── [1/6] Verific JDK si Node ────────────────────────────────────────────"
@@ -73,7 +73,7 @@ if [ ! -d "app" ]; then
   else
     cp twa-manifest.json twa-manifest.gdc.json
   fi
-  # La intrebarile din init: keystore = ./android.keystore, alias = datamover.
+  # La intrebarile din init: keystore = ./android.keystore, alias = gdc.
   bubblewrap init --manifest="https://gordas.dev/manifest.webmanifest" --directory=.
   mv -f twa-manifest.gdc.json twa-manifest.json
 fi

@@ -40,8 +40,7 @@ rulare. Rezultatul: `twa/app-release-signed.apk`.
 
 ## Semnare (keystore) — partea ireversibila
 
-`twa/android.keystore`, alias **`datamover`** (creat initial pentru primul APK,
-refolosit aici — o cheie de semnare nu depinde de numele aplicatiei).
+`twa/android.keystore`, alias **`gdc`**.
 
 - **Fa-i backup** (password manager + un al doilea loc, offline).
 - Salveaza parola keystore-ului, parola cheii si alias-ul.
@@ -61,7 +60,7 @@ Amprenta SHA-256 din el trebuie sa fie exact cea a keystore-ului
 (`build-apk.sh` o completeaza automat la pasul 6). Manual:
 
 ```bash
-keytool -list -v -keystore twa/android.keystore -alias datamover | grep SHA256
+keytool -list -v -keystore twa/android.keystore -alias gdc | grep SHA256
 ```
 
 Verificare dupa publicare:

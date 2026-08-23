@@ -19,3 +19,11 @@ settings.gradle
 gradle.properties
 local.properties
 store_icon.png
+
+# Artefacte suplimentare generate de bubblewrap/Gradle la build.
+# (adaugate dupa primul build reusit — se regenereaza toate din twa-manifest.json)
+.gradle/
+build/
+*.idsig
+manifest-checksum.txt
+twa-manifest.gdc.json
