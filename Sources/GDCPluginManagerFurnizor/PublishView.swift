@@ -34,6 +34,9 @@ struct PublishView: View {
     @State private var accessMode: AccessMode = .paid
     @State private var iconSymbol = "wand.and.stars"
     @State private var youtubeURL = ""
+    /// Coperta produsului. Preset `.icon` (pătrat 512×512) — accentul e pe
+    /// simbol/recunoaștere rapidă în grilă, nu pe detaliu.
+    @State private var coverSelection: CoverImageSelection = .none
     /// Files of the product being updated, kept so a metadata-only edit
     /// (e.g. adding/changing the YouTube link) doesn't force re-picking
     /// and re-uploading the files — only used when `isUpdate` is true and
@@ -143,6 +146,8 @@ struct PublishView: View {
                     }
                     .padding(8)
                 }
+
+                CoverImagePicker(preset: .icon, selection: $coverSelection)
 
                 if let errorMessage {
                     Text(errorMessage).foregroundStyle(.red)
@@ -269,6 +274,9 @@ struct PublishView: View {
         youtubeURL = item.youtubeURL ?? ""
         existingFiles = item.files
         existingBundleFolderName = item.bundleFolderName
+        // `.existing`: coperta e deja publicată, nu se rescrie dacă
+        // furnizorul n-o atinge (la fel ca fișierele, mai sus).
+        coverSelection = item.coverImage.map { .existing($0) } ?? .none
         pickedURL = nil
         // version left for the user to bump if they're also replacing
         // files; a metadata-only edit (e.g. just the YouTube link) can
@@ -341,13 +349,22 @@ struct PublishView: View {
             log("Actualizez catalogul (pull, repo public)…")
             try GitOps.pull(at: RepoCheckoutPaths.publicCatalogRepo)
 
+            // Coperta se scrie în docs/covers/ ÎNAINTE de commit-ul de mai
+            // jos, altfel catalogul ar referi o imagine încă nepublicată
+            // (404 la clienți până la următorul push) — vezi WARNING în
+            // CoverImageStore.
+            let previousCover = existingItems.first { $0.id == trimmedID }?.coverImage
+            let coverImage = try CoverImageStore.commit(coverSelection, id: trimmedID, previous: previousCover)
+            if coverImage != nil { log("Imagine de prezentare pregătită") }
+
             let item = PluginItem(
                 id: trimmedID, name: name, type: type, description: description,
                 version: version, files: pluginFiles,
                 iconSymbol: iconSymbol.isEmpty ? nil : iconSymbol, priceEUR: price,
                 isFree: isFreeFlag, isTrial: isTrialFlag,
                 youtubeURL: trimmedYouTube.isEmpty ? nil : trimmedYouTube,
-                bundleFolderName: bundleFolderName
+                bundleFolderName: bundleFolderName,
+                coverImage: coverImage
             )
             try CatalogEditor.upsert(item)
             log("Catalog actualizat local")
@@ -378,6 +395,7 @@ struct PublishView: View {
         guard let item = existingItems.first(where: { $0.id == id }) else { return }
         let deletedName = item.name
         let deletedID = item.id
+        let deletedCover = item.coverImage
 
         do {
             log("Actualizez repo-ul privat (pull)…")
@@ -393,6 +411,9 @@ struct PublishView: View {
 
             log("Actualizez catalogul (pull, repo public)…")
             try GitOps.pull(at: RepoCheckoutPaths.publicCatalogRepo)
+            // Ștergem și coperta, altfel ar rămâne orfană în repo pentru
+            // totdeauna (nimic n-o mai referă după ce iese din catalog).
+            try CoverImageStore.commit(.none, id: deletedID, previous: deletedCover)
             try CatalogEditor.remove(id: deletedID)
             log("Eliminat din catalog local")
 
@@ -420,6 +441,7 @@ struct PublishView: View {
         youtubeURL = ""
         existingFiles = []
         existingBundleFolderName = nil
+        coverSelection = .none
         pickedURL = nil
     }
 

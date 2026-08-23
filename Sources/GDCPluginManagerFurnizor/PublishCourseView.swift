@@ -15,6 +15,8 @@ struct PublishCourseView: View {
     @State private var options: [CourseOption] = []
     @State private var newOptionLabel = ""
     @State private var newOptionPrice = ""
+    /// Coperta cursului. Preset `.cover` — se vede în preview mărit.
+    @State private var coverSelection: CoverImageSelection = .none
 
     @State private var isBusy = false
     @State private var errorMessage: String?
@@ -64,6 +66,8 @@ struct PublishCourseView: View {
                     }
                     .padding(8)
                 }
+
+                CoverImagePicker(preset: .cover, selection: $coverSelection)
 
                 if let errorMessage {
                     Text(errorMessage).foregroundStyle(.red)
@@ -139,6 +143,9 @@ struct PublishCourseView: View {
         name = course.name
         description = course.description
         options = course.options
+        // `.existing`: imaginea e deja publicată, nu se rescrie dacă
+        // furnizorul n-o atinge.
+        coverSelection = course.coverImage.map { .existing($0) } ?? .none
         successMessage = nil
         errorMessage = nil
     }
@@ -151,6 +158,7 @@ struct PublishCourseView: View {
         options = []
         newOptionLabel = ""
         newOptionPrice = ""
+        coverSelection = .none
     }
 
     private func publish() async {
@@ -159,13 +167,25 @@ struct PublishCourseView: View {
         isBusy = true
         defer { isBusy = false }
 
-        let course = Course(
-            id: id.trimmingCharacters(in: .whitespaces), name: name,
-            description: description, options: options
-        )
+        let courseID = id.trimmingCharacters(in: .whitespaces)
 
         do {
+            // Pull ÎNAINTE de a scrie coperta pe disc, ca fișierul nou să nu
+            // fie prins într-un merge cu ce s-a publicat între timp.
             try GitOps.pull(at: RepoCheckoutPaths.publicCatalogRepo)
+
+            // Coperta se scrie în docs/covers/ ÎNAINTE de commit, altfel
+            // catalogul ar referi o imagine încă nepublicată (404 la clienți
+            // până la următorul push) — vezi WARNING în CoverImageStore.
+            let previousCover = existingCourses.first { $0.id == courseID }?.coverImage
+            let coverImage = try CoverImageStore.commit(coverSelection, id: courseID, previous: previousCover)
+
+            let course = Course(
+                id: courseID, name: name,
+                description: description, options: options,
+                coverImage: coverImage
+            )
+
             try CatalogEditor.upsertCourse(course)
             try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Curs: \(course.name)")
             successMessage = "„\(course.name)” e publicat — apare la clienți la următorul refresh de catalog."
@@ -186,6 +206,9 @@ struct PublishCourseView: View {
 
         do {
             try GitOps.pull(at: RepoCheckoutPaths.publicCatalogRepo)
+            // Ștergem și coperta, altfel ar rămâne orfană în repo pentru
+            // totdeauna (nimic n-o mai referă după ce iese din catalog).
+            try CoverImageStore.commit(.none, id: course.id, previous: course.coverImage)
             try CatalogEditor.removeCourse(id: course.id)
             try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Sterg cursul: \(course.name)")
             successMessage = "„\(course.name)” a fost șters."

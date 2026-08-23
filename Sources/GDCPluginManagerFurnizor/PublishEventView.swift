@@ -17,6 +17,9 @@ struct PublishEventView: View {
     @State private var location = ""
     @State private var externalURL = ""
     @State private var youtubeURL = ""
+    /// Afișul evenimentului. Preset `.cover` — aici imaginea chiar poartă
+    /// informație (dată, program, invitați), deci vrem rezoluție de citit.
+    @State private var coverSelection: CoverImageSelection = .none
 
     @State private var isBusy = false
     @State private var errorMessage: String?
@@ -45,6 +48,8 @@ struct PublishEventView: View {
                     }
                     .padding(8)
                 }
+
+                CoverImagePicker(preset: .cover, selection: $coverSelection)
 
                 if let errorMessage {
                     Text(errorMessage).foregroundStyle(.red)
@@ -117,6 +122,9 @@ struct PublishEventView: View {
         location = event.location
         externalURL = event.externalURL
         youtubeURL = event.youtubeURL ?? ""
+        // `.existing` (nu `.local`/`.external`): marcheaza ca imaginea e deja
+        // publicata si nu trebuie rescrisă dacă furnizorul n-o atinge.
+        coverSelection = event.coverImage.map { .existing($0) } ?? .none
         successMessage = nil
         errorMessage = nil
     }
@@ -130,6 +138,7 @@ struct PublishEventView: View {
         location = ""
         externalURL = ""
         youtubeURL = ""
+        coverSelection = .none
     }
 
     private func publish() async {
@@ -139,15 +148,27 @@ struct PublishEventView: View {
         defer { isBusy = false }
 
         let trimmedYouTube = youtubeURL.trimmingCharacters(in: .whitespaces)
-        let event = Event(
-            id: id.trimmingCharacters(in: .whitespaces), title: title,
-            description: description, dateDisplay: dateDisplay, location: location,
-            externalURL: externalURL.trimmingCharacters(in: .whitespaces),
-            youtubeURL: trimmedYouTube.isEmpty ? nil : trimmedYouTube
-        )
+        let eventID = id.trimmingCharacters(in: .whitespaces)
 
         do {
+            // Pull ÎNAINTE de a scrie coperta pe disc, ca fișierul nou să nu
+            // fie prins într-un merge cu ce s-a publicat între timp.
             try GitOps.pull(at: RepoCheckoutPaths.publicCatalogRepo)
+
+            // Coperta se scrie în docs/covers/ ÎNAINTE de commit, altfel
+            // catalogul ar referi o imagine încă nepublicată (404 la clienți
+            // până la următorul push) — vezi WARNING în CoverImageStore.
+            let previousCover = existingEvents.first { $0.id == eventID }?.coverImage
+            let coverImage = try CoverImageStore.commit(coverSelection, id: eventID, previous: previousCover)
+
+            let event = Event(
+                id: eventID, title: title,
+                description: description, dateDisplay: dateDisplay, location: location,
+                externalURL: externalURL.trimmingCharacters(in: .whitespaces),
+                youtubeURL: trimmedYouTube.isEmpty ? nil : trimmedYouTube,
+                coverImage: coverImage
+            )
+
             try CatalogEditor.upsertEvent(event)
             try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Eveniment: \(event.title)")
             successMessage = "„\(event.title)” e publicat — apare la clienți la următorul refresh de catalog."
@@ -168,6 +189,9 @@ struct PublishEventView: View {
 
         do {
             try GitOps.pull(at: RepoCheckoutPaths.publicCatalogRepo)
+            // Ștergem și afișul, altfel ar rămâne orfan în repo pentru
+            // totdeauna (nimic nu-l mai referă după ce iese din catalog).
+            try CoverImageStore.commit(.none, id: event.id, previous: event.coverImage)
             try CatalogEditor.removeEvent(id: event.id)
             try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Sterg evenimentul: \(event.title)")
             successMessage = "„\(event.title)” a fost șters."
