@@ -1,0 +1,21 @@
+# NICIODATA in git: cheia de semnare si parolele ei.
+# Daca pierzi keystore-ul, NU mai poti publica update-uri pentru APK-ul deja
+# instalat la utilizatori (Android refuza un APK semnat cu alta cheie).
+# Fa-i backup separat: password manager / disc criptat / cloud privat.
+android.keystore
+*.keystore
+*.jks
+bubblewrap.log
+app-release-*.apk
+app-release-*.aab
+# Proiectul Android generat de bubblewrap (se poate regenera oricand din
+# twa-manifest.json, deci nu are ce cauta in repo).
+app/
+gradle/
+gradlew
+gradlew.bat
+build.gradle
+settings.gradle
+gradle.properties
+local.properties
+store_icon.png

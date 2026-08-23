@@ -8,6 +8,17 @@
 <link rel="icon" type="image/x-icon" href="favicon.ico">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
+<!-- ── PWA / aplicatia Android ──────────────────────────────────────────────
+     manifest.webmanifest + sw.js fac site-ul instalabil pe telefon si stau la
+     baza APK-ului din folderul twa/. Scope-ul e radacina domeniului, deci
+     aplicatia acopera si paginile de produs (/datamover/, /cursorpro-gdc/ ...).
+     La orice modificare de pagina, incrementeaza CACHE_VERSION din sw.js. -->
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#070f0e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="GDC">
+<meta name="mobile-web-app-capable" content="yes">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -943,5 +954,18 @@
   applyLanguage(initialLang);
 </script>
 
+
+<!-- ── Inregistrarea service worker-ului ────────────────────────────────────
+     Dupa 'load', ca sa nu concureze cu randarea. Calea '/sw.js' (nu relativa)
+     ii da scope pe tot domeniul. -->
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('/sw.js').catch(function (err) {
+        console.warn('Service worker neinregistrat:', err);
+      });
+    });
+  }
+</script>
 </body>
 </html>

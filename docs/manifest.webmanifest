@@ -1,0 +1,28 @@
+{
+  "_comentariu": "Manifest PWA pentru gordas.dev (aplicatia companion GDC). Scope-ul e RADACINA domeniului, ca sa acopere toate produsele (/datamover/, /cursorpro-gdc/, /CGConvertor/ etc.) fara sa apara bara de browser in APK. Daca schimbi 'name' sau 'start_url', actualizeaza si twa/twa-manifest.json.",
+  "id": "/",
+  "name": "GDC — Plugin Manager, cursuri si resurse",
+  "short_name": "GDC",
+  "description": "Catalogul GDC pe telefon: plugin-uri, LUT-uri si DCTL-uri pentru DaVinci Resolve, cursuri, resurse educationale, evenimente si magazine partenere.",
+  "lang": "ro",
+  "dir": "ltr",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui", "browser"],
+  "orientation": "portrait-primary",
+  "background_color": "#070f0e",
+  "theme_color": "#070f0e",
+  "categories": ["productivity", "education", "photo", "video"],
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Catalog produse", "short_name": "Catalog", "url": "/?source=pwa#catalog", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Descarca aplicatia", "short_name": "Descarca", "url": "/?source=pwa#download", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }] }
+  ],
+  "prefer_related_applications": false
+}

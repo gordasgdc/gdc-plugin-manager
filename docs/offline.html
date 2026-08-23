@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#070f0e">
+<title>GDC — Esti offline</title>
+<!-- Afisata de service worker (sw.js) cand nu e retea SI pagina ceruta nu e in
+     cache. Deliberat fara fonturi sau resurse externe: trebuie sa arate corect
+     exact atunci cand nimic nu se poate descarca. -->
+<style>
+  :root { --bg:#070f0e; --text:#eef8f6; --muted:#9db8b3; --accent:#35d6be; --border:#1e3430; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body {
+    background:var(--bg); color:var(--text);
+    font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    min-height:100vh; display:flex; align-items:center; justify-content:center;
+    padding:32px; text-align:center; line-height:1.6;
+  }
+  .card { max-width:420px; }
+  img { width:88px; height:88px; margin:0 auto 24px; border-radius:20px; }
+  h1 { font-size:22px; font-weight:700; margin-bottom:10px; }
+  p { color:var(--muted); font-size:15px; margin-bottom:24px; }
+  button {
+    background:transparent; color:var(--accent); border:1px solid var(--border);
+    padding:12px 22px; border-radius:10px; font-size:15px; font-family:inherit;
+    cursor:pointer;
+  }
+  button:active { background:var(--border); }
+</style>
+</head>
+<body>
+  <div class="card">
+    <img src="/icons/icon-192.png" alt="GDC">
+    <h1>Esti offline</h1>
+    <p>Nu am putut incarca pagina. Catalogul deja vizitat ramane disponibil; restul apare cand revine conexiunea.</p>
+    <button onclick="location.reload()">Incearca din nou</button>
+  </div>
+  <script>
+    // Reincarca automat cand sistemul anunta ca a revenit reteaua.
+    window.addEventListener('online', () => location.reload());
+  </script>
+</body>
+</html>
