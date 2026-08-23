@@ -60,6 +60,14 @@
       "kind" : "course",
       "name" : "ARTA",
       "youtubeURL" : "https://www.youtube.com/"
+    },
+    {
+      "coverImage" : "https://scontent-mad2-1.xx.fbcdn.net/v/t39.30808-6/694943544_26632048763111999_3139133417635789087_n.jpg?stp=dst-jpg_tt6&cstp=mx512x800&ctp=s512x800&_nc_cat=104&ccb=1-7&_nc_sid=127cfc&_nc_ohc=5YbsYzooJmsQ7kNvwETZas6&_nc_oc=AdqBFUBBDCQhHDDpGLfbi5_hEk__gMLVOnpU2hN7l_bGC1ljV5ElOGwXmiRGK486YpMXZozrTdfcfAWDLxfKP5mZ&_nc_zt=23&_nc_ht=scontent-mad2-1.xx&_nc_gid=qWZaqsfAGJ5Vt51uqFM1PA&_nc_ss=7b2a8&oh=00_AQHrvP8wSkFXlYQPLwoL64IX7TJg98Wx0B1Pj42x9gpqDg&oe=6A90BC39",
+      "description" : "Acum aproape doi ani, în decembrie 2023, profilul meu de Instagram era un dezastru.",
+      "externalURL" : "https://payhip.com/b/kQJWD",
+      "id" : "De la Zero la Conversie",
+      "kind" : "course",
+      "name" : "De la Zero la Conversie"
     }
   ],
   "events" : [
