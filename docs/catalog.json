@@ -505,7 +505,13 @@
     }
   ],
   "partnerStores" : [
-
+    {
+      "coverImage" : "https://mitmag.ro/wp-content/uploads/2020/02-LOGO/sigla-logo-mitmag-612x226-transparent-1.png",
+      "description" : "MITMAG | Echipamente foto-video alese de Adrian Mitranescu (fotograf cu peste 15 ani de experiență în nunți). Înțelegem fricile dar si nevoile comunitatii foto-video din România. Consultanță de la coleg la coleg și produse testate pe teren!",
+      "id" : "MITMAG",
+      "name" : "MITMAG",
+      "url" : "https://mitmag.ro/"
+    }
   ],
   "updatedAt" : "2026-08-23"
 }
