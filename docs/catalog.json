@@ -64,12 +64,13 @@
   ],
   "events" : [
     {
-      "dateDisplay" : "26-29 octombrie 2026",
-      "description" : "Stiu ca l-ati asteptat, si m-ati intrebat cand fac urmatorul workshop. Don't Be Like Me Workshop revine in toamna la Sighisoara. 🥳🥳🥳\nPentru ca experienta sa fie totala, si sa facem si \"workshop dupa workshop\"",
-      "externalURL" : "https://www.facebook.com/20531316728/posts/10154009990506729/",
+      "coverImage" : "https://scontent-mad1-1.xx.fbcdn.net/v/t39.30808-6/782124361_3431049890401549_4761214581279395935_n.jpg?stp=dst-jpg_tt6&cstp=mx1024x1280&ctp=s1024x1280&_nc_cat=105&ccb=1-7&_nc_sid=127cfc&_nc_ohc=jVVr4iWmQQoQ7kNvwGwLeNk&_nc_oc=AdppDG8Jgt3AH7EhnQMMUc5KEKVgXi6fag1W2k2NbMppMgBAFRoJxzcv9UWWz-sFWCYTdvNftTrbo9PjSZC7UaIw&_nc_zt=23&_nc_ht=scontent-mad1-1.xx&_nc_gid=A28646n2H8HAw4T_JGBJHQ&_nc_ss=7b2a8&oh=00_AQHZhaukOWS-5zQzWAKQyqHeX6oi2paKj2O4Dl9Zf_ZGUw&oe=6A90E4D8",
+      "dateDisplay" : "26-29 octombrie 2026, Sighisoara",
+      "description" : "Stiu ca l-ati asteptat, si m-ati intrebat cand fac urmatorul workshop. Don't Be Like Me Workshop revine in toamna la Sighisoara. 🥳🥳",
+      "externalURL" : "https://docs.google.com/forms/d/e/1FAIpQLScOSgscKxzXugU7QkTkktefVJiQq50ZZoDOZL1WGjHqyXoJ-w/viewform",
       "id" : "Don't Be Like Me Workshop",
       "location" : "Sighisoara",
-      "title" : "Bogdan Damian",
+      "title" : "Don't Be Like Me Workshop ",
       "youtubeURL" : "https://www.facebook.com/20531316728/posts/10154009990506729/"
     }
   ],
