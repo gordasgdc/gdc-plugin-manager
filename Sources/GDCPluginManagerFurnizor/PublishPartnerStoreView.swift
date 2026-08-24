@@ -88,7 +88,10 @@ struct PublishPartnerStoreView: View {
             isPresented: Binding(get: { pendingDelete != nil }, set: { if !$0 { pendingDelete = nil } }),
             titleVisibility: .visible
         ) {
-            Button("Șterge definitiv", role: .destructive) { Task { await delete() } }
+            Button("Șterge definitiv", role: .destructive) {
+                let toDelete = pendingDelete
+                Task { await delete(toDelete) }
+            }
             Button("Anulează", role: .cancel) { pendingDelete = nil }
         }
         .task { loadExisting() }
@@ -164,8 +167,15 @@ struct PublishPartnerStoreView: View {
         }
     }
 
-    private func delete() async {
-        guard let store = pendingDelete else { return }
+    // PITFALL FIXED 2026-08-24: elementul de sters vine ca PARAMETRU,
+    // capturat sincron in butonul dialogului — NU se mai citeste
+    // pendingDelete aici. SwiftUI goleste pendingDelete (prin binding-ul
+    // custom de mai jos, la inchiderea dialogului) in paralel cu pornirea
+    // acestui Task; cine citea pendingDelete direct in delete() risca sa-l
+    // gaseasca deja nil si sa iasa fara sa faca nimic — fara eroare, fara
+    // mesaj, exact simptomul "apas Sterge si nu se intampla nimic".
+    private func delete(_ store: PartnerStore?) async {
+        guard let store else { return }
         pendingDelete = nil
         errorMessage = nil
         successMessage = nil
