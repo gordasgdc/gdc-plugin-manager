@@ -96,6 +96,16 @@ enum L {
         "card.buy": [.ro: "Cumpără", .en: "Buy", .es: "Comprar"],
         "card.free": [.ro: "Gratuit", .en: "Free", .es: "Gratis"],
         "card.trial": [.ro: "Probă", .en: "Trial", .es: "Prueba"],
+        "card.paid": [.ro: "Licență", .en: "License", .es: "Licencia"],
+        "card.trustMessage": [
+            .ro: "Dezvoltat și susținut de comunitate. Licență Lifetime la preț promoțional de lansare.",
+            .en: "Developed and supported by the community. Lifetime license at a launch-promo price.",
+            .es: "Desarrollado y respaldado por la comunidad. Licencia de por vida a precio promocional de lanzamiento."
+        ],
+        "filter.price.all": [.ro: "Toate", .en: "All", .es: "Todo"],
+        "filter.price.free": [.ro: "Gratuite", .en: "Free", .es: "Gratis"],
+        "filter.price.paid": [.ro: "Premium", .en: "Premium", .es: "Premium"],
+        "filter.price.empty": [.ro: "Niciun produs în această categorie", .en: "No products in this category", .es: "Ningún producto en esta categoría"],
         // Coperți de produs + preview mărit (vezi CoverImageViews.swift).
         "cover.zoom.hint": [.ro: "Click pentru a mări imaginea", .en: "Click to enlarge", .es: "Clic para ampliar"],
         "cover.failed": [.ro: "Imaginea nu a putut fi încărcată", .en: "The image could not be loaded", .es: "No se pudo cargar la imagen"],

@@ -1,7 +1,7 @@
 {
-  "version": "1.2.10",
+  "version": "1.2.11",
   "release_date": "2026-08-24",
-  "changes": "Fix critic (Windows): coperțile de produse/aplicații/cursuri nu se afișau deloc pe Windows, pe nicio categorie — Image.Source nu accepta un URL direct fără un convertor explicit. Rezolvat pe toate cele 6 categorii.",
+  "changes": "Badge-uri GRATUIT/LICENȚĂ/PROBĂ pe produse + filtru rapid Toate/Gratuite/Premium. Mesaj de încredere pentru produsele plătite.",
   "download_url": {
     "mac": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager.pkg",
     "windows": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Windows.zip"

@@ -176,31 +176,93 @@ private struct UpdateBanner: View {
     }
 }
 
+/// Filtru rapid Toate/Gratuite/Premium — cerut explicit 2026-08-24, ca
+/// cine vrea doar uneltele gratuite sa le gaseasca instant, fara sa
+/// citeasca fiecare card in parte.
+private enum PriceFilter: String, CaseIterable, Identifiable {
+    case all, free, paid
+    var id: String { rawValue }
+    var label: String {
+        switch self {
+        case .all: return L.t("filter.price.all")
+        case .free: return L.t("filter.price.free")
+        case .paid: return L.t("filter.price.paid")
+        }
+    }
+    func matches(_ item: PluginItem) -> Bool {
+        switch self {
+        case .all: return true
+        case .free: return item.isFree
+        case .paid: return !item.isFree
+        }
+    }
+}
+
 private struct CatalogGrid: View {
     let items: [PluginItem]
     @EnvironmentObject private var catalog: CatalogService
+    @State private var priceFilter: PriceFilter = .all
 
     // 240 (de la 220): cardul are acum și copertă, iar descrierea urcă la
     // 5 rânduri — sub 240 textul se rupe urât.
     private let columns = [GridItem(.adaptive(minimum: 240, maximum: 300), spacing: 14)]
 
+    private var filteredItems: [PluginItem] {
+        items.filter { priceFilter.matches($0) }
+    }
+
     var body: some View {
-        ScrollView {
-            if catalog.isLoading && items.isEmpty {
-                ProgressView(L.t("catalog.loading")).padding(40)
-            } else if let error = catalog.loadError, items.isEmpty {
-                Text(error).foregroundStyle(.secondary).padding(40)
-            } else if items.isEmpty {
-                Text(L.t("catalog.empty")).foregroundStyle(.secondary).padding(40)
-            } else {
-                LazyVGrid(columns: columns, spacing: 14) {
-                    ForEach(items) { item in
-                        PluginCard(item: item)
+        VStack(spacing: 0) {
+            if !items.isEmpty {
+                Picker("", selection: $priceFilter) {
+                    ForEach(PriceFilter.allCases) { filter in
+                        Text(filter.label).tag(filter)
                     }
                 }
-                .padding(16)
+                .pickerStyle(.segmented)
+                .labelsHidden()
+                .frame(maxWidth: 280)
+                .padding(.horizontal, 16)
+                .padding(.top, 12)
+            }
+
+            ScrollView {
+                if catalog.isLoading && items.isEmpty {
+                    ProgressView(L.t("catalog.loading")).padding(40)
+                } else if let error = catalog.loadError, items.isEmpty {
+                    Text(error).foregroundStyle(.secondary).padding(40)
+                } else if items.isEmpty {
+                    Text(L.t("catalog.empty")).foregroundStyle(.secondary).padding(40)
+                } else if filteredItems.isEmpty {
+                    Text(L.t("filter.price.empty")).foregroundStyle(.secondary).padding(40)
+                } else {
+                    LazyVGrid(columns: columns, spacing: 14) {
+                        ForEach(filteredItems) { item in
+                            PluginCard(item: item)
+                        }
+                    }
+                    .padding(16)
+                }
             }
         }
+    }
+}
+
+/// Etichetă compactă tip "pill" — GRATUIT (verde) / LICENȚĂ (portocaliu) /
+/// PROBĂ (albastru). Un fundal plin + text alb, nu doar text colorat, ca
+/// sa citeasca clar ca un badge, nu ca o simpla nota de pret.
+private struct BadgePill: View {
+    let text: String
+    let color: Color
+
+    var body: some View {
+        Text(text.uppercased())
+            .font(.system(size: 10, weight: .bold))
+            .foregroundStyle(.white)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 3)
+            .background(color)
+            .clipShape(Capsule())
     }
 }
 
@@ -235,21 +297,21 @@ private struct PluginCard: View {
                 VStack(alignment: .trailing, spacing: 6) {
                     infoButton
                     if item.isFree && item.isTrial {
-                        Text(L.t("card.trial"))
-                            .font(.subheadline.weight(.semibold))
-                            .foregroundStyle(.blue)
+                        BadgePill(text: L.t("card.trial"), color: .blue)
                     } else if item.isFree {
-                        Text(L.t("card.free"))
-                            .font(.subheadline.weight(.semibold))
-                            .foregroundStyle(.green)
+                        BadgePill(text: L.t("card.free"), color: .green)
                     } else {
-                        VStack(alignment: .trailing, spacing: 0) {
+                        VStack(alignment: .trailing, spacing: 3) {
                             Text(item.priceDisplay)
                                 .font(.subheadline.weight(.semibold))
                                 .foregroundStyle(.secondary)
-                            Text(L.t("card.donation"))
-                                .font(.caption2)
-                                .foregroundStyle(.tertiary)
+                            // Badge "LICENȚĂ" — inlocuieste vechea eticheta
+                            // "donație" (2026-08-24, cerere explicita: fara
+                            // ton de "reclama agresiva", comunicare
+                            // transparenta). Mesajul complet de incredere
+                            // apare la hover (.help), cardul ramane compact.
+                            BadgePill(text: L.t("card.paid"), color: .orange)
+                                .help(L.t("card.trustMessage"))
                         }
                     }
                 }
