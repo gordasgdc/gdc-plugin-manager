@@ -399,7 +399,7 @@
       ],
       "iconSymbol" : "paintpalette",
       "id" : "Raz",
-      "isFree" : true,
+      "isFree" : false,
       "isTrial" : false,
       "name" : "Raz",
       "priceEUR" : 0,
