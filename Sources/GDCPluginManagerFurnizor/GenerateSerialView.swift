@@ -51,6 +51,13 @@ struct GenerateSerialView: View {
     @State private var justCopied = false
     @State private var errorMessage: String?
 
+    // MARK: - Autocompletare client (cerut explicit 2026-08-24)
+    @ObservedObject private var clientDirectory = ClientDirectory.shared
+    /// Potrivire găsită după ID de mașină — afișată ca bănuț "date preluate
+    /// automat", chiar și când userul a suprascris manual câmpurile după.
+    @State private var autofilledFrom: ClientRecord?
+    @State private var nameSuggestions: [ClientRecord] = []
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
@@ -84,11 +91,68 @@ struct GenerateSerialView: View {
 
                 GroupBox {
                     VStack(alignment: .leading, spacing: 10) {
-                        TextField("Nume client", text: $customerName).textFieldStyle(.roundedBorder)
+                        VStack(alignment: .leading, spacing: 4) {
+                            TextField("Nume client", text: $customerName).textFieldStyle(.roundedBorder)
+                                .onChange(of: customerName) {
+                                    autofilledFrom = nil
+                                    nameSuggestions = clientDirectory.suggestions(forNamePrefix: customerName)
+                                }
+                            // Sugestii de client existent, pe măsură ce tastezi numele —
+                            // click pe o sugestie completează și email + ID mașină.
+                            if !nameSuggestions.isEmpty {
+                                VStack(alignment: .leading, spacing: 0) {
+                                    ForEach(nameSuggestions) { suggestion in
+                                        Button {
+                                            applyAutofill(suggestion)
+                                            nameSuggestions = []
+                                        } label: {
+                                            HStack {
+                                                Text(suggestion.name)
+                                                if !suggestion.email.isEmpty {
+                                                    Text(suggestion.email).foregroundStyle(.secondary)
+                                                }
+                                                Spacer()
+                                                if !suggestion.machineID.isEmpty {
+                                                    Text(suggestion.machineID)
+                                                        .font(.system(.caption2, design: .monospaced))
+                                                        .foregroundStyle(.tertiary)
+                                                }
+                                            }
+                                            .font(.caption)
+                                            .contentShape(Rectangle())
+                                        }
+                                        .buttonStyle(.plain)
+                                        .padding(.vertical, 4)
+                                        .padding(.horizontal, 8)
+                                    }
+                                }
+                                .background(Color.gray.opacity(0.1))
+                                .clipShape(RoundedRectangle(cornerRadius: 6))
+                            }
+                        }
                         TextField("Email (opțional)", text: $email).textFieldStyle(.roundedBorder)
                         TextField("ID calculator (opțional — lipit de la client)", text: $machineID)
                             .textFieldStyle(.roundedBorder)
                             .font(.system(.body, design: .monospaced))
+                            .onChange(of: machineID) {
+                                // Autocompletare după ID de mașină (tracking + istoric
+                                // vânzări — vezi ClientDirectory.swift). Nu suprascrie
+                                // dacă numele e deja completat manual de Cristi — doar
+                                // dacă e gol, sau dacă a fost autocompletat anterior de
+                                // aceeași potrivire (schimbă ID-ul → schimbă și numele).
+                                guard let match = clientDirectory.lookup(machineID: machineID) else {
+                                    autofilledFrom = nil
+                                    return
+                                }
+                                if customerName.trimmingCharacters(in: .whitespaces).isEmpty || autofilledFrom != nil {
+                                    applyAutofill(match, keepMachineID: true)
+                                }
+                            }
+                        if let autofilledFrom {
+                            Label("Date preluate automat pentru „\(autofilledFrom.name)”", systemImage: "checkmark.circle.fill")
+                                .font(.caption2)
+                                .foregroundStyle(.green)
+                        }
                         HStack {
                             TextField("Zile până expiră (0 = pe viață)", text: $expiresDays)
                                 .textFieldStyle(.roundedBorder)
@@ -140,7 +204,20 @@ struct GenerateSerialView: View {
             .padding(24)
             .frame(maxWidth: 640, alignment: .leading)
         }
-        .task { loadItems() }
+        .task {
+            loadItems()
+            await clientDirectory.loadIfNeeded()
+        }
+    }
+
+    /// Completează nume+email (și, opțional, ID mașină) dintr-o potrivire
+    /// găsită — fie prin căutare de nume (click pe sugestie), fie automat
+    /// după ID de mașină (vezi onChange(of: machineID) de mai sus).
+    private func applyAutofill(_ record: ClientRecord, keepMachineID: Bool = false) {
+        customerName = record.name
+        if !record.email.isEmpty { email = record.email }
+        if !keepMachineID, !record.machineID.isEmpty { machineID = record.machineID }
+        autofilledFrom = record
     }
 
     private var selectedItemName: String {

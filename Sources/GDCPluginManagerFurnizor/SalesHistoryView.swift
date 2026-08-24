@@ -11,12 +11,21 @@ struct SalesHistoryView: View {
     @State private var pendingDelete: SalesLog.Entry?
     @State private var justCopiedSerial: String?
     @State private var editingEntry: SalesLog.Entry?
+    @State private var showDuplicates = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack {
                 Text("Clienți").font(.title2).fontWeight(.semibold)
                 Spacer()
+                // Curățare duplicate (cerut explicit 2026-08-24): ID-uri de
+                // mașină cu mai multe nume/email-uri asociate (typo-uri la
+                // introducere manuală) — vezi DuplicateClientsView.swift.
+                Button {
+                    showDuplicates = true
+                } label: {
+                    Label("Curăță duplicate", systemImage: "person.crop.circle.badge.exclamationmark")
+                }
                 Button {
                     loadEntries()
                 } label: {
@@ -92,6 +101,13 @@ struct SalesHistoryView: View {
                 editingEntry = nil
             } onCancel: {
                 editingEntry = nil
+            }
+        }
+        .sheet(isPresented: $showDuplicates) {
+            DuplicateClientsView {
+                loadEntries()
+            } onClose: {
+                showDuplicates = false
             }
         }
         .task { loadEntries() }
