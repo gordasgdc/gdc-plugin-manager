@@ -20,7 +20,7 @@
    aplicatie imediat ce publici catalogul — FARA APK nou si fara reinstalare.
 ============================================================================= */
 
-const CACHE_VERSION = 'v7';                  // <-- INCREMENTEAZA la fiecare update de pagina
+const CACHE_VERSION = 'v8';                  // <-- INCREMENTEAZA la fiecare update de pagina
 const SHELL_CACHE   = `gdc-shell-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `gdc-runtime-${CACHE_VERSION}`;
 
