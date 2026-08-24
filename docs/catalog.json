@@ -13,6 +13,7 @@
       "youtubeURL" : "https://www.youtube.com/@cristigordas"
     },
     {
+      "coverImage" : "covers/CursorPro GDC.jpg",
       "id" : "CursorPro GDC",
       "name" : "CursorPro GDC",
       "url" : "https://gordas.dev/cursorpro-gdc/",
