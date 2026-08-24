@@ -36,6 +36,7 @@
       "youtubeURL" : "https://www.youtube.com/@cristigordas"
     },
     {
+      "coverImage" : "covers/GDC Production Manager.jpg?v=824674eb",
       "id" : "GDC Production Manager",
       "name" : "GDC Production Manager",
       "url" : "https://gordas.dev/gdc-production-manager/",
@@ -48,16 +49,16 @@
       "youtubeURL" : "https://www.youtube.com/@cristigordas"
     },
     {
-      "id" : "Simulator DOF",
-      "name" : "Simulator DOF",
-      "url" : "https://gordas.dev/depth-of-field/",
-      "youtubeURL" : "https://www.youtube.com/@cristigordas"
-    },
-    {
       "coverImage" : "covers/gdc-vault.png?v=588f4b41",
       "id" : "gdc-vault",
       "name" : "GDC Vault",
       "url" : "https://gordas.dev/gdc-vault"
+    },
+    {
+      "id" : "Simulator DOF",
+      "name" : "Simulator DOF",
+      "url" : "https://gordas.dev/depth-of-field/",
+      "youtubeURL" : "https://www.youtube.com/@cristigordas"
     }
   ],
   "courses" : [
