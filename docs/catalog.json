@@ -1,523 +1,527 @@
 {
-  "apps" : [
+  "apps": [
     {
-      "coverImage" : "covers/CG Convertor.jpg?v=9dda0a44",
-      "id" : "CG Convertor",
-      "name" : "CG Convertor",
-      "url" : "https://gordas.dev/CGConvertor/",
-      "youtubeURL" : "https://www.youtube.com/@cristigordas"
+      "coverImage": "covers/CG Convertor.jpg?v=9dda0a44",
+      "id": "CG Convertor",
+      "name": "CG Convertor",
+      "url": "https://gordas.dev/CGConvertor/",
+      "youtubeURL": "https://www.youtube.com/@cristigordas"
     },
     {
-      "coverImage" : "covers/Clapperboard Digital.png",
-      "id" : "Clapperboard Digital",
-      "name" : "Clapperboard Digital",
-      "url" : "https://gordas.dev/clapperboard-digital/",
-      "youtubeURL" : "https://www.youtube.com/@cristigordas"
+      "coverImage": "covers/Clapperboard Digital.png",
+      "id": "Clapperboard Digital",
+      "name": "Clapperboard Digital",
+      "url": "https://gordas.dev/clapperboard-digital/",
+      "youtubeURL": "https://www.youtube.com/@cristigordas"
     },
     {
-      "coverImage" : "covers/CursorPro GDC.jpg?v=88b0933e",
-      "id" : "CursorPro GDC",
-      "name" : "CursorPro GDC",
-      "url" : "https://gordas.dev/cursorpro-gdc/",
-      "youtubeURL" : "https://www.youtube.com/@cristigordas"
+      "coverImage": "covers/CursorPro GDC.jpg?v=88b0933e",
+      "id": "CursorPro GDC",
+      "name": "CursorPro GDC",
+      "url": "https://gordas.dev/cursorpro-gdc/",
+      "youtubeURL": "https://www.youtube.com/@cristigordas"
     },
     {
-      "coverImage" : "covers/DataMover.png",
-      "id" : "DataMover",
-      "name" : "DataMover",
-      "url" : "https://gordas.dev/datamover/",
-      "youtubeURL" : "https://www.youtube.com/@cristigordas"
+      "coverImage": "covers/DataMover.png",
+      "id": "DataMover",
+      "name": "DataMover",
+      "url": "https://gordas.dev/datamover/",
+      "youtubeURL": "https://www.youtube.com/@cristigordas"
     },
     {
-      "coverImage" : "covers/GDC Metadata View Premium.png",
-      "id" : "GDC Metadata View Premium",
-      "name" : "GDC Metadata View Premium",
-      "url" : "https://gordas.dev/GDC_Metadata_View_Premium/",
-      "youtubeURL" : "https://www.youtube.com/@cristigordas"
+      "coverImage": "covers/GDC Metadata View Premium.png",
+      "id": "GDC Metadata View Premium",
+      "name": "GDC Metadata View Premium",
+      "url": "https://gordas.dev/GDC_Metadata_View_Premium/",
+      "youtubeURL": "https://www.youtube.com/@cristigordas"
     },
     {
-      "id" : "GDC Production Manager",
-      "name" : "GDC Production Manager",
-      "url" : "https://gordas.dev/gdc-production-manager/",
-      "youtubeURL" : "https://www.youtube.com/@cristigordas"
+      "id": "GDC Production Manager",
+      "name": "GDC Production Manager",
+      "url": "https://gordas.dev/gdc-production-manager/",
+      "youtubeURL": "https://www.youtube.com/@cristigordas"
     },
     {
-      "id" : "gdc-resolve-encoder",
-      "name" : "GDC Resolve Encoder",
-      "url" : "https://gordas.dev/gdc-resolve-encoder/",
-      "youtubeURL" : "https://www.youtube.com/@cristigordas"
+      "id": "gdc-resolve-encoder",
+      "name": "GDC Resolve Encoder",
+      "url": "https://gordas.dev/gdc-resolve-encoder/",
+      "youtubeURL": "https://www.youtube.com/@cristigordas"
     },
     {
-      "id" : "Simulator DOF",
-      "name" : "Simulator DOF",
-      "url" : "https://gordas.dev/depth-of-field/",
-      "youtubeURL" : "https://www.youtube.com/@cristigordas"
+      "id": "Simulator DOF",
+      "name": "Simulator DOF",
+      "url": "https://gordas.dev/depth-of-field/",
+      "youtubeURL": "https://www.youtube.com/@cristigordas"
+    },
+    {
+      "id": "gdc-vault",
+      "name": "GDC Vault",
+      "url": "https://gordas.dev/gdc-vault",
+      "coverImage": "covers/gdc-vault.png?v=588f4b41"
     }
   ],
-  "courses" : [
-
-  ],
-  "educationalResources" : [
+  "courses": [],
+  "educationalResources": [
     {
-      "coverImage" : "covers/De la Zero la Conversie.jpg?v=06a6507e",
-      "description" : "Acum aproape doi ani, în decembrie 2023, profilul meu de Instagram era un dezastru.",
-      "externalURL" : "https://axintefilms.com/product/emNb5yxm",
-      "id" : "De la Zero la Conversie",
-      "kind" : "book",
-      "name" : "De la Zero la Conversie",
-      "youtubeURL" : "https://axintefilms.com/ro/de-la-0-la-conversie"
+      "coverImage": "covers/De la Zero la Conversie.jpg?v=06a6507e",
+      "description": "Acum aproape doi ani, în decembrie 2023, profilul meu de Instagram era un dezastru.",
+      "externalURL": "https://axintefilms.com/product/emNb5yxm",
+      "id": "De la Zero la Conversie",
+      "kind": "book",
+      "name": "De la Zero la Conversie",
+      "youtubeURL": "https://axintefilms.com/ro/de-la-0-la-conversie"
     }
   ],
-  "events" : [
+  "events": [
     {
-      "coverImage" : "covers/Don't Be Like Me Workshop.jpg?v=e923e643",
-      "dateDisplay" : "26-29 octombrie 2026, Sighisoara",
-      "description" : "Stiu ca l-ati asteptat, si m-ati intrebat cand fac urmatorul workshop. Don't Be Like Me Workshop revine in toamna la Sighisoara. 🥳🥳",
-      "externalURL" : "https://docs.google.com/forms/d/e/1FAIpQLScOSgscKxzXugU7QkTkktefVJiQq50ZZoDOZL1WGjHqyXoJ-w/viewform",
-      "id" : "Don't Be Like Me Workshop",
-      "location" : "Sighisoara",
-      "title" : "Don't Be Like Me Workshop ",
-      "youtubeURL" : "https://www.facebook.com/bogdan.damian.735/posts/pfbid0bnPWobkt8QuDDYk2JUE69ojzXs2wRs4i2PG3zqB92Cwiw47jcY7qcRVNWUQxF6Djl"
+      "coverImage": "covers/Don't Be Like Me Workshop.jpg?v=e923e643",
+      "dateDisplay": "26-29 octombrie 2026, Sighisoara",
+      "description": "Stiu ca l-ati asteptat, si m-ati intrebat cand fac urmatorul workshop. Don't Be Like Me Workshop revine in toamna la Sighisoara. 🥳🥳",
+      "externalURL": "https://docs.google.com/forms/d/e/1FAIpQLScOSgscKxzXugU7QkTkktefVJiQq50ZZoDOZL1WGjHqyXoJ-w/viewform",
+      "id": "Don't Be Like Me Workshop",
+      "location": "Sighisoara",
+      "title": "Don't Be Like Me Workshop ",
+      "youtubeURL": "https://www.facebook.com/bogdan.damian.735/posts/pfbid0bnPWobkt8QuDDYk2JUE69ojzXs2wRs4i2PG3zqB92Cwiw47jcY7qcRVNWUQxF6Djl"
     }
   ],
-  "items" : [
+  "items": [
     {
-      "description" : "eu",
-      "files" : [
+      "description": "eu",
+      "files": [
         {
-          "path" : "Cristi/2.0.0/GDC.alf4c",
-          "sha256" : "d6e7e5fcfb4d6361d285927ee91d68fbf7fa368bc6d6f7c48b90bd1fe4494f0c"
+          "path": "Cristi/2.0.0/GDC.alf4c",
+          "sha256": "d6e7e5fcfb4d6361d285927ee91d68fbf7fa368bc6d6f7c48b90bd1fe4494f0c"
         },
         {
-          "path" : "Cristi/2.0.0/GDC.aml",
-          "sha256" : "0808d244ee27624eacc071f3f978f6559a01b3ab1d53c026b95dee448ae54632"
+          "path": "Cristi/2.0.0/GDC.aml",
+          "sha256": "0808d244ee27624eacc071f3f978f6559a01b3ab1d53c026b95dee448ae54632"
         },
         {
-          "path" : "Cristi/2.0.0/GDC_Apple Log 2_to_Rec709.cube",
-          "sha256" : "6b37e02c1cb1044d8e4d415f7c95f3aadafec333ac8504eda3b8376ee0c4451e"
+          "path": "Cristi/2.0.0/GDC_Apple Log 2_to_Rec709.cube",
+          "sha256": "6b37e02c1cb1044d8e4d415f7c95f3aadafec333ac8504eda3b8376ee0c4451e"
         },
         {
-          "path" : "Cristi/2.0.0/GDC_Apple Log_to_Rec709.cube",
-          "sha256" : "245a60a63dafe57066f6608ab5c5d3142ea0de3cae6fe033f61bce619c18212d"
+          "path": "Cristi/2.0.0/GDC_Apple Log_to_Rec709.cube",
+          "sha256": "245a60a63dafe57066f6608ab5c5d3142ea0de3cae6fe033f61bce619c18212d"
         },
         {
-          "path" : "Cristi/2.0.0/GDC_BMD Film Gen5_to_Rec709.cube",
-          "sha256" : "99d97084c1d8f5e010058b93cca21c4e016c74ff2d533fac5f158fffc3f8bccc"
+          "path": "Cristi/2.0.0/GDC_BMD Film Gen5_to_Rec709.cube",
+          "sha256": "99d97084c1d8f5e010058b93cca21c4e016c74ff2d533fac5f158fffc3f8bccc"
         },
         {
-          "path" : "Cristi/2.0.0/GDC_CLog2_to_Rec709.cube",
-          "sha256" : "e4b0e586f3348b1f305b7d5e407502f3ff02d4b3c92ff682f4cca1d3f701da8f"
+          "path": "Cristi/2.0.0/GDC_CLog2_to_Rec709.cube",
+          "sha256": "e4b0e586f3348b1f305b7d5e407502f3ff02d4b3c92ff682f4cca1d3f701da8f"
         },
         {
-          "path" : "Cristi/2.0.0/GDC_DWG_to_Rec709_v1.0.cube",
-          "sha256" : "4b9dac5d91ebaff80432159ce9a01c351d32d309e6d06fbf8427f952f87fab7c"
+          "path": "Cristi/2.0.0/GDC_DWG_to_Rec709_v1.0.cube",
+          "sha256": "4b9dac5d91ebaff80432159ce9a01c351d32d309e6d06fbf8427f952f87fab7c"
         },
         {
-          "path" : "Cristi/2.0.0/GDC_F-Log2C_to_Rec709.cube",
-          "sha256" : "90916d9924889e1a4d436da66432a4455f0c406d9ed6c6c74604494f1e89c099"
+          "path": "Cristi/2.0.0/GDC_F-Log2C_to_Rec709.cube",
+          "sha256": "90916d9924889e1a4d436da66432a4455f0c406d9ed6c6c74604494f1e89c099"
         },
         {
-          "path" : "Cristi/2.0.0/GDC_F-Log2_to_Rec709.cube",
-          "sha256" : "44b7a320e23f5bcceeca7f4783ea282dcde761143b6c90fd752cca8ee24fc931"
+          "path": "Cristi/2.0.0/GDC_F-Log2_to_Rec709.cube",
+          "sha256": "44b7a320e23f5bcceeca7f4783ea282dcde761143b6c90fd752cca8ee24fc931"
         },
         {
-          "path" : "Cristi/2.0.0/GDC_F-Log_to_Rec709.cube",
-          "sha256" : "5068925c0b190a6379c00df608734e2aed81ebc281840de135f1b1e645dfacb6"
+          "path": "Cristi/2.0.0/GDC_F-Log_to_Rec709.cube",
+          "sha256": "5068925c0b190a6379c00df608734e2aed81ebc281840de135f1b1e645dfacb6"
         },
         {
-          "path" : "Cristi/2.0.0/GDC_LogC3_to_Rec709.cube",
-          "sha256" : "3bca1dfcc7904c671b9890d4dd5d6c3515bc5a43ac1a47bbeb737b73b5f57c8e"
+          "path": "Cristi/2.0.0/GDC_LogC3_to_Rec709.cube",
+          "sha256": "3bca1dfcc7904c671b9890d4dd5d6c3515bc5a43ac1a47bbeb737b73b5f57c8e"
         },
         {
-          "path" : "Cristi/2.0.0/GDC_LogC4_to_Rec709.cube",
-          "sha256" : "7351c7d3edc01f369b269165ba1573268b4903bcedf032d5c2a60f332af3cfa2"
+          "path": "Cristi/2.0.0/GDC_LogC4_to_Rec709.cube",
+          "sha256": "7351c7d3edc01f369b269165ba1573268b4903bcedf032d5c2a60f332af3cfa2"
         },
         {
-          "path" : "Cristi/2.0.0/GDC_Panasonic_to_Rec709.cube",
-          "sha256" : "b4850569470054f64b8be4573007a4201f0c0046ca88135c48e98dab4c797b2a"
+          "path": "Cristi/2.0.0/GDC_Panasonic_to_Rec709.cube",
+          "sha256": "b4850569470054f64b8be4573007a4201f0c0046ca88135c48e98dab4c797b2a"
         },
         {
-          "path" : "Cristi/2.0.0/GDC_RedLog3G10_to_Rec709.cube",
-          "sha256" : "28dfd0c7a34611d122e14483451fc2659c52f9c94833c7e039cf93fef2aa9339"
+          "path": "Cristi/2.0.0/GDC_RedLog3G10_to_Rec709.cube",
+          "sha256": "28dfd0c7a34611d122e14483451fc2659c52f9c94833c7e039cf93fef2aa9339"
         },
         {
-          "path" : "Cristi/2.0.0/GDC_S-Log3 Cine Venice_to_Rec709.cube",
-          "sha256" : "9570406e6aa727654711771b7301725e054c0237fafdaa7ae80548c8afab353b"
+          "path": "Cristi/2.0.0/GDC_S-Log3 Cine Venice_to_Rec709.cube",
+          "sha256": "9570406e6aa727654711771b7301725e054c0237fafdaa7ae80548c8afab353b"
         },
         {
-          "path" : "Cristi/2.0.0/GDC_S-Log3 Cine_to_Rec709.cube",
-          "sha256" : "954634f5ff00374032ce94492ee11aa665783313810ef5708e7277aa42cd32b6"
+          "path": "Cristi/2.0.0/GDC_S-Log3 Cine_to_Rec709.cube",
+          "sha256": "954634f5ff00374032ce94492ee11aa665783313810ef5708e7277aa42cd32b6"
         }
       ],
-      "iconSymbol" : "eyedropper.halffull",
-      "id" : "Cristi",
-      "isFree" : true,
-      "isTrial" : false,
-      "name" : "Cristi",
-      "priceEUR" : 0,
-      "type" : "lut",
-      "version" : "2.0.0"
+      "iconSymbol": "eyedropper.halffull",
+      "id": "Cristi",
+      "isFree": true,
+      "isTrial": false,
+      "name": "Cristi",
+      "priceEUR": 0,
+      "type": "lut",
+      "version": "2.0.0"
     },
     {
-      "description" : "FalseColorSkinDetect",
-      "files" : [
+      "description": "FalseColorSkinDetect",
+      "files": [
         {
-          "path" : "FalseColorSkinDetect/1.0.0/aGDC Saturation Seperator.dctle",
-          "sha256" : "4411296aa79882a091f657bd354f714786c6225b786de0b53237758c98ed6667"
+          "path": "FalseColorSkinDetect/1.0.0/aGDC Saturation Seperator.dctle",
+          "sha256": "4411296aa79882a091f657bd354f714786c6225b786de0b53237758c98ed6667"
         }
       ],
-      "iconSymbol" : "wand.and.stars",
-      "id" : "FalseColorSkinDetect",
-      "isFree" : true,
-      "isTrial" : false,
-      "name" : "FalseColorSkinDetect",
-      "priceEUR" : 0,
-      "type" : "dctl",
-      "version" : "1.0.0"
+      "iconSymbol": "wand.and.stars",
+      "id": "FalseColorSkinDetect",
+      "isFree": true,
+      "isTrial": false,
+      "name": "FalseColorSkinDetect",
+      "priceEUR": 0,
+      "type": "dctl",
+      "version": "1.0.0"
     },
     {
-      "description" : "GDC",
-      "files" : [
+      "description": "GDC",
+      "files": [
         {
-          "path" : "GDC/1.0.0/Alexa 35 - LOGC4/GDC.alf4c",
-          "sha256" : "d6e7e5fcfb4d6361d285927ee91d68fbf7fa368bc6d6f7c48b90bd1fe4494f0c"
+          "path": "GDC/1.0.0/Alexa 35 - LOGC4/GDC.alf4c",
+          "sha256": "d6e7e5fcfb4d6361d285927ee91d68fbf7fa368bc6d6f7c48b90bd1fe4494f0c"
         },
         {
-          "path" : "GDC/1.0.0/Alexa 35 - LOGC4/GDC_LogC4_to_Rec709.cube",
-          "sha256" : "7351c7d3edc01f369b269165ba1573268b4903bcedf032d5c2a60f332af3cfa2"
+          "path": "GDC/1.0.0/Alexa 35 - LOGC4/GDC_LogC4_to_Rec709.cube",
+          "sha256": "7351c7d3edc01f369b269165ba1573268b4903bcedf032d5c2a60f332af3cfa2"
         },
         {
-          "path" : "GDC/1.0.0/Alexa Amira - LOGC3/GDC.aml",
-          "sha256" : "0808d244ee27624eacc071f3f978f6559a01b3ab1d53c026b95dee448ae54632"
+          "path": "GDC/1.0.0/Alexa Amira - LOGC3/GDC.aml",
+          "sha256": "0808d244ee27624eacc071f3f978f6559a01b3ab1d53c026b95dee448ae54632"
         },
         {
-          "path" : "GDC/1.0.0/Alexa Amira - LOGC3/GDC_LogC3_to_Rec709.cube",
-          "sha256" : "3bca1dfcc7904c671b9890d4dd5d6c3515bc5a43ac1a47bbeb737b73b5f57c8e"
+          "path": "GDC/1.0.0/Alexa Amira - LOGC3/GDC_LogC3_to_Rec709.cube",
+          "sha256": "3bca1dfcc7904c671b9890d4dd5d6c3515bc5a43ac1a47bbeb737b73b5f57c8e"
         },
         {
-          "path" : "GDC/1.0.0/BMD - Film Gen5/GDC_BMD Film Gen5_to_Rec709.cube",
-          "sha256" : "99d97084c1d8f5e010058b93cca21c4e016c74ff2d533fac5f158fffc3f8bccc"
+          "path": "GDC/1.0.0/BMD - Film Gen5/GDC_BMD Film Gen5_to_Rec709.cube",
+          "sha256": "99d97084c1d8f5e010058b93cca21c4e016c74ff2d533fac5f158fffc3f8bccc"
         },
         {
-          "path" : "GDC/1.0.0/Canon - CLOG2/GDC_CLog2_to_Rec709.cube",
-          "sha256" : "e4b0e586f3348b1f305b7d5e407502f3ff02d4b3c92ff682f4cca1d3f701da8f"
+          "path": "GDC/1.0.0/Canon - CLOG2/GDC_CLog2_to_Rec709.cube",
+          "sha256": "e4b0e586f3348b1f305b7d5e407502f3ff02d4b3c92ff682f4cca1d3f701da8f"
         },
         {
-          "path" : "GDC/1.0.0/Davinci Wide Gamut/GDC_DWG_to_Rec709_v1.0.cube",
-          "sha256" : "4b9dac5d91ebaff80432159ce9a01c351d32d309e6d06fbf8427f952f87fab7c"
+          "path": "GDC/1.0.0/Davinci Wide Gamut/GDC_DWG_to_Rec709_v1.0.cube",
+          "sha256": "4b9dac5d91ebaff80432159ce9a01c351d32d309e6d06fbf8427f952f87fab7c"
         },
         {
-          "path" : "GDC/1.0.0/Fuji - FLOG/GDC_F-Log2C_to_Rec709.cube",
-          "sha256" : "90916d9924889e1a4d436da66432a4455f0c406d9ed6c6c74604494f1e89c099"
+          "path": "GDC/1.0.0/Fuji - FLOG/GDC_F-Log2C_to_Rec709.cube",
+          "sha256": "90916d9924889e1a4d436da66432a4455f0c406d9ed6c6c74604494f1e89c099"
         },
         {
-          "path" : "GDC/1.0.0/Fuji - FLOG/GDC_F-Log2_to_Rec709.cube",
-          "sha256" : "44b7a320e23f5bcceeca7f4783ea282dcde761143b6c90fd752cca8ee24fc931"
+          "path": "GDC/1.0.0/Fuji - FLOG/GDC_F-Log2_to_Rec709.cube",
+          "sha256": "44b7a320e23f5bcceeca7f4783ea282dcde761143b6c90fd752cca8ee24fc931"
         },
         {
-          "path" : "GDC/1.0.0/Fuji - FLOG/GDC_F-Log_to_Rec709.cube",
-          "sha256" : "5068925c0b190a6379c00df608734e2aed81ebc281840de135f1b1e645dfacb6"
+          "path": "GDC/1.0.0/Fuji - FLOG/GDC_F-Log_to_Rec709.cube",
+          "sha256": "5068925c0b190a6379c00df608734e2aed81ebc281840de135f1b1e645dfacb6"
         },
         {
-          "path" : "GDC/1.0.0/Panasonic - V-Log/GDC_Panasonic_to_Rec709.cube",
-          "sha256" : "b4850569470054f64b8be4573007a4201f0c0046ca88135c48e98dab4c797b2a"
+          "path": "GDC/1.0.0/Panasonic - V-Log/GDC_Panasonic_to_Rec709.cube",
+          "sha256": "b4850569470054f64b8be4573007a4201f0c0046ca88135c48e98dab4c797b2a"
         },
         {
-          "path" : "GDC/1.0.0/Red - RedLog3G10/GDC_RedLog3G10_to_Rec709.cube",
-          "sha256" : "28dfd0c7a34611d122e14483451fc2659c52f9c94833c7e039cf93fef2aa9339"
+          "path": "GDC/1.0.0/Red - RedLog3G10/GDC_RedLog3G10_to_Rec709.cube",
+          "sha256": "28dfd0c7a34611d122e14483451fc2659c52f9c94833c7e039cf93fef2aa9339"
         },
         {
-          "path" : "GDC/1.0.0/Sony - SLog3 Cine/GDC_S-Log3 Cine Venice_to_Rec709.cube",
-          "sha256" : "9570406e6aa727654711771b7301725e054c0237fafdaa7ae80548c8afab353b"
+          "path": "GDC/1.0.0/Sony - SLog3 Cine/GDC_S-Log3 Cine Venice_to_Rec709.cube",
+          "sha256": "9570406e6aa727654711771b7301725e054c0237fafdaa7ae80548c8afab353b"
         },
         {
-          "path" : "GDC/1.0.0/Sony - SLog3 Cine/GDC_S-Log3 Cine_to_Rec709.cube",
-          "sha256" : "954634f5ff00374032ce94492ee11aa665783313810ef5708e7277aa42cd32b6"
+          "path": "GDC/1.0.0/Sony - SLog3 Cine/GDC_S-Log3 Cine_to_Rec709.cube",
+          "sha256": "954634f5ff00374032ce94492ee11aa665783313810ef5708e7277aa42cd32b6"
         },
         {
-          "path" : "GDC/1.0.0/iPhone - Apple Log/GDC_Apple Log 2_to_Rec709.cube",
-          "sha256" : "6b37e02c1cb1044d8e4d415f7c95f3aadafec333ac8504eda3b8376ee0c4451e"
+          "path": "GDC/1.0.0/iPhone - Apple Log/GDC_Apple Log 2_to_Rec709.cube",
+          "sha256": "6b37e02c1cb1044d8e4d415f7c95f3aadafec333ac8504eda3b8376ee0c4451e"
         },
         {
-          "path" : "GDC/1.0.0/iPhone - Apple Log/GDC_Apple Log_to_Rec709.cube",
-          "sha256" : "245a60a63dafe57066f6608ab5c5d3142ea0de3cae6fe033f61bce619c18212d"
+          "path": "GDC/1.0.0/iPhone - Apple Log/GDC_Apple Log_to_Rec709.cube",
+          "sha256": "245a60a63dafe57066f6608ab5c5d3142ea0de3cae6fe033f61bce619c18212d"
         }
       ],
-      "iconSymbol" : "eyedropper.halffull",
-      "id" : "GDC",
-      "isFree" : true,
-      "isTrial" : false,
-      "name" : "GDC",
-      "priceEUR" : 0,
-      "type" : "lut",
-      "version" : "1.0.0"
+      "iconSymbol": "eyedropper.halffull",
+      "id": "GDC",
+      "isFree": true,
+      "isTrial": false,
+      "name": "GDC",
+      "priceEUR": 0,
+      "type": "lut",
+      "version": "1.0.0"
     },
     {
-      "description" : "Flux de lucru profesional Intermediate la cel mai inalt nivel in industrie",
-      "files" : [
+      "description": "Flux de lucru profesional Intermediate la cel mai inalt nivel in industrie",
+      "files": [
         {
-          "path" : "IntermediateWorkflow/1.0.0/ACEScct to Intermediate.dctl",
-          "sha256" : "8f7ca7d95f79d2cea3204162a15bf4372233f2b43c971fa020574b5b2cf84a63"
+          "path": "IntermediateWorkflow/1.0.0/ACEScct to Intermediate.dctl",
+          "sha256": "8f7ca7d95f79d2cea3204162a15bf4372233f2b43c971fa020574b5b2cf84a63"
         },
         {
-          "path" : "IntermediateWorkflow/1.0.0/ARRI LogC3 to Intermediate.dctl",
-          "sha256" : "06d3c01a43b24f40a27fb1528dfdd022ae3ac7fb3eb8fab15da6b73863814eb1"
+          "path": "IntermediateWorkflow/1.0.0/ARRI LogC3 to Intermediate.dctl",
+          "sha256": "06d3c01a43b24f40a27fb1528dfdd022ae3ac7fb3eb8fab15da6b73863814eb1"
         },
         {
-          "path" : "IntermediateWorkflow/1.0.0/ARRI LogC4 to Intermediate.dctl",
-          "sha256" : "bf0792d4a18668c6a2726d1640db1d39eb7e892158e50442c267b9bf7071cd03"
+          "path": "IntermediateWorkflow/1.0.0/ARRI LogC4 to Intermediate.dctl",
+          "sha256": "bf0792d4a18668c6a2726d1640db1d39eb7e892158e50442c267b9bf7071cd03"
         },
         {
-          "path" : "IntermediateWorkflow/1.0.0/Apple Log to Intermediate.dctl",
-          "sha256" : "b7c4cbc2021fb33f4a736f3941b886d37362c0fd7cc94a994d7eab7484d32eb1"
+          "path": "IntermediateWorkflow/1.0.0/Apple Log to Intermediate.dctl",
+          "sha256": "b7c4cbc2021fb33f4a736f3941b886d37362c0fd7cc94a994d7eab7484d32eb1"
         },
         {
-          "path" : "IntermediateWorkflow/1.0.0/Blackmagic Film Gen4 to Intermediate.dctl",
-          "sha256" : "6deeb9912bb3ba82e6c766c60244ca878bbb5311715387cf1b493dc4f25e9ad8"
+          "path": "IntermediateWorkflow/1.0.0/Blackmagic Film Gen4 to Intermediate.dctl",
+          "sha256": "6deeb9912bb3ba82e6c766c60244ca878bbb5311715387cf1b493dc4f25e9ad8"
         },
         {
-          "path" : "IntermediateWorkflow/1.0.0/Blackmagic Film Gen5 to Intermediate.dctl",
-          "sha256" : "db788bd2c29ee3e0a5abc09776e5561735aeda467152085c3f078a82390cdf26"
+          "path": "IntermediateWorkflow/1.0.0/Blackmagic Film Gen5 to Intermediate.dctl",
+          "sha256": "db788bd2c29ee3e0a5abc09776e5561735aeda467152085c3f078a82390cdf26"
         },
         {
-          "path" : "IntermediateWorkflow/1.0.0/Canon CLog to Intermediate.dctl",
-          "sha256" : "a6baf74e20e35cbae75a55db46656c3f97af1324109434df66cbb7a224a3cb57"
+          "path": "IntermediateWorkflow/1.0.0/Canon CLog to Intermediate.dctl",
+          "sha256": "a6baf74e20e35cbae75a55db46656c3f97af1324109434df66cbb7a224a3cb57"
         },
         {
-          "path" : "IntermediateWorkflow/1.0.0/Canon CLog2 to Intermediate.dctl",
-          "sha256" : "038dfc4b56af1dbeb15a03418fa55836cf6daf76253cfeb97b8c20867d905740"
+          "path": "IntermediateWorkflow/1.0.0/Canon CLog2 to Intermediate.dctl",
+          "sha256": "038dfc4b56af1dbeb15a03418fa55836cf6daf76253cfeb97b8c20867d905740"
         },
         {
-          "path" : "IntermediateWorkflow/1.0.0/Canon CLog3 to Intermediate.dctl",
-          "sha256" : "3aa16d1d4b8566679ea8dff9932fac0b1d78878e7a5df4e4a0eded9e6fa1aff6"
+          "path": "IntermediateWorkflow/1.0.0/Canon CLog3 to Intermediate.dctl",
+          "sha256": "3aa16d1d4b8566679ea8dff9932fac0b1d78878e7a5df4e4a0eded9e6fa1aff6"
         },
         {
-          "path" : "IntermediateWorkflow/1.0.0/DJI Mavic 3 Pro Cine DLog to Intermediate.dctl",
-          "sha256" : "15bcc5bf236fc7e92cbbd75cb82f02ee7cfda9d123a5782774161dbdc1702dcb"
+          "path": "IntermediateWorkflow/1.0.0/DJI Mavic 3 Pro Cine DLog to Intermediate.dctl",
+          "sha256": "15bcc5bf236fc7e92cbbd75cb82f02ee7cfda9d123a5782774161dbdc1702dcb"
         },
         {
-          "path" : "IntermediateWorkflow/1.0.0/DJI Mavic 3 Pro DLogM to Intermediate.dctl",
-          "sha256" : "73c9a3f6e633dc68fc8a028644fd156c4f1b4c90104a41e2d126ffff96a3b61a"
+          "path": "IntermediateWorkflow/1.0.0/DJI Mavic 3 Pro DLogM to Intermediate.dctl",
+          "sha256": "73c9a3f6e633dc68fc8a028644fd156c4f1b4c90104a41e2d126ffff96a3b61a"
         },
         {
-          "path" : "IntermediateWorkflow/1.0.0/DJI Phantom P4 DLog to Intermediate.dctl",
-          "sha256" : "a53557f4ce5574a46ebc2272cb76f013ddd84534917259c4e2b68cb4c30e8873"
+          "path": "IntermediateWorkflow/1.0.0/DJI Phantom P4 DLog to Intermediate.dctl",
+          "sha256": "a53557f4ce5574a46ebc2272cb76f013ddd84534917259c4e2b68cb4c30e8873"
         },
         {
-          "path" : "IntermediateWorkflow/1.0.0/FilmLight TLog to Intermediate.dctl",
-          "sha256" : "d97b261a8d12bd1a2e23da2dc074666e57e16f205f8e66d8ab8f8d6f0019eb16"
+          "path": "IntermediateWorkflow/1.0.0/FilmLight TLog to Intermediate.dctl",
+          "sha256": "d97b261a8d12bd1a2e23da2dc074666e57e16f205f8e66d8ab8f8d6f0019eb16"
         },
         {
-          "path" : "IntermediateWorkflow/1.0.0/Fujifilm FLog to Intermediate.dctl",
-          "sha256" : "05a12df4178f1b12845631b494899663cb7fb966ee0d1f4060caf13aeb7f19c6"
+          "path": "IntermediateWorkflow/1.0.0/Fujifilm FLog to Intermediate.dctl",
+          "sha256": "05a12df4178f1b12845631b494899663cb7fb966ee0d1f4060caf13aeb7f19c6"
         },
         {
-          "path" : "IntermediateWorkflow/1.0.0/Fujifilm FLog2 to Intermediate.dctl",
-          "sha256" : "e7b3b6eff6b0e48c1bde1c6c6bc6add6ac2c5bed1a99f79142439db18083fd49"
+          "path": "IntermediateWorkflow/1.0.0/Fujifilm FLog2 to Intermediate.dctl",
+          "sha256": "e7b3b6eff6b0e48c1bde1c6c6bc6add6ac2c5bed1a99f79142439db18083fd49"
         },
         {
-          "path" : "IntermediateWorkflow/1.0.0/Fujifilm_FLog2C_to_Intermediate.dctl",
-          "sha256" : "f11c4b9fcbfc8e5d086bd769777bfaf9d13d3383987acfb272fe19e46d27b858"
+          "path": "IntermediateWorkflow/1.0.0/Fujifilm_FLog2C_to_Intermediate.dctl",
+          "sha256": "f11c4b9fcbfc8e5d086bd769777bfaf9d13d3383987acfb272fe19e46d27b858"
         },
         {
-          "path" : "IntermediateWorkflow/1.0.0/Nikon NLog to Intermediate.dctl",
-          "sha256" : "f249026e818ab016be604cd334984a03dc6c0d976f6013840126c21e1f26d0e8"
+          "path": "IntermediateWorkflow/1.0.0/Nikon NLog to Intermediate.dctl",
+          "sha256": "f249026e818ab016be604cd334984a03dc6c0d976f6013840126c21e1f26d0e8"
         },
         {
-          "path" : "IntermediateWorkflow/1.0.0/Panasonic VLog to Intermediate.dctl",
-          "sha256" : "be1100caf74e8749930561bcbbe40b1d8419e9f92e2c1153e4d14ab5e0e8935a"
+          "path": "IntermediateWorkflow/1.0.0/Panasonic VLog to Intermediate.dctl",
+          "sha256": "be1100caf74e8749930561bcbbe40b1d8419e9f92e2c1153e4d14ab5e0e8935a"
         },
         {
-          "path" : "IntermediateWorkflow/1.0.0/RED Log3G10 to Intermediate.dctl",
-          "sha256" : "5b7dc52e7fe991cdb10594f656b557e7d71d60432d0b65be5eebce764f46a7c8"
+          "path": "IntermediateWorkflow/1.0.0/RED Log3G10 to Intermediate.dctl",
+          "sha256": "5b7dc52e7fe991cdb10594f656b557e7d71d60432d0b65be5eebce764f46a7c8"
         },
         {
-          "path" : "IntermediateWorkflow/1.0.0/Rec709_22_to_Intermediate.dctl",
-          "sha256" : "a1578d1894e664e7920b9710f3f8e5831b02c5259f53d36cdbdf872f4e40d784"
+          "path": "IntermediateWorkflow/1.0.0/Rec709_22_to_Intermediate.dctl",
+          "sha256": "a1578d1894e664e7920b9710f3f8e5831b02c5259f53d36cdbdf872f4e40d784"
         },
         {
-          "path" : "IntermediateWorkflow/1.0.0/Rec709_24_to_Intermediate.dctl",
-          "sha256" : "b5efaf56cb137bee39e149a5f7948ca8b2db776b52a76f8675a8d52a1ef5ae9d"
+          "path": "IntermediateWorkflow/1.0.0/Rec709_24_to_Intermediate.dctl",
+          "sha256": "b5efaf56cb137bee39e149a5f7948ca8b2db776b52a76f8675a8d52a1ef5ae9d"
         },
         {
-          "path" : "IntermediateWorkflow/1.0.0/Sony SLog2 to Intermediate.dctl",
-          "sha256" : "0b04edff399cd6e438a19f172895c0bf9a0c40ae504aade1d7d0e3332be7888a"
+          "path": "IntermediateWorkflow/1.0.0/Sony SLog2 to Intermediate.dctl",
+          "sha256": "0b04edff399cd6e438a19f172895c0bf9a0c40ae504aade1d7d0e3332be7888a"
         },
         {
-          "path" : "IntermediateWorkflow/1.0.0/Sony SLog3 to Intermediate.dctl",
-          "sha256" : "0a12dd51f301490db218956f5670d7c0dce6070bddda1d1bfc970593851d831d"
+          "path": "IntermediateWorkflow/1.0.0/Sony SLog3 to Intermediate.dctl",
+          "sha256": "0a12dd51f301490db218956f5670d7c0dce6070bddda1d1bfc970593851d831d"
         },
         {
-          "path" : "IntermediateWorkflow/1.0.0/sRGB_to_Intermediate.dctl",
-          "sha256" : "c9ccd4cc2234773e33c9d40dff5b7ae39be1b6c18184246be99f8fc88fc204c2"
+          "path": "IntermediateWorkflow/1.0.0/sRGB_to_Intermediate.dctl",
+          "sha256": "c9ccd4cc2234773e33c9d40dff5b7ae39be1b6c18184246be99f8fc88fc204c2"
         }
       ],
-      "iconSymbol" : "wand.and.stars",
-      "id" : "IntermediateWorkflow",
-      "isFree" : false,
-      "isTrial" : false,
-      "name" : "Intermediate Workflow",
-      "priceEUR" : 378,
-      "type" : "lut",
-      "version" : "1.0.0"
+      "iconSymbol": "wand.and.stars",
+      "id": "IntermediateWorkflow",
+      "isFree": false,
+      "isTrial": false,
+      "name": "Intermediate Workflow",
+      "priceEUR": 378,
+      "type": "lut",
+      "version": "1.0.0"
     },
     {
-      "description" : "Flux de lucru profesional liniar la cel mai inalt nivel in industrie",
-      "files" : [
+      "description": "Flux de lucru profesional liniar la cel mai inalt nivel in industrie",
+      "files": [
         {
-          "path" : "LiniarWorkflow/1.0.0/ACEScct IDT.dctl",
-          "sha256" : "26cce4714f98cdfc8a4fcfcbe547ee3a6501129b45082213046c8302dd3d5fdd"
+          "path": "LiniarWorkflow/1.0.0/ACEScct IDT.dctl",
+          "sha256": "26cce4714f98cdfc8a4fcfcbe547ee3a6501129b45082213046c8302dd3d5fdd"
         },
         {
-          "path" : "LiniarWorkflow/1.0.0/ARRI LogC3 IDT.dctl",
-          "sha256" : "d179b9e14e87f2b854244dbdcdf80e5a440d519973f195d4157f92a2522f7c67"
+          "path": "LiniarWorkflow/1.0.0/ARRI LogC3 IDT.dctl",
+          "sha256": "d179b9e14e87f2b854244dbdcdf80e5a440d519973f195d4157f92a2522f7c67"
         },
         {
-          "path" : "LiniarWorkflow/1.0.0/ARRI LogC4 IDT.dctl",
-          "sha256" : "a490e6e26cd94431ea13f6706fec992ef21cd268ac654a8b0e054512bf2be742"
+          "path": "LiniarWorkflow/1.0.0/ARRI LogC4 IDT.dctl",
+          "sha256": "a490e6e26cd94431ea13f6706fec992ef21cd268ac654a8b0e054512bf2be742"
         },
         {
-          "path" : "LiniarWorkflow/1.0.0/Apple Log IDT.dctl",
-          "sha256" : "770dacd6376e9ae89053ada4de5fcc14f2e0041cf409d737a8e2283c4295ae52"
+          "path": "LiniarWorkflow/1.0.0/Apple Log IDT.dctl",
+          "sha256": "770dacd6376e9ae89053ada4de5fcc14f2e0041cf409d737a8e2283c4295ae52"
         },
         {
-          "path" : "LiniarWorkflow/1.0.0/Blackmagic Film Gen4 IDT.dctl",
-          "sha256" : "f0455b921c74be608a62c6dfc64121f5ce8c13a156e0f831ccc077a20bee00aa"
+          "path": "LiniarWorkflow/1.0.0/Blackmagic Film Gen4 IDT.dctl",
+          "sha256": "f0455b921c74be608a62c6dfc64121f5ce8c13a156e0f831ccc077a20bee00aa"
         },
         {
-          "path" : "LiniarWorkflow/1.0.0/Blackmagic Film Gen5 IDT.dctl",
-          "sha256" : "bbfe9e09da9a73d2c17818764f0b0f93ad906a46e736f1ce6454115f54191f42"
+          "path": "LiniarWorkflow/1.0.0/Blackmagic Film Gen5 IDT.dctl",
+          "sha256": "bbfe9e09da9a73d2c17818764f0b0f93ad906a46e736f1ce6454115f54191f42"
         },
         {
-          "path" : "LiniarWorkflow/1.0.0/Canon CLog IDT.dctl",
-          "sha256" : "7319c914cdc0be002984e8334c6ff8efcf39edcc0237429448466a92c7fa6ad2"
+          "path": "LiniarWorkflow/1.0.0/Canon CLog IDT.dctl",
+          "sha256": "7319c914cdc0be002984e8334c6ff8efcf39edcc0237429448466a92c7fa6ad2"
         },
         {
-          "path" : "LiniarWorkflow/1.0.0/Canon CLog2 IDT.dctl",
-          "sha256" : "2096d06f379bc47df283f8cce494d2ef1678939bf5838826480fe2da12c3bcae"
+          "path": "LiniarWorkflow/1.0.0/Canon CLog2 IDT.dctl",
+          "sha256": "2096d06f379bc47df283f8cce494d2ef1678939bf5838826480fe2da12c3bcae"
         },
         {
-          "path" : "LiniarWorkflow/1.0.0/Canon CLog3 IDT.dctl",
-          "sha256" : "f6b9f3442b8c07a0bc991c3f77e62716cc4b3c6ba663d5a4a43166f951971db7"
+          "path": "LiniarWorkflow/1.0.0/Canon CLog3 IDT.dctl",
+          "sha256": "f6b9f3442b8c07a0bc991c3f77e62716cc4b3c6ba663d5a4a43166f951971db7"
         },
         {
-          "path" : "LiniarWorkflow/1.0.0/DJI Mavic 3 Pro Cine DLog IDT.dctl",
-          "sha256" : "a6dbd85694ec7008168aa5faaf433f9983472f35ee8897bc23413827b71a053c"
+          "path": "LiniarWorkflow/1.0.0/DJI Mavic 3 Pro Cine DLog IDT.dctl",
+          "sha256": "a6dbd85694ec7008168aa5faaf433f9983472f35ee8897bc23413827b71a053c"
         },
         {
-          "path" : "LiniarWorkflow/1.0.0/DJI Mavic 3 Pro DLogM IDT.dctl",
-          "sha256" : "d4ab420a189be03d8f5ecbf340c03e08be61b5fe2864748e47c2020f4e3bf15c"
+          "path": "LiniarWorkflow/1.0.0/DJI Mavic 3 Pro DLogM IDT.dctl",
+          "sha256": "d4ab420a189be03d8f5ecbf340c03e08be61b5fe2864748e47c2020f4e3bf15c"
         },
         {
-          "path" : "LiniarWorkflow/1.0.0/DJI Phantom P4 DLog IDT.dctl",
-          "sha256" : "d5d487c4adae40962afe62fa8b97e363eae5bfbf07f85b6c8d1b673ab56fa402"
+          "path": "LiniarWorkflow/1.0.0/DJI Phantom P4 DLog IDT.dctl",
+          "sha256": "d5d487c4adae40962afe62fa8b97e363eae5bfbf07f85b6c8d1b673ab56fa402"
         },
         {
-          "path" : "LiniarWorkflow/1.0.0/DaVinci Intermediate IDT.dctl",
-          "sha256" : "c57164a4dcb45c3ae6eb768475bb280f5fc0841d3e49b057c5e0344fcd590c66"
+          "path": "LiniarWorkflow/1.0.0/DaVinci Intermediate IDT.dctl",
+          "sha256": "c57164a4dcb45c3ae6eb768475bb280f5fc0841d3e49b057c5e0344fcd590c66"
         },
         {
-          "path" : "LiniarWorkflow/1.0.0/FilmLight TLog IDT.dctl",
-          "sha256" : "6f16d00ecfbf15ba21e98ba5a6b897642957b37c07b8d73257bd3086698ab40d"
+          "path": "LiniarWorkflow/1.0.0/FilmLight TLog IDT.dctl",
+          "sha256": "6f16d00ecfbf15ba21e98ba5a6b897642957b37c07b8d73257bd3086698ab40d"
         },
         {
-          "path" : "LiniarWorkflow/1.0.0/Fujifilm FLog IDT.dctl",
-          "sha256" : "8e683eeb4877f12b6bb5dc9a92af246422dcf493d13936f9271b0cbacba99816"
+          "path": "LiniarWorkflow/1.0.0/Fujifilm FLog IDT.dctl",
+          "sha256": "8e683eeb4877f12b6bb5dc9a92af246422dcf493d13936f9271b0cbacba99816"
         },
         {
-          "path" : "LiniarWorkflow/1.0.0/Fujifilm FLog2 IDT.dctl",
-          "sha256" : "796846f87b9055fee76faa49b22ca7dcbc84b4e5d3dc827cf9c780fb7c63cebe"
+          "path": "LiniarWorkflow/1.0.0/Fujifilm FLog2 IDT.dctl",
+          "sha256": "796846f87b9055fee76faa49b22ca7dcbc84b4e5d3dc827cf9c780fb7c63cebe"
         },
         {
-          "path" : "LiniarWorkflow/1.0.0/Linear_to_ARRI_LogC3.dctl",
-          "sha256" : "6a748946a1a2cc00eb00d9509ebec86c53f0103e7afdc82c1e00801ca6ddd659"
+          "path": "LiniarWorkflow/1.0.0/Linear_to_ARRI_LogC3.dctl",
+          "sha256": "6a748946a1a2cc00eb00d9509ebec86c53f0103e7afdc82c1e00801ca6ddd659"
         },
         {
-          "path" : "LiniarWorkflow/1.0.0/Nikon NLog IDT.dctl",
-          "sha256" : "4f6fd502d3c3aa40ec531f23f4db06a796cfcf8bae8c2dab61dcf7a5677e346a"
+          "path": "LiniarWorkflow/1.0.0/Nikon NLog IDT.dctl",
+          "sha256": "4f6fd502d3c3aa40ec531f23f4db06a796cfcf8bae8c2dab61dcf7a5677e346a"
         },
         {
-          "path" : "LiniarWorkflow/1.0.0/Panasonic VLog IDT.dctl",
-          "sha256" : "6daec467e7c360f64775a48f514ae8147bd6b77df53f086a2b2d63e5a7c7f004"
+          "path": "LiniarWorkflow/1.0.0/Panasonic VLog IDT.dctl",
+          "sha256": "6daec467e7c360f64775a48f514ae8147bd6b77df53f086a2b2d63e5a7c7f004"
         },
         {
-          "path" : "LiniarWorkflow/1.0.0/RED Log3G10 IDT.dctl",
-          "sha256" : "c822b5087c09e234e728d66b480722f4ac020360de5189ba9d9828436ec70201"
+          "path": "LiniarWorkflow/1.0.0/RED Log3G10 IDT.dctl",
+          "sha256": "c822b5087c09e234e728d66b480722f4ac020360de5189ba9d9828436ec70201"
         },
         {
-          "path" : "LiniarWorkflow/1.0.0/Rec709_22_to_Linear.dctl",
-          "sha256" : "96bc02490fab8ab5f2d8e1f88d9e9a1884298be25bcdc61284efa4cce699f37d"
+          "path": "LiniarWorkflow/1.0.0/Rec709_22_to_Linear.dctl",
+          "sha256": "96bc02490fab8ab5f2d8e1f88d9e9a1884298be25bcdc61284efa4cce699f37d"
         },
         {
-          "path" : "LiniarWorkflow/1.0.0/Rec709_24_to_Linear.dctl",
-          "sha256" : "6fc2ef3c88b7f4ec5597148e9c067b1396e82014a55cd093f959b0630f90494b"
+          "path": "LiniarWorkflow/1.0.0/Rec709_24_to_Linear.dctl",
+          "sha256": "6fc2ef3c88b7f4ec5597148e9c067b1396e82014a55cd093f959b0630f90494b"
         },
         {
-          "path" : "LiniarWorkflow/1.0.0/Sony SLog2 IDT.dctl",
-          "sha256" : "0cae27df7d0fa00906fa7a3c3333519845fcbd30f24eee7769a85fc93267dac1"
+          "path": "LiniarWorkflow/1.0.0/Sony SLog2 IDT.dctl",
+          "sha256": "0cae27df7d0fa00906fa7a3c3333519845fcbd30f24eee7769a85fc93267dac1"
         },
         {
-          "path" : "LiniarWorkflow/1.0.0/Sony SLog3 IDT.dctl",
-          "sha256" : "b19edf5b6945c8ee64a7b5b99782b95e8937e75d8fdc6068952370c703412487"
+          "path": "LiniarWorkflow/1.0.0/Sony SLog3 IDT.dctl",
+          "sha256": "b19edf5b6945c8ee64a7b5b99782b95e8937e75d8fdc6068952370c703412487"
         },
         {
-          "path" : "LiniarWorkflow/1.0.0/sRGB_to_Linear.dctl",
-          "sha256" : "c941d507ee12b8e9ee3f71f42ce5ce8d9dabe748e67a485f3293f305537904ae"
+          "path": "LiniarWorkflow/1.0.0/sRGB_to_Linear.dctl",
+          "sha256": "c941d507ee12b8e9ee3f71f42ce5ce8d9dabe748e67a485f3293f305537904ae"
         }
       ],
-      "iconSymbol" : "wand.and.stars",
-      "id" : "LiniarWorkflow",
-      "isFree" : false,
-      "isTrial" : false,
-      "name" : "LiniarWorkflow",
-      "priceEUR" : 487,
-      "type" : "lut",
-      "version" : "1.0.0",
-      "youtubeURL" : "https://www.youtube.com/@cristigordas"
+      "iconSymbol": "wand.and.stars",
+      "id": "LiniarWorkflow",
+      "isFree": false,
+      "isTrial": false,
+      "name": "LiniarWorkflow",
+      "priceEUR": 487,
+      "type": "lut",
+      "version": "1.0.0",
+      "youtubeURL": "https://www.youtube.com/@cristigordas"
     },
     {
-      "description" : "Raz",
-      "files" : [
+      "description": "Raz",
+      "files": [
         {
-          "path" : "Raz/1.0.0/Raz_1.1.1.drx",
-          "sha256" : "77f0ddf1d0de8b4865d7c973af4a9a72bc6d1e9c388ad8cbd927a8831397d90b"
+          "path": "Raz/1.0.0/Raz_1.1.1.drx",
+          "sha256": "77f0ddf1d0de8b4865d7c973af4a9a72bc6d1e9c388ad8cbd927a8831397d90b"
         }
       ],
-      "iconSymbol" : "paintpalette",
-      "id" : "Raz",
-      "isFree" : true,
-      "isTrial" : false,
-      "name" : "Raz",
-      "priceEUR" : 0,
-      "type" : "powerGrade",
-      "version" : "1.0.0"
+      "iconSymbol": "paintpalette",
+      "id": "Raz",
+      "isFree": true,
+      "isTrial": false,
+      "name": "Raz",
+      "priceEUR": 0,
+      "type": "powerGrade",
+      "version": "1.0.0"
     },
     {
-      "description" : "ff",
-      "files" : [
+      "description": "ff",
+      "files": [
         {
-          "path" : "ff/1.0.0/st_1.1.1.drx",
-          "sha256" : "50272b24834d3e82fd50c236c4057b6a555c9a61d678ef434e54c8c2fcc3c618"
+          "path": "ff/1.0.0/st_1.1.1.drx",
+          "sha256": "50272b24834d3e82fd50c236c4057b6a555c9a61d678ef434e54c8c2fcc3c618"
         }
       ],
-      "iconSymbol" : "paintpalette",
-      "id" : "ff",
-      "isFree" : true,
-      "isTrial" : false,
-      "name" : "ff",
-      "priceEUR" : 0,
-      "type" : "powerGrade",
-      "version" : "1.0.0"
+      "iconSymbol": "paintpalette",
+      "id": "ff",
+      "isFree": true,
+      "isTrial": false,
+      "name": "ff",
+      "priceEUR": 0,
+      "type": "powerGrade",
+      "version": "1.0.0"
     }
   ],
-  "partnerStores" : [
+  "partnerStores": [
     {
-      "coverImage" : "covers/MITMAG.jpg?v=39d86f4a",
-      "description" : "MITMAG | Echipamente foto-video alese de Adrian Mitranescu (fotograf cu peste 15 ani de experiență în nunți). Înțelegem fricile dar si nevoile comunitatii foto-video din România. Consultanță de la coleg la coleg și produse testate pe teren!",
-      "id" : "MITMAG",
-      "name" : "MITMAG",
-      "url" : "https://mitmag.ro/"
+      "coverImage": "covers/MITMAG.jpg?v=39d86f4a",
+      "description": "MITMAG | Echipamente foto-video alese de Adrian Mitranescu (fotograf cu peste 15 ani de experiență în nunți). Înțelegem fricile dar si nevoile comunitatii foto-video din România. Consultanță de la coleg la coleg și produse testate pe teren!",
+      "id": "MITMAG",
+      "name": "MITMAG",
+      "url": "https://mitmag.ro/"
     }
   ],
-  "updatedAt" : "2026-08-24"
+  "updatedAt": "2026-08-24"
 }

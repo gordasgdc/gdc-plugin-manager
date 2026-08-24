@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GDC Vault</title>
+<meta name="description" content="GDC Vault — seif securizat pentru licențe, conturi și fișiere pe Mac și Windows. Probă gratuită 15 zile, licență Lifetime 5€.">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* Aceeasi paleta ca gordas.dev/index.html — consistenta vizuala cu
+     restul ecosistemului GDC. Doar accentul de coperta (seif/cheie,
+     ardezie+neon) e specific GDC Vault, vezi covers/gdc-vault.png. */
+  :root{
+    --bg:#070f0e; --bg-2:#0b1615; --panel:#0f1c1a; --panel-2:#132420;
+    --border:#1e3430; --text:#eef8f6; --muted:#9db8b3; --faint:#5f8580;
+    --accent:#35d6be; --accent-ink:#04211c; --accent-dim:#1f7d6e;
+    --violet:#2f8f9e; --violet-2:#4fc4d6;
+    --mono:'IBM Plex Mono', ui-monospace, monospace;
+    --sans:'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+  body{
+    background:
+      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(53,214,190,.20), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 100% 10%, rgba(79,196,214,.14), transparent 55%),
+      var(--bg);
+    color:var(--text); font-family:var(--sans); line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{ color:inherit; }
+  img{ display:block; max-width:100%; }
+  .wrap{ max-width:1080px; margin:0 auto; padding:0 24px; }
+  ::selection{ background:var(--accent); color:var(--accent-ink); }
+
+  header{ position:sticky; top:0; z-index:50; background:rgba(7,15,14,.82); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); }
+  .header-inner{ display:flex; align-items:center; justify-content:space-between; padding:14px 24px; max-width:1080px; margin:0 auto; }
+  .brand{ display:flex; align-items:center; gap:10px; font-family:var(--mono); font-weight:700; font-size:15px; }
+  .brand img{ width:28px; height:28px; border-radius:8px; }
+  .back-link{ font-size:13px; color:var(--muted); text-decoration:none; }
+  .back-link:hover{ color:var(--text); }
+
+  .hero{ padding:72px 0 48px; text-align:center; }
+  .hero img.cover{ width:132px; height:132px; border-radius:26px; margin:0 auto 28px; box-shadow:0 20px 60px rgba(0,0,0,.4); }
+  .hero h1{ font-size:44px; font-weight:800; letter-spacing:-.02em; margin-bottom:14px; }
+  .hero p.tagline{ font-size:18px; color:var(--muted); max-width:560px; margin:0 auto 34px; }
+
+  .btn{ display:inline-flex; align-items:center; gap:8px; font-family:var(--mono); font-size:13.5px; font-weight:600; padding:12px 22px; border-radius:9px; text-decoration:none; white-space:nowrap; }
+  .btn-primary{ background:var(--accent); color:var(--accent-ink); }
+  .btn-primary:hover{ background:var(--violet-2); }
+  .btn-ghost{ border:1px solid var(--border); color:var(--text); }
+  .btn-ghost:hover{ border-color:var(--accent); }
+  .btn-row{ display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
+
+  .beta-note{ max-width:640px; margin:22px auto 0; font-size:13px; line-height:1.6; color:var(--faint); }
+
+  section{ padding:56px 0; border-top:1px solid var(--border); }
+  section h2{ font-size:26px; font-weight:800; margin-bottom:32px; text-align:center; }
+
+  .features{ display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:20px; }
+  .feature{ background:var(--panel); border:1px solid var(--border); border-radius:14px; padding:22px; }
+  .feature .icon{ font-size:26px; margin-bottom:10px; }
+  .feature h3{ font-size:15.5px; font-weight:700; margin-bottom:8px; }
+  .feature p{ font-size:13.5px; color:var(--muted); line-height:1.55; }
+
+  .pricing{ max-width:560px; margin:0 auto; background:var(--panel); border:1px solid var(--border); border-radius:18px; padding:36px; text-align:center; }
+  .pricing .price{ font-family:var(--mono); font-size:52px; font-weight:700; color:var(--accent); margin:14px 0 4px; }
+  .pricing .price small{ font-size:16px; color:var(--muted); font-weight:500; }
+  .pricing ul{ list-style:none; text-align:left; margin:24px 0; padding:0; }
+  .pricing li{ font-size:13.5px; color:var(--muted); padding:6px 0; padding-left:22px; position:relative; }
+  .pricing li::before{ content:"✓"; position:absolute; left:0; color:var(--accent); font-weight:700; }
+  .pricing .promo-note{ margin-top:20px; font-size:12px; line-height:1.6; color:var(--faint); text-align:left; background:var(--panel-2); border-radius:8px; padding:12px 14px; }
+
+  footer{ border-top:1px solid var(--border); padding:32px 24px; text-align:center; font-size:12.5px; color:var(--faint); }
+  footer a{ color:var(--muted); text-decoration:none; }
+  footer a:hover{ color:var(--text); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="brand"><img src="../covers/gdc-vault.png" alt=""> GDC Vault</div>
+    <a class="back-link" href="/">← gordas.dev</a>
+  </div>
+</header>
+
+<div class="hero wrap">
+  <img class="cover" src="../covers/gdc-vault.png" alt="GDC Vault">
+  <h1>GDC Vault</h1>
+  <p class="tagline">Seif securizat pentru licențe, conturi de login, chei de serie, notițe și fișiere atașate — totul într-o singură fișă per aplicație, nu împrăștiat prin note și parole uitate.</p>
+  <div class="btn-row">
+    <a class="btn btn-primary" href="https://github.com/gordasgdc/gdc-vault-mac/releases/latest/download/GDCVault-Mac.zip">⬇ Descarcă pentru Mac</a>
+    <a class="btn btn-ghost" href="https://github.com/gordasgdc/gdc-vault-win/releases/latest/download/GDCVault-Windows.zip">⬇ Descarcă pentru Windows</a>
+  </div>
+  <p class="beta-note">Probă gratuită 15 zile, acces complet la toate funcționalitățile. Versiune beta — vezi nota de transparență din secțiunea de preț mai jos.</p>
+</div>
+
+<section>
+  <div class="wrap">
+    <h2>Ce face GDC Vault</h2>
+    <div class="features">
+      <div class="feature">
+        <div class="icon">🔐</div>
+        <h3>Fișă unificată per aplicație</h3>
+        <p>Un singur produs = o singură fișă, cu cont de login, cheie de serie, dată de expirare, notițe și atașamente — toate simultan, nu separate pe categorii.</p>
+      </div>
+      <div class="feature">
+        <div class="icon">🗝️</div>
+        <h3>Stocare nativă securizată</h3>
+        <p>Parolele și cheile de serie stau în Keychain (Mac) sau DPAPI (Windows) — niciodată în clar pe disc, niciodată în fișierul de metadate.</p>
+      </div>
+      <div class="feature">
+        <div class="icon">📎</div>
+        <h3>Atașamente</h3>
+        <p>Contracte, facturi, capturi de confirmare a achiziției — atașate direct la fișa produsului, într-un folder dedicat local.</p>
+      </div>
+      <div class="feature">
+        <div class="icon">⏰</div>
+        <h3>Alertă de expirare</h3>
+        <p>Vezi dintr-o privire ce abonamente/licențe expiră curând, direct din bara laterală.</p>
+      </div>
+      <div class="feature">
+        <div class="icon">🔄</div>
+        <h3>Export/Import criptat</h3>
+        <p>Backup complet AES-256, protejat cu o parolă Master aleasă de tine — portabil între Mac și Windows.</p>
+      </div>
+      <div class="feature">
+        <div class="icon">🧹</div>
+        <h3>Dezinstalare curată</h3>
+        <p>Un script dedicat șterge tot ce a creat aplicația pe sistem — nimic rămas în urmă.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="pret">
+  <div class="wrap">
+    <h2>Preț</h2>
+    <div class="pricing">
+      <div style="font-family:var(--mono); font-size:13px; color:var(--muted); text-transform:uppercase; letter-spacing:.05em;">Licență Lifetime</div>
+      <div class="price">5€ <small>o singură dată</small></div>
+      <ul>
+        <li>15 zile probă gratuită, acces complet</li>
+        <li>Deblocare permanentă pentru un calculator</li>
+        <li>Fără abonament, fără reînnoiri</li>
+        <li>Activare prin WhatsApp — răspuns rapid, direct de la dezvoltator</li>
+      </ul>
+      <div class="promo-note">
+        <strong>Notă de transparență:</strong> aceasta este o ofertă promoțională valabilă în faza de dezvoltare/beta. Prețul va crește odată ce obținem certificatele oficiale de dezvoltator de la Apple (Mac Code Signing) și Windows (Code Signing Certificate).
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <a href="https://github.com/gordasgdc/gdc-vault-mac">GitHub (Mac)</a> ·
+  <a href="https://github.com/gordasgdc/gdc-vault-win">GitHub (Windows)</a> ·
+  <a href="/">Restul aplicațiilor GDC</a>
+  <div style="margin-top:8px;">GDC Vault — parte din ecosistemul GDC.</div>
+</footer>
+
+</body>
+</html>

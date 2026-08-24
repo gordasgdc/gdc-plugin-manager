@@ -32,6 +32,9 @@ let gdcStandaloneProducts: [StandaloneProduct] = [
     StandaloneProduct(id: "cursorpro", name: "CursorPro GDC"),
     StandaloneProduct(id: "gdc-production-manager", name: "GDC Production Manager"),
     StandaloneProduct(id: "gdc-resolve-encoder", name: "GDC Resolve Encoder"),
+    // Adaugat 2026-08-24 — verificat in LicenseManager.swift (Mac) si
+    // LicenseManager.cs (Windows) ale gdc-vault: productID = "gdc-vault".
+    StandaloneProduct(id: "gdc-vault", name: "GDC Vault"),
 ]
 
 struct GenerateSerialView: View {
