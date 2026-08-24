@@ -1,7 +1,7 @@
 {
   "apps" : [
     {
-      "coverImage" : "covers/CG Convertor.jpg",
+      "coverImage" : "covers/CG Convertor.jpg?v=9dda0a44",
       "id" : "CG Convertor",
       "name" : "CG Convertor",
       "url" : "https://gordas.dev/CGConvertor/",
