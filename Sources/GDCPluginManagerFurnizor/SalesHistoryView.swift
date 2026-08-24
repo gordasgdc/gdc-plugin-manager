@@ -13,11 +13,20 @@ struct SalesHistoryView: View {
     @State private var editingEntry: SalesLog.Entry?
     @State private var showDuplicates = false
 
+    // MARK: - Sincronizare cu Tracker-ul (cerut explicit 2026-08-24: Tracker-ul,
+    // completat de client la onboarding, e sursa de adevăr pentru nume/email).
+    @State private var isSyncing = false
+    @State private var syncStatus: String?
+    @State private var trackerOnlyClients: [ClientRecord] = []
+
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack {
                 Text("Clienți").font(.title2).fontWeight(.semibold)
                 Spacer()
+                if isSyncing {
+                    ProgressView().controlSize(.small)
+                }
                 // Curățare duplicate (cerut explicit 2026-08-24): ID-uri de
                 // mașină cu mai multe nume/email-uri asociate (typo-uri la
                 // introducere manuală) — vezi DuplicateClientsView.swift.
@@ -27,6 +36,12 @@ struct SalesHistoryView: View {
                     Label("Curăță duplicate", systemImage: "person.crop.circle.badge.exclamationmark")
                 }
                 Button {
+                    Task { await syncWithTracker() }
+                } label: {
+                    Label("Sincronizează cu Tracker", systemImage: "arrow.triangle.2.circlepath")
+                }
+                .disabled(isSyncing)
+                Button {
                     loadEntries()
                 } label: {
                     Label("Reîmprospătează", systemImage: "arrow.clockwise")
@@ -34,6 +49,14 @@ struct SalesHistoryView: View {
             }
             .padding([.horizontal, .top], 24)
             .padding(.bottom, 12)
+
+            if let syncStatus {
+                Text(syncStatus)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .padding(.horizontal, 24)
+                    .padding(.bottom, 8)
+            }
 
             TextField("Caută (client, produs, email)…", text: $searchText)
                 .textFieldStyle(.roundedBorder)
@@ -78,6 +101,37 @@ struct SalesHistoryView: View {
                     }
                 }
             }
+
+            // Clienți din Tracker fără nicio licență generată încă (cerut
+            // explicit 2026-08-24) — clientul chiar a instalat și și-a lăsat
+            // datele, doar că nu i s-a generat încă un serial. Afișați DOAR
+            // aici, niciodată ca rând fals în SalesLog (n-au produs/preț/serial).
+            if !trackerOnlyClients.isEmpty {
+                Divider().padding(.top, 8)
+                Text("Din Tracker, fără licență generată încă (\(trackerOnlyClients.count))")
+                    .font(.caption).fontWeight(.semibold)
+                    .foregroundStyle(.secondary)
+                    .padding(.horizontal, 24)
+                    .padding(.top, 12)
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 0) {
+                        ForEach(trackerOnlyClients) { client in
+                            HStack {
+                                Text(client.name)
+                                Text(client.email).foregroundStyle(.secondary)
+                                Spacer()
+                                Text(client.machineID)
+                                    .font(.system(.caption2, design: .monospaced))
+                                    .foregroundStyle(.tertiary)
+                            }
+                            .font(.caption)
+                            .padding(.vertical, 4)
+                            .padding(.horizontal, 24)
+                        }
+                    }
+                }
+                .frame(maxHeight: 140)
+            }
         }
         .confirmationDialog(
             "Ștergi din istoric codul pentru „\(pendingDelete?.customer ?? "")”?",
@@ -110,7 +164,31 @@ struct SalesHistoryView: View {
                 showDuplicates = false
             }
         }
-        .task { loadEntries() }
+        .task {
+            loadEntries()
+            // Sincronizare automată la fiecare deschidere a panoului — Tracker-ul
+            // e sursa de adevăr (cerut explicit 2026-08-24), deci corectăm
+            // singuri orice nume/email vechi/greșit fără să ceară Cristi manual.
+            await syncWithTracker()
+        }
+    }
+
+    /// Corectează SalesLog cu datele reale din Tracker (vezi TrackerSync.swift)
+    /// și reîmprospătează lista de clienți „doar din tracker, fără vânzare
+    /// încă". Rulează atât automat la deschidere, cât și la apăsarea manuală
+    /// a butonului „Sincronizează cu Tracker".
+    private func syncWithTracker() async {
+        isSyncing = true
+        let result = await TrackerSync.syncSalesLogFromTracker()
+        if result.rowsCorrected > 0 {
+            loadEntries()
+        }
+        let existingMachineIDs = Set(entries.map { $0.machineID.trimmingCharacters(in: .whitespacesAndNewlines) })
+        trackerOnlyClients = await TrackerSync.devicesWithoutSale(existingMachineIDs: existingMachineIDs)
+        syncStatus = result.devicesChecked == 0
+            ? "Tracker indisponibil sau fără date — nimic de sincronizat acum."
+            : "Tracker: \(result.devicesChecked) clienți verificați, \(result.rowsCorrected) corectați."
+        isSyncing = false
     }
 
     private var filteredEntries: [SalesLog.Entry] {
