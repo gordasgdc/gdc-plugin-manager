@@ -183,6 +183,11 @@ enum L {
         "update.title": [.ro: "Versiune nouă disponibilă", .en: "New version available", .es: "Nueva versión disponible"],
         "update.download": [.ro: "Descarcă", .en: "Download", .es: "Descargar"],
         "update.dismiss": [.ro: "Închide", .en: "Dismiss", .es: "Cerrar"],
+        // Pop-up modal (ContentView.swift), separat de bannerul de mai sus.
+        // Explica raspicat ca nu e self-update — vezi cererea din 2026-08-24.
+        "update.popup.title": [.ro: "Actualizare disponibilă", .en: "Update available", .es: "Actualización disponible"],
+        "update.popup.message": [.ro: "Este disponibilă o nouă versiune! Te rugăm să descarci ultimul installer și să îl instalezi peste versiunea actuală.", .en: "A new version is available! Please download the latest installer and install it over your current version.", .es: "¡Hay una nueva versión disponible! Por favor, descarga el último instalador e instálalo sobre la versión actual."],
+        "update.popup.later": [.ro: "Mai târziu", .en: "Later", .es: "Más tarde"],
 
         "menu.quit": [.ro: "Închide GDC Plugin Manager", .en: "Quit GDC Plugin Manager", .es: "Salir de GDC Plugin Manager"],
     ]

@@ -394,12 +394,20 @@ public struct AppLink: Codable, Identifiable, Hashable {
     /// Optional property), so this needs no custom CodingKeys/init here.
     public let youtubeURL: String?
 
-    public init(id: String, name: String, url: String, youtubeURL: String? = nil) {
+    /// Coperta aplicatiei — preset `.icon` (patrat), la fel ca PartnerStore:
+    /// e un logo, recunoscut dupa forma, nu dupa detaliu. Adaugat 2026-08-24,
+    /// deci catalogul vechi (fara aceasta cheie) decodeaza cu nil automat.
+    public let coverImage: String?
+
+    public init(id: String, name: String, url: String, youtubeURL: String? = nil, coverImage: String? = nil) {
         self.youtubeURL = youtubeURL
         self.id = id
         self.name = name
         self.url = url
+        self.coverImage = coverImage
     }
+
+    public var coverImageURL: URL? { CatalogAssets.imageURL(for: coverImage) }
 }
 
 /// A book, online course, or guide sold by a third party (Amazon,

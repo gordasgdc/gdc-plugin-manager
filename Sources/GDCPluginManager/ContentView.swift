@@ -118,6 +118,28 @@ struct ContentView: View {
         .sheet(isPresented: $showOnboarding) {
             OnboardingView(isPresented: $showOnboarding)
         }
+        // Pop-up modal, pe langa bannerul din header (nu in locul lui):
+        // bannerul e discret si poate fi ratat; pop-up-ul intrerupe o
+        // singura data, la aparitia unei versiuni noi, si explica raspicat
+        // ca nu e self-update automat — vezi WARNING din UpdateChecker.swift.
+        // isPresented citeste `availableUpdate != nil` direct, deci apare
+        // o singura data per versiune (UpdateChecker.dismiss() persista
+        // versiunea inchisa in UserDefaults, la fel ca bannerul).
+        .alert(
+            L.t("update.popup.title"),
+            isPresented: Binding(
+                get: { updateChecker.availableUpdate != nil },
+                set: { if !$0 { updateChecker.dismiss() } }
+            ),
+            presenting: updateChecker.availableUpdate
+        ) { info in
+            if let urlString = info.download_url["mac"], let url = URL(string: urlString) {
+                Button(L.t("update.download")) { NSWorkspace.shared.open(url) }
+            }
+            Button(L.t("update.popup.later"), role: .cancel) { updateChecker.dismiss() }
+        } message: { info in
+            Text(L.t("update.popup.message") + " (v\(info.version))")
+        }
     }
 
 }
@@ -674,9 +696,16 @@ private struct AppCard: View {
                 .padding(.vertical, 3)
                 .background(Capsule().fill(tint.opacity(0.15)))
                 .frame(maxWidth: .infinity, alignment: .center)
-            Image(systemName: "app.badge")
-                .font(.system(size: 22))
-                .foregroundStyle(tint)
+            // Coperta, daca aplicatia are una — altfel cade pe simbolul
+            // "app.badge" de mai jos, la aceeasi inaltime (CoverThumbnail
+            // face fallback-ul singur, vezi CoverImageViews.swift).
+            CoverThumbnail(
+                url: app.coverImageURL,
+                fallbackSymbol: "app.badge",
+                tint: tint,
+                height: 56,
+                lightboxTitle: app.name
+            )
             Text(app.name).font(.headline)
             Spacer(minLength: 0)
             if let url = URL(string: app.url) {

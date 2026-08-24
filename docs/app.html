@@ -319,7 +319,9 @@ function renderProduse() {
     html += `<div class="section-title">Aplicatii desktop <b>${apps.length}</b></div>`;
     html += apps.map(a => `
       <a class="card" href="${esc(a.url)}" target="_blank" rel="noopener">
-        <div class="ico">${svg('app')}</div>
+        <div class="ico">${a.coverImage
+          ? `<img src="${esc(a.coverImage)}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:11px" onerror="this.parentElement.innerHTML='${svg('app').replace(/'/g,"&#39;")}'">`
+          : svg('app')}</div>
         <div class="card-body"><h3>${esc(a.name)}</h3><p>Mac &middot; Windows</p></div>
         ${CHEV}
       </a>`).join('');
