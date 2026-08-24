@@ -1,7 +1,7 @@
 {
-  "version": "1.2.11",
+  "version": "1.2.12",
   "release_date": "2026-08-24",
-  "changes": "Badge-uri GRATUIT/LICENȚĂ/PROBĂ pe produse + filtru rapid Toate/Gratuite/Premium. Mesaj de încredere pentru produsele plătite.",
+  "changes": "Windows: cod QR readăugat în secțiunea Android (link direct spre APK), la paritate cu Mac.",
   "download_url": {
     "mac": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager.pkg",
     "windows": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Windows.zip"
