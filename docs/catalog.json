@@ -480,23 +480,6 @@
       "priceEUR" : 0,
       "type" : "powerGrade",
       "version" : "1.0.0"
-    },
-    {
-      "description" : "ff",
-      "files" : [
-        {
-          "path" : "ff/1.0.0/st_1.1.1.drx",
-          "sha256" : "50272b24834d3e82fd50c236c4057b6a555c9a61d678ef434e54c8c2fcc3c618"
-        }
-      ],
-      "iconSymbol" : "paintpalette",
-      "id" : "ff",
-      "isFree" : true,
-      "isTrial" : false,
-      "name" : "ff",
-      "priceEUR" : 0,
-      "type" : "powerGrade",
-      "version" : "1.0.0"
     }
   ],
   "partnerStores" : [
