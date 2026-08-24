@@ -2,6 +2,38 @@ import SwiftUI
 import AppKit
 import GDCPluginManagerCore
 
+/// O aplicație standalone GDC (DataMover, CursorPro GDC etc.) — spre
+/// deosebire de `PluginItem`, NU trăiește în `catalog.json` (nu are
+/// versiune/preț/fișiere de instalat prin Furnizor), dar folosește EXACT
+/// același format de licență Ed25519 (`LicenseGenerator`/`LicenseCore`
+/// sunt agnostice la ce fel de produs semnează — vezi `productHash`).
+///
+/// ARHITECTURA (2026-08-24): unificare cu fosta aplicație „GDC License
+/// Manager" — aceea genera coduri pentru orice ID de produs tastat liber.
+/// Cheia de semnare era deja comună (`VendorKeyStore` citește din
+/// `~/Library/Application Support/GDC License Manager/private_key.txt`,
+/// exact fișierul generat de aplicația veche), deci NU a fost nevoie de
+/// nicio migrare criptografică — doar de acest dropdown, ca Furnizor să
+/// acopere și aceste produse, nu doar cele din catalog.
+///
+/// WARNING: ID-urile de mai jos sunt citite din codul sursă al fiecărei
+/// aplicații (`PRODUCT_ID` în Python, `LicenseManager.productID` în
+/// Swift), verificate manual 2026-08-24. NU le modifica fără să verifici
+/// din nou sursa aplicației respective — un ID greșit aici tot generează
+/// un cod (semnătura e validă), dar clientul îl respinge cu
+/// `WrongProduct`, fiindcă hash-ul de produs nu se potrivește.
+struct StandaloneProduct: Identifiable, Hashable {
+    let id: String
+    let name: String
+}
+
+let gdcStandaloneProducts: [StandaloneProduct] = [
+    StandaloneProduct(id: "gdc-datamover", name: "DataMover"),
+    StandaloneProduct(id: "cursorpro", name: "CursorPro GDC"),
+    StandaloneProduct(id: "gdc-production-manager", name: "GDC Production Manager"),
+    StandaloneProduct(id: "gdc-resolve-encoder", name: "GDC Resolve Encoder"),
+]
+
 struct GenerateSerialView: View {
     @State private var items: [PluginItem] = []
     @State private var selectedID = ""
@@ -23,13 +55,27 @@ struct GenerateSerialView: View {
 
                 Picker("Produs", selection: $selectedID) {
                     Text("Alege…").tag("")
-                    ForEach(items) { item in
-                        Text("\(item.name) — \(item.priceDisplay)").tag(item.id)
+                    Section("Din catalog (LUT / DCTL / PowerGrade)") {
+                        ForEach(items) { item in
+                            Text("\(item.name) — \(item.priceDisplay)").tag(item.id)
+                        }
+                    }
+                    Section("Aplicații standalone") {
+                        ForEach(gdcStandaloneProducts) { app in
+                            Text(app.name).tag(app.id)
+                        }
                     }
                 }
                 .onChange(of: selectedID) {
+                    // Doar produsele din catalog au un preț cunoscut dinainte —
+                    // aplicațiile standalone au prețuri variabile per vânzare
+                    // (vezi memoria de proces: DataMover ~gratuit prin extindere
+                    // de trial, CursorPro 9€, etc.), deci prețul rămâne gol,
+                    // completat manual la fiecare generare.
                     if let item = items.first(where: { $0.id == selectedID }) {
                         priceText = String(item.priceEUR)
+                    } else if gdcStandaloneProducts.contains(where: { $0.id == selectedID }) {
+                        priceText = ""
                     }
                 }
 
@@ -51,7 +97,12 @@ struct GenerateSerialView: View {
                 }
 
                 if let errorMessage {
-                    Text(errorMessage).foregroundStyle(.red)
+                    Label(errorMessage, systemImage: "exclamationmark.triangle.fill")
+                        .foregroundStyle(.red)
+                        .padding(10)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Color.red.opacity(0.1))
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
                 }
 
                 Button("Generează…") { showConfirm = true }
@@ -90,7 +141,9 @@ struct GenerateSerialView: View {
     }
 
     private var selectedItemName: String {
-        items.first(where: { $0.id == selectedID })?.name ?? selectedID
+        if let item = items.first(where: { $0.id == selectedID }) { return item.name }
+        if let app = gdcStandaloneProducts.first(where: { $0.id == selectedID }) { return app.name }
+        return selectedID
     }
 
     private var isFormValid: Bool {
