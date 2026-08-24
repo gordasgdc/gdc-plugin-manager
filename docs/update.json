@@ -1,7 +1,7 @@
 {
-  "version": "1.2.14",
-  "release_date": "2026-08-24",
-  "changes": "Aplicatia mobila nu mai e APK: acum deschide direct gordas.dev/app.html in browser, pe Android si iPhone, fara instalare/certificat.",
+  "version": "1.2.15",
+  "release_date": "2026-08-25",
+  "changes": "Imbunatatiri interne de compatibilitate hardware si stabilitate a starii de licenta.",
   "download_url": {
     "mac": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager.pkg",
     "windows": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Windows.zip"
