@@ -81,7 +81,25 @@ enum GitOps {
         // Nothing to commit is not an error (e.g. re-publishing the same
         // bytes) — git exits non-zero for "nothing to commit", so check
         // status first and skip the commit step if there's nothing staged.
-        let status = try run(["status", "--porcelain"] + addArgs, at: directory)
+        //
+        // PITFALL FIXED 2026-08-24 (bug raportat: "Șterge" pe DCTL eșua cu
+        // "unknown switch 'A'"): `addArgs` e corect pentru `git add` (unde
+        // `-A` înseamnă "tot", sau o listă de path-uri), dar era reciclat
+        // AICI ca argument pentru `git status --porcelain` — `-A` nu există
+        // ca flag la `git status` (doar la `git add`/`git commit`). Apărea
+        // DOAR pe fluxul `privateFilesRepo` (`paths: nil` → `addArgs =
+        // ["-A"]`), deci exact la ștergerea unei resurse vandabile
+        // (DCTL/LUT/PowerGrade), nu la Materiale/Evenimente/etc. (care
+        // folosesc `paths` explicit — acelea sunt pathspec-uri valide și
+        // pentru `git status`, de-aia nu pica pe fluxul lor). Fix: la
+        // `status`, `-A` devine "niciun argument" (arată tot repo-ul,
+        // exact ce am adăugat oricum mai sus cu `git add -A`) — dar
+        // pentru path-urile explicite, restricția la `status` rămâne
+        // (nu doar la `add`), ca să NU declanșăm fals un commit doar
+        // pentru că altceva, neinclus în `paths`, e murdar în checkout-ul
+        // ăsta (vezi WARNING de mai sus despre docs-only vs. sursă).
+        let statusArgs = paths == nil ? [] : existingPaths
+        let status = try run(["status", "--porcelain"] + statusArgs, at: directory)
         if !status.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             try run(["commit", "-m", message], at: directory)
         }
