@@ -33,8 +33,15 @@ public enum LicenseCore {
         case malformedCode
         case badSignature
         case wrongProduct
-        case wrongMachine
-        case expired(Int64)
+        /// Carries the parsed Payload — LicenseManager needs it to decide
+        /// kill-switch policy (demo mode) without re-parsing.
+        case wrongMachine(Payload)
+        /// GDC-SEC (kill-switch diferentiat, 2026-08-24): IOKit couldn't
+        /// answer just now — distinct from wrongMachine so a transient
+        /// read failure never mistakes an honest customer's Mac for a
+        /// different one. See LicenseManager.swift for grace-period logic.
+        case hwidUnavailable(Payload)
+        case expired(Int64, Payload)
     }
 
     /// Base64 of the Ed25519 PUBLIC key from gdc-license-system's
@@ -50,7 +57,10 @@ public enum LicenseCore {
     public static let payloadSize = 22
 
     /// Validates a serial the user typed/pasted against `expectedProductID`.
-    public static func validate(serial: String, expectedProductID: String) -> Result<Payload, ValidationError> {
+    /// `hwidAvailable` (default true, i.e. unchanged for interactive
+    /// activation) lets LicenseManager's periodic re-check pass `false`
+    /// when IOKit couldn't answer just now — see `.hwidUnavailable` above.
+    public static func validate(serial: String, expectedProductID: String, hwidAvailable: Bool = true) -> Result<Payload, ValidationError> {
         guard let packed = base32Decode(serial), packed.count == payloadSize + 64 else {
             return .failure(.malformedCode)
         }
@@ -77,16 +87,20 @@ public enum LicenseCore {
 
         let storedMachineHash = Array(bytes[16..<22])
         let isMachineLocked = storedMachineHash.contains { $0 != 0 }
+        let payload = Payload(expiresAt: expiresAt, machineLocked: isMachineLocked)
         if isMachineLocked {
+            guard hwidAvailable else {
+                return .failure(.hwidUnavailable(payload))
+            }
             guard storedMachineHash == MachineID.hashBytes else {
-                return .failure(.wrongMachine)
+                return .failure(.wrongMachine(payload))
             }
         }
 
         if expiresAt != 0 && expiresAt < Int64(Date().timeIntervalSince1970) {
-            return .failure(.expired(expiresAt))
+            return .failure(.expired(expiresAt, payload))
         }
-        return .success(Payload(expiresAt: expiresAt, machineLocked: isMachineLocked))
+        return .success(payload)
     }
 
     /// Exposed so the vendor app's LicenseGenerator computes the exact

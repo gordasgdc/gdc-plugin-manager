@@ -87,12 +87,45 @@ final class LicenseManager: ObservableObject {
         try? writeStore(store, to: url)
     }
 
+    /// Reincarca si reverifica fiecare cod stocat — niciodata un flag
+    /// cache-uit (GDC-SEC-05). Kill-switch diferentiat (decizie 2026-08-24):
+    ///   - badSignature/malformedCode -> tamper evident: sters din store de
+    ///     pe disc (hard lock), nu doar din memorie.
+    ///   - hwidUnavailable -> grace period: daca ultima verificare buna e
+    ///     recenta, ramane licentiat (payload atasat erorii); altfel demo.
+    ///   - wrongMachine/wrongProduct/expired -> demo, codul ramane pe disc.
     private func loadSavedLicenses() {
-        guard let store = loadStore() else { return }
+        guard var store = loadStore() else { return }
+
+        let hwidAvailable = MachineID.isAvailable
+        let lastGood = readLastGoodTimestamp()
+        let graceActive = lastGood != 0 && (Date().timeIntervalSince1970 - lastGood) < Self.gracePeriodSeconds
+        var anyValidated = false
+        var removedAny = false
+
         for (productID, code) in store {
-            if case .success(let payload) = LicenseCore.validate(serial: code, expectedProductID: productID) {
+            switch LicenseCore.validate(serial: code, expectedProductID: productID, hwidAvailable: hwidAvailable) {
+            case .success(let payload):
                 licensedProducts[productID] = payload
+                anyValidated = true
+            case .failure(.badSignature), .failure(.malformedCode):
+                // Tamper evident — elimina codul falsificat/corupt de pe disc.
+                store.removeValue(forKey: productID)
+                removedAny = true
+            case .failure(.hwidUnavailable(let payload)) where graceActive:
+                licensedProducts[productID] = payload // grace activ — pastreaza starea buna anterioara
+            case .failure:
+                // hwidUnavailable (grace expirat) / wrongMachine / wrongProduct / expired
+                // -> mod demo, codul ramane pe disc ca istoric.
+                break
             }
+        }
+
+        if anyValidated {
+            writeLastGoodTimestamp(Date().timeIntervalSince1970)
+        }
+        if removedAny, let url = storeFileURL {
+            try? writeStore(store, to: url)
         }
     }
 
@@ -122,7 +155,35 @@ final class LicenseManager: ObservableObject {
         case .badSignature: return L.t("license.error.badSignature")
         case .wrongProduct: return L.t("license.error.wrongProduct")
         case .wrongMachine: return L.t("license.error.wrongMachine")
+        case .hwidUnavailable: return L.t("license.error.hwidUnavailable")
         case .expired: return L.t("license.error.expired")
         }
+    }
+
+    // MARK: - Kill-switch diferentiat (decizie 2026-08-24)
+    //
+    // Pe Mac practic inatins (IOKit rareori esueaza real), dar pastram
+    // acelasi mecanism ca Windows/C++/Python pentru simetrie si ca sa nu
+    // fim surprinsi daca apare vreodata (VM, sandbox restrictiv etc.).
+
+    private static let gracePeriodSeconds: TimeInterval = 5 * 86400 // 5 zile
+
+    private var graceFileURL: URL? {
+        FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first?
+            .appendingPathComponent("GDCPluginManager", isDirectory: true)
+            .appendingPathComponent("last_good_hwid.txt")
+    }
+
+    private func readLastGoodTimestamp() -> TimeInterval {
+        guard let url = graceFileURL,
+              let text = try? String(contentsOf: url, encoding: .utf8),
+              let ts = TimeInterval(text.trimmingCharacters(in: .whitespacesAndNewlines)) else { return 0 }
+        return ts
+    }
+
+    private func writeLastGoodTimestamp(_ ts: TimeInterval) {
+        guard let url = graceFileURL else { return }
+        try? FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
+        try? "\(ts)".write(to: url, atomically: true, encoding: .utf8)
     }
 }
