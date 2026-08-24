@@ -4,95 +4,51 @@ import CoreImage.CIFilterBuiltins
 import AppKit
 
 // =============================================================================
-// AndroidPane — anunta si distribuie aplicatia companion de Android (APK).
+// MobileAppPane (fost AndroidPane) — anunta aplicatia mobila companion.
 // -----------------------------------------------------------------------------
-// DE CE EXISTA: aplicatia de Android e un PWA impachetat ca APK (TWA) peste
-// gordas.dev. Nu se distribuie prin Play Store, deci utilizatorul trebuie sa
-// ajunga la fisierul .apk pe telefon — de aici codul QR, cea mai scurta cale
-// de la ecranul Mac-ului la telefon.
+// ARHITECTURA (schimbata 2026-08-24, cerut explicit de Cristi — "scapam
+// complet de problemele cu certificatele, erorile de instalare pe Android
+// si fisierele APK"): aplicatia mobila NU mai e distribuita ca APK (TWA).
+// E direct PWA-ul de la gordas.dev/app.html, deschis in browser — merge
+// IDENTIC pe Android SI iPhone, fara instalare, fara avertisment de
+// certificat/"sursa necunoscuta". "Instalarea" ramasa e doar optionala:
+// Adauga pe ecranul principal (Android Chrome / iOS Safari), care da un
+// icon pe ecran fara sa fie un APK real.
 //
-// ARCHITECTURE NOTE — de ce citim android.json si NU folosim
-// "releases/latest/download/...": release-urile de APK sunt marcate deliberat
-// ca non-latest, ca `latest` sa ramana al aplicatiei desktop (update.json /
-// UpdateChecker.swift). Un link "latest" aici ar descarca .pkg-ul de Mac.
-// Tagul fix exista intr-un SINGUR loc, docs/android.json, si e citit dinamic.
-// Nu hardcoda niciodata versiunea sau tagul in acest fisier.
+// De aceea acest fisier NU mai face niciun fetch de retea (nu mai exista
+// android.json/versiune/marime de APK) — link-ul e o constanta fixa, iar
+// panoul functioneaza instant, chiar si offline (codul QR e generat local).
+//
+// Pipeline-ul vechi de build APK (twa/, bubblewrap, keystore) a fost retras
+// din acest repo — vezi CLAUDE.md, intrarea din 2026-08-24, pentru istoric.
 // =============================================================================
 
-/// Ce publicam in docs/android.json. Camp nou acolo => camp nou aici.
-struct AndroidRelease: Decodable {
-    let version: String
-    let releaseDate: String?
-    let minAndroid: String?
-    let sizeMB: Double?
-    let apkURL: URL
-    let releasePage: URL?
-    let changes: String?
-
-    enum CodingKeys: String, CodingKey {
-        case version, minAndroid, sizeMB, apkURL, releasePage, changes
-        case releaseDate = "release_date"
-    }
-
-    static let url = URL(string: "https://gordas.dev/android.json")!
-}
-
-@MainActor
-final class AndroidReleaseLoader: ObservableObject {
-    @Published var release: AndroidRelease?
-    @Published var failed = false
-
-    func load() async {
-        do {
-            var req = URLRequest(url: AndroidRelease.url)
-            // Fara asta, un android.json vechi din cache-ul URL-ului ar ascunde
-            // versiuni noi de APK zile intregi.
-            req.cachePolicy = .reloadIgnoringLocalCacheData
-            let (data, resp) = try await URLSession.shared.data(for: req)
-            guard let http = resp as? HTTPURLResponse, http.statusCode == 200 else {
-                throw URLError(.badServerResponse)
-            }
-            release = try JSONDecoder().decode(AndroidRelease.self, from: data)
-            failed = false
-        } catch {
-            // Eroarea nu e fatala: panoul isi arata varianta fara link.
-            failed = true
-        }
-    }
-}
-
-struct AndroidPane: View {
-    @StateObject private var loader = AndroidReleaseLoader()
+struct MobileAppPane: View {
     @ObservedObject private var lang = LanguageStore.shared
     @State private var copied = false
+
+    private static let appURL = URL(string: "https://gordas.dev/app.html")!
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
                 header
 
-                if let r = loader.release {
-                    HStack(alignment: .top, spacing: 24) {
-                        qrBlock(for: r)
-                        VStack(alignment: .leading, spacing: 14) {
-                            metaRows(for: r)
-                            actions(for: r)
-                        }
-                        Spacer(minLength: 0)
+                HStack(alignment: .top, spacing: 24) {
+                    qrBlock
+                    VStack(alignment: .leading, spacing: 14) {
+                        Text(L.t("mobileapp.url"))
+                            .font(.caption.monospaced())
+                            .foregroundStyle(.secondary)
+                        actions
                     }
-                    instructions
-                } else if loader.failed {
-                    Text(L.t("android.error"))
-                        .font(.callout)
-                        .foregroundStyle(.secondary)
-                } else {
-                    ProgressView().controlSize(.small)
+                    Spacer(minLength: 0)
                 }
+                instructions
             }
             .padding(24)
             .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .task { await loader.load() }
     }
 
     // ── Titlu ───────────────────────────────────────────────────────────────
@@ -102,9 +58,9 @@ struct AndroidPane: View {
                 Image(systemName: "iphone.gen3")
                     .font(.title2)
                     .foregroundStyle(.tint)
-                Text(L.t("android.title")).font(.title2.bold())
+                Text(L.t("mobileapp.title")).font(.title2.bold())
             }
-            Text(L.t("android.subtitle"))
+            Text(L.t("mobileapp.subtitle"))
                 .font(.callout)
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
@@ -112,9 +68,9 @@ struct AndroidPane: View {
     }
 
     // ── Cod QR ──────────────────────────────────────────────────────────────
-    private func qrBlock(for r: AndroidRelease) -> some View {
+    private var qrBlock: some View {
         VStack(spacing: 8) {
-            if let img = Self.qrImage(from: r.apkURL.absoluteString) {
+            if let img = Self.qrImage(from: Self.appURL.absoluteString) {
                 Image(nsImage: img)
                     .interpolation(.none)          // fara asta, QR-ul iese neclar la scalare
                     .resizable()
@@ -131,8 +87,8 @@ struct AndroidPane: View {
         }
     }
 
-    /// Genereaza codul QR local, cu CoreImage — fara serviciu extern, deci
-    /// panoul functioneaza si fara internet (odata ce android.json e citit).
+    /// Genereaza codul QR local, cu CoreImage — fara serviciu extern si fara
+    /// nicio cerere de retea, panoul functioneaza instant, chiar si offline.
     static func qrImage(from string: String) -> NSImage? {
         let filter = CIFilter.qrCodeGenerator()
         filter.message = Data(string.utf8)
@@ -146,37 +102,12 @@ struct AndroidPane: View {
         return NSImage(cgImage: cg, size: NSSize(width: scaled.extent.width, height: scaled.extent.height))
     }
 
-    // ── Detalii versiune ────────────────────────────────────────────────────
-    private func metaRows(for r: AndroidRelease) -> some View {
-        VStack(alignment: .leading, spacing: 7) {
-            row(L.t("android.meta.version"), r.version)
-            if let s = r.sizeMB { row(L.t("android.meta.size"), String(format: "%.1f MB", s)) }
-            if let m = r.minAndroid { row(L.t("android.meta.min"), "Android \(m)+") }
-            if let d = r.releaseDate { row(L.t("android.meta.date"), d) }
-            if let c = r.changes, !c.isEmpty {
-                Text(c)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .padding(.top, 4)
-            }
-        }
-    }
-
-    private func row(_ label: String, _ value: String) -> some View {
-        HStack(spacing: 8) {
-            Text(label).font(.caption).foregroundStyle(.secondary)
-            Text(value).font(.caption.monospaced())
-        }
-    }
-
     // ── Butoane ─────────────────────────────────────────────────────────────
-    private func actions(for r: AndroidRelease) -> some View {
+    private var actions: some View {
         HStack(spacing: 10) {
             Button {
-                // Copiem linkul ca sa poata fi trimis pe telefon prin orice canal.
                 NSPasteboard.general.clearContents()
-                NSPasteboard.general.setString(r.apkURL.absoluteString, forType: .string)
+                NSPasteboard.general.setString(Self.appURL.absoluteString, forType: .string)
                 copied = true
                 Task { try? await Task.sleep(for: .seconds(2)); copied = false }
             } label: {
@@ -184,23 +115,34 @@ struct AndroidPane: View {
                       systemImage: copied ? "checkmark" : "link")
             }
             Button {
-                NSWorkspace.shared.open(r.releasePage ?? r.apkURL)
+                NSWorkspace.shared.open(Self.appURL)
             } label: {
-                Label(L.t("android.open"), systemImage: "arrow.up.right.square")
+                Label(L.t("mobileapp.open"), systemImage: "arrow.up.right.square")
             }
         }
     }
 
-    // ── Pasii de instalare ──────────────────────────────────────────────────
-    // Fara ei, utilizatorul se blocheaza la avertismentul Android pentru
-    // aplicatii din surse necunoscute si crede ca APK-ul e defect.
+    // ── Pasii de "instalare" (Adauga pe ecranul principal) ──────────────────
     private var instructions: some View {
-        VStack(alignment: .leading, spacing: 7) {
-            Text(L.t("android.steps.title")).font(.headline)
-            ForEach(Array(["android.steps.1", "android.steps.2", "android.steps.3", "android.steps.4"].enumerated()), id: \.offset) { i, key in
-                HStack(alignment: .top, spacing: 8) {
-                    Text("\(i + 1).").font(.caption.monospaced()).foregroundStyle(.tint)
-                    Text(L.t(key)).font(.caption).fixedSize(horizontal: false, vertical: true)
+        VStack(alignment: .leading, spacing: 10) {
+            Text(L.t("mobileapp.steps.title")).font(.headline)
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text(L.t("mobileapp.steps.android.title")).font(.subheadline).fontWeight(.semibold)
+                ForEach(Array(["mobileapp.steps.android.1", "mobileapp.steps.android.2"].enumerated()), id: \.offset) { i, key in
+                    HStack(alignment: .top, spacing: 8) {
+                        Text("\(i + 1).").font(.caption.monospaced()).foregroundStyle(.tint)
+                        Text(L.t(key)).font(.caption).fixedSize(horizontal: false, vertical: true)
+                    }
+                }
+            }
+            VStack(alignment: .leading, spacing: 4) {
+                Text(L.t("mobileapp.steps.ios.title")).font(.subheadline).fontWeight(.semibold)
+                ForEach(Array(["mobileapp.steps.ios.1", "mobileapp.steps.ios.2"].enumerated()), id: \.offset) { i, key in
+                    HStack(alignment: .top, spacing: 8) {
+                        Text("\(i + 1).").font(.caption.monospaced()).foregroundStyle(.tint)
+                        Text(L.t(key)).font(.caption).fixedSize(horizontal: false, vertical: true)
+                    }
                 }
             }
         }

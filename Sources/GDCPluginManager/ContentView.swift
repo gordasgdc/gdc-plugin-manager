@@ -52,8 +52,9 @@ struct ContentView: View {
                     .tag(SidebarSection.partnerStores)
                 Label(L.t("sidebar.apps"), systemImage: "app.badge")
                     .tag(SidebarSection.apps)
-                // Aplicatia companion de Android (APK) — vezi AndroidPane.swift.
-                Label(L.t("sidebar.android"), systemImage: "iphone.gen3")
+                // Aplicatia mobila companion (PWA, gordas.dev/app.html — fost
+                // APK/TWA, retras 2026-08-24) — vezi AndroidPane.swift.
+                Label(L.t("sidebar.mobileApp"), systemImage: "iphone.gen3")
                     .tag(SidebarSection.android)
                 Divider()
                 Label(L.t("sidebar.license"), systemImage: "key.fill")
@@ -84,7 +85,7 @@ struct ContentView: View {
                     case .apps:
                         AppsGrid(apps: catalog.apps)
                     case .android:
-                        AndroidPane()
+                        MobileAppPane()
                     case .all, .none:
                         CatalogGrid(items: catalog.items)
                     case .type(let type):

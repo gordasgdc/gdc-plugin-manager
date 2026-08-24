@@ -1,9 +1,10 @@
 /* =============================================================================
    GDC (gordas.dev) — Service Worker
    -----------------------------------------------------------------------------
-   Rol: face site-ul instalabil (PWA) si utilizabil offline, si sta la baza
-   APK-ului Android din folderul twa/. Acelasi cod ruleaza si in browser, si in
-   aplicatia de pe telefon.
+   Rol: face site-ul instalabil (PWA) si utilizabil offline. Aplicatia mobila
+   NU mai e un APK (retras 2026-08-24) — e chiar acest PWA, deschis direct in
+   browser pe Android si iPhone (vezi app.html + CLAUDE.md, intrarea 2026-08-24
+   despre retragerea pipeline-ului TWA/bubblewrap).
 
    CUM SE ACTUALIZEAZA:
    La FIECARE modificare de index.html / catalog.json / iconite, INCREMENTEAZA
@@ -20,7 +21,7 @@
    aplicatie imediat ce publici catalogul — FARA APK nou si fara reinstalare.
 ============================================================================= */
 
-const CACHE_VERSION = 'v8';                  // <-- INCREMENTEAZA la fiecare update de pagina
+const CACHE_VERSION = 'v9';                  // <-- INCREMENTEAZA la fiecare update de pagina
 const SHELL_CACHE   = `gdc-shell-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `gdc-runtime-${CACHE_VERSION}`;
 
@@ -136,7 +137,7 @@ self.addEventListener('fetch', (event) => {
 // ── Notificari push (produs nou, LUT/DCTL, curs, workshop) ──────────────────
 // Handler-ele sunt gata, dar push-ul NU functioneaza pana nu configurezi un
 // backend (Firebase Cloud Messaging sau server web-push cu chei VAPID) si pana
-// pagina nu apeleaza pushManager.subscribe(). Vezi docs/ANDROID.md.
+// pagina nu apeleaza pushManager.subscribe().
 self.addEventListener('push', (event) => {
   let data = { title: 'GDC', body: 'Ai o noutate in catalog.', url: '/' };
   try { if (event.data) data = { ...data, ...event.data.json() }; }

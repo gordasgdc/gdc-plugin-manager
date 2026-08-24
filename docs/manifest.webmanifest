@@ -1,5 +1,5 @@
 {
-  "_comentariu": "Manifest PWA pentru gordas.dev. start_url = /app.html (interfata de aplicatie), NU index.html (pagina de prezentare, ramane pentru vizitatorii din browser). Scope-ul e radacina domeniului, ca paginile de produs (/datamover/ etc.) sa se deschida tot in aplicatie. Daca schimbi start_url, actualizeaza si twa/twa-manifest.json si reconstruieste APK-ul.",
+  "_comentariu": "Manifest PWA pentru gordas.dev. start_url = /app.html (interfata de aplicatie), NU index.html (pagina de prezentare, ramane pentru vizitatorii din browser). Scope-ul e radacina domeniului, ca paginile de produs (/datamover/ etc.) sa se deschida tot in aplicatie. Aplicatia mobila NU mai e un APK/TWA (retras 2026-08-24) - acest PWA e chiar aplicatia, deschisa direct in browser pe Android si iPhone.",
   "id": "/",
   "name": "GDC Manager",
   "short_name": "GDC",
