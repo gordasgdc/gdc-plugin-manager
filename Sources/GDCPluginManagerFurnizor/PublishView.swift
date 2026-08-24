@@ -370,7 +370,7 @@ struct PublishView: View {
             log("Catalog actualizat local")
 
             log("Public catalogul (commit + push, repo public)…")
-            try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Catalog: \(name) \(version)")
+            try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Catalog: \(name) \(version)", paths: ["docs/catalog.json", "docs/covers"])
 
             let fileWord = pluginFiles.count > 1 ? "\(pluginFiles.count) fișiere" : "1 fișier"
             successMessage = "„\(name)” e publicat (\(fileWord)) — apare la clienți la următorul refresh de catalog."
@@ -418,7 +418,7 @@ struct PublishView: View {
             log("Eliminat din catalog local")
 
             log("Public catalogul (commit + push, repo public)…")
-            try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Sterg din catalog: \(deletedName)")
+            try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Sterg din catalog: \(deletedName)", paths: ["docs/catalog.json", "docs/covers"])
 
             successMessage = "„\(deletedName)” a fost șters complet — dispare la următorul refresh de catalog."
             clearForm()

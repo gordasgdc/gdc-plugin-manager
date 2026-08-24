@@ -42,14 +42,46 @@ enum GitOps {
         try run(["pull", "--ff-only"], at: directory)
     }
 
-    /// Stages everything, commits, and pushes — stops (throws) at the
-    /// first failing step rather than silently continuing.
-    static func commitAndPush(at directory: URL, message: String) throws {
-        try run(["add", "-A"], at: directory)
+    /// Stages, commits, and pushes — stops (throws) at the first failing
+    /// step rather than silently continuing.
+    ///
+    /// `paths`: which paths to stage, relative to `directory`. Pass `nil`
+    /// (the default) to stage everything (`git add -A`) — appropriate for
+    /// `privateFilesRepo`, which never holds anything BUT product files.
+    ///
+    /// PITFALL FIXED 2026-08-24: every caller against `publicCatalogRepo`
+    /// used to pass `nil` here too, meaning `git add -A` staged the ENTIRE
+    /// app repo — `publicCatalogRepo` is the SAME checkout as the app's own
+    /// source code (`Sources/`, `twa/`, etc.), not a docs-only clone. Any
+    /// unrelated file left modified in that checkout (a work-in-progress
+    /// code edit, a doc still being drafted) would get silently swept into
+    /// whatever catalog commit Furnizor made next — e.g. a "Material: X"
+    /// commit that also contains half-finished Swift changes. Every
+    /// `publicCatalogRepo` call site now passes an explicit `paths` list
+    /// (`docs/catalog.json` + `docs/covers`) instead. If a new kind of
+    /// asset needs staging here, add its path explicitly — don't revert to
+    /// `nil`/`-A` for this repo.
+    static func commitAndPush(at directory: URL, message: String, paths: [String]? = nil) throws {
+        // `git add <path>` throws (exit 128, "pathspec did not match any
+        // files") if the path doesn't exist yet — e.g. `docs/covers/` before
+        // the first cover image is ever published. Filter to paths that
+        // currently exist; a path that legitimately needs staging always
+        // exists by the time this runs (callers write it to disk first).
+        let existingPaths = (paths ?? []).filter {
+            FileManager.default.fileExists(atPath: directory.appendingPathComponent($0).path)
+        }
+        let addArgs = paths == nil ? ["-A"] : existingPaths
+        guard paths == nil || !existingPaths.isEmpty else {
+            // Every candidate path was missing — nothing to stage, and an
+            // empty `git add` with no args would (dangerously) mean `-A`.
+            try run(["push"], at: directory)
+            return
+        }
+        try run(["add"] + addArgs, at: directory)
         // Nothing to commit is not an error (e.g. re-publishing the same
         // bytes) — git exits non-zero for "nothing to commit", so check
         // status first and skip the commit step if there's nothing staged.
-        let status = try run(["status", "--porcelain"], at: directory)
+        let status = try run(["status", "--porcelain"] + addArgs, at: directory)
         if !status.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             try run(["commit", "-m", message], at: directory)
         }

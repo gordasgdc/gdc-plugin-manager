@@ -70,7 +70,12 @@ struct PublishCourseView: View {
                 CoverImagePicker(preset: .cover, selection: $coverSelection)
 
                 if let errorMessage {
-                    Text(errorMessage).foregroundStyle(.red)
+                    Label(errorMessage, systemImage: "exclamationmark.triangle.fill")
+                        .foregroundStyle(.red)
+                        .padding(10)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Color.red.opacity(0.1))
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
                 }
                 if let successMessage {
                     Label(successMessage, systemImage: "checkmark.circle.fill").foregroundStyle(.green)
@@ -187,7 +192,7 @@ struct PublishCourseView: View {
             )
 
             try CatalogEditor.upsertCourse(course)
-            try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Curs: \(course.name)")
+            try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Curs: \(course.name)", paths: ["docs/catalog.json", "docs/covers"])
             successMessage = "„\(course.name)” e publicat — apare la clienți la următorul refresh de catalog."
             clearForm()
             loadExisting()
@@ -210,7 +215,7 @@ struct PublishCourseView: View {
             // totdeauna (nimic n-o mai referă după ce iese din catalog).
             try CoverImageStore.commit(.none, id: course.id, previous: course.coverImage)
             try CatalogEditor.removeCourse(id: course.id)
-            try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Sterg cursul: \(course.name)")
+            try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Sterg cursul: \(course.name)", paths: ["docs/catalog.json", "docs/covers"])
             successMessage = "„\(course.name)” a fost șters."
             if editingID == course.id { clearForm() }
             loadExisting()

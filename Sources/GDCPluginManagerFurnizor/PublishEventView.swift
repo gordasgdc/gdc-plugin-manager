@@ -52,7 +52,12 @@ struct PublishEventView: View {
                 CoverImagePicker(preset: .cover, selection: $coverSelection)
 
                 if let errorMessage {
-                    Text(errorMessage).foregroundStyle(.red)
+                    Label(errorMessage, systemImage: "exclamationmark.triangle.fill")
+                        .foregroundStyle(.red)
+                        .padding(10)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Color.red.opacity(0.1))
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
                 }
                 if let successMessage {
                     Label(successMessage, systemImage: "checkmark.circle.fill").foregroundStyle(.green)
@@ -170,7 +175,7 @@ struct PublishEventView: View {
             )
 
             try CatalogEditor.upsertEvent(event)
-            try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Eveniment: \(event.title)")
+            try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Eveniment: \(event.title)", paths: ["docs/catalog.json", "docs/covers"])
             successMessage = "„\(event.title)” e publicat — apare la clienți la următorul refresh de catalog."
             clearForm()
             loadExisting()
@@ -193,7 +198,7 @@ struct PublishEventView: View {
             // totdeauna (nimic nu-l mai referă după ce iese din catalog).
             try CoverImageStore.commit(.none, id: event.id, previous: event.coverImage)
             try CatalogEditor.removeEvent(id: event.id)
-            try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Sterg evenimentul: \(event.title)")
+            try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Sterg evenimentul: \(event.title)", paths: ["docs/catalog.json", "docs/covers"])
             successMessage = "„\(event.title)” a fost șters."
             if editingID == event.id { clearForm() }
             loadExisting()

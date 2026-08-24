@@ -36,7 +36,12 @@ struct PublishAppView: View {
                 }
 
                 if let errorMessage {
-                    Text(errorMessage).foregroundStyle(.red)
+                    Label(errorMessage, systemImage: "exclamationmark.triangle.fill")
+                        .foregroundStyle(.red)
+                        .padding(10)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Color.red.opacity(0.1))
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
                 }
                 if let successMessage {
                     Label(successMessage, systemImage: "checkmark.circle.fill").foregroundStyle(.green)
@@ -128,7 +133,7 @@ struct PublishAppView: View {
         do {
             try GitOps.pull(at: RepoCheckoutPaths.publicCatalogRepo)
             try CatalogEditor.upsertApp(app)
-            try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Aplicatie: \(app.name)")
+            try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Aplicatie: \(app.name)", paths: ["docs/catalog.json", "docs/covers"])
             successMessage = "„\(app.name)” e publicată — apare la clienți la următorul refresh de catalog."
             clearForm()
             loadExisting()
@@ -148,7 +153,7 @@ struct PublishAppView: View {
         do {
             try GitOps.pull(at: RepoCheckoutPaths.publicCatalogRepo)
             try CatalogEditor.removeApp(id: app.id)
-            try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Sterg aplicatia: \(app.name)")
+            try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Sterg aplicatia: \(app.name)", paths: ["docs/catalog.json", "docs/covers"])
             successMessage = "„\(app.name)” a fost ștearsă."
             if editingID == app.id { clearForm() }
             loadExisting()

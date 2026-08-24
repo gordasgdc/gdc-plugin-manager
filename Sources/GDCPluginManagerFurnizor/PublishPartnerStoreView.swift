@@ -41,7 +41,12 @@ struct PublishPartnerStoreView: View {
                 CoverImagePicker(preset: .icon, selection: $coverSelection)
 
                 if let errorMessage {
-                    Text(errorMessage).foregroundStyle(.red)
+                    Label(errorMessage, systemImage: "exclamationmark.triangle.fill")
+                        .foregroundStyle(.red)
+                        .padding(10)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Color.red.opacity(0.1))
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
                 }
                 if let successMessage {
                     Label(successMessage, systemImage: "checkmark.circle.fill").foregroundStyle(.green)
@@ -150,7 +155,7 @@ struct PublishPartnerStoreView: View {
             )
 
             try CatalogEditor.upsertPartnerStore(store)
-            try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Magazin partener: \(store.name)")
+            try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Magazin partener: \(store.name)", paths: ["docs/catalog.json", "docs/covers"])
             successMessage = "„\(store.name)” e publicat — apare la clienți la următorul refresh de catalog."
             clearForm()
             loadExisting()
@@ -173,7 +178,7 @@ struct PublishPartnerStoreView: View {
             // totdeauna (nimic nu-l mai referă după ce iese din catalog).
             try CoverImageStore.commit(.none, id: store.id, previous: store.coverImage)
             try CatalogEditor.removePartnerStore(id: store.id)
-            try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Sterg magazinul: \(store.name)")
+            try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Sterg magazinul: \(store.name)", paths: ["docs/catalog.json", "docs/covers"])
             successMessage = "„\(store.name)” a fost șters."
             if editingID == store.id { clearForm() }
             loadExisting()
