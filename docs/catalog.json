@@ -29,6 +29,7 @@
       "youtubeURL" : "https://www.youtube.com/@cristigordas"
     },
     {
+      "coverImage" : "covers/GDC Metadata View Premium.png",
       "id" : "GDC Metadata View Premium",
       "name" : "GDC Metadata View Premium",
       "url" : "https://gordas.dev/GDC_Metadata_View_Premium/",
