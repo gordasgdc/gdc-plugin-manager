@@ -1,0 +1,12 @@
+{
+  "_comentariu": "Sursa unica de adevar pentru aplicatia Android (APK). Exista pentru ca release-urile de APK sunt marcate deliberat ca NON-latest (altfel 'releases/latest/download/...' din update.json ar pointa spre APK si s-ar rupe self-update-ul pe Mac/Windows). Regula de aur 'fara tag fix in linkuri' se respecta astfel: tagul apare o SINGURA data, aici, si e citit dinamic de site (index.html) si de aplicatiile desktop. La fiecare APK nou: actualizeaza 'version', 'versionCode' si 'apkURL'.",
+  "version": "1.1.0",
+  "versionCode": 2,
+  "release_date": "2026-08-24",
+  "packageId": "dev.gordas.gdc",
+  "minAndroid": "5.0",
+  "sizeMB": 1.5,
+  "apkURL": "https://github.com/gordasgdc/gdc-plugin-manager/releases/download/android-v1.1.0/GDC-Android-1.1.0.apk",
+  "releasePage": "https://github.com/gordasgdc/gdc-plugin-manager/releases/tag/android-v1.1.0",
+  "changes": "Interfata dedicata de aplicatie: dashboard cu tab-uri (produse, cursuri, evenimente, magazin), functionare offline, continut din catalog.json."
+}

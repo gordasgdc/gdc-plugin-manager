@@ -333,11 +333,14 @@
       <div class="hero-actions" id="download">
         <a class="btn btn-primary" data-i18n="hero.download" href="https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Mac.zip">⬇ Descarcă pentru Mac</a>
         <a class="btn btn-ghost" data-i18n="hero.download.windows" href="https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Windows.zip">⬇ Descarcă pentru Windows</a>
-        <!-- Aplicatia Android (APK, in afara Play Store). ATENTIE: linkul e pe un tag
-             FIX (android-v1.1.0), nu pe 'latest' — release-urile de APK sunt marcate
-             deliberat ca non-latest ca sa nu rupa updater-ul desktop din update.json.
-             La fiecare versiune noua de APK, actualizeaza linkul de mai jos. -->
-        <a class="btn btn-ghost" data-i18n="hero.download.android" href="https://github.com/gordasgdc/gdc-plugin-manager/releases/download/android-v1.1.0/GDC-Android-1.1.0.apk">⬇ Descarcă pentru Android</a>
+        <!-- Aplicatia Android (APK, in afara Play Store).
+             Linkul de aici e doar FALLBACK: la incarcarea paginii e inlocuit cu cel din
+             /android.json (vezi scriptul de la finalul paginii). Motivul: release-urile
+             de APK sunt marcate deliberat non-latest, ca 'releases/latest/download/...'
+             din update.json sa ramana al aplicatiei desktop — deci nu putem folosi
+             'latest' aici, iar tagul fix trebuie sa existe intr-un SINGUR loc:
+             android.json. Nu scrie tagul direct in HTML la urmatoarea versiune. -->
+        <a class="btn btn-ghost" id="btn-android" data-i18n="hero.download.android" href="https://gordas.dev/android.json">⬇ Descarcă pentru Android</a>
         <a class="btn btn-ghost" data-i18n="hero.how" href="#how">Vezi cum funcționează</a>
       </div>
       <div class="hero-meta">
@@ -979,6 +982,22 @@
       });
     });
   }
+</script>
+
+<!-- ── Linkul de descarcare Android, citit din /android.json ────────────────
+     Un singur loc de actualizat la fiecare APK nou. Daca fetch-ul eseueaza,
+     butonul ramane pe valoarea din HTML si nu se strica nimic vizual. -->
+<script>
+  fetch('/android.json', { cache: 'no-cache' })
+    .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+    .then(function (d) {
+      var btn = document.getElementById('btn-android');
+      if (!btn || !d.apkURL) return;
+      btn.href = d.apkURL;
+      btn.setAttribute('download', '');
+      btn.title = 'Versiunea ' + d.version + ' · ' + d.sizeMB + ' MB · Android ' + d.minAndroid + '+';
+    })
+    .catch(function (err) { console.warn('android.json indisponibil:', err); });
 </script>
 </body>
 </html>
