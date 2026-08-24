@@ -136,6 +136,9 @@ enum L {
         "powergrade.manualstep": [.ro: "Fișierele sunt verificate în %@ — deschide Gallery-ul din Resolve și importă-le manual (album nou, PowerGrade → Import).", .en: "The files are verified in %@ — open Resolve's Gallery and import them manually (new PowerGrade album → Import).", .es: "Los archivos están verificados en %@ — abre la Gallery de Resolve e impórtalos manualmente (álbum PowerGrade nuevo → Importar)."],
         "powergrade.manualremove": [.ro: "Fișierele locale au fost șterse — elimină-le și din Gallery manual (Resolve închis sau scripting indisponibil).", .en: "The local files were removed — remove them from the Gallery manually too (Resolve was closed or scripting wasn't available).", .es: "Los archivos locales se eliminaron — elimínalos también de la Gallery manualmente (Resolve estaba cerrado o el scripting no estaba disponible)."],
 
+        "install.paidresource.error": [.ro: "A apărut o eroare la încărcarea resursei. Te rugăm să contactezi suportul pentru asistență.", .en: "There was an error loading the paid resource. Please contact support for assistance.", .es: "Se produjo un error al cargar el recurso. Ponte en contacto con soporte para recibir ayuda."],
+        "install.contact.support": [.ro: "Contactează suportul", .en: "Contact support", .es: "Contactar con soporte"],
+
         "settings.language.title": [.ro: "Limbă", .en: "Language", .es: "Idioma"],
 
         "onboarding.title": [.ro: "Bine ai venit!", .en: "Welcome!", .es: "¡Bienvenido!"],

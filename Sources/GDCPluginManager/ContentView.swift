@@ -275,6 +275,10 @@ private struct PluginCard: View {
     @State private var errorMessage: String?
     @State private var statusMessage: String?
     @State private var showResolveWarning = false
+    /// Eșec de instalare pentru o resursă PLĂTITĂ (vezi InstallError.
+    /// paidResourceInstallFailed / InstallManager.swift) — mesaj generic +
+    /// buton WhatsApp în loc de fișiere/instrucțiuni de instalare manuală.
+    @State private var showPaidResourceSupportError = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -333,6 +337,16 @@ private struct PluginCard: View {
             }
             if let statusMessage {
                 Text(statusMessage).font(.caption2).foregroundStyle(.blue)
+            }
+            if showPaidResourceSupportError {
+                Button {
+                    NSWorkspace.shared.open(supportContactURL)
+                } label: {
+                    Label(L.t("install.contact.support"), systemImage: "message.fill")
+                        .font(.caption2)
+                }
+                .buttonStyle(.bordered)
+                .tint(.green)
             }
 
             actionButton
@@ -416,6 +430,11 @@ private struct PluginCard: View {
         return WhatsAppLink.url(text: text)
     }
 
+    private var supportContactURL: URL {
+        let text = "Salut! A apărut o eroare la instalarea \(item.name) — mă poți ajuta să o instalez manual? ID calculator: \(MachineID.display)"
+        return WhatsAppLink.url(text: text)
+    }
+
     private func runGuarded(_ action: @escaping () -> Void) {
         // Every other type must be closed (it only reads its plugin
         // folder at launch); PowerGrade is the opposite — it needs a
@@ -436,6 +455,7 @@ private struct PluginCard: View {
     private func install() {
         errorMessage = nil
         statusMessage = nil
+        showPaidResourceSupportError = false
         isBusy = true
         Task {
             do {
@@ -449,6 +469,12 @@ private struct PluginCard: View {
                 case .installed:
                     break
                 }
+            } catch InstallError.paidResourceInstallFailed {
+                // Mesaj generic, fără cale de fișier/instrucțiuni — vezi
+                // InstallManager.swift. Butonul de contact apare separat,
+                // mai jos în card (showPaidResourceSupportError).
+                errorMessage = L.t("install.paidresource.error")
+                showPaidResourceSupportError = true
             } catch {
                 errorMessage = error.localizedDescription
             }
@@ -459,6 +485,7 @@ private struct PluginCard: View {
     private func remove() {
         errorMessage = nil
         statusMessage = nil
+        showPaidResourceSupportError = false
         do {
             let outcome = try installs.remove(item)
             if item.type == .powerGrade, outcome == .removedNeedsManualGalleryCleanup {

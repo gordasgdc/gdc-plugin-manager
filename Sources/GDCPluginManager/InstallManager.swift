@@ -26,6 +26,13 @@ enum InstallError: Error, LocalizedError {
     case authenticationFailed
     case checksumMismatch
     case writeFailed(String)
+    /// SECURITATE (raportat de Cristi 2026-08-24): un PowerGrade PLĂTIT a
+    /// cărui import automat în Gallery eșuează NU mai are voie să lase pe
+    /// disc fișierul .drx brut — vezi comentariul de la locul unde e
+    /// aruncată, în `install(_:)`. Mesajul e intenționat generic (fără
+    /// cale de fișier, fără instrucțiuni) — ContentView arată în plus
+    /// butonul de contact WhatsApp pentru asistență manuală.
+    case paidResourceInstallFailed
 
     var errorDescription: String? {
         switch self {
@@ -33,6 +40,7 @@ enum InstallError: Error, LocalizedError {
         case .authenticationFailed: return "Couldn't authenticate with the file server — contact support, the access token may need renewing."
         case .checksumMismatch: return "Downloaded file doesn't match the expected checksum."
         case .writeFailed(let detail): return "Couldn't write the file: \(detail)"
+        case .paidResourceInstallFailed: return "A apărut o eroare la încărcarea resursei plătite. Te rugăm să contactezi suportul pentru asistență."
         }
     }
 }
@@ -140,6 +148,27 @@ final class InstallManager: ObservableObject {
         case .importedToGallery(let albumName):
             return .installedToGallery(albumName: albumName)
         case .stagedOnly(let folder):
+            guard item.isFree else {
+                // SECURITATE: pentru un produs GRATUIT, "stagedOnly" e
+                // inofensiv (oricine îl poate lua oricum) — dar pentru
+                // unul PLĂTIT, fișierul .drx verificat, complet
+                // funcțional, ajungea pe disc chiar și când importul
+                // automat eșua, EXACT ce header-ul din
+                // PowerGradeImporter.swift ("EXCLUSIV prin Scripting
+                // API") voia să evite. Un client putea provoca
+                // intenționat eșecul (nu deschide Resolve) ca să obțină
+                // fișierul brut și să-l distribuie neautorizat. Fix:
+                // ștergem tot ce am scris (folderul de staging) și
+                // dezinstalăm din `installedVersions` — nu rămâne NIMIC
+                // recuperabil pe disc — apoi aruncăm o eroare generică,
+                // fără cale de fișier sau instrucțiuni de instalare
+                // manuală (ContentView.swift arată în schimb butonul de
+                // contact WhatsApp, pentru instalare manuală asistată).
+                try? FileManager.default.removeItem(at: folder)
+                installedVersions.removeValue(forKey: item.id)
+                saveState()
+                throw InstallError.paidResourceInstallFailed
+            }
             return .installedNeedsManualStep(folder: folder)
         }
     }
