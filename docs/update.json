@@ -1,7 +1,7 @@
 {
-  "version": "1.2.9",
+  "version": "1.2.10",
   "release_date": "2026-08-24",
-  "changes": "Secțiune nouă „Android\": aplicația companion pentru telefon (APK) se poate descărca direct din aplicație, prin cod QR sau link copiat. Aduce catalogul GDC pe mobil — produse, cursuri, evenimente și magazine partenere, cu funcționare offline.",
+  "changes": "Fix critic (Windows): coperțile de produse/aplicații/cursuri nu se afișau deloc pe Windows, pe nicio categorie — Image.Source nu accepta un URL direct fără un convertor explicit. Rezolvat pe toate cele 6 categorii.",
   "download_url": {
     "mac": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager.pkg",
     "windows": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Windows.zip"

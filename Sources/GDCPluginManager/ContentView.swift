@@ -136,7 +136,12 @@ struct ContentView: View {
             if let urlString = info.download_url["mac"], let url = URL(string: urlString) {
                 Button(L.t("update.download")) { NSWorkspace.shared.open(url) }
             }
-            Button(L.t("update.popup.later"), role: .cancel) { updateChecker.dismiss() }
+            // Update marcat mandatory (docs/update.json): fara "Mai tarziu"
+            // — vezi UpdateChecker.dismiss(), nu se mai persista inchiderea
+            // pentru mandatory, deci butonul ar fi oricum inutil aici.
+            if info.mandatory != true {
+                Button(L.t("update.popup.later"), role: .cancel) { updateChecker.dismiss() }
+            }
         } message: { info in
             Text(L.t("update.popup.message") + " (v\(info.version))")
         }

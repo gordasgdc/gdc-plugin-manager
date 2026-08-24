@@ -70,13 +70,25 @@ final class UpdateChecker: ObservableObject {
             availableUpdate = nil
             return
         }
+        // PITFALL FIXED 2026-08-24: `mandatory` exista in JSON de la
+        // inceput dar nu era citit nicaieri — un update marcat mandatory
+        // se comporta identic cu unul optional (un singur "Later" il
+        // ascundea definitiv). Acum un update mandatory IGNORA inchiderea
+        // anterioara: reapare la fiecare check() (lansare/refresh) cat
+        // timp versiunea instalata ramane veche. Tot nu blocheaza
+        // folosirea aplicatiei — asta ar cere un helper de self-update
+        // real (vezi WARNING de mai sus) — dar userul nu mai poate sa
+        // "uite" definitiv de un fix critic cu un singur click.
         let dismissed = UserDefaults.standard.string(forKey: dismissedVersionKey)
-        availableUpdate = (dismissed == info.version) ? nil : info
+        let alreadyDismissed = (dismissed == info.version) && info.mandatory != true
+        availableUpdate = alreadyDismissed ? nil : info
     }
 
     func dismiss() {
-        guard let version = availableUpdate?.version else { return }
-        UserDefaults.standard.set(version, forKey: dismissedVersionKey)
+        guard let info = availableUpdate else { return }
+        if info.mandatory != true {
+            UserDefaults.standard.set(info.version, forKey: dismissedVersionKey)
+        }
         availableUpdate = nil
     }
 
