@@ -52,6 +52,8 @@
   a{ color:inherit; }
   img,svg{ display:block; max-width:100%; }
   .wrap{ max-width:1080px; margin:0 auto; padding:0 24px; }
+  /* Nota de instalare pentru APK-ul de Android (vezi butonul din #download). */
+  .android-note{ max-width:560px; margin-top:14px; font-size:13px; line-height:1.55; color:var(--faint); }
   ::selection{ background:var(--accent); color:var(--accent-ink); }
 
   header{
@@ -331,6 +333,11 @@
       <div class="hero-actions" id="download">
         <a class="btn btn-primary" data-i18n="hero.download" href="https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Mac.zip">⬇ Descarcă pentru Mac</a>
         <a class="btn btn-ghost" data-i18n="hero.download.windows" href="https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Windows.zip">⬇ Descarcă pentru Windows</a>
+        <!-- Aplicatia Android (APK, in afara Play Store). ATENTIE: linkul e pe un tag
+             FIX (android-v1.1.0), nu pe 'latest' — release-urile de APK sunt marcate
+             deliberat ca non-latest ca sa nu rupa updater-ul desktop din update.json.
+             La fiecare versiune noua de APK, actualizeaza linkul de mai jos. -->
+        <a class="btn btn-ghost" data-i18n="hero.download.android" href="https://github.com/gordasgdc/gdc-plugin-manager/releases/download/android-v1.1.0/GDC-Android-1.1.0.apk">⬇ Descarcă pentru Android</a>
         <a class="btn btn-ghost" data-i18n="hero.how" href="#how">Vezi cum funcționează</a>
       </div>
       <div class="hero-meta">
@@ -338,6 +345,12 @@
         <span><span class="dot"></span> <span data-i18n="hero.meta2">Mac (Apple Silicon) și Windows</span></span>
         <span><span class="dot"></span> Română · English · Español</span>
       </div>
+      <!-- Fara aceasta nota, utilizatorii se blocheaza la avertismentul Android. -->
+      <p class="android-note" data-i18n="hero.android.note">
+        Aplicația de Android se instalează din afara Play Store: după descărcare, deschide fișierul
+        și, când Android cere, activează „Permite din această sursă”. Conține catalogul complet —
+        produse, cursuri, evenimente și magazine.
+      </p>
     </div>
     <div class="catalog-demo reveal">
       <div class="tt-bar"><span></span><span></span><span></span></div>
@@ -793,7 +806,7 @@
       'hero.eyebrow': 'Mac și Windows · DaVinci Resolve',
       'hero.h1': 'Produsele GDC pentru<br>Resolve, <span class="accent">la un click distanță</span>.',
       'hero.lead': 'DCTL-uri, LUT-uri și Fuse-uri instalate direct în folderele pe care DaVinci Resolve le citește la pornire — fără să cauți manual foldere ascunse și fără să copiezi fișiere cu mâna. Aplicația e complet gratuită; cumperi (printr-o donație) doar produsele pe care le vrei.',
-      'hero.download': '⬇ Descarcă pentru Mac', 'hero.download.windows': '⬇ Descarcă pentru Windows', 'hero.how': 'Vezi cum funcționează',
+      'hero.download': '⬇ Descarcă pentru Mac', 'hero.download.windows': '⬇ Descarcă pentru Windows', 'hero.download.android': '⬇ Descarcă pentru Android', 'hero.android.note': 'Aplicația de Android se instalează din afara Play Store: după descărcare, deschide fișierul și, când Android cere, activează „Permite din această sursă”. Conține catalogul complet — produse, cursuri, evenimente și magazine.', 'hero.how': 'Vezi cum funcționează',
       'hero.meta1': 'Aplicație 100% gratuită', 'hero.meta2': 'Mac (Apple Silicon) și Windows',
       'features.tag': 'Funcții', 'features.h2': 'Tot ce ține de plugin-uri, într-un singur loc',
       'features.desc': 'Aplicația știe exact unde vrea DaVinci Resolve fiecare tip de fișier și le pune acolo pentru tine.',
@@ -840,7 +853,7 @@
       'hero.eyebrow': 'Mac and Windows · DaVinci Resolve',
       'hero.h1': 'GDC products for<br>Resolve, <span class="accent">one click away</span>.',
       'hero.lead': 'DCTLs, LUTs and Fuses installed straight into the folders DaVinci Resolve reads on launch — no hunting for hidden folders, no copying files by hand. The app itself is completely free; you only pay (via a donation) for the products you want.',
-      'hero.download': '⬇ Download for Mac', 'hero.download.windows': '⬇ Download for Windows', 'hero.how': 'See how it works',
+      'hero.download': '⬇ Download for Mac', 'hero.download.windows': '⬇ Download for Windows', 'hero.download.android': '⬇ Download for Android', 'hero.android.note': 'The Android app installs from outside the Play Store: after downloading, open the file and, when Android asks, allow installs from this source. It includes the full catalog — products, courses, events and partner stores.', 'hero.how': 'See how it works',
       'hero.meta1': '100% free app', 'hero.meta2': 'Mac (Apple Silicon) and Windows',
       'features.tag': 'Features', 'features.h2': 'Everything plugin-related, in one place',
       'features.desc': 'The app knows exactly where DaVinci Resolve wants each file type and puts it there for you.',
@@ -885,7 +898,7 @@
       'hero.eyebrow': 'Mac y Windows · DaVinci Resolve',
       'hero.h1': 'Los productos GDC para<br>Resolve, <span class="accent">a un clic de distancia</span>.',
       'hero.lead': 'DCTLs, LUTs y Fuses instalados directamente en las carpetas que DaVinci Resolve lee al iniciar — sin buscar carpetas ocultas ni copiar archivos a mano. La aplicación es completamente gratuita; solo pagas (mediante una donación) por los productos que quieras.',
-      'hero.download': '⬇ Descargar para Mac', 'hero.download.windows': '⬇ Descargar para Windows', 'hero.how': 'Ver cómo funciona',
+      'hero.download': '⬇ Descargar para Mac', 'hero.download.windows': '⬇ Descargar para Windows', 'hero.download.android': '⬇ Descargar para Android', 'hero.android.note': 'La app de Android se instala fuera de Play Store: tras descargar, abre el archivo y, cuando Android lo pida, permite la instalación desde esta fuente. Incluye el catálogo completo: productos, cursos, eventos y tiendas.', 'hero.how': 'Ver cómo funciona',
       'hero.meta1': 'Aplicación 100% gratuita', 'hero.meta2': 'Mac (Apple Silicon) y Windows',
       'features.tag': 'Funciones', 'features.h2': 'Todo lo relacionado con plugins, en un solo lugar',
       'features.desc': 'La aplicación sabe exactamente dónde quiere DaVinci Resolve cada tipo de archivo y lo coloca ahí por ti.',

@@ -79,6 +79,15 @@ if [ ! -d "app" ]; then
 fi
 bubblewrap update --skipVersionUpgrade
 
+# "bubblewrap update" cere versiunea interactiv si, cand nu primeste raspuns, o
+# lasa GOALA in app/build.gradle (aplicatia ar aparea fara versiune in Setarile
+# Android). O scriem noi, direct din twa-manifest.json, ca sa fie determinista.
+VNAME="$(python3 -c "import json;print(json.load(open('twa-manifest.json'))['appVersionName'])")"
+VCODE="$(python3 -c "import json;print(json.load(open('twa-manifest.json'))['appVersionCode'])")"
+sed -i '' "s/versionName .*/versionName \"$VNAME\"/" app/build.gradle
+sed -i '' "s/versionCode .*/versionCode $VCODE/" app/build.gradle
+echo "Versiune fixata in app/build.gradle: $VNAME (code $VCODE)"
+
 echo "── [5/6] Construiesc si semnez APK-ul ───────────────────────────────────"
 bubblewrap build
 
