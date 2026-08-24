@@ -1,5 +1,6 @@
 import Foundation
 import AppKit
+import CryptoKit
 import GDCPluginManagerCore
 
 /// Ce a ales furnizorul pentru coperta unui produs, inainte de publicare.
@@ -113,11 +114,37 @@ enum CoverImageStore {
             let destination = coversDirectory.appendingPathComponent("\(id).\(ext)")
             try FileManager.default.copyItem(at: processed, to: destination)
 
+            // PITFALL FIXED 2026-08-24: cand o coperta se INLOCUIESTE la
+            // acelasi id (deci acelasi URL final), GitHub Pages trimite
+            // `Cache-Control: max-age=14400` (4 ore) pe fisierele din
+            // docs/ — orice client care a mai vazut URL-ul (AsyncImage pe
+            // Mac, BitmapImage pe Windows, browser, si mai ales
+            // service worker-ul PWA-ului, care e cache-first PE IMAGINI
+            // FARA expirare) ramane cu poza veche pana la 4 ore sau, in
+            // PWA, pana la un CACHE_VERSION bump. Sufixul de mai jos —
+            // derivat din CONTINUTUL fisierului, nu dintr-un timestamp —
+            // face ca noua imagine sa aiba mereu un URL DIFERIT cand
+            // bytes-ii chiar s-au schimbat, ceea ce bate orice cache HTTP
+            // sau de service worker fara sa fie nevoie sa schimbam vreun
+            // cod de randare (toate randeaza direct string-ul din catalog).
+            let versionSuffix = try cacheBustSuffix(for: destination)
+
             // Cale RELATIVA in catalog, niciodata absoluta — vezi
             // CatalogAssets pentru motiv (schimbarea domeniului dintr-un
             // singur loc).
-            return "\(CatalogAssets.coversFolderName)/\(id).\(ext)"
+            return "\(CatalogAssets.coversFolderName)/\(id).\(ext)?v=\(versionSuffix)"
         }
+    }
+
+    /// Primii 8 caractere hex din SHA-256 al fisierului — scurt, dar practic
+    /// imposibil sa coincida intre doua imagini diferite. Derivat din
+    /// continut, nu din data curenta: republicarea acelorasi bytes (ex. un
+    /// build repetat fara nicio schimbare reala) produce acelasi sufix, deci
+    /// acelasi URL — clientii care il au deja in cache nu re-descarca degeaba.
+    private static func cacheBustSuffix(for fileURL: URL) throws -> String {
+        let data = try Data(contentsOf: fileURL)
+        let digest = SHA256.hash(data: data)
+        return digest.compactMap { String(format: "%02x", $0) }.joined().prefix(8).description
     }
 
     /// Sterge orice `docs/covers/<id>.*`, plus fisierul indicat de
@@ -136,10 +163,14 @@ enum CoverImageStore {
         }
 
         // Valoarea veche, daca era locala si arata spre alt nume de fisier.
+        // Sufixul `?v=...` (cache-busting, vezi commit()) NU e parte din
+        // calea reala de pe disc — trebuie taiat, altfel FileManager cauta
+        // literal un fisier numit "id.jpg?v=abcd1234", care nu exista.
         if let previous, !CatalogAssets.isExternal(previous) {
+            let pathOnly = previous.split(separator: "?", maxSplits: 1).first.map(String.init) ?? previous
             let old = RepoCheckoutPaths.publicCatalogRepo
                 .appendingPathComponent("docs")
-                .appendingPathComponent(previous)
+                .appendingPathComponent(pathOnly)
             try? fm.removeItem(at: old)
         }
     }
