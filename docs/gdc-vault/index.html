@@ -77,6 +77,11 @@
   footer{ border-top:1px solid var(--border); padding:32px 24px; text-align:center; font-size:12.5px; color:var(--faint); }
   footer a{ color:var(--muted); text-decoration:none; }
   footer a:hover{ color:var(--text); }
+
+  #lang-switch{ display:flex; gap:4px; }
+  #lang-switch button{ font-family:var(--mono); font-size:11.5px; font-weight:600; color:var(--muted); background:transparent; border:1px solid var(--border); border-radius:6px; padding:5px 9px; cursor:pointer; }
+  #lang-switch button:hover{ color:var(--text); border-color:var(--accent); }
+  #lang-switch button.active{ color:var(--accent-ink); background:var(--accent); border-color:var(--accent); }
 </style>
 </head>
 <body>
@@ -84,73 +89,93 @@
 <header>
   <div class="header-inner">
     <div class="brand"><img src="../covers/gdc-vault.png" alt=""> GDC Vault</div>
-    <a class="back-link" href="/">← gordas.dev</a>
+    <div style="display:flex; align-items:center; gap:18px;">
+      <div id="lang-switch">
+        <button data-lang="ro">RO</button>
+        <button data-lang="en">EN</button>
+        <button data-lang="es">ES</button>
+      </div>
+      <a class="back-link" data-i18n="nav.back" href="/">← gordas.dev</a>
+    </div>
   </div>
 </header>
 
 <div class="hero wrap">
   <img class="cover" src="../covers/gdc-vault.png" alt="GDC Vault">
   <h1>GDC Vault</h1>
-  <p class="tagline">Seif securizat pentru licențe, conturi de login, chei de serie, notițe și fișiere atașate — totul într-o singură fișă per aplicație, nu împrăștiat prin note și parole uitate.</p>
+  <p class="tagline" data-i18n="hero.tagline">Seif securizat pentru licențe, conturi de login, chei de serie, notițe și fișiere atașate — totul într-o singură fișă per aplicație, nu împrăștiat prin note și parole uitate.</p>
   <div class="btn-row">
-    <a class="btn btn-primary" href="https://github.com/gordasgdc/gdc-vault-mac/releases/latest/download/GDCVault-Mac.zip">⬇ Descarcă pentru Mac</a>
-    <a class="btn btn-ghost" href="https://github.com/gordasgdc/gdc-vault-win/releases/latest/download/GDCVaultSetup.exe">⬇ Descarcă pentru Windows</a>
+    <a class="btn btn-primary" data-i18n="hero.mac" href="https://github.com/gordasgdc/gdc-vault-mac/releases/latest/download/GDCVault-Mac.zip">⬇ Descarcă pentru Mac</a>
+    <a class="btn btn-ghost" data-i18n="hero.win" href="https://github.com/gordasgdc/gdc-vault-win/releases/latest/download/GDCVaultSetup.exe">⬇ Descarcă pentru Windows</a>
   </div>
-  <p class="beta-note">Probă gratuită 15 zile, acces complet la toate funcționalitățile. Versiune beta — vezi nota de transparență din secțiunea de donație mai jos.</p>
+  <p class="beta-note" data-i18n="hero.beta">Probă gratuită 15 zile, acces complet la toate funcționalitățile. Instalare directă prin pachetul .pkg semnat și notarizat de Apple — fără avertismente Gatekeeper.</p>
 </div>
 
 <section>
   <div class="wrap">
-    <h2>Ce face GDC Vault</h2>
+    <h2 data-i18n="features.title">Ce face GDC Vault</h2>
     <div class="features">
       <div class="feature">
         <div class="icon">🔐</div>
-        <h3>Fișă unificată per aplicație</h3>
-        <p>Un singur produs = o singură fișă, cu cont de login, cheie de serie, dată de expirare, notițe și atașamente — toate simultan, nu separate pe categorii.</p>
+        <h3 data-i18n="f1.h">Fișă unificată per aplicație</h3>
+        <p data-i18n="f1.p">Un singur produs = o singură fișă, cu cont de login, cheie de serie, dată de expirare, notițe și atașamente — toate simultan, nu separate pe categorii.</p>
       </div>
       <div class="feature">
         <div class="icon">🗝️</div>
-        <h3>Stocare nativă securizată</h3>
-        <p>Parolele și cheile de serie stau în Keychain (Mac) sau DPAPI (Windows) — niciodată în clar pe disc, niciodată în fișierul de metadate.</p>
+        <h3 data-i18n="f2.h">Stocare nativă securizată</h3>
+        <p data-i18n="f2.p">Parolele și cheile de serie stau în Keychain (Mac) sau DPAPI (Windows) — niciodată în clar pe disc, niciodată în fișierul de metadate.</p>
       </div>
       <div class="feature">
         <div class="icon">📎</div>
-        <h3>Atașamente</h3>
-        <p>Contracte, facturi, capturi de confirmare a achiziției — atașate direct la fișa produsului, într-un folder dedicat local.</p>
+        <h3 data-i18n="f3.h">Atașamente</h3>
+        <p data-i18n="f3.p">Contracte, facturi, capturi de confirmare a achiziției — atașate direct la fișa produsului, într-un folder dedicat local.</p>
       </div>
       <div class="feature">
         <div class="icon">⏰</div>
-        <h3>Alertă de expirare</h3>
-        <p>Vezi dintr-o privire ce abonamente/licențe expiră curând, direct din bara laterală.</p>
+        <h3 data-i18n="f4.h">Alertă de expirare</h3>
+        <p data-i18n="f4.p">Vezi dintr-o privire ce abonamente/licențe expiră curând, direct din bara laterală.</p>
       </div>
       <div class="feature">
         <div class="icon">🔄</div>
-        <h3>Export/Import criptat</h3>
-        <p>Backup complet AES-256, protejat cu o parolă Master aleasă de tine — portabil între Mac și Windows.</p>
+        <h3 data-i18n="f5.h">Export/Import criptat</h3>
+        <p data-i18n="f5.p">Backup complet AES-256, protejat cu o parolă Master aleasă de tine — portabil între Mac și Windows.</p>
       </div>
       <div class="feature">
         <div class="icon">🧹</div>
-        <h3>Dezinstalare curată</h3>
-        <p>Un script dedicat șterge tot ce a creat aplicația pe sistem — nimic rămas în urmă.</p>
+        <h3 data-i18n="f6.h">Dezinstalare curată</h3>
+        <p data-i18n="f6.p">Un script dedicat șterge tot ce a creat aplicația pe sistem — nimic rămas în urmă.</p>
       </div>
+    </div>
+  </div>
+</section>
+
+<section id="install">
+  <div class="wrap">
+    <h2 data-i18n="install.title">Instalare pe Mac</h2>
+    <div class="pricing" style="text-align:left;">
+      <ol style="padding-left:20px; font-size:13.5px; color:var(--muted); line-height:1.9;">
+        <li data-i18n="install.step1">Descarcă <code>GDCVault-Mac.zip</code> mai sus și dezarhivează-l.</li>
+        <li data-i18n="install.step2">Dublu-click pe <code>GDCVault.pkg</code> — pachet semnat și notarizat oficial de Apple, se instalează direct, fără pași suplimentari.</li>
+        <li data-i18n="install.step3">Pentru dezinstalare completă, rulează <code>Dezinstalare_GDCVault.command</code> din aceeași arhivă.</li>
+      </ol>
     </div>
   </div>
 </section>
 
 <section id="donatie">
   <div class="wrap">
-    <h2>Donație</h2>
+    <h2 data-i18n="donate.title">Donație</h2>
     <div class="pricing">
-      <div style="font-family:var(--mono); font-size:13px; color:var(--muted); text-transform:uppercase; letter-spacing:.05em;">Licență Lifetime</div>
-      <div class="price">5€ <small>donație unică</small></div>
+      <div style="font-family:var(--mono); font-size:13px; color:var(--muted); text-transform:uppercase; letter-spacing:.05em;" data-i18n="donate.plan">Licență Lifetime</div>
+      <div class="price">5€ <small data-i18n="donate.once">donație unică</small></div>
       <ul>
-        <li>15 zile probă gratuită, acces complet</li>
-        <li>Deblocare permanentă pentru un calculator</li>
-        <li>Fără abonament, fără reînnoiri</li>
-        <li>Activare prin WhatsApp — răspuns rapid, direct de la dezvoltator</li>
+        <li data-i18n="donate.li1">15 zile probă gratuită, acces complet</li>
+        <li data-i18n="donate.li2">Deblocare permanentă pentru un calculator</li>
+        <li data-i18n="donate.li3">Fără abonament, fără reînnoiri</li>
+        <li data-i18n="donate.li4">Activare prin WhatsApp — răspuns rapid, direct de la dezvoltator</li>
       </ul>
-      <div class="promo-note">
-        <strong>Notă de transparență:</strong> cei 5€ sunt o donație, nu un preț de listă — mă ajută să acopăr costurile de dezvoltare. E o ofertă promoțională valabilă în faza de dezvoltare/beta; donația va crește odată ce obținem certificatele oficiale de dezvoltator de la Apple (Mac Code Signing) și Windows (Code Signing Certificate).
+      <div class="promo-note" data-i18n-html="donate.note">
+        <strong>Notă de transparență:</strong> cei 5€ sunt o donație, nu un preț de listă — mă ajută să acopăr costurile de dezvoltare. E o ofertă promoțională valabilă în faza de dezvoltare/beta.
       </div>
     </div>
   </div>
@@ -159,9 +184,105 @@
 <footer>
   <a href="https://github.com/gordasgdc/gdc-vault-mac">GitHub (Mac)</a> ·
   <a href="https://github.com/gordasgdc/gdc-vault-win">GitHub (Windows)</a> ·
-  <a href="/">Restul aplicațiilor GDC</a>
-  <div style="margin-top:8px;">GDC Vault — parte din ecosistemul GDC.</div>
+  <a href="/" data-i18n="footer.rest">Restul aplicațiilor GDC</a>
+  <div style="margin-top:8px;" data-i18n="footer.tag">GDC Vault — parte din ecosistemul GDC.</div>
 </footer>
+
+<script>
+  const translations = {
+    ro: {
+      'nav.back': '← gordas.dev',
+      'hero.tagline': 'Seif securizat pentru licențe, conturi de login, chei de serie, notițe și fișiere atașate — totul într-o singură fișă per aplicație, nu împrăștiat prin note și parole uitate.',
+      'hero.mac': '⬇ Descarcă pentru Mac', 'hero.win': '⬇ Descarcă pentru Windows',
+      'hero.beta': 'Probă gratuită 15 zile, acces complet la toate funcționalitățile. Instalare directă prin pachetul .pkg semnat și notarizat de Apple — fără avertismente Gatekeeper.',
+      'features.title': 'Ce face GDC Vault',
+      'f1.h': 'Fișă unificată per aplicație', 'f1.p': 'Un singur produs = o singură fișă, cu cont de login, cheie de serie, dată de expirare, notițe și atașamente — toate simultan, nu separate pe categorii.',
+      'f2.h': 'Stocare nativă securizată', 'f2.p': 'Parolele și cheile de serie stau în Keychain (Mac) sau DPAPI (Windows) — niciodată în clar pe disc, niciodată în fișierul de metadate.',
+      'f3.h': 'Atașamente', 'f3.p': 'Contracte, facturi, capturi de confirmare a achiziției — atașate direct la fișa produsului, într-un folder dedicat local.',
+      'f4.h': 'Alertă de expirare', 'f4.p': 'Vezi dintr-o privire ce abonamente/licențe expiră curând, direct din bara laterală.',
+      'f5.h': 'Export/Import criptat', 'f5.p': 'Backup complet AES-256, protejat cu o parolă Master aleasă de tine — portabil între Mac și Windows.',
+      'f6.h': 'Dezinstalare curată', 'f6.p': 'Un script dedicat șterge tot ce a creat aplicația pe sistem — nimic rămas în urmă.',
+      'install.title': 'Instalare pe Mac',
+      'install.step1': 'Descarcă <code>GDCVault-Mac.zip</code> mai sus și dezarhivează-l.',
+      'install.step2': 'Dublu-click pe <code>GDCVault.pkg</code> — pachet semnat și notarizat oficial de Apple, se instalează direct, fără pași suplimentari.',
+      'install.step3': 'Pentru dezinstalare completă, rulează <code>Dezinstalare_GDCVault.command</code> din aceeași arhivă.',
+      'donate.title': 'Donație', 'donate.plan': 'Licență Lifetime', 'donate.once': 'donație unică',
+      'donate.li1': '15 zile probă gratuită, acces complet', 'donate.li2': 'Deblocare permanentă pentru un calculator',
+      'donate.li3': 'Fără abonament, fără reînnoiri', 'donate.li4': 'Activare prin WhatsApp — răspuns rapid, direct de la dezvoltator',
+      'donate.note': '<strong>Notă de transparență:</strong> cei 5€ sunt o donație, nu un preț de listă — mă ajută să acopăr costurile de dezvoltare. E o ofertă promoțională valabilă în faza de dezvoltare/beta.',
+      'footer.rest': 'Restul aplicațiilor GDC', 'footer.tag': 'GDC Vault — parte din ecosistemul GDC.',
+    },
+    en: {
+      'nav.back': '← gordas.dev',
+      'hero.tagline': 'A secure vault for licenses, login accounts, serial keys, notes and attached files — everything in one record per app, instead of scattered notes and forgotten passwords.',
+      'hero.mac': '⬇ Download for Mac', 'hero.win': '⬇ Download for Windows',
+      'hero.beta': '15-day free trial, full feature access. Installs directly via the Apple-signed and notarized .pkg — no Gatekeeper warnings.',
+      'features.title': 'What GDC Vault does',
+      'f1.h': 'One record per app', 'f1.p': 'One product = one record, with login account, serial key, expiration date, notes and attachments — all together, not split across categories.',
+      'f2.h': 'Native secure storage', 'f2.p': 'Passwords and serial keys live in Keychain (Mac) or DPAPI (Windows) — never in plain text on disk, never in the metadata file.',
+      'f3.h': 'Attachments', 'f3.p': 'Contracts, invoices, purchase confirmation screenshots — attached directly to the product record, in a dedicated local folder.',
+      'f4.h': 'Expiration alerts', 'f4.p': 'See at a glance which subscriptions/licenses are expiring soon, right from the sidebar.',
+      'f5.h': 'Encrypted export/import', 'f5.p': 'Full AES-256 backup, protected with a Master password you choose — portable between Mac and Windows.',
+      'f6.h': 'Clean uninstall', 'f6.p': 'A dedicated script removes everything the app created on your system — nothing left behind.',
+      'install.title': 'Installing on Mac',
+      'install.step1': 'Download <code>GDCVault-Mac.zip</code> above and unzip it.',
+      'install.step2': 'Double-click <code>GDCVault.pkg</code> — a package officially signed and notarized by Apple, installs directly with no extra steps.',
+      'install.step3': 'For a full uninstall, run <code>Dezinstalare_GDCVault.command</code> from the same archive.',
+      'donate.title': 'Donation', 'donate.plan': 'Lifetime license', 'donate.once': 'one-time donation',
+      'donate.li1': '15-day free trial, full access', 'donate.li2': 'Permanent unlock for one computer',
+      'donate.li3': 'No subscription, no renewals', 'donate.li4': 'Activation via WhatsApp — fast reply, directly from the developer',
+      'donate.note': '<strong>Transparency note:</strong> the €5 is a donation, not a list price — it helps cover development costs. It\'s a promotional offer valid during the development/beta phase.',
+      'footer.rest': 'The rest of the GDC apps', 'footer.tag': 'GDC Vault — part of the GDC ecosystem.',
+    },
+    es: {
+      'nav.back': '← gordas.dev',
+      'hero.tagline': 'Una caja fuerte segura para licencias, cuentas de acceso, claves de serie, notas y archivos adjuntos — todo en una sola ficha por aplicación, en lugar de notas dispersas y contraseñas olvidadas.',
+      'hero.mac': '⬇ Descargar para Mac', 'hero.win': '⬇ Descargar para Windows',
+      'hero.beta': 'Prueba gratuita de 15 días, acceso completo a todas las funciones. Instalación directa mediante el .pkg firmado y notarizado por Apple — sin avisos de Gatekeeper.',
+      'features.title': 'Qué hace GDC Vault',
+      'f1.h': 'Ficha unificada por aplicación', 'f1.p': 'Un producto = una ficha, con cuenta de acceso, clave de serie, fecha de caducidad, notas y adjuntos — todo junto, no separado por categorías.',
+      'f2.h': 'Almacenamiento nativo seguro', 'f2.p': 'Las contraseñas y claves de serie se guardan en Keychain (Mac) o DPAPI (Windows) — nunca en texto plano en disco, nunca en el archivo de metadatos.',
+      'f3.h': 'Adjuntos', 'f3.p': 'Contratos, facturas, capturas de confirmación de compra — adjuntados directamente a la ficha del producto, en una carpeta local dedicada.',
+      'f4.h': 'Alerta de caducidad', 'f4.p': 'Ve de un vistazo qué suscripciones/licencias caducan pronto, directamente desde la barra lateral.',
+      'f5.h': 'Exportar/Importar cifrado', 'f5.p': 'Copia de seguridad AES-256 completa, protegida con una contraseña Maestra que tú eliges — portátil entre Mac y Windows.',
+      'f6.h': 'Desinstalación limpia', 'f6.p': 'Un script dedicado elimina todo lo que la app creó en tu sistema — nada queda atrás.',
+      'install.title': 'Instalación en Mac',
+      'install.step1': 'Descarga <code>GDCVault-Mac.zip</code> arriba y descomprímelo.',
+      'install.step2': 'Doble clic en <code>GDCVault.pkg</code> — paquete firmado y notarizado oficialmente por Apple, se instala directamente, sin pasos adicionales.',
+      'install.step3': 'Para una desinstalación completa, ejecuta <code>Dezinstalare_GDCVault.command</code> desde el mismo archivo.',
+      'donate.title': 'Donación', 'donate.plan': 'Licencia Lifetime', 'donate.once': 'donación única',
+      'donate.li1': '15 días de prueba gratuita, acceso completo', 'donate.li2': 'Desbloqueo permanente para un ordenador',
+      'donate.li3': 'Sin suscripción, sin renovaciones', 'donate.li4': 'Activación por WhatsApp — respuesta rápida, directamente del desarrollador',
+      'donate.note': '<strong>Nota de transparencia:</strong> los 5€ son una donación, no un precio de lista — me ayuda a cubrir los costos de desarrollo. Es una oferta promocional válida durante la fase de desarrollo/beta.',
+      'footer.rest': 'El resto de las apps GDC', 'footer.tag': 'GDC Vault — parte del ecosistema GDC.',
+    },
+  };
+
+  function t(key) {
+    const lang = document.documentElement.lang || 'ro';
+    return (translations[lang] && translations[lang][key]) || translations.ro[key] || key;
+  }
+
+  function applyLanguage(lang) {
+    if (!translations[lang]) lang = 'ro';
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.getAttribute('data-i18n')); });
+    document.querySelectorAll('[data-i18n-html]').forEach(el => { el.innerHTML = t(el.getAttribute('data-i18n-html')); });
+    document.querySelectorAll('#lang-switch button').forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+    });
+    localStorage.setItem('gdcvault_lang', lang);
+  }
+
+  document.querySelectorAll('#lang-switch button').forEach(btn => {
+    btn.addEventListener('click', () => applyLanguage(btn.getAttribute('data-lang')));
+  });
+
+  const savedLang = localStorage.getItem('gdcvault_lang');
+  const browserLang = (navigator.language || 'ro').slice(0, 2);
+  const initialLang = savedLang || (translations[browserLang] ? browserLang : 'ro');
+  applyLanguage(initialLang);
+</script>
 
 </body>
 </html>
