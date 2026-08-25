@@ -34,6 +34,7 @@ struct PublishView: View {
     @State private var accessMode: AccessMode = .paid
     @State private var iconSymbol = "wand.and.stars"
     @State private var youtubeURL = ""
+    @State private var supportedOS: SupportedOS = .crossPlatform
     /// Coperta produsului. Preset `.icon` (pătrat 512×512) — accentul e pe
     /// simbol/recunoaștere rapidă în grilă, nu pe detaliu.
     @State private var coverSelection: CoverImageSelection = .none
@@ -139,6 +140,13 @@ struct PublishView: View {
                         }
                         TextField("Icon (SF Symbol, opțional)", text: $iconSymbol).textFieldStyle(.roundedBorder)
                         TextField("Link tutorial YouTube (opțional, nelistat)", text: $youtubeURL).textFieldStyle(.roundedBorder)
+
+                        Picker("Compatibilitate", selection: $supportedOS) {
+                            Text("🍎 Doar Mac").tag(SupportedOS.macOS)
+                            Text("🪟 Doar Windows").tag(SupportedOS.windows)
+                            Text("🔄 Ambele platforme").tag(SupportedOS.crossPlatform)
+                        }
+                        .pickerStyle(.segmented)
                         if isUpdate {
                             Text("Poți edita doar linkul YouTube (sau alte câmpuri) fără să alegi din nou fișierele — cele existente rămân neschimbate dacă nu alegi altele.")
                                 .font(.caption).foregroundStyle(.secondary)
@@ -272,6 +280,7 @@ struct PublishView: View {
         priceText = String(item.priceEUR)
         iconSymbol = item.iconSymbol ?? ""
         youtubeURL = item.youtubeURL ?? ""
+        supportedOS = item.supportedOS
         existingFiles = item.files
         existingBundleFolderName = item.bundleFolderName
         // `.existing`: coperta e deja publicată, nu se rescrie dacă
@@ -364,7 +373,8 @@ struct PublishView: View {
                 isFree: isFreeFlag, isTrial: isTrialFlag,
                 youtubeURL: trimmedYouTube.isEmpty ? nil : trimmedYouTube,
                 bundleFolderName: bundleFolderName,
-                coverImage: coverImage
+                coverImage: coverImage,
+                supportedOS: supportedOS
             )
             try CatalogEditor.upsert(item)
             log("Catalog actualizat local")

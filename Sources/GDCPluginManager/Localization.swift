@@ -118,6 +118,7 @@ enum L {
         "card.remove": [.ro: "Elimină", .en: "Remove", .es: "Eliminar"],
         "card.version": [.ro: "versiunea", .en: "version", .es: "versión"],
         "card.buy": [.ro: "Cumpără", .en: "Buy", .es: "Comprar"],
+        "card.incompatibleOS": [.ro: "Incompatibil cu sistemul tău", .en: "Incompatible with your system", .es: "Incompatible con tu sistema"],
         "card.free": [.ro: "Gratuit", .en: "Free", .es: "Gratis"],
         "card.trial": [.ro: "Probă", .en: "Trial", .es: "Prueba"],
         "card.paid": [.ro: "Licență", .en: "License", .es: "Licencia"],

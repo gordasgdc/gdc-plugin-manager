@@ -200,6 +200,42 @@ public enum CatalogAssets {
     }
 }
 
+/// Compatibilitatea de sistem de operare a unui produs — folosita de
+/// Client (buton dezactivat cu "Incompatibil cu sistemul tau") si de
+/// Furnizor (selector la publicare). Valoare implicita `.crossPlatform`:
+/// toate produsele existente inainte de acest camp (DCTL/LUT/Fuse/OFX
+/// pentru Resolve) chiar RULEAZA identic pe ambele platforme, asa ca
+/// decodarea unei intrari vechi (fara aceasta cheie) trebuie sa insemne
+/// "merge oriunde", nu "ascunde-l pe toata lumea".
+public enum SupportedOS: String, Codable, CaseIterable, Identifiable {
+    case macOS
+    case windows
+    case crossPlatform
+
+    public var id: String { rawValue }
+
+    /// True daca produsul e instalabil pe platforma curenta a clientului.
+    public func allows(current: SupportedOS) -> Bool {
+        self == .crossPlatform || self == current
+    }
+
+    #if os(macOS)
+    public static let current: SupportedOS = .macOS
+    #else
+    public static let current: SupportedOS = .windows
+    #endif
+
+    /// Emoji-badge afisat pe cardul din catalog (Client) — vezi cerinta
+    /// "Selector Compatibilitate OS": 🍎 doar Mac, 🪟 doar Windows, 🔄 ambele.
+    public var badgeEmoji: String {
+        switch self {
+        case .macOS: return "🍎"
+        case .windows: return "🪟"
+        case .crossPlatform: return "🔄"
+        }
+    }
+}
+
 /// One entry in the catalog — one sellable DCTL/LUT/Fuse (or a whole
 /// pack of several) from Cristi's own product line (never a general
 /// "browse anyone's plugin" catalog).
@@ -251,10 +287,13 @@ public struct PluginItem: Codable, Identifiable, Hashable {
     /// NOTE: la upload local se foloseste presetul `.icon` (patrat
     /// 512x512) — vezi ImageProcessor.Preset.
     public let coverImage: String?
+    /// Compatibilitate OS — vezi `SupportedOS`. Implicit `.crossPlatform`
+    /// (toate produsele existente pana acum ruleaza pe ambele platforme).
+    public let supportedOS: SupportedOS
 
     public init(id: String, name: String, type: PluginType, description: String, version: String,
                 files: [PluginFile], iconSymbol: String?, priceEUR: Double, isFree: Bool = false, isTrial: Bool = false,
-                youtubeURL: String? = nil, bundleFolderName: String? = nil, coverImage: String? = nil) {
+                youtubeURL: String? = nil, bundleFolderName: String? = nil, coverImage: String? = nil, supportedOS: SupportedOS = .crossPlatform) {
         self.id = id
         self.name = name
         self.type = type
@@ -268,6 +307,7 @@ public struct PluginItem: Codable, Identifiable, Hashable {
         self.youtubeURL = youtubeURL
         self.bundleFolderName = bundleFolderName
         self.coverImage = coverImage
+        self.supportedOS = supportedOS
     }
 
     /// URL-ul absolut al copertii, gata de descarcat (nil daca nu are).
@@ -278,7 +318,7 @@ public struct PluginItem: Codable, Identifiable, Hashable {
     // `isFree`/`isTrial`/`youtubeURL`/`bundleFolderName`), so any entry
     // ever published still decodes cleanly.
     private enum CodingKeys: String, CodingKey {
-        case id, name, type, description, version, files, filePath, sha256, iconSymbol, priceEUR, isFree, isTrial, youtubeURL, bundleFolderName, coverImage
+        case id, name, type, description, version, files, filePath, sha256, iconSymbol, priceEUR, isFree, isTrial, youtubeURL, bundleFolderName, coverImage, supportedOS
     }
 
     public init(from decoder: Decoder) throws {
@@ -305,6 +345,9 @@ public struct PluginItem: Codable, Identifiable, Hashable {
         // Cheie noua (2026-08): intrarile publicate inainte de sistemul de
         // coperti nu o au deloc, deci decodeIfPresent -> nil, fara eroare.
         coverImage = try c.decodeIfPresent(String.self, forKey: .coverImage)
+        // Cheie noua (2026-08-25): intrarile vechi nu o au -> .crossPlatform,
+        // pastrand comportamentul actual (instalabil pe ambele platforme).
+        supportedOS = try c.decodeIfPresent(SupportedOS.self, forKey: .supportedOS) ?? .crossPlatform
     }
 
     // Written explicitly (not synthesized) because CodingKeys carries
@@ -326,6 +369,7 @@ public struct PluginItem: Codable, Identifiable, Hashable {
         try c.encodeIfPresent(youtubeURL, forKey: .youtubeURL)
         try c.encodeIfPresent(bundleFolderName, forKey: .bundleFolderName)
         try c.encodeIfPresent(coverImage, forKey: .coverImage)
+        try c.encode(supportedOS, forKey: .supportedOS)
     }
 
     /// True for a multi-file pack (e.g. a whole folder of LUTs published

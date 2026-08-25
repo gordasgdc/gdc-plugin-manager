@@ -4,6 +4,12 @@ Format: fiecare intrare listează versiunea, platformele afectate, și — pentr
 funcționalități noi — dacă are paritate completă Mac/Windows sau e "doar pe
 o platformă, portare pe cealaltă e TODO".
 
+## v1.2.19 (2026-08-25)
+**Toate 4 componente afectate** (Mac Swift, Windows C#) — **paritate completă**:
+- Selector Compatibilitate OS pe produse: câmp `supportedOS` (macOS/Windows/crossPlatform) în `PluginItem`, implicit `crossPlatform` (retro-compatibil, nicio intrare veche nu e afectată).
+- Furnizor (Mac): selector segmentat la publicare/editare produs.
+- Client (Mac + Windows): badge 🍎/🪟/🔄 pe card, buton de instalare ascuns + mesaj „Incompatibil cu sistemul tău” pentru produsele mono-platformă nepotrivite.
+
 ## v1.2.18 (2026-08-25)
 **Windows** — paritate cu Mac:
 - Secțiune "Service & Reparații Echipament" (carduri, contact rapid, website/locație) — era doar pe Mac din v1.2.16.
