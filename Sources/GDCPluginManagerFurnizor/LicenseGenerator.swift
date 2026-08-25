@@ -28,8 +28,14 @@ enum LicenseGenerator {
     ///   - expiresAt: unix seconds, 0 = never expires
     ///   - machineIDBase32: the client's MachineID.display string, or nil
     ///     for an unlocked (any-machine) code
+    ///   - platform: GDC-LICENSE-PLATFORM (Etapa 2) — `.any` produce un
+    ///     payload v1 (22 octeti, identic byte-cu-byte cu formatul dinainte
+    ///     de aceasta schimbare, deci compatibil retroactiv); orice altă
+    ///     valoare produce v2 (23 octeti, byte de platforma adaugat la
+    ///     final). Alegerea e permanenta pentru codul generat.
     static func generate(privateKeyBase64: String, productID: String,
-                          expiresAt: Int64 = 0, machineIDBase32: String? = nil) throws -> String {
+                          expiresAt: Int64 = 0, machineIDBase32: String? = nil,
+                          platform: LicenseCore.LicensePlatform = .any) throws -> String {
         guard let keyData = Data(base64Encoded: privateKeyBase64),
               let privateKey = try? Curve25519.Signing.PrivateKey(rawRepresentation: keyData) else {
             throw GenerationError.invalidPrivateKey
@@ -60,7 +66,12 @@ enum LicenseGenerator {
         payloadBytes.append(contentsOf: expiryBytes)
         payloadBytes.append(contentsOf: nonce)
         payloadBytes.append(contentsOf: machineHash)
-        precondition(payloadBytes.count == LicenseCore.payloadSize, "payload size drifted from LicenseCore")
+        if platform != .any {
+            payloadBytes.append(platform.rawValue)
+            precondition(payloadBytes.count == LicenseCore.payloadSizeV2, "payload size drifted from LicenseCore")
+        } else {
+            precondition(payloadBytes.count == LicenseCore.payloadSize, "payload size drifted from LicenseCore")
+        }
 
         let signature = try privateKey.signature(for: Data(payloadBytes))
         var packed = payloadBytes

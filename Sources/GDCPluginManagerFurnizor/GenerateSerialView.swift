@@ -45,6 +45,7 @@ struct GenerateSerialView: View {
     @State private var machineID = ""
     @State private var expiresDays = "0" // 0 = never
     @State private var priceText = ""
+    @State private var licensePlatform: LicenseCore.LicensePlatform = .any
 
     @State private var showConfirm = false
     @State private var generatedCode: String?
@@ -159,6 +160,16 @@ struct GenerateSerialView: View {
                             TextField("Preț încasat (EUR)", text: $priceText)
                                 .textFieldStyle(.roundedBorder)
                         }
+                        // GDC-LICENSE-PLATFORM (Etapa 2): .any produce un
+                        // cod v1 (compatibil retroactiv, nicio restrictie);
+                        // celelalte 3 produc un cod v2 cu byte de platforma.
+                        Picker("Platformă", selection: $licensePlatform) {
+                            Text("Oricare (implicit)").tag(LicenseCore.LicensePlatform.any)
+                            Text("Doar Mac").tag(LicenseCore.LicensePlatform.macOnly)
+                            Text("Doar Windows").tag(LicenseCore.LicensePlatform.windowsOnly)
+                            Text("Combo (Mac + Windows)").tag(LicenseCore.LicensePlatform.crossPlatform)
+                        }
+                        .pickerStyle(.menu)
                     }
                     .padding(8)
                 }
@@ -264,7 +275,8 @@ struct GenerateSerialView: View {
             let key = try VendorKeyStore.loadPrivateKeyBase64()
             let code = try LicenseGenerator.generate(
                 privateKeyBase64: key, productID: selectedID, expiresAt: expiresAt,
-                machineIDBase32: trimmedMachineID.isEmpty ? nil : trimmedMachineID
+                machineIDBase32: trimmedMachineID.isEmpty ? nil : trimmedMachineID,
+                platform: licensePlatform
             )
             generatedCode = code
 

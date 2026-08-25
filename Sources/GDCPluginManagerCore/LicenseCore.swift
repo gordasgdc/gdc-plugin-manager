@@ -19,13 +19,37 @@ import CryptoKit
 /// signs new codes stays on Cristi's machine in `gdc-license-system/`,
 /// never in this app.
 public enum LicenseCore {
+    /// GDC-LICENSE-PLATFORM (Etapa 2, 2026-08-25): al 23-lea octet, ADAUGAT
+    /// la finalul payload-ului v1 (22 octeti), niciodata repurposand nonce-ul
+    /// existent — vezi nota de compatibilitate de mai jos.
+    ///   0 = legacy/oricare platforma (identic cu absenta bitului — orice
+    ///       cod v1, deja emis, se comporta EXACT ca inainte)
+    ///   1 = mac_only
+    ///   2 = windows_only
+    ///   3 = cross_platform (Mac + Windows, acelasi cod)
+    public enum LicensePlatform: UInt8 {
+        case any = 0
+        case macOnly = 1
+        case windowsOnly = 2
+        case crossPlatform = 3
+
+        /// Platforma pe care ruleaza acest binar — comparata la validare.
+        static var current: LicensePlatform { .macOnly } // acest target compileaza DOAR pe macOS
+
+        func allows(_ current: LicensePlatform) -> Bool {
+            self == .any || self == .crossPlatform || self == current
+        }
+    }
+
     public struct Payload {
         public let expiresAt: Int64 // unix seconds, 0 = never expires
         public let machineLocked: Bool
+        public let platform: LicensePlatform
 
-        public init(expiresAt: Int64, machineLocked: Bool) {
+        public init(expiresAt: Int64, machineLocked: Bool, platform: LicensePlatform = .any) {
             self.expiresAt = expiresAt
             self.machineLocked = machineLocked
+            self.platform = platform
         }
     }
 
@@ -33,6 +57,10 @@ public enum LicenseCore {
         case malformedCode
         case badSignature
         case wrongProduct
+        /// Codul e valid, dar emis pentru alta platforma (ex. windows_only
+        /// activat pe Mac). Codurile v1 (fara byte de platforma) nu pot
+        /// avea niciodata aceasta eroare — decodeaza mereu ca `.any`.
+        case wrongPlatform(Payload)
         /// Carries the parsed Payload — LicenseManager needs it to decide
         /// kill-switch policy (demo mode) without re-parsing.
         case wrongMachine(Payload)
@@ -53,18 +81,36 @@ public enum LicenseCore {
     static let publicKeyBase64 = "I1h23MNMRbOhc0ObKJrfa3oFHKA9w+SzbNrroAIy8hs="
 
     /// Exposed so the vendor app's LicenseGenerator can build the exact
-    /// same payload shape when signing new codes.
+    /// same payload shape when signing new codes. `payloadSize` ramane
+    /// dimensiunea v1 (neschimbata — orice cod deja emis foloseste asta);
+    /// `payloadSizeV2` e dimensiunea noilor coduri, cu byte-ul de platforma
+    /// ADAUGAT la finalul payload-ului v1, nu suprascriind nimic existent.
     public static let payloadSize = 22
+    public static let payloadSizeV2 = 23
 
     /// Validates a serial the user typed/pasted against `expectedProductID`.
     /// `hwidAvailable` (default true, i.e. unchanged for interactive
     /// activation) lets LicenseManager's periodic re-check pass `false`
     /// when IOKit couldn't answer just now — see `.hwidUnavailable` above.
+    ///
+    /// GDC-LICENSE-PLATFORM: accepta AMBELE dimensiuni de payload —
+    /// 86 octeti bruti (22+64, coduri v1, deja emise) si 87 (23+64, coduri
+    /// noi, cu platforma). Un cod v1 decodeaza mereu platforma ca `.any`,
+    /// deci comportamentul lui ramane identic dinainte de aceasta schimbare
+    /// — nicio licenta existenta nu poate fi blocata retroactiv.
     public static func validate(serial: String, expectedProductID: String, hwidAvailable: Bool = true) -> Result<Payload, ValidationError> {
-        guard let packed = base32Decode(serial), packed.count == payloadSize + 64 else {
+        guard let packed = base32Decode(serial) else {
             return .failure(.malformedCode)
         }
-        let payloadBytes = packed.prefix(payloadSize)
+        let effectiveSize: Int
+        if packed.count == payloadSize + 64 {
+            effectiveSize = payloadSize
+        } else if packed.count == payloadSizeV2 + 64 {
+            effectiveSize = payloadSizeV2
+        } else {
+            return .failure(.malformedCode)
+        }
+        let payloadBytes = packed.prefix(effectiveSize)
         let signature = packed.suffix(64)
 
         guard let publicKeyData = Data(base64Encoded: publicKeyBase64),
@@ -87,7 +133,15 @@ public enum LicenseCore {
 
         let storedMachineHash = Array(bytes[16..<22])
         let isMachineLocked = storedMachineHash.contains { $0 != 0 }
-        let payload = Payload(expiresAt: expiresAt, machineLocked: isMachineLocked)
+        let platform: LicensePlatform = (effectiveSize == payloadSizeV2)
+            ? (LicensePlatform(rawValue: bytes[22]) ?? .any)
+            : .any
+        let payload = Payload(expiresAt: expiresAt, machineLocked: isMachineLocked, platform: platform)
+
+        guard platform.allows(.current) else {
+            return .failure(.wrongPlatform(payload))
+        }
+
         if isMachineLocked {
             guard hwidAvailable else {
                 return .failure(.hwidUnavailable(payload))

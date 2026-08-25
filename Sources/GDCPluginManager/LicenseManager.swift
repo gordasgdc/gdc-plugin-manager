@@ -154,6 +154,7 @@ final class LicenseManager: ObservableObject {
         case .malformedCode: return L.t("license.error.malformed")
         case .badSignature: return L.t("license.error.badSignature")
         case .wrongProduct: return L.t("license.error.wrongProduct")
+        case .wrongPlatform: return L.t("license.error.wrongPlatform")
         case .wrongMachine: return L.t("license.error.wrongMachine")
         case .hwidUnavailable: return L.t("license.error.hwidUnavailable")
         case .expired: return L.t("license.error.expired")

@@ -194,6 +194,7 @@ enum L {
         "license.error.malformed": [.ro: "Codul nu e valid — verifică să-l fi copiat complet.", .en: "That code isn't valid — check you copied all of it.", .es: "Ese código no es válido — comprueba que lo copiaste completo."],
         "license.error.badSignature": [.ro: "Codul nu e valid.", .en: "That code isn't valid.", .es: "Ese código no es válido."],
         "license.error.wrongProduct": [.ro: "Acest cod nu se potrivește cu niciun produs din catalogul curent.", .en: "This code doesn't match any product in the current catalog.", .es: "Este código no coincide con ningún producto del catálogo actual."],
+        "license.error.wrongPlatform": [.ro: "Acest cod e valabil pentru altă platformă (Mac/Windows).", .en: "This code is valid for a different platform (Mac/Windows).", .es: "Este código es válido para otra plataforma (Mac/Windows)."],
         "license.error.wrongMachine": [.ro: "Acest cod e activat pentru alt calculator.", .en: "This code is activated for a different Mac.", .es: "Este código está activado para otro Mac."],
         "license.error.hwidUnavailable": [.ro: "Nu am putut citi identificatorul hardware acum — încearcă din nou.", .en: "Couldn't read this Mac's hardware ID just now — try again.", .es: "No se pudo leer el identificador de hardware ahora — inténtalo de nuevo."],
         "license.error.expired": [.ro: "Acest cod a expirat.", .en: "This code has expired.", .es: "Este código ha caducado."],
