@@ -789,10 +789,20 @@
     if (e.key === 'Escape') { e.preventDefault(); closeLightbox(); }
   });
 
-  fetch('./catalog.json')
+  // Timeout explicit (2026-08-25): fara AbortController, un fetch care
+  // ramane agatat (DNS, retea proasta) nu declanseaza NICIODATA .catch() -
+  // pagina ar ramane blocata la "Se incarca catalogul..." la infinit.
+  // 8s, nu 2s: catalog.json incarca normal in ~0.2s, dar o conexiune
+  // mobila lenta e usor peste 2s - un timeout prea agresiv ar arata
+  // eroare pentru utilizatori complet normali, doar mai lenti.
+  const CATALOG_TIMEOUT_MS = 8000;
+  const catalogController = new AbortController();
+  const catalogTimeoutId = setTimeout(() => catalogController.abort(), CATALOG_TIMEOUT_MS);
+
+  fetch('./catalog.json', { signal: catalogController.signal })
     .then(r => r.json())
-    .then(data => { lastCatalog = data || {}; renderCatalog(); })
-    .catch(() => { lastCatalog = 'error'; renderCatalog(); });
+    .then(data => { clearTimeout(catalogTimeoutId); lastCatalog = data || {}; renderCatalog(); })
+    .catch(() => { clearTimeout(catalogTimeoutId); lastCatalog = 'error'; renderCatalog(); });
 
   // Language switch — same RO-default / EN / ES set as the desktop app
   // (Localization.swift), independent of the browser's own locale unless
@@ -852,7 +862,7 @@
       'hero.eyebrow': 'Mac and Windows · DaVinci Resolve',
       'hero.h1': 'GDC products for<br>Resolve, <span class="accent">one click away</span>.',
       'hero.lead': 'DCTLs, LUTs and Fuses installed straight into the folders DaVinci Resolve reads on launch — no hunting for hidden folders, no copying files by hand. The app itself is completely free; you only pay (via a donation) for the products you want.',
-      'hero.download': '⬇ Download for Mac', 'hero.download.windows': '⬇ Download for Windows', 'hero.download.android': '📱 Open on your phone', 'hero.android.note': 'On your phone (Android or iPhone), the button above opens the app right in your browser — no install, no warnings. You can add an icon to your home screen from your browser\\'s menu ("Add to Home Screen"). It includes the full catalog — products, courses, events and partner stores.', 'hero.how': 'See how it works',
+      'hero.download': '⬇ Download for Mac', 'hero.download.windows': '⬇ Download for Windows', 'hero.download.android': '📱 Open on your phone', 'hero.android.note': 'On your phone (Android or iPhone), the button above opens the app right in your browser — no install, no warnings. You can add an icon to your home screen from your browser\'s menu ("Add to Home Screen"). It includes the full catalog — products, courses, events and partner stores.', 'hero.how': 'See how it works',
       'hero.meta1': '100% free app', 'hero.meta2': 'Mac (Apple Silicon) and Windows',
       'features.tag': 'Features', 'features.h2': 'Everything plugin-related, in one place',
       'features.desc': 'The app knows exactly where DaVinci Resolve wants each file type and puts it there for you.',

@@ -4,6 +4,20 @@ Format: fiecare intrare listează versiunea, platformele afectate, și — pentr
 funcționalități noi — dacă are paritate completă Mac/Windows sau e "doar pe
 o platformă, portare pe cealaltă e TODO".
 
+## Site (gordas.dev) — 2026-08-25
+**Bug critic găsit și reparat**: catalogul rămânea blocat la „Se încarcă
+catalogul…" pe TOATE limbile — cauza NU era rețeaua/`fetch` (`catalog.json`
+încărca oricum în ~0.2s, verificat direct), ci un **crash de sintaxă JS**:
+`browser\\'s menu` (backslash dublu + apostrof) în textul EN
+`hero.android.note` termina string-ul JS prematur, oprind execuția
+întregului `<script>` ÎNAINTE să ajungă la `fetch()` — pagina rămânea pe
+placeholder-ul static din HTML. Fix: `\\'` → `\'` (un singur backslash).
+Verificat cu `node --check` pe scriptul extras + testat local (server
+Python + Browser) pe toate 3 limbi (RO/EN/ES) — catalogul se randă corect.
+Adăugat și un timeout explicit de 8s (`AbortController`) pe `fetch`-ul de
+catalog, ca un hang real de rețea (nu doar o eroare) să nu blocheze pagina
+la infinit — nu exista niciun timeout înainte.
+
 ## v1.2.22 (2026-08-25)
 **Doar Mac** — TODO paritate Windows (uninstaller Windows deja există separat, vezi `gdc-plugin-manager-win`):
 - Eliminat launcher-ul `Instalare_GDCPluginManager.command` (hack Gatekeeper/quarantine inutil — pachetul e deja semnat+notarizat+stapled).
