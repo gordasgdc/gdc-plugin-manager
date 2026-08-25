@@ -381,13 +381,13 @@
           "sha256" : "c941d507ee12b8e9ee3f71f42ce5ce8d9dabe748e67a485f3293f305537904ae"
         }
       ],
-      "iconSymbol" : "wand.and.stars",
+      "iconSymbol" : "eyedropper.halffull",
       "id" : "LiniarWorkflow",
       "isFree" : false,
       "isTrial" : false,
       "name" : "LiniarWorkflow",
       "priceEUR" : 487,
-      "supportedOS" : "crossPlatform",
+      "supportedOS" : "macOS",
       "type" : "lut",
       "version" : "1.0.0",
       "youtubeURL" : "https://www.youtube.com/@cristigordas"
