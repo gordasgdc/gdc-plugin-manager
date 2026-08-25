@@ -163,6 +163,7 @@
       "isTrial" : false,
       "name" : "GDC",
       "priceEUR" : 0,
+      "supportedOS" : "crossPlatform",
       "type" : "lut",
       "version" : "1.0.0"
     },
@@ -272,6 +273,7 @@
       "isTrial" : false,
       "name" : "Intermediate Workflow",
       "priceEUR" : 378,
+      "supportedOS" : "crossPlatform",
       "type" : "lut",
       "version" : "1.0.0"
     },
@@ -385,6 +387,7 @@
       "isTrial" : false,
       "name" : "LiniarWorkflow",
       "priceEUR" : 487,
+      "supportedOS" : "crossPlatform",
       "type" : "lut",
       "version" : "1.0.0",
       "youtubeURL" : "https://www.youtube.com/@cristigordas"
@@ -403,6 +406,7 @@
       "isTrial" : false,
       "name" : "Raz",
       "priceEUR" : 0,
+      "supportedOS" : "crossPlatform",
       "type" : "powerGrade",
       "version" : "1.0.0"
     }
@@ -416,5 +420,8 @@
       "url" : "https://mitmag.ro/"
     }
   ],
-  "updatedAt" : "2026-08-24"
+  "serviceCenters" : [
+
+  ],
+  "updatedAt" : "2026-08-25"
 }
