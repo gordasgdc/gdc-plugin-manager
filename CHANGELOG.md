@@ -4,6 +4,11 @@ Format: fiecare intrare listează versiunea, platformele afectate, și — pentr
 funcționalități noi — dacă are paritate completă Mac/Windows sau e "doar pe
 o platformă, portare pe cealaltă e TODO".
 
+## v1.2.20 (2026-08-25)
+**Doar Windows** — hotfix critic:
+- Crash real la pornire pe client Windows (`BadImageFormatException: Duplicate type`, `MainWindow` → `LicensePaneViewModel`), cauzat de un bug de corupere a metadatelor în Obfuscar 3.0.0-beta.19 (confirmat cu două configurații diferite — vezi comentariul din `build-windows.yml`).
+- Fix: obfuscarea de tipuri e dezactivată definitiv pe `GDCPluginManager.Core.dll` — corectitudinea contează mai mult decât obscurizarea codului. TODO: re-evaluat alt tool de obfuscare, dacă devine nevoie.
+
 ## v1.2.19 (2026-08-25)
 **Toate 4 componente afectate** (Mac Swift, Windows C#) — **paritate completă**:
 - Selector Compatibilitate OS pe produse: câmp `supportedOS` (macOS/Windows/crossPlatform) în `PluginItem`, implicit `crossPlatform` (retro-compatibil, nicio intrare veche nu e afectată).

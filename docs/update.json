@@ -1,7 +1,7 @@
 {
-  "version": "1.2.19",
+  "version": "1.2.20",
   "release_date": "2026-08-25",
-  "changes": "Selector compatibilitate OS pe produse (macOS/Windows/ambele), badge pe card + blocare instalare cand nu se potriveste cu sistemul tau.",
+  "changes": "Hotfix Windows: crash real la pornire (bug de obfuscare a codului) - rezolvat prin dezactivarea obfuscarii.",
   "download_url": {
     "mac": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager.pkg",
     "windows": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Windows.zip"
