@@ -28,12 +28,20 @@ cp AppIcon.icns "$BUILD_OUT/Contents/Resources/AppIcon.icns"
 # Command Line Tools). Vezi PowerGradeImporter.swift findPython3().
 cp -R PythonRuntime "$BUILD_OUT/Contents/Resources/PythonRuntime"
 
-# Same local trusted certificate reused across every GDC Mac app this
-# session - this app needs no TCC-gated permissions, so a dedicated cert
-# isn't necessary, but a stable identity still avoids Gatekeeper "unknown
-# developer" friction being different every rebuild.
-SIGN_IDENTITY="CursorPro"
-codesign --force --deep --sign "$SIGN_IDENTITY" "$BUILD_OUT"
+# Semnare + notarizare Apple Developer ID, daca certificatul e configurat
+# (vezi codesigning/README.md) - altfel fallback la identitatea locala
+# ad-hoc de mai jos (fara cont Apple Developer, ramane cu avertismentul
+# Gatekeeper "unidentified developer", ca pana acum).
+if [ -n "${APPLE_SIGN_IDENTITY_APP:-}" ]; then
+    ./codesigning/sign-and-notarize.sh app "$BUILD_OUT"
+else
+    # Same local trusted certificate reused across every GDC Mac app this
+    # session - this app needs no TCC-gated permissions, so a dedicated cert
+    # isn't necessary, but a stable identity still avoids Gatekeeper "unknown
+    # developer" friction being different every rebuild.
+    SIGN_IDENTITY="CursorPro"
+    codesign --force --deep --sign "$SIGN_IDENTITY" "$BUILD_OUT"
+fi
 
 INSTALLED="/Applications/GDCPluginManager.app"
 if [ -d "$INSTALLED" ]; then

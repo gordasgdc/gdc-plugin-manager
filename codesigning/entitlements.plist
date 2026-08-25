@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  entitlements.plist — sablon comun pentru toate aplicatiile GDC pe Mac,
+  necesar la activarea Hardened Runtime (obligatoriu pentru notarizare).
+  Copiaza fisierul asta neschimbat in orice alt repo GDC care bundle-uieste
+  un Python portabil (PythonRuntime/) - vezi codesigning/README.md.
+
+  DE CE fiecare cheie exista, ca sa nu fie sterse "din greseala" la un
+  refactor viitor:
+-->
+<plist version="1.0">
+<dict>
+    <!-- Fara asta, Python-ul bundle-uit (PythonRuntime/) nu-si poate
+         incarca propriile module native (.so) sub Hardened Runtime -
+         Apple valideaza implicit ca orice biblioteca incarcata dinamic
+         are aceeasi echipa de semnare ca binarul principal, dar
+         modulele native din cpython-build-standalone NU sunt semnate
+         de Apple si nici de noi individual. Fara aceasta cheie,
+         aplicatia crapa la prima incarcare a unui modul Python nativ
+         (ex. _ssl, _hashlib) DUPA notarizare, desi merge perfect local
+         inainte de semnare - o capcana clasica, usor de ratat la teste. -->
+    <key>com.apple.security.cs.disable-library-validation</key>
+    <true/>
+
+    <!-- La fel: Python-ul insusi (si eventual alte binare bundle-uite)
+         aloca memorie executabila la runtime (JIT-uri optionale in
+         extensii C, ctypes etc.) - fara asta, Hardened Runtime poate
+         bloca acele alocari. Safe de lasat activ chiar daca nu toate
+         componentele il folosesc. -->
+    <key>com.apple.security.cs.allow-jit</key>
+    <true/>
+
+    <!-- Python interpretat poate genera cod la zbor (eval/exec, module
+         compilate on-the-fly) - fara asta, Hardened Runtime poate refuza
+         alocarea de memorie scriptibila+executabila folosita de asta. -->
+    <key>com.apple.security.cs.allow-unsigned-executable-memory</key>
+    <true/>
+
+    <!-- Aplicatiile GDC NU sunt sandboxed (nu vin din App Store) - nu
+         adaugam com.apple.security.app-sandbox. Daca vreodata trecem
+         prin App Store, tot fisierul asta trebuie revizuit de la zero,
+         nu doar adaugat sandbox-ul peste cheile de mai sus. -->
+</dict>
+</plist>

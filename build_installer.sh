@@ -3,13 +3,13 @@
 # installer with a license (Terms & Conditions) pane the user must
 # accept to continue — via productbuild's native license-pane support.
 #
-# NOTE: this produces an UNSIGNED installer package (we don't have a
-# paid Apple Developer ID Installer certificate, only a free local code-
-# signing identity for the app itself). macOS Gatekeeper will show an
-# "unidentified developer" warning on first open — right-click the .pkg
-# → Open, or allow it in System Settings → Privacy & Security. This is
-# normal for indie-distributed tools outside the App Store; mention it
-# in the download instructions.
+# NOTE: produces a SIGNED + NOTARIZED .pkg automatically once the Apple
+# Developer ID Installer certificate is configured (see
+# codesigning/README.md, one-time setup). Until then, falls back to an
+# UNSIGNED package — macOS Gatekeeper shows an "unidentified developer"
+# warning on first open (right-click the .pkg → Open, or allow it in
+# System Settings → Privacy & Security). Mention that in download
+# instructions only while unsigned.
 set -euo pipefail
 cd "$(dirname "$0")"
 
@@ -71,6 +71,11 @@ productbuild \
     "$FINAL_PKG"
 
 rm -rf "$PAYLOAD_ROOT" "$COMPONENT_PKG"
+
+# Semnare + notarizare a .pkg-ului final, daca certificatul Installer e
+# configurat (vezi codesigning/README.md) - altfel ramane nesemnat, ca
+# pana acum (avertisment Gatekeeper la instalare).
+./codesigning/sign-and-notarize.sh pkg "$FINAL_PKG"
 
 # A version-agnostic copy too — the landing page always links to this
 # stable filename (releases/latest/download/GDCPluginManager.pkg), so it
