@@ -40,8 +40,14 @@ Orice folder care cere elevare (`/Library/OFX/Plugins`) se scrie cu `osascript .
 **5. PowerGrade: EXCLUSIV prin Scripting API-ul DaVinci, niciodată scriere directă în baza de date de Gallery.**
 Vezi `PowerGradeImporter.swift`. Resolve nu expune Gallery-ul ca fișiere editabile manual (nu există `index.xml`/`.drx` documentat oficial) — orice scriere directă în structura internă a bazei de date de proiecte riscă s-o corupă. Dacă scripting-ul nu e disponibil (Resolve închis, Free edition fără bridge), cade pe `stagedOnly` — fișierele rămân verificate pe disc, userul face un import manual, niciodată eroare dură.
 
-**6. Bundle-ul `.command`.**
-Wrapper-ul de lansare de pe Mac (`Instalare_GDCPluginManager.command`) rulează `close front window` la final (nu tot Terminal-ul) și pointează exact spre `.app`-ul din `Aplicatie/` — vezi pattern-ul identic în `datamover`.
+**6. [ÎNVECHIT 2026-08-25] Bundle-ul `.command`.**
+Exista un wrapper `Instalare_GDCPluginManager.command` care rula
+`xattr -dr com.apple.quarantine` pe `.pkg` — ELIMINAT complet (fișier
+șters). Pachetul e semnat + notarizat + **stapled**, deci Gatekeeper îl
+acceptă nativ la dublu-click, fără nicio intervenție. Curățarea unei
+instalări vechi se face acum corect, în `installer/scripts/preinstall`
+(`pkgbuild --scripts`) — pkill + `rm -rf` pe copia veche, nimic legat de
+Gatekeeper/quarantine acolo. Vezi aceeași decizie în `CursorPro/CLAUDE.md`.
 
 ## Unde se rulează testele reale
 Testarea Windows depinde de disponibilitatea unui prieten (sesiune AnyDesk la distanță) — poate dura ore/zile între ferestre de test. Nu bloca alt lucru așteptând un retest.

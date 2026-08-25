@@ -33,11 +33,18 @@ echo "==> Building component package…"
 # contains its own Applications/ subfolder — using "/Applications" here would
 # nest it again into /Applications/Applications/, exactly the bug found and
 # fixed today in gdc-production-manager's installer.
+#
+# --scripts: preinstall CURATA doar o instalare veche ramasa (pkill +
+# rm -rf /Applications/GDCPluginManager.app), ca sa nu ramana doua copii
+# ale aplicatiei cu acelasi bundle ID pe disc. NU contine niciun hack de
+# Gatekeeper/quarantine - pachetul e semnat + notarizat + stapled mai jos,
+# deci Gatekeeper il accepta nativ (vezi CLAUDE.md, 2026-08-25).
 pkgbuild \
     --root "$PAYLOAD_ROOT" \
     --identifier "$PKG_ID" \
     --version "$VERSION" \
     --install-location "/" \
+    --scripts "installer/scripts" \
     "$COMPONENT_PKG"
 
 echo "==> Writing distribution definition…"
@@ -84,26 +91,29 @@ rm -rf "$PAYLOAD_ROOT" "$COMPONENT_PKG"
 # (so the landing page's link always resolves to whatever is newest).
 cp "$FINAL_PKG" "$DIST_DIR/GDCPluginManager.pkg"
 
-echo "==> Copying first-run launcher (removes Gatekeeper quarantine automatically)…"
-cp "Instalare_GDCPluginManager.command" "$DIST_DIR/Instalare_GDCPluginManager.command"
-chmod +x "$DIST_DIR/Instalare_GDCPluginManager.command"
+# REGULA PERMANENTA (2026-08-25): fiecare pachet trebuie sa includa un
+# uninstaller complet, nu doar instalatorul - vezi CLAUDE.md. Copiat aici,
+# nu generat din nou, ca sa nu existe doua surse de adevar pentru script.
+echo "==> Copying uninstaller (Dezinstalare_GDCPluginManager.command)…"
+cp "Dezinstalare_GDCPluginManager.command" "$DIST_DIR/Dezinstalare_GDCPluginManager.command"
+chmod +x "$DIST_DIR/Dezinstalare_GDCPluginManager.command"
 
-# Bundle .pkg + launcher into one zip. The website's download button
-# links to THIS zip, not the bare .pkg — a direct .pkg link means the
-# user never sees Instalare_GDCPluginManager.command, defeating the
-# whole point of the launcher.
-echo "==> Building GDCPluginManager-Mac.zip (pkg + launcher)…"
-# Only the .command is visible at the archive root — pkg goes in a
-# subfolder, so there's no confusion about what to double-click first.
+# Bundle .pkg + uninstaller + ghid PDF intr-un zip curat. Pachetul e semnat
+# + notarizat + stapled, deci Gatekeeper il accepta nativ la dublu-click -
+# NU mai exista niciun launcher/script de bypass (eliminat 2026-08-25,
+# acelasi motiv ca la CursorPro: inutil si arata neprofesionist cand
+# certificarea Apple e deja in regula). Totul la radacina arhivei.
+echo "==> Building GDCPluginManager-Mac.zip (pkg + uninstaller + ghid)…"
 ZIP_STAGE="$DIST_DIR/zip_stage"
 rm -rf "$ZIP_STAGE"
-mkdir -p "$ZIP_STAGE/Aplicatie"
-cp "$DIST_DIR/GDCPluginManager.pkg" "$ZIP_STAGE/Aplicatie/"
-cp "$DIST_DIR/Instalare_GDCPluginManager.command" "$ZIP_STAGE/"
-chmod +x "$ZIP_STAGE/Instalare_GDCPluginManager.command"
+mkdir -p "$ZIP_STAGE"
+cp "$DIST_DIR/GDCPluginManager.pkg" "$ZIP_STAGE/"
+cp "$DIST_DIR/Dezinstalare_GDCPluginManager.command" "$ZIP_STAGE/"
+chmod +x "$ZIP_STAGE/Dezinstalare_GDCPluginManager.command"
+cp "Sources/GDCPluginManager/Resources/Ghid-GDCPluginManager-ro.pdf" "$ZIP_STAGE/Ghid-de-Utilizare.pdf" 2>/dev/null || true
 ( cd "$ZIP_STAGE" && zip -q -r -y "../GDCPluginManager-Mac.zip" . )
 rm -rf "$ZIP_STAGE"
 
 echo "==> Done: $FINAL_PKG"
-echo "==> Also: $DIST_DIR/GDCPluginManager.pkg, $DIST_DIR/Instalare_GDCPluginManager.command, $DIST_DIR/GDCPluginManager-Mac.zip"
+echo "==> Also: $DIST_DIR/GDCPluginManager.pkg, $DIST_DIR/Dezinstalare_GDCPluginManager.command, $DIST_DIR/GDCPluginManager-Mac.zip"
 echo "    Upload GDCPluginManager-Mac.zip to the GitHub release (that's what the website links to)."

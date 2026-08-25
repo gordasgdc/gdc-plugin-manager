@@ -4,6 +4,13 @@ Format: fiecare intrare listează versiunea, platformele afectate, și — pentr
 funcționalități noi — dacă are paritate completă Mac/Windows sau e "doar pe
 o platformă, portare pe cealaltă e TODO".
 
+## v1.2.22 (2026-08-25)
+**Doar Mac** — TODO paritate Windows (uninstaller Windows deja există separat, vezi `gdc-plugin-manager-win`):
+- Eliminat launcher-ul `Instalare_GDCPluginManager.command` (hack Gatekeeper/quarantine inutil — pachetul e deja semnat+notarizat+stapled).
+- Adăugat `Dezinstalare_GDCPluginManager.command`, inclus automat în fiecare release (`GDCPluginManager-Mac.zip`).
+- Curățare de versiune veche mutată corect într-un `installer/scripts/preinstall` (fără hack-uri).
+- Ghid PDF de utilizare inclus direct în arhiva de release, nu doar în meniul Help al aplicației.
+
 ## v1.2.21 (2026-08-25)
 **Mac + Windows** — **paritate completă**, în urma unui audit complet cerut explicit (Furnizor → Server → Client):
 - Badge compatibilitate OS (🍎/🪟/🔄) vizibil acum pentru TOATE cele 3 stări, inclusiv „Ambele"/`crossPlatform` — decizia inițială de a-l ascunde pentru starea implicită a fost o presupunere greșită despre așteptările UX.

@@ -1,0 +1,20 @@
+#!/bin/bash
+# Preinstall script rulat de installer.d (pkgbuild --scripts) INAINTE de a
+# scrie noua copie a aplicatiei.
+#
+# NU contine niciun hack de Gatekeeper/quarantine — pachetul e semnat cu
+# Developer ID Installer si notarizat/stapled, deci Gatekeeper il accepta
+# nativ, fara nicio interventie. Singurul scop aici: curatarea unei
+# instalari vechi ramase, ca sa nu existe doua copii ale aplicatiei cu
+# acelasi bundle ID pe disc (acelasi motiv ca la CursorPro, vezi CLAUDE.md).
+
+set -e
+
+pkill -x "GDCPluginManager" 2>/dev/null || true
+sleep 1
+
+if [ -d "/Applications/GDCPluginManager.app" ]; then
+    rm -rf "/Applications/GDCPluginManager.app"
+fi
+
+exit 0
