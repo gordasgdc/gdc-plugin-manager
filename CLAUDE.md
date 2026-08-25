@@ -138,3 +138,18 @@ harta completă a directoarelor și cum se leagă între ele (Furnizor citește
 Dacă vreun viitor asistent găsește codul în `~/Downloads`, e semn că a fost
 mutat greșit înapoi — relocă-l în `~/Developer/` și actualizează
 `RepoCheckoutPaths.swift` dacă s-a schimbat structura.
+
+## REGULĂ PERMANENTĂ: Certificate & chei private — NICIODATĂ în git (2026-08-25)
+Certificatele Apple (`.p12`/`.cer`) și orice altă cheie privată (`.p8`,
+`.key`, `.pem`, `.mobileprovision`) stau EXCLUSIV local, în
+`~/Developer/Certificates/` — un folder în afara oricărui repo git
+(`~/Developer/` nu e sub git). Toate aceste extensii sunt în `.gitignore`
+al fiecărui repo GDC, ca plasă de siguranță suplimentară. Motiv: sistemele
+Apple detectează și REVOCĂ automat certificate expuse public, iar contul
+de Developer poate fi suspendat. Niciun script de build nu are nevoie să
+citească din acest folder — semnarea locală folosește identitatea din
+Keychain (`security find-identity`) + credențialele de notarizare deja
+salvate acolo (`gdc-notary`, vezi `codesigning/README.md`). Dacă un viitor
+asistent găsește un `.p12`/`.cer` oriunde altundeva decât în acest folder
+(Desktop, Downloads, un repo), mută-l imediat acolo și verifică
+`git log --all --diff-filter=A` că n-a fost comis vreodată.

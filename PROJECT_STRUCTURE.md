@@ -66,6 +66,27 @@ cd ~/Developer/GDCPluginManager
                              # non-interactive, altfel sare peste semnare silențios)
 ```
 
+## Certificate & chei private (2026-08-25)
+
+**`~/Developer/Certificates/`** — folder LOCAL, SEPARAT de orice repo git
+(`~/Developer/` nu e sub git deloc). Conține `.p12`/`.cer` pentru semnarea
+Apple (Developer ID Application/Installer, intermediarul G2CA). Permisiuni
+restrânse (`chmod 700` folder, `chmod 600` fișiere — doar tu poți citi).
+
+**REGULĂ ABSOLUTĂ: niciun `.p12`/`.cer`/`.p8`/`.key`/`.pem`/`.mobileprovision`
+nu intră NICIODATĂ într-un commit git, în niciun repo, public sau privat.**
+Sistemele Apple detectează și revocă automat certificate expuse public, iar
+contul de Developer poate fi suspendat. Toate aceste extensii sunt în
+`.gitignore` (verificat: niciodată comise în istoricul acestui repo).
+
+Scripturile de semnare (`codesigning/sign-and-notarize.sh`) NU citesc direct
+din acest folder — folosesc identitatea deja importată în macOS Keychain
+(`security find-identity`) + credențialele de notarizare deja salvate acolo
+(`xcrun notarytool store-credentials gdc-notary`, o singură dată per Mac,
+vezi `codesigning/README.md`). Folderul `Certificates/` e doar arhiva
+personală a fișierelor originale (utile dacă trebuie re-importate pe alt
+Mac sau pentru export CI ulterior) — nu o dependință de build.
+
 ## Repo-uri înrudite (nu în acest folder)
 
 - `gordasgdc/gdc-plugin-manager-win` → `~/Developer/GDCPluginManagerWin`

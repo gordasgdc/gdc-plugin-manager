@@ -22,3 +22,16 @@ Sources/GDCPluginManagerFurnizor/SupabaseAdminConfig.swift
 # Python portabil bundle-uit — ~66MB, resursa binara redistribuibila, nu
 # cod sursa. Ruleaza ./fetch_python_runtime.sh o data pe masina noua.
 PythonRuntime/
+
+# SECURITATE (2026-08-25): certificate Apple / chei private / provisioning
+# profiles NU trebuie NICIODATA sa ajunga intr-un commit, in niciun repo,
+# public sau privat - sistemele automate Apple pot detecta si REVOCA
+# certificate expuse, iar contul de Developer poate fi suspendat. Acestea
+# stau exclusiv local, in ~/Developer/Certificates/ (in afara oricarui
+# repo git) - vezi PROJECT_STRUCTURE.md / CLAUDE.md pentru detalii.
+*.p12
+*.cer
+*.p8
+*.key
+*.pem
+*.mobileprovision
