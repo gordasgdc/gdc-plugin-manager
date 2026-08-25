@@ -102,6 +102,15 @@ notarize() {
             --issuer "$APPLE_NOTARY_ISSUER_ID" \
             --wait
         rm -f "$key_p8_path"
+    elif [ -n "${APPLE_NOTARY_APPLE_ID:-}" ]; then
+        # Cale CI simpla (fara cheie API): apple-id + parola de aplicatie
+        # + team-id, direct ca 3 secrete separate - nu necesita niciun
+        # fisier temporar. Vezi codesigning/README.md.
+        xcrun notarytool submit "$upload_path" \
+            --apple-id "$APPLE_NOTARY_APPLE_ID" \
+            --team-id "$APPLE_NOTARY_TEAM_ID" \
+            --password "$APPLE_NOTARY_PASSWORD" \
+            --wait
     else
         # Cale locala: profil salvat o singura data cu
         # `xcrun notarytool store-credentials gdc-notary` (vezi README).

@@ -66,24 +66,59 @@ La finalul lui `build_installer.sh` (după ce `.pkg`-ul final e gata):
 "$(dirname "$0")/codesigning/sign-and-notarize.sh" pkg "$FINAL_PKG"
 ```
 
-## Pentru GitHub Actions (CI), în loc de Keychain local
+## Pentru GitHub Actions (CI) — ex: gdc-production-manager
 
-Trei secrete noi în repo (Settings → Secrets and variables → Actions),
-**aceleași nume peste tot**, ca să poți copia și workflow-ul YAML neschimbat:
+Spre deosebire de GDC Plugin Manager/CursorPro GDC (build local, pe Mac-ul
+tău, unde certificatele deja există în Keychain), `gdc-production-manager`
+se compilează pe un runner GitHub proaspăt — fără Keychain, fără
+certificate. Sunt necesari 2 pași suplimentari.
+
+**1. Exportă certificatele din Keychain-ul tău local, ca `.p12`:**
+
+```bash
+security export -k login.keychain-db -t identities -f pkcs12 \
+  -P "o-parola-noua-doar-pentru-acest-export" \
+  -o ~/Desktop/app.p12
+```
+(Keychain Access → click pe certificat → dropdown ▸ → Export — echivalent, dacă preferi UI. Alege o parolă nouă, diferită de orice altă parolă — o pui într-un secret separat mai jos.) Repetă pentru Installer.
+
+**2. Adaugă 7 secrete noi în `gdc-production-manager`** (Settings → Secrets
+and variables → Actions) — **aceleași nume peste tot**, ca workflow-ul YAML
+să fie copiabil neschimbat:
 
 | Secret | Conține |
 |---|---|
-| `APPLE_SIGN_IDENTITY_APP` | Textul identității, ca mai sus |
-| `APPLE_SIGN_IDENTITY_INSTALLER` | Textul identității, ca mai sus |
-| `APPLE_NOTARY_KEY_ID` | Key ID-ul cheii API (App Store Connect → Users and Access → Integrations) |
-| `APPLE_NOTARY_ISSUER_ID` | Issuer ID, de pe aceeași pagină |
-| `APPLE_NOTARY_KEY_P8` | Conținutul integral al fișierului `.p8` descărcat (o singură dată — Apple nu-l mai oferă a doua oară) |
+| `APPLE_SIGN_IDENTITY_APP` | Textul identității (`security find-identity -v -p codesigning`) |
+| `APPLE_SIGN_IDENTITY_INSTALLER` | Textul identității Installer |
+| `APPLE_CERT_APP_P12_BASE64` | `base64 -i app.p12 \| pbcopy`, lipit ca secret |
+| `APPLE_CERT_APP_P12_PASSWORD` | Parola aleasă la export (Pasul 1) |
+| `APPLE_CERT_INSTALLER_P12_BASE64` | La fel, pentru certificatul Installer |
+| `APPLE_CERT_INSTALLER_P12_PASSWORD` | Parola acelui export |
+| `APPLE_NOTARY_APPLE_ID` | `d.cristigordas@gmail.com` |
+| `APPLE_NOTARY_TEAM_ID` | `8AR6XP8MG7` |
+| `APPLE_NOTARY_PASSWORD` | Parola de aplicație (App-Specific Password), **nu** parola contului |
 
-Certificatele `.p12` (Application + Installer, exportate din Keychain cu
-parolă) trebuie și ele importate într-un keychain temporar în job-ul CI
-înainte de `codesign` — asta e un pas separat, standard pentru orice
-proiect Mac pe GitHub Actions (import via `security import`), de adăugat
-când chiar pregătim varianta CI pentru `gdc-production-manager`.
+**3. În workflow-ul YAML**, adaugă un pas nou chiar la început (după checkout),
+apoi apelurile de semnare/notarizare unde e nevoie:
+
+```yaml
+- name: Import Apple certificates
+  env:
+    APPLE_CERT_APP_P12_BASE64: ${{ secrets.APPLE_CERT_APP_P12_BASE64 }}
+    APPLE_CERT_APP_P12_PASSWORD: ${{ secrets.APPLE_CERT_APP_P12_PASSWORD }}
+    APPLE_CERT_INSTALLER_P12_BASE64: ${{ secrets.APPLE_CERT_INSTALLER_P12_BASE64 }}
+    APPLE_CERT_INSTALLER_P12_PASSWORD: ${{ secrets.APPLE_CERT_INSTALLER_P12_PASSWORD }}
+  run: ./codesigning/ci-import-certs.sh
+
+# ... apoi, dupa ce .app/.pkg exista, cu aceleasi env vars plus:
+#   APPLE_SIGN_IDENTITY_APP, APPLE_SIGN_IDENTITY_INSTALLER,
+#   APPLE_NOTARY_APPLE_ID, APPLE_NOTARY_TEAM_ID, APPLE_NOTARY_PASSWORD
+#   run: ./codesigning/sign-and-notarize.sh app dist/MyApp.app
+#   run: ./codesigning/sign-and-notarize.sh pkg dist/MyInstaller.pkg
+```
+
+`ci-import-certs.sh` nu face nimic (exit 0) dacă `APPLE_CERT_APP_P12_BASE64`
+nu e setat — sigur de adăugat înainte să existe efectiv secretele.
 
 ## De ce e separat de restul codului aplicației
 
