@@ -1,7 +1,7 @@
 {
-  "version": "1.2.16",
+  "version": "1.2.17",
   "release_date": "2026-08-25",
-  "changes": "Interfata imbunatatita: meniu nativ (About, Check for Updates, Preferences), ghid PDF, sectiune Service & Reparatii, verificare dependinte de sistem.",
+  "changes": "Suport pentru licente pe platforma (Mac/Windows/Combo) si fix la link-ul de descarcare Windows.",
   "download_url": {
     "mac": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager.pkg",
     "windows": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Windows.zip"
