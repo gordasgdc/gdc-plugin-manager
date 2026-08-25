@@ -267,13 +267,13 @@
           "sha256" : "c9ccd4cc2234773e33c9d40dff5b7ae39be1b6c18184246be99f8fc88fc204c2"
         }
       ],
-      "iconSymbol" : "wand.and.stars",
+      "iconSymbol" : "eyedropper.halffull",
       "id" : "IntermediateWorkflow",
       "isFree" : false,
       "isTrial" : false,
       "name" : "Intermediate Workflow",
       "priceEUR" : 378,
-      "supportedOS" : "crossPlatform",
+      "supportedOS" : "windows",
       "type" : "lut",
       "version" : "1.0.0"
     },
