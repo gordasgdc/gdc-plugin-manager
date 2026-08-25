@@ -125,3 +125,16 @@ Jurnal append-only. Un rând nou de fiecare dată când găsim/rezolvăm un bug 
    Windows) trebuie marcată explicit în `CHANGELOG.md` ca "TODO paritate
    pe [cealaltă platformă]" — nu se lasă nedocumentată, ca să nu se piardă
    din vedere la sesiunea următoare.
+
+## REGULĂ PERMANENTĂ: Locația proiectelor pe disc (2026-08-25)
+Toate repo-urile GDC (acesta, `GDCPluginManagerWin`, `gdc-plugin-manager-files`,
+`gdc-plugin-manager-catalog-vendor` etc.) trăiesc în **`~/Developer/`**, NU în
+`~/Downloads` sau `~/Desktop`. Motiv real: `~/Downloads` e curățat automat de
+unelte precum CleanMyMac/Hazel pe acest Mac — au șters ambele repo-uri de
+sursă în timpul unei sesiuni de lucru (recuperate din Coșul de gunoi la timp,
+dar ar fi putut fi pierdere ireversibilă). Vezi `PROJECT_STRUCTURE.md` pentru
+harta completă a directoarelor și cum se leagă între ele (Furnizor citește
+`RepoCheckoutPaths.swift`, care presupune exact `~/Developer/<nume-repo>`).
+Dacă vreun viitor asistent găsește codul în `~/Downloads`, e semn că a fost
+mutat greșit înapoi — relocă-l în `~/Developer/` și actualizează
+`RepoCheckoutPaths.swift` dacă s-a schimbat structura.

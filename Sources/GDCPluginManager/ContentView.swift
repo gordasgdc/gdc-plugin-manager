@@ -360,14 +360,14 @@ private struct PluginCard: View {
         VStack(alignment: .leading, spacing: 8) {
             ZStack(alignment: .topTrailing) {
                 typeBadge
-                if item.supportedOS != .crossPlatform {
-                    // Doar produsele mono-platforma poarta emoji-ul —
-                    // "ambele platforme" e starea normala, nu merita
-                    // zgomot vizual pe fiecare card din grila.
-                    Text(item.supportedOS.badgeEmoji)
-                        .font(.system(size: 12))
-                        .help(item.supportedOS == .macOS ? "Doar macOS" : "Doar Windows")
-                }
+                // Badge vizibil pentru TOATE cele 3 stari, inclusiv
+                // crossPlatform (2026-08-25, cerere explicita: "Ambele"
+                // trebuie sa se vada, nu doar sa fie absenta unui badge —
+                // decizia anterioara de a-l ascunde pentru starea implicita
+                // a fost o presupunere gresita despre asteptarile UX).
+                Text(item.supportedOS.badgeEmoji)
+                    .font(.system(size: 12))
+                    .help(osBadgeTooltip)
             }
             // Coperta produsului (preset .icon, pătrat 512×512). Dacă
             // produsul n-are una, cade pe simbolul SF — cardul păstrează
@@ -474,6 +474,14 @@ private struct PluginCard: View {
             }
             .buttonStyle(.plain)
             .help(L.t("card.tutorial"))
+        }
+    }
+
+    private var osBadgeTooltip: String {
+        switch item.supportedOS {
+        case .macOS: return "Doar macOS"
+        case .windows: return "Doar Windows"
+        case .crossPlatform: return "Compatibil Mac + Windows"
         }
     }
 

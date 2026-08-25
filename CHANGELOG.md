@@ -4,6 +4,13 @@ Format: fiecare intrare listează versiunea, platformele afectate, și — pentr
 funcționalități noi — dacă are paritate completă Mac/Windows sau e "doar pe
 o platformă, portare pe cealaltă e TODO".
 
+## v1.2.21 (2026-08-25)
+**Mac + Windows** — **paritate completă**, în urma unui audit complet cerut explicit (Furnizor → Server → Client):
+- Badge compatibilitate OS (🍎/🪟/🔄) vizibil acum pentru TOATE cele 3 stări, inclusiv „Ambele"/`crossPlatform` — decizia inițială de a-l ascunde pentru starea implicită a fost o presupunere greșită despre așteptările UX.
+- **Fix real Windows**: coperțile la Materiale/Evenimente nu se încărcau deloc (bug confirmat prin audit de cod, nu presupunere) — `UriToImageSourceConverter` nu asculta `DownloadFailed`, deci un eșec silențios lăsa un dreptunghi gol în loc de fallback pe iconiță. Înlocuit cu încărcare explicită în `CoverViewModel` (Windows), cu fallback vizual real.
+- `CatalogAssets.ImageUrl` (Windows) escapează acum explicit fiecare segment de path, nu doar se bazează pe combinarea implicită `Uri`.
+- **Relocare structurală**: toate repo-urile GDC mutate din `~/Downloads` (curățat automat de CleanMyMac/Hazel — a șters ambele repo-uri de sursă în timpul unei sesiuni, recuperate din Coș) în `~/Developer/`. `RepoCheckoutPaths.swift` actualizat, adăugat `PROJECT_STRUCTURE.md` în ambele repo-uri.
+
 ## v1.2.20 (2026-08-25)
 **Doar Windows** — hotfix critic:
 - Crash real la pornire pe client Windows (`BadImageFormatException: Duplicate type`, `MainWindow` → `LicensePaneViewModel`), cauzat de un bug de corupere a metadatelor în Obfuscar 3.0.0-beta.19 (confirmat cu două configurații diferite — vezi comentariul din `build-windows.yml`).
