@@ -18,7 +18,12 @@ let package = Package(
         .executableTarget(
             name: "GDCPluginManager",
             dependencies: ["GDCPluginManagerCore"],
-            path: "Sources/GDCPluginManager"
+            path: "Sources/GDCPluginManager",
+            resources: [
+                .copy("Resources/Ghid-GDCPluginManager-ro.pdf"),
+                .copy("Resources/Ghid-GDCPluginManager-en.pdf"),
+                .copy("Resources/Ghid-GDCPluginManager-es.pdf"),
+            ]
         ),
         // Cristi-only tool: publishes products and generates license
         // codes. Never distributed, never linked into the client binary.

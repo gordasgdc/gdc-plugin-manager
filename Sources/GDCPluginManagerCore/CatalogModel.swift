@@ -484,6 +484,60 @@ public struct Event: Codable, Identifiable, Hashable {
     public var coverImageURL: URL? { CatalogAssets.imageURL(for: coverImage) }
 }
 
+/// Categoria unui service partener din secțiunea "Service & Reparații
+/// Echipament" — determină iconița din grilă și gruparea vizuală.
+public enum ServiceCategory: String, Codable, CaseIterable, Identifiable {
+    case drone
+    case camera
+    case optics
+    case urgent
+
+    public var id: String { rawValue }
+
+    // Fara `label` aici in mod deliberat: Core nu are acces la
+    // Localization.swift (target separat, GDCPluginManager) — eticheta
+    // afisata (RO/EN/ES) se rezolva in Client, prin L.t (vezi
+    // ContentView.swift, serviceCategoryLabel(_:)), nu hardcodata aici.
+
+    public var symbol: String {
+        switch self {
+        case .drone: return "airplane.circle.fill"
+        case .camera: return "camera.fill"
+        case .optics: return "camera.aperture"
+        case .urgent: return "bolt.fill"
+        }
+    }
+}
+
+/// Un partener de service/reparații echipament foto-video (drone,
+/// camere, obiective) — afișat în secțiunea "Service & Reparații
+/// Echipament" din sidebar. La fel ca `PartnerStore`: doar informativ,
+/// niciun fișier, nicio licență.
+public struct ServiceCenter: Codable, Identifiable, Hashable {
+    public let id: String
+    public let name: String
+    public let category: ServiceCategory
+    public let specialization: String
+    /// Link de contact rapid — `tel:`, `https://wa.me/...` sau `mailto:`.
+    public let contactURL: String
+    /// Site sau locație (Google Maps) — opțional, nu orice service are.
+    public let websiteURL: String?
+    public let coverImage: String?
+
+    public init(id: String, name: String, category: ServiceCategory, specialization: String,
+                contactURL: String, websiteURL: String? = nil, coverImage: String? = nil) {
+        self.id = id
+        self.name = name
+        self.category = category
+        self.specialization = specialization
+        self.contactURL = contactURL
+        self.websiteURL = websiteURL
+        self.coverImage = coverImage
+    }
+
+    public var coverImageURL: URL? { CatalogAssets.imageURL(for: coverImage) }
+}
+
 /// A partner equipment shop (photo/video gear) shown in the client's
 /// "Magazine partenere" section — name, description, direct link.
 /// Nothing to install, no license.
@@ -517,8 +571,9 @@ public struct Catalog: Codable {
     public let educationalResources: [EducationalResource]
     public let events: [Event]
     public let partnerStores: [PartnerStore]
+    public let serviceCenters: [ServiceCenter]
 
-    public init(updatedAt: String?, items: [PluginItem], courses: [Course] = [], apps: [AppLink] = [], educationalResources: [EducationalResource] = [], events: [Event] = [], partnerStores: [PartnerStore] = []) {
+    public init(updatedAt: String?, items: [PluginItem], courses: [Course] = [], apps: [AppLink] = [], educationalResources: [EducationalResource] = [], events: [Event] = [], partnerStores: [PartnerStore] = [], serviceCenters: [ServiceCenter] = []) {
         self.updatedAt = updatedAt
         self.items = items
         self.courses = courses
@@ -526,13 +581,14 @@ public struct Catalog: Codable {
         self.educationalResources = educationalResources
         self.events = events
         self.partnerStores = partnerStores
+        self.serviceCenters = serviceCenters
     }
 
     // Custom decode: every collection defaults to `[]` if absent, so a
     // catalog published before a given field existed keeps decoding
     // cleanly after this update ships to clients.
     private enum CodingKeys: String, CodingKey {
-        case updatedAt, items, courses, apps, educationalResources, events, partnerStores
+        case updatedAt, items, courses, apps, educationalResources, events, partnerStores, serviceCenters
     }
 
     public init(from decoder: Decoder) throws {
@@ -544,5 +600,6 @@ public struct Catalog: Codable {
         educationalResources = try c.decodeIfPresent([EducationalResource].self, forKey: .educationalResources) ?? []
         events = try c.decodeIfPresent([Event].self, forKey: .events) ?? []
         partnerStores = try c.decodeIfPresent([PartnerStore].self, forKey: .partnerStores) ?? []
+        serviceCenters = try c.decodeIfPresent([ServiceCenter].self, forKey: .serviceCenters) ?? []
     }
 }

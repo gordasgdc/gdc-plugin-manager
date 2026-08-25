@@ -8,6 +8,7 @@ enum CatalogEditorError: Error, LocalizedError {
     case educationalResourceNotFound(String)
     case eventNotFound(String)
     case partnerStoreNotFound(String)
+    case serviceCenterNotFound(String)
 
     var errorDescription: String? {
         switch self {
@@ -17,6 +18,7 @@ enum CatalogEditorError: Error, LocalizedError {
         case .educationalResourceNotFound(let id): return "Nu există niciun material cu id-ul „\(id)” în catalog."
         case .eventNotFound(let id): return "Nu există niciun eveniment cu id-ul „\(id)” în catalog."
         case .partnerStoreNotFound(let id): return "Nu există niciun magazin cu id-ul „\(id)” în catalog."
+        case .serviceCenterNotFound(let id): return "Nu există niciun service cu id-ul „\(id)” în catalog."
         }
     }
 }
@@ -152,6 +154,25 @@ enum CatalogEditor {
         try write(catalog: catalog, partnerStores: stores)
     }
 
+    // MARK: - Service centers (Service & Reparații Echipament)
+
+    static func upsertServiceCenter(_ center: ServiceCenter) throws {
+        let catalog = (try? load()) ?? Catalog(updatedAt: nil, items: [])
+        var centers = catalog.serviceCenters.filter { $0.id != center.id }
+        centers.append(center)
+        centers.sort { $0.name < $1.name }
+        try write(catalog: catalog, serviceCenters: centers)
+    }
+
+    static func removeServiceCenter(id: String) throws {
+        let catalog = try load()
+        let centers = catalog.serviceCenters.filter { $0.id != id }
+        guard centers.count != catalog.serviceCenters.count else {
+            throw CatalogEditorError.serviceCenterNotFound(id)
+        }
+        try write(catalog: catalog, serviceCenters: centers)
+    }
+
     // MARK: - Write
 
     /// Rewrites docs/catalog.json, starting from `catalog` and replacing
@@ -165,7 +186,8 @@ enum CatalogEditor {
         apps: [AppLink]? = nil,
         educationalResources: [EducationalResource]? = nil,
         events: [Event]? = nil,
-        partnerStores: [PartnerStore]? = nil
+        partnerStores: [PartnerStore]? = nil,
+        serviceCenters: [ServiceCenter]? = nil
     ) throws {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
@@ -176,7 +198,8 @@ enum CatalogEditor {
             apps: apps ?? catalog.apps,
             educationalResources: educationalResources ?? catalog.educationalResources,
             events: events ?? catalog.events,
-            partnerStores: partnerStores ?? catalog.partnerStores
+            partnerStores: partnerStores ?? catalog.partnerStores,
+            serviceCenters: serviceCenters ?? catalog.serviceCenters
         )
 
         let encoder = JSONEncoder()

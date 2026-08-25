@@ -9,6 +9,7 @@ enum SidebarSection: Hashable {
     case educationalResources
     case events
     case partnerStores
+    case serviceCenters
     case apps
     case android
     case license
@@ -27,6 +28,44 @@ struct ContentView: View {
     @State private var selection: SidebarSection? = .all
     @State private var resolveWarningVisible = false
     @State private var showOnboarding = false
+    @State private var missingDependencies: [SystemDependency] = []
+    @State private var showManualUpdateCheckAlert = false
+    @State private var manualUpdateCheckMessage = ""
+
+    private var appVersion: String {
+        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "—"
+    }
+
+    // Extras din body — switch cu multe cazuri inline facea type-check-ul
+    // Swift sa depaseasca timeout-ul ("unable to type-check in reasonable
+    // time") dupa adaugarea cazului .serviceCenters.
+    @ViewBuilder
+    private var detailContent: some View {
+        switch selection {
+        case .license:
+            LicensePane()
+        case .help:
+            HelpView()
+        case .courses:
+            CoursesGrid(courses: catalog.courses)
+        case .educationalResources:
+            EducationalResourcesGrid(resources: catalog.educationalResources)
+        case .events:
+            EventsGrid(events: catalog.events)
+        case .partnerStores:
+            PartnerStoresGrid(stores: catalog.partnerStores)
+        case .serviceCenters:
+            ServiceCentersGrid(centers: catalog.serviceCenters)
+        case .apps:
+            AppsGrid(apps: catalog.apps)
+        case .android:
+            MobileAppPane()
+        case .all, .none:
+            CatalogGrid(items: catalog.items)
+        case .type(let type):
+            CatalogGrid(items: catalog.items.filter { $0.type == type })
+        }
+    }
 
     var body: some View {
         NavigationSplitView {
@@ -50,6 +89,8 @@ struct ContentView: View {
                     .tag(SidebarSection.events)
                 Label(L.t("sidebar.partnerStores"), systemImage: "storefront")
                     .tag(SidebarSection.partnerStores)
+                Label(L.t("sidebar.serviceCenters"), systemImage: "wrench.and.screwdriver")
+                    .tag(SidebarSection.serviceCenters)
                 Label(L.t("sidebar.apps"), systemImage: "app.badge")
                     .tag(SidebarSection.apps)
                 // Aplicatia mobila companion (PWA, gordas.dev/app.html — fost
@@ -63,35 +104,22 @@ struct ContentView: View {
                     .tag(SidebarSection.help)
             }
             .navigationSplitViewColumnWidth(180)
+            .safeAreaInset(edge: .bottom) {
+                Text("v\(appVersion)")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.vertical, 8)
+            }
         } detail: {
             VStack(spacing: 0) {
+                if !missingDependencies.isEmpty {
+                    DependencyBanner(missing: missingDependencies)
+                }
                 if let update = updateChecker.availableUpdate {
                     UpdateBanner(update: update)
                 }
-                Group {
-                    switch selection {
-                    case .license:
-                        LicensePane()
-                    case .help:
-                        HelpView()
-                    case .courses:
-                        CoursesGrid(courses: catalog.courses)
-                    case .educationalResources:
-                        EducationalResourcesGrid(resources: catalog.educationalResources)
-                    case .events:
-                        EventsGrid(events: catalog.events)
-                    case .partnerStores:
-                        PartnerStoresGrid(stores: catalog.partnerStores)
-                    case .apps:
-                        AppsGrid(apps: catalog.apps)
-                    case .android:
-                        MobileAppPane()
-                    case .all, .none:
-                        CatalogGrid(items: catalog.items)
-                    case .type(let type):
-                        CatalogGrid(items: catalog.items.filter { $0.type == type })
-                    }
-                }
+                detailContent
             }
         }
         .navigationTitle(L.t("app.name"))
@@ -112,12 +140,32 @@ struct ContentView: View {
         .task {
             await catalog.refresh()
             await updateChecker.check()
+            missingDependencies = SystemDependencyChecker.checkAll().filter { !$0.isPresent }
             if !UserDefaults.standard.bool(forKey: "gdcpm_onboarded") {
                 showOnboarding = true
             }
         }
         .sheet(isPresented: $showOnboarding) {
             OnboardingView(isPresented: $showOnboarding)
+        }
+        // "Check for Updates..." din meniul nativ (vezi GDCPluginManagerApp.swift)
+        // — separat de check-ul automat de la lansare, mereu urmat de un
+        // rezultat vizibil (pop-up nativ), niciodata silentios.
+        .onReceive(NotificationCenter.default.publisher(for: .gdcCheckForUpdatesRequested)) { _ in
+            Task {
+                await updateChecker.check()
+                if let update = updateChecker.availableUpdate {
+                    manualUpdateCheckMessage = String(format: L.t("update.check.available"), update.version)
+                } else {
+                    manualUpdateCheckMessage = L.t("update.check.upToDate")
+                }
+                showManualUpdateCheckAlert = true
+            }
+        }
+        .alert(L.t("update.check.title"), isPresented: $showManualUpdateCheckAlert) {
+            Button(L.t("common.ok"), role: .cancel) {}
+        } message: {
+            Text(manualUpdateCheckMessage)
         }
         // Pop-up modal, pe langa bannerul din header (nu in locul lui):
         // bannerul e discret si poate fi ratat; pop-up-ul intrerupe o
@@ -174,6 +222,33 @@ private struct UpdateBanner: View {
         }
         .padding(12)
         .background(Color.accentColor.opacity(0.12))
+    }
+}
+
+/// Banner de avertisment pentru dependinte de sistem lipsa (ex. DaVinci
+/// Resolve neinstalat) — vezi SystemDependencyChecker. Status complet
+/// (toate dependintele, nu doar cele lipsa) e in Preferences.
+private struct DependencyBanner: View {
+    let missing: [SystemDependency]
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: "exclamationmark.triangle.fill").foregroundStyle(.orange)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(L.t("dependency.missing.title")).font(.subheadline).fontWeight(.semibold)
+                Text(missing.map(\.name).joined(separator: ", "))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            Spacer()
+            ForEach(missing) { dep in
+                if let url = dep.downloadURL {
+                    Button(String(format: L.t("dependency.install.button"), dep.name)) { NSWorkspace.shared.open(url) }
+                }
+            }
+        }
+        .padding(12)
+        .background(Color.orange.opacity(0.12))
     }
 }
 
@@ -748,6 +823,80 @@ private struct PartnerStoreCard: View {
         }
         .padding(12)
         .frame(maxWidth: .infinity, minHeight: 180, alignment: .leading)
+        .background(RoundedRectangle(cornerRadius: 10).fill(.background.secondary))
+    }
+}
+
+private func serviceCategoryLabel(_ category: ServiceCategory) -> String {
+    L.t("servicecategory.\(category.rawValue)")
+}
+
+private struct ServiceCentersGrid: View {
+    let centers: [ServiceCenter]
+
+    private let columns = [GridItem(.adaptive(minimum: 280, maximum: 380), spacing: 16)]
+
+    var body: some View {
+        ScrollView {
+            if centers.isEmpty {
+                Text(L.t("servicecenters.empty")).foregroundStyle(.secondary).padding(40)
+            } else {
+                // Grup pe categorie, fiecare cu propriul grid — nu o singura
+                // grila cu header "spanned" (nu se poate garanta latimea
+                // completa intr-un LazyVGrid cu coloane adaptive).
+                VStack(alignment: .leading, spacing: 20) {
+                    ForEach(ServiceCategory.allCases) { category in
+                        let group = centers.filter { $0.category == category }
+                        if !group.isEmpty {
+                            VStack(alignment: .leading, spacing: 10) {
+                                Label(serviceCategoryLabel(category), systemImage: category.symbol)
+                                    .font(.headline)
+                                LazyVGrid(columns: columns, spacing: 14) {
+                                    ForEach(group) { center in
+                                        ServiceCenterCard(center: center)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                .padding(16)
+            }
+        }
+    }
+}
+
+private struct ServiceCenterCard: View {
+    let center: ServiceCenter
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            CoverThumbnail(
+                url: center.coverImageURL,
+                fallbackSymbol: center.category.symbol,
+                tint: .accentColor,
+                height: 110,
+                lightboxTitle: center.name
+            )
+            Text(center.name).font(.headline)
+            Text(center.specialization)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+            Spacer(minLength: 0)
+            HStack {
+                if let url = URL(string: center.contactURL) {
+                    Button(L.t("servicecenters.contact")) { NSWorkspace.shared.open(url) }
+                        .controlSize(.small)
+                }
+                if let websiteString = center.websiteURL, let url = URL(string: websiteString) {
+                    Button(L.t("servicecenters.website")) { NSWorkspace.shared.open(url) }
+                        .controlSize(.small)
+                }
+            }
+        }
+        .padding(12)
+        .frame(maxWidth: .infinity, minHeight: 170, alignment: .leading)
         .background(RoundedRectangle(cornerRadius: 10).fill(.background.secondary))
     }
 }

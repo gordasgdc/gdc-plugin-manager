@@ -22,6 +22,15 @@ cp .build/release/GDCPluginManager "$BUILD_OUT/Contents/MacOS/GDCPluginManager"
 cp Info.plist "$BUILD_OUT/Contents/Info.plist"
 cp AppIcon.icns "$BUILD_OUT/Contents/Resources/AppIcon.icns"
 
+# Bundle-ul de resurse generat de SPM (PDF-urile de ghid — vezi HelpGuide.swift,
+# Bundle.module) — SPM il pune langa executabil in .build/release/, NU se
+# copiaza automat in .app; fara asta, Bundle.module.url(...) intoarce nil in
+# aplicatia instalata, desi merge la `swift run` local.
+SPM_RESOURCE_BUNDLE=".build/release/GDCPluginManager_GDCPluginManager.bundle"
+if [ -d "$SPM_RESOURCE_BUNDLE" ]; then
+    cp -R "$SPM_RESOURCE_BUNDLE" "$BUILD_OUT/Contents/Resources/"
+fi
+
 # Python portabil (cpython-build-standalone, arm64, ~66MB) — bundle-uit ca
 # PowerGradeImporter sa NU mai depinda de python3 de sistem (Apple a scos
 # /usr/bin/python3 din macOS implicit pe versiunile recente; vine doar cu
