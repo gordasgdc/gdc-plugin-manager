@@ -33,19 +33,21 @@ security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
 
 echo "==> [ci-import-certs] Importez certificatul Application…"
 echo "$APPLE_CERT_APP_P12_BASE64" | base64 --decode > "$RUNNER_TEMP/app.p12"
-security import "$RUNNER_TEMP/app.p12" -k "$KEYCHAIN_PATH" -P "$APPLE_CERT_APP_P12_PASSWORD" -T /usr/bin/codesign -T /usr/bin/productsign
+security import "$RUNNER_TEMP/app.p12" -k "$KEYCHAIN_PATH" -P "$APPLE_CERT_APP_P12_PASSWORD" -T /usr/bin/codesign -T /usr/bin/productsign -T /usr/bin/pkgbuild -T /usr/bin/productbuild
 rm -f "$RUNNER_TEMP/app.p12"
 
 if [ -n "${APPLE_CERT_INSTALLER_P12_BASE64:-}" ]; then
     echo "==> [ci-import-certs] Importez certificatul Installer…"
     echo "$APPLE_CERT_INSTALLER_P12_BASE64" | base64 --decode > "$RUNNER_TEMP/installer.p12"
-    security import "$RUNNER_TEMP/installer.p12" -k "$KEYCHAIN_PATH" -P "$APPLE_CERT_INSTALLER_P12_PASSWORD" -T /usr/bin/codesign -T /usr/bin/productsign
+    security import "$RUNNER_TEMP/installer.p12" -k "$KEYCHAIN_PATH" -P "$APPLE_CERT_INSTALLER_P12_PASSWORD" -T /usr/bin/codesign -T /usr/bin/productsign -T /usr/bin/pkgbuild -T /usr/bin/productbuild
     rm -f "$RUNNER_TEMP/installer.p12"
 fi
 
-# Fara asta, codesign/productsign cer parola keychain-ului interactiv la
-# fiecare apel - imposibil intr-un job CI fara interactiune.
-security set-key-partition-list -S apple-tool:,apple:,codesign:,productsign: -s -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+# Fara asta, codesign/productsign/pkgbuild/productbuild cer parola
+# keychain-ului interactiv la fiecare apel - imposibil intr-un job CI
+# fara interactiune (job-ul ramane "in_progress" la nesfarsit, asteptand
+# un prompt GUI care nu poate aparea pe un runner headless).
+security set-key-partition-list -S apple-tool:,apple:,codesign:,productsign:,pkgbuild:,productbuild: -s -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
 
 echo "==> [ci-import-certs] Adaug keychain-ul la lista de cautare…"
 security list-keychains -d user -s "$KEYCHAIN_PATH" login.keychain-db
