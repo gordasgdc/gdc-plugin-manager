@@ -153,3 +153,26 @@ salvate acolo (`gdc-notary`, vezi `codesigning/README.md`). Dacă un viitor
 asistent găsește un `.p12`/`.cer` oriunde altundeva decât în acest folder
 (Desktop, Downloads, un repo), mută-l imediat acolo și verifică
 `git log --all --diff-filter=A` că n-a fost comis vreodată.
+
+## DIRECTIVĂ PERMANENTĂ SUPREMĂ: Checklist obligatoriu la FIECARE release (2026-08-25)
+Valabilă pentru TOATE aplicațiile ecosistemului GDC (CursorPro, GDC Plugin
+Manager + Furnizor, GDC Plugin Manager Windows, DataMover, GDC Production
+Manager, și orice proiect nou). Înainte de a raporta un release ca fiind
+gata, TREBUIE bifate intern toate cele 4 puncte de mai jos — dacă unul
+lipsește, spune-o explicit, nu declara release-ul "gata".
+
+1. **Versiune vizibilă în UI** — About/Meniu/Settings/Footer trebuie să
+   arate versiunea curentă (`v1.2.21` etc.), fără excepție.
+2. **Verificator de actualizări** — la pornire sau printr-un buton
+   „Caută actualizări", aplicația verifică versiunea de pe server/GitHub
+   și notifică userul când există un release mai nou.
+3. **Pachetul standard de release** — orice arhivă livrată clientului
+   conține FĂRĂ EXCEPȚIE:
+   - executabilul/installer-ul semnat + notarizat,
+   - `Dezinstalare_[NumeAplicație].command` (dezinstalare completă:
+     procese, permisiuni TCC, toate fișierele din `~/Library/`),
+   - un ghid/PDF de instrucțiuni.
+4. **Sincronizare site ↔ GitHub Releases** — linkurile de download de pe
+   site trebuie să pointeze mereu la `releases/latest/download/...`
+   (HTTP 200 verificat, nu presupus) și să menționeze numărul ultimei
+   versiuni.
