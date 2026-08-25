@@ -393,7 +393,7 @@
       "youtubeURL" : "https://www.youtube.com/@cristigordas"
     },
     {
-      "description" : "Raz",
+      "description" : "Test",
       "files" : [
         {
           "path" : "Raz/1.0.0/Raz_1.1.1.drx",
@@ -402,9 +402,9 @@
       ],
       "iconSymbol" : "paintpalette",
       "id" : "Raz",
-      "isFree" : false,
+      "isFree" : true,
       "isTrial" : false,
-      "name" : "Raz",
+      "name" : "Test",
       "priceEUR" : 0,
       "supportedOS" : "crossPlatform",
       "type" : "powerGrade",
