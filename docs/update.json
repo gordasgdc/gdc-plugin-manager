@@ -1,7 +1,7 @@
 {
-  "version": "1.2.17",
+  "version": "1.2.18",
   "release_date": "2026-08-25",
-  "changes": "Suport pentru licente pe platforma (Mac/Windows/Combo) si fix la link-ul de descarcare Windows.",
+  "changes": "Paritate Windows: sectiunea Service & Reparatii, verificare dependinte de sistem (DaVinci Resolve, VC++ Redistributable).",
   "download_url": {
     "mac": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager.pkg",
     "windows": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Windows.zip"

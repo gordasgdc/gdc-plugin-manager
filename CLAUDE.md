@@ -117,3 +117,11 @@ Jurnal append-only. Un rând nou de fiecare dată când găsim/rezolvăm un bug 
 2. Nu descrie pașii intermediari de analiză decât dacă sunt ceruți explicit.
 3. Răspunde ultra-concis: direct codul, diff-ul, comenzile de rulat și statusul scurt.
 4. Păstrează toate ieșirile de text scurte, la obiect și eficiente.
+
+## REGULĂ PERMANENTĂ: Documentație + Paritate Mac/Windows (2026-08-25)
+1. La orice modificare/release nou: actualizează `CHANGELOG.md` (ce s-a făcut,
+   ce platforme sunt afectate) și comentariile relevante din cod.
+2. Orice funcționalitate nouă adăugată pe O SINGURĂ platformă (Mac sau
+   Windows) trebuie marcată explicit în `CHANGELOG.md` ca "TODO paritate
+   pe [cealaltă platformă]" — nu se lasă nedocumentată, ca să nu se piardă
+   din vedere la sesiunea următoare.
