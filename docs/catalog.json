@@ -55,6 +55,13 @@
       "url" : "https://gordas.dev/gdc-vault"
     },
     {
+      "coverImage" : "media-flow-monitor/icon.png",
+      "id" : "media-flow-monitor",
+      "name" : "MediaFlow Monitor",
+      "url" : "https://gordas.dev/media-flow-monitor",
+      "youtubeURL" : "https://www.youtube.com/@cristigordas"
+    },
+    {
       "coverImage" : "covers/Simulator DOF.jpg?v=e0576314",
       "id" : "Simulator DOF",
       "name" : "Simulator DOF",
