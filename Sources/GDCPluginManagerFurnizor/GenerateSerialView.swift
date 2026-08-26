@@ -35,6 +35,10 @@ let gdcStandaloneProducts: [StandaloneProduct] = [
     // Adaugat 2026-08-24 — verificat in LicenseManager.swift (Mac) si
     // LicenseManager.cs (Windows) ale gdc-vault: productID = "gdc-vault".
     StandaloneProduct(id: "gdc-vault", name: "GDC Vault"),
+    // Adaugat 2026-08-26 — verificat in LicenseManager.swift (Mac,
+    // CGConvertor/LicenseManager.swift) si license_validator.py (Windows,
+    // python/license_validator.py) ale CGConvertor: productID = "cgconvertor".
+    StandaloneProduct(id: "cgconvertor", name: "CG Convertor"),
 ]
 
 struct GenerateSerialView: View {
