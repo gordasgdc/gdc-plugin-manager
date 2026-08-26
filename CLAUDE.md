@@ -57,6 +57,18 @@ niciodată „price"/„buy"/"sale" nici în engleză/spaniolă). Formularea tre
 să apară clar în: UI-ul aplicației (ecran/pop-up de licență), ghidul PDF, și
 orice pagină web dedicată.
 
+**[COMPLETARE 2026-08-26, închide o lacună de scop reală]** Interdicția de
+mai sus se aplică ACUM și produselor din catalogul GDC Plugin Manager
+(LUT/DCTL/PowerGrade vândute prin marketplace-ul gratuit) — găsit la audit
+un card cu buton „Cumpără" și sume afișate brut („378,00 €"). Butonul
+devine „Donează" peste tot (RO/EN/ES); suma documentată de furnizor pentru
+acel produs (promoția specifică lui, nu neapărat 23 €) rămâne vizibilă, dar
+NICIODATĂ lângă cuvântul „preț"/„cumpără"/„vânzare" — decizia anterioară de
+scop (marketplace = "relație comercială diferită, nu se aplică") e
+INVALIDATĂ explicit. Excepție: tabelele interne ale Furnizorului (ex.
+`SalesHistoryView`, coloana „Preț" din registrul de vânzări al lui Cristi)
+nu sunt UI orientat spre client — rămân neatinse.
+
 **4. Manager de Dependențe (Standard GDC, opt-in).** Aplicația de bază
 rămâne lightweight — orice dependință externă opțională/grea (ex. FFmpeg
 static) se descarcă LA CERERE, nu bundle-uită implicit dacă poate fi evitat.
