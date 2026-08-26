@@ -3,7 +3,7 @@
   "release_date": "2026-08-26",
   "changes": "Windows adus la paritate 1:1 cu Mac: design Shift, Panou Dependente DaVinci, Profil/Email/HWID in sidebar, verificare Revocare licente, pop-up Actualizeaza acum cu noutati.",
   "download_url": {
-    "mac": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager.pkg",
+    "mac": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Mac.zip",
     "windows": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Windows.zip"
   },
   "mandatory": false,
