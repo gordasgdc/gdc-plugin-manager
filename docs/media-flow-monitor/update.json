@@ -1,7 +1,7 @@
 {
-  "version": "1.5.1",
+  "version": "1.6.0",
   "release_date": "2026-08-26",
-  "changes": "v1.5.1: BUG FIX critic Auto-Update - Cauta actualizari nu mai raporta fals \"Esti la zi\" la un esec de retea/parsing (era confundat cu \"nu exista update\"); comparare SemVer robusta (Major.Minor.Patch, ignora prefix v); cache-bypass explicit pe cerere (cachePolicy + header no-cache), pe langa query param unic deja existent.",
+  "changes": "v1.6.0: BUG FIX critic Licentiere - butonul de activare exista din v1.0 dar nu era conectat la nimic; adaugat Introdu codul de activare... in meniul din bara de sus, cu mesaje clare de eroare (cod invalid/gresit produs/gresita masina/expirat).",
   "download_url": {
     "mac": "https://github.com/gordasgdc/MediaFlow-Monitor/releases/latest/download/MediaFlowMonitor.pkg",
     "windows": "https://github.com/gordasgdc/MediaFlow-Monitor/releases/latest/download/MediaFlowMonitor-Windows.zip"
