@@ -69,6 +69,31 @@ INVALIDATĂ explicit. Excepție: tabelele interne ale Furnizorului (ex.
 `SalesHistoryView`, coloana „Preț" din registrul de vânzări al lui Cristi)
 nu sunt UI orientat spre client — rămân neatinse.
 
+**15. CRM Furnizor — set minim de funcționalități administrative
+(2026-08-26).** Panoul de Clienți al Furnizorului (`SalesHistoryView.swift`)
+nu rămâne un log rigid — trebuie să ofere: filtrare rapidă pe produs
+(dropdown dinamic, nu hardcodat), export 1-click (clipboard sau fișier) al
+email-urilor/HWID-urilor din selecția curentă (filtrată), copiere rapidă
+per-câmp direct din tabel (fără să deschizi editarea), Licențiere în Masă
+(paste o listă de email-uri/machine ID-uri → generează automat câte o
+licență per linie, pentru un produs/durată alese o singură dată), și
+editare liberă a duratei unei licențe deja generate (Zile/Luni/Ani/
+Lifetime). Furnizorul arată versiunea curentă în UI, la fel ca orice
+aplicație client — nu e scutit de Regula 7 doar pentru că e un instrument
+intern.
+
+**16. Design Web "Shift" — compact, fără spații goale (2026-08-26).**
+Completare la Regula 12: paginile de prezentare NU doar adoptă paleta
+amber/cupru — trebuie și dense/aerisite corect, nu găunoase. `min-height:
+100svh` pe un hero cu conținut scurt lasă spațiu gol enorm pe orice ecran
+mai mare — evită-l sau limitează-l (ex. `78svh`); padding-ul secțiunilor
+(`section`) rămâne generos dar nu excesiv (60px, nu 90px+). Orice accent
+vechi (verde/teal/albastru folosit ca accent PRIMAR, nu ca stare
+semantică precum "verificat cu succes") se înlocuiește cu amber/cupru —
+o variabilă CSS poate păstra alt NUME istoric (`--scope`, `--accent-copy`)
+atât timp cât VALOAREA ei devine amber, ca să nu rescrii zeci de
+apariții `var(--x)` din foaia de stil.
+
 **4. Manager de Dependențe (Standard GDC, opt-in).** Aplicația de bază
 rămâne lightweight — orice dependință externă opțională/grea (ex. FFmpeg
 static) se descarcă LA CERERE, nu bundle-uită implicit dacă poate fi evitat.
