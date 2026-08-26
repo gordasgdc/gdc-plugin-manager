@@ -29,6 +29,8 @@ struct ContentView: View {
     @State private var resolveWarningVisible = false
     @State private var showOnboarding = false
     @State private var missingDependencies: [SystemDependency] = []
+    @State private var allDependencies: [SystemDependency] = []
+    @State private var showDependencyPanel = false
     @State private var showManualUpdateCheckAlert = false
     @State private var manualUpdateCheckMessage = ""
 
@@ -125,6 +127,9 @@ struct ContentView: View {
         .navigationTitle(L.t("app.name"))
         .toolbar {
             ToolbarItem {
+                DependencyBadge(dependencies: allDependencies, showPanel: $showDependencyPanel)
+            }
+            ToolbarItem {
                 Button {
                     Task {
                         await catalog.refresh()
@@ -140,13 +145,17 @@ struct ContentView: View {
         .task {
             await catalog.refresh()
             await updateChecker.check()
-            missingDependencies = SystemDependencyChecker.checkAll().filter { !$0.isPresent }
+            allDependencies = SystemDependencyChecker.checkAll()
+            missingDependencies = allDependencies.filter { !$0.isPresent && !$0.isOptional }
             if !UserDefaults.standard.bool(forKey: "gdcpm_onboarded") {
                 showOnboarding = true
             }
         }
         .sheet(isPresented: $showOnboarding) {
             OnboardingView(isPresented: $showOnboarding)
+        }
+        .sheet(isPresented: $showDependencyPanel) {
+            DependencyPanel(isPresented: $showDependencyPanel, dependencies: allDependencies)
         }
         // "Check for Updates..." din meniul nativ (vezi GDCPluginManagerApp.swift)
         // — separat de check-ul automat de la lansare, mereu urmat de un

@@ -52,6 +52,8 @@ struct PreferencesView: View {
                         Spacer()
                         if dep.isPresent {
                             Text(L.t("prefs.dependencies.installed")).foregroundStyle(.secondary).font(.callout)
+                        } else if dep.isOptional {
+                            Text(L.t("deps.state.optionalMissing")).foregroundStyle(.orange).font(.callout)
                         } else {
                             Text(L.t("prefs.dependencies.missing")).foregroundStyle(.red).font(.callout)
                             if let url = dep.downloadURL {
