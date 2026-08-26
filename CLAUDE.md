@@ -127,6 +127,18 @@ Claude rămân ultra-concise: fără explicații de proces, direct codul/
 diff-ul/comenzile și statusul. La orice modificare de cod, comanda exactă
 de rebuild local se include la finalul răspunsului.
 
+**11. Sincronizare dinamică a Standardului Master (CONTINUOUS UPDATE,
+2026-08-26).** Orice adăugare/modificare/optimizare a unei reguli globale
+din ACEASTĂ Partea 1 — indiferent din ce proiect pornește — devine automat
+noul Standard Master și TREBUIE propagată manual, în ACELAȘI commit sau
+imediat următorul, în `CLAUDE.md`-ul tuturor celorlalte proiecte din
+`~/Developer/` (nu doar notată "pentru mai târziu"). Orice aplicație NOUĂ
+creată în `~/Developer/` primește Partea 1 (versiunea curentă, completă)
+încă din primul `CLAUDE.md` scris pentru ea — nu se pornește niciodată de
+la un fișier gol sau parțial. Regula 1 de mai sus ("Dacă modifici o regulă
+aici, propag-o manual...") descrie mecanismul; aceasta îl declară
+obligatoriu, nu opțional.
+
 ## [PARTEA 2: SPECIFICAȚII TEHNICE PROIECT]
 
 ## Structura repo-ului
