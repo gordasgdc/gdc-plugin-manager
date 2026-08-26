@@ -188,6 +188,30 @@ bannerul). Popup-ul apare o singură dată per versiune nouă, cu excepția
 `mandatory: true` (reapare la fiecare lansare). Ghidul PDF (Regula 8(e))
 trebuie să explice acest flux exact.
 
+**14. Versionare semantică obligatorie la FIECARE schimbare (2026-08-26).**
+Orice modificare de cod livrată clientului — oricât de mică — incrementează
+numărul de versiune, sincron în TOATE punctele care îl țin (Info.plist Mac,
+`.csproj`/`installer.iss` Windows, `docs/update.json`, orice altă constantă
+de versiune din acel repo). Format `MAJOR.MINOR.PATCH` (ex. `2.3.1`):
+- **PATCH** (ultima cifră, `2.3.0`→`2.3.1`) — orice fix, ajustare, adăugare
+  mică sau schimbare care nu rupe compatibilitatea. Cazul implicit, cel mai
+  frecvent.
+- **MINOR** (cifra din mijloc, `2.3.x`→`2.4.0`) — funcționalitate nouă
+  vizibilă (ex. o fază/etapă întreagă ca Panoul de Dependențe sau Profilul
+  HWID), fără schimbări radicale de arhitectură.
+- **MAJOR** (prima cifră, `2.x.x`→`3.0.0`) — schimbare radicală: rebranding,
+  redesign complet de UI, schimbare de arhitectură (ex. sistem nou de
+  licențiere), sau orice prag pe care Cristi îl declară explicit "versiune
+  majoră".
+**De ce**: `UpdateChecker`/`.cs` compară STRICT numărul de versiune din
+`update.json` cu cel instalat (`IsNewer`) — înlocuirea unui binar pe un
+release existent, PE ACEEAȘI versiune, nu declanșează nicio notificare la
+clienții deja instalați (bug real, găsit și reparat 2026-08-26: Windows
+Shift UI + Faza 1/3/4 livrate silențios sub `v1.2.22`, fără niciun bump).
+Un bump de versiune fără schimbare reală de cod e la fel de greșit ca
+schimbarea de cod fără bump — cele două merg mereu împreună, în același
+commit.
+
 ## [PARTEA 2: SPECIFICAȚII TEHNICE PROIECT]
 
 ## Structura repo-ului
