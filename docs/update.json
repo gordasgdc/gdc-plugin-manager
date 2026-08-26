@@ -1,7 +1,7 @@
 {
-  "version": "1.2.22",
-  "release_date": "2026-08-25",
-  "changes": "Pachet Mac curatat: eliminat launcherul de bypass Gatekeeper (inutil, pachetul e deja semnat+notarizat+stapled), uninstaller inclus direct la radacina arhivei.",
+  "version": "1.2.23",
+  "release_date": "2026-08-26",
+  "changes": "Windows adus la paritate 1:1 cu Mac: design Shift, Panou Dependente DaVinci, Profil/Email/HWID in sidebar, verificare Revocare licente, pop-up Actualizeaza acum cu noutati.",
   "download_url": {
     "mac": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager.pkg",
     "windows": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Windows.zip"
