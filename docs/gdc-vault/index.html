@@ -14,10 +14,10 @@
      restul ecosistemului GDC. Doar accentul de coperta (seif/cheie,
      ardezie+neon) e specific GDC Vault, vezi covers/gdc-vault.png. */
   :root{
-    --bg:#070f0e; --bg-2:#0b1615; --panel:#0f1c1a; --panel-2:#132420;
-    --border:#1e3430; --text:#eef8f6; --muted:#9db8b3; --faint:#5f8580;
-    --accent:#35d6be; --accent-ink:#04211c; --accent-dim:#1f7d6e;
-    --violet:#2f8f9e; --violet-2:#4fc4d6;
+    --bg:#14161A; --bg-2:#101216; --panel:#1A1D22; --panel-2:#20232A;
+    --border:#2B2F36; --text:#EDEFF2; --muted:#93989F; --faint:#5C6169;
+    --accent:#E8963C; --accent-ink:#1A1108; --accent-dim:#B96A1E;
+    --violet:#C97C2E; --violet-2:#F2B766;
     --mono:'IBM Plex Mono', ui-monospace, monospace;
     --sans:'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   }
@@ -25,8 +25,8 @@
   html{ scroll-behavior:smooth; }
   body{
     background:
-      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(53,214,190,.20), transparent 60%),
-      radial-gradient(ellipse 700px 500px at 100% 10%, rgba(79,196,214,.14), transparent 55%),
+      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(232,150,60,.20), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 100% 10%, rgba(242,183,102,.14), transparent 55%),
       var(--bg);
     color:var(--text); font-family:var(--sans); line-height:1.6;
     -webkit-font-smoothing:antialiased;
@@ -36,7 +36,7 @@
   .wrap{ max-width:1080px; margin:0 auto; padding:0 24px; }
   ::selection{ background:var(--accent); color:var(--accent-ink); }
 
-  header{ position:sticky; top:0; z-index:50; background:rgba(7,15,14,.82); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); }
+  header{ position:sticky; top:0; z-index:50; background:rgba(20,22,26,.82); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); }
   .header-inner{ display:flex; align-items:center; justify-content:space-between; padding:14px 24px; max-width:1080px; margin:0 auto; }
   .brand{ display:flex; align-items:center; gap:10px; font-family:var(--mono); font-weight:700; font-size:15px; }
   .brand img{ width:28px; height:28px; border-radius:8px; }

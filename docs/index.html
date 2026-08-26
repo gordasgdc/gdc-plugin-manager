@@ -14,7 +14,7 @@
      aplicatia acopera si paginile de produs (/datamover/, /cursorpro-gdc/ ...).
      La orice modificare de pagina, incrementeaza CACHE_VERSION din sw.js. -->
 <link rel="manifest" href="/manifest.webmanifest">
-<meta name="theme-color" content="#070f0e">
+<meta name="theme-color" content="#14161A">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="GDC">
@@ -23,19 +23,19 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#070f0e;
-    --bg-2:#0b1615;
-    --panel:#0f1c1a;
-    --panel-2:#132420;
-    --border:#1e3430;
-    --text:#eef8f6;
-    --muted:#9db8b3;
-    --faint:#5f8580;
-    --accent:#35d6be;
-    --accent-ink:#04211c;
-    --accent-dim:#1f7d6e;
-    --violet:#2f8f9e;
-    --violet-2:#4fc4d6;
+    --bg:#14161A;
+    --bg-2:#101216;
+    --panel:#1A1D22;
+    --panel-2:#20232A;
+    --border:#2B2F36;
+    --text:#EDEFF2;
+    --muted:#93989F;
+    --faint:#5C6169;
+    --accent:#E8963C;
+    --accent-ink:#1A1108;
+    --accent-dim:#B96A1E;
+    --violet:#C97C2E;
+    --violet-2:#F2B766;
     --mono: 'IBM Plex Mono', ui-monospace, monospace;
     --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   }
@@ -43,8 +43,8 @@
   html{ scroll-behavior:smooth; }
   body{
     background:
-      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(53,214,190,.22), transparent 60%),
-      radial-gradient(ellipse 700px 500px at 100% 10%, rgba(79,196,214,.14), transparent 55%),
+      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(232,150,60,.18), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 100% 10%, rgba(242,183,102,.12), transparent 55%),
       var(--bg);
     color:var(--text); font-family:var(--sans);
     line-height:1.6; -webkit-font-smoothing:antialiased;
@@ -58,7 +58,7 @@
 
   header{
     position:sticky; top:0; z-index:50;
-    background:rgba(7,15,14,.82); backdrop-filter:blur(12px);
+    background:rgba(20,22,26,.82); backdrop-filter:blur(12px);
     border-bottom:1px solid var(--border);
   }
   .nav{ display:flex; align-items:center; justify-content:space-between; padding:16px 24px; max-width:1080px; margin:0 auto; }
@@ -115,12 +115,12 @@
     text-decoration:none; display:inline-flex; align-items:center; gap:8px; transition:all .18s ease; cursor:pointer; border:1px solid transparent;
   }
   .btn-primary{ background:var(--accent); color:var(--accent-ink); }
-  .btn-primary:hover{ background:#5fe6d2; transform:translateY(-1px); box-shadow:0 10px 30px -8px rgba(53,214,190,.5); }
+  .btn-primary:hover{ background:#F2B766; transform:translateY(-1px); box-shadow:0 10px 30px -8px rgba(232,150,60,.5); }
   .btn-ghost{ background:var(--panel); color:var(--text); border-color:var(--border); }
   .btn-ghost:hover{ border-color:var(--violet-2); }
   .hero-meta{ display:flex; gap:18px; flex-wrap:wrap; font-family:var(--mono); font-size:12px; color:var(--faint); }
   .hero-meta span{ display:flex; align-items:center; gap:6px; }
-  .dot{ width:6px; height:6px; border-radius:50%; background:#5fd98a; }
+  .dot{ width:6px; height:6px; border-radius:50%; background:#4CAF7D; }
 
   .catalog-demo{
     background:var(--panel); border:1px solid var(--border); border-radius:16px;
@@ -219,7 +219,7 @@
     font-family:var(--mono); font-size:10.5px; font-weight:700; letter-spacing:.05em; text-transform:uppercase;
     padding:3px 8px; border-radius:6px; background:var(--panel-2); border:1px solid var(--border); color:var(--muted);
   }
-  .cc-badge.free{ color:#5fd98a; border-color:rgba(95,217,138,.35); }
+  .cc-badge.free{ color:#4CAF7D; border-color:rgba(76,175,125,.35); }
   .cc-badge.trial{ color:var(--violet-2); border-color:rgba(79,196,214,.35); }
   .cc-cta{
     margin-top:auto; padding-top:14px;
