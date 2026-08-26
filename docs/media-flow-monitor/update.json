@@ -1,7 +1,7 @@
 {
-  "version": "1.6.0",
+  "version": "1.7.0",
   "release_date": "2026-08-26",
-  "changes": "v1.6.0: BUG FIX critic Licentiere - butonul de activare exista din v1.0 dar nu era conectat la nimic; adaugat Introdu codul de activare... in meniul din bara de sus, cu mesaje clare de eroare (cod invalid/gresit produs/gresita masina/expirat).",
+  "changes": "v1.7.0: Top RAM/Swap Consumers in System Health, Log Decoder Pro (filtre Errors/Warnings/Render Events, Pause/Resume, Export Log, highlight cuvinte cheie), Open Cache Folder, Copy Diagnostics, Force Close Hanging DaVinci, alerte native (swap ridicat, disk cache scazut).",
   "download_url": {
     "mac": "https://github.com/gordasgdc/MediaFlow-Monitor/releases/latest/download/MediaFlowMonitor.pkg",
     "windows": "https://github.com/gordasgdc/MediaFlow-Monitor/releases/latest/download/MediaFlowMonitorSetup-x64.exe"
