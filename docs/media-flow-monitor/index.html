@@ -37,14 +37,17 @@
   }
   .badge.warn { color: var(--accent); border-color: #4a3620; }
 
-  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 36px 0; }
+  h2.section { font-size: 1.05rem; margin: 44px 0 14px; color: var(--text); }
+  h2.section .dot { background: var(--accent); box-shadow: 0 0 6px var(--accent); }
+
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
   @media (max-width: 640px) { .grid { grid-template-columns: 1fr; } }
   .feature { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
   .feature h3 { margin: 0 0 4px; font-size: 0.95rem; }
   .feature p { margin: 0; color: var(--text-dim); font-size: 0.87rem; }
   .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 7px; background: var(--accent); box-shadow: 0 0 6px var(--accent); }
 
-  .downloads { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 32px 0; }
+  .downloads { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
   @media (max-width: 640px) { .downloads { grid-template-columns: 1fr; } }
   .dl-card { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 14px; padding: 20px; text-align: center; }
   .dl-card h3 { margin: 0 0 4px; }
@@ -59,16 +62,23 @@
 
   .warning {
     background: #201a10; border: 1px solid #4a3620; border-radius: 12px;
-    padding: 16px 18px; margin: 28px 0; font-size: 0.87rem; color: #f0d2a8;
+    padding: 16px 18px; margin: 16px 0; font-size: 0.87rem; color: #f0d2a8;
   }
   .warning strong { color: var(--accent); }
   .steps { margin: 6px 0 0; padding-left: 18px; }
   .steps li { margin-bottom: 5px; }
   code { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 1px 6px; font-size: 0.85em; }
 
+  .activation {
+    background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 14px;
+    padding: 20px 22px; margin: 16px 0; text-align: center;
+  }
+  .activation p { color: var(--text-dim); font-size: 0.88rem; margin: 0 0 14px; }
+  .activation .btn { width: auto; padding: 11px 24px; display: inline-block; }
+
   .donate {
     background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 12px;
-    padding: 18px 20px; margin: 28px 0; font-size: 0.88rem; color: var(--text-dim);
+    padding: 18px 20px; margin: 16px 0; font-size: 0.88rem; color: var(--text-dim);
   }
   footer { text-align: center; color: var(--text-dim); font-size: 0.78rem; margin-top: 56px; }
   footer a { color: var(--accent); }
@@ -80,57 +90,62 @@
   <header>
     <img class="logo" src="icon.png" alt="MediaFlow Monitor">
     <h1>MediaFlow Monitor</h1>
-    <p class="tagline">Monitorizare resurse &amp; diagnosticare DaVinci Resolve, în timp real.</p>
+    <p class="tagline">Dashboard Pro de monitorizare &amp; diagnosticare DaVinci Resolve, în timp real.</p>
     <div class="badges">
       <span class="badge">macOS 13+</span>
-      <span class="badge">Windows 10 1809+</span>
+      <span class="badge">Windows (WPF, testare internă)</span>
       <span class="badge">v1.3.1</span>
       <span class="badge" style="color:var(--ok);border-color:#2a4a2f;">✓ Semnat + Notarizat Apple</span>
     </div>
   </header>
 
   <div class="grid">
-    <div class="feature"><h3><span class="dot"></span>Zero overhead</h3><p>Cod nativ (SwiftUI / WinUI 3), fără Electron. Polling adaptiv 1–3s.</p></div>
-    <div class="feature"><h3><span class="dot"></span>Semafor vizual instant</h3><p>RAM, Swap și semnale din log-urile DaVinci — fără tabele.</p></div>
-    <div class="feature"><h3><span class="dot"></span>Overlay pe scurtătură</h3><p><code>Cmd+Shift+M</code> pe macOS, <code>Ctrl+Shift+M</code> pe Windows.</p></div>
-    <div class="feature"><h3><span class="dot"></span>RO / EN / ES</h3><p>Localizare completă din prima versiune.</p></div>
+    <div class="feature"><h3><span class="dot"></span>Grafice live VRAM &amp; CPU</h3><p>Utilizare VRAM/Swap în timp și per-thread CPU, actualizate live, direct în panou.</p></div>
+    <div class="feature"><h3><span class="dot"></span>Real-time Log Decoder</h3><p>Consolă colorată pentru evenimentele DaVinci Resolve — GPU Memory Full, Render Cache invalid, dropped frames, Fusion lent.</p></div>
+    <div class="feature"><h3><span class="dot"></span>Render Cache pe discuri externe</h3><p>Detectare + selecție manuală a folderului CacheClip, inclusiv pe volume Thunderbolt/RAID externe.</p></div>
+    <div class="feature"><h3><span class="dot"></span>Overlay pe scurtătură</h3><p><code>Cmd+Shift+M</code> pe macOS, <code>Ctrl+Shift+M</code> pe Windows — fereastră redimensionabilă, temă Dark/Light/System.</p></div>
   </div>
 
   <div class="downloads">
     <div class="dl-card">
-      <h3>macOS</h3>
-      <div class="ver">.zip · .app semnat + notarizat</div>
-      <a class="btn" href="https://github.com/gordasgdc/MediaFlow-Monitor/releases/latest/download/MediaFlowMonitor-macOS.zip">Download .zip</a>
+      <h3>Download MediaFlow Monitor (macOS)</h3>
+      <div class="ver">.zip · .app semnat + notarizat Apple · v1.3.1</div>
+      <a class="btn" href="https://github.com/gordasgdc/MediaFlow-Monitor/releases/latest/download/MediaFlowMonitor-macOS.zip">Download MediaFlow Monitor (macOS)</a>
       <div class="hash">Verifică sha256 în <a href="https://github.com/gordasgdc/MediaFlow-Monitor/releases/latest" style="color:var(--accent)">Release notes</a></div>
     </div>
     <div class="dl-card">
       <h3>Windows</h3>
-      <div class="ver">Nedisponibil încă — build în lucru</div>
+      <div class="ver">Build WPF în testare internă — nu e încă public</div>
       <a class="btn disabled" href="#">Curând</a>
       <div class="hash">Vezi <a href="https://github.com/gordasgdc/MediaFlow-Monitor" style="color:var(--accent)">repo-ul</a> pentru build local</div>
     </div>
   </div>
 
+  <h2 class="section"><span class="dot"></span>Cum se instalează &amp; se activează</h2>
   <div class="warning">
-    <strong>Pornire rapidă.</strong>
     <ol class="steps">
-      <li><strong>macOS:</strong> dezarhivează și dă dublu-click pe <code>MediaFlowMonitor.app</code> — pachet semnat + notarizat Apple, fără avertismente Gatekeeper.</li>
-      <li><strong>Windows:</strong> build în lucru — la avertismentul „Windows protected your PC" (temporar, până la semnare), apasă <strong>More info → Run anyway</strong>.</li>
-      <li>Apasă <code>Cmd+Shift+M</code> (macOS) / <code>Ctrl+Shift+M</code> (Windows) pentru a arăta/ascunde panoul.</li>
+      <li>Dezarhivează și dă dublu-click pe <code>MediaFlowMonitor.app</code> — pachet semnat + notarizat Apple, fără avertismente Gatekeeper.</li>
+      <li>Dacă aplicația rulează în afara folderului Aplicații (ex. direct din Downloads), apare automat un prompt <strong>„Mutare în Aplicații?"</strong> — confirmă și se mută/relansează singură.</li>
+      <li>Apasă <code>Cmd+Shift+M</code> pentru a arăta/ascunde panoul Dashboard Pro.</li>
+      <li>Aplicația pornește automat cu <strong>15 zile de probă gratuită</strong>, fără cont sau înregistrare.</li>
     </ol>
   </div>
 
-  <div class="downloads">
-    <div class="dl-card">
-      <h3>🕒 15-Day Free Trial</h3>
-      <div class="ver">Acces complet, fără restricții, timp de 15 zile</div>
-      <a class="btn" href="https://github.com/gordasgdc/MediaFlow-Monitor/releases/latest/download/MediaFlowMonitor-macOS.zip">Download Free Trial (15 Days)</a>
-    </div>
-    <div class="dl-card">
-      <h3>♾️ Lifetime Deal — Ofertă de lansare</h3>
-      <div class="ver">Acces pe viață, donație simbolică de <strong style="color:var(--accent)">7€</strong>, doar în perioada de lansare</div>
-      <a class="btn" href="https://wa.me/34643109970?text=Salut!%20Vreau%20Lifetime%20Access%20pentru%20MediaFlow%20Monitor%20(donatie%207e).">Get Lifetime Access (7€ Donation)</a>
-    </div>
+  <div class="activation">
+    <p>Aplicația include 15 zile gratuite, acces complet. Pentru activare pe viață, deschide meniul din bara de sus (⚡ status item) → copiază <strong>Machine ID</strong> → trimite-l pe WhatsApp pentru activare.</p>
+    <a class="btn" style="width:auto" href="https://wa.me/34643109970?text=Salut!%20Vreau%20sa%20activez%20MediaFlow%20Monitor.%20Machine%20ID%3A%20">Activează licența (WhatsApp)</a>
+  </div>
+
+  <h2 class="section"><span class="dot"></span>Integrare ecosistem GDC</h2>
+  <div class="feature" style="margin-bottom:16px;">
+    <p style="margin:0;color:var(--text-dim);font-size:0.87rem;">
+      MediaFlow Monitor folosește aceeași infrastructură de licențiere ca toate aplicațiile
+      <a href="https://gordas.dev" style="color:var(--accent)">GDC</a> — chei Ed25519, activare prin
+      Machine ID, verificare de revocare online (fail-open, funcționează și offline). Licența generată
+      de Furnizorul GDC Plugin Manager e recunoscută instant de aplicație, fără pași suplimentari de
+      configurare. Actualizările de versiune sunt verificate automat la lansare (pop-up + banner), cu
+      link direct spre ultimul build de pe această pagină.
+    </p>
   </div>
 
   <div class="donate">
