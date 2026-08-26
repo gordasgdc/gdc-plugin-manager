@@ -111,7 +111,11 @@ deschide Terminal (Spotlight, `⌘+Space`), lipește (`⌘+V`), Enter, apoi
 explică parola de Mac cerută (invizibilă la tastare) + Enter din nou;
 (c) Fluxul de utilizare + acțiuni post-proces — cum se adaugă
 fișiere/date, ce face fiecare buton rezultat; (d) Licență & Donație — trial
-gratuit explicit (zile), suma exactă ca donație (niciodată "preț"/"vânzare").
+gratuit explicit (zile), suma exactă ca donație (niciodată "preț"/"vânzare");
+(e) Cum funcționează actualizarea automată — ce înseamnă pop-up-ul de
+versiune nouă, ce face butonul „Actualizează acum" vs „Mai târziu", și că
+instalarea noii versiuni rămâne un pas asistat (descărcare + reinstalare),
+nu un update silențios în fundal.
 
 **9. Checklist obligatoriu la FIECARE release** (păstrat identic cu
 "DIRECTIVĂ PERMANENTĂ SUPREMĂ" din jurnalul fiecărui proiect — punctele
@@ -138,6 +142,51 @@ creată în `~/Developer/` primește Partea 1 (versiunea curentă, completă)
 la un fișier gol sau parțial. Regula 1 de mai sus ("Dacă modifici o regulă
 aici, propag-o manual...") descrie mecanismul; aceasta îl declară
 obligatoriu, nu opțional.
+
+**12. Profil Utilizator/HWID în Sidebar, Sistem de Revocare Licențe &
+Standard Design Web Mobile/Desktop "Shift" (2026-08-26).**
+- **Profil Utilizator opțional, vizibil în sidebar-ul UI** (Mac + Windows,
+  pe toate aplicațiile cu licențiere GDC): Nume (sau „Anonim" dacă nu e
+  completat), Email, și Machine ID (HWID) — afișate clar, nu ascunse
+  într-un submeniu. Portat din modulul Tracker existent (Mac,
+  `AnalyticsClient.registerDevice` → Supabase `devices`) — Windows trebuie
+  aliniat la aceeași infrastructură, nu una separată.
+- **Revocare/blacklist de licențe, prin Supabase** (ACEEAȘI bază de date
+  deja folosită de Tracker — niciun backend nou de construit). O licență
+  Ed25519 rămâne verificată local (offline-first, nicio schimbare la
+  activarea inițială), dar clientul verifică periodic + la lansare (dacă
+  există conexiune) un tabel de revocări după `machineID`/serial. **Fail
+  OPEN, nu fail closed**: fără conexiune la internet, o licență deja
+  activată local CONTINUĂ să funcționeze (nu bricuim un user legitim offline)
+  — revocarea se aplică abia la următoarea verificare online reușită.
+  Furnizor capătă unelte de revocare instant + editare a perioadei de
+  valabilitate a unei licențe existente deja generate.
+- **Generare flexibilă de licențe** (Furnizor): selector explicit al
+  duratei — Zile / Luni / Ani / Forever (Lifetime) / Valabil până la
+  versiunea X — nu doar trial fix + activare permanentă binară.
+- **Standard Design Web "Shift"** — orice pagină de prezentare/descărcare
+  GDC (`gordas.dev` și paginile dedicate per-aplicație) adoptă design-ul
+  dark, minimalist, accent amber/cupru consacrat de CG Convertor
+  (`gordas.dev/cg-convertor`) — niciun accent verde vechi sau stil
+  nealiniat. Toate paginile trebuie optimizate explicit pentru mobil
+  (iOS Safari + Android Chrome), verificat vizual la lățimi de telefon,
+  nu doar "responsive by CSS framework".
+
+**13. Update Checker — specificație UX obligatorie (2026-08-26).** La
+lansare, aplicația verifică `update.json`/GitHub Releases; dacă versiunea
+locală e mai veche, arată un pop-up/modal Shift (nu doar bannerul discret
+din Regula 7) cu: numărul noii versiuni, un rezumat scurt al noutăților
+(Release Notes, dacă `update.json` le are — câmp opțional, degradează
+elegant dacă lipsește), și DOUĂ butoane explicite — **„Actualizează acum"**
+(deschide direct link-ul de descărcare a installer-ului/pachetului nou,
+`releases/latest/download/...`, și arată userului că trebuie să
+instaleze peste versiunea curentă + repornească aplicația — NU e un
+self-update silențios, niciun helper nu înlocuiește bundle-ul/exe-ul în
+fundal, vezi WARNING-ul deja existent din `UpdateChecker.swift`/`.cs`) și
+**„Mai târziu"** (închide fereastra, aceeași stare de dismissal ca
+bannerul). Popup-ul apare o singură dată per versiune nouă, cu excepția
+`mandatory: true` (reapare la fiecare lansare). Ghidul PDF (Regula 8(e))
+trebuie să explice acest flux exact.
 
 ## [PARTEA 2: SPECIFICAȚII TEHNICE PROIECT]
 
