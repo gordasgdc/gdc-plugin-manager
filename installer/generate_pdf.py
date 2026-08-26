@@ -70,7 +70,7 @@ RO = dict(
     title="Ghid de utilizare — GDC Plugin Manager",
     sections=[
         ("1. Ce este GDC Plugin Manager", "Aplicație GRATUITĂ pentru instalarea, actualizarea și licențierea produselor GDC (LUT-uri, DCTL-uri, PowerGrade-uri, plugin-uri OFX și Fuse) pentru DaVinci Resolve."),
-        ("2. Cumpărare și activare", "Alege un produs din catalog, apasă „Cumpără”, apoi introdu codul serial primit în secțiunea Licență."),
+        ("2. Donație și activare", "Alege un produs din catalog, apasă „Donează”, apoi introdu codul serial primit în secțiunea Licență."),
         ("3. Instalare produse", "Apasă „Instalează” pe orice card din catalog. Aplicația copiază fișierele direct în folderele corecte pentru DaVinci Resolve."),
         ("4. PowerGrade-uri", "Se importă automat în Galeria Resolve dacă aplicația e deschisă. Dacă nu, urmează instrucțiunile afișate."),
         ("5. Machine ID", "Codurile licențiate pe o singură mașină folosesc un identificator hardware unic, afișat în secțiunea Licență."),
