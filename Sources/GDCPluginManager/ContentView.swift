@@ -207,10 +207,15 @@ struct ContentView: View {
             // UpdateChecker.swift), dar butonul e explicit denumit ca actiune
             // 1-click, nu doar "Descarca" generic. Inchide popup-ul dupa click
             // — userul si-a luat deja actiunea.
-            if let urlString = info.download_url["mac"], let url = URL(string: urlString) {
+            // Nu mai deschide browserul — vezi SelfUpdater.swift. Nu mai
+            // apelam dismiss() imediat: daca instalarea esueaza si userul
+            // mai are nevoie sa vada popup-ul din nou, availableUpdate
+            // ramane populat (SelfUpdater arata propria alerta de eroare).
+            // Garda pe download_url["mac"] pastrata ca inainte — butonul
+            // nu apare deloc daca update.json n-are link pentru Mac.
+            if info.download_url["mac"] != nil {
                 Button(L.t("update.popup.now")) {
-                    NSWorkspace.shared.open(url)
-                    updateChecker.dismiss()
+                    Task { await SelfUpdater.downloadAndInstall(info: info) }
                 }
             }
             // Update marcat mandatory (docs/update.json): fara "Mai tarziu"
@@ -247,8 +252,11 @@ private struct UpdateBanner: View {
                     .lineLimit(2)
             }
             Spacer()
-            if let urlString = update.download_url["mac"], let url = URL(string: urlString) {
-                Button(L.t("update.download")) { NSWorkspace.shared.open(url) }
+            // Nu mai deschide browserul — vezi SelfUpdater.swift.
+            if update.download_url["mac"] != nil {
+                Button(L.t("update.download")) {
+                    Task { await SelfUpdater.downloadAndInstall(info: update) }
+                }
             }
             Button(L.t("update.dismiss")) { updateChecker.dismiss() }
                 .buttonStyle(.plain)

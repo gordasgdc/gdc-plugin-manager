@@ -232,12 +232,20 @@ enum L {
         "help.support.body": [.ro: "Ai o problemă sau o întrebare? Scrie-mi pe WhatsApp din pagina „Licență” — răspund direct.", .en: "Have a problem or a question? Message me on WhatsApp from the “License” page — I reply directly.", .es: "¿Tienes un problema o una pregunta? Escríbeme por WhatsApp desde la página “Licencia” — respondo directamente."],
 
         "update.title": [.ro: "Versiune nouă disponibilă", .en: "New version available", .es: "Nueva versión disponible"],
-        "update.download": [.ro: "Descarcă", .en: "Download", .es: "Descargar"],
+        // "update.download": buton care acum descarca SI instaleaza direct
+        // (SelfUpdater), nu mai deschide browserul.
+        "update.download": [.ro: "Descarcă și instalează", .en: "Download & Install", .es: "Descargar e instalar"],
+        "update.downloading": [.ro: "Se descarcă actualizarea…", .en: "Downloading the update…", .es: "Descargando la actualización…"],
+        "update.extracting": [.ro: "Se dezarhivează…", .en: "Extracting…", .es: "Descomprimiendo…"],
+        "update.installing": [.ro: "Se instalează — introdu parola de administrator când ți se cere", .en: "Installing — enter your administrator password when asked", .es: "Instalando — introduce tu contraseña de administrador cuando se te pida"],
+        "update.installFailed.title": [.ro: "Actualizarea a eșuat", .en: "Update failed", .es: "La actualización falló"],
+        "update.installFailed.body": [.ro: "%@\n\nPoți descărca manual ultima versiune de pe pagina de GitHub.", .en: "%@\n\nYou can download the latest version manually from the GitHub page.", .es: "%@\n\nPuedes descargar manualmente la última versión desde la página de GitHub."],
+        "update.installFailed.openPage": [.ro: "Deschide pagina", .en: "Open page", .es: "Abrir página"],
         "update.dismiss": [.ro: "Închide", .en: "Dismiss", .es: "Cerrar"],
         // Pop-up modal (ContentView.swift), separat de bannerul de mai sus.
         // Explica raspicat ca nu e self-update — vezi cererea din 2026-08-24.
         "update.popup.title": [.ro: "Actualizare disponibilă", .en: "Update available", .es: "Actualización disponible"],
-        "update.popup.message": [.ro: "Este disponibilă o nouă versiune! Te rugăm să descarci ultimul installer și să îl instalezi peste versiunea actuală.", .en: "A new version is available! Please download the latest installer and install it over your current version.", .es: "¡Hay una nueva versión disponible! Por favor, descarga el último instalador e instálalo sobre la versión actual."],
+        "update.popup.message": [.ro: "Este disponibilă o nouă versiune! Apeși Actualizează acum și se instalează automat — o să-ți ceară parola de administrator.", .en: "A new version is available! Click Update now and it installs automatically — you'll be asked for your admin password.", .es: "¡Hay una nueva versión disponible! Pulsa Actualizar ahora y se instala automáticamente — se te pedirá tu contraseña de administrador."],
         "update.popup.later": [.ro: "Mai târziu", .en: "Later", .es: "Más tarde"],
         "update.popup.now": [.ro: "Actualizează acum", .en: "Update now", .es: "Actualizar ahora"],
         "update.popup.changes": [.ro: "Noutăți", .en: "What's new", .es: "Novedades"],
