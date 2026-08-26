@@ -55,21 +55,76 @@ final class UpdateChecker: ObservableObject {
 
     @Published private(set) var availableUpdate: UpdateInfo?
 
+    /// PITFALL FIXED 2026-08-26: `availableUpdate` respecta filtrul de
+    /// dismissal (corect pentru banner/popup, care nu trebuie sa reapara pe
+    /// o versiune deja inchisa). Dar verificarea MANUALA ("Check for
+    /// Updates..." din meniu / butonul din Preferences) citea tot
+    /// `availableUpdate` — daca versiunea fusese respinsa o data (chiar din
+    /// greseala), verificarea manuala minea "esti la zi" desi exista clar o
+    /// versiune mai noua. Reprodus live pe Windows (structura identica) cu
+    /// un log real: `info.Version=1.3.0, IsNewer=True, dismissed=1.3.0`.
+    /// `latestInfo` e sursa ADEVARATA, necenzurata de dismissal — orice
+    /// verificare declansata manual de user trebuie sa citeasca de aici.
+    @Published private(set) var latestInfo: UpdateInfo?
+
     private var currentVersion: String {
         Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "0"
     }
 
     private let dismissedVersionKey = "gdcpm_dismissed_update_version"
 
-    func check() async {
-        guard let (data, response) = try? await URLSession.shared.data(from: Self.updateURL),
-              let http = response as? HTTPURLResponse, (200...299).contains(http.statusCode),
-              let info = try? JSONDecoder().decode(UpdateInfo.self, from: data) else { return }
+    /// Cache-buster pe fiecare cerere: GitHub Pages (Fastly) serveste
+    /// docs/update.json cu `max-age=600` — un nod CDN care a raspuns o
+    /// data la un update.json vechi il tine cache-uit pana la 10 minute,
+    /// indiferent ce publicam intre timp. Pitfall identic celui deja
+    /// documentat pentru coperti (CoverImageStore) — acolo solutia a fost
+    /// un query param derivat din continut; aici, un check de update
+    /// trebuie sa fie mereu proaspat, nu doar stabil, deci un query param
+    /// NOU la fiecare apel (timestamp) e alegerea corecta.
+    private static func cacheBustedUpdateURL() -> URL {
+        var components = URLComponents(url: updateURL, resolvingAgainstBaseURL: false)!
+        components.queryItems = [URLQueryItem(name: "t", value: String(Int(Date().timeIntervalSince1970)))]
+        return components.url!
+    }
 
-        guard Self.isNewer(info.version, than: currentVersion) else {
-            availableUpdate = nil
+    func check() async {
+        let url = Self.cacheBustedUpdateURL()
+        DiagnosticLog.write("UpdateChecker", "check() start. currentVersion=\(currentVersion), GET \(url.absoluteString)")
+
+        let data: Data
+        let response: URLResponse
+        do {
+            (data, response) = try await URLSession.shared.data(from: url)
+        } catch {
+            DiagnosticLog.write("UpdateChecker", "Cerere esuata: \(error)")
             return
         }
+        guard let http = response as? HTTPURLResponse else {
+            DiagnosticLog.write("UpdateChecker", "Raspuns fara HTTPURLResponse (neasteptat).")
+            return
+        }
+        DiagnosticLog.write("UpdateChecker", "HTTP \(http.statusCode)")
+        guard (200...299).contains(http.statusCode) else {
+            DiagnosticLog.write("UpdateChecker", "Status neasteptat, opresc aici.")
+            return
+        }
+        let info: UpdateInfo
+        do {
+            info = try JSONDecoder().decode(UpdateInfo.self, from: data)
+        } catch {
+            let body = String(data: data, encoding: .utf8) ?? "<nu e text UTF-8>"
+            DiagnosticLog.write("UpdateChecker", "Decodare esuata: \(error). Body: \(body)")
+            return
+        }
+        DiagnosticLog.write("UpdateChecker", "info.version=\(info.version)")
+
+        guard Self.isNewer(info.version, than: currentVersion) else {
+            DiagnosticLog.write("UpdateChecker", "isNewer=false — nu e mai noua, sau egala.")
+            availableUpdate = nil
+            latestInfo = nil
+            return
+        }
+        latestInfo = info
         // PITFALL FIXED 2026-08-24: `mandatory` exista in JSON de la
         // inceput dar nu era citit nicaieri — un update marcat mandatory
         // se comporta identic cu unul optional (un singur "Later" il

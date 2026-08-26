@@ -173,7 +173,11 @@ struct ContentView: View {
         .onReceive(NotificationCenter.default.publisher(for: .gdcCheckForUpdatesRequested)) { _ in
             Task {
                 await updateChecker.check()
-                if let update = updateChecker.availableUpdate {
+                // PITFALL FIXED 2026-08-26: citea availableUpdate (filtrat
+                // de dismissal) — o versiune respinsa candva facea
+                // verificarea manuala sa minta "esti la zi". latestInfo nu
+                // e filtrat — vezi comentariul din UpdateChecker.swift.
+                if let update = updateChecker.latestInfo {
                     manualUpdateCheckMessage = String(format: L.t("update.check.available"), update.version)
                 } else {
                     manualUpdateCheckMessage = L.t("update.check.upToDate")

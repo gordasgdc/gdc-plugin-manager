@@ -82,7 +82,9 @@ struct PreferencesView: View {
 
         await updateChecker.check()
 
-        if let update = updateChecker.availableUpdate {
+        // PITFALL FIXED 2026-08-26: vezi comentariul din UpdateChecker.swift
+        // — latestInfo, nu availableUpdate (care e filtrat de dismissal).
+        if let update = updateChecker.latestInfo {
             checkResultMessage = String(format: L.t("update.check.available"), update.version)
         } else {
             checkResultMessage = L.t("update.check.upToDate")
