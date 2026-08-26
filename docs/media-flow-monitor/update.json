@@ -1,9 +1,9 @@
 {
-  "version": "1.4.0",
+  "version": "1.5.0",
   "release_date": "2026-08-26",
-  "changes": "v1.4.0: meniu nativ Help/About - Ghid de utilizare in 3 limbi (RO/EN/ES) accesibil din meniul de sus si din bara de stare, fereastra Despre cu logo, versiune+build, statut licenta si Machine ID cu copiere rapida.",
+  "changes": "v1.5.0: instalator nativ .pkg (semnat Developer ID Installer + notarizat Apple) - wizard clasic macOS, instalare automata directa in /Applications la Continue/Install, fara nicio avertizare Gatekeeper.",
   "download_url": {
-    "mac": "https://github.com/gordasgdc/MediaFlow-Monitor/releases/latest/download/MediaFlowMonitor-macOS.zip",
+    "mac": "https://github.com/gordasgdc/MediaFlow-Monitor/releases/latest/download/MediaFlowMonitor.pkg",
     "windows": "https://github.com/gordasgdc/MediaFlow-Monitor/releases/latest/download/MediaFlowMonitor-Windows.zip"
   },
   "mandatory": false,
