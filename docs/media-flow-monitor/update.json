@@ -1,7 +1,7 @@
 {
-  "version": "1.5.0",
+  "version": "1.5.1",
   "release_date": "2026-08-26",
-  "changes": "v1.5.0: instalator nativ .pkg (semnat Developer ID Installer + notarizat Apple) - wizard clasic macOS, instalare automata directa in /Applications la Continue/Install, fara nicio avertizare Gatekeeper.",
+  "changes": "v1.5.1: BUG FIX critic Auto-Update - Cauta actualizari nu mai raporta fals \"Esti la zi\" la un esec de retea/parsing (era confundat cu \"nu exista update\"); comparare SemVer robusta (Major.Minor.Patch, ignora prefix v); cache-bypass explicit pe cerere (cachePolicy + header no-cache), pe langa query param unic deja existent.",
   "download_url": {
     "mac": "https://github.com/gordasgdc/MediaFlow-Monitor/releases/latest/download/MediaFlowMonitor.pkg",
     "windows": "https://github.com/gordasgdc/MediaFlow-Monitor/releases/latest/download/MediaFlowMonitor-Windows.zip"
