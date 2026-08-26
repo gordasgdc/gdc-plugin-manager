@@ -48,6 +48,28 @@ struct GenerateSerialView: View {
     @State private var email = ""
     @State private var machineID = ""
     @State private var expiresDays = "0" // 0 = never
+    // Generare flexibila (Faza 3, vezi CLAUDE.md Partea 1 Regula 12):
+    // acelasi camp `expiresAt` (unix seconds, 0 = pe viata) din LicenseCore
+    // - nicio schimbare de format criptografic, doar UI mai clar decat un
+    // simplu numar de zile. "Pana la versiunea X" NU e criptografic
+    // (payload-ul nu are camp de versiune) - e doar o nota informativa in
+    // SalesLog; aplicarea reala se face manual, prin revocare (RevocationsView)
+    // cand acea versiune chiar apare.
+    private enum DurationUnit: String, CaseIterable, Identifiable {
+        case days = "Zile", months = "Luni", years = "Ani", lifetime = "Pe viață (Lifetime)"
+        var id: String { rawValue }
+        var dayMultiplier: Int {
+            switch self {
+            case .days: return 1
+            case .months: return 30
+            case .years: return 365
+            case .lifetime: return 0
+            }
+        }
+    }
+    @State private var durationUnit: DurationUnit = .lifetime
+    @State private var durationValue = "1"
+    @State private var validUntilVersionNote = ""
     @State private var priceText = ""
     @State private var licensePlatform: LicenseCore.LicensePlatform = .any
 
@@ -159,11 +181,20 @@ struct GenerateSerialView: View {
                                 .foregroundStyle(.green)
                         }
                         HStack {
-                            TextField("Zile până expiră (0 = pe viață)", text: $expiresDays)
-                                .textFieldStyle(.roundedBorder)
-                            TextField("Preț încasat (EUR)", text: $priceText)
-                                .textFieldStyle(.roundedBorder)
+                            Picker("Durată", selection: $durationUnit) {
+                                ForEach(DurationUnit.allCases) { Text($0.rawValue).tag($0) }
+                            }
+                            .pickerStyle(.menu)
+                            if durationUnit != .lifetime {
+                                TextField("Cantitate", text: $durationValue)
+                                    .textFieldStyle(.roundedBorder)
+                                    .frame(width: 80)
+                            }
                         }
+                        TextField("Preț încasat (EUR)", text: $priceText)
+                            .textFieldStyle(.roundedBorder)
+                        TextField("Valabil până la versiunea X (opțional, doar notă — se aplică manual prin revocare)", text: $validUntilVersionNote)
+                            .textFieldStyle(.roundedBorder)
                         // GDC-LICENSE-PLATFORM (Etapa 2): .any produce un
                         // cod v1 (compatibil retroactiv, nicio restrictie);
                         // celelalte 3 produc un cod v2 cu byte de platforma.
@@ -244,7 +275,7 @@ struct GenerateSerialView: View {
     private var isFormValid: Bool {
         !selectedID.isEmpty
             && !customerName.trimmingCharacters(in: .whitespaces).isEmpty
-            && Int(expiresDays) != nil
+            && (durationUnit == .lifetime || Int(durationValue) != nil)
             && Double(priceText) != nil
     }
 
@@ -260,17 +291,23 @@ struct GenerateSerialView: View {
         generatedCode = nil
         justCopied = false
 
-        guard let days = Int(expiresDays), let price = Double(priceText) else { return }
+        guard let price = Double(priceText) else { return }
         let expiresAt: Int64
-        let expiresDisplay: String
-        if days == 0 {
+        var expiresDisplay: String
+        if durationUnit == .lifetime {
             expiresAt = 0
             expiresDisplay = "nu expira"
         } else {
-            expiresAt = Int64(Date().timeIntervalSince1970) + Int64(days) * 86400
+            guard let quantity = Int(durationValue), quantity > 0 else { return }
+            let totalDays = quantity * durationUnit.dayMultiplier
+            expiresAt = Int64(Date().timeIntervalSince1970) + Int64(totalDays) * 86400
             let formatter = DateFormatter()
             formatter.dateFormat = "yyyy-MM-dd"
             expiresDisplay = formatter.string(from: Date(timeIntervalSince1970: TimeInterval(expiresAt)))
+        }
+        let trimmedVersionNote = validUntilVersionNote.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !trimmedVersionNote.isEmpty {
+            expiresDisplay += " (valabil manual până la versiunea \(trimmedVersionNote) — aplicat prin revocare)"
         }
 
         let trimmedMachineID = machineID.trimmingCharacters(in: .whitespacesAndNewlines)

@@ -37,7 +37,14 @@ final class LicenseManager: ObservableObject {
     /// No app-wide trial: the app is free, only paid products need
     /// unlocking, and free ones are just... free.
     func isUnlocked(for item: PluginItem) -> Bool {
-        item.isFree || licensedProducts[item.id] != nil
+        item.isFree || (licensedProducts[item.id] != nil && !RevocationCheck.shared.isRevoked(item.id))
+    }
+
+    /// Reverifica revocarea online (fail-open, vezi RevocationCheck.swift)
+    /// pentru toate produsele licentiate curent. Apelata la lansare —
+    /// niciodata sincron/blocanta pentru UI.
+    func refreshRevocations() async {
+        await RevocationCheck.shared.refresh(productIDs: Array(licensedProducts.keys))
     }
 
     /// Validates a pasted code against every product currently in the
@@ -66,6 +73,7 @@ final class LicenseManager: ObservableObject {
             case .success(let payload):
                 saveLicense(productID: productID, code: trimmed)
                 licensedProducts[productID] = payload
+                Task { await RevocationCheck.shared.refresh(productIDs: [productID]) }
                 return true
             case .failure(.wrongProduct):
                 lastError = .wrongProduct

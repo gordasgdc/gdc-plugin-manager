@@ -3,6 +3,7 @@ import SwiftUI
 enum FurnizorSection: Hashable {
     case publish
     case generateSerial
+    case revocations
     case salesHistory
     case analytics
     case courses
@@ -25,6 +26,7 @@ struct FurnizorContentView: View {
             List(selection: $selection) {
                 Label("Publică produs", systemImage: "arrow.up.doc").tag(FurnizorSection.publish)
                 Label("Generează serial", systemImage: "key").tag(FurnizorSection.generateSerial)
+                Label("Revocări licențe", systemImage: "xmark.shield").tag(FurnizorSection.revocations)
                 Label("Clienți", systemImage: "person.2").tag(FurnizorSection.salesHistory)
                 Label("Statistici", systemImage: "chart.bar").tag(FurnizorSection.analytics)
                 Divider()
@@ -46,6 +48,8 @@ struct FurnizorContentView: View {
                     PublishView()
                 case .generateSerial:
                     GenerateSerialView()
+                case .revocations:
+                    RevocationsView()
                 case .salesHistory:
                     SalesHistoryView()
                 case .analytics:

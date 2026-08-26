@@ -37,7 +37,7 @@ struct OnboardingView: View {
 
     private func finish(registered: Bool) {
         if registered {
-            AnalyticsClient.registerDevice(name: name, email: email)
+            UserProfileStore.shared.save(name: name, email: email, sendTelemetry: true)
         }
         UserDefaults.standard.set(true, forKey: "gdcpm_onboarded")
         isPresented = false

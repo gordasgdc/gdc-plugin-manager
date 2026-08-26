@@ -91,6 +91,8 @@ enum L {
         "deps.state.ok": [.ro: "OK", .en: "OK", .es: "OK"],
         "deps.state.missing": [.ro: "Lipsește", .en: "Missing", .es: "Falta"],
         "deps.state.optionalMissing": [.ro: "Opțional — neinstalat", .en: "Optional — not installed", .es: "Opcional — no instalado"],
+        "profile.anonymous": [.ro: "Anonim", .en: "Anonymous", .es: "Anónimo"],
+        "profile.editor.title": [.ro: "Profil utilizator (opțional)", .en: "User profile (optional)", .es: "Perfil de usuario (opcional)"],
         "sidebar.apps": [.ro: "Aplicații", .en: "Apps", .es: "Aplicaciones"],
         "sidebar.mobileApp": [.ro: "Aplicație mobilă", .en: "Mobile app", .es: "App móvil"],
 

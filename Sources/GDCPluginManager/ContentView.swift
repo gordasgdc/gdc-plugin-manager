@@ -107,11 +107,14 @@ struct ContentView: View {
             }
             .navigationSplitViewColumnWidth(180)
             .safeAreaInset(edge: .bottom) {
-                Text("v\(appVersion)")
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .padding(.vertical, 8)
+                VStack(spacing: 6) {
+                    ProfileSidebarBlock()
+                    Text("v\(appVersion)")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                }
+                .frame(maxWidth: .infinity, alignment: .center)
+                .padding(.vertical, 8)
             }
         } detail: {
             VStack(spacing: 0) {
@@ -145,6 +148,7 @@ struct ContentView: View {
         .task {
             await catalog.refresh()
             await updateChecker.check()
+            await license.refreshRevocations()
             allDependencies = SystemDependencyChecker.checkAll()
             missingDependencies = allDependencies.filter { !$0.isPresent && !$0.isOptional }
             if !UserDefaults.standard.bool(forKey: "gdcpm_onboarded") {
