@@ -93,7 +93,7 @@
     <p class="tagline">Dashboard Pro de monitorizare &amp; diagnosticare DaVinci Resolve, în timp real.</p>
     <div class="badges">
       <span class="badge">macOS 13+</span>
-      <span class="badge">Windows (WPF, testare internă)</span>
+      <span class="badge">Windows 10/11 (x64 + ARM64)</span>
       <span class="badge">v1.6.0</span>
       <span class="badge" style="color:var(--ok);border-color:#2a4a2f;">✓ Semnat + Notarizat Apple</span>
     </div>
@@ -117,25 +117,44 @@
       </div>
     </div>
     <div class="dl-card">
-      <h3>Windows</h3>
-      <div class="ver">Build WPF în testare internă — nu e încă public</div>
-      <a class="btn disabled" href="#">Curând</a>
-      <div class="hash">Vezi <a href="https://github.com/gordasgdc/MediaFlow-Monitor" style="color:var(--accent)">repo-ul</a> pentru build local</div>
+      <h3>Download MediaFlow Monitor (Windows)</h3>
+      <div class="ver">.exe · instalator nativ (Inno Setup) · v1.6.0 · nesemnat (avertisment SmartScreen la prima rulare)</div>
+      <a class="btn" href="https://github.com/gordasgdc/MediaFlow-Monitor/releases/latest/download/MediaFlowMonitorSetup-x64.exe">Download MediaFlow Monitor (Windows)</a>
+      <div class="hash">
+        Verifică sha256 în <a href="https://github.com/gordasgdc/MediaFlow-Monitor/releases/latest" style="color:var(--accent)">Release notes</a>
+        · sau <a href="https://github.com/gordasgdc/MediaFlow-Monitor/releases/latest/download/MediaFlowMonitorSetup-arm64.exe" style="color:var(--accent)">versiune ARM64 (Windows on ARM / Parallels pe Apple Silicon)</a>
+      </div>
     </div>
   </div>
 
   <h2 class="section"><span class="dot"></span>Cum se instalează &amp; se activează</h2>
+  <div class="grid">
+    <div class="warning" style="margin:0;">
+      <strong>macOS</strong>
+      <ol class="steps">
+        <li>Dă dublu-click pe <code>MediaFlowMonitor.pkg</code> — se deschide asistentul clasic de instalare Mac ("Install MediaFlow Monitor"), semnat + notarizat Apple, fără avertismente Gatekeeper.</li>
+        <li>Apasă <strong>Continue → Install</strong> — aplicația se instalează automat direct în <code>/Applications</code>, fără să tragi nicio iconiță manual.</li>
+        <li>Apasă <code>Cmd+Shift+M</code> pentru a arăta/ascunde panoul Dashboard Pro.</li>
+      </ol>
+    </div>
+    <div class="warning" style="margin:0;">
+      <strong>Windows</strong>
+      <ol class="steps">
+        <li>Dă dublu-click pe <code>MediaFlowMonitorSetup-x64.exe</code> — apare wizard-ul "Install MediaFlow Monitor".</li>
+        <li>Instalator <strong>nesemnat</strong> (fără certificat Authenticode încă) — Windows arată "Windows protected your PC": apasă <strong>More info → Run anyway</strong>.</li>
+        <li>Continue → Install — se instalează în <code>Program Files\GDC\MediaFlow Monitor</code>, cu scurtături Desktop + Start Menu.</li>
+        <li>Apasă <code>Ctrl+Shift+M</code> pentru a arăta/ascunde panoul Dashboard Pro.</li>
+      </ol>
+    </div>
+  </div>
   <div class="warning">
-    <ol class="steps">
-      <li>Dă dublu-click pe <code>MediaFlowMonitor.pkg</code> — se deschide asistentul clasic de instalare Mac ("Install MediaFlow Monitor"), semnat + notarizat Apple, fără avertismente Gatekeeper.</li>
-      <li>Apasă <strong>Continue → Install</strong> — aplicația se instalează automat direct în <code>/Applications</code>, fără să tragi nicio iconiță manual.</li>
-      <li>Apasă <code>Cmd+Shift+M</code> pentru a arăta/ascunde panoul Dashboard Pro.</li>
-      <li>Aplicația pornește automat cu <strong>15 zile de probă gratuită</strong>, fără cont sau înregistrare.</li>
+    <ol class="steps" style="list-style:none; padding-left:0; margin:0;">
+      <li>Aplicația pornește automat cu <strong>15 zile de probă gratuită</strong>, fără cont sau înregistrare, pe ambele platforme.</li>
     </ol>
   </div>
 
   <div class="activation">
-    <p>Aplicația include 15 zile gratuite, acces complet. Pentru activare pe viață, deschide meniul din bara de sus (⚡ status item) → copiază <strong>Machine ID</strong> → trimite-l pe WhatsApp pentru activare.</p>
+    <p>Aplicația include 15 zile gratuite, acces complet. Pentru activare pe viață, deschide meniul aplicației (bara de meniu pe Mac, system tray pe Windows) → copiază <strong>Machine ID</strong> → trimite-l pe WhatsApp pentru activare.</p>
     <a class="btn" style="width:auto" href="https://wa.me/34643109970?text=Salut!%20Vreau%20sa%20activez%20MediaFlow%20Monitor.%20Machine%20ID%3A%20">Activează licența (WhatsApp)</a>
   </div>
 

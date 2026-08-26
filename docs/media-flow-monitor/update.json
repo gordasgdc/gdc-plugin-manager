@@ -4,7 +4,7 @@
   "changes": "v1.6.0: BUG FIX critic Licentiere - butonul de activare exista din v1.0 dar nu era conectat la nimic; adaugat Introdu codul de activare... in meniul din bara de sus, cu mesaje clare de eroare (cod invalid/gresit produs/gresita masina/expirat).",
   "download_url": {
     "mac": "https://github.com/gordasgdc/MediaFlow-Monitor/releases/latest/download/MediaFlowMonitor.pkg",
-    "windows": "https://github.com/gordasgdc/MediaFlow-Monitor/releases/latest/download/MediaFlowMonitor-Windows.zip"
+    "windows": "https://github.com/gordasgdc/MediaFlow-Monitor/releases/latest/download/MediaFlowMonitorSetup-x64.exe"
   },
   "mandatory": false,
   "min_version": "1.0.0"
