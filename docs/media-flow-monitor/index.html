@@ -76,6 +76,15 @@
   .activation p { color: var(--text-dim); font-size: 0.88rem; margin: 0 0 14px; }
   .activation .btn { width: auto; padding: 11px 24px; display: inline-block; }
 
+  .screenshots { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 16px 0; }
+  @media (max-width: 640px) { .screenshots { grid-template-columns: 1fr; } }
+  .screenshots figure { margin: 0; }
+  .screenshots img {
+    width: 100%; display: block; border-radius: 12px;
+    border: 1px solid var(--border);
+  }
+  .screenshots figcaption { text-align: center; color: var(--text-dim); font-size: 0.8rem; margin-top: 8px; }
+
   .donate {
     background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 12px;
     padding: 18px 20px; margin: 16px 0; font-size: 0.88rem; color: var(--text-dim);
@@ -104,6 +113,17 @@
     <div class="feature"><h3><span class="dot"></span>Real-time Log Decoder</h3><p>Consolă colorată pentru evenimentele DaVinci Resolve — GPU Memory Full, Render Cache invalid, dropped frames, Fusion lent.</p></div>
     <div class="feature"><h3><span class="dot"></span>Render Cache pe discuri externe</h3><p>Detectare + selecție manuală a folderului CacheClip, inclusiv pe volume Thunderbolt/RAID externe.</p></div>
     <div class="feature"><h3><span class="dot"></span>Overlay pe scurtătură</h3><p><code>Cmd+Shift+M</code> pe macOS, <code>Ctrl+Shift+M</code> pe Windows — fereastră redimensionabilă, temă Dark/Light/System.</p></div>
+  </div>
+
+  <div class="screenshots">
+    <figure>
+      <img src="screenshots/dashboard-dark.png" alt="MediaFlow Monitor Dashboard Pro — temă Dark" loading="lazy">
+      <figcaption>Dashboard Pro — temă Dark</figcaption>
+    </figure>
+    <figure>
+      <img src="screenshots/dashboard-light.png" alt="MediaFlow Monitor Dashboard Pro — temă Light" loading="lazy">
+      <figcaption>Dashboard Pro — temă Light</figcaption>
+    </figure>
   </div>
 
   <div class="downloads">
