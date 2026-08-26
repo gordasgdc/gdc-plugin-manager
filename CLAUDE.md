@@ -249,6 +249,29 @@ Un bump de versiune fără schimbare reală de cod e la fel de greșit ca
 schimbarea de cod fără bump — cele două merg mereu împreună, în același
 commit.
 
+**17. Orice fișier descărcabil TREBUIE să poarte numărul versiunii în NUMELE
+fișierului (2026-08-26).** Nu doar în interiorul aplicației (Regula 14) —
+în numele fizic al pachetului: `DataMover-2.5.5.pkg`, nu `DataMover.pkg`;
+`GDCPluginManagerSetup-1.2.8.exe`, nu `GDCPluginManagerSetup.exe`. Motiv
+direct de la Cristi: probele/build-urile de test se acumulează local (în
+`~/Downloads`, `/tmp`, trimise pentru testare) și devin de nerecunoscut
+fără versiune în nume — "am o grămadă de descărcări și nu știu ce versiune
+sunt, care, ce și cum sunt".
+- **Excepție, NU o contrazicere**: mecanismul `releases/latest/download/
+  <nume-stabil>` (site-ul, self-updater-ul) are nevoie STRUCTURAL de un
+  nume care nu se schimbă niciodată între release-uri — vezi Regula
+  Domeniului & Download. Copia asta stabilă (`DataMover.pkg`,
+  `GDCPluginManager.pkg`) tot trebuie publicată, DAR ALĂTURI de copia
+  versionată, niciodată singură. `build_installer.sh`/`build_app.sh` din
+  fiecare repo produc deja ambele — regula asta cere doar ca ambele să
+  ajungă mereu pe release, nu doar cea stabilă.
+- **Orice fișier construit/descărcat/trimis lui Cristi în afara acestui
+  mecanism** (build local de test, artefact de CI descărcat manual,
+  fișier trimis prin `SendUserFile`, copie pusă în `/tmp` pentru
+  verificare) TREBUIE redenumit explicit cu versiunea înainte de a fi
+  oferit — niciodată livrat cu numele generic/stabil, care are sens doar
+  ca țintă a unui link fix, nu ca fișier de sine stătător pe disc.
+
 ## [PARTEA 2: SPECIFICAȚII TEHNICE PROIECT]
 
 ## Structura repo-ului
