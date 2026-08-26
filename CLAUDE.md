@@ -385,3 +385,14 @@ CLAUDE.md Partea 1, Regula 12 pentru regulile globale.
 - **Scop rămas** (fast-follow, port mecanic al aceluiași tipar): GDC Vault
   (Mac+Win) nu are încă `RevocationCheck`/Profil-sidebar — folosește
   aceeași `LicenseCore`, deci portarea e directă când se cere explicit.
+
+## Faza 4 (2026-08-26) — Update Checker popup cu Release Notes
+Popup-ul modal de actualizare (existent din sesiuni anterioare, doar
+text fix) afișează acum și câmpul `changes` din `update.json`
+("Noutăți"/"What's new"), și butonul de descărcare e redenumit
+"Actualizează acum" (era generic "Descarcă") — vezi CLAUDE.md Partea 1,
+Regula 13. Implementat identic pe Mac (`ContentView.swift`) și Windows
+(`MainWindow.xaml.cs`, `Wpf.Ui.Controls.MessageBox`). Ghidul PDF
+(`installer/generate_pdf.py`, secțiunea 6) explică acum exact fluxul,
+RO/EN/ES. Tot NU e self-update silențios — rămâne un pas asistat
+(descărcare + reinstalare manuală), documentat explicit ca atare.
