@@ -74,7 +74,14 @@ RO = dict(
         ("3. Instalare produse", "Apasă „Instalează” pe orice card din catalog. Aplicația copiază fișierele direct în folderele corecte pentru DaVinci Resolve."),
         ("4. PowerGrade-uri", "Se importă automat în Galeria Resolve dacă aplicația e deschisă. Dacă nu, urmează instrucțiunile afișate."),
         ("5. Machine ID", "Codurile licențiate pe o singură mașină folosesc un identificator hardware unic, afișat în secțiunea Licență."),
-        ("6. Actualizări", "Aplicația verifică automat la lansare. Poți verifica manual din meniu: GDC Plugin Manager → Check for Updates..."),
+        ("6. Actualizări automate", [
+            "Aplicația verifică automat, la fiecare lansare, dacă există o versiune mai nouă (poți verifica și manual din meniu: GDC Plugin Manager → Check for Updates...).",
+            ("Ce se întâmplă când există o versiune nouă:", [
+                "Apare o fereastră pop-up cu numărul versiunii și un scurt rezumat al noutăților (\"Noutăți\").",
+                "Butonul „Actualizează acum” deschide direct pagina de descărcare a noului pachet — trebuie să-l descarci și să-l instalezi peste versiunea curentă (nu e o actualizare automată în fundal; aplicația nu-și poate înlocui singură propriile fișiere cât timp rulează).",
+                "Butonul „Mai târziu” închide fereastra — vei fi reamintit din nou la o versiune viitoare, nu la fiecare pornire pentru aceeași versiune deja respinsă.",
+            ]),
+        ]),
         ("7. Panoul de Dependențe (indicatorul roșu/verde)", [
             "În partea de sus a ferestrei aplicației vezi un mic punct colorat, urmat de un text scurt („Sistem pregătit” sau „Necesită atenție”). Acesta îți spune dacă tot ce ai nevoie pentru DaVinci Resolve e prezent pe acest calculator.",
             ("🔴 Punct roșu — „Necesită atenție”", [
@@ -103,7 +110,14 @@ EN = dict(
         ("3. Installing products", "Click \"Install\" on any catalog card. The app copies the files directly into the correct DaVinci Resolve folders."),
         ("4. PowerGrades", "Automatically imported into Resolve's Gallery if the app is open. If not, follow the on-screen instructions."),
         ("5. Machine ID", "Machine-locked codes use a unique hardware identifier, shown in the License section."),
-        ("6. Updates", "The app checks automatically at launch. You can check manually from the menu: GDC Plugin Manager → Check for Updates..."),
+        ("6. Automatic updates", [
+            "The app checks automatically, at every launch, whether a newer version exists (you can also check manually from the menu: GDC Plugin Manager → Check for Updates...).",
+            ("What happens when a new version exists:", [
+                "A pop-up window appears with the version number and a short summary of what's new (\"What's new\").",
+                "The \"Update now\" button opens directly the download page for the new package — you need to download and install it over the current version (this is not a silent background update; the app cannot replace its own files while running).",
+                "The \"Later\" button closes the window — you'll be reminded again on a future version, not at every launch for the same already-dismissed version.",
+            ]),
+        ]),
         ("7. Dependency Panel (the red/green indicator)", [
             "At the top of the app window you'll see a small colored dot followed by a short label (“System ready” or “Needs attention”). It tells you whether everything DaVinci Resolve needs is present on this computer.",
             ("🔴 Red dot — “Needs attention”", [
@@ -132,7 +146,14 @@ ES = dict(
         ("3. Instalación de productos", "Pulsa \"Instalar\" en cualquier tarjeta del catálogo. La aplicación copia los archivos directamente en las carpetas correctas de DaVinci Resolve."),
         ("4. PowerGrades", "Se importan automáticamente en la Galería de Resolve si la aplicación está abierta. Si no, sigue las instrucciones en pantalla."),
         ("5. Machine ID", "Los códigos vinculados a una máquina usan un identificador de hardware único, mostrado en la sección Licencia."),
-        ("6. Actualizaciones", "La aplicación verifica automáticamente al iniciar. Puedes verificar manualmente desde el menú: GDC Plugin Manager → Check for Updates..."),
+        ("6. Actualizaciones automáticas", [
+            "La aplicación verifica automáticamente, en cada inicio, si existe una versión más nueva (también puedes verificar manualmente desde el menú: GDC Plugin Manager → Check for Updates...).",
+            ("Qué ocurre cuando existe una versión nueva:", [
+                "Aparece una ventana emergente con el número de versión y un breve resumen de las novedades (\"Novedades\").",
+                "El botón \"Actualizar ahora\" abre directamente la página de descarga del nuevo paquete — debes descargarlo e instalarlo sobre la versión actual (no es una actualización silenciosa en segundo plano; la app no puede reemplazar sus propios archivos mientras se ejecuta).",
+                "El botón \"Más tarde\" cierra la ventana — se te recordará de nuevo en una versión futura, no en cada inicio para la misma versión ya descartada.",
+            ]),
+        ]),
         ("7. Panel de Dependencias (el indicador rojo/verde)", [
             "En la parte superior de la ventana de la app verás un pequeño punto de color seguido de un texto breve (“Sistema listo” o “Requiere atención”). Te indica si todo lo que DaVinci Resolve necesita está presente en este ordenador.",
             ("🔴 Punto rojo — “Requiere atención”", [

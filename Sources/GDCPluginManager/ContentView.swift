@@ -195,8 +195,17 @@ struct ContentView: View {
             ),
             presenting: updateChecker.availableUpdate
         ) { info in
+            // "Actualizeaza acum" (Faza 4, vezi CLAUDE.md Partea 1 Regula 13):
+            // deschide direct link-ul de descarcare (releases/latest/download/...)
+            // — tot NU e self-update silentios (vezi WARNING din
+            // UpdateChecker.swift), dar butonul e explicit denumit ca actiune
+            // 1-click, nu doar "Descarca" generic. Inchide popup-ul dupa click
+            // — userul si-a luat deja actiunea.
             if let urlString = info.download_url["mac"], let url = URL(string: urlString) {
-                Button(L.t("update.download")) { NSWorkspace.shared.open(url) }
+                Button(L.t("update.popup.now")) {
+                    NSWorkspace.shared.open(url)
+                    updateChecker.dismiss()
+                }
             }
             // Update marcat mandatory (docs/update.json): fara "Mai tarziu"
             // — vezi UpdateChecker.dismiss(), nu se mai persista inchiderea
@@ -205,7 +214,13 @@ struct ContentView: View {
                 Button(L.t("update.popup.later"), role: .cancel) { updateChecker.dismiss() }
             }
         } message: { info in
-            Text(L.t("update.popup.message") + " (v\(info.version))")
+            // Rezumatul modificarilor (Release Notes), din update.json
+            // (`changes`) - camp optional, degradeaza elegant daca lipseste.
+            if let changes = info.changes, !changes.isEmpty {
+                Text(L.t("update.popup.message") + " (v\(info.version))\n\n" + L.t("update.popup.changes") + ":\n" + changes)
+            } else {
+                Text(L.t("update.popup.message") + " (v\(info.version))")
+            }
         }
     }
 

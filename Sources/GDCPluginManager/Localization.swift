@@ -239,6 +239,8 @@ enum L {
         "update.popup.title": [.ro: "Actualizare disponibilă", .en: "Update available", .es: "Actualización disponible"],
         "update.popup.message": [.ro: "Este disponibilă o nouă versiune! Te rugăm să descarci ultimul installer și să îl instalezi peste versiunea actuală.", .en: "A new version is available! Please download the latest installer and install it over your current version.", .es: "¡Hay una nueva versión disponible! Por favor, descarga el último instalador e instálalo sobre la versión actual."],
         "update.popup.later": [.ro: "Mai târziu", .en: "Later", .es: "Más tarde"],
+        "update.popup.now": [.ro: "Actualizează acum", .en: "Update now", .es: "Actualizar ahora"],
+        "update.popup.changes": [.ro: "Noutăți", .en: "What's new", .es: "Novedades"],
 
         "menu.quit": [.ro: "Închide GDC Plugin Manager", .en: "Quit GDC Plugin Manager", .es: "Salir de GDC Plugin Manager"],
     ]
