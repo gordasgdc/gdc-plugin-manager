@@ -1,0 +1,11 @@
+{
+  "version": "1.0.1",
+  "release_date": "2026-08-26",
+  "changes": "Fix critic: aplicatia era terminata automat de macOS (Automatic Termination) fara feedback vizual. Adaugat status item permanent in menu bar, overlay afisat la prima lansare, licentiere (trial 15 zile + activare WhatsApp), toate semnalele DaVinci Resolve vizibile in panou.",
+  "download_url": {
+    "mac": "https://github.com/gordasgdc/MediaFlow-Monitor/releases/latest/download/MediaFlowMonitor-macOS.zip",
+    "windows": "https://github.com/gordasgdc/MediaFlow-Monitor/releases/latest/download/MediaFlowMonitor-Windows.zip"
+  },
+  "mandatory": false,
+  "min_version": "1.0.0"
+}

@@ -39,6 +39,10 @@ let gdcStandaloneProducts: [StandaloneProduct] = [
     // CGConvertor/LicenseManager.swift) si license_validator.py (Windows,
     // python/license_validator.py) ale CGConvertor: productID = "cgconvertor".
     StandaloneProduct(id: "cgconvertor", name: "CG Convertor"),
+    // Adaugat 2026-08-26 — verificat in LicenseManager.swift (Mac,
+    // MediaFlow-Monitor/Sources/MediaFlowMonitor/Licensing/LicenseManager.swift):
+    // productID = "media-flow-monitor". Windows: neimplementat inca.
+    StandaloneProduct(id: "media-flow-monitor", name: "MediaFlow Monitor"),
 ]
 
 struct GenerateSerialView: View {
