@@ -359,3 +359,29 @@ lipsește, spune-o explicit, nu declara release-ul "gata".
    site trebuie să pointeze mereu la `releases/latest/download/...`
    (HTTP 200 verificat, nu presupus) și să menționeze numărul ultimei
    versiuni.
+
+## Faza 3 (2026-08-26) — Profil/HWID sidebar + Sistem de Revocare Licențe + Generare flexibilă
+Implementat pe Mac (acest repo) și Windows (gdc-plugin-manager-win), vezi
+CLAUDE.md Partea 1, Regula 12 pentru regulile globale.
+
+- **Profil Utilizator**: `UserProfileStore.swift`/`.cs` (nume/email
+  persistate local, NU doar trimise o dată la onboarding și uitate),
+  `ProfileSidebarBlock.swift` (Mac, popover) / `ProfileEditorWindow.xaml`
+  (Windows, fereastră modală) — vizibile în sidebar sub lista principală.
+- **Revocare licențe**: `RevocationCheck.swift`/`.cs` (Core) — RPC
+  Supabase `is_license_revoked(machine_id, product_id)`, FAIL-OPEN (eroare
+  de rețea = NErevocat, niciodată blocaj offline). `RevocationAdminClient.swift`
+  + `RevocationsView.swift` (Furnizor, doar Mac — singurul loc care
+  generează licențe pentru tot ecosistemul) — panou "Revocări licențe",
+  funcționează pentru orice `productID` din `gdcStandaloneProducts` sau
+  catalog. **Migrarea SQL** (`supabase/migrations/2026-08-26_license_revocations.sql`)
+  trebuie rulată MANUAL de Cristi în Supabase SQL Editor — Claude nu are
+  acces la acel proiect Supabase.
+- **Generare flexibilă**: `GenerateSerialView.swift` — Picker
+  Zile/Luni/Ani/Lifetime (fără schimbare de format criptografic,
+  `expiresAt` deja suporta orice valoare/0). "Valabil până la versiunea X"
+  e doar o notă informativă (SalesLog) — aplicarea reală se face manual
+  prin revocare când acea versiune chiar apare.
+- **Scop rămas** (fast-follow, port mecanic al aceluiași tipar): GDC Vault
+  (Mac+Win) nu are încă `RevocationCheck`/Profil-sidebar — folosește
+  aceeași `LicenseCore`, deci portarea e directă când se cere explicit.
