@@ -40,8 +40,13 @@ let gdcStandaloneProducts: [StandaloneProduct] = [
     // python/license_validator.py) ale CGConvertor: productID = "cgconvertor".
     StandaloneProduct(id: "cgconvertor", name: "CG Convertor"),
     // Adaugat 2026-08-26 — verificat in LicenseManager.swift (Mac,
-    // MediaFlow-Monitor/Sources/MediaFlowMonitor/Licensing/LicenseManager.swift):
-    // productID = "media-flow-monitor". Windows: neimplementat inca.
+    // MediaFlow-Monitor/Sources/MediaFlowMonitor/Licensing/LicenseManager.swift)
+    // si LicenseManager.cs (Windows, portat 2026-08-26, verificat cu test
+    // izolat de sign/verify Ed25519 + Base32 round-trip): productID =
+    // "media-flow-monitor" pe ambele platforme. Machine ID e opac — Mac
+    // hasheaza IOPlatformUUID, Windows hasheaza MachineGuid din Registry;
+    // clientul lipeste orice string afiseaza `MachineID.Display`/`.display`
+    // in campul "ID calculator" de mai jos, indiferent de platforma.
     StandaloneProduct(id: "media-flow-monitor", name: "MediaFlow Monitor"),
 ]
 
