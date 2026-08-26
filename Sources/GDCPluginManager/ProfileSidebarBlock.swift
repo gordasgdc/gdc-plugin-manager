@@ -13,26 +13,31 @@ struct ProfileSidebarBlock: View {
     @State private var justCopiedID = false
 
     var body: some View {
+        // Marit 2026-08-26 (cerut explicit: zona era "miniaturizata, greu de
+        // citit") - caption/caption2/caption2 -> subheadline/footnote/caption,
+        // plus spatiere verticala marita (2 -> 4) si padding propriu, ca
+        // blocul sa respire fata de restul sidebar-ului.
         Button { showEditor = true } label: {
-            VStack(spacing: 2) {
-                HStack(spacing: 5) {
+            VStack(alignment: .leading, spacing: 4) {
+                HStack(spacing: 6) {
                     Image(systemName: "person.circle")
                         .foregroundStyle(.secondary)
                     Text(profile.displayName)
-                        .font(.caption)
+                        .font(.subheadline)
                         .fontWeight(.medium)
                 }
                 if !profile.email.trimmingCharacters(in: .whitespaces).isEmpty {
                     Text(profile.email)
-                        .font(.caption2)
+                        .font(.footnote)
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
                 }
                 Text(profile.machineID)
-                    .font(.system(.caption2, design: .monospaced))
+                    .font(.system(.caption, design: .monospaced))
                     .foregroundStyle(.tertiary)
                     .lineLimit(1)
             }
+            .padding(.vertical, 4)
         }
         .buttonStyle(.plain)
         .popover(isPresented: $showEditor) {

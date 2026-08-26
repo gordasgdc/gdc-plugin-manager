@@ -1,7 +1,7 @@
 {
-  "version": "1.2.23",
+  "version": "1.2.24",
   "release_date": "2026-08-26",
-  "changes": "Windows adus la paritate 1:1 cu Mac: design Shift, Panou Dependente DaVinci, Profil/Email/HWID in sidebar, verificare Revocare licente, pop-up Actualizeaza acum cu noutati.",
+  "changes": "Hotfix UI: sidebar redimensionabil (era blocat la latime fixa), bloc Profil/HWID cu font marit, terminologie Donatie in loc de Cumpara pe cardurile de produs.",
   "download_url": {
     "mac": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Mac.zip",
     "windows": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Windows.zip"

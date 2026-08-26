@@ -37,7 +37,18 @@ struct FurnizorContentView: View {
                 Label("Service & Reparații", systemImage: "wrench.and.screwdriver").tag(FurnizorSection.serviceCenters)
                 Label("Aplicații", systemImage: "square.grid.2x2").tag(FurnizorSection.apps)
             }
-            .navigationSplitViewColumnWidth(200)
+            .navigationSplitViewColumnWidth(min: 180, ideal: 200, max: 340)
+            .safeAreaInset(edge: .bottom) {
+                // Versiune vizibila in UI, obligatoriu si pe Furnizor
+                // (cerut explicit 2026-08-26) - lipsea complet, Info-Furnizor.plist
+                // era blocat la 1.0.0 din prima zi, in ciuda a zeci de
+                // functionalitati noi adaugate de-atunci (Revocare, Durata
+                // flexibila, Clienti/Tracker, etc.).
+                Text("v\(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "?")")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .padding(.bottom, 8)
+            }
         } detail: {
             VStack(spacing: 0) {
                 if !bannerDismissed, tokenStatus.severity == .warning || tokenStatus.severity == .critical {

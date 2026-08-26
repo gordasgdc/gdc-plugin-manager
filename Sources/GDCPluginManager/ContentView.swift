@@ -105,12 +105,18 @@ struct ContentView: View {
                 Label(L.t("sidebar.help"), systemImage: "questionmark.circle")
                     .tag(SidebarSection.help)
             }
-            .navigationSplitViewColumnWidth(180)
+            // BUG REAL gasit 2026-08-26: navigationSplitViewColumnWidth(180)
+            // (valoare unica) FIXEAZA latimea coloanei, nu o seteaza doar ca
+            // implicita - sidebar-ul nu era deloc redimensionabil prin
+            // tragere de mouse, desi NavigationSplitView suporta asta nativ.
+            // Fix: supraincarcarea min/ideal/max, care lasa AppKit sa
+            // deseneze diviziunea trasabila intre coloane.
+            .navigationSplitViewColumnWidth(min: 180, ideal: 220, max: 380)
             .safeAreaInset(edge: .bottom) {
                 VStack(spacing: 6) {
                     ProfileSidebarBlock()
                     Text("v\(appVersion)")
-                        .font(.caption2)
+                        .font(.caption)
                         .foregroundStyle(.secondary)
                 }
                 .frame(maxWidth: .infinity, alignment: .center)
