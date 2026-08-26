@@ -1,7 +1,7 @@
 {
-  "version": "1.1.1",
+  "version": "1.2.0",
   "release_date": "2026-08-26",
-  "changes": "v1.1.1: verificare de revocare licenta prin Supabase (fail-open).",
+  "changes": "v1.2.0: Dashboard Pro complet - grafice live VRAM/Swap si CPU per-thread, Real-time Log Decoder colorat, panou de Diagnostic si Recomandari, selectie manuala a folderului CacheClip (inclusiv discuri externe Thunderbolt).",
   "download_url": {
     "mac": "https://github.com/gordasgdc/MediaFlow-Monitor/releases/latest/download/MediaFlowMonitor-macOS.zip",
     "windows": "https://github.com/gordasgdc/MediaFlow-Monitor/releases/latest/download/MediaFlowMonitor-Windows.zip"
