@@ -272,6 +272,32 @@ sunt, care, ce și cum sunt".
   oferit — niciodată livrat cu numele generic/stabil, care are sens doar
   ca țintă a unui link fix, nu ca fișier de sine stătător pe disc.
 
+**18. Standard UX/Arhitectură obligatoriu pentru orice aplicație desktop
+NOUĂ, de la primul release (2026-08-26).** Stabilit după MediaFlow Monitor
+v1.3.0 — patru cerințe care nu mai sunt opționale pentru nicio aplicație
+GDC viitoare (Mac și, unde tehnologia o permite, Windows):
+- **Mutare automată în `/Applications` (Mac)** — la lansare, dacă bundle-ul
+  rulează în afara `/Applications` sau `~/Applications` (tipic: extras
+  direct din `.zip`/Downloads, sub App Translocation), aplicația arată un
+  prompt nativ ("Doriți să mutați X în Aplicații?") și, la confirmare,
+  copiază bundle-ul, relansează din noua locație și mută originalul la
+  Coșul de gunoi. Vezi implementarea de referință `AppMover.swift`
+  (MediaFlow Monitor) — fără dependință externă (PFMoveToApplicationsFolder
+  nu are un port SPM întreținut), doar `NSAlert` + `FileManager`.
+- **Fereastră principală redimensionabilă liber**, cu o dimensiune minimă
+  de siguranță (`minSize`/`minWidth`+`minHeight`) sub care conținutul nu
+  mai e lizibil — nu ferestre cu dimensiune fixă hardcodată.
+- **Selector explicit de temă System/Dark/Light**, independent de setarea
+  macOS/Windows — unii clienți vor Light chiar și noaptea, alții Dark
+  permanent; NU e suficient să urmezi orbește `prefers-color-scheme`/tema
+  sistemului. Persistat local (`UserDefaults`/Registry), aplicat imediat
+  fără repornire. Vezi `AppTheme.swift`/`ThemeManager` (MediaFlow Monitor).
+- **Protocolul de semnare, notarizare, auto-update și integrare GDC
+  Manager rămâne cel deja documentat în Regulile 3, 5, 6, 13, 14, 17** —
+  regula asta nu introduce un protocol nou, doar reconfirmă că orice
+  aplicație nouă îl respectă de la prima versiune publicată, nu "adăugat
+  ulterior quando there's time".
+
 ## [PARTEA 2: SPECIFICAȚII TEHNICE PROIECT]
 
 ## Structura repo-ului
