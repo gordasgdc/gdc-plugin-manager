@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Termeni și Condiții — GDC</title>
+<meta name="description" content="Termeni și Condiții de utilizare, licențiere software și politică de returnare pentru aplicațiile și resursele GDC (gordas.dev).">
+<meta name="robots" content="index, follow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#14161A; --panel:#1A1D22; --panel-2:#20232A;
+    --border:#2B2F36; --text:#EDEFF2; --muted:#93989F; --faint:#5C6169;
+    --accent:#E8963C; --accent-ink:#1A1108;
+    --mono:'IBM Plex Mono', ui-monospace, monospace;
+    --sans:'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+  body{ background:var(--bg); color:var(--text); font-family:var(--sans); line-height:1.65; -webkit-font-smoothing:antialiased; }
+  a{ color:var(--accent); text-decoration:none; }
+  a:hover{ text-decoration:underline; }
+  ::selection{ background:var(--accent); color:var(--accent-ink); }
+
+  header{ position:sticky; top:0; z-index:10; background:rgba(20,22,26,.9); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); }
+  .header-inner{ max-width:760px; margin:0 auto; padding:16px 24px; display:flex; align-items:center; justify-content:space-between; }
+  .back-link{ font-family:var(--mono); font-size:13px; font-weight:600; color:var(--muted); }
+  .back-link:hover{ color:var(--accent); text-decoration:none; }
+  .updated{ font-family:var(--mono); font-size:11.5px; color:var(--faint); }
+
+  .wrap{ max-width:760px; margin:0 auto; padding:48px 24px 80px; }
+  .eyebrow{ font-family:var(--mono); font-size:11.5px; font-weight:600; color:var(--accent); letter-spacing:.1em; text-transform:uppercase; margin-bottom:10px; }
+  h1{ font-size:2rem; margin-bottom:8px; }
+  .lead{ color:var(--muted); font-size:1rem; margin-bottom:36px; }
+
+  .notice{
+    background:var(--panel); border:1px solid var(--border); border-left:3px solid var(--accent);
+    border-radius:10px; padding:16px 18px; margin-bottom:36px; font-size:.92rem; color:var(--text);
+  }
+  .notice strong{ color:var(--accent); }
+
+  h2{ font-size:1.15rem; margin:36px 0 12px; color:var(--text); padding-top:8px; border-top:1px solid var(--border); }
+  h2:first-of-type{ border-top:none; padding-top:0; }
+  p{ margin-bottom:14px; color:#D6D9DE; font-size:.95rem; }
+  ul, ol{ margin:0 0 14px 22px; color:#D6D9DE; font-size:.95rem; }
+  li{ margin-bottom:6px; }
+  strong{ color:var(--text); }
+  code{ font-family:var(--mono); background:var(--panel-2); padding:1px 6px; border-radius:5px; font-size:.85em; }
+
+  footer{ border-top:1px solid var(--border); padding:28px 24px; text-align:center; }
+  .footer-row{ max-width:960px; margin:0 auto; display:flex; flex-wrap:wrap; gap:8px 14px; justify-content:center; align-items:center; font-family:var(--mono); font-size:11.5px; color:var(--faint); }
+  .footer-row a{ color:var(--muted); }
+  .footer-row a:hover{ color:var(--accent); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a class="back-link" href="/">← gordas.dev</a>
+    <span class="updated">Actualizat: 27 august 2026</span>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="eyebrow">Document legal</div>
+  <h1>Termeni și Condiții de Utilizare</h1>
+  <p class="lead">Aplicabile aplicațiilor software, plugin-urilor și resurselor digitale distribuite prin gordas.dev și ecosistemul GDC.</p>
+
+  <div class="notice">
+    <strong>Statutul proiectului.</strong> GDC / gordas.dev <strong>nu este o firmă sau societate comercială înregistrată</strong>, ci un proiect dezvoltat independent, de un dezvoltator individual de aplicații software. Aplicațiile, plugin-urile și resursele oferite aici sunt rezultatul unei dezvoltări independente, susținute prin donații benevole ale comunității, nu prin tranzacții comerciale de vânzare-cumpărare în sensul clasic.
+  </div>
+
+  <h2>1. Acceptarea termenilor</h2>
+  <p>Prin descărcarea, instalarea sau utilizarea oricărei aplicații, plugin sau resurse publicate pe gordas.dev (denumite în continuare „Software-ul"), confirmi că ai citit, înțeles și acceptat acești Termeni și Condiții. Dacă nu ești de acord, te rugăm să nu folosești Software-ul.</p>
+
+  <h2>2. Natura ofertei — proiect independent, nu comercial</h2>
+  <p>Software-ul este oferit fie complet gratuit, fie printr-un sistem de <strong>susținere/donație benevolă</strong> (afișat clar în aplicație ca „Donează" / „Susține", niciodată ca „preț" sau „cumpără" în sensul unei vânzări comerciale clasice). Contribuția financiară opțională ajută la acoperirea costurilor de dezvoltare și la continuarea proiectului — nu reprezintă o achiziție de la o entitate juridică comercială, ci un sprijin direct pentru dezvoltatorul independent din spatele ecosistemului GDC.</p>
+
+  <h2>3. Licențiere software</h2>
+  <p>Fiecare aplicație sau produs (LUT, DCTL, OFX, PowerGrade, Audio etc.) se livrează cu o licență de utilizare personală, netransferabilă, legată de un identificator unic de mașină („Machine ID") generat local pe dispozitivul tău. Licența îți permite folosirea Software-ului pe dispozitivele proprii, în scop personal sau profesional — nu îți transferă dreptul de proprietate intelectuală asupra codului, mărcilor sau materialelor.</p>
+  <p>Codul sursă, denumirile („GDC", numele aplicațiilor), iconițele și materialele grafice rămân proprietatea intelectuală a dezvoltatorului. Revânzarea, redistribuirea sau republicarea Software-ului fără acord explicit nu este permisă.</p>
+
+  <h2>4. Garanție — „Ca atare" (As Is)</h2>
+  <p>Software-ul este furnizat <strong>„ca atare" („As Is")</strong>, fără nicio garanție expresă sau implicită de vandabilitate, potrivire pentru un anumit scop sau non-încălcare a unor drepturi terțe. Fiind un proiect independent, nu comercial, dezvoltatorul nu poate oferi garanțiile formale specifice unei entități juridice cu răspundere comercială. Folosești Software-ul pe propriul risc; se recomandă testarea în probă gratuită (unde e disponibilă) înainte de orice susținere financiară.</p>
+
+  <h2>5. Politica de returnare a donațiilor/susținerilor</h2>
+  <p>Dacă ai efectuat o donație/susținere pentru deblocarea unei licențe și Software-ul nu funcționează conform descrierii publicate, poți solicita o rambursare în termen de <strong>14 zile</strong> de la activare, contactând dezvoltatorul (vezi secțiunea Contact). Rambursarea se analizează de la caz la caz, cu bună-credință — nefiind o tranzacție comercială reglementată, nu se aplică automat regimul legal de retragere al unei achiziții online clasice, dar intenția e aceeași: nimeni nu rămâne blocat cu un produs nefuncțional.</p>
+
+  <h2>6. Limitarea răspunderii</h2>
+  <p>În limita maximă permisă de lege, dezvoltatorul nu răspunde pentru daune indirecte, incidentale sau pe cale de consecință rezultate din utilizarea sau imposibilitatea utilizării Software-ului, inclusiv pierderi de date sau întreruperi de flux de lucru.</p>
+
+  <h2>7. Modificări ale termenilor</h2>
+  <p>Acești termeni pot fi actualizați periodic, pentru a reflecta schimbări reale în funcționalitatea Software-ului sau în modul de operare al proiectului. Data ultimei actualizări apare în antetul acestei pagini.</p>
+
+  <h2>8. Legea aplicabilă</h2>
+  <p>Acești termeni sunt guvernați de legislația română și, unde e cazul, de reglementările aplicabile la nivelul Uniunii Europene privind protecția consumatorilor și a datelor cu caracter personal.</p>
+
+  <h2>9. Contact</h2>
+  <p>Pentru întrebări legate de acești termeni, licențiere sau solicitări de rambursare: <a href="mailto:academiagdc@gmail.com">academiagdc@gmail.com</a>.</p>
+</div>
+
+<footer>
+  <div class="footer-row">
+    <span>© 2026 GDC / Gordas. Toate drepturile rezervate.</span>
+    <a href="/termeni">Termeni și Condiții</a>
+    <a href="/confidentialitate">Politică de Confidențialitate (GDPR)</a>
+    <a href="/cookie">Cookie-uri</a>
+    <a href="mailto:academiagdc@gmail.com">Contact</a>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Politica de Cookies — GDC</title>
+<meta name="description" content="Politica de cookies și stocare locală pentru site-ul și aplicațiile GDC (gordas.dev): ce tehnologii folosim și cum le poți controla.">
+<meta name="robots" content="index, follow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#14161A; --panel:#1A1D22; --panel-2:#20232A;
+    --border:#2B2F36; --text:#EDEFF2; --muted:#93989F; --faint:#5C6169;
+    --accent:#E8963C; --accent-ink:#1A1108;
+    --mono:'IBM Plex Mono', ui-monospace, monospace;
+    --sans:'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+  body{ background:var(--bg); color:var(--text); font-family:var(--sans); line-height:1.65; -webkit-font-smoothing:antialiased; }
+  a{ color:var(--accent); text-decoration:none; }
+  a:hover{ text-decoration:underline; }
+  ::selection{ background:var(--accent); color:var(--accent-ink); }
+
+  header{ position:sticky; top:0; z-index:10; background:rgba(20,22,26,.9); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); }
+  .header-inner{ max-width:760px; margin:0 auto; padding:16px 24px; display:flex; align-items:center; justify-content:space-between; }
+  .back-link{ font-family:var(--mono); font-size:13px; font-weight:600; color:var(--muted); }
+  .back-link:hover{ color:var(--accent); text-decoration:none; }
+  .updated{ font-family:var(--mono); font-size:11.5px; color:var(--faint); }
+
+  .wrap{ max-width:760px; margin:0 auto; padding:48px 24px 80px; }
+  .eyebrow{ font-family:var(--mono); font-size:11.5px; font-weight:600; color:var(--accent); letter-spacing:.1em; text-transform:uppercase; margin-bottom:10px; }
+  h1{ font-size:2rem; margin-bottom:8px; }
+  .lead{ color:var(--muted); font-size:1rem; margin-bottom:36px; }
+
+  .notice{
+    background:var(--panel); border:1px solid var(--border); border-left:3px solid var(--accent);
+    border-radius:10px; padding:16px 18px; margin-bottom:36px; font-size:.92rem; color:var(--text);
+  }
+  .notice strong{ color:var(--accent); }
+
+  h2{ font-size:1.15rem; margin:36px 0 12px; color:var(--text); padding-top:8px; border-top:1px solid var(--border); }
+  h2:first-of-type{ border-top:none; padding-top:0; }
+  p{ margin-bottom:14px; color:#D6D9DE; font-size:.95rem; }
+  ul, ol{ margin:0 0 14px 22px; color:#D6D9DE; font-size:.95rem; }
+  li{ margin-bottom:6px; }
+  strong{ color:var(--text); }
+  code{ font-family:var(--mono); background:var(--panel-2); padding:1px 6px; border-radius:5px; font-size:.85em; }
+
+  table{ width:100%; border-collapse:collapse; margin-bottom:18px; font-size:.88rem; }
+  th, td{ text-align:left; padding:9px 12px; border-bottom:1px solid var(--border); color:#D6D9DE; vertical-align:top; }
+  th{ color:var(--muted); font-weight:600; font-size:.78rem; text-transform:uppercase; letter-spacing:.04em; }
+
+  footer{ border-top:1px solid var(--border); padding:28px 24px; text-align:center; }
+  .footer-row{ max-width:960px; margin:0 auto; display:flex; flex-wrap:wrap; gap:8px 14px; justify-content:center; align-items:center; font-family:var(--mono); font-size:11.5px; color:var(--faint); }
+  .footer-row a{ color:var(--muted); }
+  .footer-row a:hover{ color:var(--accent); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a class="back-link" href="/">← gordas.dev</a>
+    <span class="updated">Actualizat: 27 august 2026</span>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="eyebrow">Document legal</div>
+  <h1>Politica de Cookies și Stocare Locală</h1>
+  <p class="lead">Ce tehnologii de stocare folosim pe gordas.dev și în aplicațiile desktop GDC — și de ce nu ai nevoie de un banner clasic de consimțământ.</p>
+
+  <div class="notice">
+    <strong>Pe scurt:</strong> gordas.dev <strong>nu folosește cookie-uri de urmărire (tracking) sau de marketing</strong>, și nu vinde date către rețele publicitare sau terți. Folosim doar stocare locală strict funcțională, descrisă mai jos.
+  </div>
+
+  <h2>1. Ce este stocarea locală (local storage)</h2>
+  <p>Pe lângă cookie-urile clasice, browserele oferă mecanisme moderne echivalente — <code>localStorage</code> și <code>sessionStorage</code> — care păstrează informații direct în browserul tău, fără să fie trimise automat către server la fiecare cerere (spre deosebire de cookie-uri). Site-ul gordas.dev folosește exclusiv aceste mecanisme, strict funcțional.</p>
+
+  <h2>2. Ce stocăm și de ce</h2>
+  <table>
+    <tr><th>Ce</th><th>Scop</th><th>Tip</th></tr>
+    <tr><td>Limba selectată (RO/EN/ES)</td><td>Îți reține preferința de limbă între vizite</td><td>Strict necesar/funcțional</td></tr>
+    <tr><td>Filtrul de categorie activ</td><td>Reține ultima secțiune vizualizată din catalog</td><td>Strict funcțional</td></tr>
+    <tr><td>Cache local al catalogului (PWA)</td><td>Funcționare offline a aplicației mobile (app.html)</td><td>Strict funcțional</td></tr>
+  </table>
+  <p>Nu folosim cookie-uri sau tehnologii echivalente pentru publicitate, retargeting sau profilare comportamentală.</p>
+
+  <h2>3. Cookie-uri de la terți</h2>
+  <p>Fonturile web (Google Fonts) sunt încărcate de la <code>fonts.googleapis.com</code>/<code>fonts.gstatic.com</code> — acest lucru poate implica o cerere tehnică către serverele Google pentru livrarea fișierelor de font, fără cookie-uri de urmărire asociate din partea noastră. Nu integrăm scripturi de analiză (ex. Google Analytics), pixeli de urmărire sau widget-uri de rețele sociale care ar seta cookie-uri terțe.</p>
+
+  <h2>4. Stocarea în aplicațiile desktop (Mac/Windows)</h2>
+  <p>Aplicațiile GDC (GDC Plugin Manager, MediaFlow Monitor etc.) nu folosesc cookie-uri de browser — acestea rulează nativ. Preferințele (temă, licență, cache catalog) se stochează local, pe dispozitivul tău, prin mecanismele native ale sistemului de operare (<code>UserDefaults</code> pe Mac, Registry/fișiere locale pe Windows), niciodată transmise altundeva decât dacă tu inițiezi explicit o acțiune (ex. activare licență).</p>
+
+  <h2>5. Cum poți controla sau șterge aceste date</h2>
+  <p>Poți șterge oricând datele stocate local din setările browserului tău (de obicei: Setări → Confidențialitate → Golește datele site-urilor, pentru gordas.dev) sau, pentru aplicațiile desktop, prin scriptul dedicat de dezinstalare completă inclus în fiecare pachet.</p>
+
+  <h2>6. Modificări ale acestei politici</h2>
+  <p>Dacă vom introduce vreodată o tehnologie de tracking (lucru neplanificat), această pagină va fi actualizată explicit, iar site-ul va afișa un banner de consimțământ conform legii. Data ultimei actualizări apare în antetul paginii.</p>
+
+  <h2>7. Contact</h2>
+  <p>Întrebări despre această politică: <a href="mailto:academiagdc@gmail.com">academiagdc@gmail.com</a>.</p>
+</div>
+
+<footer>
+  <div class="footer-row">
+    <span>© 2026 GDC / Gordas. Toate drepturile rezervate.</span>
+    <a href="/termeni">Termeni și Condiții</a>
+    <a href="/confidentialitate">Politică de Confidențialitate (GDPR)</a>
+    <a href="/cookie">Cookie-uri</a>
+    <a href="mailto:academiagdc@gmail.com">Contact</a>
+  </div>
+</footer>
+
+</body>
+</html>
