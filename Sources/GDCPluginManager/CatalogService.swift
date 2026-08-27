@@ -15,6 +15,7 @@ final class CatalogService: ObservableObject {
     @Published private(set) var items: [PluginItem] = []
     @Published private(set) var courses: [Course] = []
     @Published private(set) var apps: [AppLink] = []
+    @Published private(set) var audioTracks: [AudioTrack] = []
     @Published private(set) var educationalResources: [EducationalResource] = []
     @Published private(set) var events: [Event] = []
     @Published private(set) var partnerStores: [PartnerStore] = []
@@ -54,6 +55,7 @@ final class CatalogService: ObservableObject {
                 items = catalog.items
                 courses = catalog.courses
                 apps = catalog.apps
+                audioTracks = catalog.audioTracks
                 educationalResources = catalog.educationalResources
                 events = catalog.events
                 partnerStores = catalog.partnerStores
@@ -92,6 +94,7 @@ final class CatalogService: ObservableObject {
         items = catalog.items
         courses = catalog.courses
         apps = catalog.apps
+        audioTracks = catalog.audioTracks
         educationalResources = catalog.educationalResources
         events = catalog.events
         partnerStores = catalog.partnerStores

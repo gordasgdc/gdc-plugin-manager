@@ -5,6 +5,7 @@ import GDCPluginManagerCore
 enum SidebarSection: Hashable {
     case all
     case type(PluginType)
+    case audio
     case courses
     case educationalResources
     case events
@@ -60,6 +61,8 @@ struct ContentView: View {
             ServiceCentersGrid(centers: catalog.serviceCenters)
         case .apps:
             AppsGrid(apps: catalog.apps)
+        case .audio:
+            AudioGrid(tracks: catalog.audioTracks)
         case .android:
             MobileAppPane()
         case .all, .none:
@@ -82,6 +85,12 @@ struct ContentView: View {
                     }
                     .tag(SidebarSection.type(type))
                 }
+                Label {
+                    Text(L.t("sidebar.audio"))
+                } icon: {
+                    Image(systemName: "waveform").foregroundStyle(Color.indigo)
+                }
+                .tag(SidebarSection.audio)
                 Divider()
                 Label(L.t("sidebar.courses"), systemImage: "graduationcap")
                     .tag(SidebarSection.courses)
@@ -1033,6 +1042,86 @@ private struct AppCard: View {
     @ViewBuilder
     private var infoButton: some View {
         if let urlString = app.youtubeURL, let url = URL(string: urlString) {
+            Button { NSWorkspace.shared.open(url) } label: {
+                Image(systemName: "info.circle.fill")
+                    .font(.system(size: 16))
+                    .foregroundStyle(.secondary)
+                    .background(Circle().fill(.background).frame(width: 16, height: 16))
+            }
+            .buttonStyle(.plain)
+            .padding(8)
+            .help(L.t("card.tutorial"))
+        }
+    }
+}
+
+private struct AudioGrid: View {
+    let tracks: [AudioTrack]
+
+    private let columns = [GridItem(.adaptive(minimum: 220, maximum: 280), spacing: 14)]
+
+    var body: some View {
+        ScrollView {
+            if tracks.isEmpty {
+                Text(L.t("audio.empty")).foregroundStyle(.secondary).padding(40)
+            } else {
+                LazyVGrid(columns: columns, spacing: 14) {
+                    ForEach(tracks) { track in
+                        AudioCard(track: track)
+                    }
+                }
+                .padding(16)
+            }
+        }
+    }
+}
+
+private struct AudioCard: View {
+    let track: AudioTrack
+
+    /// Nu e un `PluginType`, la fel ca Aplicații — culoare proprie,
+    /// distinctă de tot ce e deja folosit (dctl=galben, lut=verde,
+    /// fuse=roz, powerGrade=mov, ofx=cyan, apps=albastru).
+    private let tint = Color.indigo
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(L.t("audio.badge"))
+                .font(.system(size: 9, weight: .bold))
+                .tracking(0.5)
+                .foregroundStyle(tint)
+                .padding(.horizontal, 8)
+                .padding(.vertical, 3)
+                .background(Capsule().fill(tint.opacity(0.15)))
+                .frame(maxWidth: .infinity, alignment: .center)
+            CoverThumbnail(
+                url: track.coverImageURL,
+                fallbackSymbol: "waveform",
+                tint: tint,
+                height: 56,
+                lightboxTitle: track.name
+            )
+            Text(track.name).font(.headline)
+            if !track.description.isEmpty {
+                Text(track.description)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(3)
+            }
+            Spacer(minLength: 0)
+            if let url = URL(string: track.url) {
+                Button(L.t("audio.open")) { NSWorkspace.shared.open(url) }
+            }
+        }
+        .padding(12)
+        .frame(maxWidth: .infinity, minHeight: 96, alignment: .leading)
+        .background(RoundedRectangle(cornerRadius: 10).fill(.background.secondary))
+        .overlay(alignment: .topTrailing) { infoButton }
+    }
+
+    @ViewBuilder
+    private var infoButton: some View {
+        if let urlString = track.youtubeURL, let url = URL(string: urlString) {
             Button { NSWorkspace.shared.open(url) } label: {
                 Image(systemName: "info.circle.fill")
                     .font(.system(size: 16))

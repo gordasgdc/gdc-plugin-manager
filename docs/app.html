@@ -260,6 +260,7 @@ const ICONS = {
   'wand.and.stars':'<path d="M4 20 16 8"/><path d="M14 4l1 2.5L17.5 7.5 15 8.5 14 11l-1-2.5L10.5 7.5 13 6.5z"/><path d="M19 13l.7 1.6 1.8.7-1.8.7L19 17.6l-.7-1.6-1.8-.7 1.8-.7z"/>',
   'paintpalette':'<path d="M12 3.5c-4.7 0-8.5 3.6-8.5 8s3.8 8 8.5 8c1.4 0 2-1 1.5-1.9-.6-1.1.2-2.3 1.5-2.3h1.5c2.5 0 4.5-2 4.5-4.4 0-4-3.8-7.4-9-7.4z"/><circle cx="8" cy="10" r="1.1" fill="currentColor" stroke="none"/><circle cx="12" cy="7.5" r="1.1" fill="currentColor" stroke="none"/><circle cx="16" cy="10" r="1.1" fill="currentColor" stroke="none"/>',
   'app':'<rect x="3.5" y="3.5" width="17" height="17" rx="4"/><path d="M8.5 12h7M12 8.5v7"/>',
+  'waveform':'<path d="M4 12v2M7.5 8v10M11 5v16M14.5 8v10M18 10v6M21 12v2"/>',
   'default':'<rect x="3.5" y="3.5" width="17" height="17" rx="4"/>'
 };
 const svg = (k) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${ICONS[k]||ICONS.default}</svg>`;
@@ -304,14 +305,14 @@ function renderAll() {
 }
 
 function renderProduse() {
-  const apps = CATALOG.apps || [], items = CATALOG.items || [];
+  const apps = CATALOG.apps || [], items = CATALOG.items || [], audioTracks = CATALOG.audioTracks || [];
 
   // Chip-urile de filtrare se construiesc din tipurile care exista efectiv.
   const types = [...new Set(items.map(i => i.type))];
   document.getElementById('chips').innerHTML =
-    ['toate', 'aplicatii', ...types].map(t =>
+    ['toate', 'aplicatii', 'audio', ...types].map(t =>
       `<button class="chip ${t===filter?'on':''}" data-f="${esc(t)}">${
-        t==='toate' ? 'Toate' : t==='aplicatii' ? 'Aplicatii' : (TYPE_LABEL[t]||t)
+        t==='toate' ? 'Toate' : t==='aplicatii' ? 'Aplicatii' : t==='audio' ? 'Audio' : (TYPE_LABEL[t]||t)
       }</button>`).join('');
 
   let html = '';
@@ -323,6 +324,18 @@ function renderProduse() {
           ? `<img src="${esc(a.coverImage)}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:11px" onerror="this.parentElement.innerHTML='${svg('app').replace(/'/g,"&#39;")}'">`
           : svg('app')}</div>
         <div class="card-body"><h3>${esc(a.name)}</h3><p>Mac &middot; Windows</p></div>
+        ${CHEV}
+      </a>`).join('');
+  }
+
+  if (filter === 'toate' || filter === 'audio') {
+    html += `<div class="section-title">Audio <b>${audioTracks.length}</b></div>`;
+    html += audioTracks.map(t => `
+      <a class="card" href="${esc(t.url)}" target="_blank" rel="noopener">
+        <div class="ico">${t.coverImage
+          ? `<img src="${esc(t.coverImage)}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:11px" onerror="this.parentElement.innerHTML='${svg('waveform').replace(/'/g,"&#39;")}'">`
+          : svg('waveform')}</div>
+        <div class="card-body"><h3>${esc(t.name)}</h3><p>${esc(t.description || 'Fisier audio')}</p></div>
         ${CHEV}
       </a>`).join('');
   }

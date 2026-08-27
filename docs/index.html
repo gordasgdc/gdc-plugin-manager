@@ -574,6 +574,7 @@
     { key: 'events',               cover: 'wide',   card: eventCard },
     { key: 'partnerStores',        cover: 'square', card: storeCard },
     { key: 'apps',                 cover: 'square', card: appCard },
+    { key: 'audioTracks',          cover: 'square', card: audioCard },
   ];
 
   // Coperta ca <button> focusabil, sau nimic daca produsul n-are imagine.
@@ -669,6 +670,16 @@
       <h3>${esc(app.name)}</h3>
       <p>${esc(app.description || t('apps.generic'))}</p>
       ${link ? `<a class="cc-cta" href="${esc(link)}" target="_blank" rel="noopener noreferrer">${t('cta.open')}</a>` : ''}
+    </div>`;
+  }
+
+  function audioCard(track) {
+    const link = safeLink(track.url);
+    return `<div class="catalog-card">
+      ${coverHTML(track, 'square')}
+      <h3>${esc(track.name)}</h3>
+      <p>${esc(track.description || t('audio.generic'))}</p>
+      ${link ? `<a class="cc-cta" href="${esc(link)}" target="_blank" rel="noopener noreferrer">${t('cta.download')}</a>` : ''}
     </div>`;
   }
 
@@ -846,13 +857,16 @@
       'cat.partnerStores.lead': 'Magazine de echipament foto-video în care am încredere, pentru când ai nevoie de hardware, nu de software.',
       'cat.apps.name': 'Aplicații',
       'cat.apps.lead': 'Celelalte aplicații GDC — unelte mici care rezolvă câte o problemă concretă din fluxul de lucru.',
+      'cat.audioTracks.name': 'Audio',
+      'cat.audioTracks.lead': 'Fișiere și pachete audio — descarcă direct din pagină.',
       'badge.free': 'Gratuit', 'badge.trial': 'Probă',
       'card.version': 'versiunea',
       'kind.course': 'Curs', 'kind.book': 'Carte', 'kind.guide': 'Ghid',
       'cta.getApp': 'Descarcă aplicația', 'cta.book': 'Rezervă din aplicație',
       'cta.view': 'Vezi materialul', 'cta.details': 'Detalii și înscriere',
-      'cta.visit': 'Vizitează magazinul', 'cta.open': 'Deschide',
+      'cta.visit': 'Vizitează magazinul', 'cta.open': 'Deschide', 'cta.download': 'Descarcă',
       'apps.generic': 'Aplicație GDC, disponibilă separat.',
+      'audio.generic': 'Fișier audio GDC.',
       'footer.releases': 'Toate versiunile', 'footer.terms': 'Termeni și Condiții',
     },
     en: {
@@ -891,13 +905,16 @@
       'cat.partnerStores.lead': 'Photo and video gear shops I trust, for when what you need is hardware, not software.',
       'cat.apps.name': 'Apps',
       'cat.apps.lead': 'The other GDC apps — small tools that each solve one concrete workflow problem.',
+      'cat.audioTracks.name': 'Audio',
+      'cat.audioTracks.lead': 'Audio files and packs — download directly from the page.',
       'badge.free': 'Free', 'badge.trial': 'Trial',
       'card.version': 'version',
       'kind.course': 'Course', 'kind.book': 'Book', 'kind.guide': 'Guide',
       'cta.getApp': 'Get the app', 'cta.book': 'Book from the app',
       'cta.view': 'View material', 'cta.details': 'Details and sign-up',
-      'cta.visit': 'Visit the store', 'cta.open': 'Open',
+      'cta.visit': 'Visit the store', 'cta.open': 'Open', 'cta.download': 'Download',
       'apps.generic': 'A GDC app, available separately.',
+      'audio.generic': 'A GDC audio file.',
       'footer.releases': 'All releases', 'footer.terms': 'Terms and Conditions',
     },
     es: {
@@ -936,13 +953,16 @@
       'cat.partnerStores.lead': 'Tiendas de equipo fotográfico y de vídeo en las que confío, para cuando lo que necesitas es hardware, no software.',
       'cat.apps.name': 'Aplicaciones',
       'cat.apps.lead': 'Las demás aplicaciones GDC — herramientas pequeñas que resuelven cada una un problema concreto del flujo de trabajo.',
+      'cat.audioTracks.name': 'Audio',
+      'cat.audioTracks.lead': 'Archivos y paquetes de audio — descarga directamente desde la página.',
       'badge.free': 'Gratis', 'badge.trial': 'Prueba',
       'card.version': 'versión',
       'kind.course': 'Curso', 'kind.book': 'Libro', 'kind.guide': 'Guía',
       'cta.getApp': 'Descarga la app', 'cta.book': 'Reserva desde la app',
       'cta.view': 'Ver material', 'cta.details': 'Detalles e inscripción',
-      'cta.visit': 'Visita la tienda', 'cta.open': 'Abrir',
+      'cta.visit': 'Visita la tienda', 'cta.open': 'Abrir', 'cta.download': 'Descargar',
       'apps.generic': 'Una aplicación GDC, disponible por separado.',
+      'audio.generic': 'Un archivo de audio GDC.',
       'footer.releases': 'Todas las versiones', 'footer.terms': 'Términos y Condiciones',
     },
   };

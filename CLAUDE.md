@@ -497,6 +497,31 @@ CLAUDE.md Partea 1, Regula 12 pentru regulile globale.
   (Mac+Win) nu are încă `RevocationCheck`/Profil-sidebar — folosește
   aceeași `LicenseCore`, deci portarea e directă când se cere explicit.
 
+## Secțiune nouă "Audio" (2026-08-27) — modelată pe Aplicații
+Adăugat `AudioTrack` (Core, `CatalogModel.swift`) — id/name/description/
+url/youtubeURL/coverImage, 1:1 pe `AppLink` dar cu `description` în plus
+(cerut explicit: "Informații/Descriere" pe lângă link). Catalog.audioTracks
+nou, decode cu default `[]` (retrocompatibil, catalog vechi fără cheie nu
+sparge nimic). `CatalogEditor.upsertAudioTrack/removeAudioTrack` (Furnizor)
++ `PublishAudioView.swift` (formular, mirror `PublishAppView.swift`, cu
+`TextEditor` pentru descriere) + tag `.audio` în `FurnizorContentView`.
+Client: `SidebarSection.audio` plasat ÎN GRUPUL categoriilor
+LUT/DCTL/OFX/PowerGrade (cerut explicit — "exact în zona categoriilor
+existente"), înaintea Divider-ului spre Cursuri/Materiale/etc.; `AudioGrid`/
+`AudioCard` (`ContentView.swift`) mirror `AppsGrid`/`AppCard`, plus rândul
+de descriere (`lineLimit(3)`) și buton "Descarcă" (`audio.open`), tint
+`.indigo` (culoare nefolosită de nicio altă categorie). Localizare RO/EN/ES
+completă (`sidebar.audio`, `audio.badge`, `audio.open`, `audio.empty`).
+`swift build` verificat curat pe ambele ținte după fiecare pas.
+Versiune: Client 1.3.1→1.4.0, Furnizor 1.2.25→1.3.0 (MINOR — funcționalitate
+nouă vizibilă, Regula 14).
+**TODO paritate**: `GDCPluginManagerWin` (Client Windows, repo separat) NU
+are încă `AudioTrack`/secțiunea Audio — nu a fost cerută explicit în acest
+mesaj ("ambele aplicații" = Client Mac + Furnizor Mac, singurele numite),
+dar catalogul e partajat, deci un client Windows vechi va ignora pur și
+simplu `audioTracks` (decode tolerant) până la portare. Site-ul
+(`docs/index.html`/`app.html`) idem — nu randează încă secțiunea Audio.
+
 ## Faza 4 (2026-08-26) — Update Checker popup cu Release Notes
 Popup-ul modal de actualizare (existent din sesiuni anterioare, doar
 text fix) afișează acum și câmpul `changes` din `update.json`

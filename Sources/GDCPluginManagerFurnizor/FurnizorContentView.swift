@@ -12,6 +12,7 @@ enum FurnizorSection: Hashable {
     case partnerStores
     case serviceCenters
     case apps
+    case audio
 }
 
 struct FurnizorContentView: View {
@@ -36,6 +37,7 @@ struct FurnizorContentView: View {
                 Label("Magazine partenere", systemImage: "storefront").tag(FurnizorSection.partnerStores)
                 Label("Service & Reparații", systemImage: "wrench.and.screwdriver").tag(FurnizorSection.serviceCenters)
                 Label("Aplicații", systemImage: "square.grid.2x2").tag(FurnizorSection.apps)
+                Label("Audio", systemImage: "waveform").tag(FurnizorSection.audio)
             }
             .navigationSplitViewColumnWidth(min: 180, ideal: 200, max: 340)
             .safeAreaInset(edge: .bottom) {
@@ -77,6 +79,8 @@ struct FurnizorContentView: View {
                     PublishServiceCenterView()
                 case .apps:
                     PublishAppView()
+                case .audio:
+                    PublishAudioView()
                 }
             }
         }

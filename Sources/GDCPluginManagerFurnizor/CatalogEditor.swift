@@ -5,6 +5,7 @@ enum CatalogEditorError: Error, LocalizedError {
     case itemNotFound(String)
     case courseNotFound(String)
     case appNotFound(String)
+    case audioTrackNotFound(String)
     case educationalResourceNotFound(String)
     case eventNotFound(String)
     case partnerStoreNotFound(String)
@@ -15,6 +16,7 @@ enum CatalogEditorError: Error, LocalizedError {
         case .itemNotFound(let id): return "Nu există niciun produs cu id-ul „\(id)” în catalog."
         case .courseNotFound(let id): return "Nu există niciun curs cu id-ul „\(id)” în catalog."
         case .appNotFound(let id): return "Nu există nicio aplicație cu id-ul „\(id)” în catalog."
+        case .audioTrackNotFound(let id): return "Nu există niciun element audio cu id-ul „\(id)” în catalog."
         case .educationalResourceNotFound(let id): return "Nu există niciun material cu id-ul „\(id)” în catalog."
         case .eventNotFound(let id): return "Nu există niciun eveniment cu id-ul „\(id)” în catalog."
         case .partnerStoreNotFound(let id): return "Nu există niciun magazin cu id-ul „\(id)” în catalog."
@@ -95,6 +97,25 @@ enum CatalogEditor {
             throw CatalogEditorError.appNotFound(id)
         }
         try write(catalog: catalog, apps: apps)
+    }
+
+    // MARK: - Audio (secțiunea "Audio", modelată pe Aplicații)
+
+    static func upsertAudioTrack(_ track: AudioTrack) throws {
+        let catalog = (try? load()) ?? Catalog(updatedAt: nil, items: [])
+        var audioTracks = catalog.audioTracks.filter { $0.id != track.id }
+        audioTracks.append(track)
+        audioTracks.sort { $0.name < $1.name }
+        try write(catalog: catalog, audioTracks: audioTracks)
+    }
+
+    static func removeAudioTrack(id: String) throws {
+        let catalog = try load()
+        let audioTracks = catalog.audioTracks.filter { $0.id != id }
+        guard audioTracks.count != catalog.audioTracks.count else {
+            throw CatalogEditorError.audioTrackNotFound(id)
+        }
+        try write(catalog: catalog, audioTracks: audioTracks)
     }
 
     // MARK: - Educational resources (books / online courses / guides sold externally)
@@ -184,6 +205,7 @@ enum CatalogEditor {
         items: [PluginItem]? = nil,
         courses: [Course]? = nil,
         apps: [AppLink]? = nil,
+        audioTracks: [AudioTrack]? = nil,
         educationalResources: [EducationalResource]? = nil,
         events: [Event]? = nil,
         partnerStores: [PartnerStore]? = nil,
@@ -196,6 +218,7 @@ enum CatalogEditor {
             items: items ?? catalog.items,
             courses: courses ?? catalog.courses,
             apps: apps ?? catalog.apps,
+            audioTracks: audioTracks ?? catalog.audioTracks,
             educationalResources: educationalResources ?? catalog.educationalResources,
             events: events ?? catalog.events,
             partnerStores: partnerStores ?? catalog.partnerStores,

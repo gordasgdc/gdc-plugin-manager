@@ -454,6 +454,34 @@ public struct AppLink: Codable, Identifiable, Hashable {
     public var coverImageURL: URL? { CatalogAssets.imageURL(for: coverImage) }
 }
 
+/// One audio file/pack in the client's "Audio" section — modeled 1:1 on
+/// `AppLink` (own catalog collection, own sidebar entry, no license/
+/// install), but with an extra `description` field since an audio
+/// asset (format, metadate, ce conține) needs more context than a bare
+/// name+link. `url` points at the audio file/pachet (descărcare directă
+/// sau stocare externă) — nu trece prin `gdc-plugin-manager-files`/
+/// licențiere, la fel ca Aplicații.
+public struct AudioTrack: Codable, Identifiable, Hashable {
+    public let id: String
+    public let name: String
+    public let description: String
+    public let url: String
+    public let youtubeURL: String?
+    /// Coperta piesei/pachetului audio — preset `.icon`, la fel ca AppLink.
+    public let coverImage: String?
+
+    public init(id: String, name: String, description: String, url: String, youtubeURL: String? = nil, coverImage: String? = nil) {
+        self.id = id
+        self.name = name
+        self.description = description
+        self.url = url
+        self.youtubeURL = youtubeURL
+        self.coverImage = coverImage
+    }
+
+    public var coverImageURL: URL? { CatalogAssets.imageURL(for: coverImage) }
+}
+
 /// A book, online course, or guide sold by a third party (Amazon,
 /// Gumroad, Udemy, …) — unlike `Course`, this is NOT bookable via
 /// WhatsApp: the client just shows it and links straight out to
@@ -612,16 +640,18 @@ public struct Catalog: Codable {
     public let items: [PluginItem]
     public let courses: [Course]
     public let apps: [AppLink]
+    public let audioTracks: [AudioTrack]
     public let educationalResources: [EducationalResource]
     public let events: [Event]
     public let partnerStores: [PartnerStore]
     public let serviceCenters: [ServiceCenter]
 
-    public init(updatedAt: String?, items: [PluginItem], courses: [Course] = [], apps: [AppLink] = [], educationalResources: [EducationalResource] = [], events: [Event] = [], partnerStores: [PartnerStore] = [], serviceCenters: [ServiceCenter] = []) {
+    public init(updatedAt: String?, items: [PluginItem], courses: [Course] = [], apps: [AppLink] = [], audioTracks: [AudioTrack] = [], educationalResources: [EducationalResource] = [], events: [Event] = [], partnerStores: [PartnerStore] = [], serviceCenters: [ServiceCenter] = []) {
         self.updatedAt = updatedAt
         self.items = items
         self.courses = courses
         self.apps = apps
+        self.audioTracks = audioTracks
         self.educationalResources = educationalResources
         self.events = events
         self.partnerStores = partnerStores
@@ -632,7 +662,7 @@ public struct Catalog: Codable {
     // catalog published before a given field existed keeps decoding
     // cleanly after this update ships to clients.
     private enum CodingKeys: String, CodingKey {
-        case updatedAt, items, courses, apps, educationalResources, events, partnerStores, serviceCenters
+        case updatedAt, items, courses, apps, audioTracks, educationalResources, events, partnerStores, serviceCenters
     }
 
     public init(from decoder: Decoder) throws {
@@ -641,6 +671,7 @@ public struct Catalog: Codable {
         items = try c.decodeIfPresent([PluginItem].self, forKey: .items) ?? []
         courses = try c.decodeIfPresent([Course].self, forKey: .courses) ?? []
         apps = try c.decodeIfPresent([AppLink].self, forKey: .apps) ?? []
+        audioTracks = try c.decodeIfPresent([AudioTrack].self, forKey: .audioTracks) ?? []
         educationalResources = try c.decodeIfPresent([EducationalResource].self, forKey: .educationalResources) ?? []
         events = try c.decodeIfPresent([Event].self, forKey: .events) ?? []
         partnerStores = try c.decodeIfPresent([PartnerStore].self, forKey: .partnerStores) ?? []

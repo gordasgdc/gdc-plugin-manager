@@ -94,6 +94,7 @@ enum L {
         "profile.anonymous": [.ro: "Anonim", .en: "Anonymous", .es: "Anónimo"],
         "profile.editor.title": [.ro: "Profil utilizator (opțional)", .en: "User profile (optional)", .es: "Perfil de usuario (opcional)"],
         "sidebar.apps": [.ro: "Aplicații", .en: "Apps", .es: "Aplicaciones"],
+        "sidebar.audio": [.ro: "Audio", .en: "Audio", .es: "Audio"],
         "sidebar.mobileApp": [.ro: "Aplicație mobilă", .en: "Mobile app", .es: "App móvil"],
 
         // Panoul aplicatiei mobile companion (MobileAppPane.swift, fost
@@ -161,6 +162,9 @@ enum L {
         "apps.empty": [.ro: "Nicio aplicație listată momentan.", .en: "No apps listed right now.", .es: "Ninguna aplicación listada por ahora."],
         "apps.open": [.ro: "Deschide", .en: "Open", .es: "Abrir"],
         "apps.badge": [.ro: "Aplicație", .en: "App", .es: "Aplicación"],
+        "audio.empty": [.ro: "Niciun element audio listat momentan.", .en: "No audio listed right now.", .es: "Ningún audio listado por ahora."],
+        "audio.open": [.ro: "Descarcă", .en: "Download", .es: "Descargar"],
+        "audio.badge": [.ro: "Audio", .en: "Audio", .es: "Audio"],
 
         "resolve.running.title": [.ro: "DaVinci Resolve rulează", .en: "DaVinci Resolve is running", .es: "DaVinci Resolve está abierto"],
         "resolve.running.body": [.ro: "Închide DaVinci Resolve înainte de a instala sau elimina plugin-uri — Resolve le încarcă doar la pornire.", .en: "Quit DaVinci Resolve before installing or removing plugins — Resolve only loads them at launch.", .es: "Cierra DaVinci Resolve antes de instalar o eliminar plugins — Resolve solo los carga al iniciar."],
