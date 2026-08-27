@@ -1,7 +1,7 @@
 {
-  "version": "1.7.0",
-  "release_date": "2026-08-26",
-  "changes": "v1.7.0: Top RAM/Swap Consumers in System Health, Log Decoder Pro (filtre Errors/Warnings/Render Events, Pause/Resume, Export Log, highlight cuvinte cheie), Open Cache Folder, Copy Diagnostics, Force Close Hanging DaVinci, alerte native (swap ridicat, disk cache scazut).",
+  "version": "1.8.0",
+  "release_date": "2026-08-27",
+  "changes": "v1.8.0: Self-Updater real — „Actualizează acum” descarcă și instalează pachetul direct din aplicație, fără să mai deschidă browserul/GitHub.",
   "download_url": {
     "mac": "https://github.com/gordasgdc/MediaFlow-Monitor/releases/latest/download/MediaFlowMonitor.pkg",
     "windows": "https://github.com/gordasgdc/MediaFlow-Monitor/releases/latest/download/MediaFlowMonitorSetup-x64.exe"
