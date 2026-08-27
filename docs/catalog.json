@@ -69,8 +69,23 @@
       "youtubeURL" : "https://www.youtube.com/@cristigordas"
     }
   ],
-  "courses" : [
+  "audioTracks" : [
 
+  ],
+  "courses" : [
+    {
+      "coverImage" : "https://images.blackmagicdesign.com/images/products/davinciresolve/training/hero/hero-xl.jpg?_v=1602483203",
+      "description" : "Become a Certified DaVinci Resolve Professional!",
+      "id" : "Oficial_Blackmagic_Curs",
+      "name" : "Training Videos oficial DaVinci Resolve",
+      "options" : [
+        {
+          "id" : "9FF58E25-C908-4D5E-A303-953AEAFB4D28",
+          "label" : "1",
+          "priceEUR" : 0
+        }
+      ]
+    }
   ],
   "educationalResources" : [
     {
@@ -430,5 +445,5 @@
   "serviceCenters" : [
 
   ],
-  "updatedAt" : "2026-08-26"
+  "updatedAt" : "2026-08-27"
 }
