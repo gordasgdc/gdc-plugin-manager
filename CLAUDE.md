@@ -522,6 +522,31 @@ dar catalogul e partajat, deci un client Windows vechi va ignora pur și
 simplu `audioTracks` (decode tolerant) până la portare. Site-ul
 (`docs/index.html`/`app.html`) idem — nu randează încă secțiunea Audio.
 
+## Bug real (2026-08-27) — update.json anunta 1.4.0, dar clientii instalau 1.3.1
+Dupa ce am bumpat `docs/update.json` la `1.4.0` (sectiunea Audio) si am
+rulat CI cu succes, NU am mai construit/publicat efectiv installer-ele
+reale v1.4.0 — release-ul "latest" (`v1.3.1`) a ramas neschimbat pe
+GitHub. Rezultat: clientii vedeau corect popup-ul "e disponibila 1.4.0",
+dar `releases/latest/download/...` servea in continuare binarele 1.3.1 —
+raportat live de Cristi (installer-ul Windows arata "version 1.3.1" desi
+tocmai fusese descarcat ca "actualizare la 1.4"). **Lectie**: bump-ul de
+versiune in `update.json` si publicarea reala a release-ului GitHub cu
+artefactele noi NU sunt optionale una fata de cealalta — un `update.json`
+schimbat fara un release nou din ACELASI moment e o promisiune stricata,
+nu doar o intarziere cosmetica. **Fix**: `v1.4.0` creat manual (`gh
+release create`, cu aprobarea explicita a lui Cristi) cu `GDCPluginManager-
+1.4.0.pkg` (semnat+notarizat+stapled), `GDCPluginManager.pkg` (stabil),
+`GDCPluginManager-Mac.zip`, `Dezinstalare_GDCPluginManager.command`, si
+`GDCPluginManager-Windows.zip` (installer-ul Windows luat din artefactul
+CI al run-ului `33039378596`, deja verificat pe `windows-latest`) — toate
+verificate cu sha256 inainte de upload, si confirmat live ca
+`releases/latest/download/...` rezolva la v1.4.0 (HTTP 200 pe ambele
+platforme). **Regula de proces intarita**: dupa orice bump de
+`update.json`, urmatorul pas OBLIGATORIU in aceeasi sesiune e sa
+construiesc si sa public un release real cu artefactele corespunzatoare
+— niciodata sa las un `update.json` "in avans" fata de ce e chiar
+descarcabil.
+
 ## Faza 4 (2026-08-26) — Update Checker popup cu Release Notes
 Popup-ul modal de actualizare (existent din sesiuni anterioare, doar
 text fix) afișează acum și câmpul `changes` din `update.json`
