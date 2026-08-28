@@ -502,8 +502,8 @@
       "description" : "test",
       "id" : "test",
       "scheduling" : {
-        "endDate" : 809653034.016353,
-        "startDate" : 809653634.016353
+        "endDate" : 809654236.827637,
+        "startDate" : 809653756.827636
       },
       "url" : "https://gordas.dev/media-flow-monitor/"
     }
