@@ -87,6 +87,9 @@
       ]
     }
   ],
+  "downloadableResources" : [
+
+  ],
   "educationalResources" : [
     {
       "coverImage" : "covers/De la Zero la Conversie.jpg?v=06a6507e",
@@ -493,6 +496,18 @@
       "version" : "1.0.0"
     }
   ],
+  "partnerOffers" : [
+    {
+      "brandName" : "test",
+      "description" : "test",
+      "id" : "test",
+      "scheduling" : {
+        "endDate" : 809653034.016353,
+        "startDate" : 809653634.016353
+      },
+      "url" : "https://gordas.dev/media-flow-monitor/"
+    }
+  ],
   "partnerStores" : [
     {
       "coverImage" : "covers/MITMAG.jpg?v=39d86f4a",
@@ -513,5 +528,5 @@
       "websiteURL" : "https://www.tiktok.com/@clinicadronelor"
     }
   ],
-  "updatedAt" : "2026-08-28"
+  "updatedAt" : "2026-08-29"
 }
