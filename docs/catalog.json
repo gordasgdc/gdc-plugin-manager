@@ -503,7 +503,15 @@
     }
   ],
   "serviceCenters" : [
-
+    {
+      "category" : "drone",
+      "contactURL" : "https://clinicadronelor.ro/#formular-reparatie",
+      "coverImage" : "https://clinicadronelor.ro/wp-content/uploads/2026/04/cropped-logonou-300x83.avif",
+      "id" : "Clinica Dronelor",
+      "name" : "Clinica Dronelor",
+      "specialization" : "Service & Reparații Drone DJI în România",
+      "websiteURL" : "https://www.tiktok.com/@clinicadronelor"
+    }
   ],
   "updatedAt" : "2026-08-28"
 }
