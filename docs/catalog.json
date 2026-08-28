@@ -148,6 +148,16 @@
       "location" : "Online",
       "title" : "Switching to\nDaVinci Resolve",
       "youtubeURL" : "https://www.blackmagicdesign.com/event/davinci-resolve-online-seminars"
+    },
+    {
+      "coverImage" : "https://images.blackmagicdesign.com/images/invites/davinci-resolve-online-seminars/seminars/workflows.jpg?_v=1787704362",
+      "dateDisplay" : "Friday 20th November   14:00 (GMT)",
+      "description" : "Follow a complete post production workflow from import to delivery. Learn how to organise and manage your media, then edit and grade Blackmagic RAW camera original media. Finish by mixing the audio and delivering your project, all without leaving DaVinci Resolve.",
+      "externalURL" : "https://blackmagicdesign-emea.zoom.us/webinar/register/WN_4SMOr7J6QJaZKJFrmaTugQ#/registration",
+      "id" : "Workflows from\nCamera to Delivery",
+      "location" : "Online",
+      "title" : "Workflows from\nCamera to Delivery",
+      "youtubeURL" : "https://www.blackmagicdesign.com/event/davinci-resolve-online-seminars"
     }
   ],
   "items" : [
