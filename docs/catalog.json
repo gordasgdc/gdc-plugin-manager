@@ -138,6 +138,16 @@
       "location" : "Sighisoara",
       "title" : "Don't Be Like Me Workshop ",
       "youtubeURL" : "https://www.facebook.com/bogdan.damian.735/posts/pfbid0bnPWobkt8QuDDYk2JUE69ojzXs2wRs4i2PG3zqB92Cwiw47jcY7qcRVNWUQxF6Djl"
+    },
+    {
+      "coverImage" : "https://images.blackmagicdesign.com/images/invites/davinci-resolve-online-seminars/seminars/switching-to-davinci-resolve.jpg?_v=1787704362",
+      "dateDisplay" : "Friday 30th October   14:00 (GMT)",
+      "description" : "Designed for editors switching to DaVinci Resolve, this seminar will cover the overall layout and organization of tools. Building on your existing editing knowledge, you’ll learn how to organise media, prepare timelines and build collaborative projects that your whole team can share.",
+      "externalURL" : "https://blackmagicdesign-emea.zoom.us/webinar/register/WN_cbfeBRGDTWOA9MHiD9IYKg#/registration",
+      "id" : "Switching",
+      "location" : "Online",
+      "title" : "Switching to\nDaVinci Resolve",
+      "youtubeURL" : "https://www.blackmagicdesign.com/event/davinci-resolve-online-seminars"
     }
   ],
   "items" : [
