@@ -1,7 +1,7 @@
 {
-  "version": "1.19.7",
+  "version": "1.19.8",
   "release_date": "2026-08-29",
-  "changes": "Windows: fix critic - imaginile (coperte/filigran/lightbox) nu se mai incarcau deloc, cauzat de WinINet blocat pe unele masini; acum se descarca prin HttpClient, la fel ca restul aplicatiei. Mac: neschimbat, sincronizare de versiune.",
+  "changes": "Mac: fix retry filigran (nu reincerca la 404 tranzitoriu de CDN). Windows: logare detaliata a erorii SSL reale, utila pentru diagnosticarea esecurilor intermitente de fetch imagine (posibil ceas de sistem gresit in VM).",
   "download_url": {
     "mac": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Mac.zip",
     "windows": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Windows.zip"
