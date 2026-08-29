@@ -1,5 +1,12 @@
 # Changelog — GDC Plugin Manager
 
+## Client v1.19.8 (2026-08-29) — Fix retry filigran (404 tranzitoriu de CDN)
+
+- Fetch-ul de filigran nu reîncerca la un 404 tranzitoriu de CDN (bug real:
+  `URLSession` nu aruncă pe status HTTP de eroare, doar pe eșec de rețea).
+  Acum verifică statusul explicit și reîncearcă corect.
+- Bump doar de sincronizare cu Windows (fix suplimentar de logging acolo).
+
 ## Client v1.19.2 (2026-08-29) — Release final, paritate Windows completă
 
 - **Fix critic**: filigranul sezonier nu se încărca NICIODATĂ — `.task`

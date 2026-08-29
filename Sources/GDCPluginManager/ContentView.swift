@@ -141,18 +141,38 @@ private struct SeasonalBackgroundLayer: View {
             // acum se loghează explicit. Un singur retry, cu pauză scurtă,
             // rezolvă marea majoritate a acestor blip-uri fără interacțiune
             // manuală (fără "Reîmprospătează" apăsat de 10 ori).
+            // [2026-08-29, val 2 — BUG REAL găsit din log-ul de diagnostic]
+            // `URLSession.shared.data(from:)` NU aruncă la un status HTTP de
+            // eroare (404/500) — aruncă DOAR la eșec de rețea (DNS/TLS/
+            // timeout). Un 404 tranzitoriu de CDN (edge stale, imediat după
+            // republish — vezi comentariul de mai sus) trecea deci prin
+            // ramura de "succes", primea corpul paginii de eroare a
+            // GitHub Pages (9115 bytes, identic pe toate filigranele
+            // afectate), eșua la `NSImage(data:)`, și IEȘEA din buclă cu
+            // `break` — fără al doilea retry, exact eșecul pe care retry-ul
+            // exista să-l repare. Fix: statusul HTTP se verifică EXPLICIT
+            // înainte de decodare; orice non-200 (sau eșec de decodare a
+            // unui răspuns 200, date corupte) se tratează ca eșec real, care
+            // CONTINUĂ bucla de retry, nu `break`.
             var lastError: Error?
             var loaded = false
             for attempt in 1...2 {
                 do {
                     let (data, response) = try await URLSession.shared.data(from: url)
-                    guard let image = NSImage(data: data) else {
-                        DiagnosticLog.write("SeasonalBackground", "id=\(config.id): fetch OK (\(data.count) bytes) dar NSImage nu a decodat (încercarea \(attempt))")
-                        lastError = nil
-                        break
-                    }
                     let status = (response as? HTTPURLResponse)?.statusCode ?? -1
-                    DiagnosticLog.write("SeasonalBackground", "id=\(config.id): OK, \(data.count) bytes, HTTP \(status) (încercarea \(attempt))")
+                    guard status == 200 else {
+                        DiagnosticLog.write("SeasonalBackground", "id=\(config.id): HTTP \(status) (\(data.count) bytes) la încercarea \(attempt)")
+                        lastError = nil
+                        if attempt == 1 { try? await Task.sleep(nanoseconds: 800_000_000) }
+                        continue
+                    }
+                    guard let image = NSImage(data: data) else {
+                        DiagnosticLog.write("SeasonalBackground", "id=\(config.id): HTTP 200 (\(data.count) bytes) dar NSImage nu a decodat (încercarea \(attempt))")
+                        lastError = nil
+                        if attempt == 1 { try? await Task.sleep(nanoseconds: 800_000_000) }
+                        continue
+                    }
+                    DiagnosticLog.write("SeasonalBackground", "id=\(config.id): OK, \(data.count) bytes, HTTP 200 (încercarea \(attempt))")
                     nsImage = image
                     saveToCache(data: data)
                     loaded = true

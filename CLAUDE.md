@@ -1801,3 +1801,38 @@ o captură trimisă de Cristi). Adăugat `MinHeight` explicit la toate 4.
 
 Versiune: Client `1.19.4`→`1.19.5` (PATCH).
 **Verificat**: `swift build` — 0 erori.
+
+## [BUG REAL GĂSIT ȘI REPARAT 2026-08-29, val 2] Retry-ul de filigran nu reîncerca la 404 — găsit direct din log-ul de diagnostic
+
+**Diagnosticat exclusiv din `%TEMP%/gdcpm-crash.log`** (Regula 25 — a
+funcționat exact cum trebuia): Cristi raporta filigranul invizibil, deși
+`curl` direct pe `blackfriday.png` răspundea HTTP 200, 1MB, imagine validă
+(verificat cu PIL: RGBA, ~34% pixeli cu conținut, nu corupt). Logul a arătat
+exact secvența: `fetch OK (9115 bytes) dar NSImage nu a decodat`, repetat
+de multe ori, fără al doilea retry vizibil pentru acest caz.
+
+**Cauza reală**: `URLSession.shared.data(from:)` (Swift) **NU aruncă la un
+status HTTP de eroare** (404/500) — aruncă DOAR la eșec de rețea propriu-zis
+(DNS/TLS/timeout). Un 404 tranzitoriu de CDN edge (imediat după un
+republish — coliziunea Cloudflare+Fastly deja documentată) trecea deci prin
+ramura de "succes" a lui `do/catch`, primea corpul paginii de eroare a
+GitHub Pages (9115 bytes — identic pe toate filigranele afectate din log),
+eșua la `NSImage(data:)`, și codul făcea `break` — ieșea din buclă FĂRĂ al
+doilea retry, exact eșecul pe care retry-ul exista să-l repare.
+
+**Fix**: statusul HTTP (`HTTPURLResponse.statusCode`) se verifică EXPLICIT
+înainte de a încerca decodarea; orice non-200, sau eșec de decodare a unui
+răspuns 200 (date corupte), continuă bucla de retry (`continue`), nu mai
+iese (`break`). Windows (`SeasonalBackgroundLoader.cs`) NU avea acest bug —
+`HttpClient.GetByteArrayAsync` ARUNCĂ automat `HttpRequestException` pe
+status non-2xx, deci acolo un 404 mergea deja pe ramura corectă de retry.
+
+**Regulă practică nouă**: `URLSession.shared.data(from:)` NICIODATĂ fără
+verificare explicită a `HTTPURLResponse.statusCode` — spre deosebire de
+`HttpClient` (.NET), NU aruncă pe status HTTP de eroare, doar pe eșec de
+transport. Orice fetch nou pe Mac trebuie să verifice statusul manual.
+
+Versiune: Client `1.19.6`→`1.19.7`→`1.19.8` (PATCH — al doilea bump, doar
+sincronizare cu Windows, care a primit un fix suplimentar de logging SSL
+în aceeași fereastră de timp — vezi `GDCPluginManagerWin/CLAUDE.md`).
+**Verificat**: `swift build` — 0 erori.
