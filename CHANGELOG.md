@@ -1,5 +1,12 @@
 # Changelog — GDC Plugin Manager
 
+## v1.19.13 (2026-08-29) — Bump doar de versiune (sincronizare cu Windows, fără cod nou)
+
+Necesar ca `update.json` comun să indice o versiune reală, existentă pe
+ambele platforme, ca să putem valida manual că self-updater-ul Windows
+(reparat în v1.19.12) chiar funcționează end-to-end din program. Mac
+neschimbat față de v1.19.10 — pachet reutilizat, doar redenumit.
+
 ## v1.19.12 (2026-08-29) — Windows: HTTP/1.1 forțat + fix real self-updater
 
 - Forțat HTTP/1.1 explicit la fetch de imagini — elimină ALPN/HTTP2 ca
