@@ -610,7 +610,7 @@
       "imagePath" : "covers/seasonal/blackfriday.png?v=243e629a",
       "isEnabled" : true,
       "label" : "BlackFriday",
-      "opacity" : 0.1884174354735495,
+      "opacity" : 0.2,
       "position" : "bottomTrailing"
     }
   ],
