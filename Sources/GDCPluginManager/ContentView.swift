@@ -106,7 +106,10 @@ private struct SeasonalBackgroundLayer: View {
             // o bucată vizibilă din colț ("îmi mănâncă din imagine"). Acum
             // inset POZITIV — filigranul rămâne întreg, doar cu puțin
             // spațiu față de margine.
-            .padding(config.position == .center ? 0 : 24)
+            // [2026-08-29, mărit la cererea lui Cristi] 24pt încă îl lipea
+            // prea aproape de margine ("ca și cum l-ar tăia") — 48pt (dublu)
+            // lasă o distanță vizibilă, clară, pe orice latură.
+            .padding(config.position == .center ? 0 : 48)
         .task(id: config.imagePath) {
             guard let url = config.imageURL else {
                 nsImage = nil
