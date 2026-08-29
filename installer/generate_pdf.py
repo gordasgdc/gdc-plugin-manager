@@ -20,6 +20,7 @@
 # Ruleaza cu: python3 installer/generate_pdf.py
 # (necesita `pip install reportlab` intr-un venv)
 import os
+from PIL import Image as PILImage
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import cm
 from reportlab.lib import colors
@@ -27,11 +28,12 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import (
-    SimpleDocTemplate, Paragraph, ListFlowable, ListItem, Spacer, PageBreak, Table, TableStyle,
+    SimpleDocTemplate, Paragraph, ListFlowable, ListItem, Spacer, PageBreak, Table, TableStyle, Image,
 )
 
 OUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "Sources", "GDCPluginManager", "Resources")
-APP_VERSION = "1.19.3"
+SCREENSHOTS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "screenshots")
+APP_VERSION = "1.19.13"
 
 pdfmetrics.registerFont(TTFont("Arial", "/System/Library/Fonts/Supplemental/Arial.ttf"))
 pdfmetrics.registerFont(TTFont("Arial-Bold", "/System/Library/Fonts/Supplemental/Arial Bold.ttf"))
@@ -53,6 +55,34 @@ note_style = ParagraphStyle("Note", parent=body_style, fontName="Arial", fontSiz
 cover_app_style = ParagraphStyle("CoverApp", fontName="Arial-Bold", fontSize=26, textColor=colors.white, leading=30)
 cover_sub_style = ParagraphStyle("CoverSub", fontName="Arial", fontSize=13, textColor=colors.HexColor("#F2C89A"), spaceBefore=6)
 cover_ver_style = ParagraphStyle("CoverVer", fontName="Arial", fontSize=10, textColor=colors.HexColor("#C7CBD1"), spaceBefore=4)
+caption_style = ParagraphStyle("Caption", fontName="Arial-Italic", fontSize=8.5, textColor=MUTED, spaceBefore=3, spaceAfter=10, alignment=1)
+
+# Capturi reale (2026-08-29, la cererea explicita a lui Cristi: "aspect
+# profesional, vizual" — ghidul vechi era text simplu, fara nicio imagine
+# a aplicatiei reale). Toate 4 din aceeasi sesiune, Mac, tema Intunecata
+# (cea mai lizibila in tipar, contrast bun cu accentul amber al brandului).
+MAX_IMG_W = 16.5 * cm
+
+
+def screenshot(filename, caption_text):
+    """Image flowable scalata proportional la latimea continutului + o
+    legenda mica italic dedesubt. Daca fisierul lipseste (build pe alta
+    masina, fara capturile locale), sare peste — ghidul tot se genereaza,
+    doar fara acea imagine, in loc sa pice cu FileNotFoundError."""
+    path = os.path.join(SCREENSHOTS_DIR, filename)
+    if not os.path.exists(path):
+        return []
+    with PILImage.open(path) as im:
+        w, h = im.size
+    # Nu upscalam peste rezolutia nativa (ex. dialogul de Setari, 532px
+    # latime) doar ca sa umplem latimea paginii — ar iesi vizibil neclar la
+    # print. Tinta ~150dpi echivalent, plafonata la latimea continutului.
+    native_w = w * 2.54 / 150 * cm
+    target_w = min(MAX_IMG_W, native_w)
+    scaled_h = target_w * h / w
+    img = Image(path, width=target_w, height=scaled_h)
+    img.hAlign = "CENTER"
+    return [img, Paragraph(caption_text, caption_style)]
 
 
 def numbered(items):
@@ -125,6 +155,8 @@ def build(lang, out_path, d):
             for item in body:
                 if isinstance(item, tuple) and len(item) == 2 and item[0] == "__note__":
                     flow.append(note_box(item[1][0], item[1][1]))
+                elif isinstance(item, tuple) and len(item) == 2 and item[0] == "__img__":
+                    flow.extend(screenshot(item[1][0], item[1][1]))
                 elif isinstance(item, tuple):
                     flow.append(h3(item[0]))
                     flow.append(numbered(item[1]))
@@ -151,11 +183,17 @@ RO = dict(
     title="Ghid de utilizare — GDC Plugin Manager",
     sections=[
         ("1. Ce este GDC Plugin Manager",
-         "Aplicație GRATUITĂ pentru Mac și Windows — catalog unic pentru tot ce oferă GDC: plugin-uri și preseturi pentru DaVinci Resolve (instalare automată), resurse de descărcare directă pentru Premiere/Final Cut/Resolve, cursuri, materiale educaționale, evenimente, magazine și service-uri partenere, plus celelalte aplicații GDC. Toate produsele proprii GDC se deblochează printr-o donație unică, niciodată printr-un abonament."),
+         [
+             "Aplicație GRATUITĂ pentru Mac și Windows — catalog unic pentru tot ce oferă GDC: plugin-uri și preseturi pentru DaVinci Resolve (instalare automată), resurse de descărcare directă pentru Premiere/Final Cut/Resolve, cursuri, materiale educaționale, evenimente, magazine și service-uri partenere, plus celelalte aplicații GDC. Toate produsele proprii GDC se deblochează printr-o donație unică, niciodată printr-un abonament.",
+             ("__img__", ("main-window.png", "Fereastra principală — bara laterală grupată pe secțiuni, catalogul de evenimente")),
+         ]),
         ("2. Căutare globală",
          "Bara de căutare din partea de sus a ferestrei caută simultan în TOATE rubricile aplicației (produse, resurse, cursuri, evenimente, magazine, service) — nu trebuie să știi dinainte în ce secțiune se află ceva. Tastează orice — nume, tip, descriere — și rezultatele din toate categoriile apar sub bara de căutare. Câmpul reține și ultimele căutări, ca sugestii rapide."),
         ("3. Instalare produse pentru DaVinci Resolve",
-         "Secțiunile DCTL / LUT / Fuse / PowerGrade / OFX din bara laterală conțin plugin-uri care se instalează AUTOMAT, direct în folderele pe care DaVinci Resolve le citește la pornire. Apasă „Instalează” pe orice card — nu trebuie să cauți foldere sau să copiezi fișiere manual. La actualizare, apasă din nou „Instalează” — versiunea nouă suprascrie automat cea veche."),
+         [
+             "Secțiunile DCTL / LUT / Fuse / PowerGrade / OFX din bara laterală conțin plugin-uri care se instalează AUTOMAT, direct în folderele pe care DaVinci Resolve le citește la pornire. Apasă „Instalează” pe orice card — nu trebuie să cauți foldere sau să copiezi fișiere manual. La actualizare, apasă din nou „Instalează” — versiunea nouă suprascrie automat cea veche.",
+             ("__img__", ("plugins-grid.png", "Cardul unui produs — status Gratuit/Licență, buton Instalează/Donează")),
+         ]),
         ("4. Resurse Download (Premiere, Final Cut, Resolve)",
          [
              "Secțiunea „RESURSE DOWNLOAD” din bara laterală (LUT-uri, Efecte Audio/SFX, VFX/Overlays, Plugin-uri, Audio) conține fișiere care se DESCARCĂ direct, fără instalare automată — pentru că sunt gândite să funcționeze și în alte aplicații de montaj (Premiere, Final Cut), nu doar în Resolve.",
@@ -176,7 +214,10 @@ RO = dict(
         ("11. Machine ID",
          "Codurile licențiate pe o singură mașină folosesc un identificator hardware unic, afișat în secțiunea Licență — trimite-l când ceri activarea unui produs."),
         ("12. Temă și Mărime Text",
-         "Din Preferences (⌘,) poți alege tema aplicației — Sistem, Luminoasă sau Întunecată — independent de setarea macOS, și mărimea textului — Mic, Normal, Mare sau Foarte mare. Ambele se aplică instant, fără repornire."),
+         [
+             "Din Preferences (⌘,) pe Mac, sau butonul „Setări” din josul barei laterale pe Windows, poți alege limba (Română/English/Español), tema aplicației — Sistem, Luminoasă sau Întunecată — independent de setarea sistemului, și mărimea textului — Mic, Normal, Mare sau Foarte mare. Toate se aplică instant, fără repornire.",
+             ("__img__", ("settings.png", "Fereastra de Setări — limbă, temă, mărime text, verificare actualizări")),
+         ]),
         ("13. Actualizări automate", [
             "Aplicația verifică automat, la fiecare lansare, dacă există o versiune mai nouă (poți verifica și manual din meniu: GDC Plugin Manager → Check for Updates...).",
             ("Ce se întâmplă când există o versiune nouă:", [
@@ -187,10 +228,10 @@ RO = dict(
         ]),
         ("14. Panoul de Dependențe (indicatorul roșu/verde)", [
             "În partea de sus a ferestrei aplicației vezi un mic punct colorat, urmat de un text scurt („Sistem pregătit” sau „Necesită atenție”). Acesta îți spune dacă tot ce ai nevoie pentru DaVinci Resolve e prezent pe acest calculator.",
-            ("🔴 Punct roșu — „Necesită atenție”", [
+            ("<font color=\"#D32F2F\">●</font> Punct roșu — „Necesită atenție”", [
                 "Înseamnă că lipsește o componentă OBLIGATORIE (DaVinci Resolve însuși, sau — pe Windows — Visual C++ Redistributable). Fără ele, instalarea de pluginuri nu are unde să scrie fișierele.",
             ]),
-            ("🟢 Punct verde — „Sistem pregătit”", [
+            ("<font color=\"#2E7D32\">●</font> Punct verde — „Sistem pregătit”", [
                 "Înseamnă că tot ce e obligatoriu e prezent — poți instala orice produs din catalog fără probleme.",
             ]),
             ("Ce faci exact când vezi punctul roșu:", [
@@ -200,6 +241,7 @@ RO = dict(
                 "După ce ai instalat componenta lipsă, revino în panou și apasă „Reverifică tot” — punctul ar trebui să devină verde.",
             ]),
             "Componentele marcate „Opțional” (foldere LUT/DCTL/OFX/Fusion, sau Scripting API pentru PowerGrade) NU blochează nimic — apar automat la prima instalare a unui produs de tipul respectiv, sau doar fac importul de PowerGrade automat în loc de manual.",
+            ("__img__", ("dependency-check.png", "Fereastra „Verificare & Dependențe Sistem” — toate componentele OK")),
         ]),
         ("15. Aplicația pentru telefon (Android și iPhone)",
          "Deschide gordas.dev de pe telefon — catalogul complet (produse, resurse, cursuri, evenimente, comunitate) e disponibil direct în browser, fără instalare din magazinul de aplicații. Din meniul browserului alege „Adaugă pe ecranul principal” pentru o iconiță ca o aplicație obișnuită."),
@@ -215,11 +257,17 @@ EN = dict(
     title="User Guide — GDC Plugin Manager",
     sections=[
         ("1. What is GDC Plugin Manager",
-         "A FREE app for Mac and Windows — a single catalog for everything GDC offers: plugins and presets for DaVinci Resolve (automatic install), direct-download resources for Premiere/Final Cut/Resolve, courses, learning materials, events, partner stores and service centers, plus the other GDC apps. Every GDC product unlocks through a one-time donation, never a subscription."),
+         [
+             "A FREE app for Mac and Windows — a single catalog for everything GDC offers: plugins and presets for DaVinci Resolve (automatic install), direct-download resources for Premiere/Final Cut/Resolve, courses, learning materials, events, partner stores and service centers, plus the other GDC apps. Every GDC product unlocks through a one-time donation, never a subscription.",
+             ("__img__", ("main-window.png", "Main window — sidebar grouped by section, the events catalog")),
+         ]),
         ("2. Global search",
          "The search bar at the top of the window searches ALL sections of the app at once (products, resources, courses, events, stores, services) — you don't need to know in advance where something lives. Type anything — a name, a type, a description — and results from every category appear below the search bar. The field also remembers your recent searches as quick suggestions."),
         ("3. Installing products for DaVinci Resolve",
-         "The DCTL / LUT / Fuse / PowerGrade / OFX sections in the sidebar contain plugins that install AUTOMATICALLY, straight into the folders DaVinci Resolve reads at launch. Press \"Install\" on any card — no folder hunting, no manual file copying. To update, press \"Install\" again — the new version overwrites the old one automatically."),
+         [
+             "The DCTL / LUT / Fuse / PowerGrade / OFX sections in the sidebar contain plugins that install AUTOMATICALLY, straight into the folders DaVinci Resolve reads at launch. Press \"Install\" on any card — no folder hunting, no manual file copying. To update, press \"Install\" again — the new version overwrites the old one automatically.",
+             ("__img__", ("plugins-grid.png", "A product card — Free/Licensed status, Install/Donate button")),
+         ]),
         ("4. Downloadable Resources (Premiere, Final Cut, Resolve)",
          [
              "The \"DOWNLOADABLE RESOURCES\" section in the sidebar (LUTs, Audio Effects/SFX, VFX/Overlays, Plugins, Audio) contains files you DOWNLOAD directly, with no automatic install — because they're meant to work in other editing apps too (Premiere, Final Cut), not just Resolve.",
@@ -240,7 +288,10 @@ EN = dict(
         ("11. Machine ID",
          "Machine-locked codes use a unique hardware identifier, shown in the License section — send it when requesting activation of a product."),
         ("12. Theme and Text Size",
-         "From Preferences (⌘,) you can pick the app's theme — System, Light or Dark — independently of your macOS setting, and the text size — Small, Normal, Large or Extra large. Both apply instantly, no restart needed."),
+         [
+             "From Preferences (⌘,) on Mac, or the \"Settings\" button at the bottom of the sidebar on Windows, you can pick the language (Română/English/Español), the app's theme — System, Light or Dark — independently of your system setting, and the text size — Small, Normal, Large or Extra large. All apply instantly, no restart needed.",
+             ("__img__", ("settings.png", "Settings window — language, theme, text size, update check")),
+         ]),
         ("13. Automatic updates", [
             "The app checks automatically, at every launch, whether a newer version exists (you can also check manually from the menu: GDC Plugin Manager → Check for Updates...).",
             ("What happens when a new version exists:", [
@@ -251,10 +302,10 @@ EN = dict(
         ]),
         ("14. Dependency Panel (the red/green indicator)", [
             "At the top of the app window you'll see a small colored dot followed by a short label (“System ready” or “Needs attention”). It tells you whether everything DaVinci Resolve needs is present on this computer.",
-            ("🔴 Red dot — “Needs attention”", [
+            ("<font color=\"#D32F2F\">●</font> Red dot — “Needs attention”", [
                 "Means a REQUIRED component is missing (DaVinci Resolve itself, or — on Windows — the Visual C++ Redistributable). Without them, plugin installs have nowhere to write their files.",
             ]),
-            ("🟢 Green dot — “System ready”", [
+            ("<font color=\"#2E7D32\">●</font> Green dot — “System ready”", [
                 "Means everything required is present — you can install any product from the catalog without issues.",
             ]),
             ("Exactly what to do when you see the red dot:", [
@@ -264,6 +315,7 @@ EN = dict(
                 "After installing the missing component, go back to the panel and press “Recheck all” — the dot should turn green.",
             ]),
             "Components marked “Optional” (LUT/DCTL/OFX/Fusion folders, or the Scripting API for PowerGrade) don't block anything — they appear automatically on the first install of that product type, or just make PowerGrade import automatic instead of manual.",
+            ("__img__", ("dependency-check.png", "The “System Check & Dependencies” window — everything OK")),
         ]),
         ("15. Phone app (Android and iPhone)",
          "Open gordas.dev on your phone — the full catalog (products, resources, courses, events, community) is available directly in the browser, no app-store install needed. From the browser menu, choose \"Add to Home Screen\" for an icon that behaves like a regular app."),
@@ -279,11 +331,17 @@ ES = dict(
     title="Guía de uso — GDC Plugin Manager",
     sections=[
         ("1. Qué es GDC Plugin Manager",
-         "Aplicación GRATUITA para Mac y Windows — catálogo único para todo lo que ofrece GDC: plugins y preajustes para DaVinci Resolve (instalación automática), recursos de descarga directa para Premiere/Final Cut/Resolve, cursos, materiales educativos, eventos, tiendas y servicios asociados, además de las demás apps de GDC. Todos los productos propios de GDC se desbloquean con una donación única, nunca con una suscripción."),
+         [
+             "Aplicación GRATUITA para Mac y Windows — catálogo único para todo lo que ofrece GDC: plugins y preajustes para DaVinci Resolve (instalación automática), recursos de descarga directa para Premiere/Final Cut/Resolve, cursos, materiales educativos, eventos, tiendas y servicios asociados, además de las demás apps de GDC. Todos los productos propios de GDC se desbloquean con una donación única, nunca con una suscripción.",
+             ("__img__", ("main-window.png", "Ventana principal — barra lateral agrupada por sección, el catálogo de eventos")),
+         ]),
         ("2. Búsqueda global",
          "La barra de búsqueda en la parte superior de la ventana busca simultáneamente en TODAS las secciones de la app (productos, recursos, cursos, eventos, tiendas, servicios) — no necesitas saber de antemano dónde está algo. Escribe cualquier cosa — un nombre, un tipo, una descripción — y aparecen resultados de todas las categorías debajo de la barra de búsqueda. El campo también recuerda tus búsquedas recientes como sugerencias rápidas."),
         ("3. Instalación de productos para DaVinci Resolve",
-         "Las secciones DCTL / LUT / Fuse / PowerGrade / OFX de la barra lateral contienen plugins que se instalan AUTOMÁTICAMENTE, directamente en las carpetas que DaVinci Resolve lee al iniciar. Pulsa \"Instalar\" en cualquier tarjeta — sin buscar carpetas ni copiar archivos a mano. Para actualizar, pulsa \"Instalar\" de nuevo — la versión nueva sobrescribe automáticamente la anterior."),
+         [
+             "Las secciones DCTL / LUT / Fuse / PowerGrade / OFX de la barra lateral contienen plugins que se instalan AUTOMÁTICAMENTE, directamente en las carpetas que DaVinci Resolve lee al iniciar. Pulsa \"Instalar\" en cualquier tarjeta — sin buscar carpetas ni copiar archivos a mano. Para actualizar, pulsa \"Instalar\" de nuevo — la versión nueva sobrescribe automáticamente la anterior.",
+             ("__img__", ("plugins-grid.png", "Tarjeta de un producto — estado Gratis/Licencia, botón Instalar/Donar")),
+         ]),
         ("4. Recursos Descargables (Premiere, Final Cut, Resolve)",
          [
              "La sección \"RECURSOS DESCARGABLES\" de la barra lateral (LUTs, Efectos de Audio/SFX, VFX/Overlays, Plugins, Audio) contiene archivos que se DESCARGAN directamente, sin instalación automática — porque están pensados para funcionar también en otras apps de edición (Premiere, Final Cut), no solo en Resolve.",
@@ -304,7 +362,10 @@ ES = dict(
         ("11. Machine ID",
          "Los códigos vinculados a una máquina usan un identificador de hardware único, mostrado en la sección Licencia — envíalo al solicitar la activación de un producto."),
         ("12. Tema y Tamaño de texto",
-         "Desde Preferencias (⌘,) puedes elegir el tema de la app — Sistema, Claro u Oscuro — independientemente de tu ajuste de macOS, y el tamaño del texto — Pequeño, Normal, Grande o Muy grande. Ambos se aplican al instante, sin reiniciar."),
+         [
+             "Desde Preferencias (⌘,) en Mac, o el botón \"Ajustes\" en la parte inferior de la barra lateral en Windows, puedes elegir el idioma (Română/English/Español), el tema de la app — Sistema, Claro u Oscuro — independientemente de tu ajuste del sistema, y el tamaño del texto — Pequeño, Normal, Grande o Muy grande. Todo se aplica al instante, sin reiniciar.",
+             ("__img__", ("settings.png", "Ventana de Ajustes — idioma, tema, tamaño de texto, verificación de actualizaciones")),
+         ]),
         ("13. Actualizaciones automáticas", [
             "La aplicación verifica automáticamente, en cada inicio, si existe una versión más nueva (también puedes verificar manualmente desde el menú: GDC Plugin Manager → Check for Updates...).",
             ("Qué ocurre cuando existe una versión nueva:", [
@@ -315,10 +376,10 @@ ES = dict(
         ]),
         ("14. Panel de Dependencias (el indicador rojo/verde)", [
             "En la parte superior de la ventana de la app verás un pequeño punto de color seguido de un texto breve (“Sistema listo” o “Requiere atención”). Te indica si todo lo que DaVinci Resolve necesita está presente en este ordenador.",
-            ("🔴 Punto rojo — “Requiere atención”", [
+            ("<font color=\"#D32F2F\">●</font> Punto rojo — “Requiere atención”", [
                 "Significa que falta un componente OBLIGATORIO (DaVinci Resolve en sí, o — en Windows — Visual C++ Redistributable). Sin ellos, la instalación de plugins no tiene dónde escribir los archivos.",
             ]),
-            ("🟢 Punto verde — “Sistema listo”", [
+            ("<font color=\"#2E7D32\">●</font> Punto verde — “Sistema listo”", [
                 "Significa que todo lo obligatorio está presente — puedes instalar cualquier producto del catálogo sin problemas.",
             ]),
             ("Qué hacer exactamente cuando ves el punto rojo:", [
@@ -328,6 +389,7 @@ ES = dict(
                 "Después de instalar el componente faltante, vuelve al panel y pulsa “Volver a verificar todo” — el punto debería ponerse verde.",
             ]),
             "Los componentes marcados “Opcional” (carpetas LUT/DCTL/OFX/Fusion, o la API de scripting para PowerGrade) no bloquean nada — aparecen automáticamente en la primera instalación de ese tipo de producto, o simplemente hacen que la importación de PowerGrade sea automática en vez de manual.",
+            ("__img__", ("dependency-check.png", "La ventana “Comprobación y Dependencias del Sistema” — todo OK")),
         ]),
         ("15. App para el teléfono (Android e iPhone)",
          "Abre gordas.dev en tu teléfono — el catálogo completo (productos, recursos, cursos, eventos, comunidad) está disponible directamente en el navegador, sin instalación desde una tienda de apps. Desde el menú del navegador, elige \"Añadir a pantalla de inicio\" para tener un icono que se comporta como una app normal."),

@@ -18,7 +18,9 @@ struct HelpView: View {
                 section(icon: "camera.filters", title: "help.ofx.title", body: "help.ofx.body")
                 section(icon: "desktopcomputer", title: "help.machine.title", body: "help.machine.body")
                 section(icon: "circle.lefthalf.filled", title: "help.appearance.title", body: "help.appearance.body")
+                section(icon: "checklist", title: "help.dependencies.title", body: "help.dependencies.body")
                 section(icon: "arrow.triangle.2.circlepath", title: "help.updates.title", body: "help.updates.body")
+                section(icon: "iphone", title: "help.mobile.title", body: "help.mobile.body")
                 section(icon: "questionmark.circle", title: "help.support.title", body: "help.support.body")
 
                 Spacer(minLength: 0)
