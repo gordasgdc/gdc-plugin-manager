@@ -1,7 +1,7 @@
 {
-  "version": "1.19.2",
+  "version": "1.19.3",
   "release_date": "2026-08-29",
-  "changes": "Paritate completa Mac + Windows: iconite sociale colorate (+LinkedIn) pe toate rubricile, selector tema System/Light/Dark, biblioteca de filigrane sezoniere cu perioada, pozitie si intensitate reglabila, setare Marime Text. Fix critic: filigranul nu se incarca (task neatasat corect). Fix formular Furnizor (nu se golea dupa publicare). Fix sidebar la redimensionare rapida.",
+  "changes": "Fix critic in Furnizor: un draft nepublicat, ramas orfan dupa stergerea unui filigran, putea corupe calea imaginii la reutilizarea unui id (o poza aparea 404 pentru clienti). Adaugat log de diagnostic permanent pentru filigran, in Client si Furnizor.",
   "download_url": {
     "mac": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Mac.zip",
     "windows": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Windows.zip"
