@@ -4,8 +4,11 @@ import AppKit
 /// Deschide ghidul de utilizare PDF, in limba curenta a aplicatiei, direct
 /// in Preview (NSWorkspace.open respecta mereu aplicatia implicita a
 /// userului pentru PDF). Fisierele (Resources/Ghid-GDCPluginManager-{ro,en,es}.pdf)
-/// sunt continut de baza, generat automat — de inlocuit cu ghidul complet
-/// cand e gata, pastrand aceleasi nume de fisier.
+/// sunt generate cu `installer/generate_pdf.py` — [REDESENAT 2026-08-29]
+/// coperta cu banner de brand, 16 sectiuni (acopera toate etapele v2.0:
+/// cautare globala, Resurse Download, Aplicatiile Mele, Oferte & Pachete,
+/// tema, marime text), nu doar setul original de 8. Ruleaza scriptul din
+/// nou si suprascrie aceste 3 fisiere la orice schimbare de continut.
 enum HelpGuide {
     static func openPDF() {
         let suffix = L.current.rawValue // "ro" / "en" / "es"

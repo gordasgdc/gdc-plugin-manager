@@ -182,3 +182,17 @@ Vezi istoricul `git log` — GDC-SEC-02 (Machine ID întărit), kill-switch dife
 Orice funcționalitate nouă adăugată **doar pe o platformă** trebuie:
 1. Marcată explicit aici ca "doar pe X — TODO paritate pe Y".
 2. Portată pe cealaltă platformă într-un ciclu de lucru ulterior, nu lăsată nedefinit.
+
+## Client v1.19.4 (2026-08-29) — Documentație la zi: PDF redesenat + ghid din aplicație
+
+- **Ghidul PDF** (RO/EN/ES) redesenat complet: copertă cu banner de brand,
+  16 secțiuni (față de 8) — acoperă acum căutarea globală, Resurse Download,
+  Comunitate, Aplicațiile Mele, Oferte & Pachete, temă/mărime text, aplicația
+  de telefon. Footer cu număr de pagină pe fiecare pagină, casete evidențiate
+  pentru note importante.
+- **Ghidul din aplicație** ("Ajutor" din sidebar) — 4 secțiuni noi
+  (Căutare globală, Resurse Download, Comunitate/Aplicații/Oferte, Temă),
+  în toate 3 limbile.
+- **Bug fix web**: pagina principală (gordas.dev) avea un preview de
+  catalog separat de aplicație, cu 4 rubrici lipsă (Resurse Download,
+  Oferte Parteneri, Service & Reparații, Pachete) — corectat.

@@ -9,11 +9,15 @@ struct HelpView: View {
                 Text(L.t("help.title")).font(.title2).fontWeight(.semibold)
 
                 section(icon: "square.grid.2x2", title: "help.what.title", body: "help.what.body")
+                section(icon: "magnifyingglass", title: "help.search.title", body: "help.search.body")
                 section(icon: "cart", title: "help.buy.title", body: "help.buy.body")
                 section(icon: "arrow.down.circle", title: "help.install.title", body: "help.install.body")
+                section(icon: "square.and.arrow.down", title: "help.resources.title", body: "help.resources.body")
+                section(icon: "person.2", title: "help.community.title", body: "help.community.body")
                 section(icon: "paintpalette", title: "help.powergrade.title", body: "help.powergrade.body")
                 section(icon: "camera.filters", title: "help.ofx.title", body: "help.ofx.body")
                 section(icon: "desktopcomputer", title: "help.machine.title", body: "help.machine.body")
+                section(icon: "circle.lefthalf.filled", title: "help.appearance.title", body: "help.appearance.body")
                 section(icon: "arrow.triangle.2.circlepath", title: "help.updates.title", body: "help.updates.body")
                 section(icon: "questionmark.circle", title: "help.support.title", body: "help.support.body")
 
