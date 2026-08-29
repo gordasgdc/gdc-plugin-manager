@@ -1,7 +1,7 @@
 {
-  "version": "1.19.9",
+  "version": "1.19.10",
   "release_date": "2026-08-29",
-  "changes": "Windows: fix real la filigranul sezonier - eroarea SSL intermitenta era o conexiune HTTPS tinuta deschisa la infinit (RemoteCertificateNameMismatch pe anycast-ul Cloudflare), nu ceas de sistem gresit. Conexiunea se recicleaza acum la 5 minute.",
+  "changes": "Windows: v1.19.9 nu a rezolvat eroarea SSL la filigranul sezonier - adaugat log de diagnostic care arata certificatul TLS real respins, ca sa gasim cauza definitiva.",
   "download_url": {
     "mac": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Mac.zip",
     "windows": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Windows.zip"

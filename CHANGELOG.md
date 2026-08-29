@@ -1,5 +1,13 @@
 # Changelog — GDC Plugin Manager
 
+## v1.19.10 (2026-08-29) — Windows: diagnostic certificat TLS real (v1.19.9 nu a rezolvat)
+
+- Fix-ul v1.19.9 (reciclare conexiune HTTPS) NU a rezolvat eroarea SSL —
+  confirmat din log, persistă identic. Adăugat log explicit al
+  certificatului real respins (Subject/Issuer/Thumbprint/ChainStatus) la
+  orice eșec de validare TLS, ca să găsim cauza definitivă din date reale,
+  nu ipoteze. Mac: neschimbat.
+
 ## v1.19.9 (2026-08-29) — Windows: fix real eroare SSL filigran (conexiune HTTPS reciclată)
 
 - Cauza reală a eșecului SSL intermitent (Windows): `RemoteCertificateNameMismatch`
