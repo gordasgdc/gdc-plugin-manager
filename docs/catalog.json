@@ -582,7 +582,11 @@
       "imagePath" : "covers/seasonal/background.svg?v=27081ef5",
       "isEnabled" : true,
       "label" : "Filigran existent (migrat automat)",
-      "position" : "center"
+      "position" : "center",
+      "scheduling" : {
+        "endDate" : 810276926.525234,
+        "startDate" : 809672126.525234
+      }
     }
   ],
   "serviceCenters" : [
