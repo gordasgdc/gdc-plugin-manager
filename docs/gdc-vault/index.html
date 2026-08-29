@@ -74,6 +74,11 @@
   .pricing li::before{ content:"✓"; position:absolute; left:0; color:var(--accent); font-weight:700; }
   .pricing .promo-note{ margin-top:20px; font-size:12px; line-height:1.6; color:var(--faint); text-align:left; background:var(--panel-2); border-radius:8px; padding:12px 14px; }
 
+  .shot-gallery{ display:flex; flex-direction:column; gap:40px; margin:0 0 8px; }
+  .shot-gallery figure{ margin:0; }
+  .shot-gallery img{ display:block; width:100%; border-radius:14px; border:1px solid var(--border); box-shadow:0 30px 80px -25px rgba(0,0,0,.6); }
+  .shot-gallery figcaption{ margin-top:14px; font-family:var(--mono); font-size:12.5px; color:var(--muted); text-align:center; }
+
   footer{ border-top:1px solid var(--border); padding:32px 24px; text-align:center; font-size:12.5px; color:var(--faint); }
   footer a{ color:var(--muted); text-decoration:none; }
   footer a:hover{ color:var(--text); }
@@ -109,6 +114,23 @@
     <a class="btn btn-ghost" data-i18n="hero.win" href="https://github.com/gordasgdc/gdc-vault-win/releases/latest/download/GDCVaultSetup.exe">⬇ Descarcă pentru Windows</a>
   </div>
   <p class="beta-note" data-i18n="hero.beta">Probă gratuită 15 zile, acces complet la toate funcționalitățile. Instalare directă prin pachetul .pkg semnat și notarizat de Apple — fără avertismente Gatekeeper.</p>
+</div>
+
+<div class="wrap">
+  <div class="shot-gallery">
+    <figure>
+      <img src="img/main.png" alt="Fereastra principală GDC Vault pe macOS" loading="lazy" width="1597" height="1260">
+      <figcaption data-i18n="shots.main">Fereastra principală — o intrare = un produs, cu tot ce ține de el</figcaption>
+    </figure>
+    <figure>
+      <img src="img/add-app.png" alt="Adăugarea unei aplicații noi în GDC Vault" loading="lazy" width="1597" height="1260">
+      <figcaption data-i18n="shots.add">Credențiale, licențiere, resurse, notițe și atașamente — toate pe aceeași fișă</figcaption>
+    </figure>
+    <figure>
+      <img src="img/settings.png" alt="Setările GDC Vault — temă, mărime text, ghid PDF" loading="lazy" width="1597" height="1260">
+      <figcaption data-i18n="shots.settings">Setări — Aspect, Mărime text, acces direct la ghidul PDF</figcaption>
+    </figure>
+  </div>
 </div>
 
 <section>
@@ -211,6 +233,9 @@
   const translations = {
     ro: {
       'nav.back': '← gordas.dev',
+      'shots.main': 'Fereastra principală — o intrare = un produs, cu tot ce ține de el',
+      'shots.add': 'Credențiale, licențiere, resurse, notițe și atașamente — toate pe aceeași fișă',
+      'shots.settings': 'Setări — Aspect, Mărime text, acces direct la ghidul PDF',
       'hero.tagline': 'Seif securizat pentru licențe, conturi de login, chei de serie, notițe și fișiere atașate — totul într-o singură fișă per aplicație, nu împrăștiat prin note și parole uitate.',
       'hero.mac': '⬇ Descarcă pentru Mac', 'hero.win': '⬇ Descarcă pentru Windows',
       'hero.beta': 'Probă gratuită 15 zile, acces complet la toate funcționalitățile. Instalare directă prin pachetul .pkg semnat și notarizat de Apple — fără avertismente Gatekeeper.',
@@ -241,6 +266,9 @@
     },
     en: {
       'nav.back': '← gordas.dev',
+      'shots.main': 'Main window — one entry = one product, with everything on it',
+      'shots.add': 'Credentials, licensing, resources, notes and attachments — all on the same record',
+      'shots.settings': 'Settings — Appearance, Text size, direct access to the PDF guide',
       'hero.tagline': 'A secure vault for licenses, login accounts, serial keys, notes and attached files — everything in one record per app, instead of scattered notes and forgotten passwords.',
       'hero.mac': '⬇ Download for Mac', 'hero.win': '⬇ Download for Windows',
       'hero.beta': '15-day free trial, full feature access. Installs directly via the Apple-signed and notarized .pkg — no Gatekeeper warnings.',
@@ -271,6 +299,9 @@
     },
     es: {
       'nav.back': '← gordas.dev',
+      'shots.main': 'Ventana principal — una entrada = un producto, con todo junto',
+      'shots.add': 'Credenciales, licencia, recursos, notas y adjuntos — todo en la misma ficha',
+      'shots.settings': 'Ajustes — Apariencia, Tamaño de texto, acceso directo a la guía PDF',
       'hero.tagline': 'Una caja fuerte segura para licencias, cuentas de acceso, claves de serie, notas y archivos adjuntos — todo en una sola ficha por aplicación, en lugar de notas dispersas y contraseñas olvidadas.',
       'hero.mac': '⬇ Descargar para Mac', 'hero.win': '⬇ Descargar para Windows',
       'hero.beta': 'Prueba gratuita de 15 días, acceso completo a todas las funciones. Instalación directa mediante el .pkg firmado y notarizado por Apple — sin avisos de Gatekeeper.',
