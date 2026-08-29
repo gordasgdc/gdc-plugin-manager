@@ -166,10 +166,12 @@
     position:fixed; width:320px; height:320px; z-index:1;
     opacity:.07; pointer-events:none; object-fit:contain;
   }
-  .seasonal-bg.pos-bottomTrailing{ right:-40px; bottom:-40px; }
-  .seasonal-bg.pos-bottomLeading { left:-40px;  bottom:-40px; }
-  .seasonal-bg.pos-topTrailing   { right:-40px; top:-40px; }
-  .seasonal-bg.pos-topLeading    { left:-40px;  top:-40px; }
+  /* [2026-08-29, corectat] Inset pozitiv, nu negativ - un offset negativ
+     impingea imaginea in afara ecranului si o taia vizibil din colt. */
+  .seasonal-bg.pos-bottomTrailing{ right:24px; bottom:24px; }
+  .seasonal-bg.pos-bottomLeading { left:24px;  bottom:24px; }
+  .seasonal-bg.pos-topTrailing   { right:24px; top:24px; }
+  .seasonal-bg.pos-topLeading    { left:24px;  top:24px; }
   .seasonal-bg.pos-center        { left:50%; top:50%; transform:translate(-50%,-50%); }
 
   /* ── Buton hartă / link secundar (chip mic pe cardul rich) ───────────────── */
@@ -307,9 +309,14 @@ const PIN_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" str
 const WA_ICON = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3a9 9 0 0 0-7.7 13.6L3 21l4.5-1.2A9 9 0 1 0 12 3zm0 16.4a7.4 7.4 0 0 1-3.8-1l-.3-.2-2.8.7.7-2.7-.2-.3A7.4 7.4 0 1 1 12 19.4zm4.1-5.5c-.2-.1-1.3-.7-1.5-.7-.2-.1-.4-.1-.5.1s-.6.7-.7.9-.3.2-.5.1a6 6 0 0 1-1.8-1.1 6.7 6.7 0 0 1-1.2-1.5c-.1-.2 0-.4.1-.5l.4-.4c.1-.1.1-.2.2-.4s0-.3 0-.4-.5-1.2-.7-1.7-.4-.4-.5-.4h-.4a.9.9 0 0 0-.6.3 2.6 2.6 0 0 0-.8 1.9c0 1.1.8 2.2.9 2.4s1.6 2.4 3.8 3.4a13 13 0 0 0 1.3.5 3.1 3.1 0 0 0 1.4.1 2.3 2.3 0 0 0 1.5-1.1 1.9 1.9 0 0 0 .1-1.1c-.1-.1-.2-.2-.4-.3z"/></svg>';
 const YT_ICON = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.6 7.2a2.7 2.7 0 0 0-1.9-1.9C18 5 12 5 12 5s-6 0-7.7.3a2.7 2.7 0 0 0-1.9 1.9A28 28 0 0 0 2 12a28 28 0 0 0 .4 4.8 2.7 2.7 0 0 0 1.9 1.9C6 19 12 19 12 19s6 0 7.7-.3a2.7 2.7 0 0 0 1.9-1.9A28 28 0 0 0 22 12a28 28 0 0 0-.4-4.8zM10 15V9l5 3z"/></svg>';
 const LINK_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9.5 14.5l5-5M8 17l-2 2a3.5 3.5 0 0 1-5-5l3-3a3.5 3.5 0 0 1 5 0M16 7l2-2a3.5 3.5 0 0 1 5 5l-3 3a3.5 3.5 0 0 1-5 0"/></svg>';
-// LinkedIn (2026-08-29) — monocrom, in acelasi stil ca PIN/WA/YT: silueta
-// "in" desenata cu forme simple, nu logo-ul oficial colorat.
-const LI_ICON = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.5 3a1.8 1.8 0 1 0 0 3.6 1.8 1.8 0 0 0 0-3.6zM3 8.4h3V21H3zM9 8.4h2.9v1.7h.05a3.2 3.2 0 0 1 2.87-1.6c3.07 0 3.64 2 3.64 4.62V21h-3v-5.3c0-1.27-.02-2.9-1.77-2.9-1.78 0-2.05 1.38-2.05 2.8V21H9z"/></svg>';
+// Iconite de brand COLORATE (2026-08-29, cerut explicit — "culorile oficiale
+// de brand, nu alb-negru generic"). Port 1:1 al SVG-urilor din ContentView.swift
+// (Mac) — pastreaza paleta identica intre Client si PWA.
+const FB_ICON = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#1877F2"/><path fill="#fff" d="M15.1 12.7h-2.1v6.8h-2.8v-6.8H8.6v-2.4h1.6V8.7c0-1.9 1-3 3.1-3h1.9v2.4h-1.2c-.8 0-.9.3-.9 1v1.2h2.2z"/></svg>';
+const IG_ICON = '<svg viewBox="0 0 24 24"><defs><linearGradient id="igGrad" x1="0" y1="1" x2="1" y2="0"><stop offset="0%" stop-color="#FEDA75"/><stop offset="30%" stop-color="#FA7E1E"/><stop offset="55%" stop-color="#D62976"/><stop offset="80%" stop-color="#962FBF"/><stop offset="100%" stop-color="#4F5BD5"/></linearGradient></defs><rect x="1.5" y="1.5" width="21" height="21" rx="6.3" fill="url(#igGrad)"/><rect x="6.7" y="6.7" width="10.6" height="10.6" rx="3.4" fill="none" stroke="#fff" stroke-width="1.6"/><circle cx="12" cy="12" r="3" fill="none" stroke="#fff" stroke-width="1.6"/><circle cx="17.1" cy="6.9" r="1.1" fill="#fff"/></svg>';
+const TT_ICON = '<svg viewBox="0 0 24 24"><rect x="1" y="1" width="22" height="22" rx="6.5" fill="#010101"/><path fill="#25F4EE" d="M14.8 4.4c.4 2 1.9 3.4 3.9 3.6v2.5c-1.4 0-2.8-.4-3.9-1.2v6c0 3-2.4 5.4-5.3 5.4-2.9 0-5.3-2.4-5.3-5.4 0-2.9 2.3-5.2 5.1-5.4v2.6c-1.3.2-2.3 1.3-2.3 2.7 0 1.5 1.3 2.8 2.8 2.8 1.6 0 2.8-1.3 2.8-2.8V4.4h2.2z"/><path fill="#FE2C55" d="M13.5 4.4c.4 2 1.9 3.4 3.9 3.6v2.5c-1.4 0-2.8-.4-3.9-1.2v6c0 3-2.4 5.4-5.3 5.4-1.1 0-2.2-.4-3-1 .8.3 1.7.4 2.6.2 1.9-.3 3.4-1.9 3.5-3.8V4.4h2.2z" opacity=".8"/></svg>';
+const LI_ICON = '<svg viewBox="0 0 24 24"><rect x="1" y="1" width="22" height="22" rx="4.5" fill="#0A66C2"/><circle cx="7.2" cy="7.6" r="1.7" fill="#fff"/><rect x="5.7" y="10.3" width="3" height="8.1" fill="#fff"/><path fill="#fff" d="M11.1 10.3h2.9v1.3h.04c.4-.75 1.4-1.5 2.9-1.5 3.1 0 3.6 2 3.6 4.6v4.7h-3v-4.2c0-1 0-2.3-1.4-2.3-1.4 0-1.6 1.1-1.6 2.2v4.3h-3z"/></svg>';
+const YT_COLOR_ICON = '<svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="5" fill="#FF0000"/><path fill="#fff" d="M10 8.3l6.2 3.7-6.2 3.7z"/></svg>';
 
 // Etichetele tipurilor din catalog.json, pentru afisare.
 const TYPE_LABEL = { lut:'LUT', dctl:'DCTL', powerGrade:'PowerGrade', fuse:'Fuse', app:'Aplicatie' };
@@ -355,18 +362,18 @@ function miniLinks(items) {
   if (!parts.length) return '';
   return `<div class="mini-links">${parts.join('')}</div>`;
 }
-function miniLink(icon, label, url) {
+function miniLink(icon, label, url, tooltip) {
   if (!url) return '';
-  return `<a class="mini-link" href="${esc(url)}" target="_blank" rel="noopener">${icon}${esc(label)}</a>`;
+  return `<a class="mini-link" href="${esc(url)}" target="_blank" rel="noopener" title="${esc(tooltip || label)}">${icon}${esc(label)}</a>`;
 }
 function socialMiniLinks(social) {
   if (!social) return [];
   return [
-    miniLink(LINK_ICON, 'Facebook', social.facebookURL),
-    miniLink(YT_ICON, 'YouTube', social.youtubeURL),
-    miniLink(LINK_ICON, 'Instagram', social.instagramURL),
-    miniLink(LINK_ICON, 'TikTok', social.tiktokURL),
-    miniLink(LI_ICON, 'LinkedIn', social.linkedinURL),
+    miniLink(FB_ICON, 'Facebook', social.facebookURL, 'Deschide pagina de Facebook'),
+    miniLink(YT_COLOR_ICON, 'YouTube', social.youtubeURL, 'Vezi canalul de YouTube'),
+    miniLink(IG_ICON, 'Instagram', social.instagramURL, 'Deschide pagina de Instagram'),
+    miniLink(TT_ICON, 'TikTok', social.tiktokURL, 'Deschide contul de TikTok'),
+    miniLink(LI_ICON, 'LinkedIn', social.linkedinURL, 'Deschide pagina de LinkedIn'),
   ].filter(Boolean);
 }
 
