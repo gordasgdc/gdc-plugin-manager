@@ -615,11 +615,7 @@
       "isEnabled" : false,
       "label" : "Vară / Vacanță",
       "opacity" : 0.10635925501279864,
-      "position" : "bottomTrailing",
-      "scheduling" : {
-        "endDate" : 810310698.954441,
-        "startDate" : 809705898.954441
-      }
+      "position" : "bottomTrailing"
     },
     {
       "id" : "black-friday-sale-seeklogo",
