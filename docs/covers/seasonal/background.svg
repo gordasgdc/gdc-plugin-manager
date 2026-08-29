@@ -1,22 +1,19 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
-  <g fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linejoin="round">
-    <path d="M200 42 L245 112 L215 112 L260 178 L225 178 L275 246 L125 246 L175 178 L140 178 L185 112 L155 112 Z"/>
-    <rect x="182" y="246" width="36" height="28"/>
-    <rect x="108" y="292" width="62" height="46" rx="4"/>
-    <rect x="228" y="292" width="62" height="46" rx="4"/>
+  <g stroke="#FFFFFF" stroke-width="3" fill="none">
+    <path d="M95 85 L95 35 M95 85 L65 60 M95 85 L125 60 M95 85 L55 90 M95 85 L135 90 M95 85 L70 118 M95 85 L120 118"/>
+    <path d="M305 65 L305 25 M305 65 L280 45 M305 65 L330 45 M305 65 L270 70 M305 65 L340 70 M305 65 L285 95 M305 65 L325 95"/>
   </g>
-  <path d="M108 292 L170 338 M170 292 L108 338" stroke="#FFFFFF" stroke-width="4" fill="none"/>
-  <path d="M228 292 L290 338 M290 292 L228 338" stroke="#FFFFFF" stroke-width="4" fill="none"/>
-  <path d="M200 12 L206 28 L223 28 L209 38 L214 55 L200 45 L186 55 L191 38 L177 28 L194 28 Z" fill="#FFFFFF"/>
-  <circle cx="184" cy="140" r="6" fill="#FFFFFF"/>
-  <circle cx="216" cy="160" r="6" fill="#FFFFFF"/>
-  <circle cx="168" cy="200" r="6" fill="#FFFFFF"/>
-  <circle cx="232" cy="212" r="6" fill="#FFFFFF"/>
-  <circle cx="200" cy="228" r="6" fill="#FFFFFF"/>
-  <circle cx="80" cy="65" r="4" fill="#FFFFFF"/>
-  <circle cx="325" cy="85" r="4" fill="#FFFFFF"/>
-  <circle cx="55" cy="130" r="3" fill="#FFFFFF"/>
-  <circle cx="340" cy="150" r="3" fill="#FFFFFF"/>
-  <circle cx="100" cy="180" r="3" fill="#FFFFFF"/>
-  <text x="200" y="378" font-family="Helvetica, Arial" font-size="27" font-weight="700" fill="#FFFFFF" text-anchor="middle">Sărbători Fericite</text>
+  <circle cx="95" cy="35" r="4" fill="#FFFFFF"/>
+  <circle cx="305" cy="25" r="4" fill="#FFFFFF"/>
+  <circle cx="125" cy="60" r="3" fill="#FFFFFF"/>
+  <circle cx="330" cy="45" r="3" fill="#FFFFFF"/>
+  <circle cx="55" cy="90" r="3" fill="#FFFFFF"/>
+  <g fill="none" stroke="#FFFFFF" stroke-width="6">
+    <path d="M172 165 L172 300 Q172 322 200 322 Q228 322 228 300 L228 165 Q228 142 200 128 Q172 142 172 165 Z"/>
+    <path d="M188 322 L188 358 M212 322 L212 358 M172 358 L228 358"/>
+  </g>
+  <circle cx="190" cy="215" r="4" fill="#FFFFFF"/>
+  <circle cx="210" cy="248" r="4" fill="#FFFFFF"/>
+  <circle cx="195" cy="280" r="4" fill="#FFFFFF"/>
+  <text x="200" y="105" font-family="Helvetica, Arial" font-size="34" font-weight="900" fill="#FFFFFF" text-anchor="middle">LA MULȚI ANI!</text>
 </svg>
