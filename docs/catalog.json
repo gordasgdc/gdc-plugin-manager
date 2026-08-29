@@ -616,6 +616,14 @@
       "label" : "black-friday-sale-seeklogo",
       "opacity" : 0.1448193526023891,
       "position" : "bottomTrailing"
+    },
+    {
+      "id" : "craciun",
+      "imagePath" : "covers/seasonal/craciun.png?v=3e1740cc",
+      "isEnabled" : true,
+      "label" : "Craciun",
+      "opacity" : 0.07,
+      "position" : "bottomTrailing"
     }
   ],
   "serviceCenters" : [
