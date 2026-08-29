@@ -149,14 +149,29 @@
 
   /* ── Bara de tab-uri de jos ─────────────────────────────────────────────── */
   .tabbar{
-    position:fixed; bottom:0; left:0; right:0; z-index:20; display:grid; grid-template-columns:repeat(4,1fr);
+    position:fixed; bottom:0; left:0; right:0; z-index:20; display:grid; grid-template-columns:repeat(5,1fr);
     height:calc(var(--tabbar-h) + env(safe-area-inset-bottom)); padding-bottom:env(safe-area-inset-bottom);
     background:rgba(20,22,26,.94); backdrop-filter:blur(12px); border-top:1px solid var(--border);
   }
   .tab{ display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;
-        color:var(--faint); font-size:10.5px; font-weight:600; transition:color .15s; }
-  .tab svg{ width:21px; height:21px; }
+        color:var(--faint); font-size:9.5px; font-weight:600; transition:color .15s; padding:0 2px; }
+  .tab svg{ width:20px; height:20px; }
   .tab.on{ color:var(--accent); }
+
+  /* ── Filigran sezonier (Etapa 6, paritate mobil 2026-08-29) ──────────────── */
+  .seasonal-bg{
+    position:fixed; right:-40px; bottom:-40px; width:320px; height:320px; z-index:1;
+    opacity:.07; pointer-events:none; object-fit:contain;
+  }
+
+  /* ── Buton hartă / link secundar (chip mic pe cardul rich) ───────────────── */
+  .mini-links{ display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+  .mini-link{ display:inline-flex; align-items:center; gap:5px; font-size:12px; font-weight:600;
+              color:var(--muted); background:var(--panel-2); border:1px solid var(--border);
+              border-radius:999px; padding:6px 11px; }
+  .mini-link svg{ width:13px; height:13px; }
+  .badge.discount{ background:rgba(232,76,76,.14); color:#E85C5C; }
+  .badge.promo{ background:rgba(232,76,76,.14); color:#E85C5C; }
 
   /* ── Fereastra de cont ──────────────────────────────────────────────────── */
   .sheet{ position:fixed; inset:0; z-index:40; display:none; }
@@ -197,6 +212,8 @@
   </button>
 </header>
 
+<img class="seasonal-bg" id="seasonal-bg" alt="" style="display:none">
+
 <main>
   <!-- Tab 1: produsele — aplicatii desktop + plugin-uri/LUT/DCTL -->
   <section class="view active" id="view-produse">
@@ -204,20 +221,31 @@
     <div id="produse-list"><div class="skel"></div><div class="skel"></div><div class="skel"></div></div>
   </section>
 
-  <!-- Tab 2: cursuri si resurse educationale -->
+  <!-- Tab 2 (NOU, 2026-08-29): resurse download — LUT/SFX/VFX/Plugin cross-host,
+       segmentate separat de plugin-urile cu auto-instalare in Resolve. -->
+  <section class="view" id="view-resurse">
+    <div class="chips" id="resurse-chips"></div>
+    <div id="resurse-list"></div>
+  </section>
+
+  <!-- Tab 3: cursuri si resurse educationale -->
   <section class="view" id="view-cursuri"><div id="cursuri-list"></div></section>
 
-  <!-- Tab 3: evenimente si workshop-uri -->
+  <!-- Tab 4: evenimente si workshop-uri -->
   <section class="view" id="view-evenimente"><div id="evenimente-list"></div></section>
 
-  <!-- Tab 4: magazine partenere -->
-  <section class="view" id="view-magazin"><div id="magazin-list"></div></section>
+  <!-- Tab 5 (extins 2026-08-29): magazine partenere + servicii + oferte + pachete -->
+  <section class="view" id="view-comunitate"><div id="comunitate-list"></div></section>
 </main>
 
 <nav class="tabbar">
   <button class="tab on" data-tab="produse">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3.5 7.5 12 3l8.5 4.5v9L12 21l-8.5-4.5z"/><path d="M3.5 7.5 12 12l8.5-4.5M12 12v9"/></svg>
     Produse
+  </button>
+  <button class="tab" data-tab="resurse">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3v13M7 11l5 5 5-5"/><path d="M4 19.5h16"/></svg>
+    Resurse
   </button>
   <button class="tab" data-tab="cursuri">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H19v16H5.5A1.5 1.5 0 0 1 4 18.5z"/><path d="M8 4v16"/></svg>
@@ -227,9 +255,9 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>
     Evenimente
   </button>
-  <button class="tab" data-tab="magazin">
+  <button class="tab" data-tab="comunitate">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 8h16l-1 12H5z"/><path d="M8.5 8V6a3.5 3.5 0 0 1 7 0v2"/></svg>
-    Magazin
+    Comunitate
   </button>
 </nav>
 
@@ -241,7 +269,7 @@
     <div class="row"><span>Licente</span><b id="acct-lic">se gestioneaza pe desktop</b></div>
     <div class="row"><span>Catalog</span><b id="acct-cat">—</b></div>
     <div class="row"><span>Conexiune</span><b id="acct-net">—</b></div>
-    <div class="row"><span>Versiune</span><b>1.0.0</b></div>
+    <div class="row"><span>Versiune</span><b>1.1.0</b></div>
     <a class="btn" href="/#download">Descarca aplicatia de desktop</a>
   </div>
 </div>
@@ -261,19 +289,78 @@ const ICONS = {
   'paintpalette':'<path d="M12 3.5c-4.7 0-8.5 3.6-8.5 8s3.8 8 8.5 8c1.4 0 2-1 1.5-1.9-.6-1.1.2-2.3 1.5-2.3h1.5c2.5 0 4.5-2 4.5-4.4 0-4-3.8-7.4-9-7.4z"/><circle cx="8" cy="10" r="1.1" fill="currentColor" stroke="none"/><circle cx="12" cy="7.5" r="1.1" fill="currentColor" stroke="none"/><circle cx="16" cy="10" r="1.1" fill="currentColor" stroke="none"/>',
   'app':'<rect x="3.5" y="3.5" width="17" height="17" rx="4"/><path d="M8.5 12h7M12 8.5v7"/>',
   'waveform':'<path d="M4 12v2M7.5 8v10M11 5v16M14.5 8v10M18 10v6M21 12v2"/>',
+  'sparkles':'<path d="M12 3l1.4 4.6L18 9l-4.6 1.4L12 15l-1.4-4.6L6 9l4.6-1.4z"/><path d="M19 15l.6 2 2 .6-2 .6-.6 2-.6-2-2-.6 2-.6z"/>',
+  'puzzlepiece.extension':'<path d="M9 4h4v2.5a1.7 1.7 0 0 0 3 1.1V4h4v4h-2.6a1.7 1.7 0 0 0 0 3H20v4h-4v-2.5a1.7 1.7 0 0 0-3 0V15H9v-2.6a1.7 1.7 0 0 0-3 0V15H4v-4h2.5a1.7 1.7 0 0 0 0-3H4V4h5z"/>',
   'default':'<rect x="3.5" y="3.5" width="17" height="17" rx="4"/>'
 };
 const svg = (k) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${ICONS[k]||ICONS.default}</svg>`;
 const CHEV = '<svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>';
+const PIN_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-6.1-7-11a7 7 0 0 1 14 0c0 4.9-7 11-7 11z"/><circle cx="12" cy="10" r="2.3"/></svg>';
+const WA_ICON = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3a9 9 0 0 0-7.7 13.6L3 21l4.5-1.2A9 9 0 1 0 12 3zm0 16.4a7.4 7.4 0 0 1-3.8-1l-.3-.2-2.8.7.7-2.7-.2-.3A7.4 7.4 0 1 1 12 19.4zm4.1-5.5c-.2-.1-1.3-.7-1.5-.7-.2-.1-.4-.1-.5.1s-.6.7-.7.9-.3.2-.5.1a6 6 0 0 1-1.8-1.1 6.7 6.7 0 0 1-1.2-1.5c-.1-.2 0-.4.1-.5l.4-.4c.1-.1.1-.2.2-.4s0-.3 0-.4-.5-1.2-.7-1.7-.4-.4-.5-.4h-.4a.9.9 0 0 0-.6.3 2.6 2.6 0 0 0-.8 1.9c0 1.1.8 2.2.9 2.4s1.6 2.4 3.8 3.4a13 13 0 0 0 1.3.5 3.1 3.1 0 0 0 1.4.1 2.3 2.3 0 0 0 1.5-1.1 1.9 1.9 0 0 0 .1-1.1c-.1-.1-.2-.2-.4-.3z"/></svg>';
+const YT_ICON = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.6 7.2a2.7 2.7 0 0 0-1.9-1.9C18 5 12 5 12 5s-6 0-7.7.3a2.7 2.7 0 0 0-1.9 1.9A28 28 0 0 0 2 12a28 28 0 0 0 .4 4.8 2.7 2.7 0 0 0 1.9 1.9C6 19 12 19 12 19s6 0 7.7-.3a2.7 2.7 0 0 0 1.9-1.9A28 28 0 0 0 22 12a28 28 0 0 0-.4-4.8zM10 15V9l5 3z"/></svg>';
+const LINK_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9.5 14.5l5-5M8 17l-2 2a3.5 3.5 0 0 1-5-5l3-3a3.5 3.5 0 0 1 5 0M16 7l2-2a3.5 3.5 0 0 1 5 5l-3 3a3.5 3.5 0 0 1-5 0"/></svg>';
 
 // Etichetele tipurilor din catalog.json, pentru afisare.
 const TYPE_LABEL = { lut:'LUT', dctl:'DCTL', powerGrade:'PowerGrade', fuse:'Fuse', app:'Aplicatie' };
+const CATEGORY_LABEL = { lut:'LUT', sfx:'SFX', vfx:'VFX', plugin:'Plugin' };
 
 // Escapare HTML: continutul vine din catalog.json, deci nu il injectam brut.
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
+// ── Scheduling (Etapa 4, paritate mobil 2026-08-29) ─────────────────────────
+// `Date` din Swift se codeaza JSON ca secunde de la 2001-01-01 00:00:00 UTC
+// (referinta Core Data), NU epoch Unix — 978307200000 e acel moment, in ms.
+const SWIFT_REF_MS = 978307200000;
+function isActiveNow(sch) {
+  if (!sch) return true;
+  const now = Date.now();
+  if (sch.startDate != null && now < SWIFT_REF_MS + sch.startDate * 1000) return false;
+  if (sch.endDate != null && now > SWIFT_REF_MS + sch.endDate * 1000) return false;
+  return true;
+}
+
+// ── Harta (Etapa 5) — identic cu `MapsLink` din aplicatia de desktop:
+// termenii non-fizici (Online, Zoom etc.) nu produc niciun link. ─────────────
+const NON_PHYSICAL = new Set(['online','webinar','virtual','remote','la distanta','distanta','zoom','internet','n/a','-']);
+function mapsUrl(address) {
+  const trimmed = (address || '').trim();
+  if (!trimmed) return null;
+  const normalized = trimmed.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+  if (NON_PHYSICAL.has(normalized)) return null;
+  return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(trimmed);
+}
+
+// ── WhatsApp (acelasi numar spart in bucati ca in WhatsAppLink.swift,
+// ca sa nu apara ca sir contiguu usor de recoltat de crawlere). ─────────────
+function waLink(text) {
+  const number = ['34','643','109','970'].join('');
+  return 'https://wa.me/' + number + (text ? ('?text=' + encodeURIComponent(text)) : '');
+}
+const buyText = (name, priceEUR) => `Salut! Vreau sa deblochez ${name} cu o donatie de ${priceEUR.toFixed(2)} EUR.`;
+
+/** Randul de linkuri secundare: social, purchase/demo, harta. Omis daca nu e nimic. */
+function miniLinks(items) {
+  const parts = items.filter(Boolean);
+  if (!parts.length) return '';
+  return `<div class="mini-links">${parts.join('')}</div>`;
+}
+function miniLink(icon, label, url) {
+  if (!url) return '';
+  return `<a class="mini-link" href="${esc(url)}" target="_blank" rel="noopener">${icon}${esc(label)}</a>`;
+}
+function socialMiniLinks(social) {
+  if (!social) return [];
+  return [
+    miniLink(LINK_ICON, 'Facebook', social.facebookURL),
+    miniLink(YT_ICON, 'YouTube', social.youtubeURL),
+    miniLink(LINK_ICON, 'Instagram', social.instagramURL),
+    miniLink(LINK_ICON, 'TikTok', social.tiktokURL),
+  ].filter(Boolean);
+}
+
 let CATALOG = null;
 let filter = 'toate';
+let resurseFilter = 'toate';
 
 // ── Incarcarea catalogului ──────────────────────────────────────────────────
 // Service worker-ul trateaza catalog.json ca network-first, deci primim mereu
@@ -301,11 +388,27 @@ function renderAll() {
   const c = CATALOG;
   document.getElementById('updated').textContent = 'catalog ' + (c.updatedAt || '');
   document.getElementById('acct-cat').textContent = c.updatedAt || '—';
-  renderProduse(); renderCursuri(); renderEvenimente(); renderMagazin();
+  renderSeasonalBackground();
+  renderProduse(); renderResurse(); renderCursuri(); renderEvenimente(); renderComunitate();
+}
+
+// Filigran sezonier (Etapa 6, paritate mobil) — acelasi camp ca pe desktop,
+// aceeasi opacitate joasa; fara AsyncImage-ul problematic de pe Mac, un
+// <img> normal de browser randeaza SVG fara nicio problema.
+function renderSeasonalBackground() {
+  const el = document.getElementById('seasonal-bg');
+  if (CATALOG.seasonalBackground) {
+    el.src = CATALOG.seasonalBackground;
+    el.style.display = 'block';
+  } else {
+    el.style.display = 'none';
+  }
 }
 
 function renderProduse() {
-  const apps = CATALOG.apps || [], items = CATALOG.items || [], audioTracks = CATALOG.audioTracks || [];
+  const apps = (CATALOG.apps || []).filter(a => isActiveNow(a.scheduling));
+  const items = (CATALOG.items || []).filter(i => isActiveNow(i.scheduling));
+  const audioTracks = (CATALOG.audioTracks || []).filter(t => isActiveNow(t.scheduling));
 
   // Chip-urile de filtrare se construiesc din tipurile care exista efectiv.
   const types = [...new Set(items.map(i => i.type))];
@@ -321,7 +424,7 @@ function renderProduse() {
     html += apps.map(a => `
       <a class="card" href="${esc(a.url)}" target="_blank" rel="noopener">
         <div class="ico">${a.coverImage
-          ? `<img src="${esc(a.coverImage)}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:11px" onerror="this.parentElement.innerHTML='${svg('app').replace(/'/g,"&#39;")}'">`
+          ? `<img src="${esc(a.coverImage)}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:11px" onerror="this.parentElement.innerHTML='${svg('app').replace(/'/g,"&#39;").replace(/"/g,"&quot;")}'">`
           : svg('app')}</div>
         <div class="card-body"><h3>${esc(a.name)}</h3><p>Mac &middot; Windows</p></div>
         ${CHEV}
@@ -333,7 +436,7 @@ function renderProduse() {
     html += audioTracks.map(t => `
       <a class="card" href="${esc(t.url)}" target="_blank" rel="noopener">
         <div class="ico">${t.coverImage
-          ? `<img src="${esc(t.coverImage)}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:11px" onerror="this.parentElement.innerHTML='${svg('waveform').replace(/'/g,"&#39;")}'">`
+          ? `<img src="${esc(t.coverImage)}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:11px" onerror="this.parentElement.innerHTML='${svg('waveform').replace(/'/g,"&#39;").replace(/"/g,"&quot;")}'">`
           : svg('waveform')}</div>
         <div class="card-body"><h3>${esc(t.name)}</h3><p>${esc(t.description || 'Fisier audio')}</p></div>
         ${CHEV}
@@ -346,16 +449,26 @@ function renderProduse() {
     html += shown.map(i => {
       // Statusul afisat vine STRICT din date: nu inventam "Descarcat"/"Nou",
       // fiindca instalarea si licenta se gestioneaza in aplicatia de desktop.
+      const promo = i.promoPriceEUR != null && isActiveNow(i.scheduling);
+      const price = promo ? i.promoPriceEUR : i.priceEUR;
       const badge = i.isFree ? '<span class="badge free">Gratuit</span>'
                   : i.isTrial ? '<span class="badge trial">Trial</span>'
-                  : `<span class="badge paid">${esc(i.priceEUR)} &euro;</span>`;
+                  : promo ? `<span class="badge promo">Susținere ${esc(price)} &euro;</span>`
+                  : `<span class="badge paid">${esc(price)} &euro;</span>`;
       const n = (i.files || []).length;
-      return `<div class="card">
-        <div class="ico">${svg(i.iconSymbol)}</div>
-        <div class="card-body">
-          <h3>${esc(i.name)}</h3>
-          <p>${esc(TYPE_LABEL[i.type] || i.type)} &middot; v${esc(i.version)} &middot; ${n} fisier${n===1?'':'e'}</p>
-        </div>${badge}
+      const links = miniLinks([
+        miniLink(LINK_ICON, 'Cumpără', i.purchaseURL),
+        miniLink(LINK_ICON, 'Demo', i.demoURL),
+        ...socialMiniLinks(i.socialLinks),
+      ]);
+      return `<div class="card" style="flex-direction:column;align-items:stretch">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div class="ico">${svg(i.iconSymbol)}</div>
+          <div class="card-body">
+            <h3>${esc(i.name)}</h3>
+            <p>${esc(TYPE_LABEL[i.type] || i.type)} &middot; v${esc(i.version)} &middot; ${n} fisier${n===1?'':'e'}</p>
+          </div>${badge}
+        </div>${links}
       </div>`;
     }).join('');
   }
@@ -363,9 +476,55 @@ function renderProduse() {
   document.getElementById('produse-list').innerHTML = html || emptyState('Niciun produs pentru filtrul ales.');
 }
 
+// ── Tab NOU: Resurse download (LUT/SFX/VFX/Plugin, Etapa 2) ─────────────────
+function renderResurse() {
+  const all = (CATALOG.downloadableResources || []).filter(r => isActiveNow(r.scheduling));
+  const cats = [...new Set(all.map(r => r.category))];
+  document.getElementById('resurse-chips').innerHTML =
+    ['toate', ...cats].map(cat =>
+      `<button class="chip ${cat===resurseFilter?'on':''}" data-rf="${esc(cat)}">${
+        cat==='toate' ? 'Toate' : (CATEGORY_LABEL[cat] || cat)
+      }</button>`).join('');
+
+  const shown = all.filter(r => resurseFilter==='toate' || resurseFilter===r.category);
+  const el = document.getElementById('resurse-list');
+  if (!shown.length) { el.innerHTML = emptyState('Nicio resursă de download pentru filtrul ales.'); return; }
+
+  el.innerHTML = `<div class="section-title">Resurse download <b>${shown.length}</b></div>` +
+    shown.map(r => {
+      const promo = r.promoPriceEUR != null && isActiveNow(r.scheduling);
+      const price = promo ? r.promoPriceEUR : r.priceEUR;
+      const badge = r.isFree ? '<span class="badge free">Gratuit</span>'
+                  : r.isTrial ? '<span class="badge trial">Trial</span>'
+                  : promo ? `<span class="badge promo">Susținere ${esc(price)} &euro;</span>`
+                  : `<span class="badge paid">${esc(price)} &euro;</span>`;
+      // Gratuit -> link direct de descarcare. Platit/trial -> WhatsApp,
+      // la fel ca fluxul de pe desktop (licenta se activeaza tot acolo).
+      const primaryURL = r.isFree ? r.url : waLink(buyText(r.name, price));
+      const links = miniLinks([
+        miniLink(LINK_ICON, 'Cumpără', r.purchaseURL),
+        miniLink(LINK_ICON, 'Demo', r.demoURL),
+        ...socialMiniLinks(r.socialLinks),
+      ]);
+      return `<a class="card" style="flex-direction:column;align-items:stretch" href="${esc(primaryURL)}" target="_blank" rel="noopener">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div class="ico">${svg(DownloadCategoryIcon(r.category))}</div>
+          <div class="card-body">
+            <h3>${esc(r.name)}</h3>
+            <p>${esc(CATEGORY_LABEL[r.category] || r.category)} &middot; ${esc(r.description || '')}</p>
+          </div>${badge}
+        </div>${links}
+      </a>`;
+    }).join('');
+}
+function DownloadCategoryIcon(cat) {
+  return { lut:'eyedropper.halffull', sfx:'waveform', vfx:'sparkles', plugin:'puzzlepiece.extension' }[cat] || 'default';
+}
+
 function renderCursuri() {
   // catalog.json are doua liste separate: 'courses' si 'educationalResources'.
-  const all = [...(CATALOG.courses || []), ...(CATALOG.educationalResources || [])];
+  const all = [...(CATALOG.courses || []), ...(CATALOG.educationalResources || [])]
+    .filter(r => isActiveNow(r.scheduling));
   const el = document.getElementById('cursuri-list');
   if (!all.length) { el.innerHTML = emptyState('Nu sunt cursuri publicate momentan.'); return; }
   el.innerHTML = `<div class="section-title">Cursuri si resurse <b>${all.length}</b></div>` +
@@ -377,7 +536,7 @@ function renderCursuri() {
 }
 
 function renderEvenimente() {
-  const evs = CATALOG.events || [];
+  const evs = (CATALOG.events || []).filter(e => isActiveNow(e.scheduling));
   const el = document.getElementById('evenimente-list');
   if (!evs.length) { el.innerHTML = emptyState('Niciun eveniment programat momentan.'); return; }
   el.innerHTML = `<div class="section-title">Evenimente si workshop-uri <b>${evs.length}</b></div>` +
@@ -387,23 +546,82 @@ function renderEvenimente() {
       // asa ca adaugam 'location' doar cand nu e deja acolo — altfel apare de doua ori.
       meta: [e.dateDisplay, (e.dateDisplay || '').includes(e.location || '\u0000') ? '' : e.location]
               .filter(Boolean).join(' &middot; '),
-      desc: e.description, url: e.externalURL, cta: 'Detalii si inscriere'
+      desc: e.description, url: e.externalURL, cta: 'Detalii si inscriere',
+      extra: miniLinks([miniLink(PIN_ICON, 'Deschide harta', mapsUrl(e.location))])
     })).join('');
 }
 
-function renderMagazin() {
-  const st = CATALOG.partnerStores || [];
-  const el = document.getElementById('magazin-list');
-  if (!st.length) { el.innerHTML = emptyState('Niciun magazin partener momentan.'); return; }
-  el.innerHTML = `<div class="section-title">Magazine partenere <b>${st.length}</b></div>` +
-    st.map(s => richCard({
-      cover: s.coverImage, title: s.name, meta: 'Partener',
-      desc: s.description, url: s.url, cta: 'Viziteaza magazinul'
+// ── Tab "Comunitate" (extins 2026-08-29): magazine + servicii + oferte + pachete ──
+function renderComunitate() {
+  const stores = (CATALOG.partnerStores || []).filter(s => isActiveNow(s.scheduling));
+  const services = (CATALOG.serviceCenters || []).filter(s => isActiveNow(s.scheduling));
+  const offers = (CATALOG.partnerOffers || []).filter(o => isActiveNow(o.scheduling));
+  const bundles = (CATALOG.productBundles || []).filter(b => isActiveNow(b.scheduling));
+  const el = document.getElementById('comunitate-list');
+
+  let html = '';
+
+  if (bundles.length) {
+    html += `<div class="section-title">Pachete <b>${bundles.length}</b></div>`;
+    html += bundles.map(b => {
+      const names = b.items.map(ref => resolveBundleItemName(ref)).filter(Boolean).join(', ');
+      return richCard({
+        cover: b.coverImage, title: b.name,
+        meta: `Pachet &middot; ${esc(b.bundlePriceEUR)} &euro;`,
+        desc: (b.description ? b.description + ' — ' : '') + 'Include: ' + names,
+        url: waLink(buyText(b.name, b.bundlePriceEUR)), cta: 'Cumpără pachetul'
+      });
+    }).join('');
+  }
+
+  if (offers.length) {
+    html += `<div class="section-title">Oferte parteneri <b>${offers.length}</b></div>`;
+    html += offers.map(o => richCard({
+      cover: o.coverImage, title: o.brandName,
+      meta: [o.discountText ? `<span class="badge discount">${esc(o.discountText)}</span>` : '',
+             o.couponCode ? `Cod: ${esc(o.couponCode)}` : ''].filter(Boolean).join(' &middot; '),
+      desc: o.description, url: o.url, cta: 'Vezi oferta',
+      extra: miniLinks(socialMiniLinks(o.socialLinks))
     })).join('');
+  }
+
+  if (stores.length) {
+    html += `<div class="section-title">Magazine partenere <b>${stores.length}</b></div>`;
+    html += stores.map(s => richCard({
+      cover: s.coverImage, title: s.name, meta: 'Partener',
+      desc: s.description, url: s.url, cta: 'Viziteaza magazinul',
+      extra: miniLinks([miniLink(PIN_ICON, 'Deschide harta', mapsUrl(s.address))])
+    })).join('');
+  }
+
+  if (services.length) {
+    html += `<div class="section-title">Servicii &amp; reparații <b>${services.length}</b></div>`;
+    html += services.map(s => richCard({
+      cover: s.coverImage, title: s.name, meta: s.specialization,
+      desc: '', url: s.contactURL, cta: 'Contact',
+      extra: miniLinks([
+        miniLink(PIN_ICON, 'Deschide harta', mapsUrl(s.address)),
+        miniLink(LINK_ICON, 'Website', s.websiteURL),
+      ])
+    })).join('');
+  }
+
+  el.innerHTML = html || emptyState('Nimic publicat momentan în Comunitate.');
+}
+
+/** Rezolvă numele unui item dintr-un pachet, indiferent din ce colecție face parte. */
+function resolveBundleItemName(ref) {
+  const collections = {
+    product: CATALOG.items, download: CATALOG.downloadableResources, course: CATALOG.courses,
+    audio: CATALOG.audioTracks, app: CATALOG.apps, material: CATALOG.educationalResources,
+  };
+  const list = collections[ref.kind] || [];
+  const match = list.find(x => x.id === ref.id);
+  return match ? (match.name || match.title) : null;
 }
 
 /** Card mare, cu coperta optionala. Coperta lipsa => cardul se randeaza fara ea. */
-function richCard({ cover, title, meta, desc, url, cta }) {
+function richCard({ cover, title, meta, desc, url, cta, extra }) {
   const img = cover ? `<img src="${esc(cover)}" alt="" loading="lazy" onerror="this.remove()">` : '';
   const link = url ? `<a class="go" href="${esc(url)}" target="_blank" rel="noopener">${esc(cta)} &rarr;</a>` : '';
   return `<div class="rich">${img}<div class="pad">
@@ -411,6 +629,7 @@ function richCard({ cover, title, meta, desc, url, cta }) {
     ${meta ? `<div class="meta">${meta}</div>` : ''}
     ${desc ? `<p>${esc(desc)}</p>` : ''}
     ${link}
+    ${extra || ''}
   </div></div>`;
 }
 
@@ -434,6 +653,14 @@ document.getElementById('chips').addEventListener('click', (e) => {
   if (!chip) return;
   filter = chip.dataset.f;
   renderProduse();
+});
+
+// Filtre de categorie — tab Resurse download
+document.getElementById('resurse-chips').addEventListener('click', (e) => {
+  const chip = e.target.closest('.chip');
+  if (!chip) return;
+  resurseFilter = chip.dataset.rf;
+  renderResurse();
 });
 
 // Starea conexiunii, in bara de sus si in fereastra de cont

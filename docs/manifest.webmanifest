@@ -3,7 +3,7 @@
   "id": "/",
   "name": "GDC Manager",
   "short_name": "GDC",
-  "description": "Catalogul GDC pe telefon: plugin-uri, LUT-uri si DCTL-uri pentru DaVinci Resolve, cursuri, resurse educationale, evenimente si magazine partenere.",
+  "description": "Catalogul GDC pe telefon: plugin-uri, LUT-uri si DCTL-uri pentru DaVinci Resolve, resurse download, cursuri, evenimente, magazine partenere, servicii, oferte si pachete.",
   "lang": "ro",
   "dir": "ltr",
   "start_url": "/app.html?source=pwa",
@@ -54,6 +54,17 @@
       "name": "Produsele mele",
       "short_name": "Produse",
       "url": "/app.html?source=pwa#produse",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Resurse download",
+      "short_name": "Resurse",
+      "url": "/app.html?source=pwa#resurse",
       "icons": [
         {
           "src": "/icons/icon-192.png",
