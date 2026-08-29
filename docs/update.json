@@ -1,7 +1,7 @@
 {
-  "version": "1.19.3",
+  "version": "1.19.5",
   "release_date": "2026-08-29",
-  "changes": "Fix critic in Furnizor: un draft nepublicat, ramas orfan dupa stergerea unui filigran, putea corupe calea imaginii la reutilizarea unui id (o poza aparea 404 pentru clienti). Adaugat log de diagnostic permanent pentru filigran, in Client si Furnizor.",
+  "changes": "Fix retea: fetch filigran reincearca automat (blip-uri tranzitorii de CDN) + log de eroare reala, nu generica. Fix: ferestrele Windows (Setari/Profil/Dependente/Progres update) se puteau desena goale o clipa la deschidere.",
   "download_url": {
     "mac": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Mac.zip",
     "windows": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Windows.zip"
