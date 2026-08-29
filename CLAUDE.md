@@ -1407,3 +1407,32 @@ trebui să primească, pentru paritate:
    poziția lor. **Notă**: Windows nu are încă NICIUN filigran sezonier
    implementat (vezi TODO Etapa 6), deci acolo e implementare de la zero,
    nu doar o actualizare de model.
+
+## [FIX 2026-08-29] Sidebar "urca peste meniu" la redimensionare rapidă + setare Mărime Text
+
+**Bug real, raportat direct de Cristi**: la redimensionarea RAPIDĂ a
+ferestrei (tras de colț, în special micșorare), blocul de profil din
+sidebar (`ProfileSidebarBlock` + numărul de versiune) rămânea temporar
+suprapus peste ultimele rânduri din `List` în loc să fie sub ele. Cauza:
+`.safeAreaInset(edge: .bottom)` era atașat DIRECT pe `List` — `List` e
+un `NSScrollView` sub capotă, iar la resize rapid pe macOS content-insetul
+lui nu se resincronizează mereu instant cu safe-area-ul suprapus. **Fix**:
+`List` și blocul de profil sunt acum FRAȚI într-un `VStack` simplu (cu
+`Divider()` între ele) — layout calculat direct de VStack la fiecare
+cadru, fără nicio dependență de sincronizarea internă List/safe-area.
+
+**Cerință nouă, implementată în același commit**: setare explicită
+"Mărime text" (Mic/Normal/Mare/Foarte mare) în Preferences —
+`TextScalePreference`/`TextScaleManager` (Core, nou), aplicată prin
+`.dynamicTypeSize()` la rădăcina `WindowGroup`. Deliberat pe infrastructura
+NATIVĂ de accesibilitate SwiftUI, nu un multiplicator brut de font — tot
+textul din aplicație e deja `.font(.headline)`/`.caption`/etc (tipuri
+semantice), deci reflow-ul e garantat corect de SwiftUI, fără riscul unui
+text tăiat într-un frame fix pe care l-ar avea o scalare custom.
+
+**TODO paritate Windows**: nu portat încă — `GDCPluginManagerWin` nu are
+verificat același bug de layout la resize (WPF are alt model de layout,
+posibil să nu fie afectat), și nu are încă o setare de mărime text.
+
+Versiune: Client `1.17.0`→`1.18.0` (MINOR — feature nouă vizibilă).
+**Verificat**: `swift build` — 0 erori.

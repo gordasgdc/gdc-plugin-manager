@@ -4,6 +4,12 @@ import GDCPluginManagerCore
 
 @main
 struct GDCPluginManagerApp: App {
+    // @StateObject (nu doar `.shared` citit direct) — obligatoriu ca
+    // schimbarea din Preferences să REÎNTOARCĂ `body`-ul scenei; altfel
+    // `.dynamicTypeSize` de mai jos ar citi valoarea o singură dată, la
+    // pornire, și n-ar reacționa niciodată la o schimbare ulterioară.
+    @StateObject private var textScale = TextScaleManager.shared
+
     var body: some Scene {
         WindowGroup {
             ContentView()
@@ -13,6 +19,10 @@ struct GDCPluginManagerApp: App {
                 // să existe, caz în care `apply()` din init n-are pe ce
                 // scrie — vezi AppTheme.swift (Core).
                 .onAppear { ThemeManager.shared.applyNow() }
+                // Mărime text (2026-08-29) — `dynamicTypeSize` reflowează
+                // automat orice `Text`/`Label` din aplicație, fără cod
+                // suplimentar în fiecare view.
+                .dynamicTypeSize(textScale.current.dynamicTypeSize)
         }
         .windowStyle(.titleBar)
         .commands {

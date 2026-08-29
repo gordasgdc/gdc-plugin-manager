@@ -1,5 +1,6 @@
 import AppKit
 import Combine
+import SwiftUI
 
 /// Selector explicit de temă Sistem/Light/Dark — Regula 18 (Partea 1,
 /// CLAUDE.md): "unii clienți vor Light chiar și noaptea, alții Dark
@@ -75,4 +76,44 @@ public final class ThemeManager: ObservableObject {
     /// salvată să fie activă de la primul cadru chiar dacă `ThemeManager`
     /// s-a inițializat înainte ca `NSApp` să existe.
     public func applyNow() { apply() }
+}
+
+/// Mărime text UI, opțională — cerut explicit 2026-08-29 ("setări de mărire
+/// a textului"). Folosește infrastructura NATIVĂ de accesibilitate SwiftUI
+/// (`dynamicTypeSize`), nu un factor de scalare custom pe font — layout-ul
+/// întregii aplicații e deja construit cu `.font(.headline)`/`.caption`/etc
+/// (tipuri de text semantice), deci `dynamicTypeSize` reflowează totul
+/// corect și testat de Apple, fără riscul unui text tăiat în frame-uri
+/// fixe pe care l-ar avea o multiplicare brută a punctajului fontului.
+public enum TextScalePreference: String, CaseIterable, Identifiable, Sendable {
+    case small, normal, large, xlarge
+
+    public var id: String { rawValue }
+
+    public var dynamicTypeSize: DynamicTypeSize {
+        switch self {
+        case .small: return .small
+        case .normal: return .large // "large" e valoarea implicită a sistemului
+        case .large: return .xLarge
+        case .xlarge: return .xxxLarge
+        }
+    }
+}
+
+public final class TextScaleManager: ObservableObject {
+    public static let shared = TextScaleManager()
+
+    private static let key = "GDCPluginManager.textScale"
+
+    @Published public var current: TextScalePreference {
+        didSet {
+            guard current != oldValue else { return }
+            UserDefaults.standard.set(current.rawValue, forKey: Self.key)
+        }
+    }
+
+    private init() {
+        let saved = UserDefaults.standard.string(forKey: Self.key)
+        current = saved.flatMap(TextScalePreference.init(rawValue:)) ?? .normal
+    }
 }

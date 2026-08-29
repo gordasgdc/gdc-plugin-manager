@@ -9,6 +9,7 @@ struct PreferencesView: View {
     @ObservedObject private var languageStore = LanguageStore.shared
     @ObservedObject private var updateChecker = UpdateChecker.shared
     @ObservedObject private var theme = ThemeManager.shared
+    @ObservedObject private var textScale = TextScaleManager.shared
     @State private var dependencies: [SystemDependency] = SystemDependencyChecker.checkAll()
     @State private var isCheckingUpdate = false
     @State private var showCheckResultAlert = false
@@ -38,6 +39,22 @@ struct PreferencesView: View {
                     Text(L.t("prefs.theme.system")).tag(AppTheme.system)
                     Text(L.t("prefs.theme.light")).tag(AppTheme.light)
                     Text(L.t("prefs.theme.dark")).tag(AppTheme.dark)
+                }
+                .labelsHidden()
+                .pickerStyle(.segmented)
+            }
+
+            // Mărime text (2026-08-29, cerut explicit). `dynamicTypeSize`
+            // e infrastructura nativă de accesibilitate SwiftUI — reflowează
+            // tot textul din aplicație (deja `.font(.headline)`/`.caption`
+            // semantic peste tot), fără riscul de conținut tăiat pe care
+            // l-ar avea o scalare brută a punctajului fontului.
+            Section(L.t("prefs.textSize.title")) {
+                Picker("", selection: Binding(get: { textScale.current }, set: { textScale.current = $0 })) {
+                    Text(L.t("prefs.textSize.small")).tag(TextScalePreference.small)
+                    Text(L.t("prefs.textSize.normal")).tag(TextScalePreference.normal)
+                    Text(L.t("prefs.textSize.large")).tag(TextScalePreference.large)
+                    Text(L.t("prefs.textSize.xlarge")).tag(TextScalePreference.xlarge)
                 }
                 .labelsHidden()
                 .pickerStyle(.segmented)

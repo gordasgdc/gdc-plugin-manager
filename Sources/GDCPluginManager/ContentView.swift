@@ -203,6 +203,16 @@ struct ContentView: View {
 
     var body: some View {
         NavigationSplitView {
+            // [2026-08-29, corectat] Profilul era atasat cu `.safeAreaInset`
+            // DIRECT pe `List` — la redimensionare RAPIDA a ferestrei (tras
+            // de colt), List-ul (un NSScrollView sub capota) nu-si recalcula
+            // mereu la timp content-inset-ul fata de safe-area-ul suprapus,
+            // asa ca profilul putea sa ramana temporar "suspendat" peste
+            // ultimele randuri din sidebar in loc sa fie sub ele. Fix:
+            // List si blocul de profil sunt acum FRATI intr-un VStack simplu
+            // — layout-ul e calculat direct de VStack la fiecare cadru, fara
+            // sa depinda de sincronizarea safe-area/scroll-inset a List-ului.
+            VStack(spacing: 0) {
             List(selection: $selection) {
                 // Grup 1: instalare AUTOMATĂ, exclusiv DaVinci Resolve
                 // (Scripting API / foldere native Resolve). Separat vizual
@@ -291,17 +301,17 @@ struct ContentView: View {
             // tragere de mouse, desi NavigationSplitView suporta asta nativ.
             // Fix: supraincarcarea min/ideal/max, care lasa AppKit sa
             // deseneze diviziunea trasabila intre coloane.
-            .navigationSplitViewColumnWidth(min: 180, ideal: 220, max: 380)
-            .safeAreaInset(edge: .bottom) {
-                VStack(spacing: 6) {
-                    ProfileSidebarBlock()
-                    Text("v\(appVersion)")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-                .frame(maxWidth: .infinity, alignment: .center)
-                .padding(.vertical, 8)
+            Divider()
+            VStack(spacing: 6) {
+                ProfileSidebarBlock()
+                Text("v\(appVersion)")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
+            .frame(maxWidth: .infinity, alignment: .center)
+            .padding(.vertical, 8)
+            }
+            .navigationSplitViewColumnWidth(min: 180, ideal: 220, max: 380)
         } detail: {
             VStack(spacing: 0) {
                 if !missingDependencies.isEmpty {
