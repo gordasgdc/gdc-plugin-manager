@@ -590,6 +590,13 @@
       "isEnabled" : false,
       "label" : "Black Friday",
       "position" : "bottomTrailing"
+    },
+    {
+      "id" : "black-friday-2",
+      "imagePath" : "covers/seasonal/black-friday-2.svg?v=3d94bbd9",
+      "isEnabled" : true,
+      "label" : "Black Friday",
+      "position" : "bottomTrailing"
     }
   ],
   "serviceCenters" : [

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <text x="200" y="145" font-family="Helvetica, Arial" font-size="54" font-weight="900" fill="#FFFFFF" text-anchor="middle">BLACK</text>
+  <text x="200" y="205" font-family="Helvetica, Arial" font-size="54" font-weight="900" fill="#FFFFFF" text-anchor="middle">FRIDAY</text>
+  <g fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linejoin="round">
+    <path d="M105 250 L250 250 L302 300 L250 350 L105 350 Z"/>
+  </g>
+  <circle cx="148" cy="300" r="9" fill="#FFFFFF"/>
+  <text x="235" y="313" font-family="Helvetica, Arial" font-size="32" font-weight="800" fill="#FFFFFF" text-anchor="middle">%</text>
+  <text x="200" y="385" font-family="Helvetica, Arial" font-size="17" font-weight="700" letter-spacing="5" fill="#FFFFFF" text-anchor="middle">SUPER REDUCERI</text>
+</svg>
