@@ -604,7 +604,7 @@
     {
       "id" : "wide-169-cinematic-3d-promo-banner-for-a-video-production-so-3",
       "imagePath" : "covers/seasonal/wide-169-cinematic-3d-promo-banner-for-a-video-production-so-3.jpg?v=35df68bb",
-      "isEnabled" : true,
+      "isEnabled" : false,
       "label" : "Wide_169_cinematic_3D_promo_banner_for_a_video_production_so (3)",
       "opacity" : 0.16424094326351052,
       "position" : "center"
