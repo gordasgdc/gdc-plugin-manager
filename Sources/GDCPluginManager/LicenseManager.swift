@@ -40,6 +40,15 @@ final class LicenseManager: ObservableObject {
         item.isFree || (licensedProducts[item.id] != nil && !RevocationCheck.shared.isRevoked(item.id))
     }
 
+    /// Aceeași verificare, pentru o resursă de download (LUT/SFX/VFX/
+    /// Plugin) — Etapa 2 extinsă (2026-08-29). `licensedProducts` e
+    /// cheiat generic după ID de produs, deci ACEEAȘI infrastructură
+    /// (stocare, revocare, activare) acoperă și aceste resurse, fără
+    /// niciun cod nou de licențiere.
+    func isUnlocked(for resource: DownloadableResource) -> Bool {
+        resource.isFree || (licensedProducts[resource.id] != nil && !RevocationCheck.shared.isRevoked(resource.id))
+    }
+
     /// Reverifica revocarea online (fail-open, vezi RevocationCheck.swift)
     /// pentru toate produsele licentiate curent. Apelata la lansare —
     /// niciodata sincron/blocanta pentru UI.

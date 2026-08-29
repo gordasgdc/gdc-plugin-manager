@@ -12,9 +12,12 @@ struct PublishPartnerStoreView: View {
     @State private var name = ""
     @State private var description = ""
     @State private var url = ""
+    // Etapa 5 (2026-08-29) — adresă fizică opțională, buton Google Maps în Client.
+    @State private var address = ""
     /// Logo-ul magazinului. Preset `.icon` — un logo se recunoaște după
     /// formă, nu după detaliu, iar pătratul ține grila de carduri aliniată.
     @State private var coverSelection: CoverImageSelection = .none
+    @State private var scheduling: Scheduling?
 
     @State private var isBusy = false
     @State private var errorMessage: String?
@@ -34,11 +37,14 @@ struct PublishPartnerStoreView: View {
                         TextField("Nume magazin", text: $name).textFieldStyle(.roundedBorder)
                         TextField("Descriere", text: $description).textFieldStyle(.roundedBorder)
                         TextField("Link direct", text: $url).textFieldStyle(.roundedBorder)
+                        AutocompleteTextField(placeholder: "Adresă fizică (opțional — apare buton Google Maps în Client)", text: $address,
+                                               existingValues: existingStores.compactMap(\.address))
                     }
                     .padding(8)
                 }
 
                 CoverImagePicker(preset: .icon, selection: $coverSelection)
+                SchedulingPicker(scheduling: $scheduling)
 
                 if let errorMessage {
                     Label(errorMessage, systemImage: "exclamationmark.triangle.fill")
@@ -59,6 +65,9 @@ struct PublishPartnerStoreView: View {
                     if editingID != nil {
                         Button("Magazin nou") { clearForm() }
                     }
+                }
+                if !isFormValid && !isBusy {
+                    Text(validationHint).font(.caption).foregroundStyle(.orange)
                 }
 
                 if !existingStores.isEmpty {
@@ -104,6 +113,19 @@ struct PublishPartnerStoreView: View {
             && URL(string: url.trimmingCharacters(in: .whitespaces)) != nil
     }
 
+    private var validationHint: String {
+        var missing: [String] = []
+        if id.trimmingCharacters(in: .whitespaces).isEmpty { missing.append("ID") }
+        if name.trimmingCharacters(in: .whitespaces).isEmpty { missing.append("Nume") }
+        let trimmedURL = url.trimmingCharacters(in: .whitespaces)
+        if trimmedURL.isEmpty {
+            missing.append("Link magazin")
+        } else if URL(string: trimmedURL) == nil {
+            missing.append("Link magazin (format invalid)")
+        }
+        return "Lipsește: " + missing.joined(separator: ", ")
+    }
+
     private func loadExisting() {
         if let catalog = try? CatalogEditor.load() {
             existingStores = catalog.partnerStores.sorted { $0.name < $1.name }
@@ -116,9 +138,11 @@ struct PublishPartnerStoreView: View {
         name = store.name
         description = store.description
         url = store.url
+        address = store.address ?? ""
         // `.existing`: logo-ul e deja publicat, nu se rescrie dacă
         // furnizorul nu-l atinge.
         coverSelection = store.coverImage.map { .existing($0) } ?? .none
+        scheduling = store.scheduling
         successMessage = nil
         errorMessage = nil
     }
@@ -129,7 +153,9 @@ struct PublishPartnerStoreView: View {
         name = ""
         description = ""
         url = ""
+        address = ""
         coverSelection = .none
+        scheduling = nil
     }
 
     private func publish() async {
@@ -151,10 +177,12 @@ struct PublishPartnerStoreView: View {
             let previousCover = existingStores.first { $0.id == storeID }?.coverImage
             let coverImage = try CoverImageStore.commit(coverSelection, id: storeID, previous: previousCover)
 
+            let trimmedAddress = address.trimmingCharacters(in: .whitespaces)
             let store = PartnerStore(
                 id: storeID, name: name,
                 description: description, url: url.trimmingCharacters(in: .whitespaces),
-                coverImage: coverImage
+                coverImage: coverImage, scheduling: scheduling,
+                address: trimmedAddress.isEmpty ? nil : trimmedAddress
             )
 
             try CatalogEditor.upsertPartnerStore(store)

@@ -10,6 +10,9 @@ enum CatalogEditorError: Error, LocalizedError {
     case eventNotFound(String)
     case partnerStoreNotFound(String)
     case serviceCenterNotFound(String)
+    case downloadableResourceNotFound(String)
+    case partnerOfferNotFound(String)
+    case bundleNotFound(String)
 
     var errorDescription: String? {
         switch self {
@@ -21,6 +24,9 @@ enum CatalogEditorError: Error, LocalizedError {
         case .eventNotFound(let id): return "Nu există niciun eveniment cu id-ul „\(id)” în catalog."
         case .partnerStoreNotFound(let id): return "Nu există niciun magazin cu id-ul „\(id)” în catalog."
         case .serviceCenterNotFound(let id): return "Nu există niciun service cu id-ul „\(id)” în catalog."
+        case .downloadableResourceNotFound(let id): return "Nu există nicio resursă de download cu id-ul „\(id)” în catalog."
+        case .partnerOfferNotFound(let id): return "Nu există nicio ofertă parteneră cu id-ul „\(id)” în catalog."
+        case .bundleNotFound(let id): return "Nu există niciun pachet cu id-ul „\(id)” în catalog."
         }
     }
 }
@@ -194,6 +200,70 @@ enum CatalogEditor {
         try write(catalog: catalog, serviceCenters: centers)
     }
 
+    // MARK: - Downloadable resources (LUT/SFX/VFX/Plugin — download direct, Etapa 2)
+
+    static func upsertDownloadableResource(_ resource: DownloadableResource) throws {
+        let catalog = (try? load()) ?? Catalog(updatedAt: nil, items: [])
+        var resources = catalog.downloadableResources.filter { $0.id != resource.id }
+        resources.append(resource)
+        resources.sort { $0.name < $1.name }
+        try write(catalog: catalog, downloadableResources: resources)
+    }
+
+    static func removeDownloadableResource(id: String) throws {
+        let catalog = try load()
+        let resources = catalog.downloadableResources.filter { $0.id != id }
+        guard resources.count != catalog.downloadableResources.count else {
+            throw CatalogEditorError.downloadableResourceNotFound(id)
+        }
+        try write(catalog: catalog, downloadableResources: resources)
+    }
+
+    // MARK: - Partner offers (Oferte/Promoții branduri partenere, Etapa 4)
+
+    static func upsertPartnerOffer(_ offer: PartnerOffer) throws {
+        let catalog = (try? load()) ?? Catalog(updatedAt: nil, items: [])
+        var offers = catalog.partnerOffers.filter { $0.id != offer.id }
+        offers.append(offer)
+        offers.sort { $0.brandName < $1.brandName }
+        try write(catalog: catalog, partnerOffers: offers)
+    }
+
+    static func removePartnerOffer(id: String) throws {
+        let catalog = try load()
+        let offers = catalog.partnerOffers.filter { $0.id != id }
+        guard offers.count != catalog.partnerOffers.count else {
+            throw CatalogEditorError.partnerOfferNotFound(id)
+        }
+        try write(catalog: catalog, partnerOffers: offers)
+    }
+
+    // MARK: - Filigran/fundal sezonier (Etapa 6, 2026-08-29) — un singur slot global
+
+    static func setSeasonalBackground(_ value: String?) throws {
+        let catalog = (try? load()) ?? Catalog(updatedAt: nil, items: [])
+        try write(catalog: catalog, seasonalBackground: value)
+    }
+
+    // MARK: - Pachete/Bundle-uri (Etapa 9, 2026-08-29)
+
+    static func upsertBundle(_ bundle: ProductBundle) throws {
+        let catalog = (try? load()) ?? Catalog(updatedAt: nil, items: [])
+        var bundles = catalog.productBundles.filter { $0.id != bundle.id }
+        bundles.append(bundle)
+        bundles.sort { $0.name < $1.name }
+        try write(catalog: catalog, productBundles: bundles)
+    }
+
+    static func removeBundle(id: String) throws {
+        let catalog = try load()
+        let bundles = catalog.productBundles.filter { $0.id != id }
+        guard bundles.count != catalog.productBundles.count else {
+            throw CatalogEditorError.bundleNotFound(id)
+        }
+        try write(catalog: catalog, productBundles: bundles)
+    }
+
     // MARK: - Write
 
     /// Rewrites docs/catalog.json, starting from `catalog` and replacing
@@ -209,7 +279,14 @@ enum CatalogEditor {
         educationalResources: [EducationalResource]? = nil,
         events: [Event]? = nil,
         partnerStores: [PartnerStore]? = nil,
-        serviceCenters: [ServiceCenter]? = nil
+        serviceCenters: [ServiceCenter]? = nil,
+        downloadableResources: [DownloadableResource]? = nil,
+        partnerOffers: [PartnerOffer]? = nil,
+        // Dublu-opțional intenționat: `nil` = "nu atinge" (păstrează
+        // valoarea existentă din catalog), `.some(nil)` = "șterge
+        // explicit filigranul", `.some(.some(x))` = "setează x".
+        seasonalBackground: String?? = nil,
+        productBundles: [ProductBundle]? = nil
     ) throws {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
@@ -222,7 +299,11 @@ enum CatalogEditor {
             educationalResources: educationalResources ?? catalog.educationalResources,
             events: events ?? catalog.events,
             partnerStores: partnerStores ?? catalog.partnerStores,
-            serviceCenters: serviceCenters ?? catalog.serviceCenters
+            serviceCenters: serviceCenters ?? catalog.serviceCenters,
+            downloadableResources: downloadableResources ?? catalog.downloadableResources,
+            partnerOffers: partnerOffers ?? catalog.partnerOffers,
+            seasonalBackground: seasonalBackground ?? catalog.seasonalBackground,
+            productBundles: productBundles ?? catalog.productBundles
         )
 
         let encoder = JSONEncoder()

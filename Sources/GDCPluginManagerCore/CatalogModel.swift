@@ -225,13 +225,25 @@ public enum SupportedOS: String, Codable, CaseIterable, Identifiable {
     public static let current: SupportedOS = .windows
     #endif
 
-    /// Emoji-badge afisat pe cardul din catalog (Client) — vezi cerinta
-    /// "Selector Compatibilitate OS": 🍎 doar Mac, 🪟 doar Windows, 🔄 ambele.
-    public var badgeEmoji: String {
+    /// Simbol SF Symbols pentru badge-ul de compatibilitate de pe card —
+    /// înlocuiește emoji-urile 🍎/🪟/🔄 (2026-08-29, cerut explicit: "nu-mi
+    /// place, prefer să fie... impecabil, profesionist"). SF Symbols sunt
+    /// vectoriale (identic ca principiu cu un SVG — scalează perfect,
+    /// se tint-uiesc cu culoarea din temă), nativ Apple, nu emoji color.
+    public var badgeSymbol: String {
         switch self {
-        case .macOS: return "🍎"
-        case .windows: return "🪟"
-        case .crossPlatform: return "🔄"
+        case .macOS: return "apple.logo"
+        case .windows: return "pc"
+        case .crossPlatform: return "arrow.triangle.2.circlepath"
+        }
+    }
+
+    /// Etichetă scurtă, pentru accesibilitate/tooltip lângă simbol.
+    public var badgeLabel: String {
+        switch self {
+        case .macOS: return "Mac"
+        case .windows: return "Windows"
+        case .crossPlatform: return "Mac + Windows"
         }
     }
 }
@@ -245,6 +257,33 @@ public enum SupportedOS: String, Codable, CaseIterable, Identifiable {
 /// never change once a single unit has sold, and a retired id must never
 /// be reused for an unrelated product, or old serials would wrongly
 /// unlock it.
+/// Set opțional de linkuri către rețele sociale ale unei resurse/produs —
+/// Etapa 2 din Planul Integrat de Upgrade v2.0 (2026-08-29). Toate 100%
+/// opționale: dacă un câmp e nil, iconița corespunzătoare nu apare deloc
+/// pe cardul din Client (niciodată dezactivată/goală). Struct separat
+/// (nu 4 câmpuri direct pe `PluginItem`) ca să poată fi reutilizat 1:1 pe
+/// alte tipuri de conținut (Aplicații/Audio/etc.) la o etapă viitoare,
+/// fără să dubleze cele 4 chei peste tot.
+public struct SocialLinks: Codable, Hashable {
+    public let facebookURL: String?
+    public let youtubeURL: String?
+    public let instagramURL: String?
+    public let tiktokURL: String?
+
+    public init(facebookURL: String? = nil, youtubeURL: String? = nil, instagramURL: String? = nil, tiktokURL: String? = nil) {
+        self.facebookURL = facebookURL
+        self.youtubeURL = youtubeURL
+        self.instagramURL = instagramURL
+        self.tiktokURL = tiktokURL
+    }
+
+    /// True dacă niciunul dintre cele 4 linkuri nu e completat — folosit
+    /// ca să nu afișăm un rând gol de iconițe pe card.
+    public var isEmpty: Bool {
+        facebookURL == nil && youtubeURL == nil && instagramURL == nil && tiktokURL == nil
+    }
+}
+
 public struct PluginItem: Codable, Identifiable, Hashable {
     public let id: String
     public let name: String
@@ -290,10 +329,38 @@ public struct PluginItem: Codable, Identifiable, Hashable {
     /// Compatibilitate OS — vezi `SupportedOS`. Implicit `.crossPlatform`
     /// (toate produsele existente pana acum ruleaza pe ambele platforme).
     public let supportedOS: SupportedOS
+    /// Link opțional către magazinul/achiziția externă a produsului (ex.
+    /// pagina de pe un marketplace terț) — Etapa 2 (2026-08-29). Afișat
+    /// ca buton separat pe card doar dacă nu e nil; complet independent
+    /// de `priceEUR`/`isFree` (un produs poate fi vândut și direct prin
+    /// GDC, și listat și extern).
+    public let purchaseURL: String?
+    /// Link opțional către un demo/preview (pagină, video, sample) —
+    /// Etapa 2 (2026-08-29). Distinct de `youtubeURL` (acela e tutorial
+    /// de UTILIZARE; acesta e o PREZENTARE a produsului înainte de achiziție).
+    public let demoURL: String?
+    /// Linkuri opționale către rețele sociale ale acestei resurse — vezi
+    /// `SocialLinks`. nil (nu doar toate câmpurile interne nil) pentru
+    /// orice produs publicat înainte de Etapa 2.
+    public let socialLinks: SocialLinks?
+    /// Valabilitate temporală opțională — Etapa 4 extinsă (2026-08-29,
+    /// cerut explicit: "valabilitate temporală trebuie să fie la toate
+    /// rubricile"). Vezi `Scheduling`. `nil` = mereu vizibil.
+    public let scheduling: Scheduling?
+    /// Sumă de susținere PROMOȚIONALĂ, temporară — activă doar cât timp
+    /// `scheduling` e activ (vezi `effectivePriceEUR`). Rămâne în
+    /// limitele Regulii 3 (Partea 1): tot o sumă de DONAȚIE, niciodată
+    /// afișată cu cuvintele "preț redus"/"discount"/"reducere" — badge-ul
+    /// din Client o etichetează explicit "Susținere promoțională",
+    /// niciodată "-X% OFF" (acela e rezervat EXCLUSIV ofertelor de la
+    /// branduri PARTENERE, `PartnerOffer`, o relație comercială diferită).
+    public let promoPriceEUR: Double?
 
     public init(id: String, name: String, type: PluginType, description: String, version: String,
                 files: [PluginFile], iconSymbol: String?, priceEUR: Double, isFree: Bool = false, isTrial: Bool = false,
-                youtubeURL: String? = nil, bundleFolderName: String? = nil, coverImage: String? = nil, supportedOS: SupportedOS = .crossPlatform) {
+                youtubeURL: String? = nil, bundleFolderName: String? = nil, coverImage: String? = nil, supportedOS: SupportedOS = .crossPlatform,
+                purchaseURL: String? = nil, demoURL: String? = nil, socialLinks: SocialLinks? = nil,
+                scheduling: Scheduling? = nil, promoPriceEUR: Double? = nil) {
         self.id = id
         self.name = name
         self.type = type
@@ -308,17 +375,33 @@ public struct PluginItem: Codable, Identifiable, Hashable {
         self.bundleFolderName = bundleFolderName
         self.coverImage = coverImage
         self.supportedOS = supportedOS
+        self.purchaseURL = purchaseURL
+        self.demoURL = demoURL
+        self.socialLinks = socialLinks
+        self.scheduling = scheduling
+        self.promoPriceEUR = promoPriceEUR
     }
 
     /// URL-ul absolut al copertii, gata de descarcat (nil daca nu are).
     public var coverImageURL: URL? { CatalogAssets.imageURL(for: coverImage) }
+
+    /// Suma de afișat ACUM — cea promoțională, dacă `promoPriceEUR` e
+    /// setat ȘI `scheduling` e activ acum; altfel `priceEUR` normal.
+    public var effectivePriceEUR: Double {
+        if let promoPriceEUR, scheduling?.isActiveNow ?? false { return promoPriceEUR }
+        return priceEUR
+    }
+
+    public var isPromoActive: Bool {
+        promoPriceEUR != nil && (scheduling?.isActiveNow ?? false)
+    }
 
     // Custom decode: supports both the current `files` array AND the
     // original single-file catalog format (`filePath` + `sha256`, no
     // `isFree`/`isTrial`/`youtubeURL`/`bundleFolderName`), so any entry
     // ever published still decodes cleanly.
     private enum CodingKeys: String, CodingKey {
-        case id, name, type, description, version, files, filePath, sha256, iconSymbol, priceEUR, isFree, isTrial, youtubeURL, bundleFolderName, coverImage, supportedOS
+        case id, name, type, description, version, files, filePath, sha256, iconSymbol, priceEUR, isFree, isTrial, youtubeURL, bundleFolderName, coverImage, supportedOS, purchaseURL, demoURL, socialLinks, scheduling, promoPriceEUR
     }
 
     public init(from decoder: Decoder) throws {
@@ -348,6 +431,15 @@ public struct PluginItem: Codable, Identifiable, Hashable {
         // Cheie noua (2026-08-25): intrarile vechi nu o au -> .crossPlatform,
         // pastrand comportamentul actual (instalabil pe ambele platforme).
         supportedOS = try c.decodeIfPresent(SupportedOS.self, forKey: .supportedOS) ?? .crossPlatform
+        // Chei noi (Etapa 2, 2026-08-29) — orice produs publicat inainte
+        // nu le are, decodeIfPresent -> nil, fara eroare.
+        purchaseURL = try c.decodeIfPresent(String.self, forKey: .purchaseURL)
+        demoURL = try c.decodeIfPresent(String.self, forKey: .demoURL)
+        socialLinks = try c.decodeIfPresent(SocialLinks.self, forKey: .socialLinks)
+        // Chei noi (Etapa 4 extinsă, 2026-08-29) — orice produs publicat
+        // inainte nu le are, decodeIfPresent -> nil, fara eroare.
+        scheduling = try c.decodeIfPresent(Scheduling.self, forKey: .scheduling)
+        promoPriceEUR = try c.decodeIfPresent(Double.self, forKey: .promoPriceEUR)
     }
 
     // Written explicitly (not synthesized) because CodingKeys carries
@@ -370,6 +462,11 @@ public struct PluginItem: Codable, Identifiable, Hashable {
         try c.encodeIfPresent(bundleFolderName, forKey: .bundleFolderName)
         try c.encodeIfPresent(coverImage, forKey: .coverImage)
         try c.encode(supportedOS, forKey: .supportedOS)
+        try c.encodeIfPresent(purchaseURL, forKey: .purchaseURL)
+        try c.encodeIfPresent(demoURL, forKey: .demoURL)
+        try c.encodeIfPresent(socialLinks, forKey: .socialLinks)
+        try c.encodeIfPresent(scheduling, forKey: .scheduling)
+        try c.encodeIfPresent(promoPriceEUR, forKey: .promoPriceEUR)
     }
 
     /// True for a multi-file pack (e.g. a whole folder of LUTs published
@@ -404,6 +501,36 @@ public struct CourseOption: Codable, Hashable, Identifiable {
 /// A bookable course/session — not a downloadable product. No files, no
 /// install, no license; the client just shows it and lets the customer
 /// reach out (WhatsApp) to book one of its priced options.
+/// Valabilitate temporală opțională (From - To) — Etapa 4 din Planul
+/// Integrat de Upgrade v2.0 (2026-08-29). Aplicat la Cursuri, Materiale,
+/// Evenimente și Oferte Parteneri: dacă e setat, conținutul apare automat
+/// în Client doar între `startDate` și `endDate` (comparat cu ora curentă
+/// a dispozitivului clientului, nu cu ora serverului — suficient pentru
+/// acest caz de utilizare, fără nevoie de sincronizare de timp server).
+/// `nil` (struct absent) = mereu vizibil, comportament identic cu înainte
+/// de Etapa 4 — orice conținut existent, publicat fără scheduling,
+/// continuă să apară neschimbat.
+public struct Scheduling: Codable, Hashable {
+    public let startDate: Date?
+    public let endDate: Date?
+
+    public init(startDate: Date? = nil, endDate: Date? = nil) {
+        self.startDate = startDate
+        self.endDate = endDate
+    }
+
+    /// True dacă acest conținut ar trebui să fie vizibil ACUM. Fără
+    /// `startDate` = deja pornit; fără `endDate` = nu expiră niciodată.
+    public var isActiveNow: Bool {
+        let now = Date()
+        if let startDate, now < startDate { return false }
+        if let endDate, now > endDate { return false }
+        return true
+    }
+
+    public var isEmpty: Bool { startDate == nil && endDate == nil }
+}
+
 public struct Course: Codable, Identifiable, Hashable {
     public let id: String
     public let name: String
@@ -413,13 +540,16 @@ public struct Course: Codable, Identifiable, Hashable {
     /// vrem sa se vada detaliul intr-un preview marit, nu doar un simbol.
     /// Cheie optionala: cursurile publicate inainte decodeaza cu nil.
     public let coverImage: String?
+    /// Valabilitate temporală opțională — Etapa 4 (2026-08-29). Vezi `Scheduling`.
+    public let scheduling: Scheduling?
 
-    public init(id: String, name: String, description: String, options: [CourseOption], coverImage: String? = nil) {
+    public init(id: String, name: String, description: String, options: [CourseOption], coverImage: String? = nil, scheduling: Scheduling? = nil) {
         self.id = id
         self.name = name
         self.description = description
         self.options = options
         self.coverImage = coverImage
+        self.scheduling = scheduling
     }
 
     public var coverImageURL: URL? { CatalogAssets.imageURL(for: coverImage) }
@@ -442,13 +572,16 @@ public struct AppLink: Codable, Identifiable, Hashable {
     /// e un logo, recunoscut dupa forma, nu dupa detaliu. Adaugat 2026-08-24,
     /// deci catalogul vechi (fara aceasta cheie) decodeaza cu nil automat.
     public let coverImage: String?
+    /// Valabilitate temporală opțională — Etapa 4 extinsă (2026-08-29). Vezi `Scheduling`.
+    public let scheduling: Scheduling?
 
-    public init(id: String, name: String, url: String, youtubeURL: String? = nil, coverImage: String? = nil) {
+    public init(id: String, name: String, url: String, youtubeURL: String? = nil, coverImage: String? = nil, scheduling: Scheduling? = nil) {
         self.youtubeURL = youtubeURL
         self.id = id
         self.name = name
         self.url = url
         self.coverImage = coverImage
+        self.scheduling = scheduling
     }
 
     public var coverImageURL: URL? { CatalogAssets.imageURL(for: coverImage) }
@@ -469,14 +602,17 @@ public struct AudioTrack: Codable, Identifiable, Hashable {
     public let youtubeURL: String?
     /// Coperta piesei/pachetului audio — preset `.icon`, la fel ca AppLink.
     public let coverImage: String?
+    /// Valabilitate temporală opțională — Etapa 4 extinsă (2026-08-29). Vezi `Scheduling`.
+    public let scheduling: Scheduling?
 
-    public init(id: String, name: String, description: String, url: String, youtubeURL: String? = nil, coverImage: String? = nil) {
+    public init(id: String, name: String, description: String, url: String, youtubeURL: String? = nil, coverImage: String? = nil, scheduling: Scheduling? = nil) {
         self.id = id
         self.name = name
         self.description = description
         self.url = url
         self.youtubeURL = youtubeURL
         self.coverImage = coverImage
+        self.scheduling = scheduling
     }
 
     public var coverImageURL: URL? { CatalogAssets.imageURL(for: coverImage) }
@@ -507,8 +643,10 @@ public struct EducationalResource: Codable, Identifiable, Hashable {
     public let youtubeURL: String?
     /// Coperta materialului (coperta cartii/cursului) — preset `.cover`.
     public let coverImage: String?
+    /// Valabilitate temporală opțională — Etapa 4 (2026-08-29). Vezi `Scheduling`.
+    public let scheduling: Scheduling?
 
-    public init(id: String, name: String, description: String, kind: Kind, externalURL: String, youtubeURL: String? = nil, coverImage: String? = nil) {
+    public init(id: String, name: String, description: String, kind: Kind, externalURL: String, youtubeURL: String? = nil, coverImage: String? = nil, scheduling: Scheduling? = nil) {
         self.id = id
         self.name = name
         self.description = description
@@ -516,6 +654,7 @@ public struct EducationalResource: Codable, Identifiable, Hashable {
         self.externalURL = externalURL
         self.youtubeURL = youtubeURL
         self.coverImage = coverImage
+        self.scheduling = scheduling
     }
 
     public var coverImageURL: URL? { CatalogAssets.imageURL(for: coverImage) }
@@ -541,8 +680,13 @@ public struct Event: Codable, Identifiable, Hashable {
     /// informatie (data, lista de invitati, program), deci e cazul in care
     /// lightbox-ul din client/site conteaza cel mai mult.
     public let coverImage: String?
+    /// Valabilitate temporală opțională — Etapa 4 (2026-08-29). Vezi
+    /// `Scheduling`. Distinctă de `dateDisplay` (text liber, informativ
+    /// despre CÂND are loc evenimentul) — aceasta controlează CÂND
+    /// apare/dispare anunțul în Client, cele două nu sunt legate.
+    public let scheduling: Scheduling?
 
-    public init(id: String, title: String, description: String, dateDisplay: String, location: String, externalURL: String, youtubeURL: String? = nil, coverImage: String? = nil) {
+    public init(id: String, title: String, description: String, dateDisplay: String, location: String, externalURL: String, youtubeURL: String? = nil, coverImage: String? = nil, scheduling: Scheduling? = nil) {
         self.id = id
         self.title = title
         self.description = description
@@ -551,9 +695,12 @@ public struct Event: Codable, Identifiable, Hashable {
         self.externalURL = externalURL
         self.youtubeURL = youtubeURL
         self.coverImage = coverImage
+        self.scheduling = scheduling
     }
 
     public var coverImageURL: URL? { CatalogAssets.imageURL(for: coverImage) }
+    /// Link Google Maps generat din `location` — Etapa 5 (2026-08-29).
+    public var mapsURL: URL? { MapsLink.url(for: location) }
 }
 
 /// Categoria unui service partener din secțiunea "Service & Reparații
@@ -585,6 +732,36 @@ public enum ServiceCategory: String, Codable, CaseIterable, Identifiable {
 /// camere, obiective) — afișat în secțiunea "Service & Reparații
 /// Echipament" din sidebar. La fel ca `PartnerStore`: doar informativ,
 /// niciun fișier, nicio licență.
+/// Link direct către Google Maps, dintr-un text de adresă liber (nu
+/// coordonate) — Etapa 5 din Planul Integrat de Upgrade v2.0
+/// (2026-08-29). Folosește endpoint-ul de căutare public al Google Maps
+/// (`api=1`), care nu necesită cheie API — deschide browserul/aplicația
+/// Maps cu textul căutat, exact ca un search manual.
+public enum MapsLink {
+    /// Termeni fără sens ca adresă fizică — un curs/eveniment/service
+    /// "Online" nu are unde deschide o hartă. Semnalat explicit
+    /// (2026-08-29): "am multe locuri în care e online... chiar nimica,
+    /// că este online" — mai bine ascundem butonul decât să trimitem la
+    /// o căutare Google Maps absurdă pentru cuvântul "online".
+    private static let nonPhysicalTerms: Set<String> = [
+        "online", "webinar", "virtual", "remote", "la distanță", "distanta",
+        "zoom", "internet", "n/a", "-",
+    ]
+
+    public static func url(for address: String) -> URL? {
+        let trimmed = address.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return nil }
+        let normalized = trimmed.folding(options: [.diacriticInsensitive, .caseInsensitive], locale: nil)
+        guard !nonPhysicalTerms.contains(normalized) else { return nil }
+        var components = URLComponents(string: "https://www.google.com/maps/search/")!
+        components.queryItems = [
+            URLQueryItem(name: "api", value: "1"),
+            URLQueryItem(name: "query", value: trimmed),
+        ]
+        return components.url
+    }
+}
+
 public struct ServiceCenter: Codable, Identifiable, Hashable {
     public let id: String
     public let name: String
@@ -592,12 +769,20 @@ public struct ServiceCenter: Codable, Identifiable, Hashable {
     public let specialization: String
     /// Link de contact rapid — `tel:`, `https://wa.me/...` sau `mailto:`.
     public let contactURL: String
-    /// Site sau locație (Google Maps) — opțional, nu orice service are.
+    /// Website — opțional, nu orice service are.
     public let websiteURL: String?
     public let coverImage: String?
+    /// Valabilitate temporală opțională — Etapa 4 extinsă (2026-08-29). Vezi `Scheduling`.
+    public let scheduling: Scheduling?
+    /// Adresă fizică opțională (text liber — oraș, stradă, orice localizează
+    /// un punct de lucru) — Etapa 5 (2026-08-29). Dacă e completată, Client
+    /// afișează un buton care deschide Google Maps cu acest text căutat
+    /// (vezi `MapsLink`). Distinctă de `websiteURL` (acela e site-ul, nu
+    /// locația fizică).
+    public let address: String?
 
     public init(id: String, name: String, category: ServiceCategory, specialization: String,
-                contactURL: String, websiteURL: String? = nil, coverImage: String? = nil) {
+                contactURL: String, websiteURL: String? = nil, coverImage: String? = nil, scheduling: Scheduling? = nil, address: String? = nil) {
         self.id = id
         self.name = name
         self.category = category
@@ -605,9 +790,12 @@ public struct ServiceCenter: Codable, Identifiable, Hashable {
         self.contactURL = contactURL
         self.websiteURL = websiteURL
         self.coverImage = coverImage
+        self.scheduling = scheduling
+        self.address = address
     }
 
     public var coverImageURL: URL? { CatalogAssets.imageURL(for: coverImage) }
+    public var mapsURL: URL? { address.flatMap { MapsLink.url(for: $0) } }
 }
 
 /// A partner equipment shop (photo/video gear) shown in the client's
@@ -623,16 +811,274 @@ public struct PartnerStore: Codable, Identifiable, Hashable {
     /// cu fundal transparent, ImageProcessor il pastreaza PNG (nu-l
     /// innegreste pe fundal alb) — vezi ImageProcessor.process.
     public let coverImage: String?
+    /// Valabilitate temporală opțională — Etapa 4 extinsă (2026-08-29). Vezi `Scheduling`.
+    public let scheduling: Scheduling?
+    /// Adresă fizică opțională — Etapa 5 (2026-08-29). Vezi `ServiceCenter.address`.
+    public let address: String?
 
-    public init(id: String, name: String, description: String, url: String, coverImage: String? = nil) {
+    public init(id: String, name: String, description: String, url: String, coverImage: String? = nil, scheduling: Scheduling? = nil, address: String? = nil) {
         self.id = id
         self.name = name
         self.description = description
         self.url = url
         self.coverImage = coverImage
+        self.scheduling = scheduling
+        self.address = address
     }
 
     public var coverImageURL: URL? { CatalogAssets.imageURL(for: coverImage) }
+    public var mapsURL: URL? { address.flatMap { MapsLink.url(for: $0) } }
+}
+
+/// Categoria unei resurse de download direct — Etapa 2 din Planul Integrat
+/// de Upgrade v2.0 (2026-08-29, confirmat explicit de Cristi: "produse
+/// noi, separate, cu simplu link de download, ca Audio"). Distinctă de
+/// `PluginType` (care e specific Resolve, cu auto-instalare) — resursele
+/// astea sunt cross-host (Premiere/FCP/Resolve), userul le descarcă și le
+/// importă manual, la fel ca `AudioTrack`/`AppLink`.
+public enum DownloadCategory: String, Codable, CaseIterable, Identifiable {
+    case lut, sfx, vfx, plugin
+
+    public var id: String { rawValue }
+
+    public var defaultSymbol: String {
+        switch self {
+        case .lut: return "eyedropper.halffull"
+        case .sfx: return "waveform"
+        case .vfx: return "sparkles"
+        case .plugin: return "puzzlepiece.extension"
+        }
+    }
+
+    public var tintColor: Color {
+        switch self {
+        case .lut: return .mint
+        case .sfx: return .teal
+        case .vfx: return .purple
+        case .plugin: return .orange
+        }
+    }
+}
+
+/// O resursă de download direct (LUT/SFX/VFX/Plugin pentru Premiere Pro,
+/// Final Cut Pro sau DaVinci Resolve) — NU auto-instalează nicăieri, spre
+/// deosebire de `PluginItem`; userul descarcă fișierul de la `url` și îl
+/// importă manual în aplicația lui de editare. Model 1:1 pe `AudioTrack`,
+/// plus câmpurile de linkuri/social din Etapa 2 (`purchaseURL`/`demoURL`/
+/// `socialLinks`, ca la `PluginItem`) și `supportedOS` (unele resurse pot
+/// fi specifice unui format/plugin disponibil doar pe o platformă).
+public struct DownloadableResource: Codable, Identifiable, Hashable {
+    public let id: String
+    public let name: String
+    public let description: String
+    public let category: DownloadCategory
+    public let url: String
+    public let youtubeURL: String?
+    public let coverImage: String?
+    public let supportedOS: SupportedOS
+    public let purchaseURL: String?
+    public let demoURL: String?
+    public let socialLinks: SocialLinks?
+    /// Valabilitate temporală opțională — Etapa 4 extinsă (2026-08-29). Vezi `Scheduling`.
+    public let scheduling: Scheduling?
+    /// Licențiere — adăugată 2026-08-29 (cerut explicit: "nu am varianta
+    /// aia de gratuit, plătit, trimite ID mașină, cumpără produsul,
+    /// WhatsApp"). Port 1:1 al modelului de pe `PluginItem`: acces prin
+    /// Ed25519 (`LicenseCore`), aceeași cheie publică din ecosistem, ACELAȘI
+    /// flux WhatsApp + ID mașină. Implicit `true` (retrocompatibil — orice
+    /// resursă publicată înainte de acest câmp rămâne exact ce era: liberă,
+    /// descărcabilă direct, fără cod).
+    public let isFree: Bool
+    public let isTrial: Bool
+    public let priceEUR: Double
+    /// Sumă de susținere promoțională temporară — vezi `PluginItem.promoPriceEUR`
+    /// (aceleași reguli de conformitate cu Regula 3: rămâne donație).
+    public let promoPriceEUR: Double?
+
+    public init(id: String, name: String, description: String, category: DownloadCategory, url: String,
+                youtubeURL: String? = nil, coverImage: String? = nil, supportedOS: SupportedOS = .crossPlatform,
+                purchaseURL: String? = nil, demoURL: String? = nil, socialLinks: SocialLinks? = nil, scheduling: Scheduling? = nil,
+                isFree: Bool = true, isTrial: Bool = false, priceEUR: Double = 0, promoPriceEUR: Double? = nil) {
+        self.id = id
+        self.name = name
+        self.description = description
+        self.category = category
+        self.url = url
+        self.youtubeURL = youtubeURL
+        self.coverImage = coverImage
+        self.supportedOS = supportedOS
+        self.purchaseURL = purchaseURL
+        self.demoURL = demoURL
+        self.socialLinks = socialLinks
+        self.scheduling = scheduling
+        self.isFree = isFree
+        self.isTrial = isTrial
+        self.priceEUR = priceEUR
+        self.promoPriceEUR = promoPriceEUR
+    }
+
+    public var coverImageURL: URL? { CatalogAssets.imageURL(for: coverImage) }
+
+    public var priceDisplay: String { priceEUR.formatted(.currency(code: "EUR")) }
+    public var effectivePriceEUR: Double {
+        if let promoPriceEUR, scheduling?.isActiveNow ?? false { return promoPriceEUR }
+        return priceEUR
+    }
+    public var isPromoActive: Bool { promoPriceEUR != nil && (scheduling?.isActiveNow ?? false) }
+
+    // Custom Codable: `isFree`/`isTrial`/`priceEUR`/`promoPriceEUR` sunt
+    // chei NOI (2026-08-29) — orice resursă publicată înainte de asta nu
+    // le are deloc în JSON. `isFree` default TRUE la decodare (nu `false`
+    // ca la `PluginItem`) — păstrează exact comportamentul dinainte de
+    // acest câmp (liberă, fără cod), nu transformă silențios resurse deja
+    // publicate în "produse plătite fără licență activabilă".
+    private enum CodingKeys: String, CodingKey {
+        case id, name, description, category, url, youtubeURL, coverImage, supportedOS, purchaseURL, demoURL, socialLinks, scheduling, isFree, isTrial, priceEUR, promoPriceEUR
+    }
+
+    public init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        id = try c.decode(String.self, forKey: .id)
+        name = try c.decode(String.self, forKey: .name)
+        description = try c.decode(String.self, forKey: .description)
+        category = try c.decode(DownloadCategory.self, forKey: .category)
+        url = try c.decode(String.self, forKey: .url)
+        youtubeURL = try c.decodeIfPresent(String.self, forKey: .youtubeURL)
+        coverImage = try c.decodeIfPresent(String.self, forKey: .coverImage)
+        supportedOS = try c.decodeIfPresent(SupportedOS.self, forKey: .supportedOS) ?? .crossPlatform
+        purchaseURL = try c.decodeIfPresent(String.self, forKey: .purchaseURL)
+        demoURL = try c.decodeIfPresent(String.self, forKey: .demoURL)
+        socialLinks = try c.decodeIfPresent(SocialLinks.self, forKey: .socialLinks)
+        scheduling = try c.decodeIfPresent(Scheduling.self, forKey: .scheduling)
+        isFree = try c.decodeIfPresent(Bool.self, forKey: .isFree) ?? true
+        isTrial = try c.decodeIfPresent(Bool.self, forKey: .isTrial) ?? false
+        priceEUR = try c.decodeIfPresent(Double.self, forKey: .priceEUR) ?? 0
+        promoPriceEUR = try c.decodeIfPresent(Double.self, forKey: .promoPriceEUR)
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var c = encoder.container(keyedBy: CodingKeys.self)
+        try c.encode(id, forKey: .id)
+        try c.encode(name, forKey: .name)
+        try c.encode(description, forKey: .description)
+        try c.encode(category, forKey: .category)
+        try c.encode(url, forKey: .url)
+        try c.encodeIfPresent(youtubeURL, forKey: .youtubeURL)
+        try c.encodeIfPresent(coverImage, forKey: .coverImage)
+        try c.encode(supportedOS, forKey: .supportedOS)
+        try c.encodeIfPresent(purchaseURL, forKey: .purchaseURL)
+        try c.encodeIfPresent(demoURL, forKey: .demoURL)
+        try c.encodeIfPresent(socialLinks, forKey: .socialLinks)
+        try c.encodeIfPresent(scheduling, forKey: .scheduling)
+        try c.encode(isFree, forKey: .isFree)
+        try c.encode(isTrial, forKey: .isTrial)
+        try c.encode(priceEUR, forKey: .priceEUR)
+        try c.encodeIfPresent(promoPriceEUR, forKey: .promoPriceEUR)
+    }
+}
+
+/// O ofertă/promoție de la un brand PARTENER (ex. discount la echipament
+/// foto/video/lămpi) — Etapa 4 din Planul Integrat de Upgrade v2.0
+/// (2026-08-29). Distinctă de produsele GDC din catalog: e o relație
+/// comercială cu un brand terț, deci limbajul de "discount"/"%" e
+/// permis aici — spre deosebire de produsele/resursele proprii GDC
+/// (Regula 3, Partea 1: acelea rămân EXCLUSIV donație, niciodată preț/
+/// discount, chiar și cele din marketplace-ul gratuit).
+public struct PartnerOffer: Codable, Identifiable, Hashable {
+    public let id: String
+    /// Numele brandului/partenerului (ex. "Aputure", "Nanlite").
+    public let brandName: String
+    public let description: String
+    /// Text liber de discount, afișat ca badge pe card (ex. "-20%",
+    /// "-50% OFF", "SPECIAL OFFER") — text, nu procent numeric, ca să
+    /// acopere și cazuri non-procentuale ("2 la preț de 1").
+    public let discountText: String?
+    public let couponCode: String?
+    /// Link către magazinul/produsul partenerului.
+    public let url: String
+    public let youtubeURL: String?
+    public let coverImage: String?
+    public let socialLinks: SocialLinks?
+    public let scheduling: Scheduling?
+
+    public init(id: String, brandName: String, description: String, discountText: String? = nil,
+                couponCode: String? = nil, url: String, youtubeURL: String? = nil, coverImage: String? = nil,
+                socialLinks: SocialLinks? = nil, scheduling: Scheduling? = nil) {
+        self.id = id
+        self.brandName = brandName
+        self.description = description
+        self.discountText = discountText
+        self.couponCode = couponCode
+        self.url = url
+        self.youtubeURL = youtubeURL
+        self.coverImage = coverImage
+        self.socialLinks = socialLinks
+        self.scheduling = scheduling
+    }
+
+    public var coverImageURL: URL? { CatalogAssets.imageURL(for: coverImage) }
+}
+
+/// Tipul de conținut referit dintr-un pachet — un `ProductBundle` poate
+/// combina produse din categorii diferite (ex. un Curs + un pachet de
+/// LUT-uri), deci referința trebuie să spună ȘI unde să caute ID-ul.
+public enum BundleItemKind: String, Codable, CaseIterable {
+    case product        // PluginItem (catalog.items)
+    case download       // DownloadableResource (catalog.downloadableResources)
+    case course         // Course (catalog.courses)
+    case audio          // AudioTrack (catalog.audioTracks) — adăugat 2026-08-29
+    case app            // AppLink (catalog.apps) — aplicații proprii GDC, adăugat 2026-08-29
+    case material       // EducationalResource (catalog.educationalResources) — materiale proprii, adăugat 2026-08-29
+}
+
+public struct BundleItemRef: Codable, Hashable {
+    public let kind: BundleItemKind
+    public let id: String
+
+    public init(kind: BundleItemKind, id: String) {
+        self.kind = kind
+        self.id = id
+    }
+}
+
+/// Un pachet/bundle — Etapa 9 din Planul Integrat de Upgrade v2.0
+/// (2026-08-29, idee a lui Cristi: "combin produse, unul sau mai multe,
+/// să le vând la bulk, la super ofertă"). DELIBERAT doar un construct de
+/// PREZENTARE/MARKETING (grupare + preț total afișat), NU un mecanism nou
+/// de licențiere: fluxul rămâne cel existent — clientul apasă "Cumpără
+/// pachetul" (WhatsApp, ca la orice produs), iar Furnizorul generează în
+/// continuare, manual, câte o licență per produs inclus din pachet (exact
+/// ca acum, doar că negocierea/plata se face o singură dată, pentru tot
+/// pachetul). Simplu, sigur, fără risc de a sparge modelul de încredere
+/// bazat pe donație+WhatsApp deja funcțional în tot ecosistemul.
+public struct ProductBundle: Codable, Identifiable, Hashable {
+    public let id: String
+    public let name: String
+    public let description: String
+    public let items: [BundleItemRef]
+    /// Prețul TOTAL al pachetului (de obicei sub suma prețurilor
+    /// individuale) — afișat lângă suma individuală tăiată, pe card.
+    public let bundlePriceEUR: Double
+    public let coverImage: String?
+    public let youtubeURL: String?
+    public let socialLinks: SocialLinks?
+    public let scheduling: Scheduling?
+
+    public init(id: String, name: String, description: String, items: [BundleItemRef], bundlePriceEUR: Double,
+                coverImage: String? = nil, youtubeURL: String? = nil, socialLinks: SocialLinks? = nil, scheduling: Scheduling? = nil) {
+        self.id = id
+        self.name = name
+        self.description = description
+        self.items = items
+        self.bundlePriceEUR = bundlePriceEUR
+        self.coverImage = coverImage
+        self.youtubeURL = youtubeURL
+        self.socialLinks = socialLinks
+        self.scheduling = scheduling
+    }
+
+    public var coverImageURL: URL? { CatalogAssets.imageURL(for: coverImage) }
+    public var bundlePriceDisplay: String { bundlePriceEUR.formatted(.currency(code: "EUR")) }
 }
 
 public struct Catalog: Codable {
@@ -645,8 +1091,24 @@ public struct Catalog: Codable {
     public let events: [Event]
     public let partnerStores: [PartnerStore]
     public let serviceCenters: [ServiceCenter]
+    /// Resurse de download direct (LUT/SFX/VFX/Plugin) — Etapa 2
+    /// (2026-08-29). Default `[]`: orice catalog publicat înainte de asta
+    /// decodează curat, fără eroare.
+    public let downloadableResources: [DownloadableResource]
+    /// Oferte/Promoții de la branduri partenere — Etapa 4 (2026-08-29).
+    /// Default `[]`: retrocompatibil.
+    public let partnerOffers: [PartnerOffer]
+    /// Filigran/fundal sezonier opțional pentru Client — Etapa 6
+    /// (2026-08-29). Cristi: NU un banner mic, ci o imagine mare, discretă,
+    /// "gravată" în fundalul ferestrei (opacitate mică, nu un sticker
+    /// suprapus). Cale relativă (`covers/seasonal/<nume>.svg`) sau URL
+    /// extern — același sistem hibrid ca `coverImage` (vezi `CatalogAssets`).
+    /// `nil` = fără filigran (fundalul normal Shift).
+    public let seasonalBackground: String?
+    /// Pachete/Bundle-uri — Etapa 9 (2026-08-29). Default `[]`: retrocompatibil.
+    public let productBundles: [ProductBundle]
 
-    public init(updatedAt: String?, items: [PluginItem], courses: [Course] = [], apps: [AppLink] = [], audioTracks: [AudioTrack] = [], educationalResources: [EducationalResource] = [], events: [Event] = [], partnerStores: [PartnerStore] = [], serviceCenters: [ServiceCenter] = []) {
+    public init(updatedAt: String?, items: [PluginItem], courses: [Course] = [], apps: [AppLink] = [], audioTracks: [AudioTrack] = [], educationalResources: [EducationalResource] = [], events: [Event] = [], partnerStores: [PartnerStore] = [], serviceCenters: [ServiceCenter] = [], downloadableResources: [DownloadableResource] = [], partnerOffers: [PartnerOffer] = [], seasonalBackground: String? = nil, productBundles: [ProductBundle] = []) {
         self.updatedAt = updatedAt
         self.items = items
         self.courses = courses
@@ -656,13 +1118,17 @@ public struct Catalog: Codable {
         self.events = events
         self.partnerStores = partnerStores
         self.serviceCenters = serviceCenters
+        self.downloadableResources = downloadableResources
+        self.partnerOffers = partnerOffers
+        self.seasonalBackground = seasonalBackground
+        self.productBundles = productBundles
     }
 
     // Custom decode: every collection defaults to `[]` if absent, so a
     // catalog published before a given field existed keeps decoding
     // cleanly after this update ships to clients.
     private enum CodingKeys: String, CodingKey {
-        case updatedAt, items, courses, apps, audioTracks, educationalResources, events, partnerStores, serviceCenters
+        case updatedAt, items, courses, apps, audioTracks, educationalResources, events, partnerStores, serviceCenters, downloadableResources, partnerOffers, seasonalBackground, productBundles
     }
 
     public init(from decoder: Decoder) throws {
@@ -676,5 +1142,11 @@ public struct Catalog: Codable {
         events = try c.decodeIfPresent([Event].self, forKey: .events) ?? []
         partnerStores = try c.decodeIfPresent([PartnerStore].self, forKey: .partnerStores) ?? []
         serviceCenters = try c.decodeIfPresent([ServiceCenter].self, forKey: .serviceCenters) ?? []
+        downloadableResources = try c.decodeIfPresent([DownloadableResource].self, forKey: .downloadableResources) ?? []
+        partnerOffers = try c.decodeIfPresent([PartnerOffer].self, forKey: .partnerOffers) ?? []
+        seasonalBackground = try c.decodeIfPresent(String.self, forKey: .seasonalBackground)
+        productBundles = try c.decodeIfPresent([ProductBundle].self, forKey: .productBundles) ?? []
     }
+
+    public var seasonalBackgroundURL: URL? { CatalogAssets.imageURL(for: seasonalBackground) }
 }

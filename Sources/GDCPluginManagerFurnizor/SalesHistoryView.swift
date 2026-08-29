@@ -24,6 +24,18 @@ struct SalesHistoryView: View {
     @State private var showBulkImport = false
     @State private var selectedProductFilter: String = "Toate"
     @State private var exportStatus: String?
+    // Etapa 7 (2026-08-29) — filtrare avansată destinatari + export pe
+    // loturi pentru BCC. "Select All" = comportamentul implicit al
+    // exportului deja existent (operează pe TOATE rândurile care trec
+    // de filtrele curente — produs + status + căutare, care acoperă și
+    // ID de mașină, deja căutabil) — nu am adăugat checkbox-uri per rând,
+    // ar fi dublat exact ce fac deja filtrele.
+    private enum LicenseStatusFilter: String, CaseIterable, Identifiable {
+        case all = "Toate", active = "Active", expired = "Expirate"
+        var id: String { rawValue }
+    }
+    @State private var licenseStatusFilter: LicenseStatusFilter = .all
+    @State private var showEmailBatchExport = false
 
     // MARK: - Sincronizare cu Tracker-ul (cerut explicit 2026-08-24: Tracker-ul,
     // completat de client la onboarding, e sursa de adevăr pentru nume/email).
@@ -93,9 +105,21 @@ struct SalesHistoryView: View {
                 }
                 .frame(width: 220)
 
+                // Filtru licență Activă/Expirată — Etapa 7 (2026-08-29).
+                Picker("", selection: $licenseStatusFilter) {
+                    ForEach(LicenseStatusFilter.allCases) { status in
+                        Text(status.rawValue).tag(status)
+                    }
+                }
+                .frame(width: 140)
+
                 Menu {
                     Button("Exportă e-mailuri (clipboard)") { exportField(\.email, label: "e-mailuri") }
                     Button("Exportă HWID-uri (clipboard)") { exportField(\.machineID, label: "ID-uri de mașină") }
+                    Divider()
+                    // Etapa 7 (2026-08-29): segmentare automată pt. limita
+                    // de destinatari BCC a furnizorilor de email (Gmail etc.).
+                    Button("Exportă e-mailuri pentru BCC (loturi)…") { showEmailBatchExport = true }
                 } label: {
                     Label("Exportă", systemImage: "square.and.arrow.up")
                 }
@@ -223,6 +247,11 @@ struct SalesHistoryView: View {
                 showBulkImport = false
             }
         }
+        .sheet(isPresented: $showEmailBatchExport) {
+            EmailBatchExportView(emails: filteredEntries.map(\.email).filter { !$0.isEmpty }) {
+                showEmailBatchExport = false
+            }
+        }
         .task {
             loadEntries()
             // Sincronizare automată la fiecare deschidere a panoului — Tracker-ul
@@ -262,12 +291,21 @@ struct SalesHistoryView: View {
         if selectedProductFilter != "Toate" {
             result = result.filter { $0.productName == selectedProductFilter }
         }
+        // Etapa 7 (2026-08-29) — filtru status licență.
+        switch licenseStatusFilter {
+        case .all: break
+        case .active: result = result.filter(\.isActive)
+        case .expired: result = result.filter { !$0.isActive }
+        }
         let trimmed = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return result }
         return result.filter {
             $0.customer.localizedCaseInsensitiveContains(trimmed)
                 || $0.productName.localizedCaseInsensitiveContains(trimmed)
                 || $0.email.localizedCaseInsensitiveContains(trimmed)
+                // ID de mașină căutabil aici — Etapa 7 (2026-08-29), evită
+                // nevoia unui câmp de filtru separat pentru asta.
+                || $0.machineID.localizedCaseInsensitiveContains(trimmed)
         }
     }
 

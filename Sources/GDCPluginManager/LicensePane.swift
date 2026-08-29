@@ -159,7 +159,11 @@ struct LicensePane: View {
             }
 
             Button(L.t("license.activate")) {
-                justActivated = license.activate(code: codeField, candidateProductIDs: catalog.items.map(\.id))
+                // Etapa 2 extinsă (2026-08-29): resursele de download
+                // (LUT/SFX/VFX/Plugin) pot fi acum plătite la fel ca
+                // produsele din catalog — trebuie incluse ca și candidați.
+                let candidateIDs = catalog.items.map(\.id) + catalog.downloadableResources.map(\.id)
+                justActivated = license.activate(code: codeField, candidateProductIDs: candidateIDs)
                 if justActivated { codeField = "" }
             }
             .disabled(codeField.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || catalog.items.isEmpty)

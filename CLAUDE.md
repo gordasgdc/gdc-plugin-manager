@@ -766,3 +766,443 @@ RO/EN/ES. Tot NU e self-update silențios — rămâne un pas asistat
 (descărcare + reinstalare manuală), documentat explicit ca atare.
 - **2026-08-26 — Bug real (identic pe Mac și Windows): verificarea MANUALĂ de update ("Check for Updates..." / butonul din Preferences) minea „Ești la zi" pe o versiune deja respinsă.** Reprodus live din log-ul de diagnostic al lui Cristi (partea Windows — `dismissed=1.3.0` după un „Mai târziu" apăsat, probabil din greșeală, în timp ce explora UI-ul). `availableUpdate` e filtrat de dismissal — corect pentru banner/popup pasiv, dar verificarea manuală citea tot `availableUpdate`, deci mințea la infinit indiferent câte versiuni noi apăreau. **Soluție**: `UpdateChecker.latestInfo` — populat necenzurat de dismissal, la fiecare `check()` reușit. `ContentView.swift` (meniu „Check for Updates...") și `PreferencesView.swift` citesc acum `latestInfo`. **Notă**: prima ipoteză (cache CDN pe `gordas.dev/update.json`) a fost greșită — verificat direct că serverul răspundea corect tot timpul. Adăugat `DiagnosticLog.swift` (nou, `%TEMP%/gdcpm-crash.log`, pereche a celui de pe Windows) — până acum `check()` eșua complet silențios la orice problemă, fără nicio urmă.
 - **2026-08-26 — Bug critic găsit pe MediaFlow Monitor, verificat că exista IDENTIC și pe Mac: `LicenseManager.activate(serial:)` exista din prima versiune dar nu era apelat NICĂIERI din UI.** Un client care dona și primea codul pe WhatsApp nu avea fizic cum să-l introducă în aplicație — meniul avea doar "Activează licența (WhatsApp)…" (deschide link-ul de CERERE a codului), niciun câmp de input pentru codul PRIMIT. **Fix Mac**: `NSAlert` cu `NSTextField` accesoriu ("Introdu codul de activare…"), mesaje de eroare per caz (`LicenseCore.ValidationError`). **Fix Windows** (prima implementare de licențiere Windows din tot ecosistemul GDC — nicio altă app standalone nu avea încă LicenseCore/MachineID/RevocationCheck portate pe C#): `Licensing/LicenseCore.cs` folosește `BouncyCastle.Cryptography` (NuGet, pur managed — .NET nu expune Ed25519 nativ pe Windows/CNG), verificat cu un test izolat (proiect console separat, net8.0 non-Windows): round-trip Base32, generare+verificare semnătură cu cheie de test, rejecție corectă la payload alterat (tamper test), și încărcarea reușită a cheii publice GDC reale — toate 9 verificări au trecut înainte de a considera portul corect. **Machine ID pe Windows** folosește `HKLM\SOFTWARE\Microsoft\Cryptography\MachineGuid` (nu IOPlatformUUID ca pe Mac — surse diferite, dar irelevant: `GenerateSerialView.swift` tratează string-ul Base32 afișat ca opac, doar îl decodează direct, nu re-hashează nimic). `ActivationInputWindow.xaml` (WPF nu are input-box nativ) completează fluxul identic cu Mac.
+
+## Etapa 1 — Plan Integrat de Upgrade v2.0 (2026-08-29): Căutare fuzzy + Filtru OS (Client Mac)
+Cerință Cristi (plan pe 8 etape, confirmat "confirm" pentru ordinea propusă).
+`FuzzySearch.swift` (Core, nou) — substring pe text normalizat (fără
+diacritice) + Levenshtein marginit per-cuvânt (typo tolerance), plus
+`SearchHistoryStore` (istoric persistat local, plafonat la 8, fără
+duplicate). `SearchBar.swift` (Client, nou) — câmp reutilizabil cu
+dropdown de sugestii (istoric când e gol, potriviri live când se tastează).
+Integrate în `CatalogGrid` (Produse): bară de căutare (nume/descriere/ID/
+tip) + `OSFilter` (Toate/Mac/Windows, segmented picker lângă filtrul de
+preț existent — produsele `.crossPlatform` apar la orice filtru).
+Localizare RO/EN/ES (`search.placeholder`, `filter.os.*`).
+Versiune Client `1.4.0`→`1.5.0` (MINOR). `docs/update.json` NEATINS —
+fără release nou încă (regula practică 2026-08-27).
+
+**TODO explicit, nu ascuns**: (1) `GDCPluginManagerWin` (Client Windows)
+nu are încă acest component — port separat, planificat; (2) bara e doar pe
+`CatalogGrid` — `AppsGrid`/`CoursesGrid`/etc. rămân fără căutare/filtru OS
+până la o etapă viitoare confirmată; (3) Furnizor nu e atins în această
+etapă (Etapele 2+ din plan ating structura de date a produselor).
+
+**Verificat**: `swift build` — 0 erori, 0 avertismente noi.
+
+**[COMPLETARE 2026-08-29] Căutarea a devenit GLOBALĂ, cerută explicit
+("trebuie să cuprindă tot ce există în aplicație", "în toate rubricile").**
+`SearchBar` locală (era doar în `CatalogGrid`) a fost mutată la nivelul
+`ContentView` — un singur câmp, vizibil deasupra `detailContent` pe ORICE
+rubrică din sidebar. Câmp gol → comportament identic cu înainte (rubrica
+selectată). Câmp nevid → `GlobalSearchResults` (nou, `ContentView.swift`)
+înlocuiește conținutul rubricii curente cu rezultate din TOATE cele 8
+colecții ale catalogului (Produse, Aplicații, Audio, Cursuri, Materiale,
+Evenimente, Magazine partenere, Service & Reparații), fiecare filtrată cu
+`FuzzySearch` pe câmpurile ei relevante (nume/titlu/descriere/ID + câmpuri
+specifice — tip pentru Produse, categorie pentru Service). Secțiune goală
+= nu se randă deloc. Reutilizează card-urile existente (`PluginCard`,
+`AppCard`, `CourseCard`, etc.) — zero cod de UI duplicat.
+**TODO paritate neschimbat**: `GDCPluginManagerWin` rămâne fără căutare.
+**Verificat**: `swift build` — 0 erori.
+
+**[COMPLETARE 2026-08-29] Badge OS: SF Symbols, nu emoji (port pe ambele
+platforme).** `SupportedOS.badgeSymbol`/`badgeLabel` (Core) înlocuiesc
+`badgeEmoji` — `apple.logo`/`pc`/`arrow.triangle.2.circlepath`, randate ca
+chip circular pe card + `Label(systemImage:)` în picker-ul Furnizor. Port
+1:1 pe `GDCPluginManagerWin`: `BadgeSymbol()` (Fluent `DesktopMac24`/
+`DesktopTower24`/`ArrowSync24`, verificate prezente prin `strings` pe
+`Wpf.Ui.dll` — vezi pitfall-ul de acolo despre absență-nu-e-dovadă) +
+`SymbolNameConverter.cs` (nou) + `ui:SymbolIcon` în `MainWindow.xaml`.
+Versiune ambele clienți: `1.4.0`→`1.5.0`.
+
+**[Etapa 2, parțial] Multi-link + Social pe produse.** `PluginItem`
+(Core) capătă `purchaseURL`/`demoURL`/`socialLinks` (`SocialLinks`, nou —
+Facebook/YouTube/Instagram/TikTok), toate opționale, decode retrocompatibil
+(`decodeIfPresent`). Furnizor: `DisclosureGroup` nou în `PublishView.swift`.
+Client: `PluginCard.extraLinksRow` — iconițe SF Symbols, afișate doar dacă
+produsul are cel puțin un link completat. **TODO real**: categoriile noi
+LUT/SFX/VFX/Plugin pentru download direct multi-host (cerute în planul lui
+Cristi) se suprapun conceptual cu modelul auto-install existent (LUT/DCTL
+sunt deja categorii, dar auto-instalează în Resolve) — arhitectura exactă
+NU a fost implementată încă, cere o decizie explicită a lui Cristi înainte
+de a alege un model (extensie a `PluginItem` vs. tip nou gen `AudioTrack`
+de download simplu). **TODO paritate**: `GDCPluginManagerWin` nu are încă
+multi-link/social — Windows nu are Furnizor, deci doar AFIȘAREA pe card
+ar trebui portată, la o etapă viitoare.
+**Verificat**: `swift build` (Mac) — 0 erori. `dotnet build`
+(`GDCPluginManagerWin`, C# only) — 0 erori; XML validat manual (XAML nu
+compilează pe Mac — vezi pitfall dedicat din CLAUDE.md de acolo).
+
+**[COMPLETARE 2026-08-29] Etapa 2 finalizată — Resurse Download direct
+(LUT/SFX/VFX/Plugin), model NOU, separat.** Cristi a confirmat explicit:
+"produse noi, separate, cu simplu link de download, ca Audio" — deci NU o
+extensie a `PluginItem` (auto-install Resolve). `DownloadCategory` (enum:
+lut/sfx/vfx/plugin) + `DownloadableResource` (Core, nou) — model 1:1 pe
+`AudioTrack` + câmpurile de linkuri/social din Etapa 2. `Catalog.
+downloadableResources: [DownloadableResource] = []` (retrocompatibil).
+Furnizor: tab nou "Resurse Download" (`PublishDownloadableResourceView.swift`,
+mirror `PublishAudioView.swift` + selector categorie + compatibilitate OS +
+linkuri suplimentare). Client: 4 rânduri noi în sidebar (unul per
+categorie, `SidebarSection.download(DownloadCategory)`), `DownloadResourceGrid`/
+`Card` (mirror `AudioGrid`/`Card`, plus filtru OS ca la Produse și rândul
+de linkuri extra — extras logica în `ExtraLinksRow`/`LinkIconButton`,
+funcții shared la scope de fișier, reutilizate de `PluginCard` ȘI
+`DownloadResourceCard`, ca să nu dubleze cod). `GlobalSearchResults`
+extins la 9 colecții (era 8) — căutarea globală acoperă și noile resurse.
+**Notă de scop, nu o omisiune**: "Efecte Audio/SFX" ca nouă categorie
+coexistă acum cu secțiunea veche "Audio" (`AudioTrack`) — cele două NU
+sunt unificate (ar necesita migrare de date/breaking change pe catalogul
+existent, nerequested) — Cristi alege unde publică conținut audio nou.
+**TODO paritate**: `GDCPluginManagerWin` nu are Furnizor (publicarea
+rămâne exclusiv pe Mac) — de portat doar AFIȘAREA (Core model +
+sidebar/grid Windows), la o etapă viitoare.
+Versiune: Client `1.5.0`→`1.6.0`, Furnizor `1.3.0`→`1.4.0` (MINOR).
+**Verificat**: `swift build` (Client + Furnizor + Core) — 0 erori.
+
+**[COMPLETARE 2026-08-29] Sidebar Client — 5 secțiuni clar delimitate
+(`Section`, nu doar `Divider`).** Cristi: "să nu se încurce lumea" — grupare
+logică cu titlu gri deasupra fiecărui grup: (1) INSTALARE DAVINCI RESOLVE
+(Toate + PluginType), (2) RESURSE DOWNLOAD Premiere/FCP/Resolve (Audio +
+DownloadCategory), (3) COMUNITATE & EDUCAȚIE (Cursuri/Materiale/Evenimente/
+Magazine/Service), (4) ECOSISTEM GDC (Aplicații/Aplicație mobilă), (5)
+CONTUL TĂU (Licență/Ajutor). Localizare RO/EN/ES (`sidebar.section.*`).
+
+**NOTĂ pentru Etapa 6 (Watermark/Banner sezonier), NU implementată încă**:
+Cristi a cerut explicit ca, atunci când ajungem la acea etapă, pe lângă
+upload propriu de imagine, să pregătesc și un SET de SVG-uri tematice
+predefinite, alese de el pentru colțul dreapta-jos (suprafață mai mare,
+nu doar un icon mic): Oferte Black Friday, Crăciun (brad + Moș Crăciun +
+"Sărbători Fericite"), Revelion/Anul Nou, Ofertă de Primăvară, Paște,
+Vară/Vacanță, Ofertă Flash/Super Ofertă. Nu uita de asta la Etapa 6.
+
+**[COMPLETARE 2026-08-29] Etapa 3 — "Aplicațiile Mele" (Quick Launcher).**
+`MyAppsLauncher.swift` (nou) — sidebar nou `SidebarSection.myApps`, în
+grupul ECOSISTEM GDC. Detectarea "deținerii" unei aplicații GDC NU se
+face prin licență (fiecare aplicație GDC își ține activarea separat local,
+GDCPluginManager n-are acces) — se face prin PREZENȚA aplicației instalate
+(`NSWorkspace.urlForApplication(withBundleIdentifier:)`), aproximare
+corectă în practică. `knownGDCApps` (hardcodat, 4 aplicații cu bundle .app
+real, verificate din `Info.plist`-urile reale ale fiecărui repo):
+DataMover (`dev.gordas.datamover`), CursorPro GDC (`com.gordasgdc.cursorpro`),
+GDC Vault (`com.gordasgdc.vault`), MediaFlow Monitor
+(`com.gdc.mediaflowmonitor`). **Exclus intenționat, nu omis**: `gdc-
+production-manager` (script Python, `run-mac.command`, fără bundle .app
+standard) și `gdc-resolve-encoder` (bibliotecă C++ apelată DIN Resolve,
+niciodată lansată direct de user) — n-au ce "lansa" în sensul ăsta.
+
+Verificare versiune per aplicație (`VersionSource`, două surse reale,
+verificate din codul fiecărui repo — NU presupuse): DataMover/CursorPro/
+GDC Vault citesc `api.github.com/repos/<repo>/releases/latest`
+(`tag_name`); MediaFlow Monitor are propriul `update.json`
+(`gordas.dev/media-flow-monitor/update.json`). Badge "ACTUALIZARE" apare
+doar dacă versiunea instalată (citită din `Info.plist`-ul real al
+bundle-ului găsit) e mai veche decât cea de pe server.
+
+Scurtături personalizate (`CustomLauncher`) — persistate local
+(`UserDefaults`, JSON), adăugate prin `fileImporter` (alege orice `.app`
+din Finder, ex. DaVinci Resolve Studio/Premiere/Photoshop/Lightroom), cu
+buton de lansare + ștergere.
+
+**TODO paritate**: `GDCPluginManagerWin` nu are încă "Aplicațiile Mele" —
+pe Windows detectarea ar folosi Registry (`Uninstall` keys) sau căi
+cunoscute din Program Files, diferit de `NSWorkspace` — port separat.
+Versiune: Client `1.6.0`→`1.7.0` (MINOR). **Verificat**: `swift build` — 0 erori.
+
+**[COMPLETARE 2026-08-29] Etapa 4 — Scheduler From/To, Oferte Parteneri,
+Badge-uri Discount.** `Scheduling` (Core, nou) — `startDate`/`endDate`
+opționale + `isActiveNow` (comparat cu ora dispozitivului clientului, nu
+server — suficient pentru acest caz). Adăugat ca `scheduling: Scheduling?`
+pe `Course`, `EducationalResource`, `Event` (retrocompatibil, `nil` =
+mereu vizibil, identic cu comportamentul dinainte). Filtrare aplicată la
+apelul fiecărui Grid din `ContentView.detailContent` ȘI în
+`GlobalSearchResults` (căutarea globală respectă și ea expirarea).
+
+**`PartnerOffer`** (Core, nou) — model separat pentru promoții de la
+branduri PARTENERE (ex. discount echipament foto/video). **Decizie de
+scop explicită**: limbajul de discount/procent e PERMIS aici (nu intră
+sub Regula 3, Partea 1 — aceea acoperă produsele/resursele PROPRII GDC,
+nu relații comerciale cu terți). `discountText` (text liber, nu procent
+numeric — acoperă și "2 la preț de 1"), `couponCode`, `socialLinks`,
+`scheduling`. Furnizor: tab nou "Oferte Parteneri"
+(`PublishPartnerOfferView.swift`). Client: sidebar nou (grup COMUNITATE
+& EDUCAȚIE) + `PartnerOffersGrid`/`Card` — badge roșu de discount generat
+automat din `discountText`, afișat doar dacă e completat.
+
+**`SchedulingPicker.swift`** (Furnizor, nou) — component reutilizabil
+(toggle + 2 `DatePicker`), integrat în `PublishCourseView`/
+`PublishEducationalResourceView`/`PublishEventView`/`PublishPartnerOfferView`.
+
+**TODO paritate**: `GDCPluginManagerWin` nu are Furnizor — doar AFIȘAREA
+(Core model + filtrare scheduling + grid Oferte) ar trebui portată pe
+Windows la o etapă viitoare.
+Versiune: Client `1.7.0`→`1.8.0`, Furnizor `1.4.0`→`1.5.0` (MINOR).
+**Verificat**: `swift build` (Client + Furnizor + Core) — 0 erori.
+
+**[COMPLETARE 2026-08-29] Scheduling extins la TOATE rubricile + fix
+buton-mut la publicare + sumă promoțională pe produse proprii.**
+
+1. **Buton "Publică" dezactivat FĂRĂ mesaj — bug real de UX, raportat de
+   Cristi ("am încercat să dau publică, dar nu m-a lăsat... doar gri/
+   dezactivat, fără mesaj").** `PublishPartnerOfferView` (și implicit
+   toate celelalte forme cu `isFormValid`) dezactivau butonul silențios
+   dacă lipsea ID/nume/URL valid, fără să spună CE lipsește. Fix (aplicat
+   întâi acolo): `validationHint` — text portocaliu sub buton, listează
+   explicit ce lipsește ("Lipsește: ID ofertă, Link magazin..."). **TODO
+   rămas**: același fix trebuie aplicat și pe celelalte forme mai vechi
+   (`PublishAudioView`, etc.) — momentan doar Oferte Parteneri îl are.
+
+2. **`scheduling: Scheduling?` adăugat la TOATE modelele** (nu doar
+   Cursuri/Materiale/Evenimente/Oferte): `PluginItem`, `AppLink`,
+   `AudioTrack`, `PartnerStore`, `ServiceCenter`, `DownloadableResource`.
+   Cerut explicit: "valabilitate temporală trebuie să fie la toate
+   rubricile". `SchedulingPicker` integrat în TOATE formularele Furnizor
+   (`PublishView`, `PublishAppView`, `PublishAudioView`,
+   `PublishPartnerStoreView`, `PublishServiceCenterView`,
+   `PublishDownloadableResourceView`). Filtrare aplicată la fiecare punct
+   de afișare din `ContentView.detailContent` ȘI în `GlobalSearchResults`
+   (toate cele 9 colecții, nu doar 4).
+
+3. **`PluginItem.promoPriceEUR` (nou) — sumă de susținere PROMOȚIONALĂ
+   temporară pentru produsele PROPRII GDC (ex. Black Friday).** Cristi:
+   "trebuie să pun la anumit preț acele produse, să fie oricum discount".
+   **Decizie de conformitate cu Regula 3 (Partea 1)**: rămâne 100%
+   donație — activă DOAR cât timp `scheduling` e activ
+   (`effectivePriceEUR`/`isPromoActive`), afișată cu suma veche tăiată +
+   badge roșu "Susținere promoțională" — NICIODATĂ "reducere"/"discount"/
+   "-X% OFF" (acela rămâne EXCLUSIV pentru `PartnerOffer`, relație
+   comercială cu terți, unde limbajul de discount e permis). Mesajul
+   WhatsApp de activare folosește automat suma promoțională activă.
+   Furnizor: câmp nou "Sumă promoțională temporară" în `PublishView`,
+   vizibil doar la Acces=Plătit.
+
+**TODO paritate**: `GDCPluginManagerWin` nu are Furnizor — doar AFIȘAREA
+(filtrare scheduling + `effectivePriceEUR`) ar trebui portată pe Windows.
+Versiune: Client `1.8.0`→`1.9.0`, Furnizor `1.5.0`→`1.6.0` (MINOR).
+**Verificat**: `swift build` (Client + Furnizor + Core) — 0 erori.
+
+**[COMPLETARE 2026-08-29] Etapa 5 — Google Maps la adrese + memorare locală
+folder de download.**
+
+1. **`MapsLink.url(for:)`** (Core, nou) — deep-link către endpoint-ul
+   public de căutare Google Maps (`api=1&query=<text>`), fără cheie API.
+   `Event` folosește `location`-ul deja existent; `PartnerStore` și
+   `ServiceCenter` capătă un câmp NOU, `address: String?` (opțional,
+   distinct de `websiteURL`/`url`). `mapsURL` computed pe toate 3. Client:
+   `MapButton(mapsURL:)` (shared, ca `ExtraLinksRow`) — nu se randă deloc
+   fără adresă. Furnizor: câmp "Adresă fizică" în `PublishPartnerStoreView`/
+   `PublishServiceCenterView`.
+
+2. **[Adăugat mid-etapă, cerut explicit] Memorare loc de descărcare pe
+   Resurse Download.** Cristi: "să aibă posibilitatea să își pună path-ul...
+   ca să știe tot timpul unde l-a descărcat". `DownloadLocationStore.swift`
+   (nou) — stare 100% LOCALĂ (UserDefaults, cheiată după ID resursă), NU
+   parte din catalog.json (per-client, nu conținut publicat). Pe
+   `DownloadResourceCard`: buton "Unde l-ai salvat?" → `NSOpenPanel`
+   (alegere folder) → odată setat, arată calea + buton "Deschide folderul"
+   (`NSWorkspace.selectFile`) + "Schimbă".
+
+**TODO paritate**: `GDCPluginManagerWin` nu are Furnizor (adresă/Maps
+button ar trebui portate doar la afișare) și nici `DownloadLocationStore`
+(echivalent Windows: `Environment.SpecialFolder` + `FolderBrowserDialog`).
+Versiune: Client `1.9.0`→`1.10.0`, Furnizor `1.6.0`→`1.7.0` (MINOR).
+**Verificat**: `swift build` (Client + Furnizor + Core) — 0 erori.
+
+**[COMPLETARE 2026-08-29] Licențiere completă pe Resurse Download —
+lacună reală, semnalată explicit de Cristi ("nu am varianta aia de
+gratuit, plătit, trimite ID mașină, cumpără produsul, WhatsApp").**
+`DownloadableResource` (Core) trecut la Codable custom (era sintetizat) —
+adăugat `isFree`/`isTrial`/`priceEUR`/`promoPriceEUR`, port 1:1 al
+modelului de pe `PluginItem` (`effectivePriceEUR`/`isPromoActive`
+identice). **Retrocompatibil corect**: `isFree` decodează implicit
+`true` (nu `false` ca la `PluginItem`) — orice resursă publicată înainte
+de acest câmp rămâne exact "liberă, fără cod", nu devine silențios
+"plătită fără licență activabilă".
+
+`LicenseManager.isUnlocked(for: DownloadableResource)` (nou) — REFOLOSEȘTE
+`licensedProducts` (cheiat generic după ID de produs) și `RevocationCheck`,
+zero infrastructură nouă. `LicensePane.candidateProductIDs` extins cu
+`catalog.downloadableResources.map(\.id)`, ca un cod lipit să valideze și
+pentru aceste resurse. Furnizor: `PublishDownloadableResourceView` capătă
+Picker Acces (Gratuit/Plătit/Probă, reutilizează `AccessMode` din
+`PublishView.swift`) + preț + sumă promoțională; `GenerateSerialView`
+capătă secțiune nouă "Resurse Download" în Picker-ul de produs. Client:
+`DownloadResourceCard` — badge Gratuit/Probă/Licență+preț (identic
+`PluginCard`), buton WhatsApp cu ID mașină când blocată, "Descarcă" doar
+după deblocare; rândul de "unde l-ai salvat" (Etapa 5) apare doar pe
+resurse deblocate.
+
+**[Fix conex] `validationHint` (bug-ul de buton mut) adăugat și pe
+`PublishDownloadableResourceView`** — nu doar pe Oferte Parteneri.
+**TODO rămas**: celelalte forme mai vechi (`PublishAudioView`, etc.) încă
+nu au acest hint.
+
+**TODO paritate**: `GDCPluginManagerWin` nu are Furnizor — doar
+afișarea/deblocarea (Core model + `LicenseManager.cs` overload) ar trebui
+portată pe Windows.
+Versiune: Client `1.10.0`→`1.11.0`, Furnizor `1.7.0`→`1.8.0` (MINOR).
+**Verificat**: `swift build` (Client + Furnizor + Core) — 0 erori.
+
+**[COMPLETARE 2026-08-29] Etapa 6 — Filigran sezonier (NU banner mic).**
+Cristi a clarificat explicit: nu o iconiță în colț, ci "o imagine mai
+mare... ca și cum ar fi sculptat/imprimat în fundal". Implementat ca strat
+mare (480×480, depășește ușor colțul), opacitate 7%, ÎN SPATELE
+conținutului (`.background()`, `allowsHitTesting(false)`), nu deasupra.
+
+`Catalog.seasonalBackground: String?` (Core, nou) — UN SINGUR slot global
+(nu per-produs), același sistem hibrid cale-relativă/URL-extern ca
+`coverImage`. `SeasonalBackgroundStore.swift` (Furnizor, nou) —
+DELIBERAT separat de `CoverImageStore`: copiază fișierul BRUT, fără
+compresie/rasterizare (SVG-ul ales de Cristi rămâne vectorial). Galerie
+predefinită (`SeasonalPresets`, 7 SVG-uri inline, monocrome — Black
+Friday, Crăciun, Revelion, Primăvară, Paște, Vară, Ofertă Flash), plus
+upload propriu (imagine sau SVG). Tab nou Furnizor "Interfață Client
+(Filigran)". Client: `SeasonalBackgroundLayer` (nou) randează filigranul
+via `AsyncImage` — SVG suportat nativ de ImageIO pe macOS 12+.
+
+**TODO paritate**: `GDCPluginManagerWin` nu are Furnizor — doar AFIȘAREA
+(citire `seasonalBackground` din catalog + randare fundal) ar trebui
+portată pe Windows.
+Versiune: Client `1.11.0`→`1.12.0`, Furnizor `1.8.0`→`1.9.0` (MINOR).
+**Verificat**: `swift build` (Client + Furnizor + Core) — 0 erori.
+
+**[COMPLETARE 2026-08-29] Fix hartă pe "Online" + Autocomplete pe câmpuri
+repetitive (Furnizor).**
+
+1. **`MapsLink.url(for:)` (Core) ignoră termeni non-fizici** ("online",
+   "webinar", "virtual", "zoom", etc., normalizat fără diacritice/
+   majuscule) — Cristi: "am multe locuri în care e online... nu are
+   sens o căutare Maps pentru asta". Butonul de hartă pur și simplu nu
+   apare pentru aceste valori, în loc să deschidă o căutare absurdă.
+
+2. **`AutocompleteTextField.swift` (Furnizor, nou)** — cerut explicit:
+   "dacă scriu cuvinte repetitive [ex. „Online", numele unei firme], să
+   mi le sugereze". DELIBERAT fără store propriu de istoric — sugestiile
+   vin direct din valorile deja folosite pe alte produse deja publicate
+   (`existingItems`/`existingStores`/etc., deja încărcate de fiecare
+   view), fuzzy-filtrate pe măsură ce tastezi. Integrat pe câmpurile cu
+   risc real de repetiție: `PublishEventView` (Locație), `PublishPartnerStoreView`/
+   `PublishServiceCenterView` (Adresă fizică, Specializare),
+   `PublishPartnerOfferView` (Nume brand).
+   **TODO rămas**: nu e încă pe toate câmpurile de text din Furnizor —
+   doar cele semnalate explicit ca repetitive.
+
+Versiune: Client `1.12.0`→`1.12.1` (PATCH — doar fix Maps), Furnizor
+`1.9.0`→`1.10.0` (MINOR — funcționalitate nouă vizibilă).
+**Verificat**: `swift build` (Client + Furnizor + Core) — 0 erori.
+
+**[BUG REAL, GĂSIT ȘI REPARAT 2026-08-29] Filigranul Black Friday nu
+apărea deloc în Client — nu era o problemă de publicare.** Cristi a
+activat filigranul din Furnizor, dar nimic nu apărea în Client. Verificat
+direct, cu `curl`, că publicarea a mers perfect: `catalog.json` live avea
+`seasonalBackground` setat corect, iar `background.svg` răspundea HTTP
+200 cu `content-type: image/svg+xml`. **Cauza reală**: `AsyncImage`
+(SwiftUI) nu randează fiabil SVG pe macOS — decodorul lui intern nu
+trece prin `NSImage`, singurul care are suport SVG (adăugat în macOS
+12+). Confirmat izolat, cu un test dedicat (`swift /tmp/svgtest.swift`,
+`NSImage(data:)` pe același SVG) — a decodat corect. **Fix**:
+`SeasonalBackgroundLayer` nu mai folosește `AsyncImage` — descarcă
+manual (`URLSession.shared.data(from:)`) și construiește `NSImage(data:)`
+explicit, afișat prin `Image(nsImage:)`. **Regulă practică nouă**:
+`AsyncImage` NICIODATĂ pentru un URL care poate fi SVG în acest
+ecosistem — doar pentru rastere (jpg/png), unde funcționează normal.
+
+**[ÎNVECHIT 2026-08-29, refăcut complet la cererea explicită a lui
+Cristi] Galeria predefinită de filigrane era inacceptabil de slabă.**
+Feedback direct: "arată ca făcut de un copil de 3 ani... nici pe departe
+ce mă imaginam" — prima variantă avea doar o formă geometrică goală și
+un simbol vag, fără text, fără să sugereze tema. Refăcute complet toate
+cele 7 (`SeasonalPresets` din `SeasonalBackgroundStore.swift`) ca SCENE
+recognoscibile + text explicit: Black Friday (text mare + tag de preț cu
+"%"), Crăciun (brad cu ornamente + 2 cadouri + stea + ninsoare +
+"Sărbători Fericite"), Revelion (artificii + pahar de șampanie +
+"LA MULȚI ANI!"), Primăvară (soare + 2 flori + păsărică + iarbă),
+Paște (iepuraș + coș cu ouă + "Paște Fericit"), Vară (umbrelă de plajă +
+soare + valuri + pahar cu pai), Ofertă Flash (fulger conturat + explozie
++ "FLASH OFFER"). **Regulă de compoziție pentru orice preset viitor**:
+text SEPARAT de forme (niciodată suprapus peste o umplere solidă albă) —
+un fundal alb cu text tot alb ar deveni invizibil la opacitatea mică
+aplicată în Client (`SeasonalBackgroundLayer`), fiindcă tot SVG-ul se
+randă la o singură valoare de opacitate uniformă. Verificat vizual
+înainte de livrare: randate toate 7 pe fundal întunecat (script Swift
+izolat, `NSImage(data:)` → PNG), trimise ca fișiere lui Cristi pentru
+confirmare — **confirmat explicit** ("Arată mult mai bine acum").
+
+**[COMPLETARE 2026-08-29] Etapa 7 — Filtrare avansată + Export email pe
+loturi pentru BCC (Furnizor, Clienți).** `SalesLog.Entry.isActive` (nou)
+— parsează `expiresDisplay` ("nu expira" sau prefixul `yyyy-MM-dd`, format
+stabil din `GenerateSerialView.generate()`) pentru filtrul nou
+"Toate/Active/Expirate" din `SalesHistoryView`. ID de mașină e acum
+căutabil direct din câmpul de căutare existent (nu un filtru separat —
+ar fi dublat funcționalitate). **"Select All" = comportamentul implicit**
+al exportului deja existent (Regula 15): operează pe TOATE rândurile care
+trec de filtrele curente, fără checkbox-uri per-rând (ar fi dublat exact
+ce fac filtrele).
+
+`EmailBatchExportView.swift` (nou) — segmentare automată în loturi
+(10/50/100 sau personalizat) din e-mailurile UNICE ale selecției curente,
+fiecare lot cu propriul buton "Copiază pentru BCC" (separator `; `,
+acceptat de Gmail/Outlook/Apple Mail la lipire directă în câmpul BCC).
+
+**TODO paritate**: `GDCPluginManagerWin` nu are Furnizor — nu se aplică.
+Versiune: Furnizor `1.10.0`→`1.11.0` (MINOR).
+**Verificat**: `swift build` (Furnizor) — 0 erori.
+
+**[COMPLETARE 2026-08-29] Etapa 9 — Pachete/Bundle-uri.** Idee a lui
+Cristi: "combin produse, unul sau mai multe, să le vând la bulk, la super
+ofertă". **Decizie arhitecturală deliberată**: `ProductBundle` (Core, nou)
+e DOAR un construct de prezentare/marketing (grupare + preț total
+afișat), NU un mecanism nou de licențiere — achiziția rămâne prin
+WhatsApp (ca la orice produs), iar Furnizorul generează în continuare,
+manual, câte o licență per produs inclus (fluxul de încredere bazat pe
+donație+WhatsApp deja funcțional nu se schimbă). `BundleItemRef` (kind:
+`product`/`download`/`course` + id) — un pachet poate combina produse din
+categorii diferite (ex. un Curs + un pachet de LUT-uri, exact exemplul
+dat). Furnizor: tab nou "Pachete / Bundle-uri" (`PublishBundleView.swift`)
+— checklist cu TOATE produsele/resursele/cursurile publicate, preț total
++ afișare automată a sumei individuale pentru comparație. Client: sidebar
+nou (grup COMUNITATE & EDUCAȚIE) + `BundleGrid`/`Card` — listă de produse
+incluse rezolvate live din catalog (un ID șters ulterior e omis silențios,
+nu crapă cardul), sumă individuală tăiată + preț pachet, buton WhatsApp
+cu lista produselor în mesaj. Inclus în `GlobalSearchResults` (10 colecții
+acum). Scheduling (Etapa 4) funcționează identic — poți lega un pachet
+strict de perioada Black Friday.
+
+**TODO paritate**: `GDCPluginManagerWin` nu are Furnizor — doar AFIȘAREA
+(Core model + grid Bundle-uri) ar trebui portată pe Windows.
+Versiune: Client `1.12.1`→`1.13.0`, Furnizor `1.11.0`→`1.12.0` (MINOR).
+**Verificat**: `swift build` (Client + Furnizor + Core) — 0 erori.
+
+**[COMPLETARE 2026-08-29] Pachete extinse la Audio + Aplicații +
+Materiale.** Cristi a întrebat dacă poate combina "toate ce există pe
+platformă" — clarificat pe rând: Audio adăugat direct (conținut propriu,
+fără ambiguitate). Aplicații/Materiale — confirmat explicit de Cristi
+("toate aplicații sunt făcute de mine, materiale la fel") — adăugate ca
+tipuri valide de pachet. Oferte Parteneri (terți) și Evenimente
+(informativ) rămân EXCLUSE deliberat — nu sunt produse proprii vândute.
+**Cursurile rămân incluse** (erau deja, de la implementarea inițială —
+confirmat explicit prin întrebare directă, nicio schimbare). `BundleItemKind`
+capătă `.audio`, `.app`, `.material` (total 6 tipuri combinabile: produse,
+resurse download, cursuri, audio, aplicații, materiale). Niciunul din
+Audio/Aplicații/Materiale nu are preț propriu în model — nu contribuie la
+suma individuală calculată automat, doar apar în lista de conținut a
+pachetului.
+Versiune: Client `1.13.0`→`1.13.1`, Furnizor `1.12.0`→`1.12.1` (PATCH).
+**Verificat**: `swift build` (Client + Furnizor + Core) — 0 erori.
+
+## [COMPLETARE 2026-08-29] Etapa 8 — Cache local finalizat
+
+**Constatare**: `catalog.json` avea deja cache complet funcțional
+(`catalog-cache.json` în Application Support, fallback offline automat la
+eșec de rețea) — implementat implicit încă de la primele versiuni.
+
+**Gap găsit și rezolvat**: filigranul sezonier (`SeasonalBackgroundLayer`)
+se descărca mereu de la zero, fără persistare pe disc — offline sau la
+eșec de rețea, filigranul dispărea complet. Adăugat cache pe disc
+(`Application Support/GDCPluginManager/seasonal-background-cache`) după
+același model ca `catalog-cache.json`: la succes se salvează pe disc, la
+eșec se încearcă ultima variantă salvată local.
+
+**Status**: Verificat — build 0 erori, instalat, v1.13.2 (Client).
+
+**TODO paritate Windows**: nu se aplică — `GDCPluginManagerWin` nu are
+încă filigran sezonier implementat (vezi TODO Etapa 6).

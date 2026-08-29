@@ -20,6 +20,8 @@ struct PublishEventView: View {
     /// Afișul evenimentului. Preset `.cover` — aici imaginea chiar poartă
     /// informație (dată, program, invitați), deci vrem rezoluție de citit.
     @State private var coverSelection: CoverImageSelection = .none
+    // Etapa 4 (2026-08-29) — valabilitate temporală opțională.
+    @State private var scheduling: Scheduling?
 
     @State private var isBusy = false
     @State private var errorMessage: String?
@@ -40,7 +42,11 @@ struct PublishEventView: View {
                         TextField("Descriere", text: $description).textFieldStyle(.roundedBorder)
                         TextField("Dată (text liber, ex. 15-17 martie 2026)", text: $dateDisplay)
                             .textFieldStyle(.roundedBorder)
-                        TextField("Locație", text: $location).textFieldStyle(.roundedBorder)
+                        // Autocomplete (2026-08-29, cerut explicit): multe
+                        // evenimente sunt "Online" — sugerează valorile deja
+                        // folosite, ca să nu retastezi de fiecare dată.
+                        AutocompleteTextField(placeholder: "Locație (ex. Online, sau adresa fizică)", text: $location,
+                                               existingValues: existingEvents.map(\.location))
                         TextField("Link detalii/înscriere", text: $externalURL)
                             .textFieldStyle(.roundedBorder)
                         TextField("Link YouTube/Vimeo (opțional)", text: $youtubeURL)
@@ -50,6 +56,7 @@ struct PublishEventView: View {
                 }
 
                 CoverImagePicker(preset: .cover, selection: $coverSelection)
+                SchedulingPicker(scheduling: $scheduling)
 
                 if let errorMessage {
                     Label(errorMessage, systemImage: "exclamationmark.triangle.fill")
@@ -70,6 +77,9 @@ struct PublishEventView: View {
                     if editingID != nil {
                         Button("Eveniment nou") { clearForm() }
                     }
+                }
+                if !isFormValid && !isBusy {
+                    Text(validationHint).font(.caption).foregroundStyle(.orange)
                 }
 
                 if !existingEvents.isEmpty {
@@ -115,6 +125,19 @@ struct PublishEventView: View {
             && URL(string: externalURL.trimmingCharacters(in: .whitespaces)) != nil
     }
 
+    private var validationHint: String {
+        var missing: [String] = []
+        if id.trimmingCharacters(in: .whitespaces).isEmpty { missing.append("ID") }
+        if title.trimmingCharacters(in: .whitespaces).isEmpty { missing.append("Titlu") }
+        let trimmedURL = externalURL.trimmingCharacters(in: .whitespaces)
+        if trimmedURL.isEmpty {
+            missing.append("Link înscriere")
+        } else if URL(string: trimmedURL) == nil {
+            missing.append("Link înscriere (format invalid)")
+        }
+        return "Lipsește: " + missing.joined(separator: ", ")
+    }
+
     private func loadExisting() {
         if let catalog = try? CatalogEditor.load() {
             existingEvents = catalog.events.sorted { $0.title < $1.title }
@@ -133,6 +156,7 @@ struct PublishEventView: View {
         // `.existing` (nu `.local`/`.external`): marcheaza ca imaginea e deja
         // publicata si nu trebuie rescrisă dacă furnizorul n-o atinge.
         coverSelection = event.coverImage.map { .existing($0) } ?? .none
+        scheduling = event.scheduling
         successMessage = nil
         errorMessage = nil
     }
@@ -147,6 +171,7 @@ struct PublishEventView: View {
         externalURL = ""
         youtubeURL = ""
         coverSelection = .none
+        scheduling = nil
     }
 
     private func publish() async {
@@ -174,7 +199,7 @@ struct PublishEventView: View {
                 description: description, dateDisplay: dateDisplay, location: location,
                 externalURL: externalURL.trimmingCharacters(in: .whitespaces),
                 youtubeURL: trimmedYouTube.isEmpty ? nil : trimmedYouTube,
-                coverImage: coverImage
+                coverImage: coverImage, scheduling: scheduling
             )
 
             try CatalogEditor.upsertEvent(event)

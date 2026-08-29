@@ -13,6 +13,10 @@ enum FurnizorSection: Hashable {
     case serviceCenters
     case apps
     case audio
+    case downloadResources
+    case partnerOffers
+    case bundles
+    case seasonalBackground
 }
 
 struct FurnizorContentView: View {
@@ -38,6 +42,11 @@ struct FurnizorContentView: View {
                 Label("Service & Reparații", systemImage: "wrench.and.screwdriver").tag(FurnizorSection.serviceCenters)
                 Label("Aplicații", systemImage: "square.grid.2x2").tag(FurnizorSection.apps)
                 Label("Audio", systemImage: "waveform").tag(FurnizorSection.audio)
+                Label("Resurse Download (LUT/SFX/VFX/Plugin)", systemImage: "arrow.down.circle").tag(FurnizorSection.downloadResources)
+                Label("Oferte Parteneri", systemImage: "tag").tag(FurnizorSection.partnerOffers)
+                Label("Pachete / Bundle-uri", systemImage: "shippingbox").tag(FurnizorSection.bundles)
+                Divider()
+                Label("Interfață Client (Filigran)", systemImage: "photo.on.rectangle.angled").tag(FurnizorSection.seasonalBackground)
             }
             .navigationSplitViewColumnWidth(min: 180, ideal: 200, max: 340)
             .safeAreaInset(edge: .bottom) {
@@ -81,6 +90,14 @@ struct FurnizorContentView: View {
                     PublishAppView()
                 case .audio:
                     PublishAudioView()
+                case .downloadResources:
+                    PublishDownloadableResourceView()
+                case .partnerOffers:
+                    PublishPartnerOfferView()
+                case .bundles:
+                    PublishBundleView()
+                case .seasonalBackground:
+                    SeasonalBackgroundView()
                 }
             }
         }

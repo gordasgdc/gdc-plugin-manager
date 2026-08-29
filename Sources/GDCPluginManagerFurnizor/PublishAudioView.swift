@@ -16,6 +16,7 @@ struct PublishAudioView: View {
     @State private var youtubeURL = ""
     /// Coperta elementului audio. Preset `.icon` — la fel ca la Aplicații.
     @State private var coverSelection: CoverImageSelection = .none
+    @State private var scheduling: Scheduling?
 
     @State private var isBusy = false
     @State private var errorMessage: String?
@@ -51,6 +52,7 @@ struct PublishAudioView: View {
                 }
 
                 CoverImagePicker(preset: .icon, selection: $coverSelection)
+                SchedulingPicker(scheduling: $scheduling)
 
                 if let errorMessage {
                     Label(errorMessage, systemImage: "exclamationmark.triangle.fill")
@@ -71,6 +73,9 @@ struct PublishAudioView: View {
                     if editingID != nil {
                         Button("Element audio nou") { clearForm() }
                     }
+                }
+                if !isFormValid && !isBusy {
+                    Text(validationHint).font(.caption).foregroundStyle(.orange)
                 }
 
                 if !existingTracks.isEmpty {
@@ -116,6 +121,18 @@ struct PublishAudioView: View {
             && (url.hasPrefix("http://") || url.hasPrefix("https://"))
     }
 
+    private var validationHint: String {
+        var missing: [String] = []
+        if id.trimmingCharacters(in: .whitespaces).isEmpty { missing.append("ID") }
+        if name.trimmingCharacters(in: .whitespaces).isEmpty { missing.append("Nume") }
+        if !url.hasPrefix("http://") && !url.hasPrefix("https://") {
+            missing.append("Link (trebuie să înceapă cu http:// sau https://)")
+        } else if URL(string: url) == nil {
+            missing.append("Link (format invalid)")
+        }
+        return "Lipsește: " + missing.joined(separator: ", ")
+    }
+
     private func loadExisting() {
         if let catalog = try? CatalogEditor.load() {
             existingTracks = catalog.audioTracks.sorted { $0.name < $1.name }
@@ -132,6 +149,7 @@ struct PublishAudioView: View {
         // `.existing`: coperta e deja publicată, nu se rescrie dacă
         // furnizorul n-o atinge.
         coverSelection = track.coverImage.map { .existing($0) } ?? .none
+        scheduling = track.scheduling
         successMessage = nil
         errorMessage = nil
     }
@@ -144,6 +162,7 @@ struct PublishAudioView: View {
         url = ""
         youtubeURL = ""
         coverSelection = .none
+        scheduling = nil
     }
 
     private func publish() async {
@@ -167,7 +186,7 @@ struct PublishAudioView: View {
 
             let track = AudioTrack(id: trackID, name: name, description: description, url: url,
                                     youtubeURL: trimmedYouTube.isEmpty ? nil : trimmedYouTube,
-                                    coverImage: coverImage)
+                                    coverImage: coverImage, scheduling: scheduling)
             try CatalogEditor.upsertAudioTrack(track)
             try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Audio: \(track.name)", paths: ["docs/catalog.json", "docs/covers"])
             successMessage = "„\(track.name)” e publicat — apare la clienți la următorul refresh de catalog."

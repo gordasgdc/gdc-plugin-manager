@@ -17,6 +17,8 @@ struct PublishCourseView: View {
     @State private var newOptionPrice = ""
     /// Coperta cursului. Preset `.cover` — se vede în preview mărit.
     @State private var coverSelection: CoverImageSelection = .none
+    // Etapa 4 (2026-08-29) — valabilitate temporală opțională.
+    @State private var scheduling: Scheduling?
 
     @State private var isBusy = false
     @State private var errorMessage: String?
@@ -68,6 +70,7 @@ struct PublishCourseView: View {
                 }
 
                 CoverImagePicker(preset: .cover, selection: $coverSelection)
+                SchedulingPicker(scheduling: $scheduling)
 
                 if let errorMessage {
                     Label(errorMessage, systemImage: "exclamationmark.triangle.fill")
@@ -88,6 +91,9 @@ struct PublishCourseView: View {
                     if editingID != nil {
                         Button("Curs nou") { clearForm() }
                     }
+                }
+                if !isFormValid && !isBusy {
+                    Text(validationHint).font(.caption).foregroundStyle(.orange)
                 }
 
                 if !existingCourses.isEmpty {
@@ -132,6 +138,14 @@ struct PublishCourseView: View {
             && !options.isEmpty
     }
 
+    private var validationHint: String {
+        var missing: [String] = []
+        if id.trimmingCharacters(in: .whitespaces).isEmpty { missing.append("ID") }
+        if name.trimmingCharacters(in: .whitespaces).isEmpty { missing.append("Nume") }
+        if options.isEmpty { missing.append("Minim o opțiune de preț (adaugă cu butonul de adăugare opțiune)") }
+        return "Lipsește: " + missing.joined(separator: ", ")
+    }
+
     private func addOption() {
         guard let price = Double(newOptionPrice) else { return }
         options.append(CourseOption(label: newOptionLabel.trimmingCharacters(in: .whitespaces), priceEUR: price))
@@ -154,6 +168,7 @@ struct PublishCourseView: View {
         // `.existing`: imaginea e deja publicată, nu se rescrie dacă
         // furnizorul n-o atinge.
         coverSelection = course.coverImage.map { .existing($0) } ?? .none
+        scheduling = course.scheduling
         successMessage = nil
         errorMessage = nil
     }
@@ -167,6 +182,7 @@ struct PublishCourseView: View {
         newOptionLabel = ""
         newOptionPrice = ""
         coverSelection = .none
+        scheduling = nil
     }
 
     private func publish() async {
@@ -191,7 +207,7 @@ struct PublishCourseView: View {
             let course = Course(
                 id: courseID, name: name,
                 description: description, options: options,
-                coverImage: coverImage
+                coverImage: coverImage, scheduling: scheduling
             )
 
             try CatalogEditor.upsertCourse(course)

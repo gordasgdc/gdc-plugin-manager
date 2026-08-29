@@ -13,7 +13,10 @@ struct PublishServiceCenterView: View {
     @State private var specialization = ""
     @State private var contactURL = ""
     @State private var websiteURL = ""
+    // Etapa 5 (2026-08-29) — adresă fizică opțională, buton Google Maps în Client.
+    @State private var address = ""
     @State private var coverSelection: CoverImageSelection = .none
+    @State private var scheduling: Scheduling?
 
     @State private var isBusy = false
     @State private var errorMessage: String?
@@ -36,17 +39,20 @@ struct PublishServiceCenterView: View {
                                 Text(cat.rawValue).tag(cat)
                             }
                         }
-                        TextField("Specializare (ex. reparații gimbal, senzori DJI)", text: $specialization)
-                            .textFieldStyle(.roundedBorder)
+                        AutocompleteTextField(placeholder: "Specializare (ex. reparații gimbal, senzori DJI)", text: $specialization,
+                                               existingValues: existingCenters.map(\.specialization))
                         TextField("Link contact rapid (tel:, wa.me, mailto:)", text: $contactURL)
                             .textFieldStyle(.roundedBorder)
-                        TextField("Website / Locație (opțional)", text: $websiteURL)
+                        TextField("Website (opțional)", text: $websiteURL)
                             .textFieldStyle(.roundedBorder)
+                        AutocompleteTextField(placeholder: "Adresă fizică (opțional — apare buton Google Maps în Client)", text: $address,
+                                               existingValues: existingCenters.compactMap(\.address))
                     }
                     .padding(8)
                 }
 
                 CoverImagePicker(preset: .icon, selection: $coverSelection)
+                SchedulingPicker(scheduling: $scheduling)
 
                 if let errorMessage {
                     Label(errorMessage, systemImage: "exclamationmark.triangle.fill")
@@ -67,6 +73,9 @@ struct PublishServiceCenterView: View {
                     if editingID != nil {
                         Button("Service nou") { clearForm() }
                     }
+                }
+                if !isFormValid && !isBusy {
+                    Text(validationHint).font(.caption).foregroundStyle(.orange)
                 }
 
                 if !existingCenters.isEmpty {
@@ -112,6 +121,14 @@ struct PublishServiceCenterView: View {
             && !contactURL.trimmingCharacters(in: .whitespaces).isEmpty
     }
 
+    private var validationHint: String {
+        var missing: [String] = []
+        if id.trimmingCharacters(in: .whitespaces).isEmpty { missing.append("ID") }
+        if name.trimmingCharacters(in: .whitespaces).isEmpty { missing.append("Nume") }
+        if contactURL.trimmingCharacters(in: .whitespaces).isEmpty { missing.append("Link contact") }
+        return "Lipsește: " + missing.joined(separator: ", ")
+    }
+
     private func loadExisting() {
         if let catalog = try? CatalogEditor.load() {
             existingCenters = catalog.serviceCenters.sorted { $0.name < $1.name }
@@ -126,7 +143,9 @@ struct PublishServiceCenterView: View {
         specialization = center.specialization
         contactURL = center.contactURL
         websiteURL = center.websiteURL ?? ""
+        address = center.address ?? ""
         coverSelection = center.coverImage.map { .existing($0) } ?? .none
+        scheduling = center.scheduling
         successMessage = nil
         errorMessage = nil
     }
@@ -139,7 +158,9 @@ struct PublishServiceCenterView: View {
         specialization = ""
         contactURL = ""
         websiteURL = ""
+        address = ""
         coverSelection = .none
+        scheduling = nil
     }
 
     private func publish() async {
@@ -161,7 +182,8 @@ struct PublishServiceCenterView: View {
                 specialization: specialization,
                 contactURL: contactURL.trimmingCharacters(in: .whitespaces),
                 websiteURL: websiteURL.trimmingCharacters(in: .whitespaces).isEmpty ? nil : websiteURL.trimmingCharacters(in: .whitespaces),
-                coverImage: coverImage
+                coverImage: coverImage, scheduling: scheduling,
+                address: address.trimmingCharacters(in: .whitespaces).isEmpty ? nil : address.trimmingCharacters(in: .whitespaces)
             )
 
             try CatalogEditor.upsertServiceCenter(center)

@@ -31,10 +31,19 @@ struct PublishView: View {
     @State private var type: PluginType = .dctl
     @State private var version = "1.0.0"
     @State private var priceText = "0"
+    @State private var promoPriceText = ""
     @State private var accessMode: AccessMode = .paid
     @State private var iconSymbol = "wand.and.stars"
     @State private var youtubeURL = ""
     @State private var supportedOS: SupportedOS = .crossPlatform
+    @State private var scheduling: Scheduling?
+    // Etapa 2 (2026-08-29) — linkuri multiple + social, toate opționale.
+    @State private var purchaseURL = ""
+    @State private var demoURL = ""
+    @State private var facebookURL = ""
+    @State private var instagramURL = ""
+    @State private var tiktokURL = ""
+    @State private var socialYoutubeURL = ""
     /// Coperta produsului. Preset `.icon` (pătrat 512×512) — accentul e pe
     /// simbol/recunoaștere rapidă în grilă, nu pe detaliu.
     @State private var coverSelection: CoverImageSelection = .none
@@ -131,6 +140,13 @@ struct PublishView: View {
                         switch accessMode {
                         case .paid:
                             TextField("Preț (EUR, donație)", text: $priceText).textFieldStyle(.roundedBorder)
+                            // Etapa 4 extinsă (2026-08-29) — sumă de
+                            // SUSȚINERE promoțională, temporară (ex. Black
+                            // Friday). Rămâne donație (Regula 3) — NICIODATĂ
+                            // etichetată "reducere"/"discount"/"preț redus"
+                            // în UI-ul clientului, doar "susținere promoțională".
+                            TextField("Sumă promoțională temporară (EUR, opțional — activă doar în intervalul de mai jos)", text: $promoPriceText)
+                                .textFieldStyle(.roundedBorder)
                         case .free:
                             Text("Clientul instalează direct, fără cod de activare.")
                                 .font(.caption).foregroundStyle(.secondary)
@@ -141,10 +157,24 @@ struct PublishView: View {
                         TextField("Icon (SF Symbol, opțional)", text: $iconSymbol).textFieldStyle(.roundedBorder)
                         TextField("Link tutorial YouTube (opțional, nelistat)", text: $youtubeURL).textFieldStyle(.roundedBorder)
 
+                        // Etapa 2 (2026-08-29) — linkuri multiple, 100% opționale.
+                        DisclosureGroup("Linkuri suplimentare & rețele sociale (opțional)") {
+                            VStack(alignment: .leading, spacing: 8) {
+                                TextField("Link Achiziție/Magazin extern", text: $purchaseURL).textFieldStyle(.roundedBorder)
+                                TextField("Link Demo/Preview", text: $demoURL).textFieldStyle(.roundedBorder)
+                                Text("Rețele sociale").font(.caption).foregroundStyle(.secondary).padding(.top, 4)
+                                TextField("Facebook", text: $facebookURL).textFieldStyle(.roundedBorder)
+                                TextField("YouTube (canal, nu tutorialul de mai sus)", text: $socialYoutubeURL).textFieldStyle(.roundedBorder)
+                                TextField("Instagram", text: $instagramURL).textFieldStyle(.roundedBorder)
+                                TextField("TikTok", text: $tiktokURL).textFieldStyle(.roundedBorder)
+                            }
+                            .padding(.top, 6)
+                        }
+
                         Picker("Compatibilitate", selection: $supportedOS) {
-                            Text("🍎 Doar Mac").tag(SupportedOS.macOS)
-                            Text("🪟 Doar Windows").tag(SupportedOS.windows)
-                            Text("🔄 Ambele platforme").tag(SupportedOS.crossPlatform)
+                            Label("Doar Mac", systemImage: SupportedOS.macOS.badgeSymbol).tag(SupportedOS.macOS)
+                            Label("Doar Windows", systemImage: SupportedOS.windows.badgeSymbol).tag(SupportedOS.windows)
+                            Label("Ambele platforme", systemImage: SupportedOS.crossPlatform.badgeSymbol).tag(SupportedOS.crossPlatform)
                         }
                         .pickerStyle(.segmented)
                         if isUpdate {
@@ -156,6 +186,7 @@ struct PublishView: View {
                 }
 
                 CoverImagePicker(preset: .icon, selection: $coverSelection)
+                SchedulingPicker(scheduling: $scheduling)
 
                 if let errorMessage {
                     Text(errorMessage).foregroundStyle(.red)
@@ -175,6 +206,9 @@ struct PublishView: View {
                     if isBusy { ProgressView().controlSize(.small) }
                     Button("Publică") { Task { await publish() } }
                         .disabled(isBusy || !isFormValid)
+                }
+                if !isFormValid && !isBusy {
+                    Text(validationHint).font(.caption).foregroundStyle(.orange)
                 }
             }
             .padding(24)
@@ -213,6 +247,19 @@ struct PublishView: View {
             && (accessMode != .paid || Double(priceText) != nil)
             && (pickedURL != nil || (isUpdate && !existingFiles.isEmpty))
             && (type != .ofx || pickedURL == nil || isDirectory(pickedURL!))
+    }
+
+    private var validationHint: String {
+        var missing: [String] = []
+        if id.trimmingCharacters(in: .whitespaces).isEmpty { missing.append("ID") }
+        if name.trimmingCharacters(in: .whitespaces).isEmpty { missing.append("Nume") }
+        if version.trimmingCharacters(in: .whitespaces).isEmpty { missing.append("Versiune") }
+        if accessMode == .paid && Double(priceText) == nil { missing.append("Preț (număr valid)") }
+        if pickedURL == nil && !(isUpdate && !existingFiles.isEmpty) { missing.append("Fișier sau folder") }
+        if type == .ofx, let url = pickedURL, !isDirectory(url) {
+            missing.append("Pentru OFX trebuie ales un folder, nu un fișier")
+        }
+        return "Lipsește: " + missing.joined(separator: ", ")
     }
 
     /// Lets the vendor pick either ONE file (a single DCTL/LUT) or a
@@ -281,6 +328,14 @@ struct PublishView: View {
         iconSymbol = item.iconSymbol ?? ""
         youtubeURL = item.youtubeURL ?? ""
         supportedOS = item.supportedOS
+        purchaseURL = item.purchaseURL ?? ""
+        demoURL = item.demoURL ?? ""
+        facebookURL = item.socialLinks?.facebookURL ?? ""
+        instagramURL = item.socialLinks?.instagramURL ?? ""
+        tiktokURL = item.socialLinks?.tiktokURL ?? ""
+        socialYoutubeURL = item.socialLinks?.youtubeURL ?? ""
+        scheduling = item.scheduling
+        promoPriceText = item.promoPriceEUR.map { String($0) } ?? ""
         existingFiles = item.files
         existingBundleFolderName = item.bundleFolderName
         // `.existing`: coperta e deja publicată, nu se rescrie dacă
@@ -366,6 +421,14 @@ struct PublishView: View {
             let coverImage = try CoverImageStore.commit(coverSelection, id: trimmedID, previous: previousCover)
             if coverImage != nil { log("Imagine de prezentare pregătită") }
 
+            func nilIfEmpty(_ s: String) -> String? {
+                let t = s.trimmingCharacters(in: .whitespaces)
+                return t.isEmpty ? nil : t
+            }
+            let social = SocialLinks(
+                facebookURL: nilIfEmpty(facebookURL), youtubeURL: nilIfEmpty(socialYoutubeURL),
+                instagramURL: nilIfEmpty(instagramURL), tiktokURL: nilIfEmpty(tiktokURL)
+            )
             let item = PluginItem(
                 id: trimmedID, name: name, type: type, description: description,
                 version: version, files: pluginFiles,
@@ -374,7 +437,12 @@ struct PublishView: View {
                 youtubeURL: trimmedYouTube.isEmpty ? nil : trimmedYouTube,
                 bundleFolderName: bundleFolderName,
                 coverImage: coverImage,
-                supportedOS: supportedOS
+                supportedOS: supportedOS,
+                purchaseURL: nilIfEmpty(purchaseURL),
+                demoURL: nilIfEmpty(demoURL),
+                socialLinks: social.isEmpty ? nil : social,
+                scheduling: scheduling,
+                promoPriceEUR: Double(promoPriceText.trimmingCharacters(in: .whitespaces))
             )
             try CatalogEditor.upsert(item)
             log("Catalog actualizat local")
@@ -449,6 +517,14 @@ struct PublishView: View {
         accessMode = .paid
         iconSymbol = "wand.and.stars"
         youtubeURL = ""
+        purchaseURL = ""
+        demoURL = ""
+        facebookURL = ""
+        instagramURL = ""
+        tiktokURL = ""
+        socialYoutubeURL = ""
+        scheduling = nil
+        promoPriceText = ""
         existingFiles = []
         existingBundleFolderName = nil
         coverSelection = .none

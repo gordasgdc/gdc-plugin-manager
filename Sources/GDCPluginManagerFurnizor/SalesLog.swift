@@ -32,6 +32,20 @@ enum SalesLog {
         var priceDisplay: String {
             priceEUR.formatted(.currency(code: "EUR"))
         }
+
+        /// Activă = fără expirare ("nu expira") SAU data de expirare e în
+        /// viitor. `expiresDisplay` e text liber (vezi `GenerateSerialView.
+        /// generate()`), dar formatul primelor 10 caractere e stabil
+        /// ("yyyy-MM-dd") pentru orice licență cu durată — Etapa 7
+        /// (2026-08-29), pentru filtrul "Active/Expirate" din Clienți.
+        var isActive: Bool {
+            if expiresDisplay.hasPrefix("nu expira") { return true }
+            let datePart = String(expiresDisplay.prefix(10))
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd"
+            guard let date = formatter.date(from: datePart) else { return true } // format necunoscut — nu presupunem expirat
+            return date >= Date()
+        }
     }
 
     static func append(productID: String, productName: String, customer: String, email: String,

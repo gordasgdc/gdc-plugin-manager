@@ -52,6 +52,9 @@ let gdcStandaloneProducts: [StandaloneProduct] = [
 
 struct GenerateSerialView: View {
     @State private var items: [PluginItem] = []
+    // Etapa 2 extinsă (2026-08-29) — Resursele Download (LUT/SFX/VFX/
+    // Plugin) pot fi acum plătite la fel ca produsele din catalog.
+    @State private var downloadResources: [DownloadableResource] = []
     @State private var selectedID = ""
     @State private var customerName = ""
     @State private var email = ""
@@ -106,6 +109,11 @@ struct GenerateSerialView: View {
                             Text("\(item.name) — \(item.priceDisplay)").tag(item.id)
                         }
                     }
+                    Section("Resurse Download (LUT/SFX/VFX/Plugin)") {
+                        ForEach(downloadResources) { resource in
+                            Text("\(resource.name) — \(resource.priceDisplay)").tag(resource.id)
+                        }
+                    }
                     Section("Aplicații standalone") {
                         ForEach(gdcStandaloneProducts) { app in
                             Text(app.name).tag(app.id)
@@ -120,6 +128,8 @@ struct GenerateSerialView: View {
                     // completat manual la fiecare generare.
                     if let item = items.first(where: { $0.id == selectedID }) {
                         priceText = String(item.priceEUR)
+                    } else if let resource = downloadResources.first(where: { $0.id == selectedID }) {
+                        priceText = String(resource.priceEUR)
                     } else if gdcStandaloneProducts.contains(where: { $0.id == selectedID }) {
                         priceText = ""
                     }
@@ -292,6 +302,7 @@ struct GenerateSerialView: View {
         if let catalog = try? CatalogEditor.load() {
             // Free items need no license at all - nothing to generate.
             items = catalog.items.filter { !$0.isFree }.sorted { $0.name < $1.name }
+            downloadResources = catalog.downloadableResources.filter { !$0.isFree }.sorted { $0.name < $1.name }
         }
     }
 

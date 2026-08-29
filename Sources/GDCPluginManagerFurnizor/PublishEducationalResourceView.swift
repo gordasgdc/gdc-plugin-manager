@@ -19,6 +19,8 @@ struct PublishEducationalResourceView: View {
     /// Coperta cărții/cursului. Preset `.cover` — vrem să se citească
     /// titlul de pe copertă într-un preview mărit.
     @State private var coverSelection: CoverImageSelection = .none
+    // Etapa 4 (2026-08-29) — valabilitate temporală opțională.
+    @State private var scheduling: Scheduling?
 
     @State private var isBusy = false
     @State private var errorMessage: String?
@@ -54,6 +56,7 @@ struct PublishEducationalResourceView: View {
                 }
 
                 CoverImagePicker(preset: .cover, selection: $coverSelection)
+                SchedulingPicker(scheduling: $scheduling)
 
                 if let errorMessage {
                     Label(errorMessage, systemImage: "exclamationmark.triangle.fill")
@@ -74,6 +77,9 @@ struct PublishEducationalResourceView: View {
                     if editingID != nil {
                         Button("Material nou") { clearForm() }
                     }
+                }
+                if !isFormValid && !isBusy {
+                    Text(validationHint).font(.caption).foregroundStyle(.orange)
                 }
 
                 if !existingResources.isEmpty {
@@ -119,6 +125,19 @@ struct PublishEducationalResourceView: View {
             && !externalURL.trimmingCharacters(in: .whitespaces).isEmpty
     }
 
+    private var validationHint: String {
+        var missing: [String] = []
+        if id.trimmingCharacters(in: .whitespaces).isEmpty { missing.append("ID") }
+        if name.trimmingCharacters(in: .whitespaces).isEmpty { missing.append("Nume") }
+        let trimmedURL = externalURL.trimmingCharacters(in: .whitespaces)
+        if trimmedURL.isEmpty {
+            missing.append("Link extern")
+        } else if URL(string: trimmedURL) == nil {
+            missing.append("Link extern (format invalid)")
+        }
+        return "Lipsește: " + missing.joined(separator: ", ")
+    }
+
     private func loadExisting() {
         if let catalog = try? CatalogEditor.load() {
             existingResources = catalog.educationalResources.sorted { $0.name < $1.name }
@@ -136,6 +155,7 @@ struct PublishEducationalResourceView: View {
         // `.existing`: imaginea e deja publicată, nu se rescrie dacă
         // furnizorul n-o atinge.
         coverSelection = resource.coverImage.map { .existing($0) } ?? .none
+        scheduling = resource.scheduling
         successMessage = nil
         errorMessage = nil
     }
@@ -149,6 +169,7 @@ struct PublishEducationalResourceView: View {
         externalURL = ""
         youtubeURL = ""
         coverSelection = .none
+        scheduling = nil
     }
 
     private func publish() async {
@@ -176,7 +197,7 @@ struct PublishEducationalResourceView: View {
                 description: description, kind: kind,
                 externalURL: externalURL.trimmingCharacters(in: .whitespaces),
                 youtubeURL: trimmedYouTube.isEmpty ? nil : trimmedYouTube,
-                coverImage: coverImage
+                coverImage: coverImage, scheduling: scheduling
             )
 
             try CatalogEditor.upsertEducationalResource(resource)

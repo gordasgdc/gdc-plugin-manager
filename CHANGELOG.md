@@ -1,5 +1,58 @@
 # Changelog — GDC Plugin Manager
 
+## Client v1.6.0 + Furnizor v1.4.0 (2026-08-29) — Etapa 2 finalizată: Resurse Download (LUT/SFX/VFX/Plugin)
+Cristi a confirmat: "produse noi, separate, cu simplu link de download, ca
+Audio". `DownloadableResource`/`DownloadCategory` (Core, nou) — 4
+categorii, model de download direct (nu auto-install ca LUT/DCTL). Furnizor:
+tab nou "Resurse Download". Client: 4 categorii noi în sidebar, cu filtru
+OS + linkuri Achiziție/Demo/Social pe card, incluse și în căutarea globală.
+Vezi CLAUDE.md pentru detalii complete + nota de scop (Audio vechi rămâne
+neschimbat, neunificat cu noua categorie SFX).
+
+## Client + Furnizor Mac v1.5.0 (2026-08-29) — Etapa 2 (parțial) din Planul Integrat de Upgrade v2.0
+Model `PluginItem` (Core) extins, retrocompatibil: `purchaseURL` (Link
+Achiziție/Magazin extern), `demoURL` (Link Demo/Preview), `socialLinks`
+(`SocialLinks`: Facebook/YouTube/Instagram/TikTok, toate opționale — nil
+pentru orice produs vechi). Furnizor (`PublishView.swift`): secțiune
+`DisclosureGroup` "Linkuri suplimentare & rețele sociale (opțional)" cu
+cele 6 câmpuri noi. Client (`PluginCard`): rând nou de iconițe (SF Symbols,
+nu emoji/logo-uri de brand) sub versiune — apare DOAR dacă produsul are
+cel puțin un link completat. **Scope rămas din Etapa 2**: categoriile noi
+LUT-uri/SFX/VFX/Plugin-uri pentru download direct (Premiere/FCP/Resolve) —
+arhitectură neclară încă (se suprapune cu modelul auto-install existent al
+LUT/DCTL) — de clarificat cu Cristi înainte de implementare.
+
+## Client Mac v1.5.0 (2026-08-29) — Etapa 1 din Planul Integrat de Upgrade v2.0
+Căutare fuzzy (typo-tolerant, `FuzzySearch.swift`, Core) + istoric de
+căutări recente + autocomplete (`SearchBar.swift`) și filtru rapid
+Toate/Mac/Windows (`OSFilter`), adăugate în `CatalogGrid` (secțiunea
+Produse — DCTL/LUT/Fuse/OFX/PowerGrade). Caută în nume, descriere, ID și
+tip. **TODO paritate**: `GDCPluginManagerWin` (Client Windows) nu are încă
+această bară — portare separată. **TODO scope**: AppsGrid/CoursesGrid/etc.
+nu au încă bara — extindere la o etapă viitoare, dacă se confirmă util.
+Nu s-a atins `docs/update.json` — fără release nou încă (Regula practică
+2026-08-27: nu bump `update.json` fără artefact publicat).
+
+**[COMPLETARE 2026-08-29] Badge-uri de compatibilitate OS: SF Symbols, nu
+emoji.** Cristi: "simbolurile de măr... nu-mi place, prefer SVG... impecabil,
+profesionist". `🍎/🪟/🔄` (emoji color) → `SupportedOS.badgeSymbol` (SF
+Symbols vectoriale: `apple.logo`/`pc`/`arrow.triangle.2.circlepath`), randate
+ca chip circular discret pe card + `Label(systemImage:)` în selectorul din
+Furnizor. **Port 1:1 pe Windows** (`GDCPluginManagerWin`): `BadgeSymbol()`
+(Fluent: `DesktopMac24`/`DesktopTower24`/`ArrowSync24`) + `SymbolNameConverter`
+(nou) + `ui:SymbolIcon` în `MainWindow.xaml`, în loc de `TextBlock` cu emoji.
+
+**[COMPLETARE 2026-08-29] Căutarea devine GLOBALĂ, nu doar pe Produse.**
+Cristi a semnalat explicit că bara de căutare trebuie să funcționeze din
+ORICE rubrică, pe TOT ce există în aplicație — nu doar pe secțiunea
+Produse. Bara locală din `CatalogGrid` a fost eliminată; o singură bară
+`SearchBar` acum trăiește deasupra `detailContent` (vizibilă indiferent de
+selecția din sidebar). Câmp gol → rubrica selectată se comportă exact ca
+înainte. Câmp nevid → `GlobalSearchResults` (nou) afișează, în ORICE
+rubrică te-ai afla, rezultate unificate din TOATE cele 8 colecții
+(Produse/Aplicații/Audio/Cursuri/Materiale/Evenimente/Magazine/Service),
+grupate pe secțiuni (o secțiune fără potriviri nu se afișează deloc).
+
 Format: fiecare intrare listează versiunea, platformele afectate, și — pentru
 funcționalități noi — dacă are paritate completă Mac/Windows sau e "doar pe
 o platformă, portare pe cealaltă e TODO".

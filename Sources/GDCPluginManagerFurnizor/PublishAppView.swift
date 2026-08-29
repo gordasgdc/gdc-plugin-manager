@@ -15,6 +15,7 @@ struct PublishAppView: View {
     /// Coperta aplicației. Preset `.icon` — un logo se recunoaște după
     /// formă, nu după detaliu, la fel ca la Magazine partenere.
     @State private var coverSelection: CoverImageSelection = .none
+    @State private var scheduling: Scheduling?
 
     @State private var isBusy = false
     @State private var errorMessage: String?
@@ -39,6 +40,7 @@ struct PublishAppView: View {
                 }
 
                 CoverImagePicker(preset: .icon, selection: $coverSelection)
+                SchedulingPicker(scheduling: $scheduling)
 
                 if let errorMessage {
                     Label(errorMessage, systemImage: "exclamationmark.triangle.fill")
@@ -59,6 +61,9 @@ struct PublishAppView: View {
                     if editingID != nil {
                         Button("Aplicație nouă") { clearForm() }
                     }
+                }
+                if !isFormValid && !isBusy {
+                    Text(validationHint).font(.caption).foregroundStyle(.orange)
                 }
 
                 if !existingApps.isEmpty {
@@ -104,6 +109,18 @@ struct PublishAppView: View {
             && (url.hasPrefix("http://") || url.hasPrefix("https://"))
     }
 
+    private var validationHint: String {
+        var missing: [String] = []
+        if id.trimmingCharacters(in: .whitespaces).isEmpty { missing.append("ID") }
+        if name.trimmingCharacters(in: .whitespaces).isEmpty { missing.append("Nume") }
+        if !url.hasPrefix("http://") && !url.hasPrefix("https://") {
+            missing.append("Link (trebuie să înceapă cu http:// sau https://)")
+        } else if URL(string: url) == nil {
+            missing.append("Link (format invalid)")
+        }
+        return "Lipsește: " + missing.joined(separator: ", ")
+    }
+
     private func loadExisting() {
         if let catalog = try? CatalogEditor.load() {
             existingApps = catalog.apps.sorted { $0.name < $1.name }
@@ -119,6 +136,7 @@ struct PublishAppView: View {
         // `.existing`: coperta e deja publicată, nu se rescrie dacă
         // furnizorul n-o atinge.
         coverSelection = app.coverImage.map { .existing($0) } ?? .none
+        scheduling = app.scheduling
         successMessage = nil
         errorMessage = nil
     }
@@ -130,6 +148,7 @@ struct PublishAppView: View {
         url = ""
         youtubeURL = ""
         coverSelection = .none
+        scheduling = nil
     }
 
     private func publish() async {
@@ -154,7 +173,7 @@ struct PublishAppView: View {
 
             let app = AppLink(id: appID, name: name, url: url,
                                youtubeURL: trimmedYouTube.isEmpty ? nil : trimmedYouTube,
-                               coverImage: coverImage)
+                               coverImage: coverImage, scheduling: scheduling)
             try CatalogEditor.upsertApp(app)
             try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Aplicatie: \(app.name)", paths: ["docs/catalog.json", "docs/covers"])
             successMessage = "„\(app.name)” e publicată — apare la clienți la următorul refresh de catalog."

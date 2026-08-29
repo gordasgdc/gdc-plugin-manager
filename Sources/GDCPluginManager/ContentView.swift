@@ -6,15 +6,78 @@ enum SidebarSection: Hashable {
     case all
     case type(PluginType)
     case audio
+    case download(DownloadCategory)
     case courses
     case educationalResources
     case events
+    case partnerOffers
+    case bundles
     case partnerStores
     case serviceCenters
     case apps
+    case myApps
     case android
     case license
     case help
+}
+
+/// Filigran sezonier — Etapa 6 (2026-08-29). O imagine MARE (nu o
+/// iconiță), la opacitate mică, "gravată" în fundalul ferestrei: ocupă o
+/// porțiune generoasă din colțul dreapta-jos, non-interactivă
+/// (`allowsHitTesting(false)`), fără să concureze cu conținutul din
+/// prim-plan. `nil` => nimic randat, fundalul Shift normal rămâne
+/// neschimbat.
+private struct SeasonalBackgroundLayer: View {
+    let url: URL?
+    @State private var nsImage: NSImage?
+    @State private var loadedURL: URL?
+
+    /// Cache local (Etapa 8) — la fel ca `catalog-cache.json`, ca filigranul
+    /// să rămână vizibil și offline / la eșec de rețea, nu doar când
+    /// descărcarea reușește de fiecare dată.
+    private var cacheFileURL: URL {
+        FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+            .appendingPathComponent("GDCPluginManager")
+            .appendingPathComponent("seasonal-background-cache")
+    }
+
+    var body: some View {
+        Group {
+            if let nsImage {
+                Image(nsImage: nsImage)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 480, height: 480)
+                    .opacity(0.07)
+                    .padding(-40) // depășește ușor marginea, ca un filigran "tăiat" de colț
+            }
+        }
+        .allowsHitTesting(false)
+        .task(id: url) {
+            guard let url, url != loadedURL || nsImage == nil else {
+                if url == nil { nsImage = nil }
+                return
+            }
+            // NU AsyncImage: decodorul lui SwiftUI nu randează fiabil SVG
+            // pe macOS (2026-08-29, filigran Black Friday invizibil în
+            // Client — cauza reală). `NSImage(data:)` ȘTIE nativ SVG
+            // (suport adăugat în macOS 12+), la fel ca orice raster.
+            if let (data, _) = try? await URLSession.shared.data(from: url), let image = NSImage(data: data) {
+                nsImage = image
+                loadedURL = url
+                saveToCache(data: data)
+            } else if let cached = try? Data(contentsOf: cacheFileURL), let image = NSImage(data: cached) {
+                // Offline sau rețea indisponibilă — ultima variantă descărcată cu succes.
+                nsImage = image
+                loadedURL = url
+            }
+        }
+    }
+
+    private func saveToCache(data: Data) {
+        try? FileManager.default.createDirectory(at: cacheFileURL.deletingLastPathComponent(), withIntermediateDirectories: true)
+        try? data.write(to: cacheFileURL)
+    }
 }
 
 struct ContentView: View {
@@ -34,9 +97,26 @@ struct ContentView: View {
     @State private var showDependencyPanel = false
     @State private var showManualUpdateCheckAlert = false
     @State private var manualUpdateCheckMessage = ""
+    @State private var globalSearchText = ""
 
     private var appVersion: String {
         Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "—"
+    }
+
+    /// Nume din TOATE categoriile — folosit ca sugestii live pentru bara
+    /// de căutare globală (istoricul recent se adaugă separat, în SearchBar).
+    private var globalSearchSuggestions: [String] {
+        catalog.items.map(\.name)
+            + catalog.apps.map(\.name)
+            + catalog.courses.map(\.name)
+            + catalog.audioTracks.map(\.name)
+            + catalog.events.map(\.title)
+            + catalog.educationalResources.map(\.name)
+            + catalog.partnerStores.map(\.name)
+            + catalog.serviceCenters.map(\.name)
+            + catalog.downloadableResources.map(\.name)
+            + catalog.partnerOffers.map(\.brandName)
+            + catalog.productBundles.map(\.name)
     }
 
     // Extras din body — switch cu multe cazuri inline facea type-check-ul
@@ -50,69 +130,122 @@ struct ContentView: View {
         case .help:
             HelpView()
         case .courses:
-            CoursesGrid(courses: catalog.courses)
+            // Etapa 4 (2026-08-29): filtrat pe valabilitate temporală —
+            // conținut nescheduled (nil) rămâne mereu vizibil, identic cu
+            // înainte.
+            CoursesGrid(courses: catalog.courses.filter { $0.scheduling?.isActiveNow ?? true })
         case .educationalResources:
-            EducationalResourcesGrid(resources: catalog.educationalResources)
+            EducationalResourcesGrid(resources: catalog.educationalResources.filter { $0.scheduling?.isActiveNow ?? true })
         case .events:
-            EventsGrid(events: catalog.events)
+            EventsGrid(events: catalog.events.filter { $0.scheduling?.isActiveNow ?? true })
+        case .partnerOffers:
+            PartnerOffersGrid(offers: catalog.partnerOffers.filter { $0.scheduling?.isActiveNow ?? true })
+        case .bundles:
+            BundleGrid(bundles: catalog.productBundles.filter { $0.scheduling?.isActiveNow ?? true }, catalog: catalog)
         case .partnerStores:
-            PartnerStoresGrid(stores: catalog.partnerStores)
+            PartnerStoresGrid(stores: catalog.partnerStores.filter { $0.scheduling?.isActiveNow ?? true })
         case .serviceCenters:
-            ServiceCentersGrid(centers: catalog.serviceCenters)
+            ServiceCentersGrid(centers: catalog.serviceCenters.filter { $0.scheduling?.isActiveNow ?? true })
         case .apps:
-            AppsGrid(apps: catalog.apps)
+            AppsGrid(apps: catalog.apps.filter { $0.scheduling?.isActiveNow ?? true })
+        case .myApps:
+            MyAppsGrid()
         case .audio:
-            AudioGrid(tracks: catalog.audioTracks)
+            AudioGrid(tracks: catalog.audioTracks.filter { $0.scheduling?.isActiveNow ?? true })
+        case .download(let category):
+            DownloadResourceGrid(resources: catalog.downloadableResources.filter { $0.category == category && ($0.scheduling?.isActiveNow ?? true) })
         case .android:
             MobileAppPane()
         case .all, .none:
-            CatalogGrid(items: catalog.items)
+            CatalogGrid(items: catalog.items.filter { $0.scheduling?.isActiveNow ?? true })
         case .type(let type):
-            CatalogGrid(items: catalog.items.filter { $0.type == type })
+            CatalogGrid(items: catalog.items.filter { $0.type == type && ($0.scheduling?.isActiveNow ?? true) })
         }
     }
 
     var body: some View {
         NavigationSplitView {
             List(selection: $selection) {
-                Label(L.t("sidebar.all"), systemImage: "square.grid.2x2")
-                    .tag(SidebarSection.all)
-                ForEach(PluginType.allCases) { type in
-                    Label {
-                        Text(type.label)
-                    } icon: {
-                        Image(systemName: type.defaultSymbol).foregroundStyle(type.tintColor)
+                // Grup 1: instalare AUTOMATĂ, exclusiv DaVinci Resolve
+                // (Scripting API / foldere native Resolve). Separat vizual
+                // explicit de grupul de mai jos — cerut de Cristi 2026-08-29:
+                // "să nu se încurce lumea" cu resursele de download direct.
+                Section(L.t("sidebar.section.resolveInstall")) {
+                    Label(L.t("sidebar.all"), systemImage: "square.grid.2x2")
+                        .tag(SidebarSection.all)
+                    ForEach(PluginType.allCases) { type in
+                        Label {
+                            Text(type.label)
+                        } icon: {
+                            Image(systemName: type.defaultSymbol).foregroundStyle(type.tintColor)
+                        }
+                        .tag(SidebarSection.type(type))
                     }
-                    .tag(SidebarSection.type(type))
                 }
-                Label {
-                    Text(L.t("sidebar.audio"))
-                } icon: {
-                    Image(systemName: "waveform").foregroundStyle(Color.indigo)
+
+                // Grup 2: RESURSE DE DOWNLOAD DIRECT — Premiere Pro/Final Cut/
+                // DaVinci Resolve, NU se instalează automat nicăieri (userul
+                // descarcă și importă manual). Include Audio (deja exista) +
+                // cele 4 categorii noi din Etapa 2 (2026-08-29).
+                Section(L.t("sidebar.section.downloadResources")) {
+                    Label {
+                        Text(L.t("sidebar.audio"))
+                    } icon: {
+                        Image(systemName: "waveform").foregroundStyle(Color.indigo)
+                    }
+                    .tag(SidebarSection.audio)
+                    ForEach(DownloadCategory.allCases) { category in
+                        Label {
+                            Text(L.t("sidebar.download.\(category.rawValue)"))
+                        } icon: {
+                            Image(systemName: category.defaultSymbol).foregroundStyle(category.tintColor)
+                        }
+                        .tag(SidebarSection.download(category))
+                    }
                 }
-                .tag(SidebarSection.audio)
-                Divider()
-                Label(L.t("sidebar.courses"), systemImage: "graduationcap")
-                    .tag(SidebarSection.courses)
-                Label(L.t("sidebar.educationalResources"), systemImage: "book")
-                    .tag(SidebarSection.educationalResources)
-                Label(L.t("sidebar.events"), systemImage: "calendar")
-                    .tag(SidebarSection.events)
-                Label(L.t("sidebar.partnerStores"), systemImage: "storefront")
-                    .tag(SidebarSection.partnerStores)
-                Label(L.t("sidebar.serviceCenters"), systemImage: "wrench.and.screwdriver")
-                    .tag(SidebarSection.serviceCenters)
-                Label(L.t("sidebar.apps"), systemImage: "app.badge")
-                    .tag(SidebarSection.apps)
-                // Aplicatia mobila companion (PWA, gordas.dev/app.html — fost
-                // APK/TWA, retras 2026-08-24) — vezi AndroidPane.swift.
-                Label(L.t("sidebar.mobileApp"), systemImage: "iphone.gen3")
-                    .tag(SidebarSection.android)
-                Divider()
-                Label(L.t("sidebar.license"), systemImage: "key.fill")
-                    .tag(SidebarSection.license)
-                Label(L.t("sidebar.help"), systemImage: "questionmark.circle")
-                    .tag(SidebarSection.help)
+
+                // Grup 3: comunitate & educație — conținut informativ, fără
+                // fișiere/instalare, doar link-uri externe (Cursuri/Materiale/
+                // Evenimente) sau contact (Magazine/Service).
+                Section(L.t("sidebar.section.community")) {
+                    Label(L.t("sidebar.courses"), systemImage: "graduationcap")
+                        .tag(SidebarSection.courses)
+                    Label(L.t("sidebar.educationalResources"), systemImage: "book")
+                        .tag(SidebarSection.educationalResources)
+                    Label(L.t("sidebar.events"), systemImage: "calendar")
+                        .tag(SidebarSection.events)
+                    // Etapa 4 (2026-08-29) — Oferte Parteneri.
+                    Label(L.t("sidebar.partnerOffers"), systemImage: "tag")
+                        .tag(SidebarSection.partnerOffers)
+                    // Etapa 9 (2026-08-29) — Pachete/Bundle-uri.
+                    Label(L.t("sidebar.bundles"), systemImage: "shippingbox")
+                        .tag(SidebarSection.bundles)
+                    Label(L.t("sidebar.partnerStores"), systemImage: "storefront")
+                        .tag(SidebarSection.partnerStores)
+                    Label(L.t("sidebar.serviceCenters"), systemImage: "wrench.and.screwdriver")
+                        .tag(SidebarSection.serviceCenters)
+                }
+
+                // Grup 4: ecosistemul GDC — alte aplicații ale lui Cristi.
+                Section(L.t("sidebar.section.ecosystem")) {
+                    Label(L.t("sidebar.apps"), systemImage: "app.badge")
+                        .tag(SidebarSection.apps)
+                    // Aplicatia mobila companion (PWA, gordas.dev/app.html —
+                    // fost APK/TWA, retras 2026-08-24) — vezi AndroidPane.swift.
+                    Label(L.t("sidebar.mobileApp"), systemImage: "iphone.gen3")
+                        .tag(SidebarSection.android)
+                    // Etapa 3 (2026-08-29) — lansator rapid, vezi MyAppsLauncher.swift.
+                    Label(L.t("sidebar.myApps"), systemImage: "square.grid.3x1.folder.badge.plus")
+                        .tag(SidebarSection.myApps)
+                }
+
+                // Grup 5: contul tău — licență + ajutor, mereu ultimul.
+                Section(L.t("sidebar.section.account")) {
+                    Label(L.t("sidebar.license"), systemImage: "key.fill")
+                        .tag(SidebarSection.license)
+                    Label(L.t("sidebar.help"), systemImage: "questionmark.circle")
+                        .tag(SidebarSection.help)
+                }
             }
             // BUG REAL gasit 2026-08-26: navigationSplitViewColumnWidth(180)
             // (valoare unica) FIXEAZA latimea coloanei, nu o seteaza doar ca
@@ -139,8 +272,31 @@ struct ContentView: View {
                 if let update = updateChecker.availableUpdate {
                     UpdateBanner(update: update)
                 }
-                detailContent
+                // Bară de căutare GLOBALĂ (Etapa 1, extinsă 2026-08-29 —
+                // cerut explicit: "trebuie să cuprindă tot ce există în
+                // aplicație"). Vizibilă pe ORICE rubrică, indiferent de
+                // secțiunea aleasă în sidebar — cât timp userul tastează
+                // ceva, rezultatele unificate din TOATE categoriile
+                // (Produse/Aplicații/Cursuri/Audio/Evenimente/Materiale/
+                // Magazine/Service) înlocuiesc conținutul rubricii curente;
+                // câmp gol → se revine exact la rubrica selectată, ca înainte.
+                SearchBar(text: $globalSearchText, historyKey: "gdcpm_search_history_global",
+                          liveSuggestions: globalSearchSuggestions)
+                    .padding(.horizontal, 16)
+                    .padding(.top, 10)
+                if globalSearchText.trimmingCharacters(in: .whitespaces).isEmpty {
+                    detailContent
+                } else {
+                    GlobalSearchResults(catalog: catalog, query: globalSearchText)
+                }
             }
+            // Etapa 6 (2026-08-29) — filigran sezonier. Clarificare
+            // EXPLICITĂ de la Cristi: "nu neapărat numai banner... să
+            // apară ca o imagine mai mare... ca și cum ar fi sculptat/
+            // imprimat în fundal" — deci NU un icon mic suprapus, ci un
+            // strat mare, discret, ÎN SPATELE conținutului (opacitate
+            // mică, non-interactiv), nu deasupra lui.
+            .background(alignment: .bottomTrailing) { SeasonalBackgroundLayer(url: catalog.seasonalBackgroundURL) }
         }
         .navigationTitle(L.t("app.name"))
         .toolbar {
@@ -329,32 +485,202 @@ private enum PriceFilter: String, CaseIterable, Identifiable {
     }
 }
 
+/// Filtru OS Toate/Mac/Windows — Etapa 1 din planul de upgrade
+/// (2026-08-29). Produsele `.crossPlatform` apar la orice filtru ales
+/// (ele chiar rulează pe ambele), la fel cum se comportă deja badge-ul
+/// 🔄 pe card.
+private enum OSFilter: String, CaseIterable, Identifiable {
+    case all, mac, windows
+    var id: String { rawValue }
+    var label: String {
+        switch self {
+        case .all: return L.t("filter.os.all")
+        case .mac: return L.t("filter.os.mac")
+        case .windows: return L.t("filter.os.windows")
+        }
+    }
+    func matches(_ supportedOS: SupportedOS) -> Bool {
+        switch self {
+        case .all: return true
+        case .mac: return supportedOS == .macOS || supportedOS == .crossPlatform
+        case .windows: return supportedOS == .windows || supportedOS == .crossPlatform
+        }
+    }
+}
+
+/// Rezultate unificate ale căutării globale — combină toate cele 8
+/// colecții din catalog, fiecare filtrată cu `FuzzySearch` pe câmpurile ei
+/// relevante. O secțiune nu se afișează deloc dacă n-are niciun rezultat.
+private struct GlobalSearchResults: View {
+    @ObservedObject var catalog: CatalogService
+    let query: String
+
+    // Etapa 4 extinsă (2026-08-29): rezultatele de căutare respectă
+    // valabilitatea temporală în TOATE colecțiile, nu doar Cursuri/
+    // Evenimente/Materiale/Oferte — un produs/aplicație/resursă expirată
+    // sau neînceput încă nu trebuie să apară nici prin căutare globală.
+    private var matchedItems: [PluginItem] {
+        catalog.items.filter { ($0.scheduling?.isActiveNow ?? true) && FuzzySearch.matches(query: query, inAny: [$0.name, $0.description, $0.id, $0.type.label]) }
+    }
+    private var matchedApps: [AppLink] {
+        catalog.apps.filter { ($0.scheduling?.isActiveNow ?? true) && FuzzySearch.matches(query: query, inAny: [$0.name, $0.id]) }
+    }
+    private var matchedCourses: [Course] {
+        catalog.courses.filter { ($0.scheduling?.isActiveNow ?? true) && FuzzySearch.matches(query: query, inAny: [$0.name, $0.description, $0.id]) }
+    }
+    private var matchedAudio: [AudioTrack] {
+        catalog.audioTracks.filter { ($0.scheduling?.isActiveNow ?? true) && FuzzySearch.matches(query: query, inAny: [$0.name, $0.description, $0.id]) }
+    }
+    private var matchedEvents: [Event] {
+        catalog.events.filter { ($0.scheduling?.isActiveNow ?? true) && FuzzySearch.matches(query: query, inAny: [$0.title, $0.description, $0.location, $0.id]) }
+    }
+    private var matchedResources: [EducationalResource] {
+        catalog.educationalResources.filter { ($0.scheduling?.isActiveNow ?? true) && FuzzySearch.matches(query: query, inAny: [$0.name, $0.description, $0.kind.label, $0.id]) }
+    }
+    private var matchedOffers: [PartnerOffer] {
+        catalog.partnerOffers.filter { ($0.scheduling?.isActiveNow ?? true) && FuzzySearch.matches(query: query, inAny: [$0.brandName, $0.description, $0.id, $0.couponCode]) }
+    }
+    private var matchedStores: [PartnerStore] {
+        catalog.partnerStores.filter { ($0.scheduling?.isActiveNow ?? true) && FuzzySearch.matches(query: query, inAny: [$0.name, $0.description, $0.id]) }
+    }
+    private var matchedCenters: [ServiceCenter] {
+        catalog.serviceCenters.filter { ($0.scheduling?.isActiveNow ?? true) && FuzzySearch.matches(query: query, inAny: [$0.name, $0.specialization, serviceCategoryLabel($0.category), $0.id]) }
+    }
+    private var matchedDownloads: [DownloadableResource] {
+        catalog.downloadableResources.filter { ($0.scheduling?.isActiveNow ?? true) && FuzzySearch.matches(query: query, inAny: [$0.name, $0.description, $0.id, $0.category.rawValue]) }
+    }
+    private var matchedBundles: [ProductBundle] {
+        catalog.productBundles.filter { ($0.scheduling?.isActiveNow ?? true) && FuzzySearch.matches(query: query, inAny: [$0.name, $0.description, $0.id]) }
+    }
+
+    private var totalMatches: Int {
+        matchedItems.count + matchedApps.count + matchedCourses.count + matchedAudio.count
+            + matchedEvents.count + matchedResources.count + matchedStores.count + matchedCenters.count
+            + matchedDownloads.count + matchedOffers.count + matchedBundles.count
+    }
+
+    private let productColumns = [GridItem(.adaptive(minimum: 240, maximum: 300), spacing: 14)]
+    private let wideColumns = [GridItem(.adaptive(minimum: 260, maximum: 340), spacing: 14)]
+
+    var body: some View {
+        ScrollView {
+            if totalMatches == 0 {
+                Text(L.t("search.noResults")).foregroundStyle(.secondary).padding(40)
+            } else {
+                VStack(alignment: .leading, spacing: 20) {
+                    section(title: L.t("sidebar.all"), isEmpty: matchedItems.isEmpty) {
+                        LazyVGrid(columns: productColumns, spacing: 14) {
+                            ForEach(matchedItems) { PluginCard(item: $0) }
+                        }
+                    }
+                    section(title: L.t("sidebar.apps"), isEmpty: matchedApps.isEmpty) {
+                        LazyVGrid(columns: wideColumns, spacing: 14) {
+                            ForEach(matchedApps) { AppCard(app: $0) }
+                        }
+                    }
+                    section(title: L.t("sidebar.audio"), isEmpty: matchedAudio.isEmpty) {
+                        LazyVGrid(columns: wideColumns, spacing: 14) {
+                            ForEach(matchedAudio) { AudioCard(track: $0) }
+                        }
+                    }
+                    section(title: L.t("sidebar.courses"), isEmpty: matchedCourses.isEmpty) {
+                        LazyVGrid(columns: wideColumns, spacing: 14) {
+                            ForEach(matchedCourses) { CourseCard(course: $0) }
+                        }
+                    }
+                    section(title: L.t("sidebar.educationalResources"), isEmpty: matchedResources.isEmpty) {
+                        LazyVGrid(columns: wideColumns, spacing: 14) {
+                            ForEach(matchedResources) { EducationalResourceCard(resource: $0) }
+                        }
+                    }
+                    section(title: L.t("sidebar.events"), isEmpty: matchedEvents.isEmpty) {
+                        LazyVGrid(columns: wideColumns, spacing: 14) {
+                            ForEach(matchedEvents) { EventCard(event: $0) }
+                        }
+                    }
+                    section(title: L.t("sidebar.partnerOffers"), isEmpty: matchedOffers.isEmpty) {
+                        LazyVGrid(columns: wideColumns, spacing: 14) {
+                            ForEach(matchedOffers) { PartnerOfferCard(offer: $0) }
+                        }
+                    }
+                    section(title: L.t("sidebar.bundles"), isEmpty: matchedBundles.isEmpty) {
+                        LazyVGrid(columns: wideColumns, spacing: 14) {
+                            ForEach(matchedBundles) { BundleCard(bundle: $0, catalog: catalog) }
+                        }
+                    }
+                    section(title: L.t("sidebar.partnerStores"), isEmpty: matchedStores.isEmpty) {
+                        LazyVGrid(columns: wideColumns, spacing: 14) {
+                            ForEach(matchedStores) { PartnerStoreCard(store: $0) }
+                        }
+                    }
+                    section(title: L.t("sidebar.serviceCenters"), isEmpty: matchedCenters.isEmpty) {
+                        LazyVGrid(columns: wideColumns, spacing: 14) {
+                            ForEach(matchedCenters) { ServiceCenterCard(center: $0) }
+                        }
+                    }
+                    ForEach(DownloadCategory.allCases) { category in
+                        let matches = matchedDownloads.filter { $0.category == category }
+                        section(title: L.t("sidebar.download.\(category.rawValue)"), isEmpty: matches.isEmpty) {
+                            LazyVGrid(columns: wideColumns, spacing: 14) {
+                                ForEach(matches) { DownloadResourceCard(resource: $0) }
+                            }
+                        }
+                    }
+                }
+                .padding(16)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func section<Content: View>(title: String, isEmpty: Bool, @ViewBuilder content: () -> Content) -> some View {
+        if !isEmpty {
+            VStack(alignment: .leading, spacing: 8) {
+                Text(title).font(.headline).foregroundStyle(.secondary)
+                content()
+            }
+        }
+    }
+}
+
 private struct CatalogGrid: View {
     let items: [PluginItem]
     @EnvironmentObject private var catalog: CatalogService
     @State private var priceFilter: PriceFilter = .all
+    @State private var osFilter: OSFilter = .all
 
     // 240 (de la 220): cardul are acum și copertă, iar descrierea urcă la
     // 5 rânduri — sub 240 textul se rupe urât.
     private let columns = [GridItem(.adaptive(minimum: 240, maximum: 300), spacing: 14)]
 
     private var filteredItems: [PluginItem] {
-        items.filter { priceFilter.matches($0) }
+        items.filter { priceFilter.matches($0) && osFilter.matches($0.supportedOS) }
     }
 
     var body: some View {
         VStack(spacing: 0) {
             if !items.isEmpty {
-                Picker("", selection: $priceFilter) {
-                    ForEach(PriceFilter.allCases) { filter in
-                        Text(filter.label).tag(filter)
+                HStack {
+                    Picker("", selection: $priceFilter) {
+                        ForEach(PriceFilter.allCases) { filter in
+                            Text(filter.label).tag(filter)
+                        }
                     }
+                    .pickerStyle(.segmented)
+                    .labelsHidden()
+                    .frame(maxWidth: 280)
+
+                    Picker("", selection: $osFilter) {
+                        ForEach(OSFilter.allCases) { filter in
+                            Text(filter.label).tag(filter)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                    .labelsHidden()
+                    .frame(maxWidth: 220)
                 }
-                .pickerStyle(.segmented)
-                .labelsHidden()
-                .frame(maxWidth: 280)
                 .padding(.horizontal, 16)
-                .padding(.top, 12)
+                .padding(.top, 10)
             }
 
             ScrollView {
@@ -376,6 +702,66 @@ private struct CatalogGrid: View {
                 }
             }
         }
+    }
+}
+
+/// Rând de iconițe pentru linkurile opționale ale unei resurse (Achiziție/
+/// Demo/rețele sociale) — Etapa 2 (2026-08-29). Shared între `PluginCard`
+/// și `DownloadResourceCard`, ca să nu dubleze aceeași logică. Nu se
+/// randă deloc dacă niciun link nu e completat.
+@ViewBuilder
+func ExtraLinksRow(purchaseURL: String?, demoURL: String?, social: SocialLinks?) -> some View {
+    let hasAny = purchaseURL != nil || demoURL != nil || !(social?.isEmpty ?? true)
+    if hasAny {
+        HStack(spacing: 10) {
+            if let purchaseURL, let url = URL(string: purchaseURL) {
+                LinkIconButton(systemImage: "cart", tooltip: L.t("card.purchaseLink"), url: url)
+            }
+            if let demoURL, let url = URL(string: demoURL) {
+                LinkIconButton(systemImage: "play.circle", tooltip: L.t("card.demoLink"), url: url)
+            }
+            if let social {
+                if let s = social.facebookURL, let url = URL(string: s) {
+                    LinkIconButton(systemImage: "f.circle", tooltip: "Facebook", url: url)
+                }
+                if let s = social.youtubeURL, let url = URL(string: s) {
+                    LinkIconButton(systemImage: "play.rectangle", tooltip: "YouTube", url: url)
+                }
+                if let s = social.instagramURL, let url = URL(string: s) {
+                    LinkIconButton(systemImage: "camera.circle", tooltip: "Instagram", url: url)
+                }
+                if let s = social.tiktokURL, let url = URL(string: s) {
+                    LinkIconButton(systemImage: "music.note", tooltip: "TikTok", url: url)
+                }
+            }
+            Spacer()
+        }
+    }
+}
+
+private func LinkIconButton(systemImage: String, tooltip: String, url: URL) -> some View {
+    Button {
+        NSWorkspace.shared.open(url)
+    } label: {
+        Image(systemName: systemImage)
+            .font(.system(size: 12))
+            .foregroundStyle(.secondary)
+    }
+    .buttonStyle(.plain)
+    .help(tooltip)
+}
+
+/// Buton compact "deschide în Google Maps" — Etapa 5 (2026-08-29). Nu se
+/// randă deloc dacă `mapsURL` e nil (adresă lipsă/goală).
+@ViewBuilder
+func MapButton(mapsURL: URL?) -> some View {
+    if let mapsURL {
+        Button {
+            NSWorkspace.shared.open(mapsURL)
+        } label: {
+            Label(L.t("maps.open"), systemImage: "map")
+        }
+        .controlSize(.small)
     }
 }
 
@@ -420,8 +806,15 @@ private struct PluginCard: View {
                 // trebuie sa se vada, nu doar sa fie absenta unui badge —
                 // decizia anterioara de a-l ascunde pentru starea implicita
                 // a fost o presupunere gresita despre asteptarile UX).
-                Text(item.supportedOS.badgeEmoji)
-                    .font(.system(size: 12))
+                // SF Symbols vectoriale, nu emoji color (2026-08-29, cerut
+                // explicit — "impecabil, profesionist") — chip circular
+                // discret, ton neutru, la fel ca stilul de badge din
+                // `typeBadge` de mai jos.
+                Image(systemName: item.supportedOS.badgeSymbol)
+                    .font(.system(size: 10, weight: .semibold))
+                    .foregroundStyle(.secondary)
+                    .frame(width: 20, height: 20)
+                    .background(Circle().fill(Color.secondary.opacity(0.12)))
                     .help(osBadgeTooltip)
             }
             // Coperta produsului (preset .icon, pătrat 512×512). Dacă
@@ -447,16 +840,33 @@ private struct PluginCard: View {
                         BadgePill(text: L.t("card.free"), color: .green)
                     } else {
                         VStack(alignment: .trailing, spacing: 3) {
-                            Text(item.priceDisplay)
+                            // Etapa 4 extinsă (2026-08-29): sumă de
+                            // susținere promoțională temporară (ex. Black
+                            // Friday) — rămâne donație (Regula 3), suma
+                            // veche apare tăiată, niciodată cuvântul
+                            // "reducere"/"discount". Badge distinct de
+                            // "-X% OFF" (acela e EXCLUSIV pentru
+                            // `PartnerOffer`, branduri terțe).
+                            if item.isPromoActive {
+                                Text(item.priceDisplay)
+                                    .font(.caption)
+                                    .strikethrough()
+                                    .foregroundStyle(.tertiary)
+                            }
+                            Text(item.effectivePriceEUR.formatted(.currency(code: "EUR")))
                                 .font(.subheadline.weight(.semibold))
                                 .foregroundStyle(.secondary)
-                            // Badge "LICENȚĂ" — inlocuieste vechea eticheta
-                            // "donație" (2026-08-24, cerere explicita: fara
-                            // ton de "reclama agresiva", comunicare
-                            // transparenta). Mesajul complet de incredere
-                            // apare la hover (.help), cardul ramane compact.
-                            BadgePill(text: L.t("card.paid"), color: .orange)
-                                .help(L.t("card.trustMessage"))
+                            if item.isPromoActive {
+                                BadgePill(text: L.t("card.promo"), color: .red)
+                            } else {
+                                // Badge "LICENȚĂ" — inlocuieste vechea eticheta
+                                // "donație" (2026-08-24, cerere explicita: fara
+                                // ton de "reclama agresiva", comunicare
+                                // transparenta). Mesajul complet de incredere
+                                // apare la hover (.help), cardul ramane compact.
+                                BadgePill(text: L.t("card.paid"), color: .orange)
+                                    .help(L.t("card.trustMessage"))
+                            }
                         }
                     }
                 }
@@ -472,6 +882,13 @@ private struct PluginCard: View {
             Text("\(L.t("card.version")) \(item.version)")
                 .font(.caption2)
                 .foregroundStyle(.tertiary)
+
+            // Etapa 2 (2026-08-29) — linkuri opționale (Achiziție/Demo) +
+            // rețele sociale, toate 100% opționale: rândul nu apare deloc
+            // dacă produsul nu are niciunul completat. Iconițe SF Symbols
+            // vectoriale (nu logo-uri de brand — Apple nu le permite ca
+            // simboluri third-party), simplu și consistent, nu emoji.
+            extraLinksRow
 
             if let errorMessage {
                 Text(errorMessage).font(.caption2).foregroundStyle(.red)
@@ -500,6 +917,10 @@ private struct PluginCard: View {
         } message: {
             Text(resolveWarningBody)
         }
+    }
+
+    private var extraLinksRow: some View {
+        ExtraLinksRow(purchaseURL: item.purchaseURL, demoURL: item.demoURL, social: item.socialLinks)
     }
 
     /// Centered tag at the top of the card naming the product's type
@@ -579,7 +1000,9 @@ private struct PluginCard: View {
     }
 
     private var buyURL: URL {
-        let text = "Salut! Vreau să deblochez \(item.name) cu o donație de \(item.priceDisplay). ID calculator: \(MachineID.display)"
+        // Suma promoțională activă (dacă e cazul) — vezi effectivePriceEUR.
+        let priceText = item.effectivePriceEUR.formatted(.currency(code: "EUR"))
+        let text = "Salut! Vreau să deblochez \(item.name) cu o donație de \(priceText). ID calculator: \(MachineID.display)"
         return WhatsAppLink.url(text: text)
     }
 
@@ -833,8 +1256,11 @@ private struct EventCard: View {
                 }
             }
             Text(event.title).font(.headline)
-            Text("\(event.dateDisplay) · \(event.location)")
-                .font(.caption).foregroundStyle(.secondary)
+            HStack(spacing: 6) {
+                Text("\(event.dateDisplay) · \(event.location)")
+                    .font(.caption).foregroundStyle(.secondary)
+                MapButton(mapsURL: event.mapsURL)
+            }
             Text(event.description)
                 .font(.caption)
                 .foregroundStyle(.secondary)
@@ -848,6 +1274,213 @@ private struct EventCard: View {
         .padding(12)
         .frame(maxWidth: .infinity, minHeight: 220, alignment: .leading)
         .background(RoundedRectangle(cornerRadius: 10).fill(.background.secondary))
+    }
+}
+
+/// Grid pentru Oferte Parteneri — Etapa 4 (2026-08-29). Discount afișat ca
+/// badge grafic pe card, generat automat din `discountText` (dacă e setat).
+/// Grid pentru Pachete/Bundle-uri — Etapa 9 (2026-08-29). Fiecare card
+/// listează produsele incluse (rezolvate din catalog după `BundleItemRef`),
+/// suma individuală tăiată + prețul total al pachetului, buton WhatsApp
+/// (achiziția, ca la orice produs — licențele individuale rămân un pas
+/// manual separat al Furnizorului, neschimbat).
+private struct BundleGrid: View {
+    let bundles: [ProductBundle]
+    @ObservedObject var catalog: CatalogService
+
+    private let columns = [GridItem(.adaptive(minimum: 300, maximum: 400), spacing: 16)]
+
+    var body: some View {
+        ScrollView {
+            if bundles.isEmpty {
+                Text(L.t("bundles.empty")).foregroundStyle(.secondary).padding(40)
+            } else {
+                LazyVGrid(columns: columns, spacing: 14) {
+                    ForEach(bundles) { bundle in
+                        BundleCard(bundle: bundle, catalog: catalog)
+                    }
+                }
+                .padding(16)
+            }
+        }
+    }
+}
+
+private struct BundleCard: View {
+    let bundle: ProductBundle
+    @ObservedObject var catalog: CatalogService
+
+    /// Nume + preț individual pentru fiecare produs inclus, rezolvate
+    /// după tip (produs/resursă download/curs) — un ID care nu se mai
+    /// găsește (produs șters ulterior) e omis silențios, nu crapă cardul.
+    private var resolvedItems: [(name: String, priceEUR: Double?)] {
+        bundle.items.compactMap { ref in
+            switch ref.kind {
+            case .product:
+                guard let item = catalog.items.first(where: { $0.id == ref.id }) else { return nil }
+                return (item.name, item.priceEUR)
+            case .download:
+                guard let resource = catalog.downloadableResources.first(where: { $0.id == ref.id }) else { return nil }
+                return (resource.name, resource.priceEUR)
+            case .course:
+                guard let course = catalog.courses.first(where: { $0.id == ref.id }) else { return nil }
+                return (course.name, nil)
+            case .audio:
+                guard let track = catalog.audioTracks.first(where: { $0.id == ref.id }) else { return nil }
+                return (track.name, nil)
+            case .app:
+                guard let app = catalog.apps.first(where: { $0.id == ref.id }) else { return nil }
+                return (app.name, nil)
+            case .material:
+                guard let resource = catalog.educationalResources.first(where: { $0.id == ref.id }) else { return nil }
+                return (resource.name, nil)
+            }
+        }
+    }
+
+    private var individualTotal: Double {
+        resolvedItems.compactMap(\.priceEUR).reduce(0, +)
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            CoverThumbnail(
+                url: bundle.coverImageURL,
+                fallbackSymbol: "shippingbox.fill",
+                tint: .purple,
+                height: 130,
+                lightboxTitle: bundle.name
+            )
+            Text(bundle.name).font(.headline)
+            Text(bundle.description)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+
+            VStack(alignment: .leading, spacing: 3) {
+                Text(L.t("bundles.includes")).font(.caption2).foregroundStyle(.secondary)
+                ForEach(resolvedItems, id: \.name) { entry in
+                    Text("• \(entry.name)").font(.caption2).foregroundStyle(.secondary)
+                }
+            }
+
+            HStack(alignment: .lastTextBaseline, spacing: 8) {
+                if individualTotal > bundle.bundlePriceEUR {
+                    Text(individualTotal.formatted(.currency(code: "EUR")))
+                        .font(.caption)
+                        .strikethrough()
+                        .foregroundStyle(.tertiary)
+                }
+                Text(bundle.bundlePriceDisplay)
+                    .font(.subheadline.weight(.bold))
+                    .foregroundStyle(.orange)
+            }
+
+            ExtraLinksRow(purchaseURL: nil, demoURL: nil, social: bundle.socialLinks)
+            Button(L.t("bundles.buy")) { NSWorkspace.shared.open(buyURL) }
+        }
+        .padding(12)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(RoundedRectangle(cornerRadius: 10).fill(.background.secondary))
+        .overlay(alignment: .topTrailing) {
+            if let urlString = bundle.youtubeURL, let url = URL(string: urlString) {
+                Button { NSWorkspace.shared.open(url) } label: {
+                    Image(systemName: "info.circle.fill")
+                        .font(.system(size: 16))
+                        .foregroundStyle(.secondary)
+                        .background(Circle().fill(.background).frame(width: 16, height: 16))
+                }
+                .buttonStyle(.plain)
+                .padding(8)
+                .help(L.t("card.tutorial"))
+            }
+        }
+    }
+
+    private var buyURL: URL {
+        let itemsList = resolvedItems.map(\.name).joined(separator: ", ")
+        let text = "Salut! Vreau să cumpăr pachetul „\(bundle.name)” (\(itemsList)) la \(bundle.bundlePriceDisplay). ID calculator: \(MachineID.display)"
+        return WhatsAppLink.url(text: text)
+    }
+}
+
+private struct PartnerOffersGrid: View {
+    let offers: [PartnerOffer]
+
+    private let columns = [GridItem(.adaptive(minimum: 300, maximum: 400), spacing: 16)]
+
+    var body: some View {
+        ScrollView {
+            if offers.isEmpty {
+                Text(L.t("partnerOffers.empty")).foregroundStyle(.secondary).padding(40)
+            } else {
+                LazyVGrid(columns: columns, spacing: 14) {
+                    ForEach(offers) { offer in
+                        PartnerOfferCard(offer: offer)
+                    }
+                }
+                .padding(16)
+            }
+        }
+    }
+}
+
+private struct PartnerOfferCard: View {
+    let offer: PartnerOffer
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            ZStack(alignment: .topTrailing) {
+                CoverThumbnail(
+                    url: offer.coverImageURL,
+                    fallbackSymbol: "tag.fill",
+                    tint: .red,
+                    height: 150,
+                    lightboxTitle: offer.brandName
+                )
+                // Badge de discount, generat automat din `discountText` —
+                // permis aici (brand PARTENER, nu produs propriu GDC).
+                if let discountText = offer.discountText {
+                    Text(discountText.uppercased())
+                        .font(.system(size: 11, weight: .bold))
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 10).padding(.vertical, 4)
+                        .background(Capsule().fill(Color.red))
+                        .padding(8)
+                }
+            }
+            Text(offer.brandName).font(.headline)
+            Text(offer.description)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+            if let coupon = offer.couponCode {
+                HStack(spacing: 4) {
+                    Text(L.t("partnerOffers.coupon")).font(.caption2).foregroundStyle(.secondary)
+                    Text(coupon).font(.caption2.monospaced()).fontWeight(.bold)
+                }
+            }
+            ExtraLinksRow(purchaseURL: nil, demoURL: nil, social: offer.socialLinks)
+            if let url = URL(string: offer.url) {
+                Button(L.t("partnerOffers.open")) { NSWorkspace.shared.open(url) }
+            }
+        }
+        .padding(12)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(RoundedRectangle(cornerRadius: 10).fill(.background.secondary))
+        .overlay(alignment: .topLeading) {
+            if let urlString = offer.youtubeURL, let url = URL(string: urlString) {
+                Button { NSWorkspace.shared.open(url) } label: {
+                    Image(systemName: "info.circle.fill")
+                        .font(.system(size: 16))
+                        .foregroundStyle(.secondary)
+                        .background(Circle().fill(.background).frame(width: 16, height: 16))
+                }
+                .buttonStyle(.plain)
+                .padding(8)
+                .help(L.t("card.tutorial"))
+            }
+        }
     }
 }
 
@@ -893,9 +1526,12 @@ private struct PartnerStoreCard: View {
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
             Spacer(minLength: 0)
-            if let url = URL(string: store.url) {
-                Button(L.t("stores.visit")) { NSWorkspace.shared.open(url) }
-                    .controlSize(.small)
+            HStack {
+                if let url = URL(string: store.url) {
+                    Button(L.t("stores.visit")) { NSWorkspace.shared.open(url) }
+                        .controlSize(.small)
+                }
+                MapButton(mapsURL: store.mapsURL)
             }
         }
         .padding(12)
@@ -970,6 +1606,7 @@ private struct ServiceCenterCard: View {
                     Button(L.t("servicecenters.website")) { NSWorkspace.shared.open(url) }
                         .controlSize(.small)
                 }
+                MapButton(mapsURL: center.mapsURL)
             }
         }
         .padding(12)
@@ -1042,6 +1679,200 @@ private struct AppCard: View {
     @ViewBuilder
     private var infoButton: some View {
         if let urlString = app.youtubeURL, let url = URL(string: urlString) {
+            Button { NSWorkspace.shared.open(url) } label: {
+                Image(systemName: "info.circle.fill")
+                    .font(.system(size: 16))
+                    .foregroundStyle(.secondary)
+                    .background(Circle().fill(.background).frame(width: 16, height: 16))
+            }
+            .buttonStyle(.plain)
+            .padding(8)
+            .help(L.t("card.tutorial"))
+        }
+    }
+}
+
+/// Grid pentru o categorie de resurse de download direct (LUT/SFX/VFX/
+/// Plugin) — Etapa 2 (2026-08-29). Filtru OS (Toate/Mac/Windows), la fel
+/// ca `CatalogGrid` — unele resurse (ex. un plugin Premiere) pot fi
+/// specifice unei singure platforme.
+private struct DownloadResourceGrid: View {
+    let resources: [DownloadableResource]
+    @State private var osFilter: OSFilter = .all
+
+    private let columns = [GridItem(.adaptive(minimum: 220, maximum: 280), spacing: 14)]
+
+    private var filteredResources: [DownloadableResource] {
+        resources.filter { osFilter.matches($0.supportedOS) }
+    }
+
+    var body: some View {
+        VStack(spacing: 0) {
+            if !resources.isEmpty {
+                Picker("", selection: $osFilter) {
+                    ForEach(OSFilter.allCases) { filter in
+                        Text(filter.label).tag(filter)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .labelsHidden()
+                .frame(maxWidth: 220)
+                .padding(.horizontal, 16)
+                .padding(.top, 12)
+            }
+            ScrollView {
+                if resources.isEmpty {
+                    Text(L.t("download.empty")).foregroundStyle(.secondary).padding(40)
+                } else if filteredResources.isEmpty {
+                    Text(L.t("filter.price.empty")).foregroundStyle(.secondary).padding(40)
+                } else {
+                    LazyVGrid(columns: columns, spacing: 14) {
+                        ForEach(filteredResources) { resource in
+                            DownloadResourceCard(resource: resource)
+                        }
+                    }
+                    .padding(16)
+                }
+            }
+        }
+    }
+}
+
+private struct DownloadResourceCard: View {
+    let resource: DownloadableResource
+    @ObservedObject private var locations = DownloadLocationStore.shared
+    // Licențiere adăugată 2026-08-29 (cerut explicit) — port 1:1 al
+    // fluxului de pe `PluginCard` (Gratuit/Probă/Licență + WhatsApp).
+    @ObservedObject private var license = LicenseManager.shared
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(alignment: .top) {
+                Spacer()
+                VStack(alignment: .trailing, spacing: 6) {
+                    Image(systemName: resource.supportedOS.badgeSymbol)
+                        .font(.system(size: 10, weight: .semibold))
+                        .foregroundStyle(.secondary)
+                        .frame(width: 20, height: 20)
+                        .background(Circle().fill(Color.secondary.opacity(0.12)))
+                        .help(resource.supportedOS.badgeLabel)
+                    licenseBadge
+                }
+            }
+            CoverThumbnail(
+                url: resource.coverImageURL,
+                fallbackSymbol: resource.category.defaultSymbol,
+                tint: resource.category.tintColor,
+                height: 100,
+                lightboxTitle: resource.name
+            )
+            Text(resource.name).font(.headline)
+            if !resource.description.isEmpty {
+                Text(resource.description)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(4)
+            }
+            ExtraLinksRow(purchaseURL: resource.purchaseURL, demoURL: resource.demoURL, social: resource.socialLinks)
+            // Etapa 5+ (2026-08-29, cerut explicit): "să aibă posibilitatea
+            // să își pună path-ul... ca să știe tot timpul unde l-a
+            // descărcat" — stare 100% locală (DownloadLocationStore), nu
+            // parte din catalog. Doar dacă e deblocată (n-are sens sa
+            // memorezi o cale pentru ceva ce inca nu poti descarca).
+            if license.isUnlocked(for: resource) {
+                downloadLocationRow
+            }
+            Spacer(minLength: 0)
+            actionButton
+        }
+        .padding(12)
+        .frame(maxWidth: .infinity, minHeight: 96, alignment: .leading)
+        .background(RoundedRectangle(cornerRadius: 10).fill(.background.secondary))
+        .overlay(alignment: .topLeading) { infoButton }
+    }
+
+    @ViewBuilder
+    private var licenseBadge: some View {
+        if resource.isFree && resource.isTrial {
+            BadgePill(text: L.t("card.trial"), color: .blue)
+        } else if resource.isFree {
+            BadgePill(text: L.t("card.free"), color: .green)
+        } else {
+            VStack(alignment: .trailing, spacing: 3) {
+                if resource.isPromoActive {
+                    Text(resource.priceDisplay).font(.caption2).strikethrough().foregroundStyle(.tertiary)
+                }
+                Text(resource.effectivePriceEUR.formatted(.currency(code: "EUR")))
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.secondary)
+                if resource.isPromoActive {
+                    BadgePill(text: L.t("card.promo"), color: .red)
+                } else {
+                    BadgePill(text: L.t("card.paid"), color: .orange)
+                        .help(L.t("card.trustMessage"))
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var actionButton: some View {
+        if !resource.supportedOS.allows(current: .current) {
+            Text(L.t("card.incompatibleOS")).font(.caption).foregroundStyle(.red)
+        } else if !license.isUnlocked(for: resource) {
+            Button(L.t("card.buy")) { NSWorkspace.shared.open(buyURL) }
+        } else if let url = URL(string: resource.url) {
+            Button(L.t("audio.open")) { NSWorkspace.shared.open(url) }
+        }
+    }
+
+    private var buyURL: URL {
+        let priceText = resource.effectivePriceEUR.formatted(.currency(code: "EUR"))
+        let text = "Salut! Vreau să deblochez \(resource.name) cu o donație de \(priceText). ID calculator: \(MachineID.display)"
+        return WhatsAppLink.url(text: text)
+    }
+
+    @ViewBuilder
+    private var downloadLocationRow: some View {
+        if let path = locations.path(for: resource.id) {
+            HStack(spacing: 6) {
+                Image(systemName: "folder.fill").font(.system(size: 10)).foregroundStyle(.secondary)
+                Text(path)
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+                    .truncationMode(.middle)
+                Spacer()
+                Button {
+                    locations.openFolder(for: resource.id)
+                } label: {
+                    Image(systemName: "arrow.up.forward.square")
+                }
+                .buttonStyle(.plain)
+                .help(L.t("download.location.open"))
+                Button {
+                    locations.pickFolder(for: resource.id)
+                } label: {
+                    Image(systemName: "pencil")
+                }
+                .buttonStyle(.plain)
+                .help(L.t("download.location.change"))
+            }
+        } else {
+            Button {
+                locations.pickFolder(for: resource.id)
+            } label: {
+                Label(L.t("download.location.set"), systemImage: "folder.badge.plus")
+                    .font(.caption)
+            }
+            .buttonStyle(.plain)
+            .foregroundStyle(.secondary)
+        }
+    }
+
+    @ViewBuilder
+    private var infoButton: some View {
+        if let urlString = resource.youtubeURL, let url = URL(string: urlString) {
             Button { NSWorkspace.shared.open(url) } label: {
                 Image(systemName: "info.circle.fill")
                     .font(.system(size: 16))
