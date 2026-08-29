@@ -1,5 +1,13 @@
 # Changelog — GDC Plugin Manager
 
+## v1.19.9 (2026-08-29) — Windows: fix real eroare SSL filigran (conexiune HTTPS reciclată)
+
+- Cauza reală a eșecului SSL intermitent (Windows): `RemoteCertificateNameMismatch`
+  pe conexiunea HTTPS statică a aplicației, ținută deschisă la infinit —
+  nu ceas de sistem greșit în VM, cum se bănuia inițial. `HttpClient`
+  reciclează acum conexiunea la 5 minute, robust la anycast-ul Cloudflare
+  din spatele `gordas.dev`. Mac: neschimbat față de v1.19.8.
+
 ## Client v1.19.8 (2026-08-29) — Fix retry filigran (404 tranzitoriu de CDN)
 
 - Fetch-ul de filigran nu reîncerca la un 404 tranzitoriu de CDN (bug real:

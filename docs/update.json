@@ -1,7 +1,7 @@
 {
-  "version": "1.19.8",
+  "version": "1.19.9",
   "release_date": "2026-08-29",
-  "changes": "Mac: fix retry filigran (nu reincerca la 404 tranzitoriu de CDN). Windows: logare detaliata a erorii SSL reale, utila pentru diagnosticarea esecurilor intermitente de fetch imagine (posibil ceas de sistem gresit in VM).",
+  "changes": "Windows: fix real la filigranul sezonier - eroarea SSL intermitenta era o conexiune HTTPS tinuta deschisa la infinit (RemoteCertificateNameMismatch pe anycast-ul Cloudflare), nu ceas de sistem gresit. Conexiunea se recicleaza acum la 5 minute.",
   "download_url": {
     "mac": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Mac.zip",
     "windows": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Windows.zip"
