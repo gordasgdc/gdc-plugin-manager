@@ -582,7 +582,7 @@
       "imagePath" : "covers/seasonal/black-friday-seeklogo.png?v=3a8a64dc",
       "isEnabled" : true,
       "label" : "black-friday-seeklogo",
-      "position" : "center"
+      "position" : "bottomTrailing"
     },
     {
       "id" : "black-friday",
