@@ -607,7 +607,11 @@
       "isEnabled" : false,
       "label" : "Wide_169_cinematic_3D_promo_banner_for_a_video_production_so (3)",
       "opacity" : 0.16424094326351052,
-      "position" : "center"
+      "position" : "center",
+      "scheduling" : {
+        "endDate" : 810311606.669152,
+        "startDate" : 809706806.669152
+      }
     },
     {
       "id" : "summer",
