@@ -600,7 +600,7 @@
     {
       "id" : "craciun",
       "imagePath" : "covers/seasonal/craciun.png?v=3e1740cc",
-      "isEnabled" : true,
+      "isEnabled" : false,
       "label" : "Craciun",
       "opacity" : 0.1522502285929432,
       "position" : "bottomTrailing"
