@@ -1160,19 +1160,28 @@ public struct SeasonalBackgroundConfig: Codable, Hashable, Identifiable {
     /// Comutator manual, independent de dată — un filigran poate sta în
     /// bibliotecă stins, gata de folosit, fără să-i ștergi perioada.
     public let isEnabled: Bool
+    /// Intensitate reglabilă (2026-08-29, cerut explicit de Cristi — "cât
+    /// de tare să se vadă"). 0.07 = valoarea implicită de dinainte
+    /// (opacitate FIXĂ, hardcodată în Client). Acum fiecare filigran din
+    /// bibliotecă are propria intensitate, reglabilă dintr-un slider în
+    /// Furnizor — fără să mai fie nevoie de o modificare de cod pentru
+    /// fiecare filigran nou. Interval practic 0.03–0.20 (impus în UI, nu
+    /// aici în model — modelul acceptă orice `Double` valid).
+    public let opacity: Double
 
     public init(id: String, label: String, imagePath: String, scheduling: Scheduling? = nil,
-                position: SeasonalPosition = .bottomTrailing, isEnabled: Bool = true) {
+                position: SeasonalPosition = .bottomTrailing, isEnabled: Bool = true, opacity: Double = 0.07) {
         self.id = id
         self.label = label
         self.imagePath = imagePath
         self.scheduling = scheduling
         self.position = position
         self.isEnabled = isEnabled
+        self.opacity = opacity
     }
 
     private enum CodingKeys: String, CodingKey {
-        case id, label, imagePath, scheduling, position, isEnabled
+        case id, label, imagePath, scheduling, position, isEnabled, opacity
     }
 
     public init(from decoder: Decoder) throws {
@@ -1183,6 +1192,11 @@ public struct SeasonalBackgroundConfig: Codable, Hashable, Identifiable {
         scheduling = try c.decodeIfPresent(Scheduling.self, forKey: .scheduling)
         position = try c.decodeIfPresent(SeasonalPosition.self, forKey: .position) ?? .bottomTrailing
         isEnabled = try c.decodeIfPresent(Bool.self, forKey: .isEnabled) ?? true
+        // Retrocompatibil: filigranele publicate înainte de acest câmp nu au
+        // "opacity" în JSON — 0.07 reproduce EXACT comportamentul vechi
+        // (constanta hardcodată din SeasonalBackgroundLayer), fără nicio
+        // schimbare vizuală pentru bibliotecile deja publicate.
+        opacity = try c.decodeIfPresent(Double.self, forKey: .opacity) ?? 0.07
     }
 
     /// Vizibil ACUM: bifat manual ȘI (fără perioadă SAU în interiorul ei).

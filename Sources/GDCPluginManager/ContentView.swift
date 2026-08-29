@@ -84,7 +84,9 @@ private struct SeasonalBackgroundLayer: View {
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 480, height: 480)
-                    .opacity(0.07)
+                    // [2026-08-29] Intensitate per-filigran, nu mai o
+                    // constantă globală - vezi SeasonalBackgroundConfig.opacity.
+                    .opacity(config.opacity)
                     // [2026-08-29, corectat la cererea lui Cristi] Padding
                     // NEGATIV aici împingea imaginea în afara ferestrei și
                     // îi tăia efectiv o bucată vizibilă din colț ("îmi

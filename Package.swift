@@ -31,7 +31,16 @@ let package = Package(
             name: "GDCPluginManagerFurnizor",
             dependencies: ["GDCPluginManagerCore"],
             path: "Sources/GDCPluginManagerFurnizor",
-            exclude: ["SupabaseAdminConfig.swift.example"]
+            exclude: ["SupabaseAdminConfig.swift.example"],
+            resources: [
+                // [2026-08-29] Preseturile sezoniere predefinite au trecut de
+                // la SVG inline la PNG randat, bundle-uit - vezi
+                // SeasonalBackgroundStore.swift pentru motivul real
+                // (decodorul SVG nativ ImageIO NU randează deloc <text>,
+                // gasit ca bug real, nu presupunere - toate cele 7 preseturi
+                // aveau text complet invizibil).
+                .copy("Resources/SeasonalPresets"),
+            ]
         )
     ]
 )

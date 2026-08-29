@@ -1496,3 +1496,71 @@ prin comparație cu formularele existente înainte de a considera un
 formular nou "gata".
 Versiune Furnizor: `1.15.0`→`1.15.1` (PATCH — fix, nu funcționalitate nouă).
 **Verificat**: `swift build` — 0 erori.
+
+## [BUG MAJOR GĂSIT ȘI REPARAT 2026-08-29] Decodorul SVG de pe macOS NU randează `<text>` — filigranul sezonier era gol
+
+**Raportat de Cristi**: "filigranul nu se vede" — persistent, chiar și după
+recompilare la ultima versiune. **Diagnostic real, nu presupunere**:
+verificat direct cu un test izolat (`NSImage(data:)` pe un SVG minimal cu
+`<rect><text>HI</text></svg>`) — pixelul din centrul textului rămâne
+`alpha=0` (complet transparent), indiferent de `font-family` folosit.
+**ImageIO (decodorul SVG nativ macOS 12+) randează corect `<path>`/
+`<circle>`/`<rect>`/gradienți, dar NU randează DELOC elementul `<text>`.**
+Asta explică retroactiv de ce toate cele 7 preseturi predefinite (Black
+Friday, Crăciun, Revelion, Primăvară, Paște, Vară, Ofertă Flash) — refăcute
+complet pe 2026-08-29 tocmai ca să includă text explicit ("Sărbători
+Fericite", "LA MULȚI ANI!" etc.) — aveau tot timpul textul invizibil în
+Client, fără nicio eroare, de la prima lor publicare.
+
+**Fix ales, la cererea explicită a lui Cristi** ("dacă crezi că SVG face
+probleme, lasă doar PNG, dar să fim siguri că-i 100% funcțional, nu
+riscăm"): cele 7 preseturi predefinite au trecut de la SVG generat inline
+la **PNG randat o singură dată, offline** — textul original a fost
+convertit în path-uri vectoriale REALE folosind CoreText
+(`CTFontCreatePathForGlyph`, glif cu glif, cu suport corect pentru
+diacritice — verificat vizual, "Sărbători Fericite" randează corect ă/ș),
+apoi totul rasterizat la 960×960 cu fundal TRANSPARENT (nu opac — filigranul
+se suprapune la opacitate mică peste UI). PNG-urile trăiesc acum ca resurse
+bundle-uite în Furnizor (`Sources/GDCPluginManagerFurnizor/Resources/
+SeasonalPresets/`, `.copy(...)` în `Package.swift`, încărcate prin
+`Bundle.module` — vezi `SeasonalPresets.resourceURL(for:)`).
+`SeasonalPreset` a pierdut câmpul `svg: String`; `commitPreset` copiază
+acum bytes-ii PNG-ului bundle-uit, nu mai scrie un fișier temporar SVG.
+
+**Recomandarea PNG vs SVG s-a INVERSAT** (era "SVG mai bun", acum "PNG
+implicit") — documentat explicit în cod și în UI-ul Furnizorului. SVG
+rămâne acceptat la upload propriu (util pentru forme PURE, fără text —
+gradienți, iconițe vectoriale simple), dar Furnizorul avertizează acum
+EXPLICIT (mesaj de succes cu ATENȚIE, nu doar silențios) dacă fișierul SVG
+ales conține `<text>` — detectat prin citirea conținutului
+(`content.contains("<text")`), nu doar extensia fișierului.
+
+**Fix live imediat, în afara fluxului normal de Furnizor** (asset deja
+publicat și activ, risc de așteptare): `docs/covers/seasonal/black-friday.svg`
+și `black-friday-2.svg` (acesta din urmă activ chiar acum în catalogul live)
+au fost înlocuite direct cu echivalentele PNG corect randate, `catalog.json`
+actualizat manual cu noile căi + hash de cache-busting — verificat cu un
+diff semantic (JSON parsat, nu text brut) că NIMIC altceva din catalog nu
+s-a schimbat accidental.
+
+**Feature nou, cerut în aceeași conversație**: intensitate (opacitate)
+reglabilă PER filigran, nu mai o constantă globală (0.07) hardcodată în
+Client. `SeasonalBackgroundConfig.opacity: Double` (nou, retrocompatibil —
+lipsă în JSON vechi decodează la 0.07, exact valoarea de dinainte, zero
+schimbare vizuală pentru bibliotecile deja publicate). Slider în Furnizor
+(0.03–0.20), publicat o singură dată la eliberare (`onEditingChanged`), nu
+la fiecare pixel de mișcare a slider-ului.
+
+**TODO paritate Windows**: `GDCPluginManagerWin` a primit deja `SharpVectors`
+(librărie de randare SVG) special pentru filigranul sezonier — dacă acel
+randor ARE suport de `<text>` (SharpVectors se bazează pe alt motor decât
+ImageIO, posibil să nu aibă aceeași limitare), problema ar putea fi
+DOAR pe macOS. NEVERIFICAT încă — necesită un test real pe Windows înainte
+de a trage o concluzie. Indiferent de rezultat, bibliotecile PNG publicate
+acum (Mac) funcționează identic pe Windows (PNG e universal suportat,
+`BitmapImage` nativ WPF, fără nicio dependință specială).
+
+Versiune: Client `1.18.0`→`1.19.0`, Furnizor `1.15.1`→`1.16.0` (MINOR —
+schimbare de arhitectură a preseturilor + feature nou de intensitate).
+**Verificat**: `swift build` (Core + Client + Furnizor) — 0 erori. Toate 7
+PNG-uri verificate vizual (randate cu text corect, inclusiv diacritice).

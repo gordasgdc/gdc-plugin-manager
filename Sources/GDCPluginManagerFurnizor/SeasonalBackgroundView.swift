@@ -16,6 +16,9 @@ struct SeasonalBackgroundView: View {
     @State private var errorMessage: String?
     @State private var successMessage: String?
     @State private var pendingDelete: SeasonalBackgroundConfig?
+    /// Valoare "în lucru" a slider-ului de intensitate, cheiată per id —
+    /// publicată abia la eliberare (`onEditingChanged`), nu la fiecare pixel.
+    @State private var draftOpacity: [String: Double] = [:]
 
     private let columns = [GridItem(.adaptive(minimum: 140, maximum: 180), spacing: 12)]
 
@@ -116,6 +119,26 @@ struct SeasonalBackgroundView: View {
                 }
             }
 
+            // Intensitate reglabilă (2026-08-29, cerut explicit: "cât de
+            // tare să se vadă"). `onEditingChanged` publică o singură dată
+            // la eliberarea slider-ului, nu la fiecare pixel de mișcare —
+            // altfel fiecare tragere ar face zeci de commit-uri git.
+            VStack(alignment: .leading, spacing: 2) {
+                HStack {
+                    Text("Intensitate").font(.caption).foregroundStyle(.secondary)
+                    Spacer()
+                    Text("\(Int(config.opacity * 100))%").font(.caption.monospacedDigit()).foregroundStyle(.secondary)
+                }
+                Slider(
+                    value: Binding(get: { config.opacity }, set: { draftOpacity[config.id] = $0 }),
+                    in: 0.03...0.20,
+                    onEditingChanged: { editing in
+                        guard !editing, let value = draftOpacity[config.id] else { return }
+                        Task { await update(config, opacity: value) }
+                    }
+                )
+            }
+
             // Același component reutilizat de toate rubricile (Etapa 4) —
             // nicio logică de dată duplicată aici.
             SchedulingPicker(scheduling: Binding(
@@ -142,7 +165,7 @@ struct SeasonalBackgroundView: View {
     private var addBox: some View {
         GroupBox("Adaugă în bibliotecă") {
             VStack(alignment: .leading, spacing: 12) {
-                Text("Din galeria predefinită (SVG, gata de folosit)").font(.caption).foregroundStyle(.secondary)
+                Text("Din galeria predefinită (imagini gata de folosit)").font(.caption).foregroundStyle(.secondary)
                 LazyVGrid(columns: columns, spacing: 12) {
                     ForEach(SeasonalPresets.all) { preset in
                         Button {
@@ -165,7 +188,7 @@ struct SeasonalBackgroundView: View {
 
                 Text("Sau încarcă propriul fișier — rămâne salvat în bibliotecă, reutilizabil oricând.")
                     .font(.caption).foregroundStyle(.secondary)
-                Text("Recomandat SVG: vectorial (nepixelat la orice rezoluție/Retina), fișier mult mai mic, ușor de recolorat. PNG e potrivit doar pentru poze reale. Fișierul e copiat NEALTERAT, fără compresie.")
+                Text("Recomandat PNG — decodorul SVG de pe macOS nu randează text (bug real, găsit 2026-08-29), deci un SVG cu text scris în el n-ar apărea deloc la clienți. SVG rămâne acceptat doar pentru forme pure, fără text. Fișierul e copiat NEALTERAT, fără compresie.")
                     .font(.caption2).foregroundStyle(.secondary)
                 Button("Alege fișier (SVG sau imagine)…") {
                     guard let url = SeasonalBackgroundStore.pickFile() else { return }
@@ -195,7 +218,20 @@ struct SeasonalBackgroundView: View {
     private func addCustom(_ url: URL) async {
         let base = slug(url.deletingPathExtension().lastPathComponent)
         let id = uniqueID(base: base.isEmpty ? "filigran" : base)
-        await run("Filigran personalizat adăugat în bibliotecă.") {
+        // [2026-08-29] Avertisment, NU blocare — un SVG cu <text> se
+        // publică oricum (poate fi o decizie deliberată, ex. reutilizare
+        // ulterioară cu textul convertit manual în path), dar Cristi
+        // trebuie să știe DINAINTE, nu să descopere abia la clienți că
+        // filigranul arată gol. Verificare simplă pe conținut, nu doar
+        // extensie — un fișier .svg fără <text> rămâne complet sigur.
+        var containsUnrenderableText = false
+        if url.pathExtension.lowercased() == "svg", let content = try? String(contentsOf: url, encoding: .utf8) {
+            containsUnrenderableText = content.contains("<text")
+        }
+        await run(containsUnrenderableText
+            ? "Filigran adăugat — ATENȚIE: acest SVG conține <text>, care NU se randează la clienți (macOS nu decodează text SVG). Textul va fi invizibil. Recomandat: PNG, sau un SVG fără text."
+            : "Filigran personalizat adăugat în bibliotecă."
+        ) {
             let path = try SeasonalBackgroundStore.commit(source: url, id: id)
             try CatalogEditor.upsertSeasonalBackground(
                 SeasonalBackgroundConfig(id: id, label: url.deletingPathExtension().lastPathComponent, imagePath: path)
@@ -207,14 +243,16 @@ struct SeasonalBackgroundView: View {
                         isEnabled: Bool? = nil,
                         position: SeasonalPosition? = nil,
                         scheduling: Scheduling? = nil,
-                        clearScheduling: Bool = false) async {
+                        clearScheduling: Bool = false,
+                        opacity: Double? = nil) async {
         let updated = SeasonalBackgroundConfig(
             id: config.id,
             label: config.label,
             imagePath: config.imagePath,
             scheduling: clearScheduling ? nil : (scheduling ?? config.scheduling),
             position: position ?? config.position,
-            isEnabled: isEnabled ?? config.isEnabled
+            isEnabled: isEnabled ?? config.isEnabled,
+            opacity: opacity ?? config.opacity
         )
         guard updated != config else { return }
         await run("Filigran actualizat.") {
