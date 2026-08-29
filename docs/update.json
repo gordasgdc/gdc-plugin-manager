@@ -1,6 +1,6 @@
 {
-  "version": "1.4.0",
-  "release_date": "2026-08-27",
+  "version": "1.16.0",
+  "release_date": "2026-08-29",
   "changes": "Sectiune noua Audio (Mac + Windows): elemente audio cu link de descarcare/accesare, descriere si copertă opțională, afisate langa LUT/DCTL/OFX/PowerGrade in bara de categorii.",
   "download_url": {
     "mac": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Mac.zip",
