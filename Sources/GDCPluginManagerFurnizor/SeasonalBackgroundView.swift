@@ -241,6 +241,18 @@ struct SeasonalBackgroundView: View {
 
     private func addPreset(_ preset: SeasonalPreset) async {
         let id = uniqueID(base: preset.id)
+        // [BUG REAL 2026-08-29, găsit prin log de diagnostic] Un `id` poate
+        // fi reutilizat dacă intrarea anterioară cu același nume a fost
+        // ȘTEARSĂ în aceeași sesiune (`uniqueID` nu mai vede coliziunea).
+        // Dacă acea intrare veche avea un draft LOCAL nepublicat (ex. doar
+        // reglase intensitatea, fără să apese "Trimite"), draft-ul stă
+        // "orfan" în `drafts[id]` — cu `imagePath`-ul VECHI, către un fișier
+        // deja șters. Dacă userul apoi apasă "Trimite modificările" pe
+        // intrarea NOUĂ (cu același id), draft-ul orfan ar suprascrie calea
+        // corectă cu una moartă (404 permanent — exact ce a pățit Cristi:
+        // catalog.json rămăsese pe `.jpg` deși fișierul real era `.png`).
+        // Fix: golește orice draft orfan ÎNAINTE de a crea intrarea nouă.
+        drafts[id] = nil
         await run("Filigran „\(preset.label)” adăugat în bibliotecă.") {
             let path = try SeasonalBackgroundStore.commitPreset(preset, id: id)
             try CatalogEditor.upsertSeasonalBackground(
@@ -252,6 +264,9 @@ struct SeasonalBackgroundView: View {
     private func addCustom(_ url: URL) async {
         let base = slug(url.deletingPathExtension().lastPathComponent)
         let id = uniqueID(base: base.isEmpty ? "filigran" : base)
+        // Vezi comentariul identic din addPreset() — același risc de draft
+        // orfan la reutilizarea unui id după ștergere.
+        drafts[id] = nil
         // [2026-08-29] Avertisment, NU blocare — un SVG cu <text> se
         // publică oricum (poate fi o decizie deliberată, ex. reutilizare
         // ulterioară cu textul convertit manual în path), dar Cristi
@@ -291,6 +306,11 @@ struct SeasonalBackgroundView: View {
     private func remove(_ config: SeasonalBackgroundConfig?) async {
         guard let config else { return }
         pendingDelete = nil
+        // [BUG REAL 2026-08-29] Lipsea această linie — un draft nepublicat
+        // al intrării șterse rămânea "orfan" în `drafts`, gata să
+        // corupă o intrare VIITOARE cu același id (vezi comentariul din
+        // addPreset()/addCustom()).
+        drafts[config.id] = nil
         await run("„\(config.label)” a fost șters din bibliotecă.") {
             SeasonalBackgroundStore.removeFiles(id: config.id)
             try CatalogEditor.removeSeasonalBackground(id: config.id)

@@ -1702,3 +1702,39 @@ cele 5 repo-uri din `~/Developer/` care nu aveau încă unul.
 
 Versiune: Client `1.19.2`→`1.19.3`, Furnizor `1.16.1`→`1.16.2` (PATCH).
 **Verificat**: `swift build` — 0 erori.
+
+## [BUG REAL GĂSIT ȘI REPARAT 2026-08-29] Draft orfan corupea calea imaginii la reutilizarea unui id
+
+**Diagnosticat direct din `%TEMP%/gdcpm-crash.log`** (Regula 25, log de
+diagnostic permanent — a funcționat exact cum trebuia, prima oară folosit
+real): Cristi raporta "unele PNG-uri nu merg deloc, altele da". Logul a
+arătat clar: `catalog.json` avea `imagePath` cu extensia `.jpg` pentru o
+intrare, dar fișierul REAL de pe disc/server era `.png` — HTTP 404 permanent,
+nu o întârziere de propagare (verificat separat: alte 2 fișiere "noi" ERAU
+doar întârziate de CDN și s-au rezolvat singure în ~1 minut — fals pozitiv
+parțial în raportul inițial, corect diagnosticat prin re-testare).
+
+**Cauza reală**: `drafts` (dicționarul local de modificări nepublicate,
+introdus la fix-ul anterior "nu mai trimite instant") e cheiat după `id`.
+Dacă o intrare era ȘTEARSĂ cât timp avea un draft nepublicat (ex. Cristi
+reglase intensitatea dar nu apăsase încă "Trimite"), draftul rămânea
+"orfan" — `remove()` nu-l curăța. La o reutilizare ulterioară a ACELUIAȘI
+`id` (posibil dacă un fișier nou are un nume care generează același slug),
+`uniqueID()` nu mai vedea nicio coliziune (intrarea veche nu mai există în
+`library`), deci noua intrare primea id-ul liber — dar draftul orfan, cu
+`imagePath`-ul VECHI (către fișierul deja șters), rămânea legat de acel id.
+Prima apăsare pe "Trimite modificările" pe intrarea nouă publica draftul
+VECHI, suprascriind calea corectă cu una moartă.
+
+**Fix**: `drafts[id] = nil` explicit în `remove()` ȘI defensiv la
+începutul lui `addPreset()`/`addCustom()` (înainte de a crea intrarea nouă)
+— dublă gardă, ca niciun draft vechi să nu mai poată supraviețui unui id
+reutilizat.
+
+**Fix live imediat**: intrarea deja stricată din producție
+(`wide-169-cinematic-...`) a fost corectată direct în `catalog.json`
+(imagePath → extensia reală `.png`, hash recalculat) — verificat cu HTTP
+200 după corectare.
+
+Versiune Furnizor: `1.16.2`→`1.16.3` (PATCH — fix critic).
+**Verificat**: `swift build` — 0 erori.
