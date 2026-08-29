@@ -1206,3 +1206,53 @@ eșec se încearcă ultima variantă salvată local.
 
 **TODO paritate Windows**: nu se aplică — `GDCPluginManagerWin` nu are
 încă filigran sezonier implementat (vezi TODO Etapa 6).
+
+## [FINALIZARE 2026-08-29] Publicare produs final client — web + Mac
+
+**1. Paritate mobil (PWA, servit la gordas.dev/app.html)** — lipseau complet
+Resurse download, Servicii, Oferte Parteneri, Pachete + scheduling + hărți +
+filigran sezonier (existau doar pe Mac). Rezolvat:
+- Tabbar extins 4→5: Produse, **Resurse** (nou), Cursuri, Evenimente,
+  **Comunitate** (extins: Magazine + Servicii + Oferte + Pachete).
+- Filtru `isActiveNow` (scheduling) aplicat pe TOATE colecțiile randate —
+  logica identică cu `Scheduling.isActiveNow` din Swift, portată în JS
+  (`SWIFT_REF_MS = 978307200000`, referința 2001-01-01 UTC a `Date`-urilor
+  codate de JSONEncoder).
+- Buton hartă (`mapsUrl`) — port 1:1 al stoplist-ului din `MapsLink.swift`.
+- Filigran sezonier — `<img>` simplu (nu AsyncImage, nu exista bug-ul de pe
+  Mac — un `<img>` de browser randează SVG nativ).
+- Bug preexistent găsit și reparat: `onerror` de pe cardurile
+  Aplicații/Audio scăpa apostroful dar NU ghilimelele duble din SVG-ul
+  inline, rupea atributul HTML la parsare → text vizibil `'">` pe fiecare
+  card, indiferent dacă imaginea eșua sau nu. Fix: `.replace(/"/g,"&quot;")`.
+- `manifest.webmanifest`: descriere actualizată, shortcut nou "Resurse".
+- `sw.js`: CACHE_VERSION v11→v12.
+- Android: NU există build/APK de refăcut — comentariul din
+  `manifest.webmanifest` confirmă TWA-ul retras pe 2026-08-24; PWA-ul
+  CHIAR e aplicația, deschisă direct în browser. Push-ul pe gordas.dev
+  actualizează automat Android + iPhone.
+
+**2. Logo-uri reale pentru Aplicații (Client + Furnizor)** — coperțile
+foloseau fotografii/bannere generice în loc de logo-ul fiecărei aplicații.
+Extrase `.icns`-urile reale din reposurile surori (CGConvertor, CursorPro,
+DataMover, gdc-production-manager, GDCVault, MediaFlow-Monitor) + un PNG
+existent pentru Clapperboard Digital, procesate prin ACELAȘI
+`ImageProcessor.process(preset: .icon)` folosit de Furnizor (via un mini
+pachet SwiftPM temporar, ca să nu se atingă `Package.swift`-ul real),
+publicate în `docs/covers/`. Rămân neschimbate (fără logo real disponibil):
+gdc-resolve-encoder, GDC Metadata View Premium, Simulator DOF.
+
+**3. Release Mac v1.13.2** — semnat (`Developer ID Application` +
+`Developer ID Installer`), notarizat (profil `gdc-notary` deja configurat),
+stapled. Publicat pe GitHub Releases (`gh release create v1.13.2`, cu
+`GDCPluginManager-Mac.zip` + `.pkg`). `update.json` actualizat la 1.13.2.
+
+**RISC CUNOSCUT, ACCEPTAT EXPLICIT DE CRISTI (2026-08-29)**: `update.json`
+e comun Mac+Windows (un singur câmp `version`). Windows n-a primit NICIUNA
+din cele 9 etape (rămâne la 1.5.0 local, fără build azi) — userii Windows
+vor vedea "update disponibil" la 1.13.2, dar descărcarea `download_url.windows`
+va da 404 până se construiește și urcă un build Windows nou în release.
+**TODO următor**: implementare completă a celor 9 etape pe
+`GDCPluginManagerWin` (display-only, nu are Furnizor) + build + upload
+`GDCPluginManager-Windows.zip` în release-ul v1.13.2 existent (`gh release
+upload v1.13.2 ...`), ca 404-ul să dispară.
