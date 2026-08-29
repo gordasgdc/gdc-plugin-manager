@@ -1615,3 +1615,42 @@ nu doar închiderea ferestrei — un simplu `cp` peste bundle nu afectează un
 proces deja pornit din memorie). De verificat direct de Cristi la
 următorul test: numărul de versiune afișat în aplicație (Preferences) TREBUIE
 să arate ultima versiune înainte de a concluziona că filigranul tot nu merge.
+
+## [BUG REAL GĂSIT ȘI REPARAT 2026-08-29] Filigranul sezonier NU pornea niciodată fetch-ul de imagine — `.task` neatașat corect
+
+**Cauza reală a lui "nu apare filigranul", diagnosticată cu print-uri
+temporare, nu presupusă**: `SeasonalBackgroundLayer.body` avea `.task(id:)`
+atașat pe `Group { if let nsImage {...} }`. La primul randaj, `nsImage`
+e `nil`, deci acel `Group` nu are NICIUN copil concret. Confirmat direct,
+rulând Client-ul din Terminal cu `NSUnbufferedIO=YES` (altfel `print`-urile
+rămân blocate în bufferul stdio al unei aplicații GUI, niciodată scrise —
+notă utilă pentru orice diagnostic viitor similar): `SeasonalBackgroundsLayer.body`
+se evalua corect, cu exact 1 config activ, dar print-ul din INTERIORUL
+`.task` NU apărea NICIODATĂ — deci fetch-ul de rețea nu pornea deloc,
+indiferent ce filigran era activ, ce poziție sau ce opacitate avea.
+Explică retroactiv TOATE testele anterioare din această conversație:
+datele erau mereu corecte (verificat obsesiv, catalog.json, HTTP 200 pe
+imagine, decodare SVG/PNG confirmată izolat) — problema era 100% în
+Client, în punctul unde ar fi trebuit să CEARĂ imaginea, care pur și simplu
+nu se declanșa niciodată.
+
+**Fix**: `.task` mutat pe un container CONCRET, mereu prezent —
+`Color.clear.frame(width: 480, height: 480).overlay { if let nsImage {...} }`
+— în loc de `Group { if let nsImage {...} }`. Un `Group` al cărui unic
+conținut e un `if` fără ramură `else` poate să nu fie tratat de SwiftUI ca
+prezent stabil în ierarhie la prima evaluare (când condiția e falsă),
+riscând ca modificatori ca `.task`/`.onAppear` atașați pe acel Group să nu
+se declanșeze fiabil. **Regulă practică nouă, de reținut pentru orice view
+viitor cu încărcare asincronă condiționată de o stare opțională**:
+NICIODATĂ `.task`/`.onAppear` pe un `Group`/`ZStack` al cărui SINGUR
+conținut e un `if let` — atașează-l pe un container necondiționat
+(`Color.clear`, un `Rectangle`, sau un `VStack` cu alt conținut garantat),
+cu conținutul condițional doar ca `overlay`/copil intern.
+
+Versiune Client: `1.19.0`→`1.19.1` (PATCH — fix critic).
+**Verificat, nu presupus**: rulat direct din Terminal, cu print-uri de
+diagnostic (eliminate după verificare) — confirmat că fetch-ul pornește,
+HTTP 200, 59827 bytes, decodare reușită (2000×1025). Filigranul
+`black-friday-seeklogo` era activ la acel moment (Cristi testa live),
+opacitate 12% (dovadă că sliderul de intensitate din Furnizor funcționează
+și el corect, publică valoarea aleasă).

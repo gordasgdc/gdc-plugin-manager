@@ -78,23 +78,35 @@ private struct SeasonalBackgroundLayer: View {
     }
 
     var body: some View {
-        Group {
-            if let nsImage {
-                Image(nsImage: nsImage)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 480, height: 480)
-                    // [2026-08-29] Intensitate per-filigran, nu mai o
-                    // constantă globală - vezi SeasonalBackgroundConfig.opacity.
-                    .opacity(config.opacity)
-                    // [2026-08-29, corectat la cererea lui Cristi] Padding
-                    // NEGATIV aici împingea imaginea în afara ferestrei și
-                    // îi tăia efectiv o bucată vizibilă din colț ("îmi
-                    // mănâncă din imagine"). Acum inset POZITIV — filigranul
-                    // rămâne întreg, doar cu puțin spațiu față de margine.
-                    .padding(config.position == .center ? 0 : 24)
+        // [2026-08-29, BUG REAL găsit și reparat] `.task` era atașat pe un
+        // `Group { if let nsImage {...} }` — la primul randaj (`nsImage`
+        // încă `nil`), acel Group nu are NICIUN copil concret, iar SwiftUI
+        // pare să NU garanteze `.task`/`onAppear` pe un asemenea "gol
+        // condițional" (confirmat printr-un print de diagnostic care
+        // NICIODATĂ nu apărea — task-ul pur și simplu nu pornea, deci
+        // fetch-ul de imagine nu se declanșa NICIODATĂ, indiferent ce era
+        // publicat sau ce opacitate avea). Fix: `.task` atașat pe un
+        // container CONCRET, mereu prezent (`Color.clear` cu `frame` fix),
+        // cu imaginea suprapusă DOAR când există — containerul de bază nu
+        // mai depinde de starea condițională.
+        Color.clear
+            .frame(width: 480, height: 480)
+            .overlay {
+                if let nsImage {
+                    Image(nsImage: nsImage)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        // [2026-08-29] Intensitate per-filigran, nu mai o
+                        // constantă globală - vezi SeasonalBackgroundConfig.opacity.
+                        .opacity(config.opacity)
+                }
             }
-        }
+            // [2026-08-29, corectat la cererea lui Cristi] Padding NEGATIV
+            // aici împingea imaginea în afara ferestrei și îi tăia efectiv
+            // o bucată vizibilă din colț ("îmi mănâncă din imagine"). Acum
+            // inset POZITIV — filigranul rămâne întreg, doar cu puțin
+            // spațiu față de margine.
+            .padding(config.position == .center ? 0 : 24)
         .task(id: config.imagePath) {
             guard let url = config.imageURL else {
                 nsImage = nil
