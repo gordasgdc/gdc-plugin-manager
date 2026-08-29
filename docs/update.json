@@ -1,7 +1,7 @@
 {
-  "version": "1.19.5",
+  "version": "1.19.6",
   "release_date": "2026-08-29",
-  "changes": "Fix retea: fetch filigran reincearca automat (blip-uri tranzitorii de CDN) + log de eroare reala, nu generica. Fix: ferestrele Windows (Setari/Profil/Dependente/Progres update) se puteau desena goale o clipa la deschidere.",
+  "changes": "Windows: fix coperte lipsa la Magazine/Cursuri/Materiale (retry automat + log real de eroare, in loc de Debug.WriteLine invizibil). Mac: sincronizare de versiune.",
   "download_url": {
     "mac": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Mac.zip",
     "windows": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Windows.zip"
