@@ -8,6 +8,7 @@ import GDCPluginManagerCore
 struct PreferencesView: View {
     @ObservedObject private var languageStore = LanguageStore.shared
     @ObservedObject private var updateChecker = UpdateChecker.shared
+    @ObservedObject private var theme = ThemeManager.shared
     @State private var dependencies: [SystemDependency] = SystemDependencyChecker.checkAll()
     @State private var isCheckingUpdate = false
     @State private var showCheckResultAlert = false
@@ -24,6 +25,19 @@ struct PreferencesView: View {
                     ForEach(AppLanguage.allCases) { lang in
                         Text(lang.displayName).tag(lang)
                     }
+                }
+                .labelsHidden()
+                .pickerStyle(.segmented)
+            }
+
+            // Regula 18 (Partea 1): selector explicit Sistem/Light/Dark,
+            // independent de setarea macOS. Aplicat instant, fără repornire
+            // (ThemeManager scrie direct în NSApp.appearance).
+            Section(L.t("prefs.theme.title")) {
+                Picker("", selection: Binding(get: { theme.current }, set: { theme.set($0) })) {
+                    Text(L.t("prefs.theme.system")).tag(AppTheme.system)
+                    Text(L.t("prefs.theme.light")).tag(AppTheme.light)
+                    Text(L.t("prefs.theme.dark")).tag(AppTheme.dark)
                 }
                 .labelsHidden()
                 .pickerStyle(.segmented)
@@ -68,7 +82,7 @@ struct PreferencesView: View {
             }
         }
         .formStyle(.grouped)
-        .frame(width: 420, height: 360)
+        .frame(width: 420, height: 430)
         .alert(L.t("update.check.title"), isPresented: $showCheckResultAlert) {
             Button(L.t("common.ok"), role: .cancel) {}
         } message: {
