@@ -610,7 +610,7 @@
       "imagePath" : "covers/seasonal/summer.png?v=41ec55aa",
       "isEnabled" : true,
       "label" : "summer",
-      "opacity" : 0.19965583315404475,
+      "opacity" : 0.2,
       "position" : "bottomTrailing"
     }
   ],
