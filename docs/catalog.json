@@ -614,8 +614,12 @@
       "imagePath" : "covers/seasonal/summer.png?v=b5bc7198",
       "isEnabled" : true,
       "label" : "Vară / Vacanță",
-      "opacity" : 0.07,
-      "position" : "bottomTrailing"
+      "opacity" : 0.10635925501279864,
+      "position" : "bottomTrailing",
+      "scheduling" : {
+        "endDate" : 810310698.954441,
+        "startDate" : 809705898.954441
+      }
     }
   ],
   "serviceCenters" : [
