@@ -1564,3 +1564,54 @@ Versiune: Client `1.18.0`→`1.19.0`, Furnizor `1.15.1`→`1.16.0` (MINOR —
 schimbare de arhitectură a preseturilor + feature nou de intensitate).
 **Verificat**: `swift build` (Core + Client + Furnizor) — 0 erori. Toate 7
 PNG-uri verificate vizual (randate cu text corect, inclusiv diacritice).
+
+## [FIX 2026-08-29] Furnizor: fiecare control al filigranului publica INSTANT — cerut buton explicit de "Trimite"
+
+**Raportat direct de Cristi, în timp real**: "când reglez intensitatea se
+blochează... când apăs activ, el deja o urcă... nu să tot trimită, să am
+buton de push să pot controla". Confirmat exact în `git log` — fiecare
+Toggle/Picker/Slider din `SeasonalBackgroundView.entryRow` apela `update()`
+imediat, care făcea un `git pull` + `commit` + `push` COMPLET la fiecare
+atingere de control (commit-uri repetate "Filigrane sezoniere actualizate",
+zeci în șir în timp ce Cristi doar regla un slider). Pe lângă lent, asta
+explică și senzația de „se blochează": UI-ul aștepta rețeaua la fiecare
+mișcare de slider.
+
+**Fix**: toate modificările unei intrări (Activ/Poziție/Intensitate/
+Perioadă) se țin acum STRICT LOCAL, într-un `@State private var drafts:
+[String: SeasonalBackgroundConfig]`, cheiat după id — ZERO activitate de
+rețea la atingerea unui control. Un banner portocaliu ("Modificări
+nepublicate încă") + două butoane explicite ("Anulează" / "Trimite
+modificările") apar DOAR când intrarea are un draft diferit de ce e deja
+publicat. Apăsarea "Trimite modificările" face UN SINGUR
+`pull`+`commit`+`push`, cu toate câmpurile schimbate deodată.
+
+`SeasonalBackgroundConfig.with(isEnabled:position:opacity:scheduling:)`
+(Core, nou) — helper de copiere imutabilă (câmpurile modelului rămân `let`,
+neschimbat), evită reconstruirea manuală a tuturor celor 7 câmpuri la
+fiecare editare de UI.
+
+**Regulă practică nouă, de reținut pentru orice panou viitor de bibliotecă
+similar** (ex. dacă apare o a doua bibliotecă de conținut reglabil):
+NICIODATĂ un control legat direct la o acțiune de rețea (`Task { await
+update(...) }` pe `set:` al unui Binding) — separă întotdeauna starea
+LOCALĂ (draft) de acțiunea explicită de publicare.
+Versiune Furnizor: `1.16.0`→`1.16.1` (PATCH — fix de comportament, nu
+funcționalitate nouă).
+**Verificat**: `swift build` (Core + Furnizor) — 0 erori.
+
+## [DIAGNOSTIC 2026-08-29] Filigranul tot nu apărea în Client, deși datele erau corecte
+
+Verificat direct pe acest Mac: `catalog-cache.json` local (Application
+Support) arăta corect toate cele 3 filigrane din bibliotecă — dar
+`isEnabled` se schimba la fiecare câteva secunde, în timp real, cât Cristi
+încerca combinații diferite din Furnizor (confirmă exact bug-ul de mai sus:
+fiecare click chiar AJUNGEA la server, doar prea des și fără control).
+Nu s-a găsit alt bug de decodare/randare în afară de cel deja documentat
+(`<text>` invizibil, reparat separat). Suspiciune principală rămasă
+NECONFIRMATĂ: aplicația Client de testat de pe acest Mac putea rula o
+instanță VECHE, deschisă înainte de reinstalare (`Cmd+Q` complet necesar,
+nu doar închiderea ferestrei — un simplu `cp` peste bundle nu afectează un
+proces deja pornit din memorie). De verificat direct de Cristi la
+următorul test: numărul de versiune afișat în aplicație (Preferences) TREBUIE
+să arate ultima versiune înainte de a concluziona că filigranul tot nu merge.

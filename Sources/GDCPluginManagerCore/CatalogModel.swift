@@ -1199,6 +1199,27 @@ public struct SeasonalBackgroundConfig: Codable, Hashable, Identifiable {
         opacity = try c.decodeIfPresent(Double.self, forKey: .opacity) ?? 0.07
     }
 
+    /// Copie modificată — câmpurile sunt `let` (imutabile prin design, ca
+    /// orice model Codable din acest fișier), deci editarea unui singur
+    /// câmp local (ex. UI-ul de Furnizor, înainte de publicare) trece prin
+    /// acest helper în loc să reconstruiască manual toate cele 7 câmpuri de
+    /// fiecare dată. `scheduling` e dublu-opțional ca să distingem "nu-l
+    /// ating" (`nil`) de "îl setez explicit la nil" (`.some(nil)`).
+    public func with(
+        isEnabled: Bool? = nil,
+        position: SeasonalPosition? = nil,
+        opacity: Double? = nil,
+        scheduling: Scheduling?? = nil
+    ) -> SeasonalBackgroundConfig {
+        SeasonalBackgroundConfig(
+            id: id, label: label, imagePath: imagePath,
+            scheduling: scheduling ?? self.scheduling,
+            position: position ?? self.position,
+            isEnabled: isEnabled ?? self.isEnabled,
+            opacity: opacity ?? self.opacity
+        )
+    }
+
     /// Vizibil ACUM: bifat manual ȘI (fără perioadă SAU în interiorul ei).
     public var isActiveNow: Bool {
         isEnabled && (scheduling?.isActiveNow ?? true)

@@ -16,9 +16,16 @@ struct SeasonalBackgroundView: View {
     @State private var errorMessage: String?
     @State private var successMessage: String?
     @State private var pendingDelete: SeasonalBackgroundConfig?
-    /// Valoare "în lucru" a slider-ului de intensitate, cheiată per id —
-    /// publicată abia la eliberare (`onEditingChanged`), nu la fiecare pixel.
-    @State private var draftOpacity: [String: Double] = [:]
+    /// [2026-08-29, fix real — raportat direct de Cristi] Fiecare control
+    /// (Activ/Poziție/Intensitate/Perioadă) publica INSTANT, la fiecare
+    /// atingere — fiecare click/tragere de slider = propriul
+    /// `git pull` + `commit` + `push`. Cristi: "nu să tot trimită... să am
+    /// buton de push să pot controla, nu cum tot modific, el tot urcă în
+    /// continuu". Fix: toate modificările unei intrări se țin LOCAL, în
+    /// acest dicționar (cheiat după id), fără nicio activitate de rețea —
+    /// abia butonul explicit "Trimite modificările" din rând publică totul
+    /// deodată, într-un SINGUR commit.
+    @State private var drafts: [String: SeasonalBackgroundConfig] = [:]
 
     private let columns = [GridItem(.adaptive(minimum: 140, maximum: 180), spacing: 12)]
 
@@ -89,8 +96,22 @@ struct SeasonalBackgroundView: View {
         }
     }
 
+    /// Valoarea "de lucru" a intrării — draft-ul local dacă există unul
+    /// nepublicat încă, altfel exact ce e deja publicat.
+    private func draft(for config: SeasonalBackgroundConfig) -> SeasonalBackgroundConfig {
+        drafts[config.id] ?? config
+    }
+
+    private func hasPendingChanges(_ config: SeasonalBackgroundConfig) -> Bool {
+        guard let d = drafts[config.id] else { return false }
+        return d != config
+    }
+
     @ViewBuilder
     private func entryRow(_ config: SeasonalBackgroundConfig) -> some View {
+        let current = draft(for: config)
+        let dirty = hasPendingChanges(config)
+
         VStack(alignment: .leading, spacing: 8) {
             HStack(alignment: .top, spacing: 12) {
                 SeasonalThumbnail(url: config.imageURL)
@@ -105,47 +126,60 @@ struct SeasonalBackgroundView: View {
                 Button("Șterge", role: .destructive) { pendingDelete = config }
             }
 
+            // Toate controalele de mai jos scriu DOAR local (`drafts`) —
+            // niciun apel de rețea la atingere. Publicarea e explicită, prin
+            // butonul "Trimite modificările" de la finalul rândului.
             Toggle("Activ", isOn: Binding(
-                get: { config.isEnabled },
-                set: { newValue in Task { await update(config, isEnabled: newValue) } }
+                get: { current.isEnabled },
+                set: { newValue in drafts[config.id] = current.with(isEnabled: newValue) }
             ))
 
             Picker("Poziție pe ecran", selection: Binding(
-                get: { config.position },
-                set: { newValue in Task { await update(config, position: newValue) } }
+                get: { current.position },
+                set: { newValue in drafts[config.id] = current.with(position: newValue) }
             )) {
                 ForEach(SeasonalPosition.allCases) { position in
                     Text(position.label).tag(position)
                 }
             }
 
-            // Intensitate reglabilă (2026-08-29, cerut explicit: "cât de
-            // tare să se vadă"). `onEditingChanged` publică o singură dată
-            // la eliberarea slider-ului, nu la fiecare pixel de mișcare —
-            // altfel fiecare tragere ar face zeci de commit-uri git.
+            // Intensitate reglabilă — cerut explicit: "cât de tare să se
+            // vadă", plus "mi-ar plăcut să pot vedea intensitatea care se
+            // aplică". Procentul se actualizează live, în timp ce tragi —
+            // dar rămâne 100% local până apeși "Trimite modificările".
             VStack(alignment: .leading, spacing: 2) {
                 HStack {
                     Text("Intensitate").font(.caption).foregroundStyle(.secondary)
                     Spacer()
-                    Text("\(Int(config.opacity * 100))%").font(.caption.monospacedDigit()).foregroundStyle(.secondary)
+                    Text("\(Int(current.opacity * 100))%").font(.caption.monospacedDigit()).foregroundStyle(.secondary)
                 }
                 Slider(
-                    value: Binding(get: { config.opacity }, set: { draftOpacity[config.id] = $0 }),
-                    in: 0.03...0.20,
-                    onEditingChanged: { editing in
-                        guard !editing, let value = draftOpacity[config.id] else { return }
-                        Task { await update(config, opacity: value) }
-                    }
+                    value: Binding(
+                        get: { current.opacity },
+                        set: { newValue in drafts[config.id] = current.with(opacity: newValue) }
+                    ),
+                    in: 0.03...0.20
                 )
             }
 
             // Același component reutilizat de toate rubricile (Etapa 4) —
             // nicio logică de dată duplicată aici.
             SchedulingPicker(scheduling: Binding(
-                get: { config.scheduling },
-                set: { newValue in Task { await update(config, scheduling: newValue, clearScheduling: newValue == nil) } }
+                get: { current.scheduling },
+                set: { newValue in drafts[config.id] = current.with(scheduling: newValue) }
             ))
             .id(config.id) // starea internă a picker-ului e per-intrare
+
+            if dirty {
+                HStack {
+                    Text("Modificări nepublicate încă.")
+                        .font(.caption).foregroundStyle(.orange)
+                    Spacer()
+                    Button("Anulează") { drafts[config.id] = nil }
+                    Button("Trimite modificările") { Task { await publish(config) } }
+                        .buttonStyle(.borderedProminent)
+                }
+            }
         }
     }
 
@@ -239,25 +273,19 @@ struct SeasonalBackgroundView: View {
         }
     }
 
-    private func update(_ config: SeasonalBackgroundConfig,
-                        isEnabled: Bool? = nil,
-                        position: SeasonalPosition? = nil,
-                        scheduling: Scheduling? = nil,
-                        clearScheduling: Bool = false,
-                        opacity: Double? = nil) async {
-        let updated = SeasonalBackgroundConfig(
-            id: config.id,
-            label: config.label,
-            imagePath: config.imagePath,
-            scheduling: clearScheduling ? nil : (scheduling ?? config.scheduling),
-            position: position ?? config.position,
-            isEnabled: isEnabled ?? config.isEnabled,
-            opacity: opacity ?? config.opacity
-        )
-        guard updated != config else { return }
-        await run("Filigran actualizat.") {
+    /// Publică TOATE modificările locale ale unei intrări dintr-o singură
+    /// mișcare (Activ + Poziție + Intensitate + Perioadă) — un singur
+    /// `git pull`/`commit`/`push`, apăsat explicit de Cristi, nu unul per
+    /// control atins. Vezi comentariul de la `drafts` mai sus.
+    private func publish(_ config: SeasonalBackgroundConfig) async {
+        guard let updated = drafts[config.id], updated != config else {
+            drafts[config.id] = nil
+            return
+        }
+        await run("„\(config.label.isEmpty ? config.id : config.label)” actualizat.") {
             try CatalogEditor.upsertSeasonalBackground(updated)
         }
+        drafts[config.id] = nil
     }
 
     private func remove(_ config: SeasonalBackgroundConfig?) async {
