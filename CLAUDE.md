@@ -1472,3 +1472,27 @@ posibil să nu fie afectat), și nu are încă o setare de mărime text.
 
 Versiune: Client `1.17.0`→`1.18.0` (MINOR — feature nouă vizibilă).
 **Verificat**: `swift build` — 0 erori.
+
+## [FIX 2026-08-29] Formularul de Produse (Furnizor) nu se golea după publicare
+
+**Bug real, raportat de Cristi**: după ce publica un produs, trebuia să
+închidă și să redeschidă Furnizorul ca să poată adăuga alt produs — toate
+câmpurile rămâneau completate. **Cauză, verificată prin comparație directă
+cu celelalte 9 formulare de publicare** (`PublishAppView`, `PublishAudioView`,
+`PublishBundleView`, `PublishCourseView`, `PublishDownloadableResourceView`,
+`PublishEducationalResourceView`, `PublishEventView`,
+`PublishPartnerOfferView`, `PublishPartnerStoreView`,
+`PublishServiceCenterView` — TOATE apelau deja `clearForm()` imediat după
+`successMessage`): DOAR `PublishView.swift` (Produse — formularul cel mai
+folosit) omitea acest apel, apelând în schimb `loadExistingIfNeeded()`
+necondiționat, care repopulează formularul dacă ID-ul introdus se
+potrivește cu un produs existent — util la actualizare, dar greșit la
+creare de produs nou. **Fix**: `clearForm()` apelat după o publicare NOUĂ
+(`!isUpdate`); la o actualizare (`isUpdate == true`) comportamentul rămâne
+neschimbat (`loadExistingIfNeeded()`), fiindcă acolo repopularea e utilă.
+**Regulă practică de reținut**: orice formular NOU de Furnizor trebuie să
+apeleze `clearForm()` după publicare reușită (cazul de creare) — verifică
+prin comparație cu formularele existente înainte de a considera un
+formular nou "gata".
+Versiune Furnizor: `1.15.0`→`1.15.1` (PATCH — fix, nu funcționalitate nouă).
+**Verificat**: `swift build` — 0 erori.
