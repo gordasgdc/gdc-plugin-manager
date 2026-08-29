@@ -1768,3 +1768,36 @@ regresie).
 sisteme de randare SEPARATE, care nu se sincronizează automat — orice
 colecție nouă din `Catalog` (Core) trebuie adăugată manual în AMBELE, nu
 doar în `app.html`. `docs/sw.js` CACHE_VERSION v16→v17.
+
+## [FIX ROBUSTEȚE 2026-08-29] Fetch filigran — retry automat + eroare reală în log (Mac + Windows)
+
+**Raportat live de Cristi, diagnosticat direct din log**: un filigran
+(Black Friday) eșua consecvent la încărcare în timp ce altul (Crăciun),
+publicat în același minut, se încărca perfect. Verificat DIRECT (nu
+presupus): fișierul era disponibil pe server exact în acel moment
+(`curl` → HTTP 200), deci NU exista o problemă reală de disponibilitate —
+`try?`/`catch` generic ascundea eroarea REALĂ (timeout? DNS? TLS?),
+raportând mereu doar "fetch eșuat", fără detalii utile.
+
+**Concluzie**: `gordas.dev` trece prin DOUĂ straturi de CDN (Cloudflare +
+Fastly/GitHub Pages) — un nod de edge poate rata tranzitoriu o cerere, fără
+ca alta, la milisecunde distanță, s-o rateze. Nu e un bug de cod, dar
+aplicația poate — și trebuie — să reziste la un asemenea blip.
+
+**Fix, pe AMBELE platforme**: fiecare fetch de filigran încearcă acum de
+**2 ori** (a doua încercare, la 0.8s după prima), și logul înregistrează
+eroarea REALĂ (`Error`/`Exception` completă), nu doar "a eșuat" — un
+raport viitor similar se diagnostichează direct din log, fără presupuneri.
+Windows: `DiagnosticLog` (Core) trecut din `internal` în `public`, ca să
+poată fi folosit și din `SeasonalBackgroundLoader.cs` (Client) — până acum
+doar `PowerGradeImporter` îl folosea.
+
+**Bonus, găsit în timpul investigației**: ferestrele Windows noi
+(`SettingsWindow`/`ProfileEditorWindow`/`DependencyPanelWindow`/
+`UpdateProgressWindow`) foloseau `SizeToContent="Height"` FĂRĂ `MinHeight`
+— pe o mașină mai lentă (Parallels/VM), fereastra se putea desena o clipă
+înainte ca WPF să termine calculul înălțimii, arătând goală (confirmat de
+o captură trimisă de Cristi). Adăugat `MinHeight` explicit la toate 4.
+
+Versiune: Client `1.19.4`→`1.19.5` (PATCH).
+**Verificat**: `swift build` — 0 erori.

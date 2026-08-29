@@ -128,17 +128,50 @@ private struct SeasonalBackgroundLayer: View {
             // pe macOS (2026-08-29, filigran Black Friday invizibil în
             // Client — cauza reală). `NSImage(data:)` ȘTIE nativ SVG
             // (suport adăugat în macOS 12+), la fel ca orice raster.
-            if let (data, response) = try? await URLSession.shared.data(from: url), let image = NSImage(data: data) {
-                let status = (response as? HTTPURLResponse)?.statusCode ?? -1
-                DiagnosticLog.write("SeasonalBackground", "id=\(config.id): OK, \(data.count) bytes, HTTP \(status)")
-                nsImage = image
-                saveToCache(data: data)
-            } else if let cached = try? Data(contentsOf: cacheFileURL), let image = NSImage(data: cached) {
-                DiagnosticLog.write("SeasonalBackground", "id=\(config.id): fetch retea esuat, fallback pe cache local reusit")
-                // Offline sau rețea indisponibilă — ultima variantă descărcată cu succes.
-                nsImage = image
-            } else {
-                DiagnosticLog.write("SeasonalBackground", "id=\(config.id): fetch retea esuat SI niciun cache local disponibil")
+            //
+            // [2026-08-29] RETRY + eroare reală în log — găsit live (raportat
+            // de Cristi): un filigran eșua consecvent la fetch în timp ce
+            // altul, publicat în același minut, mergea perfect — verificat
+            // direct că fișierul era disponibil pe server (HTTP 200, `curl`)
+            // exact cât timp aplicația raporta eșec. Concluzie: nu era un
+            // bug de cod, ci un blip TRANZITORIU de rețea/CDN (gordas.dev
+            // trece prin Cloudflare ȘI Fastly/GitHub Pages — un nod de edge
+            // poate rata o cerere fără ca alta, milisecunde mai târziu, s-o
+            // rateze). `try?` ascundea eroarea REALĂ (timeout? DNS? TLS?) —
+            // acum se loghează explicit. Un singur retry, cu pauză scurtă,
+            // rezolvă marea majoritate a acestor blip-uri fără interacțiune
+            // manuală (fără "Reîmprospătează" apăsat de 10 ori).
+            var lastError: Error?
+            var loaded = false
+            for attempt in 1...2 {
+                do {
+                    let (data, response) = try await URLSession.shared.data(from: url)
+                    guard let image = NSImage(data: data) else {
+                        DiagnosticLog.write("SeasonalBackground", "id=\(config.id): fetch OK (\(data.count) bytes) dar NSImage nu a decodat (încercarea \(attempt))")
+                        lastError = nil
+                        break
+                    }
+                    let status = (response as? HTTPURLResponse)?.statusCode ?? -1
+                    DiagnosticLog.write("SeasonalBackground", "id=\(config.id): OK, \(data.count) bytes, HTTP \(status) (încercarea \(attempt))")
+                    nsImage = image
+                    saveToCache(data: data)
+                    loaded = true
+                    break
+                } catch {
+                    lastError = error
+                    DiagnosticLog.write("SeasonalBackground", "id=\(config.id): fetch EȘUAT la încercarea \(attempt): \(error)")
+                    if attempt == 1 {
+                        try? await Task.sleep(nanoseconds: 800_000_000) // 0.8s, apoi reîncearcă o dată
+                    }
+                }
+            }
+            if !loaded {
+                if let cached = try? Data(contentsOf: cacheFileURL), let image = NSImage(data: cached) {
+                    DiagnosticLog.write("SeasonalBackground", "id=\(config.id): fetch eșuat de 2 ori (\(String(describing: lastError))), fallback pe cache local reușit")
+                    nsImage = image
+                } else {
+                    DiagnosticLog.write("SeasonalBackground", "id=\(config.id): fetch eșuat de 2 ori (\(String(describing: lastError))) ȘI niciun cache local disponibil")
+                }
             }
         }
     }
