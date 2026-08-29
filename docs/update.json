@@ -1,7 +1,7 @@
 {
-  "version": "1.19.12",
+  "version": "1.19.13",
   "release_date": "2026-08-29",
-  "changes": "Windows: fortat HTTP/1.1 explicit la fetch de imagini (elimina ALPN/HTTP2 ca variabila in eroarea SSL) + fix real self-updater (folosea HttpClient fara User-Agent, cadea tacut pe descarcare manuala).",
+  "changes": "Cauza reala a imaginilor invizibile gasita si rezolvata: blocaj La Liga (Spania) pe intervalul Cloudflare al gordas.dev - domeniul e acum servit direct de GitHub Pages, in afara intervalului blocat.",
   "download_url": {
     "mac": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Mac.zip",
     "windows": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Windows.zip"
