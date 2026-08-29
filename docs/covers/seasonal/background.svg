@@ -1,10 +1,22 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
-  <text x="200" y="145" font-family="Helvetica, Arial" font-size="54" font-weight="900" fill="#FFFFFF" text-anchor="middle">BLACK</text>
-  <text x="200" y="205" font-family="Helvetica, Arial" font-size="54" font-weight="900" fill="#FFFFFF" text-anchor="middle">FRIDAY</text>
   <g fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linejoin="round">
-    <path d="M105 250 L250 250 L302 300 L250 350 L105 350 Z"/>
+    <path d="M200 42 L245 112 L215 112 L260 178 L225 178 L275 246 L125 246 L175 178 L140 178 L185 112 L155 112 Z"/>
+    <rect x="182" y="246" width="36" height="28"/>
+    <rect x="108" y="292" width="62" height="46" rx="4"/>
+    <rect x="228" y="292" width="62" height="46" rx="4"/>
   </g>
-  <circle cx="148" cy="300" r="9" fill="#FFFFFF"/>
-  <text x="235" y="313" font-family="Helvetica, Arial" font-size="32" font-weight="800" fill="#FFFFFF" text-anchor="middle">%</text>
-  <text x="200" y="385" font-family="Helvetica, Arial" font-size="17" font-weight="700" letter-spacing="5" fill="#FFFFFF" text-anchor="middle">SUPER REDUCERI</text>
+  <path d="M108 292 L170 338 M170 292 L108 338" stroke="#FFFFFF" stroke-width="4" fill="none"/>
+  <path d="M228 292 L290 338 M290 292 L228 338" stroke="#FFFFFF" stroke-width="4" fill="none"/>
+  <path d="M200 12 L206 28 L223 28 L209 38 L214 55 L200 45 L186 55 L191 38 L177 28 L194 28 Z" fill="#FFFFFF"/>
+  <circle cx="184" cy="140" r="6" fill="#FFFFFF"/>
+  <circle cx="216" cy="160" r="6" fill="#FFFFFF"/>
+  <circle cx="168" cy="200" r="6" fill="#FFFFFF"/>
+  <circle cx="232" cy="212" r="6" fill="#FFFFFF"/>
+  <circle cx="200" cy="228" r="6" fill="#FFFFFF"/>
+  <circle cx="80" cy="65" r="4" fill="#FFFFFF"/>
+  <circle cx="325" cy="85" r="4" fill="#FFFFFF"/>
+  <circle cx="55" cy="130" r="3" fill="#FFFFFF"/>
+  <circle cx="340" cy="150" r="3" fill="#FFFFFF"/>
+  <circle cx="100" cy="180" r="3" fill="#FFFFFF"/>
+  <text x="200" y="378" font-family="Helvetica, Arial" font-size="27" font-weight="700" fill="#FFFFFF" text-anchor="middle">Sărbători Fericite</text>
 </svg>
