@@ -140,8 +140,13 @@
       "id" : "Don't Be Like Me Workshop",
       "location" : "Sighisoara",
       "scheduling" : {
-        "endDate" : 815021738.592533,
-        "startDate" : 809661338.592533
+        "endDate" : 812435826.730138,
+        "startDate" : 809671026.730138
+      },
+      "socialLinks" : {
+        "facebookURL" : "https://www.facebook.com/dblmworkshop",
+        "instagramURL" : "https://www.instagram.com/damianfilms/",
+        "tiktokURL" : "https://www.tiktok.com/@damianfilms"
       },
       "title" : "Don't Be Like Me Workshop ",
       "youtubeURL" : "https://www.facebook.com/bogdan.damian.735/posts/pfbid0bnPWobkt8QuDDYk2JUE69ojzXs2wRs4i2PG3zqB92Cwiw47jcY7qcRVNWUQxF6Djl"
@@ -571,7 +576,15 @@
       }
     }
   ],
-  "seasonalBackground" : "covers/seasonal/background.svg?v=27081ef5",
+  "seasonalBackgrounds" : [
+    {
+      "id" : "migrat-2026-08-29",
+      "imagePath" : "covers/seasonal/background.svg?v=27081ef5",
+      "isEnabled" : true,
+      "label" : "Filigran existent (migrat automat)",
+      "position" : "bottomTrailing"
+    }
+  ],
   "serviceCenters" : [
     {
       "category" : "drone",
