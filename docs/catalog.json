@@ -521,6 +521,56 @@
       "url" : "https://mitmag.ro/"
     }
   ],
+  "productBundles" : [
+    {
+      "bundlePriceEUR" : 0,
+      "description" : "",
+      "id" : "vbbbvb",
+      "items" : [
+        {
+          "id" : "Oficial_Blackmagic_Curs",
+          "kind" : "course"
+        },
+        {
+          "id" : "GDC Metadata View Premium",
+          "kind" : "app"
+        },
+        {
+          "id" : "media-flow-monitor",
+          "kind" : "app"
+        },
+        {
+          "id" : "Clapperboard Digital",
+          "kind" : "app"
+        },
+        {
+          "id" : "IntermediateWorkflow",
+          "kind" : "product"
+        },
+        {
+          "id" : "gdc-resolve-encoder",
+          "kind" : "app"
+        },
+        {
+          "id" : "CursorPro GDC",
+          "kind" : "app"
+        },
+        {
+          "id" : "GDC",
+          "kind" : "product"
+        },
+        {
+          "id" : "LiniarWorkflow",
+          "kind" : "product"
+        }
+      ],
+      "name" : "bbv",
+      "scheduling" : {
+        "endDate" : 809658649.238534,
+        "startDate" : 809658229.238534
+      }
+    }
+  ],
   "seasonalBackground" : "covers/seasonal/background.svg?v=cf9f89cc",
   "serviceCenters" : [
     {
