@@ -1,5 +1,15 @@
 # Changelog — GDC Plugin Manager
 
+## v1.19.12 (2026-08-29) — Windows: HTTP/1.1 forțat + fix real self-updater
+
+- Forțat HTTP/1.1 explicit la fetch de imagini — elimină ALPN/HTTP2 ca
+  variabilă în eroarea SSL persistentă de la `gordas.dev` (v1.19.9/10 nu
+  au rezolvat-o).
+- Fix real self-updater: folosea un `HttpClient` propriu fără User-Agent
+  și fără logare — orice eșec cădea tăcut pe fallback-ul de descărcare
+  manuală ("trebuie tot timpul să descarc de pe pagina web"). Mac:
+  neschimbat.
+
 ## v1.19.10 (2026-08-29) — Windows: diagnostic certificat TLS real (v1.19.9 nu a rezolvat)
 
 - Fix-ul v1.19.9 (reciclare conexiune HTTPS) NU a rezolvat eroarea SSL —
