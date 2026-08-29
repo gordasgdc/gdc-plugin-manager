@@ -584,7 +584,7 @@
     {
       "id" : "summer",
       "imagePath" : "covers/seasonal/summer.png?v=b5bc7198",
-      "isEnabled" : false,
+      "isEnabled" : true,
       "label" : "Vară / Vacanță",
       "opacity" : 0.2,
       "position" : "bottomTrailing"
