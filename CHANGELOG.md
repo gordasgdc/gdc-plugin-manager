@@ -1,5 +1,16 @@
 # Changelog — GDC Plugin Manager
 
+## v1.19.14 (2026-08-29) — Ghiduri PDF redesenate + ghid din aplicație completat
+
+- PDF-urile de utilizare (RO/EN/ES) redesenate cu 4 capturi reale ale
+  aplicației (fereastra principală, instalare produs, setări, verificare
+  dependențe) + fix real: punctele 🔴/🟢 apăreau ca pătrate goale în PDF
+  (Arial nu are glyph-uri emoji) — acum puncte colorate reale.
+- Ghidul din aplicație (Ajutor) completat cu 2 secțiuni lipsă găsite la
+  audit: Panoul de Dependențe și Aplicația mobilă.
+- Audit date confidențiale pe paginile publice: nimic expus.
+- Windows: neschimbat, doar sincronizare de versiune.
+
 ## v1.19.13 (2026-08-29) — Bump doar de versiune (sincronizare cu Windows, fără cod nou)
 
 Necesar ca `update.json` comun să indice o versiune reală, existentă pe
