@@ -16,10 +16,7 @@ struct PublishPartnerOfferView: View {
     @State private var couponCode = ""
     @State private var url = ""
     @State private var youtubeURL = ""
-    @State private var facebookURL = ""
-    @State private var instagramURL = ""
-    @State private var tiktokURL = ""
-    @State private var socialYoutubeURL = ""
+    @State private var socialForm = SocialLinksFormState()
     @State private var scheduling: Scheduling?
     @State private var coverSelection: CoverImageSelection = .none
 
@@ -60,11 +57,7 @@ struct PublishPartnerOfferView: View {
                         }
                         TextField("Link tutorial/prezentare YouTube (opțional)", text: $youtubeURL).textFieldStyle(.roundedBorder)
 
-                        Text("Rețele sociale (opțional)").font(.caption).foregroundStyle(.secondary).padding(.top, 4)
-                        TextField("Facebook", text: $facebookURL).textFieldStyle(.roundedBorder)
-                        TextField("YouTube", text: $socialYoutubeURL).textFieldStyle(.roundedBorder)
-                        TextField("Instagram", text: $instagramURL).textFieldStyle(.roundedBorder)
-                        TextField("TikTok", text: $tiktokURL).textFieldStyle(.roundedBorder)
+                        SocialLinksFields(state: $socialForm, youtubeLabel: "YouTube")
                     }
                     .padding(8)
                 }
@@ -180,10 +173,7 @@ struct PublishPartnerOfferView: View {
         couponCode = offer.couponCode ?? ""
         url = offer.url
         youtubeURL = offer.youtubeURL ?? ""
-        facebookURL = offer.socialLinks?.facebookURL ?? ""
-        instagramURL = offer.socialLinks?.instagramURL ?? ""
-        tiktokURL = offer.socialLinks?.tiktokURL ?? ""
-        socialYoutubeURL = offer.socialLinks?.youtubeURL ?? ""
+        socialForm = SocialLinksFormState(offer.socialLinks)
         scheduling = offer.scheduling
         coverSelection = offer.coverImage.map { .existing($0) } ?? .none
         successMessage = nil
@@ -199,10 +189,7 @@ struct PublishPartnerOfferView: View {
         couponCode = ""
         url = ""
         youtubeURL = ""
-        facebookURL = ""
-        instagramURL = ""
-        tiktokURL = ""
-        socialYoutubeURL = ""
+        socialForm.reset()
         scheduling = nil
         coverSelection = .none
     }
@@ -225,15 +212,11 @@ struct PublishPartnerOfferView: View {
             let previousCover = existingOffers.first { $0.id == offerID }?.coverImage
             let coverImage = try CoverImageStore.commit(coverSelection, id: offerID, previous: previousCover)
 
-            let social = SocialLinks(
-                facebookURL: nilIfEmpty(facebookURL), youtubeURL: nilIfEmpty(socialYoutubeURL),
-                instagramURL: nilIfEmpty(instagramURL), tiktokURL: nilIfEmpty(tiktokURL)
-            )
             let offer = PartnerOffer(
                 id: offerID, brandName: brandName, description: description,
                 discountText: nilIfEmpty(discountText), couponCode: nilIfEmpty(couponCode),
                 url: url, youtubeURL: nilIfEmpty(youtubeURL), coverImage: coverImage,
-                socialLinks: social.isEmpty ? nil : social, scheduling: scheduling
+                socialLinks: socialForm.model, scheduling: scheduling
             )
             try CatalogEditor.upsertPartnerOffer(offer)
             try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Ofertă parteneră: \(offer.brandName)", paths: ["docs/catalog.json", "docs/covers"])

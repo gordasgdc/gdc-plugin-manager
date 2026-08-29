@@ -269,18 +269,27 @@ public struct SocialLinks: Codable, Hashable {
     public let youtubeURL: String?
     public let instagramURL: String?
     public let tiktokURL: String?
+    /// LinkedIn — adăugat 2026-08-29 la cererea explicită a lui Cristi
+    /// ("să adăugăm și LinkedIn"). Opțional ca toate celelalte; o valoare
+    /// absentă din `catalog.json` decodează nil (Codable sintetizat trata
+    /// deja o cheie lipsă ca nil pentru un Optional), deci fiecare produs/
+    /// resursă publicată înainte rămâne exact ce era.
+    public let linkedinURL: String?
 
-    public init(facebookURL: String? = nil, youtubeURL: String? = nil, instagramURL: String? = nil, tiktokURL: String? = nil) {
+    public init(facebookURL: String? = nil, youtubeURL: String? = nil, instagramURL: String? = nil,
+                tiktokURL: String? = nil, linkedinURL: String? = nil) {
         self.facebookURL = facebookURL
         self.youtubeURL = youtubeURL
         self.instagramURL = instagramURL
         self.tiktokURL = tiktokURL
+        self.linkedinURL = linkedinURL
     }
 
-    /// True dacă niciunul dintre cele 4 linkuri nu e completat — folosit
+    /// True dacă niciunul dintre cele 5 linkuri nu e completat — folosit
     /// ca să nu afișăm un rând gol de iconițe pe card.
     public var isEmpty: Bool {
-        facebookURL == nil && youtubeURL == nil && instagramURL == nil && tiktokURL == nil
+        facebookURL == nil && youtubeURL == nil && instagramURL == nil
+            && tiktokURL == nil && linkedinURL == nil
     }
 }
 
@@ -542,14 +551,20 @@ public struct Course: Codable, Identifiable, Hashable {
     public let coverImage: String?
     /// Valabilitate temporală opțională — Etapa 4 (2026-08-29). Vezi `Scheduling`.
     public let scheduling: Scheduling?
+    /// Rețele sociale opționale — 2026-08-29, cerut explicit ("să apară la
+    /// toate rubricile", nu doar la produse/resurse). Codable sintetizat:
+    /// o cheie lipsă într-un `catalog.json` vechi decodează nil automat, iar
+    /// encoderul o omite când e nil — 100% retrocompatibil, ca `scheduling`.
+    public let socialLinks: SocialLinks?
 
-    public init(id: String, name: String, description: String, options: [CourseOption], coverImage: String? = nil, scheduling: Scheduling? = nil) {
+    public init(id: String, name: String, description: String, options: [CourseOption], coverImage: String? = nil, scheduling: Scheduling? = nil, socialLinks: SocialLinks? = nil) {
         self.id = id
         self.name = name
         self.description = description
         self.options = options
         self.coverImage = coverImage
         self.scheduling = scheduling
+        self.socialLinks = socialLinks
     }
 
     public var coverImageURL: URL? { CatalogAssets.imageURL(for: coverImage) }
@@ -574,14 +589,17 @@ public struct AppLink: Codable, Identifiable, Hashable {
     public let coverImage: String?
     /// Valabilitate temporală opțională — Etapa 4 extinsă (2026-08-29). Vezi `Scheduling`.
     public let scheduling: Scheduling?
+    /// Rețele sociale opționale — 2026-08-29. Vezi `Course.socialLinks`.
+    public let socialLinks: SocialLinks?
 
-    public init(id: String, name: String, url: String, youtubeURL: String? = nil, coverImage: String? = nil, scheduling: Scheduling? = nil) {
+    public init(id: String, name: String, url: String, youtubeURL: String? = nil, coverImage: String? = nil, scheduling: Scheduling? = nil, socialLinks: SocialLinks? = nil) {
         self.youtubeURL = youtubeURL
         self.id = id
         self.name = name
         self.url = url
         self.coverImage = coverImage
         self.scheduling = scheduling
+        self.socialLinks = socialLinks
     }
 
     public var coverImageURL: URL? { CatalogAssets.imageURL(for: coverImage) }
@@ -645,8 +663,10 @@ public struct EducationalResource: Codable, Identifiable, Hashable {
     public let coverImage: String?
     /// Valabilitate temporală opțională — Etapa 4 (2026-08-29). Vezi `Scheduling`.
     public let scheduling: Scheduling?
+    /// Rețele sociale opționale — 2026-08-29. Vezi `Course.socialLinks`.
+    public let socialLinks: SocialLinks?
 
-    public init(id: String, name: String, description: String, kind: Kind, externalURL: String, youtubeURL: String? = nil, coverImage: String? = nil, scheduling: Scheduling? = nil) {
+    public init(id: String, name: String, description: String, kind: Kind, externalURL: String, youtubeURL: String? = nil, coverImage: String? = nil, scheduling: Scheduling? = nil, socialLinks: SocialLinks? = nil) {
         self.id = id
         self.name = name
         self.description = description
@@ -655,6 +675,7 @@ public struct EducationalResource: Codable, Identifiable, Hashable {
         self.youtubeURL = youtubeURL
         self.coverImage = coverImage
         self.scheduling = scheduling
+        self.socialLinks = socialLinks
     }
 
     public var coverImageURL: URL? { CatalogAssets.imageURL(for: coverImage) }
@@ -685,8 +706,11 @@ public struct Event: Codable, Identifiable, Hashable {
     /// despre CÂND are loc evenimentul) — aceasta controlează CÂND
     /// apare/dispare anunțul în Client, cele două nu sunt legate.
     public let scheduling: Scheduling?
+    /// Rețele sociale opționale — 2026-08-29. Vezi `Course.socialLinks`.
+    public let socialLinks: SocialLinks?
 
-    public init(id: String, title: String, description: String, dateDisplay: String, location: String, externalURL: String, youtubeURL: String? = nil, coverImage: String? = nil, scheduling: Scheduling? = nil) {
+    public init(id: String, title: String, description: String, dateDisplay: String, location: String, externalURL: String, youtubeURL: String? = nil, coverImage: String? = nil, scheduling: Scheduling? = nil, socialLinks: SocialLinks? = nil) {
+        self.socialLinks = socialLinks
         self.id = id
         self.title = title
         self.description = description
@@ -780,9 +804,12 @@ public struct ServiceCenter: Codable, Identifiable, Hashable {
     /// (vezi `MapsLink`). Distinctă de `websiteURL` (acela e site-ul, nu
     /// locația fizică).
     public let address: String?
+    /// Rețele sociale opționale — 2026-08-29. Vezi `Course.socialLinks`.
+    public let socialLinks: SocialLinks?
 
     public init(id: String, name: String, category: ServiceCategory, specialization: String,
-                contactURL: String, websiteURL: String? = nil, coverImage: String? = nil, scheduling: Scheduling? = nil, address: String? = nil) {
+                contactURL: String, websiteURL: String? = nil, coverImage: String? = nil, scheduling: Scheduling? = nil, address: String? = nil, socialLinks: SocialLinks? = nil) {
+        self.socialLinks = socialLinks
         self.id = id
         self.name = name
         self.category = category
@@ -815,8 +842,11 @@ public struct PartnerStore: Codable, Identifiable, Hashable {
     public let scheduling: Scheduling?
     /// Adresă fizică opțională — Etapa 5 (2026-08-29). Vezi `ServiceCenter.address`.
     public let address: String?
+    /// Rețele sociale opționale — 2026-08-29. Vezi `Course.socialLinks`.
+    public let socialLinks: SocialLinks?
 
-    public init(id: String, name: String, description: String, url: String, coverImage: String? = nil, scheduling: Scheduling? = nil, address: String? = nil) {
+    public init(id: String, name: String, description: String, url: String, coverImage: String? = nil, scheduling: Scheduling? = nil, address: String? = nil, socialLinks: SocialLinks? = nil) {
+        self.socialLinks = socialLinks
         self.id = id
         self.name = name
         self.description = description
@@ -1081,6 +1111,88 @@ public struct ProductBundle: Codable, Identifiable, Hashable {
     public var bundlePriceDisplay: String { bundlePriceEUR.formatted(.currency(code: "EUR")) }
 }
 
+/// Unde apare filigranul sezonier în fereastra Client-ului — 2026-08-29,
+/// cerut explicit de Cristi ("să aleagă unde apare pe ecran"). Implicit
+/// `.bottomTrailing`: exact comportamentul hardcodat de dinainte, deci un
+/// filigran migrat dintr-un catalog vechi arată identic cu ce arăta.
+public enum SeasonalPosition: String, Codable, CaseIterable, Identifiable, Sendable {
+    case bottomTrailing, bottomLeading, topTrailing, topLeading, center
+
+    public var id: String { rawValue }
+
+    public var label: String {
+        switch self {
+        case .bottomTrailing: return "Jos-dreapta"
+        case .bottomLeading: return "Jos-stânga"
+        case .topTrailing: return "Sus-dreapta"
+        case .topLeading: return "Sus-stânga"
+        case .center: return "Centru"
+        }
+    }
+}
+
+/// O intrare din BIBLIOTECA de filigrane sezoniere — 2026-08-29.
+///
+/// Înlocuiește `Catalog.seasonalBackground: String?` (un singur slot global,
+/// fără perioadă și fără poziție). Cristi a cerut trei lucruri care nu
+/// încăpeau într-un simplu String: (a) din ce dată până în ce dată apare,
+/// (b) unde apare pe ecran, (c) ca o imagine proprie încărcată o dată să
+/// rămână SALVATĂ și reutilizabilă mai târziu, nu folosită și uitată.
+///
+/// De-aia `Catalog.seasonalBackgrounds` e o LISTĂ (biblioteca), nu un slot:
+/// fiecare intrare are propriul `isEnabled` + `scheduling`, deci Cristi
+/// poate ține pregătite toate filigranele anului și le lasă să se aprindă
+/// singure la datele lor.
+public struct SeasonalBackgroundConfig: Codable, Hashable, Identifiable {
+    /// Slug stabil — e și numele fișierului din `docs/covers/seasonal/`, și
+    /// cheia de cache pe disc din Client (vezi `SeasonalBackgroundLayer`).
+    public let id: String
+    /// Eticheta pusă de Cristi ("Black Friday 2026") — doar pentru lista
+    /// din Furnizor, nu apare nicăieri la clienți.
+    public let label: String
+    /// Cale relativă (`covers/seasonal/<id>.svg`) sau URL extern — același
+    /// sistem hibrid ca `coverImage` (vezi `CatalogAssets`).
+    public let imagePath: String
+    /// `nil` = mereu vizibil (cât timp `isEnabled`), identic cu
+    /// comportamentul de dinainte de această schimbare.
+    public let scheduling: Scheduling?
+    public let position: SeasonalPosition
+    /// Comutator manual, independent de dată — un filigran poate sta în
+    /// bibliotecă stins, gata de folosit, fără să-i ștergi perioada.
+    public let isEnabled: Bool
+
+    public init(id: String, label: String, imagePath: String, scheduling: Scheduling? = nil,
+                position: SeasonalPosition = .bottomTrailing, isEnabled: Bool = true) {
+        self.id = id
+        self.label = label
+        self.imagePath = imagePath
+        self.scheduling = scheduling
+        self.position = position
+        self.isEnabled = isEnabled
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case id, label, imagePath, scheduling, position, isEnabled
+    }
+
+    public init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        id = try c.decode(String.self, forKey: .id)
+        label = try c.decodeIfPresent(String.self, forKey: .label) ?? ""
+        imagePath = try c.decode(String.self, forKey: .imagePath)
+        scheduling = try c.decodeIfPresent(Scheduling.self, forKey: .scheduling)
+        position = try c.decodeIfPresent(SeasonalPosition.self, forKey: .position) ?? .bottomTrailing
+        isEnabled = try c.decodeIfPresent(Bool.self, forKey: .isEnabled) ?? true
+    }
+
+    /// Vizibil ACUM: bifat manual ȘI (fără perioadă SAU în interiorul ei).
+    public var isActiveNow: Bool {
+        isEnabled && (scheduling?.isActiveNow ?? true)
+    }
+
+    public var imageURL: URL? { CatalogAssets.imageURL(for: imagePath) }
+}
+
 public struct Catalog: Codable {
     public let updatedAt: String?
     public let items: [PluginItem]
@@ -1098,17 +1210,16 @@ public struct Catalog: Codable {
     /// Oferte/Promoții de la branduri partenere — Etapa 4 (2026-08-29).
     /// Default `[]`: retrocompatibil.
     public let partnerOffers: [PartnerOffer]
-    /// Filigran/fundal sezonier opțional pentru Client — Etapa 6
-    /// (2026-08-29). Cristi: NU un banner mic, ci o imagine mare, discretă,
-    /// "gravată" în fundalul ferestrei (opacitate mică, nu un sticker
-    /// suprapus). Cale relativă (`covers/seasonal/<nume>.svg`) sau URL
-    /// extern — același sistem hibrid ca `coverImage` (vezi `CatalogAssets`).
-    /// `nil` = fără filigran (fundalul normal Shift).
-    public let seasonalBackground: String?
+    /// BIBLIOTECA de filigrane sezoniere — 2026-08-29. Înlocuiește vechiul
+    /// `seasonalBackground: String?` (un singur slot global, fără perioadă
+    /// și fără poziție); vezi `SeasonalBackgroundConfig` pentru motivație.
+    /// Un `catalog.json` vechi, cu cheia singulară, e migrat SILENȚIOS la
+    /// decodare — vezi `init(from:)` de mai jos.
+    public let seasonalBackgrounds: [SeasonalBackgroundConfig]
     /// Pachete/Bundle-uri — Etapa 9 (2026-08-29). Default `[]`: retrocompatibil.
     public let productBundles: [ProductBundle]
 
-    public init(updatedAt: String?, items: [PluginItem], courses: [Course] = [], apps: [AppLink] = [], audioTracks: [AudioTrack] = [], educationalResources: [EducationalResource] = [], events: [Event] = [], partnerStores: [PartnerStore] = [], serviceCenters: [ServiceCenter] = [], downloadableResources: [DownloadableResource] = [], partnerOffers: [PartnerOffer] = [], seasonalBackground: String? = nil, productBundles: [ProductBundle] = []) {
+    public init(updatedAt: String?, items: [PluginItem], courses: [Course] = [], apps: [AppLink] = [], audioTracks: [AudioTrack] = [], educationalResources: [EducationalResource] = [], events: [Event] = [], partnerStores: [PartnerStore] = [], serviceCenters: [ServiceCenter] = [], downloadableResources: [DownloadableResource] = [], partnerOffers: [PartnerOffer] = [], seasonalBackgrounds: [SeasonalBackgroundConfig] = [], productBundles: [ProductBundle] = []) {
         self.updatedAt = updatedAt
         self.items = items
         self.courses = courses
@@ -1120,7 +1231,7 @@ public struct Catalog: Codable {
         self.serviceCenters = serviceCenters
         self.downloadableResources = downloadableResources
         self.partnerOffers = partnerOffers
-        self.seasonalBackground = seasonalBackground
+        self.seasonalBackgrounds = seasonalBackgrounds
         self.productBundles = productBundles
     }
 
@@ -1128,7 +1239,14 @@ public struct Catalog: Codable {
     // catalog published before a given field existed keeps decoding
     // cleanly after this update ships to clients.
     private enum CodingKeys: String, CodingKey {
-        case updatedAt, items, courses, apps, audioTracks, educationalResources, events, partnerStores, serviceCenters, downloadableResources, partnerOffers, seasonalBackground, productBundles
+        case updatedAt, items, courses, apps, audioTracks, educationalResources, events, partnerStores, serviceCenters, downloadableResources, partnerOffers, seasonalBackgrounds, productBundles
+    }
+
+    /// Cheia SINGULARĂ, doar pentru citirea unui `catalog.json` publicat
+    /// înainte de bibliotecă. Nu se mai SCRIE niciodată — la prima
+    /// republicare din Furnizor, catalogul iese cu forma nouă.
+    private enum LegacyCodingKeys: String, CodingKey {
+        case seasonalBackground
     }
 
     public init(from decoder: Decoder) throws {
@@ -1144,9 +1262,48 @@ public struct Catalog: Codable {
         serviceCenters = try c.decodeIfPresent([ServiceCenter].self, forKey: .serviceCenters) ?? []
         downloadableResources = try c.decodeIfPresent([DownloadableResource].self, forKey: .downloadableResources) ?? []
         partnerOffers = try c.decodeIfPresent([PartnerOffer].self, forKey: .partnerOffers) ?? []
-        seasonalBackground = try c.decodeIfPresent(String.self, forKey: .seasonalBackground)
         productBundles = try c.decodeIfPresent([ProductBundle].self, forKey: .productBundles) ?? []
+
+        // MIGRARE SILENȚIOASĂ (2026-08-29): un `catalog.json` publicat
+        // înainte de bibliotecă are `seasonalBackground` (String). Îl
+        // convertim într-o intrare unică, FĂRĂ scheduling (mereu activă) și
+        // pe poziția implicită `.bottomTrailing` — adică EXACT ce arăta
+        // înainte; niciun client nu vede o schimbare de comportament la
+        // update. Cheia nouă câștigă dacă ambele există.
+        if let list = try c.decodeIfPresent([SeasonalBackgroundConfig].self, forKey: .seasonalBackgrounds) {
+            seasonalBackgrounds = list
+        } else if let legacy = try decoder.container(keyedBy: LegacyCodingKeys.self)
+            .decodeIfPresent(String.self, forKey: .seasonalBackground) {
+            seasonalBackgrounds = [SeasonalBackgroundConfig(
+                id: "migrat-2026-08-29",
+                label: "Filigran existent (migrat automat)",
+                imagePath: legacy
+            )]
+        } else {
+            seasonalBackgrounds = []
+        }
     }
 
-    public var seasonalBackgroundURL: URL? { CatalogAssets.imageURL(for: seasonalBackground) }
+    /// Vezi `[SeasonalBackgroundConfig].activeNowDeduplicated`.
+    public var activeSeasonalBackgrounds: [SeasonalBackgroundConfig] {
+        seasonalBackgrounds.activeNowDeduplicated
+    }
+}
+
+public extension Array where Element == SeasonalBackgroundConfig {
+    /// Filigranele care ar trebui randate ACUM, deduplicate pe poziție.
+    ///
+    /// DECIZIE DE COLIZIUNE (documentată deliberat, nu accidentală): dacă
+    /// mai multe filigrane active cad pe ACEEAȘI poziție, câștigă ULTIMUL
+    /// din listă (ultimul adăugat/editat în Furnizor). Suprapunerea a două
+    /// imagini în același colț ar da o pată ilizibilă; alegerea e stabilă și
+    /// previzibilă, nu aleatorie, și nu aruncă niciodată eroare. Filigranele
+    /// pe poziții DIFERITE se randează toate — sunt independente.
+    var activeNowDeduplicated: [SeasonalBackgroundConfig] {
+        var byPosition: [SeasonalPosition: SeasonalBackgroundConfig] = [:]
+        for config in self where config.isActiveNow {
+            byPosition[config.position] = config // ultimul câștigă
+        }
+        return SeasonalPosition.allCases.compactMap { byPosition[$0] }
+    }
 }

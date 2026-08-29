@@ -1,5 +1,31 @@
 # Changelog — GDC Plugin Manager
 
+## Client v1.16.0 + Furnizor v1.15.0 (2026-08-29) — Social pe toate rubricile, selector de temă, bibliotecă de filigrane
+
+Trei cerințe explicite ale lui Cristi, în trei commit-uri separate.
+Platforme afectate: **Mac (Client + Furnizor) + PWA/mobil** (`docs/app.html`).
+
+1. **Rețele sociale la TOATE rubricile + LinkedIn.** `socialLinks` adăugat pe
+   Course/EducationalResource/Event/PartnerStore/ServiceCenter/AppLink (Core,
+   retrocompatibil); `linkedinURL` nou pe `SocialLinks`. Furnizor: componentă
+   partajată `SocialLinksEditor.swift` integrată în toate cele 10 formulare.
+   Client + PWA: rând de iconițe pe cardurile respective.
+2. **Selector explicit de temă Sistem/Light/Dark** (Regula 18, lipsea complet).
+   `AppTheme.swift` în Core, aplicat prin `NSApp.appearance`, persistat local,
+   fără repornire. Client: Preferences. Furnizor: ecran de Preferences NOU.
+3. **Filigrane sezoniere — bibliotecă reutilizabilă**, cu perioadă
+   (`Scheduling`), poziție (5 opțiuni) și toggle activ/inactiv per intrare.
+   `Catalog.seasonalBackground` (String) → `seasonalBackgrounds` (listă), cu
+   migrare silențioasă a cheii vechi, verificată pe catalogul live.
+   Recomandare documentată: **SVG** peste PNG (ambele rămân suportate).
+
+`docs/sw.js`: CACHE_VERSION v12 → v14. `docs/update.json` NEATINS.
+
+**TODO paritate pe Windows** (`GDCPluginManagerWin`, repo separat): niciuna
+dintre cele 3 nu e portată — social/LinkedIn pe cele 6 modele, selector de
+temă WPF, și filigranele sezoniere (acolo nu există deloc încă). Detalii în
+CLAUDE.md, secțiunea "SESIUNE 2026-08-29".
+
 ## Client v1.6.0 + Furnizor v1.4.0 (2026-08-29) — Etapa 2 finalizată: Resurse Download (LUT/SFX/VFX/Plugin)
 Cristi a confirmat: "produse noi, separate, cu simplu link de download, ca
 Audio". `DownloadableResource`/`DownloadCategory` (Core, nou) — 4

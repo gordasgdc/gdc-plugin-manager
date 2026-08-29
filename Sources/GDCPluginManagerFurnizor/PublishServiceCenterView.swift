@@ -17,6 +17,8 @@ struct PublishServiceCenterView: View {
     @State private var address = ""
     @State private var coverSelection: CoverImageSelection = .none
     @State private var scheduling: Scheduling?
+    // Rețele sociale opționale (2026-08-29) — vezi SocialLinksEditor.swift.
+    @State private var socialForm = SocialLinksFormState()
 
     @State private var isBusy = false
     @State private var errorMessage: String?
@@ -53,6 +55,7 @@ struct PublishServiceCenterView: View {
 
                 CoverImagePicker(preset: .icon, selection: $coverSelection)
                 SchedulingPicker(scheduling: $scheduling)
+                SocialLinksSection(state: $socialForm)
 
                 if let errorMessage {
                     Label(errorMessage, systemImage: "exclamationmark.triangle.fill")
@@ -146,6 +149,7 @@ struct PublishServiceCenterView: View {
         address = center.address ?? ""
         coverSelection = center.coverImage.map { .existing($0) } ?? .none
         scheduling = center.scheduling
+        socialForm = SocialLinksFormState(center.socialLinks)
         successMessage = nil
         errorMessage = nil
     }
@@ -161,6 +165,7 @@ struct PublishServiceCenterView: View {
         address = ""
         coverSelection = .none
         scheduling = nil
+        socialForm.reset()
     }
 
     private func publish() async {
@@ -183,7 +188,8 @@ struct PublishServiceCenterView: View {
                 contactURL: contactURL.trimmingCharacters(in: .whitespaces),
                 websiteURL: websiteURL.trimmingCharacters(in: .whitespaces).isEmpty ? nil : websiteURL.trimmingCharacters(in: .whitespaces),
                 coverImage: coverImage, scheduling: scheduling,
-                address: address.trimmingCharacters(in: .whitespaces).isEmpty ? nil : address.trimmingCharacters(in: .whitespaces)
+                address: address.trimmingCharacters(in: .whitespaces).isEmpty ? nil : address.trimmingCharacters(in: .whitespaces),
+                socialLinks: socialForm.model
             )
 
             try CatalogEditor.upsertServiceCenter(center)

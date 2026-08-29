@@ -27,18 +27,54 @@ enum SidebarSection: Hashable {
 /// (`allowsHitTesting(false)`), fără să concureze cu conținutul din
 /// prim-plan. `nil` => nimic randat, fundalul Shift normal rămâne
 /// neschimbat.
-private struct SeasonalBackgroundLayer: View {
-    let url: URL?
-    @State private var nsImage: NSImage?
-    @State private var loadedURL: URL?
+private extension SeasonalPosition {
+    var alignment: Alignment {
+        switch self {
+        case .bottomTrailing: return .bottomTrailing
+        case .bottomLeading: return .bottomLeading
+        case .topTrailing: return .topTrailing
+        case .topLeading: return .topLeading
+        case .center: return .center
+        }
+    }
+}
 
-    /// Cache local (Etapa 8) — la fel ca `catalog-cache.json`, ca filigranul
-    /// să rămână vizibil și offline / la eșec de rețea, nu doar când
-    /// descărcarea reușește de fiecare dată.
+/// Toate filigranele active acum, fiecare la poziția lui configurată —
+/// 2026-08-29. `Catalog.activeSeasonalBackgrounds` a filtrat deja după
+/// `isActiveNow` și a rezolvat coliziunile de poziție (ultimul adăugat
+/// câștigă, vezi comentariul de acolo), deci aici doar randăm.
+private struct SeasonalBackgroundsLayer: View {
+    let configs: [SeasonalBackgroundConfig]
+
+    var body: some View {
+        ZStack {
+            ForEach(configs) { config in
+                SeasonalBackgroundLayer(config: config)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: config.position.alignment)
+            }
+        }
+        .allowsHitTesting(false)
+    }
+}
+
+private struct SeasonalBackgroundLayer: View {
+    let config: SeasonalBackgroundConfig
+    @State private var nsImage: NSImage?
+
+    /// Cache local pe disc (Etapa 8) — la fel ca `catalog-cache.json`, ca
+    /// filigranul să rămână vizibil offline / la eșec de rețea.
+    ///
+    /// CHEIAT PER FILIGRAN (2026-08-29): era un singur fișier global
+    /// `seasonal-background-cache`, ceea ce cu o bibliotecă de mai multe
+    /// filigrane ar fi însemnat că ultimul descărcat suprascrie cache-ul
+    /// tuturor celorlalte (offline, toate ar fi arătat aceeași imagine).
     private var cacheFileURL: URL {
         FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
             .appendingPathComponent("GDCPluginManager")
-            .appendingPathComponent("seasonal-background-cache")
+            .appendingPathComponent("seasonal-cache", isDirectory: true)
+            // `id` e slug de catalog (litere mici/cifre/cratime), dar
+            // filtrăm oricum ce ar putea deveni cale ("/", "..").
+            .appendingPathComponent(config.id.replacingOccurrences(of: "/", with: "_"))
     }
 
     var body: some View {
@@ -49,13 +85,14 @@ private struct SeasonalBackgroundLayer: View {
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 480, height: 480)
                     .opacity(0.07)
-                    .padding(-40) // depășește ușor marginea, ca un filigran "tăiat" de colț
+                    // Depășește ușor marginea, ca un filigran "tăiat" de
+                    // colț — la `.center` ar decupa din imagine degeaba.
+                    .padding(config.position == .center ? 0 : -40)
             }
         }
-        .allowsHitTesting(false)
-        .task(id: url) {
-            guard let url, url != loadedURL || nsImage == nil else {
-                if url == nil { nsImage = nil }
+        .task(id: config.imagePath) {
+            guard let url = config.imageURL else {
+                nsImage = nil
                 return
             }
             // NU AsyncImage: decodorul lui SwiftUI nu randează fiabil SVG
@@ -64,12 +101,10 @@ private struct SeasonalBackgroundLayer: View {
             // (suport adăugat în macOS 12+), la fel ca orice raster.
             if let (data, _) = try? await URLSession.shared.data(from: url), let image = NSImage(data: data) {
                 nsImage = image
-                loadedURL = url
                 saveToCache(data: data)
             } else if let cached = try? Data(contentsOf: cacheFileURL), let image = NSImage(data: cached) {
                 // Offline sau rețea indisponibilă — ultima variantă descărcată cu succes.
                 nsImage = image
-                loadedURL = url
             }
         }
     }
@@ -296,7 +331,9 @@ struct ContentView: View {
             // imprimat în fundal" — deci NU un icon mic suprapus, ci un
             // strat mare, discret, ÎN SPATELE conținutului (opacitate
             // mică, non-interactiv), nu deasupra lui.
-            .background(alignment: .bottomTrailing) { SeasonalBackgroundLayer(url: catalog.seasonalBackgroundURL) }
+            // Fără `alignment:` fix aici: fiecare filigran își poartă
+            // propria poziție (2026-08-29) — vezi SeasonalBackgroundsLayer.
+            .background { SeasonalBackgroundsLayer(configs: catalog.seasonalBackgrounds.activeNowDeduplicated) }
         }
         .navigationTitle(L.t("app.name"))
         .toolbar {
@@ -733,10 +770,27 @@ func ExtraLinksRow(purchaseURL: String?, demoURL: String?, social: SocialLinks?)
                 if let s = social.tiktokURL, let url = URL(string: s) {
                     LinkIconButton(systemImage: "music.note", tooltip: "TikTok", url: url)
                 }
+                // LinkedIn (2026-08-29). SF Symbols NU are un glif de brand
+                // LinkedIn (Apple nu livrează logo-uri de terți) — folosim
+                // `link.circle`, simbolul generic de link, exact varianta
+                // propusă de Cristi; tooltip-ul spune care rețea e.
+                if let s = social.linkedinURL, let url = URL(string: s) {
+                    LinkIconButton(systemImage: "link.circle", tooltip: "LinkedIn", url: url)
+                }
             }
             Spacer()
         }
     }
+}
+
+/// Variantă doar-social a lui `ExtraLinksRow` — 2026-08-29, cerut explicit
+/// ("rețelele sociale la toate rubricile", grupurile Comunitate & Educație
+/// + Ecosistem GDC). NU dublează logica: e strict un wrapper peste
+/// `ExtraLinksRow` pentru rubricile care nu au linkuri de achiziție/demo
+/// (Cursuri, Materiale, Evenimente, Magazine, Service, Aplicații).
+@ViewBuilder
+func SocialLinksRow(_ social: SocialLinks?) -> some View {
+    ExtraLinksRow(purchaseURL: nil, demoURL: nil, social: social)
 }
 
 private func LinkIconButton(systemImage: String, tooltip: String, url: URL) -> some View {
@@ -1128,6 +1182,7 @@ private struct CourseCard: View {
                     }
                 }
             }
+            SocialLinksRow(course.socialLinks)
         }
         .padding(12)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -1199,6 +1254,7 @@ private struct EducationalResourceCard: View {
                 Button(L.t("resources.buy")) { NSWorkspace.shared.open(url) }
                     .controlSize(.small)
             }
+            SocialLinksRow(resource.socialLinks)
         }
         .padding(12)
         .frame(maxWidth: .infinity, minHeight: 200, alignment: .leading)
@@ -1270,6 +1326,7 @@ private struct EventCard: View {
                 Button(L.t("events.details")) { NSWorkspace.shared.open(url) }
                     .controlSize(.small)
             }
+            SocialLinksRow(event.socialLinks)
         }
         .padding(12)
         .frame(maxWidth: .infinity, minHeight: 220, alignment: .leading)
@@ -1533,6 +1590,7 @@ private struct PartnerStoreCard: View {
                 }
                 MapButton(mapsURL: store.mapsURL)
             }
+            SocialLinksRow(store.socialLinks)
         }
         .padding(12)
         .frame(maxWidth: .infinity, minHeight: 180, alignment: .leading)
@@ -1608,6 +1666,7 @@ private struct ServiceCenterCard: View {
                 }
                 MapButton(mapsURL: center.mapsURL)
             }
+            SocialLinksRow(center.socialLinks)
         }
         .padding(12)
         .frame(maxWidth: .infinity, minHeight: 170, alignment: .leading)
@@ -1669,6 +1728,7 @@ private struct AppCard: View {
             if let url = URL(string: app.url) {
                 Button(L.t("apps.open")) { NSWorkspace.shared.open(url) }
             }
+            SocialLinksRow(app.socialLinks)
         }
         .padding(12)
         .frame(maxWidth: .infinity, minHeight: 96, alignment: .leading)

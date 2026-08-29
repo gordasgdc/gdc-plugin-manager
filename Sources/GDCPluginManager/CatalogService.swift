@@ -22,7 +22,10 @@ final class CatalogService: ObservableObject {
     @Published private(set) var serviceCenters: [ServiceCenter] = []
     @Published private(set) var downloadableResources: [DownloadableResource] = []
     @Published private(set) var partnerOffers: [PartnerOffer] = []
-    @Published private(set) var seasonalBackgroundURL: URL?
+    /// Biblioteca de filigrane sezoniere (2026-08-29) — era un singur
+    /// `seasonalBackgroundURL`. Filtrarea pe "active acum" + rezolvarea
+    /// coliziunilor de poziție se fac în `Catalog.activeSeasonalBackgrounds`.
+    @Published private(set) var seasonalBackgrounds: [SeasonalBackgroundConfig] = []
     @Published private(set) var productBundles: [ProductBundle] = []
     @Published private(set) var isLoading = false
     @Published private(set) var loadError: String?
@@ -66,7 +69,7 @@ final class CatalogService: ObservableObject {
                 serviceCenters = catalog.serviceCenters
                 downloadableResources = catalog.downloadableResources
                 partnerOffers = catalog.partnerOffers
-                seasonalBackgroundURL = catalog.seasonalBackgroundURL
+                seasonalBackgrounds = catalog.seasonalBackgrounds
                 productBundles = catalog.productBundles
                 saveToCache(data: data)
             } catch {
@@ -109,7 +112,7 @@ final class CatalogService: ObservableObject {
         serviceCenters = catalog.serviceCenters
         downloadableResources = catalog.downloadableResources
         partnerOffers = catalog.partnerOffers
-        seasonalBackgroundURL = catalog.seasonalBackgroundURL
+        seasonalBackgrounds = catalog.seasonalBackgrounds
         productBundles = catalog.productBundles
     }
 

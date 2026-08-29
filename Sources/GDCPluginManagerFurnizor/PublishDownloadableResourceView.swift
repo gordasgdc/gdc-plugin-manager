@@ -28,10 +28,7 @@ struct PublishDownloadableResourceView: View {
     @State private var promoPriceText = ""
     @State private var purchaseURL = ""
     @State private var demoURL = ""
-    @State private var facebookURL = ""
-    @State private var instagramURL = ""
-    @State private var tiktokURL = ""
-    @State private var socialYoutubeURL = ""
+    @State private var socialForm = SocialLinksFormState()
     /// Coperta resursei. Preset `.icon` — la fel ca la Aplicații/Audio.
     @State private var coverSelection: CoverImageSelection = .none
     @State private var scheduling: Scheduling?
@@ -113,11 +110,7 @@ struct PublishDownloadableResourceView: View {
                             VStack(alignment: .leading, spacing: 8) {
                                 TextField("Link Achiziție/Magazin extern", text: $purchaseURL).textFieldStyle(.roundedBorder)
                                 TextField("Link Demo/Preview", text: $demoURL).textFieldStyle(.roundedBorder)
-                                Text("Rețele sociale").font(.caption).foregroundStyle(.secondary).padding(.top, 4)
-                                TextField("Facebook", text: $facebookURL).textFieldStyle(.roundedBorder)
-                                TextField("YouTube (canal, nu tutorialul de mai sus)", text: $socialYoutubeURL).textFieldStyle(.roundedBorder)
-                                TextField("Instagram", text: $instagramURL).textFieldStyle(.roundedBorder)
-                                TextField("TikTok", text: $tiktokURL).textFieldStyle(.roundedBorder)
+                                SocialLinksFields(state: $socialForm, youtubeLabel: "YouTube (canal, nu tutorialul de mai sus)")
                             }
                             .padding(.top, 6)
                         }
@@ -236,10 +229,7 @@ struct PublishDownloadableResourceView: View {
         supportedOS = resource.supportedOS
         purchaseURL = resource.purchaseURL ?? ""
         demoURL = resource.demoURL ?? ""
-        facebookURL = resource.socialLinks?.facebookURL ?? ""
-        instagramURL = resource.socialLinks?.instagramURL ?? ""
-        tiktokURL = resource.socialLinks?.tiktokURL ?? ""
-        socialYoutubeURL = resource.socialLinks?.youtubeURL ?? ""
+        socialForm = SocialLinksFormState(resource.socialLinks)
         coverSelection = resource.coverImage.map { .existing($0) } ?? .none
         scheduling = resource.scheduling
         accessMode = resource.isTrial ? .trial : (resource.isFree ? .free : .paid)
@@ -260,10 +250,7 @@ struct PublishDownloadableResourceView: View {
         supportedOS = .crossPlatform
         purchaseURL = ""
         demoURL = ""
-        facebookURL = ""
-        instagramURL = ""
-        tiktokURL = ""
-        socialYoutubeURL = ""
+        socialForm.reset()
         coverSelection = .none
         scheduling = nil
         accessMode = .free
@@ -289,10 +276,6 @@ struct PublishDownloadableResourceView: View {
             let previousCover = existingResources.first { $0.id == resourceID }?.coverImage
             let coverImage = try CoverImageStore.commit(coverSelection, id: resourceID, previous: previousCover)
 
-            let social = SocialLinks(
-                facebookURL: nilIfEmpty(facebookURL), youtubeURL: nilIfEmpty(socialYoutubeURL),
-                instagramURL: nilIfEmpty(instagramURL), tiktokURL: nilIfEmpty(tiktokURL)
-            )
             let isFreeFlag = accessMode != .paid
             let isTrialFlag = accessMode == .trial
             let price = isFreeFlag ? 0 : (Double(priceText) ?? 0)
@@ -300,7 +283,7 @@ struct PublishDownloadableResourceView: View {
                 id: resourceID, name: name, description: description, category: category, url: url,
                 youtubeURL: nilIfEmpty(youtubeURL), coverImage: coverImage, supportedOS: supportedOS,
                 purchaseURL: nilIfEmpty(purchaseURL), demoURL: nilIfEmpty(demoURL),
-                socialLinks: social.isEmpty ? nil : social, scheduling: scheduling,
+                socialLinks: socialForm.model, scheduling: scheduling,
                 isFree: isFreeFlag, isTrial: isTrialFlag, priceEUR: price,
                 promoPriceEUR: Double(promoPriceText.trimmingCharacters(in: .whitespaces))
             )

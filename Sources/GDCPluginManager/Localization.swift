@@ -75,6 +75,11 @@ enum L {
         "dependency.missing.title": [.ro: "Dependință de sistem lipsă", .en: "Missing system dependency", .es: "Falta una dependencia del sistema"],
         "dependency.install.button": [.ro: "Instalează %@", .en: "Install %@", .es: "Instalar %@"],
         "prefs.language.title": [.ro: "Limbă / Language", .en: "Language", .es: "Idioma"],
+        // Selector de temă — Regula 18 (Partea 1). Vezi AppTheme.swift (Core).
+        "prefs.theme.title": [.ro: "Temă", .en: "Theme", .es: "Tema"],
+        "prefs.theme.system": [.ro: "Sistem", .en: "System", .es: "Sistema"],
+        "prefs.theme.light": [.ro: "Luminoasă", .en: "Light", .es: "Clara"],
+        "prefs.theme.dark": [.ro: "Întunecată", .en: "Dark", .es: "Oscura"],
         "prefs.updates.title": [.ro: "Actualizări", .en: "Updates", .es: "Actualizaciones"],
         "prefs.updates.currentVersion": [.ro: "Versiune curentă", .en: "Current version", .es: "Versión actual"],
         "prefs.dependencies.title": [.ro: "Dependențe de sistem", .en: "System dependencies", .es: "Dependencias del sistema"],

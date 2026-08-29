@@ -40,10 +40,7 @@ struct PublishView: View {
     // Etapa 2 (2026-08-29) — linkuri multiple + social, toate opționale.
     @State private var purchaseURL = ""
     @State private var demoURL = ""
-    @State private var facebookURL = ""
-    @State private var instagramURL = ""
-    @State private var tiktokURL = ""
-    @State private var socialYoutubeURL = ""
+    @State private var socialForm = SocialLinksFormState()
     /// Coperta produsului. Preset `.icon` (pătrat 512×512) — accentul e pe
     /// simbol/recunoaștere rapidă în grilă, nu pe detaliu.
     @State private var coverSelection: CoverImageSelection = .none
@@ -162,11 +159,7 @@ struct PublishView: View {
                             VStack(alignment: .leading, spacing: 8) {
                                 TextField("Link Achiziție/Magazin extern", text: $purchaseURL).textFieldStyle(.roundedBorder)
                                 TextField("Link Demo/Preview", text: $demoURL).textFieldStyle(.roundedBorder)
-                                Text("Rețele sociale").font(.caption).foregroundStyle(.secondary).padding(.top, 4)
-                                TextField("Facebook", text: $facebookURL).textFieldStyle(.roundedBorder)
-                                TextField("YouTube (canal, nu tutorialul de mai sus)", text: $socialYoutubeURL).textFieldStyle(.roundedBorder)
-                                TextField("Instagram", text: $instagramURL).textFieldStyle(.roundedBorder)
-                                TextField("TikTok", text: $tiktokURL).textFieldStyle(.roundedBorder)
+                                SocialLinksFields(state: $socialForm, youtubeLabel: "YouTube (canal, nu tutorialul de mai sus)")
                             }
                             .padding(.top, 6)
                         }
@@ -330,10 +323,7 @@ struct PublishView: View {
         supportedOS = item.supportedOS
         purchaseURL = item.purchaseURL ?? ""
         demoURL = item.demoURL ?? ""
-        facebookURL = item.socialLinks?.facebookURL ?? ""
-        instagramURL = item.socialLinks?.instagramURL ?? ""
-        tiktokURL = item.socialLinks?.tiktokURL ?? ""
-        socialYoutubeURL = item.socialLinks?.youtubeURL ?? ""
+        socialForm = SocialLinksFormState(item.socialLinks)
         scheduling = item.scheduling
         promoPriceText = item.promoPriceEUR.map { String($0) } ?? ""
         existingFiles = item.files
@@ -425,10 +415,6 @@ struct PublishView: View {
                 let t = s.trimmingCharacters(in: .whitespaces)
                 return t.isEmpty ? nil : t
             }
-            let social = SocialLinks(
-                facebookURL: nilIfEmpty(facebookURL), youtubeURL: nilIfEmpty(socialYoutubeURL),
-                instagramURL: nilIfEmpty(instagramURL), tiktokURL: nilIfEmpty(tiktokURL)
-            )
             let item = PluginItem(
                 id: trimmedID, name: name, type: type, description: description,
                 version: version, files: pluginFiles,
@@ -440,7 +426,7 @@ struct PublishView: View {
                 supportedOS: supportedOS,
                 purchaseURL: nilIfEmpty(purchaseURL),
                 demoURL: nilIfEmpty(demoURL),
-                socialLinks: social.isEmpty ? nil : social,
+                socialLinks: socialForm.model,
                 scheduling: scheduling,
                 promoPriceEUR: Double(promoPriceText.trimmingCharacters(in: .whitespaces))
             )
@@ -519,10 +505,7 @@ struct PublishView: View {
         youtubeURL = ""
         purchaseURL = ""
         demoURL = ""
-        facebookURL = ""
-        instagramURL = ""
-        tiktokURL = ""
-        socialYoutubeURL = ""
+        socialForm.reset()
         scheduling = nil
         promoPriceText = ""
         existingFiles = []

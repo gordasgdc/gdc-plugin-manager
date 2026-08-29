@@ -1,5 +1,6 @@
 import SwiftUI
 import AppKit
+import GDCPluginManagerCore
 
 @main
 struct GDCPluginManagerApp: App {
@@ -7,6 +8,11 @@ struct GDCPluginManagerApp: App {
         WindowGroup {
             ContentView()
                 .frame(minWidth: 760, minHeight: 500)
+                // Tema salvată (Sistem/Light/Dark) se aplică din primul
+                // cadru: `ThemeManager` se poate iniția înainte ca `NSApp`
+                // să existe, caz în care `apply()` din init n-are pe ce
+                // scrie — vezi AppTheme.swift (Core).
+                .onAppear { ThemeManager.shared.applyNow() }
         }
         .windowStyle(.titleBar)
         .commands {

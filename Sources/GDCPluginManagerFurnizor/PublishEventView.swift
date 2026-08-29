@@ -22,6 +22,8 @@ struct PublishEventView: View {
     @State private var coverSelection: CoverImageSelection = .none
     // Etapa 4 (2026-08-29) — valabilitate temporală opțională.
     @State private var scheduling: Scheduling?
+    // Rețele sociale opționale (2026-08-29) — vezi SocialLinksEditor.swift.
+    @State private var socialForm = SocialLinksFormState()
 
     @State private var isBusy = false
     @State private var errorMessage: String?
@@ -57,6 +59,7 @@ struct PublishEventView: View {
 
                 CoverImagePicker(preset: .cover, selection: $coverSelection)
                 SchedulingPicker(scheduling: $scheduling)
+                SocialLinksSection(state: $socialForm)
 
                 if let errorMessage {
                     Label(errorMessage, systemImage: "exclamationmark.triangle.fill")
@@ -157,6 +160,7 @@ struct PublishEventView: View {
         // publicata si nu trebuie rescrisă dacă furnizorul n-o atinge.
         coverSelection = event.coverImage.map { .existing($0) } ?? .none
         scheduling = event.scheduling
+        socialForm = SocialLinksFormState(event.socialLinks)
         successMessage = nil
         errorMessage = nil
     }
@@ -172,6 +176,7 @@ struct PublishEventView: View {
         youtubeURL = ""
         coverSelection = .none
         scheduling = nil
+        socialForm.reset()
     }
 
     private func publish() async {
@@ -199,7 +204,8 @@ struct PublishEventView: View {
                 description: description, dateDisplay: dateDisplay, location: location,
                 externalURL: externalURL.trimmingCharacters(in: .whitespaces),
                 youtubeURL: trimmedYouTube.isEmpty ? nil : trimmedYouTube,
-                coverImage: coverImage, scheduling: scheduling
+                coverImage: coverImage, scheduling: scheduling,
+                socialLinks: socialForm.model
             )
 
             try CatalogEditor.upsertEvent(event)

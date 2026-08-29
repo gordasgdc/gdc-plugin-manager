@@ -159,10 +159,18 @@
   .tab.on{ color:var(--accent); }
 
   /* ── Filigran sezonier (Etapa 6, paritate mobil 2026-08-29) ──────────────── */
+  /* Pozitia (jos-dreapta / jos-stanga / sus-* / centru) vine acum din
+     catalog, per filigran — vezi SeasonalPosition (Core). Clasa de baza
+     ramane fara ancorare; o clasa .pos-* o adauga. */
   .seasonal-bg{
-    position:fixed; right:-40px; bottom:-40px; width:320px; height:320px; z-index:1;
+    position:fixed; width:320px; height:320px; z-index:1;
     opacity:.07; pointer-events:none; object-fit:contain;
   }
+  .seasonal-bg.pos-bottomTrailing{ right:-40px; bottom:-40px; }
+  .seasonal-bg.pos-bottomLeading { left:-40px;  bottom:-40px; }
+  .seasonal-bg.pos-topTrailing   { right:-40px; top:-40px; }
+  .seasonal-bg.pos-topLeading    { left:-40px;  top:-40px; }
+  .seasonal-bg.pos-center        { left:50%; top:50%; transform:translate(-50%,-50%); }
 
   /* ── Buton hartă / link secundar (chip mic pe cardul rich) ───────────────── */
   .mini-links{ display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
@@ -212,7 +220,7 @@
   </button>
 </header>
 
-<img class="seasonal-bg" id="seasonal-bg" alt="" style="display:none">
+<div id="seasonal-bg"></div>
 
 <main>
   <!-- Tab 1: produsele — aplicatii desktop + plugin-uri/LUT/DCTL -->
@@ -299,6 +307,9 @@ const PIN_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" str
 const WA_ICON = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3a9 9 0 0 0-7.7 13.6L3 21l4.5-1.2A9 9 0 1 0 12 3zm0 16.4a7.4 7.4 0 0 1-3.8-1l-.3-.2-2.8.7.7-2.7-.2-.3A7.4 7.4 0 1 1 12 19.4zm4.1-5.5c-.2-.1-1.3-.7-1.5-.7-.2-.1-.4-.1-.5.1s-.6.7-.7.9-.3.2-.5.1a6 6 0 0 1-1.8-1.1 6.7 6.7 0 0 1-1.2-1.5c-.1-.2 0-.4.1-.5l.4-.4c.1-.1.1-.2.2-.4s0-.3 0-.4-.5-1.2-.7-1.7-.4-.4-.5-.4h-.4a.9.9 0 0 0-.6.3 2.6 2.6 0 0 0-.8 1.9c0 1.1.8 2.2.9 2.4s1.6 2.4 3.8 3.4a13 13 0 0 0 1.3.5 3.1 3.1 0 0 0 1.4.1 2.3 2.3 0 0 0 1.5-1.1 1.9 1.9 0 0 0 .1-1.1c-.1-.1-.2-.2-.4-.3z"/></svg>';
 const YT_ICON = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.6 7.2a2.7 2.7 0 0 0-1.9-1.9C18 5 12 5 12 5s-6 0-7.7.3a2.7 2.7 0 0 0-1.9 1.9A28 28 0 0 0 2 12a28 28 0 0 0 .4 4.8 2.7 2.7 0 0 0 1.9 1.9C6 19 12 19 12 19s6 0 7.7-.3a2.7 2.7 0 0 0 1.9-1.9A28 28 0 0 0 22 12a28 28 0 0 0-.4-4.8zM10 15V9l5 3z"/></svg>';
 const LINK_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9.5 14.5l5-5M8 17l-2 2a3.5 3.5 0 0 1-5-5l3-3a3.5 3.5 0 0 1 5 0M16 7l2-2a3.5 3.5 0 0 1 5 5l-3 3a3.5 3.5 0 0 1-5 0"/></svg>';
+// LinkedIn (2026-08-29) — monocrom, in acelasi stil ca PIN/WA/YT: silueta
+// "in" desenata cu forme simple, nu logo-ul oficial colorat.
+const LI_ICON = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.5 3a1.8 1.8 0 1 0 0 3.6 1.8 1.8 0 0 0 0-3.6zM3 8.4h3V21H3zM9 8.4h2.9v1.7h.05a3.2 3.2 0 0 1 2.87-1.6c3.07 0 3.64 2 3.64 4.62V21h-3v-5.3c0-1.27-.02-2.9-1.77-2.9-1.78 0-2.05 1.38-2.05 2.8V21H9z"/></svg>';
 
 // Etichetele tipurilor din catalog.json, pentru afisare.
 const TYPE_LABEL = { lut:'LUT', dctl:'DCTL', powerGrade:'PowerGrade', fuse:'Fuse', app:'Aplicatie' };
@@ -355,6 +366,7 @@ function socialMiniLinks(social) {
     miniLink(YT_ICON, 'YouTube', social.youtubeURL),
     miniLink(LINK_ICON, 'Instagram', social.instagramURL),
     miniLink(LINK_ICON, 'TikTok', social.tiktokURL),
+    miniLink(LI_ICON, 'LinkedIn', social.linkedinURL),
   ].filter(Boolean);
 }
 
@@ -392,17 +404,34 @@ function renderAll() {
   renderProduse(); renderResurse(); renderCursuri(); renderEvenimente(); renderComunitate();
 }
 
-// Filigran sezonier (Etapa 6, paritate mobil) — acelasi camp ca pe desktop,
-// aceeasi opacitate joasa; fara AsyncImage-ul problematic de pe Mac, un
-// <img> normal de browser randeaza SVG fara nicio problema.
+// Filigrane sezoniere — BIBLIOTECA (2026-08-29), paritate cu Mac: mai multe
+// filigrane, fiecare cu perioada si pozitie proprie. Port 1:1 al deciziei de
+// coliziune din Core (`activeNowDeduplicated`): la aceeasi pozitie castiga
+// ULTIMUL din lista; pozitii diferite se randeaza toate.
+// Fara AsyncImage-ul problematic de pe Mac — un <img> de browser randeaza SVG nativ.
+function activeSeasonalBackgrounds() {
+  // Migrare in citire, ca in Swift: un catalog.json vechi are cheia
+  // singulara `seasonalBackground` (string), fara perioada si fara pozitie.
+  let list = CATALOG.seasonalBackgrounds;
+  if (!Array.isArray(list)) {
+    list = CATALOG.seasonalBackground
+      ? [{ id: 'migrat-2026-08-29', imagePath: CATALOG.seasonalBackground }]
+      : [];
+  }
+  const byPosition = new Map();
+  for (const cfg of list) {
+    const enabled = cfg.isEnabled !== false;         // lipsa = activ
+    if (!enabled || !isActiveNow(cfg.scheduling)) continue;
+    byPosition.set(cfg.position || 'bottomTrailing', cfg); // ultimul castiga
+  }
+  return [...byPosition.entries()];
+}
+
 function renderSeasonalBackground() {
   const el = document.getElementById('seasonal-bg');
-  if (CATALOG.seasonalBackground) {
-    el.src = CATALOG.seasonalBackground;
-    el.style.display = 'block';
-  } else {
-    el.style.display = 'none';
-  }
+  el.innerHTML = activeSeasonalBackgrounds().map(([position, cfg]) =>
+    `<img class="seasonal-bg pos-${esc(position)}" alt="" src="${esc(cfg.imagePath)}">`
+  ).join('');
 }
 
 function renderProduse() {
@@ -421,14 +450,24 @@ function renderProduse() {
   let html = '';
   if (filter === 'toate' || filter === 'aplicatii') {
     html += `<div class="section-title">Aplicatii desktop <b>${apps.length}</b></div>`;
-    html += apps.map(a => `
-      <a class="card" href="${esc(a.url)}" target="_blank" rel="noopener">
+    html += apps.map(a => {
+      const links = miniLinks(socialMiniLinks(a.socialLinks));
+      const row = `
         <div class="ico">${a.coverImage
           ? `<img src="${esc(a.coverImage)}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:11px" onerror="this.parentElement.innerHTML='${svg('app').replace(/'/g,"&#39;").replace(/"/g,"&quot;")}'">`
           : svg('app')}</div>
         <div class="card-body"><h3>${esc(a.name)}</h3><p>Mac &middot; Windows</p></div>
-        ${CHEV}
-      </a>`).join('');
+        ${CHEV}`;
+      // Fara linkuri sociale: cardul ramane EXACT ce era (un singur <a>).
+      // Cu linkuri: ancorele sociale nu pot sta intr-un <a> parinte (HTML
+      // invalid, ancore imbricate), deci cardul devine un <div> in coloana,
+      // cu randul principal ca ancora separata — acelasi tipar ca la Produse.
+      if (!links) return `<a class="card" href="${esc(a.url)}" target="_blank" rel="noopener">${row}</a>`;
+      return `<div class="card" style="flex-direction:column;align-items:stretch">
+        <a href="${esc(a.url)}" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:12px;color:inherit;text-decoration:none">${row}</a>
+        ${links}
+      </div>`;
+    }).join('');
   }
 
   if (filter === 'toate' || filter === 'audio') {
@@ -531,7 +570,8 @@ function renderCursuri() {
     all.map(r => richCard({
       cover: r.coverImage, title: r.name || r.title,
       meta: r.kind === 'course' ? 'Curs' : 'Resursa educationala',
-      desc: r.description, url: r.externalURL || r.youtubeURL, cta: 'Deschide'
+      desc: r.description, url: r.externalURL || r.youtubeURL, cta: 'Deschide',
+      extra: miniLinks(socialMiniLinks(r.socialLinks))
     })).join('');
 }
 
@@ -547,7 +587,10 @@ function renderEvenimente() {
       meta: [e.dateDisplay, (e.dateDisplay || '').includes(e.location || '\u0000') ? '' : e.location]
               .filter(Boolean).join(' &middot; '),
       desc: e.description, url: e.externalURL, cta: 'Detalii si inscriere',
-      extra: miniLinks([miniLink(PIN_ICON, 'Deschide harta', mapsUrl(e.location))])
+      extra: miniLinks([
+        miniLink(PIN_ICON, 'Deschide harta', mapsUrl(e.location)),
+        ...socialMiniLinks(e.socialLinks),
+      ])
     })).join('');
 }
 
@@ -569,7 +612,8 @@ function renderComunitate() {
         cover: b.coverImage, title: b.name,
         meta: `Pachet &middot; ${esc(b.bundlePriceEUR)} &euro;`,
         desc: (b.description ? b.description + ' — ' : '') + 'Include: ' + names,
-        url: waLink(buyText(b.name, b.bundlePriceEUR)), cta: 'Cumpără pachetul'
+        url: waLink(buyText(b.name, b.bundlePriceEUR)), cta: 'Cumpără pachetul',
+        extra: miniLinks(socialMiniLinks(b.socialLinks))
       });
     }).join('');
   }
@@ -590,7 +634,10 @@ function renderComunitate() {
     html += stores.map(s => richCard({
       cover: s.coverImage, title: s.name, meta: 'Partener',
       desc: s.description, url: s.url, cta: 'Viziteaza magazinul',
-      extra: miniLinks([miniLink(PIN_ICON, 'Deschide harta', mapsUrl(s.address))])
+      extra: miniLinks([
+        miniLink(PIN_ICON, 'Deschide harta', mapsUrl(s.address)),
+        ...socialMiniLinks(s.socialLinks),
+      ])
     })).join('');
   }
 
@@ -602,6 +649,7 @@ function renderComunitate() {
       extra: miniLinks([
         miniLink(PIN_ICON, 'Deschide harta', mapsUrl(s.address)),
         miniLink(LINK_ICON, 'Website', s.websiteURL),
+        ...socialMiniLinks(s.socialLinks),
       ])
     })).join('');
   }
