@@ -16,6 +16,8 @@ struct PublishAppView: View {
     /// formă, nu după detaliu, la fel ca la Magazine partenere.
     @State private var coverSelection: CoverImageSelection = .none
     @State private var scheduling: Scheduling?
+    // Rețele sociale opționale (2026-08-29) — vezi SocialLinksEditor.swift.
+    @State private var socialForm = SocialLinksFormState()
 
     @State private var isBusy = false
     @State private var errorMessage: String?
@@ -41,6 +43,7 @@ struct PublishAppView: View {
 
                 CoverImagePicker(preset: .icon, selection: $coverSelection)
                 SchedulingPicker(scheduling: $scheduling)
+                SocialLinksSection(state: $socialForm)
 
                 if let errorMessage {
                     Label(errorMessage, systemImage: "exclamationmark.triangle.fill")
@@ -137,6 +140,7 @@ struct PublishAppView: View {
         // furnizorul n-o atinge.
         coverSelection = app.coverImage.map { .existing($0) } ?? .none
         scheduling = app.scheduling
+        socialForm = SocialLinksFormState(app.socialLinks)
         successMessage = nil
         errorMessage = nil
     }
@@ -149,6 +153,7 @@ struct PublishAppView: View {
         youtubeURL = ""
         coverSelection = .none
         scheduling = nil
+        socialForm.reset()
     }
 
     private func publish() async {
@@ -173,7 +178,8 @@ struct PublishAppView: View {
 
             let app = AppLink(id: appID, name: name, url: url,
                                youtubeURL: trimmedYouTube.isEmpty ? nil : trimmedYouTube,
-                               coverImage: coverImage, scheduling: scheduling)
+                               coverImage: coverImage, scheduling: scheduling,
+                               socialLinks: socialForm.model)
             try CatalogEditor.upsertApp(app)
             try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Aplicatie: \(app.name)", paths: ["docs/catalog.json", "docs/covers"])
             successMessage = "„\(app.name)” e publicată — apare la clienți la următorul refresh de catalog."

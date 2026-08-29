@@ -19,6 +19,8 @@ struct PublishCourseView: View {
     @State private var coverSelection: CoverImageSelection = .none
     // Etapa 4 (2026-08-29) — valabilitate temporală opțională.
     @State private var scheduling: Scheduling?
+    // Rețele sociale opționale (2026-08-29) — vezi SocialLinksEditor.swift.
+    @State private var socialForm = SocialLinksFormState()
 
     @State private var isBusy = false
     @State private var errorMessage: String?
@@ -71,6 +73,7 @@ struct PublishCourseView: View {
 
                 CoverImagePicker(preset: .cover, selection: $coverSelection)
                 SchedulingPicker(scheduling: $scheduling)
+                SocialLinksSection(state: $socialForm)
 
                 if let errorMessage {
                     Label(errorMessage, systemImage: "exclamationmark.triangle.fill")
@@ -169,6 +172,7 @@ struct PublishCourseView: View {
         // furnizorul n-o atinge.
         coverSelection = course.coverImage.map { .existing($0) } ?? .none
         scheduling = course.scheduling
+        socialForm = SocialLinksFormState(course.socialLinks)
         successMessage = nil
         errorMessage = nil
     }
@@ -183,6 +187,7 @@ struct PublishCourseView: View {
         newOptionPrice = ""
         coverSelection = .none
         scheduling = nil
+        socialForm.reset()
     }
 
     private func publish() async {
@@ -207,7 +212,8 @@ struct PublishCourseView: View {
             let course = Course(
                 id: courseID, name: name,
                 description: description, options: options,
-                coverImage: coverImage, scheduling: scheduling
+                coverImage: coverImage, scheduling: scheduling,
+                socialLinks: socialForm.model
             )
 
             try CatalogEditor.upsertCourse(course)

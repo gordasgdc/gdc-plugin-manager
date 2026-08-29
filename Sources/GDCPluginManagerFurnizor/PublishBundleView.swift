@@ -16,10 +16,7 @@ struct PublishBundleView: View {
     @State private var bundlePriceText = ""
     @State private var selectedItems: Set<BundleItemRef> = []
     @State private var youtubeURL = ""
-    @State private var facebookURL = ""
-    @State private var instagramURL = ""
-    @State private var tiktokURL = ""
-    @State private var socialYoutubeURL = ""
+    @State private var socialForm = SocialLinksFormState()
     @State private var scheduling: Scheduling?
     @State private var coverSelection: CoverImageSelection = .none
 
@@ -88,10 +85,7 @@ struct PublishBundleView: View {
 
                         DisclosureGroup("Rețele sociale (opțional)") {
                             VStack(alignment: .leading, spacing: 8) {
-                                TextField("Facebook", text: $facebookURL).textFieldStyle(.roundedBorder)
-                                TextField("YouTube", text: $socialYoutubeURL).textFieldStyle(.roundedBorder)
-                                TextField("Instagram", text: $instagramURL).textFieldStyle(.roundedBorder)
-                                TextField("TikTok", text: $tiktokURL).textFieldStyle(.roundedBorder)
+                                SocialLinksFields(state: $socialForm, youtubeLabel: "YouTube")
                             }
                             .padding(.top, 6)
                         }
@@ -232,10 +226,7 @@ struct PublishBundleView: View {
         bundlePriceText = String(bundle.bundlePriceEUR)
         selectedItems = Set(bundle.items)
         youtubeURL = bundle.youtubeURL ?? ""
-        facebookURL = bundle.socialLinks?.facebookURL ?? ""
-        instagramURL = bundle.socialLinks?.instagramURL ?? ""
-        tiktokURL = bundle.socialLinks?.tiktokURL ?? ""
-        socialYoutubeURL = bundle.socialLinks?.youtubeURL ?? ""
+        socialForm = SocialLinksFormState(bundle.socialLinks)
         scheduling = bundle.scheduling
         coverSelection = bundle.coverImage.map { .existing($0) } ?? .none
         successMessage = nil
@@ -250,10 +241,7 @@ struct PublishBundleView: View {
         bundlePriceText = ""
         selectedItems = []
         youtubeURL = ""
-        facebookURL = ""
-        instagramURL = ""
-        tiktokURL = ""
-        socialYoutubeURL = ""
+        socialForm.reset()
         scheduling = nil
         coverSelection = .none
     }
@@ -277,14 +265,10 @@ struct PublishBundleView: View {
             let previousCover = existingBundles.first { $0.id == bundleID }?.coverImage
             let coverImage = try CoverImageStore.commit(coverSelection, id: bundleID, previous: previousCover)
 
-            let social = SocialLinks(
-                facebookURL: nilIfEmpty(facebookURL), youtubeURL: nilIfEmpty(socialYoutubeURL),
-                instagramURL: nilIfEmpty(instagramURL), tiktokURL: nilIfEmpty(tiktokURL)
-            )
             let bundle = ProductBundle(
                 id: bundleID, name: name, description: description, items: Array(selectedItems),
                 bundlePriceEUR: price, coverImage: coverImage, youtubeURL: nilIfEmpty(youtubeURL),
-                socialLinks: social.isEmpty ? nil : social, scheduling: scheduling
+                socialLinks: socialForm.model, scheduling: scheduling
             )
             try CatalogEditor.upsertBundle(bundle)
             try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Pachet: \(bundle.name)", paths: ["docs/catalog.json", "docs/covers"])

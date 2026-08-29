@@ -269,18 +269,27 @@ public struct SocialLinks: Codable, Hashable {
     public let youtubeURL: String?
     public let instagramURL: String?
     public let tiktokURL: String?
+    /// LinkedIn — adăugat 2026-08-29 la cererea explicită a lui Cristi
+    /// ("să adăugăm și LinkedIn"). Opțional ca toate celelalte; o valoare
+    /// absentă din `catalog.json` decodează nil (Codable sintetizat trata
+    /// deja o cheie lipsă ca nil pentru un Optional), deci fiecare produs/
+    /// resursă publicată înainte rămâne exact ce era.
+    public let linkedinURL: String?
 
-    public init(facebookURL: String? = nil, youtubeURL: String? = nil, instagramURL: String? = nil, tiktokURL: String? = nil) {
+    public init(facebookURL: String? = nil, youtubeURL: String? = nil, instagramURL: String? = nil,
+                tiktokURL: String? = nil, linkedinURL: String? = nil) {
         self.facebookURL = facebookURL
         self.youtubeURL = youtubeURL
         self.instagramURL = instagramURL
         self.tiktokURL = tiktokURL
+        self.linkedinURL = linkedinURL
     }
 
-    /// True dacă niciunul dintre cele 4 linkuri nu e completat — folosit
+    /// True dacă niciunul dintre cele 5 linkuri nu e completat — folosit
     /// ca să nu afișăm un rând gol de iconițe pe card.
     public var isEmpty: Bool {
-        facebookURL == nil && youtubeURL == nil && instagramURL == nil && tiktokURL == nil
+        facebookURL == nil && youtubeURL == nil && instagramURL == nil
+            && tiktokURL == nil && linkedinURL == nil
     }
 }
 
@@ -542,14 +551,20 @@ public struct Course: Codable, Identifiable, Hashable {
     public let coverImage: String?
     /// Valabilitate temporală opțională — Etapa 4 (2026-08-29). Vezi `Scheduling`.
     public let scheduling: Scheduling?
+    /// Rețele sociale opționale — 2026-08-29, cerut explicit ("să apară la
+    /// toate rubricile", nu doar la produse/resurse). Codable sintetizat:
+    /// o cheie lipsă într-un `catalog.json` vechi decodează nil automat, iar
+    /// encoderul o omite când e nil — 100% retrocompatibil, ca `scheduling`.
+    public let socialLinks: SocialLinks?
 
-    public init(id: String, name: String, description: String, options: [CourseOption], coverImage: String? = nil, scheduling: Scheduling? = nil) {
+    public init(id: String, name: String, description: String, options: [CourseOption], coverImage: String? = nil, scheduling: Scheduling? = nil, socialLinks: SocialLinks? = nil) {
         self.id = id
         self.name = name
         self.description = description
         self.options = options
         self.coverImage = coverImage
         self.scheduling = scheduling
+        self.socialLinks = socialLinks
     }
 
     public var coverImageURL: URL? { CatalogAssets.imageURL(for: coverImage) }
@@ -574,14 +589,17 @@ public struct AppLink: Codable, Identifiable, Hashable {
     public let coverImage: String?
     /// Valabilitate temporală opțională — Etapa 4 extinsă (2026-08-29). Vezi `Scheduling`.
     public let scheduling: Scheduling?
+    /// Rețele sociale opționale — 2026-08-29. Vezi `Course.socialLinks`.
+    public let socialLinks: SocialLinks?
 
-    public init(id: String, name: String, url: String, youtubeURL: String? = nil, coverImage: String? = nil, scheduling: Scheduling? = nil) {
+    public init(id: String, name: String, url: String, youtubeURL: String? = nil, coverImage: String? = nil, scheduling: Scheduling? = nil, socialLinks: SocialLinks? = nil) {
         self.youtubeURL = youtubeURL
         self.id = id
         self.name = name
         self.url = url
         self.coverImage = coverImage
         self.scheduling = scheduling
+        self.socialLinks = socialLinks
     }
 
     public var coverImageURL: URL? { CatalogAssets.imageURL(for: coverImage) }
@@ -645,8 +663,10 @@ public struct EducationalResource: Codable, Identifiable, Hashable {
     public let coverImage: String?
     /// Valabilitate temporală opțională — Etapa 4 (2026-08-29). Vezi `Scheduling`.
     public let scheduling: Scheduling?
+    /// Rețele sociale opționale — 2026-08-29. Vezi `Course.socialLinks`.
+    public let socialLinks: SocialLinks?
 
-    public init(id: String, name: String, description: String, kind: Kind, externalURL: String, youtubeURL: String? = nil, coverImage: String? = nil, scheduling: Scheduling? = nil) {
+    public init(id: String, name: String, description: String, kind: Kind, externalURL: String, youtubeURL: String? = nil, coverImage: String? = nil, scheduling: Scheduling? = nil, socialLinks: SocialLinks? = nil) {
         self.id = id
         self.name = name
         self.description = description
@@ -655,6 +675,7 @@ public struct EducationalResource: Codable, Identifiable, Hashable {
         self.youtubeURL = youtubeURL
         self.coverImage = coverImage
         self.scheduling = scheduling
+        self.socialLinks = socialLinks
     }
 
     public var coverImageURL: URL? { CatalogAssets.imageURL(for: coverImage) }
@@ -685,8 +706,11 @@ public struct Event: Codable, Identifiable, Hashable {
     /// despre CÂND are loc evenimentul) — aceasta controlează CÂND
     /// apare/dispare anunțul în Client, cele două nu sunt legate.
     public let scheduling: Scheduling?
+    /// Rețele sociale opționale — 2026-08-29. Vezi `Course.socialLinks`.
+    public let socialLinks: SocialLinks?
 
-    public init(id: String, title: String, description: String, dateDisplay: String, location: String, externalURL: String, youtubeURL: String? = nil, coverImage: String? = nil, scheduling: Scheduling? = nil) {
+    public init(id: String, title: String, description: String, dateDisplay: String, location: String, externalURL: String, youtubeURL: String? = nil, coverImage: String? = nil, scheduling: Scheduling? = nil, socialLinks: SocialLinks? = nil) {
+        self.socialLinks = socialLinks
         self.id = id
         self.title = title
         self.description = description
@@ -780,9 +804,12 @@ public struct ServiceCenter: Codable, Identifiable, Hashable {
     /// (vezi `MapsLink`). Distinctă de `websiteURL` (acela e site-ul, nu
     /// locația fizică).
     public let address: String?
+    /// Rețele sociale opționale — 2026-08-29. Vezi `Course.socialLinks`.
+    public let socialLinks: SocialLinks?
 
     public init(id: String, name: String, category: ServiceCategory, specialization: String,
-                contactURL: String, websiteURL: String? = nil, coverImage: String? = nil, scheduling: Scheduling? = nil, address: String? = nil) {
+                contactURL: String, websiteURL: String? = nil, coverImage: String? = nil, scheduling: Scheduling? = nil, address: String? = nil, socialLinks: SocialLinks? = nil) {
+        self.socialLinks = socialLinks
         self.id = id
         self.name = name
         self.category = category
@@ -815,8 +842,11 @@ public struct PartnerStore: Codable, Identifiable, Hashable {
     public let scheduling: Scheduling?
     /// Adresă fizică opțională — Etapa 5 (2026-08-29). Vezi `ServiceCenter.address`.
     public let address: String?
+    /// Rețele sociale opționale — 2026-08-29. Vezi `Course.socialLinks`.
+    public let socialLinks: SocialLinks?
 
-    public init(id: String, name: String, description: String, url: String, coverImage: String? = nil, scheduling: Scheduling? = nil, address: String? = nil) {
+    public init(id: String, name: String, description: String, url: String, coverImage: String? = nil, scheduling: Scheduling? = nil, address: String? = nil, socialLinks: SocialLinks? = nil) {
+        self.socialLinks = socialLinks
         self.id = id
         self.name = name
         self.description = description

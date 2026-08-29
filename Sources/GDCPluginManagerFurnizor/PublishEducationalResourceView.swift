@@ -21,6 +21,8 @@ struct PublishEducationalResourceView: View {
     @State private var coverSelection: CoverImageSelection = .none
     // Etapa 4 (2026-08-29) — valabilitate temporală opțională.
     @State private var scheduling: Scheduling?
+    // Rețele sociale opționale (2026-08-29) — vezi SocialLinksEditor.swift.
+    @State private var socialForm = SocialLinksFormState()
 
     @State private var isBusy = false
     @State private var errorMessage: String?
@@ -57,6 +59,7 @@ struct PublishEducationalResourceView: View {
 
                 CoverImagePicker(preset: .cover, selection: $coverSelection)
                 SchedulingPicker(scheduling: $scheduling)
+                SocialLinksSection(state: $socialForm)
 
                 if let errorMessage {
                     Label(errorMessage, systemImage: "exclamationmark.triangle.fill")
@@ -156,6 +159,7 @@ struct PublishEducationalResourceView: View {
         // furnizorul n-o atinge.
         coverSelection = resource.coverImage.map { .existing($0) } ?? .none
         scheduling = resource.scheduling
+        socialForm = SocialLinksFormState(resource.socialLinks)
         successMessage = nil
         errorMessage = nil
     }
@@ -170,6 +174,7 @@ struct PublishEducationalResourceView: View {
         youtubeURL = ""
         coverSelection = .none
         scheduling = nil
+        socialForm.reset()
     }
 
     private func publish() async {
@@ -197,7 +202,8 @@ struct PublishEducationalResourceView: View {
                 description: description, kind: kind,
                 externalURL: externalURL.trimmingCharacters(in: .whitespaces),
                 youtubeURL: trimmedYouTube.isEmpty ? nil : trimmedYouTube,
-                coverImage: coverImage, scheduling: scheduling
+                coverImage: coverImage, scheduling: scheduling,
+                socialLinks: socialForm.model
             )
 
             try CatalogEditor.upsertEducationalResource(resource)

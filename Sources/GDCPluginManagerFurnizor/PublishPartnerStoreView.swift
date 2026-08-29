@@ -18,6 +18,8 @@ struct PublishPartnerStoreView: View {
     /// formă, nu după detaliu, iar pătratul ține grila de carduri aliniată.
     @State private var coverSelection: CoverImageSelection = .none
     @State private var scheduling: Scheduling?
+    // Rețele sociale opționale (2026-08-29) — vezi SocialLinksEditor.swift.
+    @State private var socialForm = SocialLinksFormState()
 
     @State private var isBusy = false
     @State private var errorMessage: String?
@@ -45,6 +47,7 @@ struct PublishPartnerStoreView: View {
 
                 CoverImagePicker(preset: .icon, selection: $coverSelection)
                 SchedulingPicker(scheduling: $scheduling)
+                SocialLinksSection(state: $socialForm)
 
                 if let errorMessage {
                     Label(errorMessage, systemImage: "exclamationmark.triangle.fill")
@@ -143,6 +146,7 @@ struct PublishPartnerStoreView: View {
         // furnizorul nu-l atinge.
         coverSelection = store.coverImage.map { .existing($0) } ?? .none
         scheduling = store.scheduling
+        socialForm = SocialLinksFormState(store.socialLinks)
         successMessage = nil
         errorMessage = nil
     }
@@ -156,6 +160,7 @@ struct PublishPartnerStoreView: View {
         address = ""
         coverSelection = .none
         scheduling = nil
+        socialForm.reset()
     }
 
     private func publish() async {
@@ -182,7 +187,8 @@ struct PublishPartnerStoreView: View {
                 id: storeID, name: name,
                 description: description, url: url.trimmingCharacters(in: .whitespaces),
                 coverImage: coverImage, scheduling: scheduling,
-                address: trimmedAddress.isEmpty ? nil : trimmedAddress
+                address: trimmedAddress.isEmpty ? nil : trimmedAddress,
+                socialLinks: socialForm.model
             )
 
             try CatalogEditor.upsertPartnerStore(store)

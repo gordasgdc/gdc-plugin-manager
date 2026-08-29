@@ -733,10 +733,27 @@ func ExtraLinksRow(purchaseURL: String?, demoURL: String?, social: SocialLinks?)
                 if let s = social.tiktokURL, let url = URL(string: s) {
                     LinkIconButton(systemImage: "music.note", tooltip: "TikTok", url: url)
                 }
+                // LinkedIn (2026-08-29). SF Symbols NU are un glif de brand
+                // LinkedIn (Apple nu livrează logo-uri de terți) — folosim
+                // `link.circle`, simbolul generic de link, exact varianta
+                // propusă de Cristi; tooltip-ul spune care rețea e.
+                if let s = social.linkedinURL, let url = URL(string: s) {
+                    LinkIconButton(systemImage: "link.circle", tooltip: "LinkedIn", url: url)
+                }
             }
             Spacer()
         }
     }
+}
+
+/// Variantă doar-social a lui `ExtraLinksRow` — 2026-08-29, cerut explicit
+/// ("rețelele sociale la toate rubricile", grupurile Comunitate & Educație
+/// + Ecosistem GDC). NU dublează logica: e strict un wrapper peste
+/// `ExtraLinksRow` pentru rubricile care nu au linkuri de achiziție/demo
+/// (Cursuri, Materiale, Evenimente, Magazine, Service, Aplicații).
+@ViewBuilder
+func SocialLinksRow(_ social: SocialLinks?) -> some View {
+    ExtraLinksRow(purchaseURL: nil, demoURL: nil, social: social)
 }
 
 private func LinkIconButton(systemImage: String, tooltip: String, url: URL) -> some View {
@@ -1128,6 +1145,7 @@ private struct CourseCard: View {
                     }
                 }
             }
+            SocialLinksRow(course.socialLinks)
         }
         .padding(12)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -1199,6 +1217,7 @@ private struct EducationalResourceCard: View {
                 Button(L.t("resources.buy")) { NSWorkspace.shared.open(url) }
                     .controlSize(.small)
             }
+            SocialLinksRow(resource.socialLinks)
         }
         .padding(12)
         .frame(maxWidth: .infinity, minHeight: 200, alignment: .leading)
@@ -1270,6 +1289,7 @@ private struct EventCard: View {
                 Button(L.t("events.details")) { NSWorkspace.shared.open(url) }
                     .controlSize(.small)
             }
+            SocialLinksRow(event.socialLinks)
         }
         .padding(12)
         .frame(maxWidth: .infinity, minHeight: 220, alignment: .leading)
@@ -1533,6 +1553,7 @@ private struct PartnerStoreCard: View {
                 }
                 MapButton(mapsURL: store.mapsURL)
             }
+            SocialLinksRow(store.socialLinks)
         }
         .padding(12)
         .frame(maxWidth: .infinity, minHeight: 180, alignment: .leading)
@@ -1608,6 +1629,7 @@ private struct ServiceCenterCard: View {
                 }
                 MapButton(mapsURL: center.mapsURL)
             }
+            SocialLinksRow(center.socialLinks)
         }
         .padding(12)
         .frame(maxWidth: .infinity, minHeight: 170, alignment: .leading)
@@ -1669,6 +1691,7 @@ private struct AppCard: View {
             if let url = URL(string: app.url) {
                 Button(L.t("apps.open")) { NSWorkspace.shared.open(url) }
             }
+            SocialLinksRow(app.socialLinks)
         }
         .padding(12)
         .frame(maxWidth: .infinity, minHeight: 96, alignment: .leading)
