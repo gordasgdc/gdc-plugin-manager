@@ -1,0 +1,12 @@
+{
+  "version": "2.7.2",
+  "release_date": "2026-08-29",
+  "changes": "Windows: panou unificat Setari copiere + tema Sistem/Luminos/Intunecat + Manager de Dependinte real (Visual C++ Redistributable) + fix titlu versiune stale. Ghidurile PDF (RO/EN/ES) redesenate cu coperta, capturi reale, culori de brand. Site web: hero optimizat pentru monitoare mari + animatie noua card->linie neon->hard disk (transfer).",
+  "download_url": {
+    "windows": "https://github.com/gordasgdc/datamover/releases/latest/download/DataMover-Windows.zip",
+    "mac": "https://github.com/gordasgdc/datamover/releases/latest/download/DataMover-Mac.zip",
+    "windows_wpf": "https://github.com/gordasgdc/datamover/releases/latest/download/DataMover-WPF-Windows.zip"
+  },
+  "mandatory": false,
+  "min_version": "1.0.0"
+}
