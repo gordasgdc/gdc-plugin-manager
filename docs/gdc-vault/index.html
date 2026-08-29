@@ -151,13 +151,24 @@
 
 <section id="install">
   <div class="wrap">
-    <h2 data-i18n="install.title">Instalare pe Mac</h2>
-    <div class="pricing" style="text-align:left;">
-      <ol style="padding-left:20px; font-size:13.5px; color:var(--muted); line-height:1.9;">
-        <li data-i18n="install.step1">Descarcă <code>GDCVault-Mac.zip</code> mai sus și dezarhivează-l.</li>
-        <li data-i18n="install.step2">Dublu-click pe <code>GDCVault.pkg</code> — pachet semnat și notarizat oficial de Apple, se instalează direct, fără pași suplimentari.</li>
-        <li data-i18n="install.step3">Pentru dezinstalare completă, rulează <code>Dezinstalare_GDCVault.command</code> din aceeași arhivă.</li>
-      </ol>
+    <h2 data-i18n="install.title">Instalare</h2>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:20px;">
+      <div class="pricing" style="text-align:left; padding:26px;">
+        <div style="font-family:var(--mono); font-size:12.5px; font-weight:700; color:var(--accent); text-transform:uppercase; letter-spacing:.05em; margin-bottom:10px;" data-i18n="install.mac.title">macOS</div>
+        <ol style="padding-left:20px; font-size:13.5px; color:var(--muted); line-height:1.9;">
+          <li data-i18n-html="install.step1">Descarcă <code>GDCVault-Mac.zip</code> mai sus și dezarhivează-l.</li>
+          <li data-i18n-html="install.step2">Dublu-click pe <code>GDCVault.pkg</code> — pachet semnat și notarizat oficial de Apple, se instalează direct, fără pași suplimentari.</li>
+          <li data-i18n-html="install.step3">Pentru dezinstalare completă, rulează <code>Dezinstalare_GDCVault.command</code> din aceeași arhivă.</li>
+        </ol>
+      </div>
+      <div class="pricing" style="text-align:left; padding:26px;">
+        <div style="font-family:var(--mono); font-size:12.5px; font-weight:700; color:var(--accent); text-transform:uppercase; letter-spacing:.05em; margin-bottom:10px;" data-i18n="install.win.title">Windows</div>
+        <ol style="padding-left:20px; font-size:13.5px; color:var(--muted); line-height:1.9;">
+          <li data-i18n-html="install.win.step1">Descarcă <code>GDCVaultSetup.exe</code> mai sus și rulează-l.</li>
+          <li data-i18n-html="install.win.step2">Acceptă licența (pas obligatoriu, "I accept the agreement") și urmează wizard-ul Inno Setup — Next, Install, Finish.</li>
+          <li data-i18n-html="install.win.step3">Pentru dezinstalare, folosește "Adaugă sau elimină programe" din Windows — dezinstalarea e nativă, fără script separat.</li>
+        </ol>
+      </div>
     </div>
   </div>
 </section>
@@ -210,10 +221,15 @@
       'f4.h': 'Alertă de expirare', 'f4.p': 'Vezi dintr-o privire ce abonamente/licențe expiră curând, direct din bara laterală.',
       'f5.h': 'Export/Import criptat', 'f5.p': 'Backup complet AES-256, protejat cu o parolă Master aleasă de tine — portabil între Mac și Windows.',
       'f6.h': 'Dezinstalare curată', 'f6.p': 'Un script dedicat șterge tot ce a creat aplicația pe sistem — nimic rămas în urmă.',
-      'install.title': 'Instalare pe Mac',
+      'install.title': 'Instalare',
+      'install.mac.title': 'macOS',
       'install.step1': 'Descarcă <code>GDCVault-Mac.zip</code> mai sus și dezarhivează-l.',
       'install.step2': 'Dublu-click pe <code>GDCVault.pkg</code> — pachet semnat și notarizat oficial de Apple, se instalează direct, fără pași suplimentari.',
       'install.step3': 'Pentru dezinstalare completă, rulează <code>Dezinstalare_GDCVault.command</code> din aceeași arhivă.',
+      'install.win.title': 'Windows',
+      'install.win.step1': 'Descarcă <code>GDCVaultSetup.exe</code> mai sus și rulează-l.',
+      'install.win.step2': 'Acceptă licența (pas obligatoriu, „I accept the agreement") și urmează wizard-ul Inno Setup — Next, Install, Finish.',
+      'install.win.step3': 'Pentru dezinstalare, folosește „Adaugă sau elimină programe" din Windows — dezinstalarea e nativă, fără script separat.',
       'donate.title': 'Donație', 'donate.plan': 'Licență Lifetime', 'donate.once': 'donație unică',
       'donate.li1': '15 zile probă gratuită, acces complet', 'donate.li2': 'Deblocare permanentă pentru un calculator',
       'donate.li3': 'Fără abonament, fără reînnoiri', 'donate.li4': 'Activare prin WhatsApp — răspuns rapid, direct de la dezvoltator',
@@ -235,10 +251,15 @@
       'f4.h': 'Expiration alerts', 'f4.p': 'See at a glance which subscriptions/licenses are expiring soon, right from the sidebar.',
       'f5.h': 'Encrypted export/import', 'f5.p': 'Full AES-256 backup, protected with a Master password you choose — portable between Mac and Windows.',
       'f6.h': 'Clean uninstall', 'f6.p': 'A dedicated script removes everything the app created on your system — nothing left behind.',
-      'install.title': 'Installing on Mac',
+      'install.title': 'Installation',
+      'install.mac.title': 'macOS',
       'install.step1': 'Download <code>GDCVault-Mac.zip</code> above and unzip it.',
       'install.step2': 'Double-click <code>GDCVault.pkg</code> — a package officially signed and notarized by Apple, installs directly with no extra steps.',
       'install.step3': 'For a full uninstall, run <code>Dezinstalare_GDCVault.command</code> from the same archive.',
+      'install.win.title': 'Windows',
+      'install.win.step1': 'Download <code>GDCVaultSetup.exe</code> above and run it.',
+      'install.win.step2': 'Accept the license (required, "I accept the agreement") and follow the Inno Setup wizard — Next, Install, Finish.',
+      'install.win.step3': 'To uninstall, use "Add or remove programs" in Windows — the uninstall is native, no separate script needed.',
       'donate.title': 'Donation', 'donate.plan': 'Lifetime license', 'donate.once': 'one-time donation',
       'donate.li1': '15-day free trial, full access', 'donate.li2': 'Permanent unlock for one computer',
       'donate.li3': 'No subscription, no renewals', 'donate.li4': 'Activation via WhatsApp — fast reply, directly from the developer',
@@ -260,10 +281,15 @@
       'f4.h': 'Alerta de caducidad', 'f4.p': 'Ve de un vistazo qué suscripciones/licencias caducan pronto, directamente desde la barra lateral.',
       'f5.h': 'Exportar/Importar cifrado', 'f5.p': 'Copia de seguridad AES-256 completa, protegida con una contraseña Maestra que tú eliges — portátil entre Mac y Windows.',
       'f6.h': 'Desinstalación limpia', 'f6.p': 'Un script dedicado elimina todo lo que la app creó en tu sistema — nada queda atrás.',
-      'install.title': 'Instalación en Mac',
+      'install.title': 'Instalación',
+      'install.mac.title': 'macOS',
       'install.step1': 'Descarga <code>GDCVault-Mac.zip</code> arriba y descomprímelo.',
       'install.step2': 'Doble clic en <code>GDCVault.pkg</code> — paquete firmado y notarizado oficialmente por Apple, se instala directamente, sin pasos adicionales.',
       'install.step3': 'Para una desinstalación completa, ejecuta <code>Dezinstalare_GDCVault.command</code> desde el mismo archivo.',
+      'install.win.title': 'Windows',
+      'install.win.step1': 'Descarga <code>GDCVaultSetup.exe</code> arriba y ejecútalo.',
+      'install.win.step2': 'Acepta la licencia (paso obligatorio, "I accept the agreement") y sigue el asistente de Inno Setup — Next, Install, Finish.',
+      'install.win.step3': 'Para desinstalar, usa "Agregar o quitar programas" en Windows — la desinstalación es nativa, sin script aparte.',
       'donate.title': 'Donación', 'donate.plan': 'Licencia Lifetime', 'donate.once': 'donación única',
       'donate.li1': '15 días de prueba gratuita, acceso completo', 'donate.li2': 'Desbloqueo permanente para un ordenador',
       'donate.li3': 'Sin suscripción, sin renovaciones', 'donate.li4': 'Activación por WhatsApp — respuesta rápida, directamente del desarrollador',
