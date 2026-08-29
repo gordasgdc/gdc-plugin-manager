@@ -27,18 +27,54 @@ enum SidebarSection: Hashable {
 /// (`allowsHitTesting(false)`), fără să concureze cu conținutul din
 /// prim-plan. `nil` => nimic randat, fundalul Shift normal rămâne
 /// neschimbat.
-private struct SeasonalBackgroundLayer: View {
-    let url: URL?
-    @State private var nsImage: NSImage?
-    @State private var loadedURL: URL?
+private extension SeasonalPosition {
+    var alignment: Alignment {
+        switch self {
+        case .bottomTrailing: return .bottomTrailing
+        case .bottomLeading: return .bottomLeading
+        case .topTrailing: return .topTrailing
+        case .topLeading: return .topLeading
+        case .center: return .center
+        }
+    }
+}
 
-    /// Cache local (Etapa 8) — la fel ca `catalog-cache.json`, ca filigranul
-    /// să rămână vizibil și offline / la eșec de rețea, nu doar când
-    /// descărcarea reușește de fiecare dată.
+/// Toate filigranele active acum, fiecare la poziția lui configurată —
+/// 2026-08-29. `Catalog.activeSeasonalBackgrounds` a filtrat deja după
+/// `isActiveNow` și a rezolvat coliziunile de poziție (ultimul adăugat
+/// câștigă, vezi comentariul de acolo), deci aici doar randăm.
+private struct SeasonalBackgroundsLayer: View {
+    let configs: [SeasonalBackgroundConfig]
+
+    var body: some View {
+        ZStack {
+            ForEach(configs) { config in
+                SeasonalBackgroundLayer(config: config)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: config.position.alignment)
+            }
+        }
+        .allowsHitTesting(false)
+    }
+}
+
+private struct SeasonalBackgroundLayer: View {
+    let config: SeasonalBackgroundConfig
+    @State private var nsImage: NSImage?
+
+    /// Cache local pe disc (Etapa 8) — la fel ca `catalog-cache.json`, ca
+    /// filigranul să rămână vizibil offline / la eșec de rețea.
+    ///
+    /// CHEIAT PER FILIGRAN (2026-08-29): era un singur fișier global
+    /// `seasonal-background-cache`, ceea ce cu o bibliotecă de mai multe
+    /// filigrane ar fi însemnat că ultimul descărcat suprascrie cache-ul
+    /// tuturor celorlalte (offline, toate ar fi arătat aceeași imagine).
     private var cacheFileURL: URL {
         FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
             .appendingPathComponent("GDCPluginManager")
-            .appendingPathComponent("seasonal-background-cache")
+            .appendingPathComponent("seasonal-cache", isDirectory: true)
+            // `id` e slug de catalog (litere mici/cifre/cratime), dar
+            // filtrăm oricum ce ar putea deveni cale ("/", "..").
+            .appendingPathComponent(config.id.replacingOccurrences(of: "/", with: "_"))
     }
 
     var body: some View {
@@ -49,13 +85,14 @@ private struct SeasonalBackgroundLayer: View {
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 480, height: 480)
                     .opacity(0.07)
-                    .padding(-40) // depășește ușor marginea, ca un filigran "tăiat" de colț
+                    // Depășește ușor marginea, ca un filigran "tăiat" de
+                    // colț — la `.center` ar decupa din imagine degeaba.
+                    .padding(config.position == .center ? 0 : -40)
             }
         }
-        .allowsHitTesting(false)
-        .task(id: url) {
-            guard let url, url != loadedURL || nsImage == nil else {
-                if url == nil { nsImage = nil }
+        .task(id: config.imagePath) {
+            guard let url = config.imageURL else {
+                nsImage = nil
                 return
             }
             // NU AsyncImage: decodorul lui SwiftUI nu randează fiabil SVG
@@ -64,12 +101,10 @@ private struct SeasonalBackgroundLayer: View {
             // (suport adăugat în macOS 12+), la fel ca orice raster.
             if let (data, _) = try? await URLSession.shared.data(from: url), let image = NSImage(data: data) {
                 nsImage = image
-                loadedURL = url
                 saveToCache(data: data)
             } else if let cached = try? Data(contentsOf: cacheFileURL), let image = NSImage(data: cached) {
                 // Offline sau rețea indisponibilă — ultima variantă descărcată cu succes.
                 nsImage = image
-                loadedURL = url
             }
         }
     }
@@ -296,7 +331,9 @@ struct ContentView: View {
             // imprimat în fundal" — deci NU un icon mic suprapus, ci un
             // strat mare, discret, ÎN SPATELE conținutului (opacitate
             // mică, non-interactiv), nu deasupra lui.
-            .background(alignment: .bottomTrailing) { SeasonalBackgroundLayer(url: catalog.seasonalBackgroundURL) }
+            // Fără `alignment:` fix aici: fiecare filigran își poartă
+            // propria poziție (2026-08-29) — vezi SeasonalBackgroundsLayer.
+            .background { SeasonalBackgroundsLayer(configs: catalog.seasonalBackgrounds.activeNowDeduplicated) }
         }
         .navigationTitle(L.t("app.name"))
         .toolbar {

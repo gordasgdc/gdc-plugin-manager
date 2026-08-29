@@ -238,11 +238,33 @@ enum CatalogEditor {
         try write(catalog: catalog, partnerOffers: offers)
     }
 
-    // MARK: - Filigran/fundal sezonier (Etapa 6, 2026-08-29) — un singur slot global
+    // MARK: - Filigrane sezoniere — BIBLIOTECĂ (2026-08-29)
+    //
+    // Era un singur slot global (`setSeasonalBackground(_: String?)`).
+    // Acum e o listă persistată: fiecare intrare are perioadă, poziție și
+    // comutator propriu — vezi `SeasonalBackgroundConfig` (Core).
 
-    static func setSeasonalBackground(_ value: String?) throws {
+    static func setSeasonalBackgrounds(_ configs: [SeasonalBackgroundConfig]) throws {
         let catalog = (try? load()) ?? Catalog(updatedAt: nil, items: [])
-        try write(catalog: catalog, seasonalBackground: value)
+        try write(catalog: catalog, seasonalBackgrounds: configs)
+    }
+
+    static func upsertSeasonalBackground(_ config: SeasonalBackgroundConfig) throws {
+        let catalog = (try? load()) ?? Catalog(updatedAt: nil, items: [])
+        var list = catalog.seasonalBackgrounds
+        // Păstrează POZIȚIA în listă la editare (ordinea contează: la
+        // coliziune de poziție câștigă ultimul — vezi Core).
+        if let index = list.firstIndex(where: { $0.id == config.id }) {
+            list[index] = config
+        } else {
+            list.append(config)
+        }
+        try write(catalog: catalog, seasonalBackgrounds: list)
+    }
+
+    static func removeSeasonalBackground(id: String) throws {
+        let catalog = (try? load()) ?? Catalog(updatedAt: nil, items: [])
+        try write(catalog: catalog, seasonalBackgrounds: catalog.seasonalBackgrounds.filter { $0.id != id })
     }
 
     // MARK: - Pachete/Bundle-uri (Etapa 9, 2026-08-29)
@@ -282,10 +304,7 @@ enum CatalogEditor {
         serviceCenters: [ServiceCenter]? = nil,
         downloadableResources: [DownloadableResource]? = nil,
         partnerOffers: [PartnerOffer]? = nil,
-        // Dublu-opțional intenționat: `nil` = "nu atinge" (păstrează
-        // valoarea existentă din catalog), `.some(nil)` = "șterge
-        // explicit filigranul", `.some(.some(x))` = "setează x".
-        seasonalBackground: String?? = nil,
+        seasonalBackgrounds: [SeasonalBackgroundConfig]? = nil,
         productBundles: [ProductBundle]? = nil
     ) throws {
         let formatter = DateFormatter()
@@ -302,7 +321,7 @@ enum CatalogEditor {
             serviceCenters: serviceCenters ?? catalog.serviceCenters,
             downloadableResources: downloadableResources ?? catalog.downloadableResources,
             partnerOffers: partnerOffers ?? catalog.partnerOffers,
-            seasonalBackground: seasonalBackground ?? catalog.seasonalBackground,
+            seasonalBackgrounds: seasonalBackgrounds ?? catalog.seasonalBackgrounds,
             productBundles: productBundles ?? catalog.productBundles
         )
 

@@ -10,8 +10,21 @@ import GDCPluginManagerCore
 /// preset fix) — corect pentru thumbnail-uri de card, greșit pentru un
 /// filigran, unde Cristi vrea explicit posibilitatea unui SVG vectorial
 /// nealterat (compresia/rasterizarea l-ar strica). Acest store copiază
-/// fișierul BRUT, exact cum a fost ales, într-un singur slot global
-/// (`docs/covers/seasonal/background.<ext>`) — nu e per-produs.
+/// fișierul BRUT, exact cum a fost ales.
+///
+/// [SCHIMBAT 2026-08-29] Era UN SINGUR slot global
+/// (`docs/covers/seasonal/background.<ext>`), deci o imagine încărcată era
+/// folosită o dată și pierdută la următoarea. Acum e o BIBLIOTECĂ: un
+/// fișier per intrare, `docs/covers/seasonal/<id>.<ext>` — încărcarea unei
+/// imagini noi ADAUGĂ, nu înlocuiește.
+///
+/// RECOMANDARE PNG vs SVG (întrebare directă a lui Cristi): **SVG**.
+/// Vectorial (nepixelat la orice rezoluție/DPI, inclusiv Retina), fișier
+/// mult mai mic, ușor de recolorat/editat ulterior, și e deja tehnologia
+/// celor 7 presetări din `SeasonalPresets`. PNG rămâne perfect acceptabil
+/// pentru poze reale (un logo fotografic complex), dar pentru orice grafică
+/// sau text desenat, SVG e alegerea corectă. AMBELE rămân suportate la
+/// upload — doar recomandarea implicită e SVG.
 enum SeasonalBackgroundStore {
     static var directory: URL {
         RepoCheckoutPaths.publicCatalogRepo
@@ -20,38 +33,41 @@ enum SeasonalBackgroundStore {
             .appendingPathComponent("seasonal", isDirectory: true)
     }
 
-    /// Copiază `source` (svg/png/jpg — orice a ales furnizorul) ca noul
-    /// filigran global, cu cache-busting după conținut (același motiv ca
-    /// `CoverImageStore` — GitHub Pages cache-uiește 4h, PWA cache-first).
-    /// `nil` șterge filigranul curent (revenire la fundalul Shift normal).
-    static func commit(source: URL?) throws -> String? {
+    /// Copiază `source` (svg/png/jpg — orice a ales furnizorul) ca fișier al
+    /// intrării `id` din bibliotecă, cu cache-busting după conținut (același
+    /// motiv ca `CoverImageStore` — GitHub Pages cache-uiește 4h, PWA
+    /// cache-first). Întoarce valoarea de scris în `imagePath`.
+    static func commit(source: URL, id: String) throws -> String {
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        // Curăță orice "background.*" vechi — extensia se poate schimba
-        // (ex. de la .svg la .png) între publicări.
-        if let entries = try? FileManager.default.contentsOfDirectory(at: directory, includingPropertiesForKeys: nil) {
-            for entry in entries where entry.deletingPathExtension().lastPathComponent == "background" {
-                try? FileManager.default.removeItem(at: entry)
-            }
-        }
-        guard let source else { return nil }
+        removeFiles(id: id) // extensia se poate schimba între încărcări
 
-        let ext = source.pathExtension.isEmpty ? "png" : source.pathExtension
-        let destination = directory.appendingPathComponent("background.\(ext)")
+        let ext = source.pathExtension.isEmpty ? "png" : source.pathExtension.lowercased()
+        let destination = directory.appendingPathComponent("\(id).\(ext)")
         try FileManager.default.copyItem(at: source, to: destination)
 
         let data = try Data(contentsOf: destination)
         let digest = SHA256.hash(data: data).compactMap { String(format: "%02x", $0) }.joined().prefix(8)
-        return "\(CatalogAssets.coversFolderName)/seasonal/background.\(ext)?v=\(digest)"
+        return "\(CatalogAssets.coversFolderName)/seasonal/\(id).\(ext)?v=\(digest)"
     }
 
     /// Scrie un preset predefinit (SVG inline, din `SeasonalPresets`) —
     /// nu cere niciun fișier de pe disc, doar alegerea din galerie.
-    static func commitPreset(_ preset: SeasonalPreset) throws -> String? {
-        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+    static func commitPreset(_ preset: SeasonalPreset, id: String) throws -> String {
         let tempURL = FileManager.default.temporaryDirectory.appendingPathComponent("\(preset.id).svg")
+        try? FileManager.default.removeItem(at: tempURL)
         try preset.svg.write(to: tempURL, atomically: true, encoding: .utf8)
         defer { try? FileManager.default.removeItem(at: tempURL) }
-        return try commit(source: tempURL)
+        return try commit(source: tempURL, id: id)
+    }
+
+    /// Șterge fișierul (orice extensie) al unei intrări scoase din
+    /// bibliotecă — altfel ar rămâne orfan în repo pentru totdeauna, exact
+    /// pitfall-ul deja documentat la coperți (`CoverImageStore`).
+    static func removeFiles(id: String) {
+        guard let entries = try? FileManager.default.contentsOfDirectory(at: directory, includingPropertiesForKeys: nil) else { return }
+        for entry in entries where entry.deletingPathExtension().lastPathComponent == id {
+            try? FileManager.default.removeItem(at: entry)
+        }
     }
 
     @MainActor
@@ -60,7 +76,7 @@ enum SeasonalBackgroundStore {
         panel.allowedContentTypes = [.image, .svg]
         panel.allowsMultipleSelection = false
         panel.canChooseDirectories = false
-        panel.message = "Alege imaginea/SVG-ul de fundal sezonier (fișierul original, fără compresie)."
+        panel.message = "Alege imaginea/SVG-ul de fundal sezonier (fișierul original, fără compresie). Recomandat: SVG."
         panel.prompt = "Alege"
         return panel.runModal() == .OK ? panel.url : nil
     }

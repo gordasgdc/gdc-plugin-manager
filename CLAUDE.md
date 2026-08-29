@@ -1256,3 +1256,154 @@ va da 404 până se construiește și urcă un build Windows nou în release.
 `GDCPluginManagerWin` (display-only, nu are Furnizor) + build + upload
 `GDCPluginManager-Windows.zip` în release-ul v1.13.2 existent (`gh release
 upload v1.13.2 ...`), ca 404-ul să dispară.
+
+## [SESIUNE 2026-08-29] Trei cerințe Cristi: social pe toate rubricile, selector de temă, bibliotecă de filigrane
+
+Trei cereri explicite, implementate ca trei commit-uri separate. `swift build`
+(Core + Client + Furnizor) — 0 erori după fiecare.
+Versiuni finale: **Client 1.13.2 → 1.16.0**, **Furnizor 1.12.2 → 1.15.0**
+(câte un MINOR per cerință, Regula 14). `docs/update.json` NEATINS —
+rămâne decizia lui Cristi, separat. `docs/sw.js`: CACHE_VERSION v12 → v14.
+
+### 1. Rețele sociale pe TOATE rubricile + LinkedIn
+
+`SocialLinks` exista, dar era câmp doar pe 4 modele (PluginItem,
+DownloadableResource, PartnerOffer, ProductBundle). Adăugat `socialLinks:
+SocialLinks?` pe celelalte 6: `Course`, `EducationalResource`, `Event`,
+`PartnerStore`, `ServiceCenter`, `AppLink` — adică toate rubricile din
+grupurile COMUNITATE & EDUCAȚIE și ECOSISTEM GDC.
+
+**LinkedIn adăugat** pe `SocialLinks` (întrebare directă a lui Cristi: da).
+
+**Decizie de retrocompatibilitate**: cele 6 structuri folosesc Codable
+SINTETIZAT, nu custom `CodingKeys` ca `PluginItem`. Pentru o proprietate
+Optional, Swift tratează o cheie lipsă ca nil la decodare și o omite la
+encodare — deci nu e nevoie de `decodeIfPresent` scris de mână, exact
+tiparul deja folosit pentru `scheduling` pe aceleași structuri. Verificat
+pe `docs/catalog.json` REAL: toate cursurile/materialele vechi decodează cu
+`socialLinks == nil`, restul colecțiilor rămân intacte.
+
+**Iconița LinkedIn (Client)**: SF Symbols NU are glif de brand LinkedIn
+(Apple nu livrează logo-uri de terți) → `link.circle`, varianta propusă de
+Cristi, cu tooltip "LinkedIn". Pe PWA există `LI_ICON` (SVG monocrom
+propriu, în stilul `PIN_ICON`/`WA_ICON`/`YT_ICON`).
+
+**Zero cod duplicat**: `SocialLinksRow(_:)` (Client) e un wrapper subțire
+peste `ExtraLinksRow` deja existent. În Furnizor, `SocialLinksEditor.swift`
+(nou) aduce `SocialLinksFormState` + `SocialLinksFields` +
+`SocialLinksSection` — un singur `@State` per formular în loc de 5 câmpuri
+separate; cele 4 formulare care aveau deja social au fost REFACTORIZATE pe
+componenta nouă (nu lăsate divergente), iar cele 6 care nu aveau au primit
+`SocialLinksSection`.
+
+**PWA**: `socialMiniLinks` e apelată acum și la Cursuri/Materiale,
+Evenimente, Pachete, Magazine, Servicii, Aplicații. Pitfall prins la
+implementare: cardul de Aplicații era un `<a>`, iar linkurile sociale sunt
+tot ancore — ancore imbricate = HTML invalid. Cardul devine `<div>` în
+coloană cu rândul principal ca ancoră separată, DOAR când există linkuri
+sociale (altfel rămâne exact ce era).
+
+### 2. Selector explicit de temă Sistem/Light/Dark (lacună față de Regula 18)
+
+Regula 18 (Partea 1) o cere din 2026-08-26; niciuna dintre cele două
+aplicații Mac nu o avea. `AppTheme.swift` — port 1:1 al implementării de
+referință din MediaFlow Monitor, pus în **Core** ca să fie folosit identic
+de amândouă aplicațiile, nu două copii care pot diverge. Persistat în
+`UserDefaults` (`GDCPluginManager.appTheme`); cheia e aceeași literal în
+ambele, dar domeniile de preferințe sunt separate (bundle ID-uri diferite),
+deci alegerile lor nu se calcă reciproc.
+
+**Decizie: `NSApp.appearance`, NU `.preferredColorScheme()`.**
+`preferredColorScheme` afectează doar ierarhia SwiftUI a acelei ferestre —
+meniurile, panourile native (`NSOpenPanel`/`NSAlert`), popover-ele și
+fereastra de Preferences ar fi rămas pe tema sistemului, adică exact
+incoerența pe care selectorul trebuie s-o elimine. `applyNow()` e chemat din
+`.onAppear`-ul ferestrei principale, fiindcă `ThemeManager` se poate
+inițializa înainte ca `NSApp` să existe (atunci `apply()` din init n-are pe
+ce scrie).
+
+Client: secțiune nouă "Temă" în `PreferencesView.swift` (Cmd+,), localizată
+RO/EN/ES. Furnizor: NU avea niciun ecran de setări — adăugat `Settings`
+scene + `FurnizorPreferencesView.swift` (nou). Furnizorul nu e scutit de
+standard doar pentru că e instrument intern (același raționament ca Regula
+15 despre versiunea vizibilă în UI).
+
+### 3. Filigrane sezoniere: bibliotecă reutilizabilă, cu perioadă și poziție
+
+Etapa 6 avea `Catalog.seasonalBackground: String?` — UN SINGUR slot global,
+fără perioadă proprie, mereu jos-dreapta, iar o imagine proprie încărcată
+era folosită o dată și pierdută la următoarea. Cristi a cerut explicit: (a)
+din ce dată până în ce dată apare, (b) unde apare pe ecran, (c) ca fișierele
+proprii încărcate să rămână SALVATE și reutilizabile.
+
+**Model nou (Core)**: `SeasonalBackgroundConfig` (`id`, `label`,
+`imagePath`, `scheduling: Scheduling?` — reutilizat, nu unul nou —,
+`position: SeasonalPosition`, `isEnabled`) + `SeasonalPosition`
+(bottomTrailing/bottomLeading/topTrailing/topLeading/center, implicit
+bottomTrailing). `Catalog.seasonalBackground` devine
+`seasonalBackgrounds: [SeasonalBackgroundConfig]` — o BIBLIOTECĂ, nu un slot.
+
+**Retrocompatibilitate (verificată pe catalogul LIVE, nu presupusă)**:
+`Catalog.init(from:)` încearcă întâi cheia nouă; dacă lipsește și există
+cea veche (`seasonalBackground`, String), o migrează silențios într-o
+intrare unică — fără scheduling (mereu activă), poziție `.bottomTrailing`,
+adică EXACT ce arăta înainte. Testat pe `docs/catalog.json` real
+(`covers/seasonal/background.png?v=3a8a64dc`): migrează corect, round-trip-ul
+nu mai scrie niciodată cheia veche, restul colecțiilor rămân intacte.
+
+**DECIZIE DE COLIZIUNE (deliberată, documentată)**: dacă mai multe filigrane
+active cad pe ACEEAȘI poziție, câștigă **ULTIMUL din listă** (ultimul
+adăugat/editat în Furnizor). Suprapunerea a două imagini în același colț ar
+da o pată ilizibilă; alegerea e stabilă și previzibilă, nu aleatorie, și nu
+aruncă niciodată eroare. Filigranele pe poziții DIFERITE se randează toate.
+Logica trăiește într-un singur loc — `[SeasonalBackgroundConfig]
+.activeNowDeduplicated` (Core) — folosit și de Client, și portat 1:1 în JS
+pentru PWA.
+
+**RECOMANDARE PNG vs SVG (întrebare directă a lui Cristi): SVG.** Vectorial
+(nepixelat la orice rezoluție/DPI, inclusiv Retina), fișier mult mai mic,
+ușor de recolorat/editat ulterior, și e deja tehnologia celor 7 presetări
+din `SeasonalPresets`. PNG rămâne perfect acceptabil pentru poze reale (un
+logo fotografic complex), dar pentru orice grafică sau text desenat, SVG e
+alegerea corectă. **AMBELE rămân suportate la upload** — doar recomandarea
+implicită e SVG (scrisă și în UI-ul Furnizorului, nu doar aici).
+
+**Furnizor**: `SeasonalBackgroundStore` scrie acum un fișier PER INTRARE
+(`docs/covers/seasonal/<id>.<ext>`), nu un `background.<ext>` global —
+încărcarea unei imagini noi ADAUGĂ, nu înlocuiește; `removeFiles(id:)`
+curăță fișierul la ștergerea din bibliotecă (altfel ar rămâne orfan în repo,
+exact pitfall-ul deja documentat la coperți). `SeasonalBackgroundView` e o
+listă: nume + thumbnail + stare/perioadă + toggle Activ + Picker de poziție
+(5 opțiuni) + `SchedulingPicker` (REUTILIZAT, cel de la Etapa 4) + buton
+Șterge; adăugare din galeria predefinită sau din fișier propriu. ID-urile
+sunt slug-uri unice (`uniqueID`/`slug`) — `id`-ul e și numele fișierului
+public, și cheia de cache din Client, deci două intrări cu același id ar
+suprascrie aceeași imagine.
+
+**Client**: `SeasonalBackgroundsLayer` iterează biblioteca activă și randează
+fiecare filigran la `config.position.alignment`. Păstrat fix-ul din
+2026-08-29: NU `AsyncImage` (nu randează fiabil SVG pe macOS) — descărcare
+manuală + `NSImage(data:)`. **Cache-ul pe disc e acum cheiat per filigran**
+(`seasonal-cache/<id>`) — era un singur fișier global, ceea ce cu o
+bibliotecă ar fi însemnat că ultimul descărcat suprascrie cache-ul tuturor
+celorlalte (offline, toate ar fi arătat aceeași imagine).
+
+**PWA**: `.seasonal-bg` nu mai e ancorat fix jos-dreapta — clase `.pos-*`
+per poziție; `renderSeasonalBackground()` randează toate filigranele active,
+cu aceeași migrare a cheii vechi și aceeași regulă de coliziune ca în Swift.
+
+### TODO paritate Windows (NU implementat aici — repo separat, lucrat în paralel)
+
+`GDCPluginManagerWin` (Client Windows, display-only, nu are Furnizor) ar
+trebui să primească, pentru paritate:
+1. `SocialLinks.LinkedinURL` + `SocialLinks` pe Course/EducationalResource/
+   Event/PartnerStore/ServiceCenter/AppLink în modelul C#, plus afișarea
+   rândului de iconițe pe cardurile respective.
+2. Selector de temă System/Light/Dark (Regula 18) — echivalentul WPF
+   (`ThemeManager`/`ApplicationThemeManager` din Wpf.Ui), persistat în
+   Registry/settings, aplicat fără repornire.
+3. `SeasonalBackgroundConfig`/`SeasonalPosition` + citirea
+   `seasonalBackgrounds` cu migrarea cheii vechi + randarea filigranelor la
+   poziția lor. **Notă**: Windows nu are încă NICIUN filigran sezonier
+   implementat (vezi TODO Etapa 6), deci acolo e implementare de la zero,
+   nu doar o actualizare de model.

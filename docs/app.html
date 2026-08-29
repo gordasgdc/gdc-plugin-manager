@@ -159,10 +159,18 @@
   .tab.on{ color:var(--accent); }
 
   /* ── Filigran sezonier (Etapa 6, paritate mobil 2026-08-29) ──────────────── */
+  /* Pozitia (jos-dreapta / jos-stanga / sus-* / centru) vine acum din
+     catalog, per filigran — vezi SeasonalPosition (Core). Clasa de baza
+     ramane fara ancorare; o clasa .pos-* o adauga. */
   .seasonal-bg{
-    position:fixed; right:-40px; bottom:-40px; width:320px; height:320px; z-index:1;
+    position:fixed; width:320px; height:320px; z-index:1;
     opacity:.07; pointer-events:none; object-fit:contain;
   }
+  .seasonal-bg.pos-bottomTrailing{ right:-40px; bottom:-40px; }
+  .seasonal-bg.pos-bottomLeading { left:-40px;  bottom:-40px; }
+  .seasonal-bg.pos-topTrailing   { right:-40px; top:-40px; }
+  .seasonal-bg.pos-topLeading    { left:-40px;  top:-40px; }
+  .seasonal-bg.pos-center        { left:50%; top:50%; transform:translate(-50%,-50%); }
 
   /* ── Buton hartă / link secundar (chip mic pe cardul rich) ───────────────── */
   .mini-links{ display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
@@ -212,7 +220,7 @@
   </button>
 </header>
 
-<img class="seasonal-bg" id="seasonal-bg" alt="" style="display:none">
+<div id="seasonal-bg"></div>
 
 <main>
   <!-- Tab 1: produsele — aplicatii desktop + plugin-uri/LUT/DCTL -->
@@ -396,17 +404,34 @@ function renderAll() {
   renderProduse(); renderResurse(); renderCursuri(); renderEvenimente(); renderComunitate();
 }
 
-// Filigran sezonier (Etapa 6, paritate mobil) — acelasi camp ca pe desktop,
-// aceeasi opacitate joasa; fara AsyncImage-ul problematic de pe Mac, un
-// <img> normal de browser randeaza SVG fara nicio problema.
+// Filigrane sezoniere — BIBLIOTECA (2026-08-29), paritate cu Mac: mai multe
+// filigrane, fiecare cu perioada si pozitie proprie. Port 1:1 al deciziei de
+// coliziune din Core (`activeNowDeduplicated`): la aceeasi pozitie castiga
+// ULTIMUL din lista; pozitii diferite se randeaza toate.
+// Fara AsyncImage-ul problematic de pe Mac — un <img> de browser randeaza SVG nativ.
+function activeSeasonalBackgrounds() {
+  // Migrare in citire, ca in Swift: un catalog.json vechi are cheia
+  // singulara `seasonalBackground` (string), fara perioada si fara pozitie.
+  let list = CATALOG.seasonalBackgrounds;
+  if (!Array.isArray(list)) {
+    list = CATALOG.seasonalBackground
+      ? [{ id: 'migrat-2026-08-29', imagePath: CATALOG.seasonalBackground }]
+      : [];
+  }
+  const byPosition = new Map();
+  for (const cfg of list) {
+    const enabled = cfg.isEnabled !== false;         // lipsa = activ
+    if (!enabled || !isActiveNow(cfg.scheduling)) continue;
+    byPosition.set(cfg.position || 'bottomTrailing', cfg); // ultimul castiga
+  }
+  return [...byPosition.entries()];
+}
+
 function renderSeasonalBackground() {
   const el = document.getElementById('seasonal-bg');
-  if (CATALOG.seasonalBackground) {
-    el.src = CATALOG.seasonalBackground;
-    el.style.display = 'block';
-  } else {
-    el.style.display = 'none';
-  }
+  el.innerHTML = activeSeasonalBackgrounds().map(([position, cfg]) =>
+    `<img class="seasonal-bg pos-${esc(position)}" alt="" src="${esc(cfg.imagePath)}">`
+  ).join('');
 }
 
 function renderProduse() {
