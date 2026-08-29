@@ -583,6 +583,13 @@
       "isEnabled" : true,
       "label" : "black-friday-seeklogo",
       "position" : "center"
+    },
+    {
+      "id" : "black-friday",
+      "imagePath" : "covers/seasonal/black-friday.svg?v=3d94bbd9",
+      "isEnabled" : true,
+      "label" : "Black Friday",
+      "position" : "bottomTrailing"
     }
   ],
   "serviceCenters" : [
