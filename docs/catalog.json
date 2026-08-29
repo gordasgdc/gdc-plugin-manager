@@ -574,14 +574,6 @@
   ],
   "seasonalBackgrounds" : [
     {
-      "id" : "black-friday",
-      "imagePath" : "covers/seasonal/black-friday.png?v=c657674b",
-      "isEnabled" : false,
-      "label" : "Black Friday",
-      "opacity" : 0.07,
-      "position" : "bottomTrailing"
-    },
-    {
       "id" : "black-friday-2",
       "imagePath" : "covers/seasonal/black-friday-2.png?v=c657674b",
       "isEnabled" : false,
