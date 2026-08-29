@@ -111,7 +111,16 @@ private struct SeasonalBackgroundLayer: View {
             // lasă o distanță vizibilă, clară, pe orice latură.
             .padding(config.position == .center ? 0 : 48)
         .task(id: config.imagePath) {
+            // Log de diagnostic PERMANENT (nu print-uri temporare) — vezi
+            // DiagnosticLog.swift. Motiv direct: bug-ul real de azi (task
+            // neatașat corect, fetch-ul nu pornea niciodată) a fost gasit
+            // DOAR adăugând print-uri temporare, rulând din Terminal cu
+            // NSUnbufferedIO=YES. Cu logul permanent, un raport viitor de
+            // gen "nu apare filigranul" se diagnostichează direct din
+            // %TEMP%/gdcpm-crash.log, fără să mai reproducem manual bug-ul.
+            DiagnosticLog.write("SeasonalBackground", "task pornit pt. id=\(config.id) imagePath=\(config.imagePath)")
             guard let url = config.imageURL else {
+                DiagnosticLog.write("SeasonalBackground", "id=\(config.id): imageURL NIL")
                 nsImage = nil
                 return
             }
@@ -119,12 +128,17 @@ private struct SeasonalBackgroundLayer: View {
             // pe macOS (2026-08-29, filigran Black Friday invizibil în
             // Client — cauza reală). `NSImage(data:)` ȘTIE nativ SVG
             // (suport adăugat în macOS 12+), la fel ca orice raster.
-            if let (data, _) = try? await URLSession.shared.data(from: url), let image = NSImage(data: data) {
+            if let (data, response) = try? await URLSession.shared.data(from: url), let image = NSImage(data: data) {
+                let status = (response as? HTTPURLResponse)?.statusCode ?? -1
+                DiagnosticLog.write("SeasonalBackground", "id=\(config.id): OK, \(data.count) bytes, HTTP \(status)")
                 nsImage = image
                 saveToCache(data: data)
             } else if let cached = try? Data(contentsOf: cacheFileURL), let image = NSImage(data: cached) {
+                DiagnosticLog.write("SeasonalBackground", "id=\(config.id): fetch retea esuat, fallback pe cache local reusit")
                 // Offline sau rețea indisponibilă — ultima variantă descărcată cu succes.
                 nsImage = image
+            } else {
+                DiagnosticLog.write("SeasonalBackground", "id=\(config.id): fetch retea esuat SI niciun cache local disponibil")
             }
         }
     }

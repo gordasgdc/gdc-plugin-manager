@@ -1,5 +1,33 @@
 # Changelog — GDC Plugin Manager
 
+## Client v1.19.2 (2026-08-29) — Release final, paritate Windows completă
+
+- **Fix critic**: filigranul sezonier nu se încărca NICIODATĂ — `.task`
+  atașat greșit pe un container gol la primul randaj. Reparat, verificat
+  direct (rulat din Terminal cu print-uri de diagnostic).
+- Iconițe sociale COLORATE de brand (Facebook/YouTube/Instagram/TikTok/
+  LinkedIn), nu SF Symbols alb-negru. Tooltips pe butonul YouTube + toate
+  iconițele sociale.
+- Fix poziționare filigran: padding negativ care tăia imaginea din colț →
+  pozitiv, mărit apoi la 48px (de la 24px) la cerere.
+- Fix sidebar: profilul nu mai suprapune meniul la redimensionare rapidă.
+- Setare nouă "Mărime Text" (Mic/Normal/Mare/Foarte mare), în Preferences.
+- Cele 7 preseturi de filigran predefinite au trecut de la SVG (text
+  invizibil — bug real ImageIO găsit azi) la PNG randat corect.
+- Intensitate (opacitate) reglabilă per filigran, din Furnizor.
+
+## Furnizor v1.16.1 (2026-08-29)
+
+- Fix: formularul de Produse nu se golea după publicare (trebuia să
+  închizi și să redeschizi aplicația pentru al doilea produs).
+- Fix: fiecare control al filigranului (Activ/Poziție/Intensitate/
+  Perioadă) publica INSTANT, la fiecare atingere — acum totul e local,
+  publicat printr-un buton explicit "Trimite modificările".
+- Preseturi PNG (nu SVG) — vezi mai sus.
+
+**TODO paritate Windows**: acum COMPLETĂ — vezi CHANGELOG.md din
+`GDCPluginManagerWin`, v1.19.2.
+
 ## Client v1.16.0 + Furnizor v1.15.0 (2026-08-29) — Social pe toate rubricile, selector de temă, bibliotecă de filigrane
 
 Trei cerințe explicite ale lui Cristi, în trei commit-uri separate.

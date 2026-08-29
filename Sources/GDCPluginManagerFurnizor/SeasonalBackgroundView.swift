@@ -323,14 +323,17 @@ struct SeasonalBackgroundView: View {
         successMessage = nil
         isBusy = true
         defer { isBusy = false }
+        DiagnosticLog.write("SeasonalBackgroundView", "run() start — pull+work+commit+push")
         do {
             try GitOps.pull(at: RepoCheckoutPaths.publicCatalogRepo)
             try work()
             try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Filigrane sezoniere actualizate", paths: ["docs/catalog.json", "docs/covers"])
             successMessage = success
+            DiagnosticLog.write("SeasonalBackgroundView", "run() SUCCES: \(success)")
             loadLibrary()
         } catch {
             errorMessage = error.localizedDescription
+            DiagnosticLog.write("SeasonalBackgroundView", "run() EROARE: \(error)")
         }
     }
 }
@@ -356,8 +359,17 @@ private struct SeasonalThumbnail: View {
             // `URLSession` async, nu `Data(contentsOf:)` — acesta din urmă
             // ar bloca main thread-ul pe un URL de rețea (miniatura vine de
             // pe gordas.dev, nu de pe disc).
-            guard let url, let (data, _) = try? await URLSession.shared.data(from: url) else { return }
+            guard let url else {
+                DiagnosticLog.write("SeasonalThumbnail", "url NIL — fara imagine de aratat")
+                return
+            }
+            guard let (data, response) = try? await URLSession.shared.data(from: url) else {
+                DiagnosticLog.write("SeasonalThumbnail", "fetch esuat pentru \(url.absoluteString)")
+                return
+            }
+            let status = (response as? HTTPURLResponse)?.statusCode ?? -1
             nsImage = NSImage(data: data)
+            DiagnosticLog.write("SeasonalThumbnail", "\(url.lastPathComponent): HTTP \(status), \(data.count) bytes, decodat=\(nsImage != nil)")
         }
     }
 }

@@ -1,4 +1,5 @@
 import Foundation
+import GDCPluginManagerCore
 
 struct UpdateInfo: Decodable {
     let version: String

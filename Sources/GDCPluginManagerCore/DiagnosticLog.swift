@@ -16,11 +16,16 @@ import Foundation
 /// nicio dovada CE anume picase (retea? parsare? un proxy corporate care
 /// intercepteaza TLS?). Windows avea deja `DiagnosticLog`/`gdcpm-crash.log`
 /// din investigatia PowerGrade — Mac nu avea echivalentul.
-enum DiagnosticLog {
+/// [2026-08-29] Mutat din `GDCPluginManager` (Client) în Core, ca să fie
+/// reutilizat și de Furnizor — folosit acum și pentru diagnosticarea
+/// bibliotecii de filigrane sezoniere (upload/publicare), nu doar
+/// `UpdateChecker`. Un singur fișier de log, un singur loc de căutat,
+/// indiferent care dintre cele două aplicații a scris ultima intrare.
+public enum DiagnosticLog {
     private static let path = FileManager.default.temporaryDirectory
         .appendingPathComponent("gdcpm-crash.log")
 
-    static func write(_ tag: String, _ message: String) {
+    public static func write(_ tag: String, _ message: String) {
         let timestamp = ISO8601DateFormatter().string(from: Date())
         let line = "[\(timestamp)] [\(tag)] \(message)\n"
         guard let data = line.data(using: .utf8) else { return }
