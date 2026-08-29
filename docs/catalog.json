@@ -620,7 +620,7 @@
     {
       "id" : "black-friday-sale-seeklogo",
       "imagePath" : "covers/seasonal/black-friday-sale-seeklogo.png?v=73d4d6f4",
-      "isEnabled" : true,
+      "isEnabled" : false,
       "label" : "black-friday-sale-seeklogo",
       "opacity" : 0.1448193526023891,
       "position" : "bottomTrailing"
