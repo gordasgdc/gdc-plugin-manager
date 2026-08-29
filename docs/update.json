@@ -1,7 +1,7 @@
 {
-  "version": "1.16.0",
+  "version": "1.19.2",
   "release_date": "2026-08-29",
-  "changes": "9 etape de upgrade v2.0 (cautare fuzzy, resurse download, Aplicatiile Mele, scheduling, harti, filigran sezonier, pachete/bundle-uri) - Mac + Windows. Mac primeste in plus: social links (+LinkedIn) pe toate rubricile, selector tema System/Light/Dark, biblioteca de filigrane sezoniere cu perioada si pozitie.",
+  "changes": "Paritate completa Mac + Windows: iconite sociale colorate (+LinkedIn) pe toate rubricile, selector tema System/Light/Dark, biblioteca de filigrane sezoniere cu perioada, pozitie si intensitate reglabila, setare Marime Text. Fix critic: filigranul nu se incarca (task neatasat corect). Fix formular Furnizor (nu se golea dupa publicare). Fix sidebar la redimensionare rapida.",
   "download_url": {
     "mac": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Mac.zip",
     "windows": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Windows.zip"
