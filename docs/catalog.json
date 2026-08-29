@@ -510,10 +510,6 @@
       "brandName" : "test",
       "description" : "test",
       "id" : "test",
-      "scheduling" : {
-        "endDate" : 809654236.827637,
-        "startDate" : 809653756.827636
-      },
       "url" : "https://gordas.dev/media-flow-monitor/"
     }
   ],
