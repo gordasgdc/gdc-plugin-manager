@@ -1,19 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
-  <g stroke="#FFFFFF" stroke-width="3" fill="none">
-    <path d="M95 85 L95 35 M95 85 L65 60 M95 85 L125 60 M95 85 L55 90 M95 85 L135 90 M95 85 L70 118 M95 85 L120 118"/>
-    <path d="M305 65 L305 25 M305 65 L280 45 M305 65 L330 45 M305 65 L270 70 M305 65 L340 70 M305 65 L285 95 M305 65 L325 95"/>
+  <g fill="none" stroke="#FFFFFF" stroke-width="3">
+    <path d="M200 55 L200 25 M258 70 L280 50 M298 115 L328 105 M298 175 L328 185 M258 220 L280 240 M142 220 L120 240 M102 175 L72 185 M102 115 L72 105 M142 70 L120 50"/>
   </g>
-  <circle cx="95" cy="35" r="4" fill="#FFFFFF"/>
-  <circle cx="305" cy="25" r="4" fill="#FFFFFF"/>
-  <circle cx="125" cy="60" r="3" fill="#FFFFFF"/>
-  <circle cx="330" cy="45" r="3" fill="#FFFFFF"/>
-  <circle cx="55" cy="90" r="3" fill="#FFFFFF"/>
-  <g fill="none" stroke="#FFFFFF" stroke-width="6">
-    <path d="M172 165 L172 300 Q172 322 200 322 Q228 322 228 300 L228 165 Q228 142 200 128 Q172 142 172 165 Z"/>
-    <path d="M188 322 L188 358 M212 322 L212 358 M172 358 L228 358"/>
-  </g>
-  <circle cx="190" cy="215" r="4" fill="#FFFFFF"/>
-  <circle cx="210" cy="248" r="4" fill="#FFFFFF"/>
-  <circle cx="195" cy="280" r="4" fill="#FFFFFF"/>
-  <text x="200" y="105" font-family="Helvetica, Arial" font-size="34" font-weight="900" fill="#FFFFFF" text-anchor="middle">LA MULȚI ANI!</text>
+  <path d="M222 78 L152 205 L194 205 L172 320 L272 175 L218 175 Z" fill="none" stroke="#FFFFFF" stroke-width="7" stroke-linejoin="round"/>
+  <text x="200" y="368" font-family="Helvetica, Arial" font-size="30" font-weight="900" letter-spacing="2" fill="#FFFFFF" text-anchor="middle">FLASH OFFER</text>
 </svg>
