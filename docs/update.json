@@ -1,7 +1,7 @@
 {
   "version": "1.16.0",
   "release_date": "2026-08-29",
-  "changes": "Sectiune noua Audio (Mac + Windows): elemente audio cu link de descarcare/accesare, descriere si copertă opțională, afisate langa LUT/DCTL/OFX/PowerGrade in bara de categorii.",
+  "changes": "9 etape de upgrade v2.0 (cautare fuzzy, resurse download, Aplicatiile Mele, scheduling, harti, filigran sezonier, pachete/bundle-uri) - Mac + Windows. Mac primeste in plus: social links (+LinkedIn) pe toate rubricile, selector tema System/Light/Dark, biblioteca de filigrane sezoniere cu perioada si pozitie.",
   "download_url": {
     "mac": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Mac.zip",
     "windows": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Windows.zip"
