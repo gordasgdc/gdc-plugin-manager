@@ -587,7 +587,7 @@
     {
       "id" : "black-friday",
       "imagePath" : "covers/seasonal/black-friday.svg?v=3d94bbd9",
-      "isEnabled" : true,
+      "isEnabled" : false,
       "label" : "Black Friday",
       "position" : "bottomTrailing"
     }
