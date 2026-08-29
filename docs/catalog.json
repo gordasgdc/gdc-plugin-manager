@@ -578,14 +578,6 @@
   ],
   "seasonalBackgrounds" : [
     {
-      "id" : "black-friday-seeklogo",
-      "imagePath" : "covers/seasonal/black-friday-seeklogo.png?v=3a8a64dc",
-      "isEnabled" : true,
-      "label" : "black-friday-seeklogo",
-      "opacity" : 0.11130799381399319,
-      "position" : "bottomTrailing"
-    },
-    {
       "id" : "black-friday",
       "imagePath" : "covers/seasonal/black-friday.png?v=c657674b",
       "isEnabled" : false,
