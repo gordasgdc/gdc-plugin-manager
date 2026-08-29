@@ -221,6 +221,7 @@
   }
   .cc-badge.free{ color:#4CAF7D; border-color:rgba(76,175,125,.35); }
   .cc-badge.trial{ color:var(--violet-2); border-color:rgba(79,196,214,.35); }
+  .cc-badge.discount{ color:#E85C5C; border-color:rgba(232,92,92,.4); }
   .cc-cta{
     margin-top:auto; padding-top:14px;
     font-family:var(--mono); font-size:12px; font-weight:600;
@@ -579,6 +580,10 @@
     { key: 'partnerStores',        cover: 'square', card: storeCard },
     { key: 'apps',                 cover: 'square', card: appCard },
     { key: 'audioTracks',          cover: 'square', card: audioCard },
+    { key: 'downloadableResources',cover: 'square', card: downloadResourceCard },
+    { key: 'partnerOffers',        cover: 'square', card: offerCard },
+    { key: 'serviceCenters',       cover: 'square', card: serviceCard },
+    { key: 'productBundles',       cover: 'wide',   card: bundleCard },
   ];
 
   // Coperta ca <button> focusabil, sau nimic daca produsul n-are imagine.
@@ -684,6 +689,56 @@
       <h3>${esc(track.name)}</h3>
       <p>${esc(track.description || t('audio.generic'))}</p>
       ${link ? `<a class="cc-cta" href="${esc(link)}" target="_blank" rel="noopener noreferrer">${t('cta.download')}</a>` : ''}
+    </div>`;
+  }
+
+  // [2026-08-29] Cele 4 categorii de mai jos lipseau complet din preview-ul
+  // site-ului — publicate în catalog de câteva "etape" bune, dar nimeni nu
+  // le-a adăugat aici, doar în `app.html`. Găsit direct de Cristi: "pe
+  // pagina de Android, iPhone, nu-mi apar toate rubricile noi".
+  const DOWNLOAD_CATEGORY_LABEL = { lut: 'LUT', sfx: 'SFX', vfx: 'VFX', plugin: 'Plugin' };
+
+  function downloadResourceCard(res) {
+    return `<div class="catalog-card">
+      ${coverHTML(res, 'square')}
+      <div class="cc-top">
+        <span class="cc-type">${esc(DOWNLOAD_CATEGORY_LABEL[res.category] || res.category || '')}</span>
+        ${priceHTML(res)}
+      </div>
+      <h3>${esc(res.name)}</h3>
+      <p>${esc(res.description || '')}</p>
+      <a class="cc-cta" href="#download">${t('cta.getApp')}</a>
+    </div>`;
+  }
+
+  function offerCard(offer) {
+    const link = safeLink(offer.url);
+    return `<div class="catalog-card">
+      ${coverHTML(offer, 'square')}
+      ${offer.discountText ? `<span class="cc-badge discount">${esc(offer.discountText)}</span>` : ''}
+      <h3>${esc(offer.brandName)}</h3>
+      <p>${esc(offer.description || '')}</p>
+      ${link ? `<a class="cc-cta" href="${esc(link)}" target="_blank" rel="noopener noreferrer">${t('cta.visit')}</a>` : ''}
+    </div>`;
+  }
+
+  function serviceCard(center) {
+    const link = safeLink(center.websiteURL);
+    return `<div class="catalog-card">
+      ${coverHTML(center, 'square')}
+      <h3>${esc(center.name)}</h3>
+      <p>${esc(center.specialization || '')}</p>
+      ${link ? `<a class="cc-cta" href="${esc(link)}" target="_blank" rel="noopener noreferrer">${t('cta.visit')}</a>` : ''}
+    </div>`;
+  }
+
+  function bundleCard(bundle) {
+    return `<div class="catalog-card">
+      ${coverHTML(bundle, 'wide')}
+      <h3>${esc(bundle.name)}</h3>
+      <p>${esc(bundle.description || '')}</p>
+      <div class="cc-meta"><span>${Number(bundle.bundlePriceEUR || 0).toFixed(0)} EUR</span></div>
+      <a class="cc-cta" href="#download">${t('cta.getApp')}</a>
     </div>`;
   }
 
@@ -863,6 +918,14 @@
       'cat.apps.lead': 'Celelalte aplicații GDC — unelte mici care rezolvă câte o problemă concretă din fluxul de lucru.',
       'cat.audioTracks.name': 'Audio',
       'cat.audioTracks.lead': 'Fișiere și pachete audio — descarcă direct din pagină.',
+      'cat.downloadableResources.name': 'Resurse Download',
+      'cat.downloadableResources.lead': 'LUT-uri, efecte audio/SFX, VFX/overlay-uri și plugin-uri pentru Premiere, Final Cut sau Resolve — descărcare directă, fără instalare automată.',
+      'cat.partnerOffers.name': 'Oferte Parteneri',
+      'cat.partnerOffers.lead': 'Promoții de la branduri partenere de echipament foto-video — nu produse GDC.',
+      'cat.serviceCenters.name': 'Service & Reparații',
+      'cat.serviceCenters.lead': 'Parteneri de service/reparații pentru drone, camere și optică.',
+      'cat.productBundles.name': 'Pachete',
+      'cat.productBundles.lead': 'Combinații de produse GDC la un preț total avantajos.',
       'badge.free': 'Gratuit', 'badge.trial': 'Probă',
       'card.version': 'versiunea',
       'kind.course': 'Curs', 'kind.book': 'Carte', 'kind.guide': 'Ghid',
@@ -914,6 +977,14 @@
       'cat.apps.lead': 'The other GDC apps — small tools that each solve one concrete workflow problem.',
       'cat.audioTracks.name': 'Audio',
       'cat.audioTracks.lead': 'Audio files and packs — download directly from the page.',
+      'cat.downloadableResources.name': 'Downloadable Resources',
+      'cat.downloadableResources.lead': 'LUTs, audio effects/SFX, VFX/overlays and plugins for Premiere, Final Cut or Resolve — direct download, no automatic install.',
+      'cat.partnerOffers.name': 'Partner Offers',
+      'cat.partnerOffers.lead': 'Promotions from partner photo/video gear brands — not GDC products.',
+      'cat.serviceCenters.name': 'Service & Repair',
+      'cat.serviceCenters.lead': 'Service/repair partners for drones, cameras and optics.',
+      'cat.productBundles.name': 'Bundles',
+      'cat.productBundles.lead': 'GDC product combos at a better total price.',
       'badge.free': 'Free', 'badge.trial': 'Trial',
       'card.version': 'version',
       'kind.course': 'Course', 'kind.book': 'Book', 'kind.guide': 'Guide',
@@ -965,6 +1036,14 @@
       'cat.apps.lead': 'Las demás aplicaciones GDC — herramientas pequeñas que resuelven cada una un problema concreto del flujo de trabajo.',
       'cat.audioTracks.name': 'Audio',
       'cat.audioTracks.lead': 'Archivos y paquetes de audio — descarga directamente desde la página.',
+      'cat.downloadableResources.name': 'Recursos Descargables',
+      'cat.downloadableResources.lead': 'LUTs, efectos de audio/SFX, VFX/overlays y plugins para Premiere, Final Cut o Resolve — descarga directa, sin instalación automática.',
+      'cat.partnerOffers.name': 'Ofertas de Socios',
+      'cat.partnerOffers.lead': 'Promociones de marcas asociadas de equipo foto/video — no son productos GDC.',
+      'cat.serviceCenters.name': 'Servicio y Reparación',
+      'cat.serviceCenters.lead': 'Socios de servicio/reparación para drones, cámaras y óptica.',
+      'cat.productBundles.name': 'Paquetes',
+      'cat.productBundles.lead': 'Combinaciones de productos GDC a un precio total más ventajoso.',
       'badge.free': 'Gratis', 'badge.trial': 'Prueba',
       'card.version': 'versión',
       'kind.course': 'Curso', 'kind.book': 'Libro', 'kind.guide': 'Guía',

@@ -1738,3 +1738,33 @@ reutilizat.
 
 Versiune Furnizor: `1.16.2`→`1.16.3` (PATCH — fix critic).
 **Verificat**: `swift build` — 0 erori.
+
+## [BUG REAL GĂSIT ȘI REPARAT 2026-08-29] Preview-ul de catalog de pe index.html lipsea 4 rubrici noi
+
+**Raportat de Cristi**: "pe pagina de Android, iPhone, nu-mi apar toate
+rubricile noi care le-am adăugat". **Diagnostic real**: două pagini
+diferite servesc conținut de catalog pe `gordas.dev` — `app.html`
+(aplicația interactivă reală, cu tabbar-ul complet) și `index.html`
+(pagina de prezentare/vânzare, cu un preview STATIC de catalog, cod
+separat, propriile funcții `xCard()` + array `CATEGORIES`). `app.html` era
+la zi; `index.html` avea `CATEGORIES` cu doar 7 din 11 colecții —
+`downloadableResources`, `partnerOffers`, `serviceCenters`,
+`productBundles` (toate patru din etapele mai recente) nu fuseseră
+adăugate NICIODATĂ acolo, de la publicarea lor inițială.
+
+**Fix**: 4 funcții noi de card (`downloadResourceCard`, `offerCard`,
+`serviceCard`, `bundleCard`, port 1:1 al stilului celorlalte) + 4 intrări
+noi în `CATEGORIES` + traduceri complete RO/EN/ES (`cat.X.name`/`cat.X.lead`)
++ stil nou `.cc-badge.discount` pentru badge-ul de reducere pe Ofertele
+Parteneri. Verificat DIRECT, nu presupus: rulat local cu `http.server`,
+catalogul live decodat corect, toate 3 categorii noi (Ofertă Parteneri,
+Service & Reparații, Pachete) apar cu numărul real de intrări
+("Partner Offers1", "Service & Repair1", "Bundles1") — a patra
+(`downloadableResources`) nu apare încă DELIBERAT (zero resurse publicate
+în acea categorie momentan — comportamentul corect e s-o ascundă, nu o
+regresie).
+
+**Regulă practică nouă, de reținut**: `index.html` și `app.html` au
+sisteme de randare SEPARATE, care nu se sincronizează automat — orice
+colecție nouă din `Catalog` (Core) trebuie adăugată manual în AMBELE, nu
+doar în `app.html`. `docs/sw.js` CACHE_VERSION v16→v17.
