@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
-  <g fill="none" stroke="#FFFFFF" stroke-width="3">
-    <path d="M200 55 L200 25 M258 70 L280 50 M298 115 L328 105 M298 175 L328 185 M258 220 L280 240 M142 220 L120 240 M102 175 L72 185 M102 115 L72 105 M142 70 L120 50"/>
-  </g>
-  <path d="M222 78 L152 205 L194 205 L172 320 L272 175 L218 175 Z" fill="none" stroke="#FFFFFF" stroke-width="7" stroke-linejoin="round"/>
-  <text x="200" y="368" font-family="Helvetica, Arial" font-size="30" font-weight="900" letter-spacing="2" fill="#FFFFFF" text-anchor="middle">FLASH OFFER</text>
-</svg>

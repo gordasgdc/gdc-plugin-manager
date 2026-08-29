@@ -571,7 +571,7 @@
       }
     }
   ],
-  "seasonalBackground" : "covers/seasonal/background.svg?v=a8a05836",
+  "seasonalBackground" : "covers/seasonal/background.png?v=73d4d6f4",
   "serviceCenters" : [
     {
       "category" : "drone",
