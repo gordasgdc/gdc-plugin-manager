@@ -437,8 +437,21 @@ struct PublishView: View {
             try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Catalog: \(name) \(version)", paths: ["docs/catalog.json", "docs/covers"])
 
             let fileWord = pluginFiles.count > 1 ? "\(pluginFiles.count) fișiere" : "1 fișier"
-            successMessage = "„\(name)” e publicat (\(fileWord)) — apare la clienți la următorul refresh de catalog."
-            loadExistingIfNeeded()
+            let publishedName = name
+            successMessage = "„\(publishedName)” e publicat (\(fileWord)) — apare la clienți la următorul refresh de catalog."
+            if isUpdate {
+                loadExistingIfNeeded()
+            } else {
+                // [2026-08-29, fix real, raportat de Cristi] Formularul
+                // rămânea complet populat după publicare — trebuia să
+                // închidă și să redeschidă aplicația ca să poată adăuga
+                // UN ALT produs nou, fiindcă altfel risca să suprascrie
+                // accidental același ID. La publicarea unui produs NOU
+                // (nu o actualizare), golim formularul automat — mesajul
+                // de succes rămâne vizibil, ca să știe ce tocmai a publicat.
+                clearForm()
+                successMessage = "„\(publishedName)” e publicat (\(fileWord)) — apare la clienți la următorul refresh de catalog. Formularul e gol, poți adăuga alt produs."
+            }
         } catch {
             errorMessage = error.localizedDescription
             log("EROARE: \(error.localizedDescription)")
