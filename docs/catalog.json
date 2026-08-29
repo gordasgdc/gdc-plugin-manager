@@ -582,14 +582,6 @@
       "position" : "bottomTrailing"
     },
     {
-      "id" : "summer",
-      "imagePath" : "covers/seasonal/summer.png?v=b5bc7198",
-      "isEnabled" : true,
-      "label" : "Vară / Vacanță",
-      "opacity" : 0.2,
-      "position" : "bottomTrailing"
-    },
-    {
       "id" : "black-friday-sale-seeklogo",
       "imagePath" : "covers/seasonal/black-friday-sale-seeklogo.png?v=73d4d6f4",
       "isEnabled" : false,
