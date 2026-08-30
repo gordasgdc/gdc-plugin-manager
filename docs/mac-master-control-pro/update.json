@@ -1,7 +1,7 @@
 {
-    "version": "2.0.0",
+    "version": "2.1.0",
     "release_date": "2026-08-30",
-    "changes": "Rebranding: Mac Master Control Pro -> Master Control Studio Pro (nume neutru, pregatit pentru lansarea pe Windows). Doar cosmetic - productID, licentele existente si numele fisierelor raman neschimbate.",
+    "changes": "Buton Activeaza Licenta persistent in Sidebar Footer (badge Pro/Trial apasabil oricand) + Contact WhatsApp in modala de activare, cu mesaj pre-completat (Machine ID).",
     "download_url": {
         "mac": "https://github.com/gordasgdc/mac-master-control-pro/releases/latest/download/MacMasterControlPro-Mac.zip"
     },
