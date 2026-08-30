@@ -51,6 +51,9 @@ let knownGDCApps: [MyAppEntry] = [
     MyAppEntry(id: "media-flow-monitor", name: "MediaFlow Monitor", bundleIdentifier: "com.gdc.mediaflowmonitor",
                iconSymbol: "waveform.path.ecg", tint: .orange,
                versionSource: .updateJSON(url: URL(string: "https://gordas.dev/media-flow-monitor/update.json")!)),
+    MyAppEntry(id: "mac-master-control-pro", name: "Master Control Studio Pro", bundleIdentifier: "com.gordasgdc.macmastercontrolpro",
+               iconSymbol: "gearshape.2", tint: .yellow,
+               versionSource: .githubReleases(repo: "gordasgdc/mac-master-control-pro")),
 ]
 
 /// O scurtătură personalizată către o aplicație aleasă liber de user (ex.
@@ -72,7 +75,7 @@ struct CustomLauncher: Codable, Identifiable, Hashable {
 }
 
 @MainActor
-final class MyAppsStore: ObservableObject {
+final class MyAppsStore: NSObject, ObservableObject {
     static let shared = MyAppsStore()
 
     struct Status {
@@ -87,8 +90,19 @@ final class MyAppsStore: ObservableObject {
 
     private let customLaunchersKey = "gdcpm_custom_launchers"
 
-    private init() {
+    private override init() {
+        super.init()
         loadCustomLaunchers()
+        NSWorkspace.shared.notificationCenter.addObserver(
+            self, selector: #selector(handleAppLaunched),
+            name: NSWorkspace.didLaunchApplicationNotification, object: nil)
+    }
+
+    @objc private func handleAppLaunched(_ note: Notification) {
+        guard let launched = note.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication,
+              let bundleID = launched.bundleIdentifier,
+              knownGDCApps.contains(where: { $0.bundleIdentifier == bundleID }) else { return }
+        refreshAll()
     }
 
     func refreshAll() {
