@@ -1,5 +1,11 @@
 # Changelog — GDC Plugin Manager
 
+## v1.20.0 (2026-08-30) — Iconițe reale + auto-detectare live „Aplicațiile Mele"
+- **Fix real**: Master Control Studio Pro nu apărea în „Aplicațiile Mele" — lipsea din lista hardcodată `knownGDCApps`. Adăugat, plus un listener `NSWorkspace.didLaunchApplicationNotification` care reface lista instant la lansarea oricărei aplicații GDC.
+- **Watcher live pe `/Applications` + `~/Applications`**: o instalare prin `.pkg`/copiere manuală apare acum și fără ca aplicația să fi fost lansată vreodată.
+- **Iconițe REALE**, nu simboluri generice: cardurile din „Aplicații GDC instalate" și „Scurtături personalizate" extrag acum iconița adevărată direct din bundle-ul instalat (`NSWorkspace.icon(forFile:)`) — inclusiv pentru scurtături terțe (DaVinci Resolve, Photoshop, Lightroom etc.). Nu bundle-uim nicio siglă terță în cod (risc de marcă înregistrată) — extragerea se face mereu din aplicația deja instalată pe mașina userului, exact ca Finder.
+- **Adăugare multiplă de scurtături** — `fileImporter` acceptă acum mai multe aplicații deodată, nu doar una.
+
 ## v1.19.14 (2026-08-29) — Ghiduri PDF redesenate + ghid din aplicație completat
 
 - PDF-urile de utilizare (RO/EN/ES) redesenate cu 4 capturi reale ale

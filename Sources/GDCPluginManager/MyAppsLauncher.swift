@@ -83,6 +83,10 @@ final class MyAppsStore: NSObject, ObservableObject {
         var installedVersion: String?
         var latestVersion: String?
         var hasUpdate = false
+        /// Calea bundle-ului instalat — folosita pentru a extrage iconita
+        /// REALA a aplicatiei (NSWorkspace), niciodata un simbol generic
+        /// cand aplicatia chiar exista pe disc.
+        var appPath: String?
     }
 
     @Published private(set) var statuses: [String: Status] = [:]
@@ -90,12 +94,17 @@ final class MyAppsStore: NSObject, ObservableObject {
 
     private let customLaunchersKey = "gdcpm_custom_launchers"
 
+    /// Sursele de fisiere active - tinute vii cat traieste store-ul (retain
+    /// explicit, altfel DispatchSourceFileSystemObject se opreste la deinit).
+    private var directoryWatchers: [DispatchSourceFileSystemObject] = []
+
     private override init() {
         super.init()
         loadCustomLaunchers()
         NSWorkspace.shared.notificationCenter.addObserver(
             self, selector: #selector(handleAppLaunched),
             name: NSWorkspace.didLaunchApplicationNotification, object: nil)
+        watchApplicationsFolders()
     }
 
     @objc private func handleAppLaunched(_ note: Notification) {
@@ -103,6 +112,25 @@ final class MyAppsStore: NSObject, ObservableObject {
               let bundleID = launched.bundleIdentifier,
               knownGDCApps.contains(where: { $0.bundleIdentifier == bundleID }) else { return }
         refreshAll()
+    }
+
+    /// Prinde o instalare (.pkg/copiere manuala) chiar daca aplicatia nu a
+    /// fost inca lansata deloc - `didLaunchApplicationNotification` singur
+    /// nu acopera acest caz. Un DispatchSource pe folderul de nivel 1
+    /// (nu FSEvents recursiv) e suficient si ieftin: orice schimbare in
+    /// `/Applications`/`~/Applications` declanseaza un rescan (doar 4-5
+    /// verificari `urlForApplication`, nu o scanare de disc).
+    private func watchApplicationsFolders() {
+        for path in ["/Applications", NSHomeDirectory() + "/Applications"] {
+            let fd = open(path, O_EVTONLY)
+            guard fd >= 0 else { continue }
+            let source = DispatchSource.makeFileSystemObjectSource(
+                fileDescriptor: fd, eventMask: [.write], queue: .main)
+            source.setEventHandler { [weak self] in self?.refreshAll() }
+            source.setCancelHandler { close(fd) }
+            source.resume()
+            directoryWatchers.append(source)
+        }
     }
 
     func refreshAll() {
@@ -119,12 +147,12 @@ final class MyAppsStore: NSObject, ObservableObject {
         let installedVersion = (try? FileManager.default.attributesOfItem(atPath: appURL.path)) != nil
             ? Bundle(url: appURL)?.infoDictionary?["CFBundleShortVersionString"] as? String
             : nil
-        statuses[app.id] = Status(isInstalled: true, installedVersion: installedVersion)
+        statuses[app.id] = Status(isInstalled: true, installedVersion: installedVersion, appPath: appURL.path)
 
         Task {
             let latest = await fetchLatestVersion(app.versionSource)
             guard let latest else { return }
-            var status = statuses[app.id] ?? Status(isInstalled: true, installedVersion: installedVersion)
+            var status = statuses[app.id] ?? Status(isInstalled: true, installedVersion: installedVersion, appPath: appURL.path)
             status.latestVersion = latest
             if let installedVersion {
                 status.hasUpdate = isNewer(latest, than: installedVersion)
@@ -240,10 +268,11 @@ struct MyAppsGrid: View {
             .padding(16)
         }
         .onAppear { store.refreshAll() }
-        .fileImporter(isPresented: $showAddLauncher, allowedContentTypes: [.application]) { result in
-            guard case .success(let url) = result else { return }
-            let name = url.deletingPathExtension().lastPathComponent
-            store.addCustomLauncher(name: name, appPath: url.path)
+        .fileImporter(isPresented: $showAddLauncher, allowedContentTypes: [.application], allowsMultipleSelection: true) { result in
+            guard case .success(let urls) = result else { return }
+            for url in urls {
+                store.addCustomLauncher(name: url.deletingPathExtension().lastPathComponent, appPath: url.path)
+            }
         }
     }
 }
@@ -255,9 +284,18 @@ private struct MyAppCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
-                Image(systemName: app.iconSymbol)
-                    .font(.system(size: 22))
-                    .foregroundStyle(app.tint)
+                // Iconita REALA a aplicatiei instalate (extrasa din bundle,
+                // niciodata bundle-uita in cod - vezi nota de mai jos despre
+                // marcile inregistrate). Cand nu e instalata, cadem pe
+                // simbolul generic ca fallback vizual.
+                if let path = status.appPath {
+                    Image(nsImage: NSWorkspace.shared.icon(forFile: path))
+                        .resizable().frame(width: 26, height: 26)
+                } else {
+                    Image(systemName: app.iconSymbol)
+                        .font(.system(size: 22))
+                        .foregroundStyle(app.tint)
+                }
                 Spacer()
                 if status.hasUpdate {
                     Text(L.t("myApps.updateAvailable"))
@@ -292,7 +330,14 @@ private struct CustomLauncherCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
-                Image(systemName: "app.badge.checkmark").font(.system(size: 22)).foregroundStyle(.secondary)
+                // Iconita reala a aplicatiei alese (DaVinci Resolve,
+                // Photoshop, Lightroom etc.) - extrasa direct din bundle-ul
+                // deja instalat pe masina userului, exact ca in Finder.
+                // NU bundle-uim siglele oficiale ale acestor aplicatii terte
+                // in cod - sunt marci inregistrate ale Adobe/Blackmagic,
+                // redistribuirea lor fara licenta ar fi risc de trademark.
+                Image(nsImage: NSWorkspace.shared.icon(forFile: launcher.appPath))
+                    .resizable().frame(width: 26, height: 26)
                 Spacer()
                 Button {
                     store.removeCustomLauncher(launcher)

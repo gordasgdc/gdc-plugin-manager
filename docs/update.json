@@ -1,7 +1,7 @@
 {
-  "version": "1.19.14",
-  "release_date": "2026-08-29",
-  "changes": "Mac: ghidurile PDF (RO/EN/ES) redesenate cu capturi reale ale aplicatiei + fix punctele rosu/verde. Ghidul din aplicatie completat cu Panoul de Dependente si Aplicatia mobila. Windows: neschimbat.",
+  "version": "1.20.0",
+  "release_date": "2026-08-30",
+  "changes": "Mac + Windows: iconite REALE (extrase din aplicatia instalata) in Aplicatiile Mele si Scurtaturi, in loc de simboluri generice. Mac: adaugare multipla de scurtaturi + watcher live pe /Applications (detecteaza o instalare noua fara sa astepte prima lansare).",
   "download_url": {
     "mac": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Mac.zip",
     "windows": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Windows.zip"
