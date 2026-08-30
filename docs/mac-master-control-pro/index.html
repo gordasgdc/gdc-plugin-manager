@@ -54,6 +54,9 @@
   .btn-row{ display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
 
   .beta-note{ max-width:640px; margin:20px auto 0; font-size:13px; line-height:1.6; color:var(--faint); }
+  .btn .ver{ opacity:.75; font-weight:400; font-size:11.5px; }
+  .btn.is-secondary-os{ opacity:.72; }
+  .os-note{ font-size:11.5px; color:var(--faint); margin-top:10px; }
 
   section{ padding:48px 0; border-top:1px solid var(--border); }
   section h2{ font-size:24px; font-weight:800; margin-bottom:28px; text-align:center; }
@@ -95,7 +98,11 @@
   <h1>Master Control Studio Pro</h1>
   <p class="tagline">Ultimate System Tuning, Universal Cloud Mount, Media Cache & Future macOS Readiness Panel — un singur panou nativ pentru tot ce faci acum din Terminal.</p>
   <div class="btn-row">
-    <a class="btn btn-primary" href="https://github.com/gordasgdc/mac-master-control-pro/releases/latest/download/MacMasterControlPro-Mac.zip">⬇ Descarcă pentru Mac</a>
+    <a id="btn-mac" class="btn btn-primary" href="https://github.com/gordasgdc/mac-master-control-pro/releases/latest/download/MacMasterControlPro-Mac.zip">⬇ Descarcă pentru Mac <span class="ver" id="ver-mac"></span></a>
+    <a id="btn-win" class="btn btn-primary" href="https://github.com/gordasgdc/mac-master-control-pro-win/releases/latest/download/MacMasterControlProSetup.exe">⬇ Descarcă pentru Windows <span class="ver" id="ver-win"></span></a>
+  </div>
+  <p class="os-note" id="os-note"></p>
+  <div class="btn-row" style="margin-top:10px;">
     <a class="btn btn-ghost" href="#pricing">Vezi licența — 9€</a>
   </div>
   <p class="beta-note">Trial nelimitat: analizele și scanările sunt complet libere. Doar acțiunile care modifică sistemul (curățare, tuning, montare Cloud, eliminare Rosetta) cer licența Lifetime.</p>
@@ -131,6 +138,7 @@
 <section class="wrap">
   <h2>Cerințe</h2>
   <p class="req">macOS 14+ · Apple Silicon sau Intel · pentru Cloud Manager necesită <code>rclone</code> + <code>macFUSE</code> (instalate automat din aplicație)</p>
+  <p class="req" style="margin-top:8px;">Windows 10/11 (x64) · pentru Cloud Manager necesită <code>rclone</code> + <code>WinFSP</code> (instalate automat din aplicație)</p>
 </section>
 
 <footer>
@@ -144,6 +152,46 @@
   <p style="max-width:520px;margin:12px auto 0;">gordas.dev este o platformă administrată de dezvoltatori independenți. Aplicațiile și resursele sunt furnizate ca atare (AS IS), iar susținerea proiectului se bazează pe contribuții opționale de sprijin și donații.</p>
   <div style="margin-top:10px;">© <span id="year"></span> GDC / Cristi Gordas. Toate drepturile rezervate.</div>
 </footer>
-<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+
+// Sincronizare automata cu ultimul release GitHub (Mac + Windows) — nu
+// mai trebuie editat manual numarul de versiune de pe pagina la fiecare
+// lansare. API public, neautentificat (rate-limit generos pt. o pagina
+// statica). Link-urile de download raman oricum `releases/latest/
+// download/...`, care se rezolva automat la binarul curent chiar si daca
+// acest fetch esueaza — degradare eleganta, fara sa strice butoanele.
+async function syncRelease(repo, verElId) {
+  try {
+    const res = await fetch(`https://api.github.com/repos/${repo}/releases/latest`, {
+      headers: { Accept: 'application/vnd.github+json' },
+    });
+    if (!res.ok) return;
+    const data = await res.json();
+    const tag = (data.tag_name || '').replace(/^v/, '');
+    if (tag) document.getElementById(verElId).textContent = `v${tag}`;
+  } catch (e) { /* pagina ramane corecta si fara asta */ }
+}
+syncRelease('gordasgdc/mac-master-control-pro', 'ver-mac');
+syncRelease('gordasgdc/mac-master-control-pro-win', 'ver-win');
+
+// Detectare OS — evidentiaza butonul relevant ca principal, pastreaza
+// pe celalalt vizibil (nu ascuns) pentru descarcare manuala oricand.
+(function () {
+  const ua = navigator.userAgent || '';
+  const isWindows = /Windows/i.test(ua);
+  const isMac = /Macintosh|Mac OS X/i.test(ua);
+  const btnMac = document.getElementById('btn-mac');
+  const btnWin = document.getElementById('btn-win');
+  const note = document.getElementById('os-note');
+  if (isWindows) {
+    btnMac.classList.add('is-secondary-os');
+    note.textContent = 'Am detectat Windows — dacă folosești un Mac, apasă celălalt buton.';
+  } else if (isMac) {
+    btnWin.classList.add('is-secondary-os');
+    note.textContent = 'Am detectat macOS — dacă folosești Windows, apasă celălalt buton.';
+  }
+})();
+</script>
 </body>
 </html>

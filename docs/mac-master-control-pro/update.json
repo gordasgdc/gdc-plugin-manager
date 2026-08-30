@@ -1,7 +1,7 @@
 {
-    "version": "2.1.0",
+    "version": "2.2.0",
     "release_date": "2026-08-30",
-    "changes": "Buton Activeaza Licenta persistent in Sidebar Footer (badge Pro/Trial apasabil oricand) + Contact WhatsApp in modala de activare, cu mesaj pre-completat (Machine ID).",
+    "changes": "Selectie granulara (checkbox-uri per element) in Curatare & RAM, Rosetta Inspector, Tweak-uri Sistem. Nou: Trimite la Cos aplicatiile Intel selectate.",
     "download_url": {
         "mac": "https://github.com/gordasgdc/mac-master-control-pro/releases/latest/download/MacMasterControlPro-Mac.zip"
     },
