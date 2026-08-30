@@ -48,6 +48,11 @@ let gdcStandaloneProducts: [StandaloneProduct] = [
     // clientul lipeste orice string afiseaza `MachineID.Display`/`.display`
     // in campul "ID calculator" de mai jos, indiferent de platforma.
     StandaloneProduct(id: "media-flow-monitor", name: "MediaFlow Monitor"),
+    // Adaugat 2026-08-30 — verificat in LicenseState.swift
+    // (MacMasterControlPro/Sources/MacMasterControlProCore/LicenseState.swift,
+    // constanta macMasterControlProProductID): productID =
+    // "mac-master-control-pro". Donatie de referinta 9€ (Regula 3).
+    StandaloneProduct(id: "mac-master-control-pro", name: "Mac Master Control Pro"),
 ]
 
 struct GenerateSerialView: View {
