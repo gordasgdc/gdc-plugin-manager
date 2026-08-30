@@ -1,7 +1,7 @@
 {
-    "version": "1.0.0",
+    "version": "2.0.0",
     "release_date": "2026-08-30",
-    "changes": "Lansare inițială: tuning Rețea/TCP, Cloud Manager universal (Rclone multi-provider), Curățare & RAM, Tweak-uri Sistem, Rosetta 2 Inspector, Dependency Auto-Installer, temă System/Light/Dark, Mărime Text.",
+    "changes": "Rebranding: Mac Master Control Pro -> Master Control Studio Pro (nume neutru, pregatit pentru lansarea pe Windows). Doar cosmetic - productID, licentele existente si numele fisierelor raman neschimbate.",
     "download_url": {
         "mac": "https://github.com/gordasgdc/mac-master-control-pro/releases/latest/download/MacMasterControlPro-Mac.zip"
     },
