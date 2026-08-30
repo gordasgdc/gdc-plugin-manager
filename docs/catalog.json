@@ -43,6 +43,12 @@
       "youtubeURL" : "https://www.youtube.com/@cristigordas"
     },
     {
+      "id" : "mac-master-control-pro",
+      "name" : "Mac Master Control Pro",
+      "url" : "https://gordas.dev/mac-master-control-pro/",
+      "youtubeURL" : "https://www.youtube.com/@cristigordas"
+    },
+    {
       "id" : "gdc-resolve-encoder",
       "name" : "GDC Resolve Encoder",
       "url" : "https://gordas.dev/gdc-resolve-encoder/",

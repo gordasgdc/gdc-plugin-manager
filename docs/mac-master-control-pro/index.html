@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mac Master Control Pro</title>
+<meta name="description" content="Mac Master Control Pro — tuning sistem, Cloud Manager universal, curățare cache media, Rosetta Inspector. Nativ SwiftUI pentru Apple Silicon.">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* Aceeasi paleta de baza ca gordas.dev, accent amber/cupru propriu
+     brandului (Regula 16 — design Web "Shift", compact, fara gol imens). */
+  :root{
+    --bg:#14161A; --bg-2:#101216; --panel:#1A1D22; --panel-2:#20232A;
+    --border:#2B2F36; --text:#EDEFF2; --muted:#93989F; --faint:#5C6169;
+    --accent:#D98A3D; --accent-ink:#1A1108; --accent-dim:#A9631E;
+    --violet:#C97C2E; --violet-2:#F2B766;
+    --mono:'IBM Plex Mono', ui-monospace, monospace;
+    --sans:'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+  body{
+    background:
+      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(217,138,61,.20), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 100% 10%, rgba(242,183,102,.14), transparent 55%),
+      var(--bg);
+    color:var(--text); font-family:var(--sans); line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{ color:inherit; }
+  img{ display:block; max-width:100%; }
+  .wrap{ max-width:1080px; margin:0 auto; padding:0 24px; }
+  ::selection{ background:var(--accent); color:var(--accent-ink); }
+
+  header{ position:sticky; top:0; z-index:50; background:rgba(20,22,26,.82); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); }
+  .header-inner{ display:flex; align-items:center; justify-content:space-between; padding:14px 24px; max-width:1080px; margin:0 auto; }
+  .brand{ display:flex; align-items:center; gap:10px; font-family:var(--mono); font-weight:700; font-size:15px; }
+  .brand .badge{ width:28px; height:28px; border-radius:8px; background:var(--accent); display:flex; align-items:center; justify-content:center; font-size:15px; }
+  .back-link{ font-size:13px; color:var(--muted); text-decoration:none; }
+  .back-link:hover{ color:var(--text); }
+
+  .hero{ padding:64px 0 44px; text-align:center; }
+  .hero .badge-lg{ width:96px; height:96px; border-radius:22px; margin:0 auto 26px; background:var(--accent); display:flex; align-items:center; justify-content:center; font-size:44px; box-shadow:0 20px 60px rgba(0,0,0,.4); }
+  .hero h1{ font-size:42px; font-weight:800; letter-spacing:-.02em; margin-bottom:14px; }
+  .hero p.tagline{ font-size:17px; color:var(--muted); max-width:600px; margin:0 auto 30px; }
+
+  .btn{ display:inline-flex; align-items:center; gap:8px; font-family:var(--mono); font-size:13.5px; font-weight:600; padding:12px 22px; border-radius:9px; text-decoration:none; white-space:nowrap; }
+  .btn-primary{ background:var(--accent); color:var(--accent-ink); }
+  .btn-primary:hover{ background:var(--violet-2); }
+  .btn-ghost{ border:1px solid var(--border); color:var(--text); }
+  .btn-ghost:hover{ border-color:var(--accent); }
+  .btn-row{ display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
+
+  .beta-note{ max-width:640px; margin:20px auto 0; font-size:13px; line-height:1.6; color:var(--faint); }
+
+  section{ padding:48px 0; border-top:1px solid var(--border); }
+  section h2{ font-size:24px; font-weight:800; margin-bottom:28px; text-align:center; }
+
+  .features{ display:grid; grid-template-columns:repeat(auto-fit, minmax(230px, 1fr)); gap:18px; }
+  .feature{ background:var(--panel); border:1px solid var(--border); border-radius:14px; padding:20px; }
+  .feature .icon{ font-size:24px; margin-bottom:8px; }
+  .feature h3{ font-size:15px; font-weight:700; margin-bottom:6px; }
+  .feature p{ font-size:13px; color:var(--muted); line-height:1.55; }
+
+  .pricing{ max-width:520px; margin:0 auto; background:var(--panel); border:1px solid var(--border); border-radius:18px; padding:32px; text-align:center; }
+  .pricing .price{ font-family:var(--mono); font-size:48px; font-weight:700; color:var(--accent); margin:12px 0 4px; }
+  .pricing .price small{ font-size:15px; color:var(--muted); font-weight:500; }
+  .pricing ul{ list-style:none; text-align:left; margin:22px 0; padding:0; }
+  .pricing li{ font-size:13px; color:var(--muted); padding:5px 0; padding-left:22px; position:relative; }
+  .pricing li::before{ content:"✓"; position:absolute; left:0; color:var(--accent); font-weight:700; }
+  .pricing .promo-note{ margin-top:18px; font-size:12px; line-height:1.6; color:var(--faint); text-align:left; background:var(--panel-2); border-radius:8px; padding:12px 14px; }
+
+  .req{ font-size:13px; color:var(--muted); text-align:center; }
+  .req code{ font-family:var(--mono); background:var(--panel-2); border-radius:4px; padding:1px 6px; }
+
+  footer{ border-top:1px solid var(--border); padding:28px 24px; text-align:center; font-size:12.5px; color:var(--faint); }
+  footer a{ color:var(--muted); text-decoration:none; }
+  footer a:hover{ color:var(--text); }
+  footer .legal{ margin-top:8px; display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="brand"><span class="badge">⚙️</span> Mac Master Control Pro</div>
+    <a class="back-link" href="/">← gordas.dev</a>
+  </div>
+</header>
+
+<div class="hero wrap">
+  <div class="badge-lg">⚙️</div>
+  <h1>Mac Master Control Pro</h1>
+  <p class="tagline">Ultimate System Tuning, Universal Cloud Mount, Media Cache & Future macOS Readiness Panel — un singur panou nativ pentru tot ce faci acum din Terminal.</p>
+  <div class="btn-row">
+    <a class="btn btn-primary" href="https://github.com/gordasgdc/mac-master-control-pro/releases/latest/download/MacMasterControlPro-Mac.zip">⬇ Descarcă pentru Mac</a>
+    <a class="btn btn-ghost" href="#pricing">Vezi licența — 9€</a>
+  </div>
+  <p class="beta-note">Trial nelimitat: analizele și scanările sunt complet libere. Doar acțiunile care modifică sistemul (curățare, tuning, montare Cloud, eliminare Rosetta) cer licența Lifetime.</p>
+</div>
+
+<section class="wrap">
+  <h2>Module</h2>
+  <div class="features">
+    <div class="feature"><div class="icon">🌐</div><h3>Rețea & TCP Tuning</h3><p>Forțare 1 Gbps Full-Duplex, DNS Cloudflare/Google, buffere kernel 1MB, la un click.</p></div>
+    <div class="feature"><div class="icon">☁️</div><h3>Cloud Manager Universal</h3><p>Google Drive, Dropbox, OneDrive, pCloud, Degoo, Mega, S3, WebDAV, SFTP/NAS — montate ca disc pe Desktop, cu Chunker opțional.</p></div>
+    <div class="feature"><div class="icon">🧹</div><h3>Curățare & RAM</h3><p>Cache DaVinci Resolve, Adobe, Xcode DerivedData, Time Machine Snapshots, purjare RAM + flush DNS.</p></div>
+    <div class="feature"><div class="icon">🛠️</div><h3>Tweak-uri Sistem</h3><p>Finder avansat, blocare .DS_Store pe USB/NAS, Touch ID pentru sudo, Spotlight Shield pentru foldere RAW.</p></div>
+    <div class="feature"><div class="icon">🧭</div><h3>Rosetta 2 Inspector</h3><p>Scanează /Applications pentru cod Intel, verifică starea Rosetta, elimină mediul de traducere când nu mai e nevoie.</p></div>
+    <div class="feature"><div class="icon">🧩</div><h3>Dependency Auto-Installer</h3><p>Detectează Homebrew/Rclone/macFUSE și le instalează cu un click, fără Terminal.</p></div>
+  </div>
+</section>
+
+<section class="wrap" id="pricing">
+  <h2>Licență</h2>
+  <div class="pricing">
+    <div>Susținere Lifetime</div>
+    <div class="price">9€ <small>donație unică</small></div>
+    <ul>
+      <li>Toate modulele deblocate definitiv</li>
+      <li>Actualizări gratuite pe viață</li>
+      <li>Licențiat pe Machine ID, sincronizat cu GDC Plugin Manager</li>
+    </ul>
+    <a class="btn btn-primary" href="https://gordas.dev/gdc-plugin-manager/">Donează din GDC Plugin Manager</a>
+    <p class="promo-note">Disponibilă și direct din aplicație (modul „Setări → Licență”), fără să părăsești fereastra.</p>
+  </div>
+</section>
+
+<section class="wrap">
+  <h2>Cerințe</h2>
+  <p class="req">macOS 14+ · Apple Silicon sau Intel · pentru Cloud Manager necesită <code>rclone</code> + <code>macFUSE</code> (instalate automat din aplicație)</p>
+</section>
+
+<footer>
+  <a href="https://github.com/gordasgdc/mac-master-control-pro">GitHub</a> ·
+  <a href="/">Restul aplicațiilor GDC</a>
+  <div class="legal">
+    <a href="https://gordas.dev/termeni">Termeni</a> ·
+    <a href="https://gordas.dev/confidentialitate">Confidențialitate</a> ·
+    <a href="https://gordas.dev/cookie">Cookie-uri</a>
+  </div>
+  <p style="max-width:520px;margin:12px auto 0;">gordas.dev este o platformă administrată de dezvoltatori independenți. Aplicațiile și resursele sunt furnizate ca atare (AS IS), iar susținerea proiectului se bazează pe contribuții opționale de sprijin și donații.</p>
+  <div style="margin-top:10px;">© <span id="year"></span> GDC / Cristi Gordas. Toate drepturile rezervate.</div>
+</footer>
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>
