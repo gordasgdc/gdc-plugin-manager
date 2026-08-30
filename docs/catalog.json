@@ -615,7 +615,7 @@
     {
       "id" : "summer",
       "imagePath" : "covers/seasonal/summer.png?v=41ec55aa",
-      "isEnabled" : true,
+      "isEnabled" : false,
       "label" : "summer",
       "opacity" : 0.2,
       "position" : "bottomTrailing"
@@ -632,5 +632,5 @@
       "websiteURL" : "https://www.tiktok.com/@clinicadronelor"
     }
   ],
-  "updatedAt" : "2026-08-29"
+  "updatedAt" : "2026-08-30"
 }
