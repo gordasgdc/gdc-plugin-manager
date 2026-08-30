@@ -43,6 +43,7 @@
       "youtubeURL" : "https://www.youtube.com/@cristigordas"
     },
     {
+      "coverImage" : "covers/Mac Master Control Pro.png",
       "id" : "mac-master-control-pro",
       "name" : "Mac Master Control Pro",
       "url" : "https://gordas.dev/mac-master-control-pro/",
