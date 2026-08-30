@@ -52,7 +52,10 @@ let gdcStandaloneProducts: [StandaloneProduct] = [
     // (MacMasterControlPro/Sources/MacMasterControlProCore/LicenseState.swift,
     // constanta macMasterControlProProductID): productID =
     // "mac-master-control-pro". Donatie de referinta 9€ (Regula 3).
-    StandaloneProduct(id: "mac-master-control-pro", name: "Mac Master Control Pro"),
+    // Redenumit 2026-08-30: "Mac Master Control Pro" -> "Master Control
+    // Studio Pro" (nume neutru, pregatit pentru lansarea viitoare pe
+    // Windows) - productID ramane neschimbat, doar numele afisat.
+    StandaloneProduct(id: "mac-master-control-pro", name: "Master Control Studio Pro"),
 ]
 
 struct GenerateSerialView: View {
