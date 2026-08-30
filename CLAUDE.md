@@ -565,6 +565,42 @@ Diagnostic permanent, nu print-uri temporare (2026-08-29).**
   aceleiași aplicații (Client + Furnizor, dacă există) — userul trimite UN
   fișier, nu trebuie să știe care componentă a scris eroarea.
 
+**26. Instalare pas-cu-pas (buton roșu/verde per componentă) + Panou
+„Terminal Live” obligatoriu pentru orice comandă externă (2026-08-30).**
+Stabilit după Master Control Studio Pro (Mac + Windows) — două cerințe
+care devin standard pentru orice aplicație GDC nouă sau modificată, de la
+următoarea ei actualizare:
+- **Niciodată un buton „Instalează tot ce lipsește"/instalare în masă
+  fără control explicit.** Orice componentă instalabilă (dependență,
+  pachet, plugin) are propriul buton de acțiune, colorat după stare:
+  **roșu** = neinstalat/apăsabil, **verde** = instalat (dezactivat, doar
+  informativ). Motiv direct de la Cristi: o instalare în masă, silențioasă,
+  a mai multor pachete deodată poate bloca sistemul clientului — pas cu
+  pas, userul vede exact ce se instalează și când.
+- **Panou „Terminal Live" obligatoriu** pentru orice acțiune care rulează
+  o comandă externă (instalare pachet, ștergere fișiere/cache, montare
+  cloud, orice `Shell.run`/`Process.Start` cu potențial de durată sau
+  eșec): un panou tip terminal (fundal închis, text monospace, auto-scroll)
+  afișează LINIE CU LINIE ce se execută și rezultatul — niciodată doar un
+  text static „Se instalează…"/"✔ Gata" fără detalii. Motiv real, găsit
+  2026-08-30: ștergerea de cache pe Windows eșua silențios pe primul fișier
+  blocat (catch înfășura toată bucla, nu fiecare fișier), iar userul nu
+  avea NICIO indicație că ceva nu a mers — cu panoul de-al doilea rând, nu
+  doar bug-ul devine vizibil imediat, ci și comportamentul normal (ce se
+  întâmplă „în fundal") devine transparent pentru client.
+- **Implementare de referință**: `TerminalLogView.swift` (SwiftUI, Mac) +
+  `Controls/TerminalLogView.xaml`/`.cs` (WPF, Windows) — ambele din
+  `MacMasterControlPro`/`MacMasterControlProWin`; `DependenciesModuleView.swift`/
+  `DependenciesPage.xaml.cs` din același repo arată tiparul de buton
+  roșu/verde per element. Portul pe orice altă aplicație GDC (Mac/Windows)
+  cu un flux de instalare/dependențe sau operații pe fișiere/rețea trebuie
+  verificat la fel pentru acest pattern.
+- **Regula 25 (Log de Diagnostic permanent) rămâne complementară, nu
+  înlocuită**: `DiagnosticLog` scrie pe disc pentru diagnosticare de la
+  distanță (Cristi citește fișierul), panoul „Terminal Live" arată userul
+  ÎN TIMP REAL ce se întâmplă, direct în UI — cele două servesc scopuri
+  diferite și rămân ambele obligatorii.
+
 ## [PARTEA 2: SPECIFICAȚII TEHNICE PROIECT]
 
 ## Structura repo-ului
