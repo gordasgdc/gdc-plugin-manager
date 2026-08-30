@@ -1,5 +1,28 @@
 # Changelog — GDC Plugin Manager
 
+## Furnizor v1.17.0 (2026-08-30) — Pricing Manager: prețuri/oferte dinamice fără recompilare
+Cerință directă a lui Cristi: o ofertă de Black Friday necesita până acum
+recompilarea + resemnarea + republicarea FIECĂREI aplicații standalone
+(12 repo-uri) doar ca să schimbi o cifră afișată.
+- **Panou nou „Prețuri & Oferte"** — pentru fiecare aplicație standalone
+  (`gdcStandaloneProducts`): preț de bază editabil + un PROGRAM de ferestre
+  de ofertă, programabile din timp ("1-15 sept: preț X, Black Friday: preț
+  Y, Crăciun: preț Z"), nu doar o singură ofertă on/off. Fiecare fereastră
+  are preț, etichetă, interval de timp, și un comutator opțional „Arată
+  countdown live" (creează urgență — "Se termină în 2z 14h").
+- **„Publică" = `git pull` → scrie `docs/pricing.json` → `commit` + `push`**
+  (reutilizează `GitOps` deja existent) — fără recompilare, live pe toate
+  aplicațiile care citesc `pricing.json` în câteva minute.
+- **`docs/pricing.json`** (nou) — servit static la `https://gordas.dev/pricing.json`,
+  citit de `PricingChecker` (portat identic per aplicație client, după
+  modelul `UpdateChecker`/`update.json`) — **fail-open**: fără conexiune,
+  aplicația folosește prețul hardcodat din cod, niciodată un ecran gol.
+- **Pilot implementat**: DataMover (Mac) — `ActivationSheet` arată prețul
+  efectiv (bază sau ofertă activă) + countdown opțional, iar mesajul
+  WhatsApp pre-completat folosește prețul curent, nu unul fix. Restul
+  aplicațiilor (Windows DataMover + celelalte 10 repo-uri) rămân TODO,
+  documentat ca Regula 27 în CLAUDE.md.
+
 ## v1.20.0 (2026-08-30) — Iconițe reale + auto-detectare live „Aplicațiile Mele"
 - **Fix real**: Master Control Studio Pro nu apărea în „Aplicațiile Mele" — lipsea din lista hardcodată `knownGDCApps`. Adăugat, plus un listener `NSWorkspace.didLaunchApplicationNotification` care reface lista instant la lansarea oricărei aplicații GDC.
 - **Watcher live pe `/Applications` + `~/Applications`**: o instalare prin `.pkg`/copiere manuală apare acum și fără ca aplicația să fi fost lansată vreodată.

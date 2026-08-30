@@ -1,0 +1,11 @@
+{
+  "updatedAt": "2026-08-30",
+  "products": {
+    "gdc-datamover": { "name": "DataMover", "basePrice": 23, "currency": "EUR", "promoSchedule": [] },
+    "cursorpro": { "name": "CursorPro GDC", "basePrice": 9, "currency": "EUR", "promoSchedule": [] },
+    "gdc-vault": { "name": "GDC Vault", "basePrice": 5, "currency": "EUR", "promoSchedule": [] },
+    "cgconvertor": { "name": "CG Convertor", "basePrice": 23, "currency": "EUR", "promoSchedule": [] },
+    "media-flow-monitor": { "name": "MediaFlow Monitor", "basePrice": 23, "currency": "EUR", "promoSchedule": [] },
+    "mac-master-control-pro": { "name": "Master Control Studio Pro", "basePrice": 17, "currency": "EUR", "promoSchedule": [] }
+  }
+}

@@ -17,6 +17,7 @@ enum FurnizorSection: Hashable {
     case partnerOffers
     case bundles
     case seasonalBackground
+    case pricing
 }
 
 struct FurnizorContentView: View {
@@ -34,6 +35,7 @@ struct FurnizorContentView: View {
                 Label("Revocări licențe", systemImage: "xmark.shield").tag(FurnizorSection.revocations)
                 Label("Clienți", systemImage: "person.2").tag(FurnizorSection.salesHistory)
                 Label("Statistici", systemImage: "chart.bar").tag(FurnizorSection.analytics)
+                Label("Prețuri & Oferte", systemImage: "eurosign.circle").tag(FurnizorSection.pricing)
                 Divider()
                 Label("Cursuri", systemImage: "graduationcap").tag(FurnizorSection.courses)
                 Label("Materiale", systemImage: "book").tag(FurnizorSection.educationalResources)
@@ -76,6 +78,8 @@ struct FurnizorContentView: View {
                     SalesHistoryView()
                 case .analytics:
                     AnalyticsView()
+                case .pricing:
+                    PricingManagerView()
                 case .courses:
                     PublishCourseView()
                 case .educationalResources:

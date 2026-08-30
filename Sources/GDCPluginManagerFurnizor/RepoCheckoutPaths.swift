@@ -25,4 +25,11 @@ enum RepoCheckoutPaths {
     static var catalogJSONURL: URL {
         publicCatalogRepo.appendingPathComponent("docs").appendingPathComponent("catalog.json")
     }
+
+    /// Preturi dinamice (2026-08-30) - vezi PricingModel/PricingEditor.
+    /// Fisier separat de catalog.json (produse standalone, nu marketplace),
+    /// dar in acelasi checkout/repo public, servit static prin GitHub Pages.
+    static var pricingJSONURL: URL {
+        publicCatalogRepo.appendingPathComponent("docs").appendingPathComponent("pricing.json")
+    }
 }
