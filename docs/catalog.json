@@ -607,7 +607,7 @@
     {
       "id" : "blackfriday",
       "imagePath" : "covers/seasonal/blackfriday.png?v=243e629a",
-      "isEnabled" : false,
+      "isEnabled" : true,
       "label" : "BlackFriday",
       "opacity" : 0.2,
       "position" : "bottomTrailing"
