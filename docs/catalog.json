@@ -134,6 +134,11 @@
       "externalURL" : "https://blackmagicdesign-emea.zoom.us/webinar/register/WN_9gsd7fYVRVW5mlcap7dsyw#/registration",
       "id" : "New-Users-Davinci",
       "location" : "Online",
+      "scheduling" : {
+        "endDate" : 810433549.820505,
+        "showCountdown" : true,
+        "startDate" : 809828749.820505
+      },
       "title" : "DaVinci Resolve\nfor New Users",
       "youtubeURL" : "https://www.blackmagicdesign.com/event/davinci-resolve-online-seminars"
     },
