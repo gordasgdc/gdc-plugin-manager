@@ -136,6 +136,7 @@
       "location" : "Sighisoara",
       "scheduling" : {
         "endDate" : 812435826.730138,
+        "showCountdown" : true,
         "startDate" : 809671026.730138
       },
       "socialLinks" : {
@@ -480,6 +481,7 @@
       "name" : "bbv",
       "scheduling" : {
         "endDate" : 809658649.238534,
+        "showCountdown" : false,
         "startDate" : 809658229.238534
       }
     }
