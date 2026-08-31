@@ -37,11 +37,17 @@
       ]
     },
     "gdc-vault" : {
-      "basePrice" : 5,
+      "basePrice" : 18,
       "currency" : "EUR",
       "name" : "GDC Vault",
       "promoSchedule" : [
-
+        {
+          "endsAt" : "2026-09-04T05:14:45Z",
+          "label" : "Oferta lansare",
+          "price" : 9,
+          "showCountdown" : true,
+          "startsAt" : "2026-08-31T05:14:45Z"
+        }
       ]
     },
     "mac-master-control-pro" : {
