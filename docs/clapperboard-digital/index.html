@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<script>
+  if (location.hostname === "gordasgdc.github.io") {
+    location.replace("https://gordas.dev/clapperboard-digital/" + location.search + location.hash);
+  }
+</script>
+<title>Clapperboard Digital</title>
+<meta name="description" content="Clachetă digitală pentru platoul de filmare — timecode, proiect, scenă și take, gata de filmat.">
+<meta name="theme-color" content="#0a0a0c">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Clapperboard">
+<script src="./qrcode.min.js"></script>
+<style>
+  :root{
+    --bg:#0a0a0c;
+    --panel:#151517;
+    --panel-2:#1c1c20;
+    --border:#2c2c31;
+    --text:#f0f0f0;
+    --muted:#8a8a92;
+    --yellow:#f5c518;
+    --yellow-ink:#141200;
+    --danger:#e8483c;
+    --led:#ff3b30;
+    --led-glow: rgba(255,59,48,.55);
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  *{ box-sizing:border-box; -webkit-tap-highlight-color: transparent; user-select:none; }
+  button, input, select, textarea{
+    appearance:none; -webkit-appearance:none; -moz-appearance:none;
+    font-family:inherit; color:inherit;
+  }
+  button{ background:none; }
+  html,body{
+    margin:0; padding:0; background:var(--bg); color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    height:100%; overscroll-behavior:none;
+    overflow-y:auto; -webkit-overflow-scrolling:touch;
+  }
+  input, textarea{ user-select:text; }
+
+  .slate{
+    min-height:100vh; min-height:100dvh; display:flex; flex-direction:column;
+    padding: calc(8px + var(--safe-top)) 14px calc(10px + var(--safe-bottom));
+    gap:8px;
+  }
+
+  .topbar{ display:flex; align-items:center; justify-content:space-between; }
+  .brand{ font-size:13px; font-weight:800; letter-spacing:.12em; color:var(--muted); text-transform:uppercase; }
+  .brand .mark{ color:var(--yellow); }
+  .topbar-actions{ display:flex; gap:6px; }
+  .icon-btn{
+    width:38px; height:38px; border-radius:6px; border:1px solid var(--border);
+    background:var(--panel); color:var(--text); font-size:15px;
+    display:flex; align-items:center; justify-content:center; cursor:pointer;
+    transition:background .1s ease;
+  }
+  .icon-btn:active{ background:var(--panel-2); }
+
+  .lang-switch{ display:flex; gap:3px; margin-right:4px; }
+  .lang-btn{
+    min-width:30px; height:38px; padding:0 6px; border-radius:6px; border:1px solid var(--border);
+    background:var(--panel); color:var(--muted); font-size:11px; font-weight:800;
+    letter-spacing:.04em; cursor:pointer; transition:background .1s ease, color .1s ease;
+  }
+  .lang-btn.active{ background:var(--yellow); color:var(--yellow-ink); border-color:var(--yellow); }
+
+  .info-icon-btn{ font-size:19px; font-weight:800; }
+
+  .stripes{
+    height:22px; border-radius:4px; overflow:hidden; background:#0a0a0c;
+  }
+  .stripes svg{ display:block; width:100%; height:100%; }
+
+  .slate-card{
+    flex:0 1 auto; display:flex; flex-direction:column; gap:0;
+    background:#000; border:1px solid var(--border);
+    border-radius:10px; overflow:hidden;
+  }
+
+  .tc-block{ text-align:center; cursor:pointer; background:#000; padding:2.2vh 4vw 1.6vh; position:relative; }
+  .tc-block::before{
+    /* textura fina "dot-matrix", ca pe afisajele LED reale */
+    content:""; position:absolute; inset:0;
+    background-image: radial-gradient(rgba(255,255,255,.05) 1px, transparent 1px);
+    background-size: 4px 4px; pointer-events:none;
+  }
+  .tc-digits{
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size:clamp(34px, 11vw, 80px); font-weight:700; letter-spacing:.02em;
+    color:var(--led); line-height:1; font-variant-numeric:tabular-nums;
+    text-shadow: 0 0 14px var(--led-glow), 0 0 2px var(--led-glow);
+  }
+  .tc-digits .frames{ color:var(--led); }
+  .tc-label{
+    margin-top:8px; font-size:10px; letter-spacing:.2em; color:#6b3330;
+    font-weight:700; text-transform:uppercase;
+  }
+
+  .info-grid{ display:flex; flex-direction:column; background:#f2f0eb; color:#141414; }
+  .info-row{ display:flex; border-top:1px solid #cfccc3; }
+  .info-row:first-child{ border-top:none; }
+  .info-cell{
+    flex:1 1 0; padding:1.3vh 3vw; cursor:pointer; border-left:1px solid #cfccc3;
+    display:flex; flex-direction:column; gap:2px; min-width:0;
+  }
+  .info-cell:first-child{ border-left:none; }
+  .info-cell:active{ background:#e6e3db; }
+  .info-label{
+    font-size:10px; letter-spacing:.14em; font-weight:800; text-transform:uppercase; color:#8a8578;
+  }
+  .info-value{
+    font-size:clamp(14px,3.4vw,19px); font-weight:700; color:#141414;
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  }
+  .info-cell.empty .info-value{ color:#b3ada0; font-weight:600; }
+
+  .action-row{ display:flex; gap:8px; align-items:stretch; }
+  .take-btn{
+    flex:1; min-height:54px; border-radius:6px; border:1px solid var(--border);
+    background:var(--panel); color:var(--text); font-size:14px; font-weight:700;
+    letter-spacing:.06em; cursor:pointer; text-transform:uppercase;
+    transition:background .1s ease;
+  }
+  .take-btn:active{ background:var(--panel-2); }
+  .clap-btn{
+    flex:1.7; min-height:54px; border-radius:6px; border:2px solid var(--yellow-ink);
+    background:var(--yellow); color:var(--yellow-ink); font-size:16px; font-weight:800;
+    letter-spacing:.08em; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;
+    text-transform:uppercase; transition:filter .1s ease;
+  }
+  .clap-btn:active{ filter:brightness(0.92); }
+
+  .exit-hint{ text-align:center; font-size:10.5px; color:var(--muted); padding-top:0; }
+
+  .toast{
+    position:fixed; left:50%; bottom:calc(20px + var(--safe-bottom)); transform:translateX(-50%);
+    background:var(--panel-2); border:1px solid var(--border); color:var(--text);
+    padding:12px 20px; border-radius:100px; font-size:14px; font-weight:600;
+    box-shadow:0 8px 24px rgba(0,0,0,.5); opacity:0; pointer-events:none; transition:opacity .2s ease, transform .2s ease;
+    z-index:90;
+  }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(-4px); }
+
+  .flash{ position:fixed; inset:0; background:#fff; opacity:0; pointer-events:none; z-index:95; transition:opacity .08s ease; }
+  .flash.on{ opacity:.9; }
+
+  .overlay{
+    position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:60;
+    display:flex; align-items:flex-end; justify-content:center;
+    opacity:0; pointer-events:none; transition:opacity .18s ease;
+  }
+  .overlay.open{ opacity:1; pointer-events:auto; }
+  .sheet{
+    width:100%; max-width:520px; background:var(--panel); border-radius:20px 20px 0 0;
+    border:1px solid var(--border); border-bottom:none;
+    max-height:88vh; overflow-y:auto;
+    padding: 16px 18px calc(20px + var(--safe-bottom));
+    transform:translateY(20px); transition:transform .18s ease;
+  }
+  .overlay.open .sheet{ transform:translateY(0); }
+  .sheet-header{ display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+  .sheet-header h2{ margin:0; font-size:16px; }
+
+  .field{ display:flex; flex-direction:column; gap:6px; margin-bottom:12px; }
+  .field label{ font-size:12.5px; color:var(--muted); font-weight:700; }
+  .field input, .field select{
+    background:var(--panel-2); border:1px solid var(--border); border-radius:10px;
+    color:var(--text); font-size:16px; padding:12px; min-height:44px;
+  }
+  .field-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+  .field-grid input{ text-align:center; font-variant-numeric:tabular-nums; }
+
+  .sheet-actions{ display:flex; gap:10px; margin-top:12px; }
+  .sheet-btn{
+    flex:1; min-height:48px; border-radius:12px; border:1px solid var(--border);
+    background:var(--panel-2); color:var(--text); font-size:14px; font-weight:700; cursor:pointer;
+  }
+  .sheet-btn.primary{ background:var(--yellow); color:var(--yellow-ink); border:none; }
+  .sheet-btn.danger{ color:var(--danger); }
+
+  .history-list{ display:flex; flex-direction:column; gap:8px; margin-bottom:12px; max-height:50vh; overflow-y:auto; }
+  .history-item{
+    background:var(--panel-2); border:1px solid var(--border); border-radius:12px;
+    padding:11px 13px; display:flex; align-items:center; justify-content:space-between; gap:10px; cursor:pointer;
+  }
+  .history-item .info strong{ display:block; font-size:14px; }
+  .history-item .info span{ display:block; font-size:11.5px; color:var(--muted); margin-top:2px; font-variant-numeric:tabular-nums; }
+  .history-item .badge{ background:var(--panel); color:var(--yellow); font-weight:800; font-size:12px; padding:4px 9px; border-radius:100px; flex:none; }
+  .history-empty{ text-align:center; color:var(--muted); padding:30px 10px; font-size:13.5px; }
+
+  .qr-wrap{ display:flex; flex-direction:column; align-items:center; gap:10px; padding:6px 0 10px; }
+  .qr-wrap #qr-canvas{ background:#fff; border-radius:10px; padding:10px; width:230px; height:230px; display:flex; align-items:center; justify-content:center; }
+  .qr-wrap #qr-canvas svg{ width:100%; height:100%; display:block; }
+  .qr-wrap p{ margin:0; font-size:12px; color:var(--muted); text-align:center; }
+
+  .guide-sheet{ max-width:560px; }
+  .guide-intro{ font-size:13px; color:var(--muted); margin:0 0 16px; line-height:1.5; }
+  .guide-content{ display:flex; flex-direction:column; gap:16px; }
+  .guide-step{ display:flex; gap:12px; }
+  .guide-num{
+    flex:none; width:26px; height:26px; border-radius:50%; background:var(--yellow); color:var(--yellow-ink);
+    font-weight:800; font-size:13px; display:flex; align-items:center; justify-content:center; margin-top:1px;
+  }
+  .guide-step h3{ margin:0 0 4px; font-size:14.5px; }
+  .guide-step p{ margin:0; font-size:13px; color:var(--muted); line-height:1.55; }
+  .guide-divider{ border:none; border-top:1px solid var(--border); margin:18px 0; }
+  .guide-footer{ font-size:12px; color:var(--muted); text-align:center; margin-top:16px; }
+
+  .install-banner{
+    position:fixed; left:16px; right:16px; bottom:calc(16px + var(--safe-bottom));
+    background:var(--panel-2); border:1px solid var(--border); border-radius:14px;
+    padding:14px 16px; display:flex; align-items:center; gap:12px; z-index:55;
+    box-shadow:0 10px 30px rgba(0,0,0,.4);
+    transform:translateY(150%); transition:transform .25s ease;
+  }
+  .install-banner.show{ transform:translateY(0); }
+  .install-banner p{ margin:0; font-size:13px; flex:1; }
+  .install-banner button{ border:none; border-radius:10px; padding:10px 14px; font-weight:700; font-size:13px; cursor:pointer; }
+  .install-banner .install-yes{ background:var(--yellow); color:var(--yellow-ink); }
+  .install-banner .install-no{ background:transparent; color:var(--muted); }
+
+  .hidden{ display:none !important; }
+
+  @media (max-height: 640px){
+    .exit-hint{ display:none; }
+    .tc-block{ padding:1.4vh 4vw 1vh; }
+    .tc-digits{ font-size:clamp(30px, 10vw, 64px); }
+    .info-cell{ padding:1vh 3vw; }
+  }
+
+  @media (max-width: 340px){
+    .field-grid{ gap:6px; }
+    .clap-btn{ font-size:14px; }
+    .take-btn{ font-size:12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="flash" id="flash"></div>
+
+<div class="slate" id="slate">
+  <div class="topbar">
+    <div class="brand"><span class="mark">🎬</span> CLAPPERBOARD DIGITAL</div>
+    <div class="topbar-actions">
+      <div class="lang-switch" id="lang-switch" role="group" aria-label="Limbă">
+        <button class="lang-btn" data-lang="ro">RO</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+        <button class="lang-btn" data-lang="es">ES</button>
+      </div>
+      <button class="icon-btn" id="qr-btn" data-i18n-title="title_qr" title="Cod QR">▦</button>
+      <button class="icon-btn" id="history-btn" data-i18n-title="title_history" title="Istoric (h)">📜</button>
+      <button class="icon-btn" id="export-btn" data-i18n-title="title_export" title="Exportă metadate">⤓</button>
+      <button class="icon-btn" id="edit-btn" data-i18n-title="title_edit" title="Editează">✏️</button>
+      <button class="icon-btn" id="fullscreen-btn" data-i18n-title="title_fullscreen" title="Ecran complet (f)">⛶</button>
+      <button class="icon-btn info-icon-btn" id="guide-btn" data-i18n-title="title_guide" title="Ghid de utilizare">ⓘ</button>
+    </div>
+  </div>
+
+  <div class="slate-card">
+    <div class="tc-block" id="tc-block">
+      <div class="tc-digits" id="tc-digits">00:00:00<span class="frames">:00</span></div>
+      <div class="tc-label" data-i18n="tc_label">TIMECODE — atinge pentru a seta manual</div>
+    </div>
+
+    <div class="stripes" id="stripes"></div>
+
+    <div class="info-grid">
+      <div class="info-row">
+        <div class="info-cell" id="row-camera"><span class="info-label" data-i18n="label_camera">Cameră</span><span class="info-value" id="disp-camera">—</span></div>
+        <div class="info-cell" id="row-scene"><span class="info-label" data-i18n="label_scene">Scenă</span><span class="info-value" id="disp-scene">—</span></div>
+        <div class="info-cell" id="row-take"><span class="info-label" data-i18n="label_take">Take</span><span class="info-value" id="disp-take">1</span></div>
+      </div>
+      <div class="info-row">
+        <div class="info-cell" id="row-project"><span class="info-label" data-i18n="label_project">Proiect</span><span class="info-value" id="disp-project">Atinge pentru a completa</span></div>
+      </div>
+      <div class="info-row">
+        <div class="info-cell" id="row-director"><span class="info-label" data-i18n="label_director">Regizor</span><span class="info-value" id="disp-director">—</span></div>
+        <div class="info-cell" id="row-notes"><span class="info-label" data-i18n="label_notes">Notițe</span><span class="info-value" id="disp-notes">—</span></div>
+      </div>
+      <div class="info-row">
+        <div class="info-cell"><span class="info-label" data-i18n="label_date">Dată</span><span class="info-value" id="disp-date">—</span></div>
+        <div class="info-cell"><span class="info-label" data-i18n="label_time">Ora</span><span class="info-value" id="disp-clock">—</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="action-row">
+    <button class="take-btn" id="take-minus" data-i18n="btn_take_minus">Take −</button>
+    <button class="take-btn" id="take-plus" data-i18n="btn_take_plus">Take +</button>
+    <button class="clap-btn" id="clap-btn" data-i18n="btn_clap">Clap</button>
+  </div>
+
+  <div class="exit-hint" data-i18n="exit_hint">Apasă ESC sau atinge ecranul pentru a ieși din ecran complet</div>
+</div>
+
+<div class="overlay" id="edit-overlay">
+  <div class="sheet">
+    <div class="sheet-header"><h2 data-i18n="edit_title">✏️ Editează informațiile</h2><button class="icon-btn" id="close-edit-btn">✕</button></div>
+    <div class="field"><label data-i18n="edit_label_project">📁 Proiect</label><input id="f-project" type="text" data-i18n-placeholder="ph_project" placeholder="Nunta Ana &amp; Mihai"></div>
+    <div class="field"><label data-i18n="edit_label_scene">🎬 Scenă</label><input id="f-scene" type="text" placeholder="12A"></div>
+    <div class="field"><label data-i18n="edit_label_director">🎤 Regizor</label><input id="f-director" type="text" data-i18n-placeholder="ph_director" placeholder="Cristi Gordas"></div>
+    <div class="field"><label data-i18n="edit_label_camera">🎥 Cameră</label><input id="f-camera" type="text" placeholder="Sony FX6"></div>
+    <div class="field"><label data-i18n="edit_label_notes">📝 Notițe</label><input id="f-notes" type="text" data-i18n-placeholder="ph_notes" placeholder="Stabilizator activat"></div>
+    <div class="sheet-actions">
+      <button class="sheet-btn danger" id="reset-fields-btn" data-i18n="btn_reset">🔄 Resetează</button>
+      <button class="sheet-btn primary" id="save-fields-btn" data-i18n="btn_save">Salvează</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="tc-overlay">
+  <div class="sheet">
+    <div class="sheet-header"><h2 data-i18n="tc_sheet_title">⏱ Setează timecode</h2><button class="icon-btn" id="close-tc-btn">✕</button></div>
+    <div class="field-grid">
+      <div class="field"><label>HH</label><input id="tc-hh" type="number" min="0" max="23" inputmode="numeric"></div>
+      <div class="field"><label>MM</label><input id="tc-mm" type="number" min="0" max="59" inputmode="numeric"></div>
+      <div class="field"><label>SS</label><input id="tc-ss" type="number" min="0" max="59" inputmode="numeric"></div>
+      <div class="field"><label>FF</label><input id="tc-ff" type="number" min="0" max="29" inputmode="numeric"></div>
+    </div>
+    <div class="field">
+      <label data-i18n="tc_label_fps">Cadre pe secundă (fps)</label>
+      <select id="tc-fps">
+        <option value="24">24</option>
+        <option value="25">25</option>
+        <option value="30">30</option>
+      </select>
+    </div>
+    <div class="sheet-actions">
+      <button class="sheet-btn" id="tc-sync-now-btn" data-i18n="btn_tc_sync">🔄 Sincronizează cu ora sistemului</button>
+      <button class="sheet-btn primary" id="tc-save-btn" data-i18n="btn_save">Salvează</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="history-overlay">
+  <div class="sheet">
+    <div class="sheet-header"><h2 data-i18n="history_title">📜 Istoric take-uri</h2><button class="icon-btn" id="close-history-btn">✕</button></div>
+    <div class="history-list" id="history-list"></div>
+    <div class="sheet-actions">
+      <button class="sheet-btn danger" id="clear-history-btn" style="width:100%;" data-i18n="btn_clear_history">🗑 Șterge istoricul</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="qr-overlay">
+  <div class="sheet">
+    <div class="sheet-header"><h2 data-i18n="qr_title">▦ Cod QR</h2><button class="icon-btn" id="close-qr-btn">✕</button></div>
+    <div class="qr-wrap">
+      <div id="qr-canvas"></div>
+      <p data-i18n="qr_hint">Scanează pentru proiect, scenă, take și timecode</p>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="export-overlay">
+  <div class="sheet">
+    <div class="sheet-header"><h2 data-i18n="export_title">⤓ Exportă metadate</h2><button class="icon-btn" id="close-export-btn">✕</button></div>
+    <p style="font-size:13px; color:var(--muted); margin-top:0;" data-i18n="export_desc">
+      Exportă toate take-urile înregistrate ca fișier pentru montaj sau import parțial în DaVinci Resolve.
+      Coloana <strong>File Name</strong> rămâne goală — completeaz-o manual cu numele fișierelor după ingest,
+      apoi folosește <em>Media Pool → Metadata → Import</em> în Resolve.
+    </p>
+    <div class="sheet-actions">
+      <button class="sheet-btn" id="export-csv-btn" data-i18n="btn_export_csv">📄 CSV (Resolve)</button>
+      <button class="sheet-btn" id="export-json-btn" data-i18n="btn_export_json">🧾 JSON</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="guide-overlay">
+  <div class="sheet guide-sheet">
+    <div class="sheet-header"><h2 data-i18n="guide_title">ⓘ Ghid de utilizare</h2><button class="icon-btn" id="close-guide-btn">✕</button></div>
+    <p class="guide-intro" data-i18n="guide_intro">Clapperboard Digital înlocuiește clapeta clasică — completezi informațiile filmării, filmezi ecranul la începutul clipului, apoi editorul se orientează după el în montaj.</p>
+    <div class="guide-content">
+      <div class="guide-step">
+        <div class="guide-num">1</div>
+        <div><h3 data-i18n="guide_s1_title">Completează informațiile</h3>
+        <p data-i18n="guide_s1_desc">Atinge Proiect, Scenă, Cameră, Regizor sau Notițe (sau butonul ✏️) ca să deschizi formularul de editare. Take se schimbă separat, din TAKE − / TAKE +.</p></div>
+      </div>
+      <div class="guide-step">
+        <div class="guide-num">2</div>
+        <div><h3 data-i18n="guide_s2_title">Timecode</h3>
+        <p data-i18n="guide_s2_desc">Cifrele roșii de sus urmăresc ora sistemului. Atinge-le ca să setezi manual o valoare (HH/MM/SS/FF + fps) sau ca să resincronizezi cu ora sistemului.</p></div>
+      </div>
+      <div class="guide-step">
+        <div class="guide-num">3</div>
+        <div><h3 data-i18n="guide_s3_title">Butonul CLAP</h3>
+        <p data-i18n="guide_s3_desc">Înregistrează take-ul curent în istoric, redă un sunet scurt și ascuțit — gândit special ca vârf clar în forma de undă, pentru sincronizare precisă în montaj — și avansează automat la take-ul următor.</p></div>
+      </div>
+      <div class="guide-step">
+        <div class="guide-num">4</div>
+        <div><h3 data-i18n="guide_s4_title">Ecran complet</h3>
+        <p data-i18n="guide_s4_desc">Butonul ⛶ (sau tasta F) elimină bara de sus și butoanele — util exact în momentul filmării ecranului. Atinge ecranul sau apasă ESC ca să ieși.</p></div>
+      </div>
+      <div class="guide-step">
+        <div class="guide-num">5</div>
+        <div><h3 data-i18n="guide_s5_title">Cod QR</h3>
+        <p data-i18n="guide_s5_desc">Butonul ▦ arată un cod QR cu proiect, scenă, take și timecode — util dacă vrei să transferi datele rapid către alt dispozitiv sau aplicație, fără să retastezi.</p></div>
+      </div>
+      <div class="guide-step">
+        <div class="guide-num">6</div>
+        <div><h3 data-i18n="guide_s6_title">Istoric</h3>
+        <p data-i18n="guide_s6_desc">Butonul 📜 arată toate take-urile înregistrate cu CLAP. Atingi un rând ca să reîncarci acele informații (util dacă revii la o scenă anterioară).</p></div>
+      </div>
+      <div class="guide-step">
+        <div class="guide-num">7</div>
+        <div><h3 data-i18n="guide_s7_title">Export</h3>
+        <p data-i18n="guide_s7_desc">Butonul ⤓ exportă tot istoricul ca CSV (gata pentru Media Pool → Metadata → Import în DaVinci Resolve) sau JSON.</p></div>
+      </div>
+      <div class="guide-step">
+        <div class="guide-num">8</div>
+        <div><h3 data-i18n="guide_s8_title">Limbă</h3>
+        <p data-i18n="guide_s8_desc">RO / EN / ES, sus în stânga iconițelor. Alegerea rămâne salvată pe acest dispozitiv.</p></div>
+      </div>
+      <div class="guide-step">
+        <div class="guide-num">9</div>
+        <div><h3 data-i18n="guide_s9_title">Instalare pe tabletă</h3>
+        <p data-i18n="guide_s9_desc">Adaugă pagina pe ecranul de pornire (bannerul de jos, sau meniul browserului → „Adaugă pe ecranul de pornire") — pornește ca o aplicație reală, fără bara browserului.</p></div>
+      </div>
+      <div class="guide-step">
+        <div class="guide-num">10</div>
+        <div><h3 data-i18n="guide_s10_title">Datele tale rămân pe acest dispozitiv</h3>
+        <p data-i18n="guide_s10_desc">Nu există server, nici cont. Istoricul și informațiile completate se salvează doar local, în acest browser — fiecare tabletă are datele ei, complet separate.</p></div>
+      </div>
+    </div>
+    <hr class="guide-divider">
+    <p class="guide-footer" data-i18n="guide_footer">Clapperboard Digital · gratuit și open-source (MIT)</p>
+  </div>
+</div>
+
+<div class="install-banner" id="install-banner">
+  <p data-i18n="install_text">📲 Adaugă Clapperboard Digital pe ecranul de pornire pentru acces instant, fără bara de browser.</p>
+  <button class="install-yes" id="install-yes-btn" data-i18n="install_yes">Instalează</button>
+  <button class="install-no" id="install-no-btn">✕</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  const LANG_KEY = "clapperboard_lang";
+  const TRANSLATIONS = {
+    ro: {
+      title_qr: "Cod QR", title_history: "Istoric (h)", title_export: "Exportă metadate",
+      title_edit: "Editează", title_fullscreen: "Ecran complet (f)", title_guide: "Ghid de utilizare",
+      tc_label: "TIMECODE — atinge pentru a seta manual",
+      label_camera: "Cameră", label_scene: "Scenă", label_take: "Take", label_project: "Proiect",
+      label_director: "Regizor", label_notes: "Notițe", label_date: "Dată", label_time: "Ora",
+      project_placeholder_display: "Atinge pentru a completa",
+      btn_take_minus: "Take −", btn_take_plus: "Take +", btn_clap: "Clap",
+      exit_hint: "Apasă ESC sau atinge ecranul pentru a ieși din ecran complet",
+      edit_title: "✏️ Editează informațiile",
+      edit_label_project: "📁 Proiect", edit_label_scene: "🎬 Scenă", edit_label_director: "🎤 Regizor",
+      edit_label_camera: "🎥 Cameră", edit_label_notes: "📝 Notițe",
+      ph_project: "Nunta Ana & Mihai", ph_director: "Cristi Gordas", ph_notes: "Stabilizator activat",
+      btn_reset: "🔄 Resetează", btn_save: "Salvează",
+      tc_sheet_title: "⏱ Setează timecode", tc_label_fps: "Cadre pe secundă (fps)",
+      btn_tc_sync: "🔄 Sincronizează cu ora sistemului",
+      history_title: "📜 Istoric take-uri", btn_clear_history: "🗑 Șterge istoricul",
+      history_empty: "Niciun take înregistrat încă.<br>Apasă CLAP pentru a începe.",
+      history_take: "Take {n}",
+      qr_title: "▦ Cod QR", qr_hint: "Scanează pentru proiect, scenă, take și timecode",
+      export_title: "⤓ Exportă metadate",
+      export_desc: "Exportă toate take-urile înregistrate ca fișier pentru montaj sau import parțial în DaVinci Resolve. Coloana <strong>File Name</strong> rămâne goală — completeaz-o manual cu numele fișierelor după ingest, apoi folosește <em>Media Pool → Metadata → Import</em> în Resolve.",
+      btn_export_csv: "📄 CSV (Resolve)", btn_export_json: "🧾 JSON",
+      install_text: "📲 Adaugă Clapperboard Digital pe ecranul de pornire pentru acces instant, fără bara de browser.",
+      install_yes: "Instalează",
+      toast_project_needed: "Completează proiectul înainte de CLAP (✏️)",
+      toast_take_recorded: "Take {take} înregistrat — {timecode}",
+      toast_saved: "Salvat",
+      confirm_reset_fields: "Resetezi toate câmpurile?",
+      toast_fields_reset: "Câmpuri resetate",
+      toast_tc_set: "Timecode setat",
+      toast_tc_synced: "Sincronizat cu ora sistemului",
+      confirm_clear_history: "Ștergi tot istoricul de take-uri? Acțiunea nu poate fi anulată.",
+      toast_history_cleared: "Istoric șters",
+      toast_history_loaded: "Detalii încărcate din istoric",
+      toast_nothing_to_export: "Niciun take de exportat",
+      toast_csv_exported: "CSV exportat", toast_json_exported: "JSON exportat",
+      guide_title: "ⓘ Ghid de utilizare",
+      guide_intro: "Clapperboard Digital înlocuiește clapeta clasică — completezi informațiile filmării, filmezi ecranul la începutul clipului, apoi editorul se orientează după el în montaj.",
+      guide_s1_title: "Completează informațiile",
+      guide_s1_desc: "Atinge Proiect, Scenă, Cameră, Regizor sau Notițe (sau butonul ✏️) ca să deschizi formularul de editare. Take se schimbă separat, din TAKE − / TAKE +.",
+      guide_s2_title: "Timecode",
+      guide_s2_desc: "Cifrele roșii de sus urmăresc ora sistemului. Atinge-le ca să setezi manual o valoare (HH/MM/SS/FF + fps) sau ca să resincronizezi cu ora sistemului.",
+      guide_s3_title: "Butonul CLAP",
+      guide_s3_desc: "Înregistrează take-ul curent în istoric, redă un sunet scurt și ascuțit — gândit special ca vârf clar în forma de undă, pentru sincronizare precisă în montaj — și avansează automat la take-ul următor.",
+      guide_s4_title: "Ecran complet",
+      guide_s4_desc: "Butonul ⛶ (sau tasta F) elimină bara de sus și butoanele — util exact în momentul filmării ecranului. Atinge ecranul sau apasă ESC ca să ieși.",
+      guide_s5_title: "Cod QR",
+      guide_s5_desc: "Butonul ▦ arată un cod QR cu proiect, scenă, take și timecode — util dacă vrei să transferi datele rapid către alt dispozitiv sau aplicație, fără să retastezi.",
+      guide_s6_title: "Istoric",
+      guide_s6_desc: "Butonul 📜 arată toate take-urile înregistrate cu CLAP. Atingi un rând ca să reîncarci acele informații (util dacă revii la o scenă anterioară).",
+      guide_s7_title: "Export",
+      guide_s7_desc: "Butonul ⤓ exportă tot istoricul ca CSV (gata pentru Media Pool → Metadata → Import în DaVinci Resolve) sau JSON.",
+      guide_s8_title: "Limbă",
+      guide_s8_desc: "RO / EN / ES, sus în stânga iconițelor. Alegerea rămâne salvată pe acest dispozitiv.",
+      guide_s9_title: "Instalare pe tabletă",
+      guide_s9_desc: "Adaugă pagina pe ecranul de pornire (bannerul de jos, sau meniul browserului → „Adaugă pe ecranul de pornire\") — pornește ca o aplicație reală, fără bara browserului.",
+      guide_s10_title: "Datele tale rămân pe acest dispozitiv",
+      guide_s10_desc: "Nu există server, nici cont. Istoricul și informațiile completate se salvează doar local, în acest browser — fiecare tabletă are datele ei, complet separate.",
+      guide_footer: "Clapperboard Digital · gratuit și open-source (MIT)",
+    },
+    en: {
+      title_qr: "QR code", title_history: "History (h)", title_export: "Export metadata",
+      title_edit: "Edit", title_fullscreen: "Fullscreen (f)", title_guide: "User guide",
+      tc_label: "TIMECODE — tap to set manually",
+      label_camera: "Camera", label_scene: "Scene", label_take: "Take", label_project: "Project",
+      label_director: "Director", label_notes: "Notes", label_date: "Date", label_time: "Time",
+      project_placeholder_display: "Tap to fill in",
+      btn_take_minus: "Take −", btn_take_plus: "Take +", btn_clap: "Clap",
+      exit_hint: "Press ESC or tap the screen to exit fullscreen",
+      edit_title: "✏️ Edit information",
+      edit_label_project: "📁 Project", edit_label_scene: "🎬 Scene", edit_label_director: "🎤 Director",
+      edit_label_camera: "🎥 Camera", edit_label_notes: "📝 Notes",
+      ph_project: "Ana & Mike's Wedding", ph_director: "Cristi Gordas", ph_notes: "Stabilizer on",
+      btn_reset: "🔄 Reset", btn_save: "Save",
+      tc_sheet_title: "⏱ Set timecode", tc_label_fps: "Frames per second (fps)",
+      btn_tc_sync: "🔄 Sync to system clock",
+      history_title: "📜 Take history", btn_clear_history: "🗑 Clear history",
+      history_empty: "No takes recorded yet.<br>Tap CLAP to start.",
+      history_take: "Take {n}",
+      qr_title: "▦ QR code", qr_hint: "Scan for project, scene, take and timecode",
+      export_title: "⤓ Export metadata",
+      export_desc: "Exports all recorded takes as a file for editing or partial import into DaVinci Resolve. The <strong>File Name</strong> column stays empty — fill it in manually with the file names after ingest, then use <em>Media Pool → Metadata → Import</em> in Resolve.",
+      btn_export_csv: "📄 CSV (Resolve)", btn_export_json: "🧾 JSON",
+      install_text: "📲 Add Clapperboard Digital to your home screen for instant access, no browser bar.",
+      install_yes: "Install",
+      toast_project_needed: "Fill in the project before CLAP (✏️)",
+      toast_take_recorded: "Take {take} recorded — {timecode}",
+      toast_saved: "Saved",
+      confirm_reset_fields: "Reset all fields?",
+      toast_fields_reset: "Fields reset",
+      toast_tc_set: "Timecode set",
+      toast_tc_synced: "Synced to system clock",
+      confirm_clear_history: "Clear the entire take history? This can't be undone.",
+      toast_history_cleared: "History cleared",
+      toast_history_loaded: "Details loaded from history",
+      toast_nothing_to_export: "No takes to export",
+      toast_csv_exported: "CSV exported", toast_json_exported: "JSON exported",
+      guide_title: "ⓘ User guide",
+      guide_intro: "Clapperboard Digital replaces the classic clapperboard — fill in the shoot's info, film the screen at the start of the clip, and the editor will sync to it in post.",
+      guide_s1_title: "Fill in the information",
+      guide_s1_desc: "Tap Project, Scene, Camera, Director or Notes (or the ✏️ button) to open the edit form. Take changes separately, from TAKE − / TAKE +.",
+      guide_s2_title: "Timecode",
+      guide_s2_desc: "The red digits at the top follow the system clock. Tap them to set a value manually (HH/MM/SS/FF + fps) or to resync with the system clock.",
+      guide_s3_title: "The CLAP button",
+      guide_s3_desc: "Records the current take in history, plays a short, sharp sound — designed specifically as a clear spike in the waveform, for precise sync in post — and automatically advances to the next take.",
+      guide_s4_title: "Fullscreen",
+      guide_s4_desc: "The ⛶ button (or the F key) removes the top bar and buttons — useful right when filming the screen. Tap the screen or press ESC to exit.",
+      guide_s5_title: "QR code",
+      guide_s5_desc: "The ▦ button shows a QR code with project, scene, take and timecode — handy if you want to transfer the data quickly to another device or app, without retyping.",
+      guide_s6_title: "History",
+      guide_s6_desc: "The 📜 button shows all takes recorded with CLAP. Tap a row to reload that information (useful if you go back to an earlier scene).",
+      guide_s7_title: "Export",
+      guide_s7_desc: "The ⤓ button exports the entire history as CSV (ready for Media Pool → Metadata → Import in DaVinci Resolve) or JSON.",
+      guide_s8_title: "Language",
+      guide_s8_desc: "RO / EN / ES, top-left of the icons. The choice stays saved on this device.",
+      guide_s9_title: "Installing on a tablet",
+      guide_s9_desc: "Add the page to the home screen (the banner at the bottom, or the browser menu → \"Add to Home Screen\") — it starts like a real app, with no browser bar.",
+      guide_s10_title: "Your data stays on this device",
+      guide_s10_desc: "There's no server, no account. History and the information you fill in are saved only locally, in this browser — each tablet has its own data, fully separate.",
+      guide_footer: "Clapperboard Digital · free and open-source (MIT)",
+    },
+    es: {
+      title_qr: "Código QR", title_history: "Historial (h)", title_export: "Exportar metadatos",
+      title_edit: "Editar", title_fullscreen: "Pantalla completa (f)", title_guide: "Guía de uso",
+      tc_label: "TIMECODE — toca para ajustar manualmente",
+      label_camera: "Cámara", label_scene: "Escena", label_take: "Toma", label_project: "Proyecto",
+      label_director: "Director", label_notes: "Notas", label_date: "Fecha", label_time: "Hora",
+      project_placeholder_display: "Toca para completar",
+      btn_take_minus: "Toma −", btn_take_plus: "Toma +", btn_clap: "Clap",
+      exit_hint: "Pulsa ESC o toca la pantalla para salir de pantalla completa",
+      edit_title: "✏️ Editar información",
+      edit_label_project: "📁 Proyecto", edit_label_scene: "🎬 Escena", edit_label_director: "🎤 Director",
+      edit_label_camera: "🎥 Cámara", edit_label_notes: "📝 Notas",
+      ph_project: "Boda de Ana y Miguel", ph_director: "Cristi Gordas", ph_notes: "Estabilizador activado",
+      btn_reset: "🔄 Restablecer", btn_save: "Guardar",
+      tc_sheet_title: "⏱ Ajustar timecode", tc_label_fps: "Cuadros por segundo (fps)",
+      btn_tc_sync: "🔄 Sincronizar con la hora del sistema",
+      history_title: "📜 Historial de tomas", btn_clear_history: "🗑 Borrar historial",
+      history_empty: "Aún no hay tomas registradas.<br>Pulsa CLAP para empezar.",
+      history_take: "Toma {n}",
+      qr_title: "▦ Código QR", qr_hint: "Escanea para proyecto, escena, toma y timecode",
+      export_title: "⤓ Exportar metadatos",
+      export_desc: "Exporta todas las tomas registradas como archivo para montaje o importación parcial en DaVinci Resolve. La columna <strong>File Name</strong> queda vacía — complétala manualmente con los nombres de archivo tras el ingest, luego usa <em>Media Pool → Metadata → Import</em> en Resolve.",
+      btn_export_csv: "📄 CSV (Resolve)", btn_export_json: "🧾 JSON",
+      install_text: "📲 Añade Clapperboard Digital a tu pantalla de inicio para acceso instantáneo, sin la barra del navegador.",
+      install_yes: "Instalar",
+      toast_project_needed: "Completa el proyecto antes de CLAP (✏️)",
+      toast_take_recorded: "Toma {take} registrada — {timecode}",
+      toast_saved: "Guardado",
+      confirm_reset_fields: "¿Restablecer todos los campos?",
+      toast_fields_reset: "Campos restablecidos",
+      toast_tc_set: "Timecode ajustado",
+      toast_tc_synced: "Sincronizado con la hora del sistema",
+      confirm_clear_history: "¿Borrar todo el historial de tomas? Esta acción no se puede deshacer.",
+      toast_history_cleared: "Historial borrado",
+      toast_history_loaded: "Detalles cargados del historial",
+      toast_nothing_to_export: "No hay tomas para exportar",
+      toast_csv_exported: "CSV exportado", toast_json_exported: "JSON exportado",
+      guide_title: "ⓘ Guía de uso",
+      guide_intro: "Clapperboard Digital reemplaza la claqueta clásica — completas la información del rodaje, filmas la pantalla al inicio del clip y el editor se sincroniza con ella en montaje.",
+      guide_s1_title: "Completa la información",
+      guide_s1_desc: "Toca Proyecto, Escena, Cámara, Director o Notas (o el botón ✏️) para abrir el formulario de edición. La toma cambia por separado, con TOMA − / TOMA +.",
+      guide_s2_title: "Timecode",
+      guide_s2_desc: "Los dígitos rojos de arriba siguen la hora del sistema. Tócalos para ajustar un valor manualmente (HH/MM/SS/FF + fps) o para resincronizar con la hora del sistema.",
+      guide_s3_title: "El botón CLAP",
+      guide_s3_desc: "Registra la toma actual en el historial, reproduce un sonido corto y nítido — pensado especialmente como un pico claro en la forma de onda, para una sincronización precisa en montaje — y avanza automáticamente a la siguiente toma.",
+      guide_s4_title: "Pantalla completa",
+      guide_s4_desc: "El botón ⛶ (o la tecla F) elimina la barra superior y los botones — útil justo en el momento de filmar la pantalla. Toca la pantalla o pulsa ESC para salir.",
+      guide_s5_title: "Código QR",
+      guide_s5_desc: "El botón ▦ muestra un código QR con proyecto, escena, toma y timecode — útil si quieres transferir los datos rápidamente a otro dispositivo o aplicación, sin volver a escribir.",
+      guide_s6_title: "Historial",
+      guide_s6_desc: "El botón 📜 muestra todas las tomas registradas con CLAP. Toca una fila para volver a cargar esa información (útil si vuelves a una escena anterior).",
+      guide_s7_title: "Exportar",
+      guide_s7_desc: "El botón ⤓ exporta todo el historial como CSV (listo para Media Pool → Metadata → Import en DaVinci Resolve) o JSON.",
+      guide_s8_title: "Idioma",
+      guide_s8_desc: "RO / EN / ES, arriba a la izquierda de los iconos. La elección queda guardada en este dispositivo.",
+      guide_s9_title: "Instalación en una tableta",
+      guide_s9_desc: "Añade la página a la pantalla de inicio (el banner de abajo, o el menú del navegador → «Añadir a la pantalla de inicio») — se inicia como una app real, sin la barra del navegador.",
+      guide_s10_title: "Tus datos permanecen en este dispositivo",
+      guide_s10_desc: "No hay servidor ni cuenta. El historial y la información que completas se guardan solo localmente, en este navegador — cada tableta tiene sus propios datos, totalmente separados.",
+      guide_footer: "Clapperboard Digital · gratis y de código abierto (MIT)",
+    },
+  };
+
+  function currentLang() {
+    const saved = localStorage.getItem(LANG_KEY);
+    return TRANSLATIONS[saved] ? saved : "ro";
+  }
+  let lang = currentLang();
+
+  function t(key, params) {
+    const dict = TRANSLATIONS[lang] || TRANSLATIONS.ro;
+    let text = dict[key] != null ? dict[key] : (TRANSLATIONS.ro[key] || key);
+    if (params) {
+      Object.keys(params).forEach((k) => { text = text.replace(`{${k}}`, params[k]); });
+    }
+    return text;
+  }
+
+  function applyLang(newLang) {
+    lang = TRANSLATIONS[newLang] ? newLang : "ro";
+    localStorage.setItem(LANG_KEY, lang);
+    document.documentElement.lang = lang;
+
+    document.querySelectorAll("[data-i18n]").forEach((el) => {
+      el.innerHTML = t(el.getAttribute("data-i18n"));
+    });
+    document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
+      el.setAttribute("placeholder", t(el.getAttribute("data-i18n-placeholder")));
+    });
+    document.querySelectorAll("[data-i18n-title]").forEach((el) => {
+      el.setAttribute("title", t(el.getAttribute("data-i18n-title")));
+    });
+    document.querySelectorAll(".lang-btn").forEach((btn) => {
+      btn.classList.toggle("active", btn.dataset.lang === lang);
+    });
+
+    renderFields();
+    if (document.getElementById("history-overlay").classList.contains("open")) renderHistoryList();
+  }
+
+  document.querySelectorAll(".lang-btn").forEach((btn) => {
+    btn.addEventListener("click", () => applyLang(btn.dataset.lang));
+  });
+
+  const STATE_KEY = "clapperboard_state_v2";
+  const HISTORY_KEY = "clapperboard_history";
+  const MAX_HISTORY = 200;
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STATE_KEY);
+      const parsed = raw ? JSON.parse(raw) : {};
+      return Object.assign({
+        project: "", scene: "", take: 1, director: "", camera: "", notes: "",
+        fps: 25, tcOffsetMs: 0,
+      }, parsed);
+    } catch (e) {
+      return { project: "", scene: "", take: 1, director: "", camera: "", notes: "", fps: 25, tcOffsetMs: 0 };
+    }
+  }
+
+  let state = loadState();
+  function saveState() { localStorage.setItem(STATE_KEY, JSON.stringify(state)); }
+
+  function loadHistory() {
+    try {
+      const raw = localStorage.getItem(HISTORY_KEY);
+      const parsed = raw ? JSON.parse(raw) : [];
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (e) { return []; }
+  }
+  function saveHistory() { localStorage.setItem(HISTORY_KEY, JSON.stringify(history.slice(0, MAX_HISTORY))); }
+  let history = loadHistory();
+
+  function currentTimecode() {
+    const now = Date.now() + state.tcOffsetMs;
+    const d = new Date(now);
+    const fps = state.fps || 25;
+    const ff = Math.floor((d.getMilliseconds() / 1000) * fps);
+    return { hh: d.getHours(), mm: d.getMinutes(), ss: d.getSeconds(), ff, fps };
+  }
+
+  function pad(n) { return String(n).padStart(2, "0"); }
+  function formatTimecode(tc) { return `${pad(tc.hh)}:${pad(tc.mm)}:${pad(tc.ss)}:${pad(tc.ff)}`; }
+
+  function renderTimecode() {
+    const tc = currentTimecode();
+    document.getElementById("tc-digits").innerHTML =
+      `${pad(tc.hh)}:${pad(tc.mm)}:${pad(tc.ss)}<span class="frames">:${pad(tc.ff)}</span>`;
+  }
+  setInterval(renderTimecode, 1000 / 25);
+  renderTimecode();
+
+  function renderClock() {
+    const now = new Date();
+    document.getElementById("disp-date").textContent = now.toISOString().slice(0, 10);
+    document.getElementById("disp-clock").textContent = now.toTimeString().slice(0, 8);
+  }
+  renderClock();
+  setInterval(() => { renderClock(); renderQr(); }, 1000);
+
+  function renderFields() {
+    document.getElementById("disp-project").textContent = state.project || t("project_placeholder_display");
+    document.getElementById("disp-scene").textContent = state.scene || "—";
+    document.getElementById("disp-take").textContent = state.take;
+    document.getElementById("disp-camera").textContent = state.camera || "—";
+    document.getElementById("disp-director").textContent = state.director || "—";
+    document.getElementById("disp-notes").textContent = state.notes || "—";
+  }
+  applyLang(lang);
+
+  // Banda de chevron-uri (colorate -> grayscale), ca pe clapetele
+  // profesionale reale - generata in SVG, nu cu imagini, ca sa ramana
+  // perfect ascutita si sa se intinda pe orice latime de ecran.
+  function buildChevronBar() {
+    const svgNS = "http://www.w3.org/2000/svg";
+    const COLS = ["#3aa757", "#f2c230", "#2f7fd6", "#d94a3d", "#101010"];
+    const GRAY_COUNT = 17;
+    for (let i = 0; i < GRAY_COUNT; i++) {
+      const t = i / (GRAY_COUNT - 1);
+      const v = Math.round(40 + t * 210); // #282828 -> aproape alb
+      COLS.push(`rgb(${v},${v},${v})`);
+    }
+    const unit = 40, tall = 28, n = COLS.length;
+    const svg = document.createElementNS(svgNS, "svg");
+    svg.setAttribute("viewBox", `0 0 ${unit * n} ${tall}`);
+    svg.setAttribute("preserveAspectRatio", "none");
+    COLS.forEach((color, i) => {
+      const x = i * unit;
+      const poly = document.createElementNS(svgNS, "polygon");
+      poly.setAttribute("points",
+        `${x},0 ${x + unit * 0.7},0 ${x + unit},${tall / 2} ${x + unit * 0.7},${tall} ${x},${tall} ${x + unit * 0.3},${tall / 2}`);
+      poly.setAttribute("fill", color);
+      svg.appendChild(poly);
+    });
+    const holder = document.getElementById("stripes");
+    holder.innerHTML = "";
+    holder.appendChild(svg);
+  }
+  buildChevronBar();
+
+  function currentData() {
+    const tc = currentTimecode();
+    const now = new Date();
+    return {
+      project: state.project, scene: state.scene, take: state.take,
+      director: state.director, camera: state.camera, notes: state.notes,
+      timecode: formatTimecode(tc),
+      date: now.toISOString().slice(0, 10),
+      time: now.toTimeString().slice(0, 8),
+    };
+  }
+
+  let qrDebounce = null;
+  function renderQr() {
+    if (qrDebounce) clearTimeout(qrDebounce);
+    qrDebounce = setTimeout(() => {
+      const holder = document.getElementById("qr-canvas");
+      if (!window.qrcode || !holder) return;
+      const text = JSON.stringify(currentData());
+      let qr = null;
+      for (let type = 4; type <= 40; type += 1) {
+        try {
+          qr = qrcode(type, "M");
+          qr.addData(text);
+          qr.make();
+          break;
+        } catch (e) {
+          qr = null;
+        }
+      }
+      if (!qr) return;
+      holder.innerHTML = qr.createSvgTag({ cellSize: 4, margin: 4, scalable: true });
+    }, 120);
+  }
+
+  let toastTimer = null;
+  function showToast(msg) {
+    const toast = document.getElementById("toast");
+    toast.textContent = msg;
+    toast.classList.add("show");
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove("show"), 1800);
+  }
+  function flashScreen() {
+    const flash = document.getElementById("flash");
+    flash.classList.add("on");
+    setTimeout(() => flash.classList.remove("on"), 110);
+  }
+
+  let audioCtx = null;
+  function playClapSound() {
+    // Transient SCURT si ASCUTIT, gandit special pentru sincronizare audio
+    // in montaj: majoritatea energiei e concentrata in primele cateva
+    // milisecunde, ca sa apara ca o linie/varf curat si usor de gasit cu
+    // ochiul liber in forma de unda (waveform) din editor - nu o "explozie"
+    // intinsa pe 150-200ms, unde punctul exact de sincronizare e ambiguu.
+    try {
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!audioCtx) audioCtx = new Ctx();
+      if (audioCtx.state === "suspended") audioCtx.resume();
+
+      const bufferSize = Math.floor(audioCtx.sampleRate * 0.05); // 50ms, nu 180ms
+      const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        // exponent mare (6, fata de 2.2 inainte) = decadere mult mai abrupta,
+        // aproape toata energia in primele ~5ms
+        data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / bufferSize, 6);
+      }
+      const noise = audioCtx.createBufferSource();
+      noise.buffer = buffer;
+
+      const bandpass = audioCtx.createBiquadFilter();
+      bandpass.type = "bandpass";
+      bandpass.frequency.value = 2200;
+      bandpass.Q.value = 0.9;
+
+      const gain = audioCtx.createGain();
+      gain.gain.setValueAtTime(1.7, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.02); // varf -> aproape tacere in 20ms
+
+      const thump = audioCtx.createOscillator();
+      thump.type = "sine";
+      thump.frequency.setValueAtTime(150, audioCtx.currentTime);
+      thump.frequency.exponentialRampToValueAtTime(45, audioCtx.currentTime + 0.05);
+      const thumpGain = audioCtx.createGain();
+      thumpGain.gain.setValueAtTime(0.45, audioCtx.currentTime); // "corp" discret, nu concureaza cu varful
+      thumpGain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.06);
+
+      noise.connect(bandpass).connect(gain).connect(audioCtx.destination);
+      thump.connect(thumpGain).connect(audioCtx.destination);
+
+      noise.start(); noise.stop(audioCtx.currentTime + 0.05);
+      thump.start(); thump.stop(audioCtx.currentTime + 0.06);
+
+      if (navigator.vibrate) navigator.vibrate([0, 40]);
+    } catch (e) { /* Web Audio unavailable — silent no-op */ }
+  }
+
+  document.getElementById("clap-btn").addEventListener("click", () => {
+    if (!state.project) {
+      showToast(t("toast_project_needed"));
+      openOverlay("edit-overlay");
+      populateEditSheet();
+      return;
+    }
+    const data = currentData();
+    history.unshift({
+      id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+      project: data.project, scene: data.scene, take: data.take,
+      director: data.director, camera: data.camera, notes: data.notes,
+      timecode: data.timecode, date: data.date, time: data.time,
+    });
+    saveHistory();
+
+    playClapSound();
+    flashScreen();
+    showToast(t("toast_take_recorded", { take: data.take, timecode: data.timecode }));
+
+    state.take += 1;
+    saveState();
+    renderFields();
+    renderQr();
+  });
+
+  document.getElementById("take-plus").addEventListener("click", () => {
+    state.take += 1; saveState(); renderFields(); renderQr();
+  });
+  document.getElementById("take-minus").addEventListener("click", () => {
+    state.take = Math.max(1, state.take - 1); saveState(); renderFields(); renderQr();
+  });
+
+  function openOverlay(id) { document.getElementById(id).classList.add("open"); }
+  function closeOverlay(id) { document.getElementById(id).classList.remove("open"); }
+  function closeAllOverlays() {
+    document.querySelectorAll(".overlay.open").forEach(el => el.classList.remove("open"));
+  }
+
+  function populateEditSheet() {
+    document.getElementById("f-project").value = state.project;
+    document.getElementById("f-scene").value = state.scene;
+    document.getElementById("f-director").value = state.director;
+    document.getElementById("f-camera").value = state.camera;
+    document.getElementById("f-notes").value = state.notes;
+  }
+
+  document.getElementById("edit-btn").addEventListener("click", () => { populateEditSheet(); openOverlay("edit-overlay"); });
+  document.getElementById("row-project").addEventListener("click", () => { populateEditSheet(); openOverlay("edit-overlay"); });
+  document.getElementById("row-scene").addEventListener("click", () => { populateEditSheet(); openOverlay("edit-overlay"); });
+  document.getElementById("row-camera").addEventListener("click", () => { populateEditSheet(); openOverlay("edit-overlay"); });
+  document.getElementById("row-director").addEventListener("click", () => { populateEditSheet(); openOverlay("edit-overlay"); });
+  document.getElementById("row-notes").addEventListener("click", () => { populateEditSheet(); openOverlay("edit-overlay"); });
+  document.getElementById("close-edit-btn").addEventListener("click", () => closeOverlay("edit-overlay"));
+
+  document.getElementById("save-fields-btn").addEventListener("click", () => {
+    state.project = document.getElementById("f-project").value.trim();
+    state.scene = document.getElementById("f-scene").value.trim();
+    state.director = document.getElementById("f-director").value.trim();
+    state.camera = document.getElementById("f-camera").value.trim();
+    state.notes = document.getElementById("f-notes").value.trim();
+    saveState();
+    renderFields();
+    renderQr();
+    closeOverlay("edit-overlay");
+    showToast(t("toast_saved"));
+  });
+
+  document.getElementById("reset-fields-btn").addEventListener("click", () => {
+    if (!confirm(t("confirm_reset_fields"))) return;
+    state.project = ""; state.scene = ""; state.director = ""; state.camera = ""; state.notes = ""; state.take = 1;
+    saveState();
+    renderFields();
+    renderQr();
+    populateEditSheet();
+    showToast(t("toast_fields_reset"));
+  });
+
+  document.getElementById("tc-block").addEventListener("click", () => {
+    const tc = currentTimecode();
+    document.getElementById("tc-hh").value = tc.hh;
+    document.getElementById("tc-mm").value = tc.mm;
+    document.getElementById("tc-ss").value = tc.ss;
+    document.getElementById("tc-ff").value = tc.ff;
+    document.getElementById("tc-fps").value = String(state.fps || 25);
+    openOverlay("tc-overlay");
+  });
+  document.getElementById("close-tc-btn").addEventListener("click", () => closeOverlay("tc-overlay"));
+
+  document.getElementById("tc-save-btn").addEventListener("click", () => {
+    const hh = Math.min(23, Math.max(0, parseInt(document.getElementById("tc-hh").value, 10) || 0));
+    const mm = Math.min(59, Math.max(0, parseInt(document.getElementById("tc-mm").value, 10) || 0));
+    const ss = Math.min(59, Math.max(0, parseInt(document.getElementById("tc-ss").value, 10) || 0));
+    const fps = parseInt(document.getElementById("tc-fps").value, 10) || 25;
+    const ff = Math.min(fps - 1, Math.max(0, parseInt(document.getElementById("tc-ff").value, 10) || 0));
+
+    state.fps = fps;
+
+    const now = new Date();
+    const target = new Date(now);
+    target.setHours(hh, mm, ss, Math.round((ff / fps) * 1000));
+
+    state.tcOffsetMs = target.getTime() - now.getTime();
+    saveState();
+    renderTimecode();
+    closeOverlay("tc-overlay");
+    showToast(t("toast_tc_set"));
+  });
+
+  document.getElementById("tc-sync-now-btn").addEventListener("click", () => {
+    state.tcOffsetMs = 0;
+    saveState();
+    renderTimecode();
+    closeOverlay("tc-overlay");
+    showToast(t("toast_tc_synced"));
+  });
+
+  document.getElementById("history-btn").addEventListener("click", () => { renderHistoryList(); openOverlay("history-overlay"); });
+  document.getElementById("close-history-btn").addEventListener("click", () => closeOverlay("history-overlay"));
+
+  document.getElementById("clear-history-btn").addEventListener("click", () => {
+    if (!confirm(t("confirm_clear_history"))) return;
+    history = [];
+    saveHistory();
+    renderHistoryList();
+    showToast(t("toast_history_cleared"));
+  });
+
+  function escapeHtml(str) {
+    const div = document.createElement("div");
+    div.textContent = str || "";
+    return div.innerHTML;
+  }
+
+  function renderHistoryList() {
+    const list = document.getElementById("history-list");
+    if (!history.length) {
+      list.innerHTML = `<div class="history-empty">${t("history_empty")}</div>`;
+      return;
+    }
+    list.innerHTML = history.map(h => `
+      <div class="history-item" data-id="${h.id}">
+        <div class="info">
+          <strong>${escapeHtml(h.project)}${h.scene ? " · " + escapeHtml(h.scene) : ""}</strong>
+          <span>${escapeHtml(h.timecode || "")} · ${escapeHtml(h.date)} ${escapeHtml(h.time || "")}</span>
+        </div>
+        <div class="badge">${t("history_take", { n: h.take })}</div>
+      </div>
+    `).join("");
+
+    list.querySelectorAll(".history-item").forEach(item => {
+      item.addEventListener("click", () => {
+        const entry = history.find(h => h.id === item.dataset.id);
+        if (!entry) return;
+        state.project = entry.project; state.scene = entry.scene;
+        state.director = entry.director; state.camera = entry.camera; state.notes = entry.notes;
+        state.take = entry.take + 1;
+        saveState();
+        renderFields();
+        renderQr();
+        closeOverlay("history-overlay");
+        showToast(t("toast_history_loaded"));
+      });
+    });
+  }
+
+  document.getElementById("qr-btn").addEventListener("click", () => { renderQr(); openOverlay("qr-overlay"); });
+  document.getElementById("close-qr-btn").addEventListener("click", () => closeOverlay("qr-overlay"));
+
+  document.getElementById("guide-btn").addEventListener("click", () => openOverlay("guide-overlay"));
+  document.getElementById("close-guide-btn").addEventListener("click", () => closeOverlay("guide-overlay"));
+
+  document.getElementById("export-btn").addEventListener("click", () => openOverlay("export-overlay"));
+  document.getElementById("close-export-btn").addEventListener("click", () => closeOverlay("export-overlay"));
+
+  function downloadBlob(content, filename, mime) {
+    const blob = new Blob([content], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  function csvEscape(value) {
+    const str = String(value == null ? "" : value);
+    if (/[",\n]/.test(str)) return `"${str.replace(/"/g, '""')}"`;
+    return str;
+  }
+
+  document.getElementById("export-csv-btn").addEventListener("click", () => {
+    if (!history.length) { showToast(t("toast_nothing_to_export")); return; }
+    const headers = ["File Name", "Project", "Scene", "Take", "Timecode", "Date", "Time", "Director", "Camera", "Notes"];
+    const rows = history.slice().reverse().map(h => [
+      "", h.project, h.scene, h.take, h.timecode || "", h.date, h.time || "", h.director || "", h.camera || "", h.notes || "",
+    ]);
+    const csv = [headers, ...rows].map(row => row.map(csvEscape).join(",")).join("\r\n");
+    const stamp = new Date().toISOString().slice(0, 10);
+    downloadBlob(csv, `clapperboard-metadata-${stamp}.csv`, "text/csv;charset=utf-8");
+    showToast(t("toast_csv_exported"));
+    closeOverlay("export-overlay");
+  });
+
+  document.getElementById("export-json-btn").addEventListener("click", () => {
+    if (!history.length) { showToast(t("toast_nothing_to_export")); return; }
+    const data = history.slice().reverse();
+    const stamp = new Date().toISOString().slice(0, 10);
+    downloadBlob(JSON.stringify(data, null, 2), `clapperboard-metadata-${stamp}.json`, "application/json");
+    showToast(t("toast_json_exported"));
+    closeOverlay("export-overlay");
+  });
+
+  function isFullscreen() { return !!(document.fullscreenElement || document.webkitFullscreenElement); }
+
+  function requestFs() {
+    const el = document.documentElement;
+    const req = el.requestFullscreen || el.webkitRequestFullscreen;
+    if (req && !isFullscreen()) {
+      try { const p = req.call(el); if (p && p.catch) p.catch(() => {}); } catch (e) {}
+    }
+  }
+  function exitFs() {
+    if (isFullscreen()) {
+      const exit = document.exitFullscreen || document.webkitExitFullscreen;
+      if (exit) { try { exit.call(document); } catch (e) {} }
+    }
+  }
+
+  document.getElementById("fullscreen-btn").addEventListener("click", () => {
+    if (isFullscreen()) exitFs(); else requestFs();
+  });
+
+  function firstTapFullscreen(e) {
+    if (e.target.closest(".overlay")) return;
+    requestFs();
+    document.removeEventListener("click", firstTapFullscreen);
+  }
+  document.addEventListener("click", firstTapFullscreen);
+
+  document.getElementById("slate").addEventListener("click", (e) => {
+    if (e.target.id === "slate" || e.target.classList.contains("stripes")) {
+      exitFs();
+    }
+  });
+
+  document.addEventListener("keydown", (e) => {
+    const tag = document.activeElement && document.activeElement.tagName;
+    const typing = tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT";
+
+    if (e.key === "Escape") {
+      if (document.querySelector(".overlay.open")) { closeAllOverlays(); return; }
+      exitFs();
+      return;
+    }
+    if (typing) return;
+
+    if (e.key === "+" || e.key === "=") document.getElementById("take-plus").click();
+    else if (e.key === "-" || e.key === "_") document.getElementById("take-minus").click();
+    else if (e.key === " ") { e.preventDefault(); document.getElementById("clap-btn").click(); }
+    else if (e.key === "f" || e.key === "F") { if (isFullscreen()) exitFs(); else requestFs(); }
+    else if (e.key === "h" || e.key === "H") { renderHistoryList(); openOverlay("history-overlay"); }
+  });
+
+  let deferredPrompt = null;
+  const installBanner = document.getElementById("install-banner");
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    if (!localStorage.getItem("clapperboard_install_dismissed")) installBanner.classList.add("show");
+  });
+  document.getElementById("install-yes-btn").addEventListener("click", async () => {
+    installBanner.classList.remove("show");
+    if (deferredPrompt) { deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt = null; }
+  });
+  document.getElementById("install-no-btn").addEventListener("click", () => {
+    installBanner.classList.remove("show");
+    localStorage.setItem("clapperboard_install_dismissed", "1");
+  });
+
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("sw.js").catch(() => {});
+    });
+    let refreshedOnce = false;
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      if (refreshedOnce) return;
+      refreshedOnce = true;
+      window.location.reload();
+    });
+  }
+})();
+</script>
+</body>
+</html>
