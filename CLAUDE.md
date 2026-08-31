@@ -815,6 +815,36 @@ datat sunt mutate în `CLAUDE_ARCHIVE.md` (NU se citește automat) — citește-
 explicit când investighezi o zonă veche de cod. Rezumat "stare curentă" mai
 jos rămâne aici, fiindcă e activ relevant sesiune de sesiune.
 
+## Client v1.23.0 (2026-08-31) — Banner de lansare, controlabil din Furnizor
+
+v1.22.0 (imagine bundled static in Sources/GDCPluginManager/Resources) a
+fost publicat, apoi INLOCUIT la cererea lui Cristi: "eu cum pot controla
+imaginea?" - vroia sa poata schimba imaginea/textul singur, oricand, fara
+sa ma astepte pe mine sau un rebuild. Port 1:1 al arhitecturii
+`PricingCatalog`/Regula 27 (docs/pricing.json), dar pentru un singur
+"produs" (nu o lista):
+
+- **`LaunchBannerModel.swift`** (Core, nou) - `LaunchBannerConfig`
+  (enabled/imagePath/topText/mainText), decodare tolerantă (fail-open,
+  camp lipsa = valoare implicita, niciodata crash).
+- **`docs/launch-banner.json`** (nou) - servit static la
+  `gordas.dev/launch-banner.json`, scris de Furnizor prin
+  `LaunchBannerEditor.swift` (port 1:1 al `PricingEditor.swift` - pull ->
+  scrie -> commit+push).
+- **Furnizor - panoul "Banner Lansare"** (`LaunchBannerManagerView.swift`) -
+  reutilizeaza `CoverImagePicker`/`CoverImageStore.commit(id: "launch-banner")`
+  deja existente (acelasi pipeline de compresie + cache-bust prin hash SHA256
+  ca orice coperta de produs) - nu s-a scris cod nou de upload.
+- **Client - `LaunchBannerChecker.swift`** (nou) - fetch + retry + cache
+  local pe disc, port 1:1 al tiparului deja verificat in
+  `SeasonalBackgroundLayer` (ContentView.swift): verificare explicita de
+  status HTTP (nu doar exceptii), 2 incercari, fallback pe cache offline,
+  ascuns complet (nu doar gol) daca nici cache-ul nu exista.
+- `LaunchOfferBanner.swift` (view) simplificat la un simplu observator al
+  checker-ului - nicio logica de retea in view.
+
+**Verificat**: `swift build` (Client + Core + Furnizor) - 0 erori.
+
 ## Client v1.21.0 + Furnizor v1.18.0 (2026-08-31) — Ceas live optional (countdown)
 
 Cerinta explicita a lui Cristi, dupa fix-ul de scheduling de mai jos:

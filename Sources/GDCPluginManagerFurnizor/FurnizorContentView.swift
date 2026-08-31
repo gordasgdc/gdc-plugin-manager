@@ -18,6 +18,7 @@ enum FurnizorSection: Hashable {
     case bundles
     case seasonalBackground
     case pricing
+    case launchBanner
 }
 
 struct FurnizorContentView: View {
@@ -36,6 +37,7 @@ struct FurnizorContentView: View {
                 Label("Clienți", systemImage: "person.2").tag(FurnizorSection.salesHistory)
                 Label("Statistici", systemImage: "chart.bar").tag(FurnizorSection.analytics)
                 Label("Prețuri & Oferte", systemImage: "eurosign.circle").tag(FurnizorSection.pricing)
+                Label("Banner Lansare", systemImage: "megaphone").tag(FurnizorSection.launchBanner)
                 Divider()
                 Label("Cursuri", systemImage: "graduationcap").tag(FurnizorSection.courses)
                 Label("Materiale", systemImage: "book").tag(FurnizorSection.educationalResources)
@@ -80,6 +82,8 @@ struct FurnizorContentView: View {
                     AnalyticsView()
                 case .pricing:
                     PricingManagerView()
+                case .launchBanner:
+                    LaunchBannerManagerView()
                 case .courses:
                     PublishCourseView()
                 case .educationalResources:

@@ -32,4 +32,9 @@ enum RepoCheckoutPaths {
     static var pricingJSONURL: URL {
         publicCatalogRepo.appendingPathComponent("docs").appendingPathComponent("pricing.json")
     }
+
+    /// Banner de lansare (2026-08-31) - vezi LaunchBannerModel/Editor.
+    static var launchBannerJSONURL: URL {
+        publicCatalogRepo.appendingPathComponent("docs").appendingPathComponent("launch-banner.json")
+    }
 }

@@ -1,5 +1,20 @@
 # Changelog — GDC Plugin Manager
 
+## Client v1.23.0 (2026-08-31) — Banner de lansare controlabil din Furnizor
+
+Înlocuiește v1.22.0 (imagine statică bundled în app): Cristi poate acum
+schimba imaginea/textul bannerului oricând, fără recompilare — la fel ca
+prețurile dinamice (Regula 27).
+
+- **`docs/launch-banner.json`** (nou) — sursa canonică (enabled, imagine,
+  text), servită static la `gordas.dev/launch-banner.json`.
+- **Furnizor — panoul "Banner Lansare"** (`LaunchBannerManagerView.swift`,
+  nou) — comutator, două câmpuri de text, upload de imagine (reutilizează
+  `CoverImagePicker`/`CoverImageStore` deja existente), buton „Publică".
+- **Client — `LaunchBannerChecker.swift`** (nou) — fetch la lansare, cache
+  local (offline-first, ca filigranele sezoniere), ascuns complet dacă
+  bannerul e dezactivat sau nu s-a putut încărca nimic.
+
 ## Client v1.22.0 (2026-08-31) — Banner de lansare publică
 
 Cerută de Cristi pentru lansarea publică a platformei: un banner static,
