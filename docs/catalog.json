@@ -530,11 +530,15 @@
   ],
   "serviceCenters" : [
     {
+      "address" : "Clinica Dronelor\nGalați, Bd. George Coșbuc 116–118",
       "category" : "drone",
       "contactURL" : "https://clinicadronelor.ro/#formular-reparatie",
-      "coverImage" : "https://clinicadronelor.ro/wp-content/uploads/2026/04/cropped-logonou-300x83.avif",
+      "coverImage" : "covers/Clinica Dronelor.png?v=69853d62",
       "id" : "Clinica Dronelor",
       "name" : "Clinica Dronelor",
+      "socialLinks" : {
+        "tiktokURL" : "https://www.tiktok.com/@clinicadronelor"
+      },
       "specialization" : "Service & Reparații Drone DJI în România",
       "websiteURL" : "https://www.tiktok.com/@clinicadronelor"
     }
