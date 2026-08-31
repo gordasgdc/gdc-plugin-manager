@@ -1,11 +1,17 @@
 {
   "products" : {
     "cgconvertor" : {
-      "basePrice" : 23,
+      "basePrice" : 46,
       "currency" : "EUR",
       "name" : "CG Convertor",
       "promoSchedule" : [
-
+        {
+          "endsAt" : "2026-09-04T05:15:24Z",
+          "label" : "Oferta lansare",
+          "price" : 23,
+          "showCountdown" : true,
+          "startsAt" : "2026-08-31T05:15:24Z"
+        }
       ]
     },
     "cursorpro" : {
