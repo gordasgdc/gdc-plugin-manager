@@ -1,6 +1,6 @@
 {
-  "enabled" : true,
-  "imagePath" : "",
+  "enabled" : false,
+  "imagePath" : "covers/launch-banner.png?v=f447d90a",
   "mainText" : "PREȚURI SPECIALE DE DESCHIDERE",
   "textOnTop" : false,
   "topText" : "LANSARE",
