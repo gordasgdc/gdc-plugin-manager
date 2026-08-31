@@ -31,6 +31,7 @@
     --danger:#e8483c;
     --led:#ff3b30;
     --led-glow: rgba(255,59,48,.55);
+    --led-label: #6b3330;
     --safe-top: env(safe-area-inset-top, 0px);
     --safe-bottom: env(safe-area-inset-bottom, 0px);
   }
@@ -173,6 +174,26 @@
 
   .field{ display:flex; flex-direction:column; gap:6px; margin-bottom:12px; }
   .field label{ font-size:12.5px; color:var(--muted); font-weight:700; }
+
+  /* Culoare cifre timecode (2026-08-31) — cerinta explicita: "culorile
+     trebuie gandite incat sa poata fi percepute bine de camere, de la
+     distanta". Paletă restransă deliberat la culori SATURATE, de mare
+     luminanta, folosite deja pe afisaje profesionale (LED tally, timecode
+     boxe Ambient/Tentacle) — NU orice culoare din curcubeu: rosu/verde/
+     galben sunt distincte chiar si pe senzori cu balans de alb prost facut
+     sau expunere gresita, iar albul pur ramane lizibil pe orice fundal
+     intunecat de studio. Fiecare swatch e chiar culoarea reala (WYSIWYG). */
+  .color-swatches{ display:flex; gap:10px; flex-wrap:wrap; padding-top:2px; }
+  .color-swatch{
+    width:36px; height:36px; border-radius:50%; border:2px solid transparent;
+    cursor:pointer; position:relative; transition:transform .1s ease, border-color .1s ease;
+  }
+  .color-swatch:active{ transform:scale(0.92); }
+  .color-swatch.active{ border-color:#fff; }
+  .color-swatch.active::after{
+    content:"✓"; position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-size:15px; font-weight:900; color:#000; text-shadow:0 0 3px rgba(255,255,255,.8);
+  }
   .field input, .field select{
     background:var(--panel-2); border:1px solid var(--border); border-radius:10px;
     color:var(--text); font-size:16px; padding:12px; min-height:44px;
@@ -365,6 +386,10 @@
         <option value="30">30</option>
       </select>
     </div>
+    <div class="field">
+      <label data-i18n="tc_label_color">Culoare cifre</label>
+      <div class="color-swatches" id="tc-color-swatches"></div>
+    </div>
     <div class="sheet-actions">
       <button class="sheet-btn" id="tc-sync-now-btn" data-i18n="btn_tc_sync">🔄 Sincronizează cu ora sistemului</button>
       <button class="sheet-btn primary" id="tc-save-btn" data-i18n="btn_save">Salvează</button>
@@ -496,7 +521,7 @@
       edit_label_camera: "🎥 Cameră", edit_label_notes: "📝 Notițe",
       ph_project: "Nunta Ana & Mihai", ph_director: "Cristi Gordas", ph_notes: "Stabilizator activat",
       btn_reset: "🔄 Resetează", btn_save: "Salvează",
-      tc_sheet_title: "⏱ Setează timecode", tc_label_fps: "Cadre pe secundă (fps)",
+      tc_sheet_title: "⏱ Setează timecode", tc_label_fps: "Cadre pe secundă (fps)", tc_label_color: "Culoare cifre",
       btn_tc_sync: "🔄 Sincronizează cu ora sistemului",
       history_title: "📜 Istoric take-uri", btn_clear_history: "🗑 Șterge istoricul",
       history_empty: "Niciun take înregistrat încă.<br>Apasă CLAP pentru a începe.",
@@ -557,7 +582,7 @@
       edit_label_camera: "🎥 Camera", edit_label_notes: "📝 Notes",
       ph_project: "Ana & Mike's Wedding", ph_director: "Cristi Gordas", ph_notes: "Stabilizer on",
       btn_reset: "🔄 Reset", btn_save: "Save",
-      tc_sheet_title: "⏱ Set timecode", tc_label_fps: "Frames per second (fps)",
+      tc_sheet_title: "⏱ Set timecode", tc_label_fps: "Frames per second (fps)", tc_label_color: "Digit color",
       btn_tc_sync: "🔄 Sync to system clock",
       history_title: "📜 Take history", btn_clear_history: "🗑 Clear history",
       history_empty: "No takes recorded yet.<br>Tap CLAP to start.",
@@ -618,7 +643,7 @@
       edit_label_camera: "🎥 Cámara", edit_label_notes: "📝 Notas",
       ph_project: "Boda de Ana y Miguel", ph_director: "Cristi Gordas", ph_notes: "Estabilizador activado",
       btn_reset: "🔄 Restablecer", btn_save: "Guardar",
-      tc_sheet_title: "⏱ Ajustar timecode", tc_label_fps: "Cuadros por segundo (fps)",
+      tc_sheet_title: "⏱ Ajustar timecode", tc_label_fps: "Cuadros por segundo (fps)", tc_label_color: "Color de dígitos",
       btn_tc_sync: "🔄 Sincronizar con la hora del sistema",
       history_title: "📜 Historial de tomas", btn_clear_history: "🗑 Borrar historial",
       history_empty: "Aún no hay tomas registradas.<br>Pulsa CLAP para empezar.",
@@ -710,7 +735,48 @@
 
   const STATE_KEY = "clapperboard_state_v2";
   const HISTORY_KEY = "clapperboard_history";
+  const TC_COLOR_KEY = "clapperboard_tc_color";
   const MAX_HISTORY = 200;
+
+  // Paleta de culori pentru cifrele de timecode (2026-08-31) — restransa
+  // deliberat la 5 culori de mare saturatie/luminanta, deja standard pe
+  // afisaje profesionale (tally LED, timecode boxe Ambient/Tentacle):
+  // usor de citit de pe orice camera, la distanta, indiferent de balansul
+  // de alb sau expunerea aleasa la fata locului.
+  const TC_COLORS = [
+    { id: "red",    hex: "#ff3b30", glow: "rgba(255,59,48,.55)"  },
+    { id: "green",  hex: "#2ee06a", glow: "rgba(46,224,106,.55)" },
+    { id: "amber",  hex: "#ffb800", glow: "rgba(255,184,0,.55)"  },
+    { id: "cyan",   hex: "#22d3ee", glow: "rgba(34,211,238,.55)" },
+    { id: "white",  hex: "#f5f5f5", glow: "rgba(245,245,245,.5)" },
+  ];
+
+  function loadTcColor() {
+    const saved = localStorage.getItem(TC_COLOR_KEY);
+    return TC_COLORS.find(c => c.id === saved) || TC_COLORS[0];
+  }
+
+  function applyTcColor(color) {
+    document.documentElement.style.setProperty("--led", color.hex);
+    document.documentElement.style.setProperty("--led-glow", color.glow);
+    localStorage.setItem(TC_COLOR_KEY, color.id);
+    renderTcColorSwatches(color.id);
+  }
+
+  function renderTcColorSwatches(activeId) {
+    const holder = document.getElementById("tc-color-swatches");
+    if (!holder) return;
+    holder.innerHTML = "";
+    TC_COLORS.forEach(color => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "color-swatch" + (color.id === activeId ? " active" : "");
+      btn.style.background = color.hex;
+      btn.setAttribute("aria-label", color.id);
+      btn.addEventListener("click", () => applyTcColor(color));
+      holder.appendChild(btn);
+    });
+  }
 
   function loadState() {
     try {
@@ -774,6 +840,7 @@
     document.getElementById("disp-notes").textContent = state.notes || "—";
   }
   applyLang(lang);
+  applyTcColor(loadTcColor());
 
   // Banda de chevron-uri (colorate -> grayscale), ca pe clapetele
   // profesionale reale - generata in SVG, nu cu imagini, ca sa ramana
@@ -883,7 +950,7 @@
       bandpass.Q.value = 0.9;
 
       const gain = audioCtx.createGain();
-      gain.gain.setValueAtTime(1.7, audioCtx.currentTime);
+      gain.gain.setValueAtTime(2.3, audioCtx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.02); // varf -> aproape tacere in 20ms
 
       const thump = audioCtx.createOscillator();
@@ -894,8 +961,24 @@
       thumpGain.gain.setValueAtTime(0.45, audioCtx.currentTime); // "corp" discret, nu concureaza cu varful
       thumpGain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.06);
 
-      noise.connect(bandpass).connect(gain).connect(audioCtx.destination);
-      thump.connect(thumpGain).connect(audioCtx.destination);
+      // Limiter (2026-08-31) — cerinta explicita: "cat se aude mai tare,
+      // foarte tare, cu atat e mai bine". Gain-ul de mai sus (2.3) DEPASESTE
+      // plafonul digital (ar da clipping brut, distorsionat, daca ar merge
+      // direct la iesire) — un DynamicsCompressorNode cu atac aproape
+      // instant si raport mare functioneaza ca limiter, "prinde" varful si
+      // il aduce la maximum SIGUR, fara sunetul aspru/spart al clipping-ului
+      // brut. Rezultat: volum perceput mai mare, dar curat, exact varful
+      // ascutit necesar pentru sincronizare in waveform.
+      const limiter = audioCtx.createDynamicsCompressor();
+      limiter.threshold.setValueAtTime(-8, audioCtx.currentTime);
+      limiter.knee.setValueAtTime(0, audioCtx.currentTime);
+      limiter.ratio.setValueAtTime(20, audioCtx.currentTime);
+      limiter.attack.setValueAtTime(0.001, audioCtx.currentTime);
+      limiter.release.setValueAtTime(0.08, audioCtx.currentTime);
+
+      noise.connect(bandpass).connect(gain).connect(limiter);
+      thump.connect(thumpGain).connect(limiter);
+      limiter.connect(audioCtx.destination);
 
       noise.start(); noise.stop(audioCtx.currentTime + 0.05);
       thump.start(); thump.stop(audioCtx.currentTime + 0.06);
@@ -989,6 +1072,7 @@
     document.getElementById("tc-ss").value = tc.ss;
     document.getElementById("tc-ff").value = tc.ff;
     document.getElementById("tc-fps").value = String(state.fps || 25);
+    renderTcColorSwatches(loadTcColor().id);
     openOverlay("tc-overlay");
   });
   document.getElementById("close-tc-btn").addEventListener("click", () => closeOverlay("tc-overlay"));
