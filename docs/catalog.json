@@ -184,6 +184,11 @@
       "externalURL" : "https://blackmagicdesign-emea.zoom.us/webinar/register/WN_A21ElzjKR1i3kOtwHdA7bw#/registration",
       "id" : "Work Smarter\nwith AI Tools",
       "location" : "Online",
+      "scheduling" : {
+        "endDate" : 810433578.899774,
+        "showCountdown" : true,
+        "startDate" : 809828778.899773
+      },
       "title" : "Work Smarter\nwith AI Tools",
       "youtubeURL" : "https://www.blackmagicdesign.com/event/davinci-resolve-online-seminars"
     },
