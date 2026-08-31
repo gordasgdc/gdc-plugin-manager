@@ -9,11 +9,17 @@
       ]
     },
     "cursorpro" : {
-      "basePrice" : 9,
+      "basePrice" : 15,
       "currency" : "EUR",
       "name" : "CursorPro GDC",
       "promoSchedule" : [
-
+        {
+          "endsAt" : "2026-09-04T05:12:35Z",
+          "label" : "Oferta lansare",
+          "price" : 9,
+          "showCountdown" : true,
+          "startsAt" : "2026-08-31T05:12:35Z"
+        }
       ]
     },
     "gdc-datamover" : {
