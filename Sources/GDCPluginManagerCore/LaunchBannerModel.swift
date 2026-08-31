@@ -17,17 +17,23 @@ public struct LaunchBannerConfig: Codable, Equatable {
     public var topText: String
     public var mainText: String
     public var updatedAt: String
+    /// Valabilitate temporală opțională (2026-08-31, cerută explicit de
+    /// Cristi) — aceeași `Scheduling` folosită de tot restul catalogului
+    /// (Evenimente, Cursuri, etc.). `nil` = mereu vizibil cât timp
+    /// `enabled == true`, exact ca înainte de acest câmp.
+    public var scheduling: Scheduling?
 
     public init(enabled: Bool = false, imagePath: String = "", topText: String = "",
-                mainText: String = "", updatedAt: String = "") {
+                mainText: String = "", updatedAt: String = "", scheduling: Scheduling? = nil) {
         self.enabled = enabled
         self.imagePath = imagePath
         self.topText = topText
         self.mainText = mainText
         self.updatedAt = updatedAt
+        self.scheduling = scheduling
     }
 
-    enum CodingKeys: String, CodingKey { case enabled, imagePath, topText, mainText, updatedAt }
+    enum CodingKeys: String, CodingKey { case enabled, imagePath, topText, mainText, updatedAt, scheduling }
 
     /// Decodare tolerantă — un `launch-banner.json` viitor cu un câmp în
     /// plus, sau un client vechi care citește un JSON mai nou, nu trebuie
@@ -39,13 +45,16 @@ public struct LaunchBannerConfig: Codable, Equatable {
         topText = try c.decodeIfPresent(String.self, forKey: .topText) ?? ""
         mainText = try c.decodeIfPresent(String.self, forKey: .mainText) ?? ""
         updatedAt = try c.decodeIfPresent(String.self, forKey: .updatedAt) ?? ""
+        scheduling = try c.decodeIfPresent(Scheduling.self, forKey: .scheduling)
     }
 
     public var imageURL: URL? { CatalogAssets.imageURL(for: imagePath) }
 
-    /// True doar dacă totul e configurat corect — un `enabled: true` cu
-    /// imagine sau text lipsă nu ar arăta un banner util.
+    /// True doar dacă totul e configurat corect ȘI valabilitatea temporală
+    /// (dacă e setată) e activă ACUM — un `enabled: true` cu imagine/text
+    /// lipsă, sau o fereastră de timp deja expirată, nu ar arăta un banner
+    /// util.
     public var isDisplayable: Bool {
-        enabled && imageURL != nil && !topText.isEmpty && !mainText.isEmpty
+        enabled && imageURL != nil && !topText.isEmpty && !mainText.isEmpty && (scheduling?.isActiveNow ?? true)
     }
 }

@@ -1,5 +1,11 @@
 # Changelog — GDC Plugin Manager
 
+## Client v1.24.0 (2026-08-31) — Valabilitate temporală pentru bannerul de lansare
+
+Bannerul de lansare (v1.23.0) poate avea acum o perioadă programată — se
+ascunde automat după data de sfârșit, fără nicio acțiune manuală. Aceeași
+componentă `SchedulingPicker` folosită de tot restul catalogului.
+
 ## Client v1.23.0 (2026-08-31) — Banner de lansare controlabil din Furnizor
 
 Înlocuiește v1.22.0 (imagine statică bundled în app): Cristi poate acum

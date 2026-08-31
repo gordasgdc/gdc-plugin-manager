@@ -12,6 +12,13 @@ struct LaunchBannerManagerView: View {
     @State private var draftTopText = "LANSARE"
     @State private var draftMainText = "PREȚURI SPECIALE DE DESCHIDERE"
     @State private var coverSelection: CoverImageSelection = .none
+    @State private var scheduling: Scheduling?
+    /// Incrementat la fiecare `reload()` reușit - vezi `.id()` de mai jos.
+    /// Fără el, `SchedulingPicker` (view persistent, nu recreat) și-ar
+    /// inițializa starea internă o singură dată, ÎNAINTE ca `reload()`
+    /// asincron să apuce să seteze `scheduling` real din git — exact bug-ul
+    /// deja documentat și reparat sistemic în cele 11 `Publish*View.swift`.
+    @State private var loadGeneration = 0
 
     @State private var isBusy = false
     @State private var loadError: String?
@@ -41,6 +48,8 @@ struct LaunchBannerManagerView: View {
                 }
 
                 CoverImagePicker(preset: .cover, selection: $coverSelection)
+                SchedulingPicker(scheduling: $scheduling)
+                    .id(loadGeneration)
 
                 if let publishError {
                     Label(publishError, systemImage: "exclamationmark.triangle.fill").foregroundStyle(.red)
@@ -73,6 +82,8 @@ struct LaunchBannerManagerView: View {
             draftTopText = loaded.topText.isEmpty ? draftTopText : loaded.topText
             draftMainText = loaded.mainText.isEmpty ? draftMainText : loaded.mainText
             coverSelection = loaded.imagePath.isEmpty ? .none : .existing(loaded.imagePath)
+            scheduling = loaded.scheduling
+            loadGeneration += 1
         } catch {
             // launch-banner.json poate lipsi la prima rulare — nu e o
             // eroare blocantă, doar un formular gol/implicit.
@@ -88,11 +99,12 @@ struct LaunchBannerManagerView: View {
         let topText = draftTopText
         let mainText = draftMainText
         let selection = coverSelection
+        let schedulingValue = scheduling
 
         DispatchQueue.global(qos: .userInitiated).async {
             do {
                 let imagePath = try CoverImageStore.commit(selection, id: "launch-banner", previous: previousImagePath) ?? ""
-                let updated = LaunchBannerConfig(enabled: enabled, imagePath: imagePath, topText: topText, mainText: mainText)
+                let updated = LaunchBannerConfig(enabled: enabled, imagePath: imagePath, topText: topText, mainText: mainText, scheduling: schedulingValue)
                 try LaunchBannerEditor.publish(updated, message: "Banner Lansare: \(enabled ? "activat" : "dezactivat")")
                 DispatchQueue.main.async {
                     config = updated

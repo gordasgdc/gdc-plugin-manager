@@ -815,6 +815,29 @@ datat sunt mutate în `CLAUDE_ARCHIVE.md` (NU se citește automat) — citește-
 explicit când investighezi o zonă veche de cod. Rezumat "stare curentă" mai
 jos rămâne aici, fiindcă e activ relevant sesiune de sesiune.
 
+## Client v1.24.0 (2026-08-31) — Valabilitate temporală pentru banner
+
+Raportat direct de Cristi ("dar nu pot sa-i dau valabilitate temporala?")
+imediat după publicarea v1.23.0: `LaunchBannerConfig` capătă un câmp
+`scheduling: Scheduling?` (aceeași struct folosită de tot restul
+catalogului, nimic nou de construit) - `isDisplayable` verifică acum și
+`scheduling?.isActiveNow ?? true`.
+
+- **Furnizor** - `SchedulingPicker` adăugat în `LaunchBannerManagerView`,
+  cu `.id(loadGeneration)` (nu `.id(editingID)` ca la restul view-urilor -
+  aici nu există "editare unui item din listă", ci un singur `reload()`
+  async la `onAppear`; `loadGeneration` se incrementează o singură dată,
+  după ce `scheduling` real e citit din git, forțând `SchedulingPicker`
+  să-și re-inițializeze starea cu valoarea reală, nu cu `nil`-ul inițial).
+  Fără asta ar fi fost EXACT bug-ul deja documentat și reparat sistemic
+  în cele 11 `Publish*View.swift` (Furnizor v1.17.1).
+- **Client** (Mac + Windows) - `LaunchOfferBanner`/`LaunchBannerChecker`
+  NU au avut nevoie de nicio modificare - `isDisplayable` era deja unicul
+  punct de decizie "arăt sau nu bannerul", verificat direct din Core.
+
+**Verificat**: `swift build` (Client + Core + Furnizor) - 0 erori.
+`dotnet build ... -r win-x64` (Windows) - 0 erori.
+
 ## Client v1.23.0 (2026-08-31) — Banner de lansare, controlabil din Furnizor
 
 v1.22.0 (imagine bundled static in Sources/GDCPluginManager/Resources) a
