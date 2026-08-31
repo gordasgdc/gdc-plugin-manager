@@ -1,5 +1,12 @@
 # Changelog — GDC Plugin Manager
 
+## Client v1.24.5 (2026-08-31) — Fix real: Mărime Text nu făcea nimic (Mac)
+
+`dynamicTypeSize` (infrastructura de accesibilitate SwiftUI) nu producea
+nicio schimbare vizibilă pe macOS, în ciuda a două tentative de fix.
+Înlocuit cu aceeași tehnică deja dovedită pe Windows: o scalare vizuală
+directă a întregului conținut. Confirmat funcțional de Cristi.
+
 ## Client v1.24.3 (2026-08-31) — Poziție text sus/jos, aleasă din Furnizor
 
 - Bannerul de lansare nu mai suprapune textul peste imagine — text și

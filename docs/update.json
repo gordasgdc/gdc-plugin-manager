@@ -1,7 +1,7 @@
 {
-  "version": "1.24.3",
+  "version": "1.24.5",
   "release_date": "2026-08-31",
-  "changes": "Fix: textul bannerului nu se mai suprapune peste imagine; poziție sus/jos aleasă din Furnizor.",
+  "changes": "Fix: setarea Mărime Text din Preferințe nu avea niciun efect pe Mac.",
   "download_url": {
     "mac": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Mac.zip",
     "windows": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Windows.zip"

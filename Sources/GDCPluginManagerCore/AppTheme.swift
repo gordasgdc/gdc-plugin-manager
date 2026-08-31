@@ -79,23 +79,36 @@ public final class ThemeManager: ObservableObject {
 }
 
 /// Mărime text UI, opțională — cerut explicit 2026-08-29 ("setări de mărire
-/// a textului"). Folosește infrastructura NATIVĂ de accesibilitate SwiftUI
-/// (`dynamicTypeSize`), nu un factor de scalare custom pe font — layout-ul
-/// întregii aplicații e deja construit cu `.font(.headline)`/`.caption`/etc
-/// (tipuri de text semantice), deci `dynamicTypeSize` reflowează totul
-/// corect și testat de Apple, fără riscul unui text tăiat în frame-uri
-/// fixe pe care l-ar avea o multiplicare brută a punctajului fontului.
+/// a textului").
+///
+/// [2026-08-31, BUG REAL găsit și reparat] Varianta inițială folosea
+/// `dynamicTypeSize` (infrastructura de accesibilitate SwiftUI) — pe
+/// hârtie, alegerea "corectă" (reflow automat, fără text tăiat). ÎN
+/// PRACTICĂ, pe macOS 14, modificatorul nu producea NICIO schimbare
+/// vizibilă NICĂIERI în această aplicație, confirmat direct de Cristi de
+/// două ori (o dată cu modificatorul aplicat la nivel de Scene, a doua
+/// oară mutat la nivel de View — tot fără efect). Motivul exact rămâne
+/// neclar (posibil: macOS randează multe stiluri semantice de font la
+/// dimensiuni FIXE, spre deosebire de iOS, unde Dynamic Type are tabele
+/// de dimensiuni explicite per treaptă) — indiferent de cauză, dovada
+/// empirică ("nu funcționează") bate presupunerea teoretică ("ar trebui
+/// să funcționeze"). Înlocuit cu EXACT aceeași strategie deja dovedită pe
+/// Windows (`TextScaleStore.cs`, `ScaleTransform` pe `LayoutTransform`):
+/// un factor de scalare aplicat direct, vizual, pe întregul arbore
+/// (`.scaleEffect` + compensare de `frame`, vezi `GDCPluginManagerApp.swift`).
 public enum TextScalePreference: String, CaseIterable, Identifiable, Sendable {
     case small, normal, large, xlarge
 
     public var id: String { rawValue }
 
-    public var dynamicTypeSize: DynamicTypeSize {
+    /// Aceiași factori ca `TextScalePreferenceExtensions.ScaleFactor` de pe
+    /// Windows — paritate vizuală între platforme.
+    public var scaleFactor: CGFloat {
         switch self {
-        case .small: return .small
-        case .normal: return .large // "large" e valoarea implicită a sistemului
-        case .large: return .xLarge
-        case .xlarge: return .xxxLarge
+        case .small: return 0.9
+        case .normal: return 1.0
+        case .large: return 1.15
+        case .xlarge: return 1.3
         }
     }
 }

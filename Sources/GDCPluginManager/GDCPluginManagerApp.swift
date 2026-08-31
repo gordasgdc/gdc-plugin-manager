@@ -4,25 +4,15 @@ import GDCPluginManagerCore
 
 @main
 struct GDCPluginManagerApp: App {
-    // @StateObject (nu doar `.shared` citit direct) — obligatoriu ca
-    // schimbarea din Preferences să REÎNTOARCĂ `body`-ul scenei; altfel
-    // `.dynamicTypeSize` de mai jos ar citi valoarea o singură dată, la
-    // pornire, și n-ar reacționa niciodată la o schimbare ulterioară.
-    @StateObject private var textScale = TextScaleManager.shared
-
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ScaledContentView()
                 .frame(minWidth: 760, minHeight: 500)
                 // Tema salvată (Sistem/Light/Dark) se aplică din primul
                 // cadru: `ThemeManager` se poate iniția înainte ca `NSApp`
                 // să existe, caz în care `apply()` din init n-are pe ce
                 // scrie — vezi AppTheme.swift (Core).
                 .onAppear { ThemeManager.shared.applyNow() }
-                // Mărime text (2026-08-29) — `dynamicTypeSize` reflowează
-                // automat orice `Text`/`Label` din aplicație, fără cod
-                // suplimentar în fiecare view.
-                .dynamicTypeSize(textScale.current.dynamicTypeSize)
         }
         .windowStyle(.titleBar)
         .commands {
@@ -73,4 +63,27 @@ struct GDCPluginManagerApp: App {
 
 extension Notification.Name {
     static let gdcCheckForUpdatesRequested = Notification.Name("gdcCheckForUpdatesRequested")
+}
+
+/// Mărime text (2026-08-31) — vezi nota din `TextScalePreference`
+/// (AppTheme.swift) despre eșecul real al `dynamicTypeSize` pe această
+/// aplicație. Aici scalăm vizual ÎNTREG conținutul, port 1:1 al tehnicii
+/// deja dovedite pe Windows (`LayoutTransform`+`ScaleTransform`): randăm
+/// `ContentView` la dimensiunea "1/scale" din spațiul disponibil, apoi îl
+/// mărim vizual cu `.scaleEffect` — rezultatul e identic ca efect cu un
+/// layout transform (tot ce conține `ContentView`, text SAU altceva,
+/// devine vizibil mai mare/mic), fără să depindă de ce tip de `Font`
+/// folosește fiecare `Text` în parte.
+private struct ScaledContentView: View {
+    @ObservedObject private var textScale = TextScaleManager.shared
+
+    var body: some View {
+        GeometryReader { geo in
+            let scale = textScale.current.scaleFactor
+            ContentView()
+                .frame(width: geo.size.width / scale, height: geo.size.height / scale)
+                .scaleEffect(scale)
+                .position(x: geo.size.width / 2, y: geo.size.height / 2)
+        }
+    }
 }
