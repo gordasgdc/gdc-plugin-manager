@@ -512,7 +512,7 @@
     {
       "id" : "lansare",
       "imagePath" : "covers/seasonal/lansare.jpg?v=b898bfc8",
-      "isEnabled" : true,
+      "isEnabled" : false,
       "label" : "lansare",
       "opacity" : 0.16103848429432013,
       "position" : "bottomTrailing"
