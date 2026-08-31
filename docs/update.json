@@ -1,7 +1,7 @@
 {
-  "version": "1.21.0",
+  "version": "1.22.0",
   "release_date": "2026-08-31",
-  "changes": "Nou: ceas live optional (countdown Xz Yh) pentru continut cu oferta cu termen (Evenimente, Cursuri, Aplicatii, Oferte Parteneri, etc.) - activat de Furnizor per intrare.",
+  "changes": "Nou: banner de lansare cu ofertele speciale de deschidere, vizibil jos pe ecranul principal.",
   "download_url": {
     "mac": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Mac.zip",
     "windows": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Windows.zip"

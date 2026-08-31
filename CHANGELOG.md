@@ -1,5 +1,24 @@
 # Changelog — GDC Plugin Manager
 
+## Client v1.22.0 (2026-08-31) — Banner de lansare publică
+
+Cerută de Cristi pentru lansarea publică a platformei: un banner static,
+ancorat jos de tot pe ecranul principal, cu imaginea generată AI (3D,
+obiecte simbolice pentru fiecare tip de conținut din catalog) și textul
+real „LANSARE" / „PREȚURI SPECIALE DE DESCHIDERE" suprapus (SwiftUI
+`Text`, nu parte din imagine — generatoarele AI de imagini nu randează
+fiabil text cu diacritice românești).
+
+- **`LaunchOfferBanner.swift`** (nou) — imagine statică `.copy`-uită în
+  bundle-ul Client (`Resources/LaunchOfferBanner.jpg`), NU parte din
+  biblioteca de filigrane sezoniere (`SeasonalBackgroundsLayer`/Furnizor) —
+  e temporară, scoasă manual din cod când se încheie oferta de lansare, nu
+  are nevoie de scheduling.
+- Inserată ca frate în `VStack`-ul din `ContentView.detail` (Regula 24 —
+  niciodată `.safeAreaInset` direct pe un `List`/`ScrollView`),
+  non-interactivă (`.allowsHitTesting(false)`).
+- **Verificat**: `swift build --product GDCPluginManager` — 0 erori.
+
 ## Client v1.21.0 + Furnizor v1.18.0 (2026-08-31) — Ceas live opțional (countdown) pentru oferte cu termen
 Cerință explicită a lui Cristi: "dacă pun un eveniment sau o aplicație la
 ofertă... să apară ca un ceas câte zile, ore, minute mai este până dispare".

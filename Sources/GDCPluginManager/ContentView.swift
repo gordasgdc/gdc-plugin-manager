@@ -397,6 +397,11 @@ struct ContentView: View {
             }
             .navigationSplitViewColumnWidth(min: 180, ideal: 220, max: 380)
         } detail: {
+            // LaunchOfferBanner e FRATE cu conținutul scrollabil, nu
+            // `.safeAreaInset` direct pe listă — vezi Regula 24
+            // (CLAUDE.md): safeAreaInset atașat direct pe un List/ScrollView
+            // nu se resincronizează mereu instant la resize rapid.
+            VStack(spacing: 0) {
             VStack(spacing: 0) {
                 if !missingDependencies.isEmpty {
                     DependencyBanner(missing: missingDependencies)
@@ -431,6 +436,8 @@ struct ContentView: View {
             // Fără `alignment:` fix aici: fiecare filigran își poartă
             // propria poziție (2026-08-29) — vezi SeasonalBackgroundsLayer.
             .background { SeasonalBackgroundsLayer(configs: catalog.seasonalBackgrounds.activeNowDeduplicated) }
+            LaunchOfferBanner()
+            }
         }
         .navigationTitle(L.t("app.name"))
         .toolbar {

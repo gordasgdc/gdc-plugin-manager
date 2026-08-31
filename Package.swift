@@ -23,6 +23,7 @@ let package = Package(
                 .copy("Resources/Ghid-GDCPluginManager-ro.pdf"),
                 .copy("Resources/Ghid-GDCPluginManager-en.pdf"),
                 .copy("Resources/Ghid-GDCPluginManager-es.pdf"),
+                .copy("Resources/LaunchOfferBanner.jpg"),
             ]
         ),
         // Cristi-only tool: publishes products and generates license
