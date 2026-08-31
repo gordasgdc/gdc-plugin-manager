@@ -119,6 +119,11 @@
       "externalURL" : "https://blackmagicdesign-emea.zoom.us/webinar/register/WN_0_KeO82lSiWK1zbesPsC7A#/registration",
       "id" : "Photo-to-Video",
       "location" : "Online",
+      "scheduling" : {
+        "endDate" : 810433533.536226,
+        "showCountdown" : true,
+        "startDate" : 809828733.536225
+      },
       "title" : "Creativity from\nPhoto to Video",
       "youtubeURL" : "https://www.blackmagicdesign.com/event/davinci-resolve-online-seminars"
     },
