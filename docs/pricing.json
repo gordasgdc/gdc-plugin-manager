@@ -57,11 +57,17 @@
       ]
     },
     "mac-master-control-pro" : {
-      "basePrice" : 17,
+      "basePrice" : 34,
       "currency" : "EUR",
       "name" : "Master Control Studio Pro",
       "promoSchedule" : [
-
+        {
+          "endsAt" : "2026-09-04T05:16:36Z",
+          "label" : "Oferta lansare",
+          "price" : 21,
+          "showCountdown" : true,
+          "startsAt" : "2026-08-31T05:16:36Z"
+        }
       ]
     },
     "media-flow-monitor" : {
