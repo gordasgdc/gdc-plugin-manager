@@ -32,6 +32,13 @@ struct CoverImagePicker: View {
     @State private var debouncedURL: URL?
     @State private var mode: Mode = .none
     @State private var errorMessage: String?
+    /// Biblioteca de imagini deja publicate (2026-08-31) — cerință directă
+    /// a lui Cristi: "odată ce ai urcat, poți să o selectezi și să o
+    /// folosești în mai multe locuri". Încărcată la deschiderea foii, nu
+    /// la fiecare randare — `docs/covers/` nu se schimbă în timp ce
+    /// formularul e deschis.
+    @State private var showingLibrary = false
+    @State private var libraryEntries: [CoverImageStore.LibraryEntry] = []
 
     private enum Mode: String, CaseIterable, Identifiable {
         case none, local, external
@@ -80,6 +87,62 @@ struct CoverImagePicker: View {
             .padding(8)
         }
         .task { syncModeFromSelection() }
+        .sheet(isPresented: $showingLibrary) { libraryPicker }
+    }
+
+    // MARK: - Sheet "Bibliotecă imagini"
+
+    private static let libraryColumns = [GridItem(.adaptive(minimum: 96), spacing: 12)]
+
+    @ViewBuilder
+    private var libraryPicker: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Bibliotecă imagini").font(.title3).fontWeight(.semibold)
+            Text("Imagini deja publicate — alege una ca să o refolosești aici, fără reîncărcare.")
+                .font(.caption).foregroundStyle(.secondary)
+
+            if libraryEntries.isEmpty {
+                Text("Nicio imagine publicată încă.")
+                    .font(.callout).foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity, minHeight: 120)
+            } else {
+                ScrollView {
+                    LazyVGrid(columns: Self.libraryColumns, spacing: 12) {
+                        ForEach(libraryEntries) { entry in
+                            Button {
+                                selection = .existing(entry.catalogValue)
+                                mode = .local
+                                showingLibrary = false
+                            } label: {
+                                VStack(spacing: 4) {
+                                    ZStack {
+                                        RoundedRectangle(cornerRadius: 8).fill(Color.secondary.opacity(0.1))
+                                        if let image = NSImage(contentsOf: entry.fileURL) {
+                                            Image(nsImage: image).resizable().scaledToFill()
+                                        } else {
+                                            Image(systemName: "photo").font(.system(size: 24)).foregroundStyle(.secondary)
+                                        }
+                                    }
+                                    .frame(width: 80, height: 80)
+                                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                                    Text(entry.id).font(.caption2).lineLimit(1).truncationMode(.middle)
+                                }
+                                .frame(width: 96)
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
+                }
+                .frame(maxHeight: 360)
+            }
+
+            HStack {
+                Spacer()
+                Button("Anulează") { showingLibrary = false }
+            }
+        }
+        .padding(20)
+        .frame(width: 480)
     }
 
     // MARK: - Sectiunea "Fisier local"
@@ -90,7 +153,13 @@ struct CoverImagePicker: View {
             preview
 
             VStack(alignment: .leading, spacing: 8) {
-                Button("Alege imagine…") { pickLocal() }
+                HStack(spacing: 8) {
+                    Button("Alege imagine…") { pickLocal() }
+                    Button("Din bibliotecă…") {
+                        libraryEntries = CoverImageStore.libraryEntries()
+                        showingLibrary = true
+                    }
+                }
 
                 if case .local(_, let savings) = selection {
                     // Aratam castigul concret ("5,4 MB -> 529 KB (90% mai

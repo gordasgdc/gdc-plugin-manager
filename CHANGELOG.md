@@ -426,3 +426,11 @@ imagini eșua cu „fișier deja existent" — singurul ocol era să schimbi
 numele produsului. Fix: fișierul vechi se șterge explicit înainte de
 copiere, de fiecare dată — republicarea funcționează acum indiferent de
 starea anterioară a fișierului.
+
+## Furnizor v1.24.0 (2026-08-31) — Bibliotecă de imagini reutilizabile
+
+Nou buton „Din bibliotecă…" lângă „Alege imagine…", la orice copertă din
+orice secțiune (Aplicații, Evenimente, Materiale, Magazine, Service,
+Cursuri, Oferte, Pachete, Resurse) — arată toate imaginile deja publicate
+și permite reutilizarea uneia existente pe un produs nou, fără reîncărcare
+de pe disc.

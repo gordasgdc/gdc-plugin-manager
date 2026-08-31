@@ -194,6 +194,39 @@ enum CoverImageStore {
         }
     }
 
+    /// O intrare din biblioteca de imagini deja publicate — vezi
+    /// `libraryEntries()`. Cerinta lui Cristi (2026-08-31): "odata ce ai
+    /// urcat, poti sa o selectezi si sa o folosesti in mai multe locuri" —
+    /// pana acum fiecare copertă trebuia reîncărcată de pe disc separat
+    /// pentru fiecare produs, chiar dacă imaginea era deja publicată.
+    struct LibraryEntry: Identifiable, Hashable {
+        /// Numele fisierului (fara extensie) — ce arata furnizorului in UI.
+        let id: String
+        let fileURL: URL
+        /// Valoarea gata de scris in `coverImage`, cu acelasi cache-bust
+        /// prin hash de continut ca orice publicare noua.
+        let catalogValue: String
+    }
+
+    /// Toate imaginile deja publicate in `docs/covers/` — root, fara
+    /// subfolderul `seasonal/` (filigrane, alt scop) si fara
+    /// `launch-banner.*` (slot unic, nu un produs reutilizabil).
+    static func libraryEntries() -> [LibraryEntry] {
+        let fm = FileManager.default
+        guard let entries = try? fm.contentsOfDirectory(at: coversDirectory, includingPropertiesForKeys: [.isDirectoryKey]) else {
+            return []
+        }
+        return entries.compactMap { url -> LibraryEntry? in
+            guard (try? url.resourceValues(forKeys: [.isDirectoryKey]))?.isDirectory != true else { return nil }
+            let name = url.deletingPathExtension().lastPathComponent
+            guard name != "launch-banner" else { return nil }
+            guard let suffix = try? cacheBustSuffix(for: url) else { return nil }
+            let value = "\(CatalogAssets.coversFolderName)/\(url.lastPathComponent)?v=\(suffix)"
+            return LibraryEntry(id: name, fileURL: url, catalogValue: value)
+        }
+        .sorted { $0.id.localizedCaseInsensitiveCompare($1.id) == .orderedAscending }
+    }
+
     /// Deschide selectorul de fisiere. nil daca furnizorul a anulat.
     ///
     /// NOTE: `.image` acopera tot ce stie ImageIO sa citeasca (HEIC de pe
