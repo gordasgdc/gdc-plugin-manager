@@ -238,6 +238,35 @@
     .info-cell{ padding:1vh 3vw; }
   }
 
+  /* Landscape compact (2026-08-31) — FIX REAL: pana acum, orice rotire pe
+     landscape (telefon/tableta pe orizontala, exact pozitia normala de
+     filmat o clacheta pe suport) pastra aceeasi stivare verticala pe 4
+     randuri a `.info-grid` — pe o inaltime scurta de landscape (~340-430px
+     pe majoritatea telefoanelor), continutul devenea mai inalt decat
+     ecranul (masurat: 420px continut vs 375px ecran vizibil), fortand
+     scroll si ascunzand butonul CLAP. Landscape-ul are din start avantajul
+     de LATIME, nu de inaltime — solutia e sa folosim acea latime: cele 4
+     randuri de informatii devin 2 coloane x 2 randuri (jumatate din
+     inaltime), iar cifrele de timecode se micsoreaza usor. */
+  @media (orientation: landscape) and (max-height: 500px){
+    .slate{ gap:5px; padding: calc(5px + var(--safe-top)) 10px calc(6px + var(--safe-bottom)); }
+    .topbar{ min-height:0; }
+    .icon-btn, .lang-btn{ width:30px; height:30px; min-width:26px; }
+    .stripes{ height:12px; }
+    .tc-block{ padding:0.6vh 3vw 0.3vh; }
+    .tc-digits{ font-size:clamp(22px, 6vw, 40px); }
+    .tc-label{ margin-top:2px; font-size:8px; }
+    .info-grid{ flex-direction:row; flex-wrap:wrap; }
+    .info-row{ flex:1 1 50%; border-top:none; }
+    .info-row:nth-child(even){ border-left:1px solid #cfccc3; }
+    .info-cell{ padding:0.5vh 2vw; }
+    .info-label{ font-size:8px; }
+    .info-value{ font-size:clamp(12px,2.6vw,15px); }
+    .action-row{ gap:6px; }
+    .take-btn, .clap-btn{ min-height:34px; font-size:11px; }
+    .exit-hint{ display:none; }
+  }
+
   @media (max-width: 340px){
     .field-grid{ gap:6px; }
     .clap-btn{ font-size:14px; }
