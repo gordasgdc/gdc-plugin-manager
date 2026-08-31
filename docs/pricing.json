@@ -1,11 +1,59 @@
 {
-  "updatedAt": "2026-08-30",
-  "products": {
-    "gdc-datamover": { "name": "DataMover", "basePrice": 23, "currency": "EUR", "promoSchedule": [] },
-    "cursorpro": { "name": "CursorPro GDC", "basePrice": 9, "currency": "EUR", "promoSchedule": [] },
-    "gdc-vault": { "name": "GDC Vault", "basePrice": 5, "currency": "EUR", "promoSchedule": [] },
-    "cgconvertor": { "name": "CG Convertor", "basePrice": 23, "currency": "EUR", "promoSchedule": [] },
-    "media-flow-monitor": { "name": "MediaFlow Monitor", "basePrice": 23, "currency": "EUR", "promoSchedule": [] },
-    "mac-master-control-pro": { "name": "Master Control Studio Pro", "basePrice": 17, "currency": "EUR", "promoSchedule": [] }
-  }
+  "products" : {
+    "cgconvertor" : {
+      "basePrice" : 23,
+      "currency" : "EUR",
+      "name" : "CG Convertor",
+      "promoSchedule" : [
+
+      ]
+    },
+    "cursorpro" : {
+      "basePrice" : 9,
+      "currency" : "EUR",
+      "name" : "CursorPro GDC",
+      "promoSchedule" : [
+
+      ]
+    },
+    "gdc-datamover" : {
+      "basePrice" : 45,
+      "currency" : "EUR",
+      "name" : "DataMover",
+      "promoSchedule" : [
+        {
+          "endsAt" : "2026-09-11T05:08:30Z",
+          "label" : "Oferta lansare",
+          "price" : 25,
+          "showCountdown" : true,
+          "startsAt" : "2026-08-31T05:08:30Z"
+        }
+      ]
+    },
+    "gdc-vault" : {
+      "basePrice" : 5,
+      "currency" : "EUR",
+      "name" : "GDC Vault",
+      "promoSchedule" : [
+
+      ]
+    },
+    "mac-master-control-pro" : {
+      "basePrice" : 17,
+      "currency" : "EUR",
+      "name" : "Master Control Studio Pro",
+      "promoSchedule" : [
+
+      ]
+    },
+    "media-flow-monitor" : {
+      "basePrice" : 23,
+      "currency" : "EUR",
+      "name" : "MediaFlow Monitor",
+      "promoSchedule" : [
+
+      ]
+    }
+  },
+  "updatedAt" : "2026-08-31"
 }
