@@ -1,5 +1,13 @@
 # Changelog — GDC Plugin Manager
 
+## Client v1.24.1 (2026-08-31) — Fix: bannerul de lansare nu se afișa niciodată
+
+Bug real, identic cu cel deja documentat la filigranul sezonier: `.task`
+(care pornea fetch-ul) era atașat pe un container gol condiționat — la
+primul randaj SwiftUI nu-l pornea niciodată. Confirmat din log ("zero
+apeluri LaunchBanner") și reparat: `.task` mutat pe un container CONCRET,
+mereu prezent.
+
 ## Client v1.24.0 (2026-08-31) — Valabilitate temporală pentru bannerul de lansare
 
 Bannerul de lansare (v1.23.0) poate avea acum o perioadă programată — se

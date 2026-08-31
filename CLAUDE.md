@@ -838,6 +838,29 @@ datat sunt mutate în `CLAUDE_ARCHIVE.md` (NU se citește automat) — citește-
 explicit când investighezi o zonă veche de cod. Rezumat "stare curentă" mai
 jos rămâne aici, fiindcă e activ relevant sesiune de sesiune.
 
+## Client v1.24.1 (2026-08-31) — FIX REAL: bannerul nu se afișa niciodată
+
+Raportat direct de Cristi ("nu apare banerul"). `LaunchOfferBanner.swift`
+avea EXACT bug-ul deja documentat la `SeasonalBackgroundLayer`
+(2026-08-29): `.task` atașat pe un `Group { if let ... }` — la primul
+randaj (`checker.config` încă `nil`), Group-ul n-are niciun copil concret,
+SwiftUI nu garantează `.task` pe un gol condiționat. Confirmat DIRECT din
+`%TEMP%/gdcpm-crash.log`: zero apeluri "LaunchBanner" în tot log-ul,
+deși `UpdateChecker` avea zeci de intrări din aceeași sesiune - deci
+task-ul chiar nu pornea niciodată, nu era o problemă de rețea/server.
+Fix: `.task` mutat pe `Color.clear.frame(...)` (container concret, mereu
+prezent), conținutul real ca `.overlay` suprapus doar când există.
+**Verificat live, nu doar cod**: rebuild + reinstall local + relansare +
+grep pe log — apar acum "view task pornit" și "OK, enabled=true".
+
+**Lecție de proces**: acest bug exista din commit-ul inițial al
+bannerului (v1.22.0) - a scăpat pentru că verificarea de atunci s-a oprit
+la "swift build - 0 erori", niciodată la rularea REALĂ + verificarea
+log-ului. Un `.task`/`.onAppear` nou, atașat pe orice conținut
+CONDIȚIONAT, se verifică de-acum obligatoriu prin rulare + log, nu doar
+prin compilare - la fel cum Regula 25 (Log de Diagnostic) există special
+pentru genul ăsta de eșec silențios.
+
 ## Client v1.24.0 (2026-08-31) — Valabilitate temporală pentru banner
 
 Raportat direct de Cristi ("dar nu pot sa-i dau valabilitate temporala?")
