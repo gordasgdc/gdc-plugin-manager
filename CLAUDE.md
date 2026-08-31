@@ -710,6 +710,29 @@ clase, cauze tehnice) unei audiențe publice necunoscute.
 
 ## Reguli de aur
 
+**0. Rebuild+reinstall OBLIGATORIU pentru AMBELE aplicații (Client ȘI
+Furnizor) la orice commit care atinge codul vreuneia — nu doar cea testată
+în acel moment.** (Promovată din `CLAUDE_ARCHIVE.md`, 2026-08-31 — regula
+exista din 2026-08-24, dar trăia într-un fișier care explicit NU se
+citește automat, deci a fost încălcată din nou.) Bug real, repetat:
+`Client v1.24.0 + Furnizor v1.20.0` au fost bump-uite în ACELAȘI commit
+(scheduling pe bannerul de lansare), dar doar Client-ul a fost rebuild-uit
++ reinstalat + testat imediat — Furnizor-ul instalat a rămas la binarul
+vechi (`v1.19.0`, fără scheduling), până când Cristi a întrebat explicit
+"Furnizor este actualizat?". Regulă practică:
+- După orice commit care schimbă cod în `Sources/GDCPluginManager/`,
+  `Sources/GDCPluginManagerCore/`, SAU `Sources/GDCPluginManagerFurnizor/`,
+  rulează AMBELE `build_app.sh` ȘI `build_furnizor_app.sh` înainte de a
+  raporta lucrul ca fiind gata — niciodată doar scriptul aplicației la care
+  te-ai gândit ultima. `GDCPluginManagerCore` e comun ambelor, deci orice
+  schimbare acolo atinge implicit pe amândouă.
+- Verifică explicit versiunea INSTALATĂ (nu doar cea din sursă) înainte de
+  a spune "gata" — `/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString"`
+  pe bundle-ul din `/Applications`, comparată cu `Info.plist`/
+  `Info-Furnizor.plist` din repo. O versiune bump-uită în sursă, dar
+  nereflectată pe disc, e exact genul de discrepanță care a cauzat bug-ul
+  de mai sus.
+
 **1. Download links — NICIODATĂ hardcodate.**
 Orice link de download (site, `update.json`, README) trebuie să folosească `.../releases/latest/download/<fisier>` — GitHub rezolvă automat spre ultimul release nepublicat ca draft/prerelease. Nu scrie niciodată un tag fix (`v1.2.4`) într-un link public. Verificat live 2026-08-22: toate cele 4 site-uri GDC respectă deja asta.
 
