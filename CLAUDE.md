@@ -776,6 +776,32 @@ datat sunt mutate în `CLAUDE_ARCHIVE.md` (NU se citește automat) — citește-
 explicit când investighezi o zonă veche de cod. Rezumat "stare curentă" mai
 jos rămâne aici, fiindcă e activ relevant sesiune de sesiune.
 
+## Client v1.21.0 + Furnizor v1.18.0 (2026-08-31) — Ceas live optional (countdown)
+
+Cerinta explicita a lui Cristi, dupa fix-ul de scheduling de mai jos:
+"sa apara ca un ceas cat timp mai este pana dispare", pe modelul deja
+existent `PricingPromo.showCountdown` din DataMover (Regula 27), dar
+generalizat la ORICE continut din catalog cu valabilitate temporala, nu
+doar preturi.
+
+- **`Scheduling.showCountdown: Bool`** (nou, `CatalogModel.swift`) -
+  decodare custom (`decodeIfPresent ?? false`) pentru compatibilitate cu
+  `catalog.json` existent. `countdownText` computed - "Mai sunt Xz Yh" /
+  "Mai sunt Yh Zm" / "Mai sunt Zm", `nil` daca nu se aplica (fara endDate,
+  expirat, sau flag-ul OFF). Fara secunde - un ceas la secunda pe zeci de
+  carduri simultan e cost UI nejustificat.
+- **Furnizor** (`SchedulingPicker.swift`) - toggle nou, vizibil doar cand
+  valabilitatea temporala e activa.
+- **Client** (`ContentView.swift`) - `CountdownBadge` (nou, reutilizabil,
+  `Timer.publish(every: 60)`) inserat in toate cele 11 tipuri de card
+  (Plugin/Curs/Resursa educationala/Eveniment/Bundle/Oferta Partener/
+  Magazin Partener/Centru Service/Aplicatie/Resursa descarcabila/Audio) -
+  insertie facuta printr-un script Python scopat pe fiecare `struct...Card`
+  (nu sed global - `PublishDownloadableResourceView`/`PublishEducationalResourceView`
+  foloseau AMBELE variabila `resource`, ambiguu pentru un simplu sed).
+
+**Verificat**: `swift build` (Client + Furnizor + Core) - 0 erori.
+
 ## Furnizor v1.17.1 (2026-08-31) — fix real de identitate SwiftUI, sistemic
 
 Raportat de Cristi: edita un Eveniment cu valabilitate temporală deja

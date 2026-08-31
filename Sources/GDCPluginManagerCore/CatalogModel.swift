@@ -522,10 +522,29 @@ public struct CourseOption: Codable, Hashable, Identifiable {
 public struct Scheduling: Codable, Hashable {
     public let startDate: Date?
     public let endDate: Date?
+    /// Ceas live opțional (2026-08-31, cerut explicit de Cristi, după modelul
+    /// `PricingPromo.showCountdown` din DataMover) - dacă `true` și
+    /// `endDate` e setat, clientul (GDCPluginManager) arată "Mai sunt Xz Yh"
+    /// lângă conținut, ca urgență/FOMO pentru oferte cu termen. Implicit
+    /// `false` - decodare custom pentru compatibilitate cu `catalog.json`
+    /// existent, unde câmpul nu exista deloc înainte de această versiune.
+    public let showCountdown: Bool
 
-    public init(startDate: Date? = nil, endDate: Date? = nil) {
+    public init(startDate: Date? = nil, endDate: Date? = nil, showCountdown: Bool = false) {
         self.startDate = startDate
         self.endDate = endDate
+        self.showCountdown = showCountdown
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case startDate, endDate, showCountdown
+    }
+
+    public init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        startDate = try c.decodeIfPresent(Date.self, forKey: .startDate)
+        endDate = try c.decodeIfPresent(Date.self, forKey: .endDate)
+        showCountdown = try c.decodeIfPresent(Bool.self, forKey: .showCountdown) ?? false
     }
 
     /// True dacă acest conținut ar trebui să fie vizibil ACUM. Fără
@@ -538,6 +557,24 @@ public struct Scheduling: Codable, Hashable {
     }
 
     public var isEmpty: Bool { startDate == nil && endDate == nil }
+
+    /// Text scurt "Mai sunt Xz Yh"/"Mai sunt Yh Zm"/"Mai sunt Zm" pentru
+    /// afișare live în Client - `nil` dacă nu se aplică (fără endDate,
+    /// deja expirat, sau `showCountdown == false`). Nu folosește secunde -
+    /// un client care ține un ceas la secundă pe zeci de carduri e cost UI
+    /// nejustificat; minute e suficient de "live" pentru FOMO.
+    public var countdownText: String? {
+        guard showCountdown, let endDate, isActiveNow else { return nil }
+        let remaining = endDate.timeIntervalSinceNow
+        guard remaining > 0 else { return nil }
+        let totalMinutes = Int(remaining / 60)
+        let days = totalMinutes / (24 * 60)
+        let hours = (totalMinutes % (24 * 60)) / 60
+        let minutes = totalMinutes % 60
+        if days > 0 { return "Mai sunt \(days)z \(hours)h" }
+        if hours > 0 { return "Mai sunt \(hours)h \(minutes)m" }
+        return "Mai sunt \(minutes)m"
+    }
 }
 
 public struct Course: Codable, Identifiable, Hashable {

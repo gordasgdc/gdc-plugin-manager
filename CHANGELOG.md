@@ -1,5 +1,20 @@
 # Changelog — GDC Plugin Manager
 
+## Client v1.21.0 + Furnizor v1.18.0 (2026-08-31) — Ceas live opțional (countdown) pentru oferte cu termen
+Cerință explicită a lui Cristi: "dacă pun un eveniment sau o aplicație la
+ofertă... să apară ca un ceas câte zile, ore, minute mai este până dispare".
+- **`Scheduling.showCountdown`** (nou, opțional, implicit `false`) —
+  câmp nou pe modelul de valabilitate temporală comun tuturor secțiunilor
+  (Evenimente, Cursuri, Aplicații, Oferte Parteneri, Bundle-uri, Materiale,
+  Magazine Parteneri, Centre Service, Resurse descărcabile/educaționale).
+- **Furnizor** — comutator nou "Arată countdown live la clienți (opțional)"
+  în `SchedulingPicker`, vizibil doar când valabilitatea temporală e activă.
+- **Client** — badge portocaliu "MAI SUNT Xz Yh" pe cardul respectiv, cât
+  timp conținutul e activ, auto-actualizat la 60s — pe toate cele 11 tipuri
+  de conținut din catalog.
+- Compatibil cu `catalog.json` existent — orice intrare fără acest câmp
+  se comportă identic ca înainte (countdown OFF implicit).
+
 ## Furnizor v1.17.1 (2026-08-31) — Fix: valabilitatea temporală nu apărea corect la editare
 Raportat de Cristi: la editarea unui Eveniment (sau oricărei alte secțiuni
 — Cursuri, Oferte Parteneri, Materiale, Aplicații, etc.) care avea deja o

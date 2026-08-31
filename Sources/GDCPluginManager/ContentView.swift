@@ -972,6 +972,28 @@ func MapButton(mapsURL: URL?) -> some View {
 /// Etichetă compactă tip "pill" — GRATUIT (verde) / LICENȚĂ (portocaliu) /
 /// PROBĂ (albastru). Un fundal plin + text alb, nu doar text colorat, ca
 /// sa citeasca clar ca un badge, nu ca o simpla nota de pret.
+/// Ceas live opțional pentru conținut cu ofertă cu termen (2026-08-31,
+/// cerut explicit de Cristi - vezi `Scheduling.showCountdown`/`countdownText`).
+/// Nu arată nimic dacă nu se aplică (countdown dezactivat de Furnizor, fără
+/// termen, sau expirat) - `Group` gol nu ocupă spațiu în layout.
+/// Se auto-actualizează la 60s - suficient pentru "live" fără cost UI de
+/// a reface un `Text` in fiecare card la fiecare secundă.
+private struct CountdownBadge: View {
+    let scheduling: Scheduling?
+    @State private var text: String?
+    private let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
+
+    var body: some View {
+        Group {
+            if let text {
+                BadgePill(text: text, color: .orange)
+            }
+        }
+        .onAppear { text = scheduling?.countdownText }
+        .onReceive(timer) { _ in text = scheduling?.countdownText }
+    }
+}
+
 private struct BadgePill: View {
     let text: String
     let color: Color
@@ -1076,6 +1098,7 @@ private struct PluginCard: View {
                 }
             }
             Text(item.name).font(.headline)
+            CountdownBadge(scheduling: item.scheduling)
             Text(item.description)
                 .font(.caption)
                 .foregroundStyle(.secondary)
@@ -1315,6 +1338,7 @@ private struct CourseCard: View {
                 lightboxTitle: course.name
             )
             Text(course.name).font(.headline)
+            CountdownBadge(scheduling: course.scheduling)
             Text(course.description)
                 .font(.caption)
                 .foregroundStyle(.secondary)
@@ -1397,6 +1421,7 @@ private struct EducationalResourceCard: View {
                 }
             }
             Text(resource.name).font(.headline)
+            CountdownBadge(scheduling: resource.scheduling)
             Text(resource.description)
                 .font(.caption)
                 .foregroundStyle(.secondary)
@@ -1465,6 +1490,7 @@ private struct EventCard: View {
                 }
             }
             Text(event.title).font(.headline)
+            CountdownBadge(scheduling: event.scheduling)
             HStack(spacing: 6) {
                 Text("\(event.dateDisplay) · \(event.location)")
                     .font(.caption).foregroundStyle(.secondary)
@@ -1562,6 +1588,7 @@ private struct BundleCard: View {
                 lightboxTitle: bundle.name
             )
             Text(bundle.name).font(.headline)
+            CountdownBadge(scheduling: bundle.scheduling)
             Text(bundle.description)
                 .font(.caption)
                 .foregroundStyle(.secondary)
@@ -1661,6 +1688,7 @@ private struct PartnerOfferCard: View {
                 }
             }
             Text(offer.brandName).font(.headline)
+            CountdownBadge(scheduling: offer.scheduling)
             Text(offer.description)
                 .font(.caption)
                 .foregroundStyle(.secondary)
@@ -1733,6 +1761,7 @@ private struct PartnerStoreCard: View {
                 lightboxTitle: store.name
             )
             Text(store.name).font(.headline)
+            CountdownBadge(scheduling: store.scheduling)
             Text(store.description)
                 .font(.caption)
                 .foregroundStyle(.secondary)
@@ -1805,6 +1834,7 @@ private struct ServiceCenterCard: View {
                 lightboxTitle: center.name
             )
             Text(center.name).font(.headline)
+            CountdownBadge(scheduling: center.scheduling)
             Text(center.specialization)
                 .font(.caption)
                 .foregroundStyle(.secondary)
@@ -1879,6 +1909,7 @@ private struct AppCard: View {
                 lightboxTitle: app.name
             )
             Text(app.name).font(.headline)
+            CountdownBadge(scheduling: app.scheduling)
             Spacer(minLength: 0)
             if let url = URL(string: app.url) {
                 Button(L.t("apps.open")) { NSWorkspace.shared.open(url) }
@@ -1983,6 +2014,7 @@ private struct DownloadResourceCard: View {
                 lightboxTitle: resource.name
             )
             Text(resource.name).font(.headline)
+            CountdownBadge(scheduling: resource.scheduling)
             if !resource.description.isEmpty {
                 Text(resource.description)
                     .font(.caption)
@@ -2150,6 +2182,7 @@ private struct AudioCard: View {
                 lightboxTitle: track.name
             )
             Text(track.name).font(.headline)
+            CountdownBadge(scheduling: track.scheduling)
             if !track.description.isEmpty {
                 Text(track.description)
                     .font(.caption)
