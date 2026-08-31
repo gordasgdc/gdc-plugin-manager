@@ -1,7 +1,7 @@
 {
-  "version": "1.8.0",
-  "release_date": "2026-08-27",
-  "changes": "v1.8.0: Self-Updater real — „Actualizează acum” descarcă și instalează pachetul direct din aplicație, fără să mai deschidă browserul/GitHub.",
+  "version": "1.9.0",
+  "release_date": "2026-08-31",
+  "changes": "v1.9.0: GPU Monitor (utilizare live) și Thermal Monitor (avertizare la supraîncălzire/throttling) — noi module de monitorizare în Dashboard-ul Pro.",
   "download_url": {
     "mac": "https://github.com/gordasgdc/MediaFlow-Monitor/releases/latest/download/MediaFlowMonitor.pkg",
     "windows": "https://github.com/gordasgdc/MediaFlow-Monitor/releases/latest/download/MediaFlowMonitorSetup-x64.exe"
