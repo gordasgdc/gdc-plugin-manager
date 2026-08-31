@@ -53,6 +53,7 @@ struct PublishAudioView: View {
 
                 CoverImagePicker(preset: .icon, selection: $coverSelection)
                 SchedulingPicker(scheduling: $scheduling)
+                    .id(editingID ?? "new")
 
                 if let errorMessage {
                     Label(errorMessage, systemImage: "exclamationmark.triangle.fill")

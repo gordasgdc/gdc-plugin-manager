@@ -1,5 +1,32 @@
 # Changelog — GDC Plugin Manager
 
+## Furnizor v1.17.1 (2026-08-31) — Fix: valabilitatea temporală nu apărea corect la editare
+Raportat de Cristi: la editarea unui Eveniment (sau oricărei alte secțiuni
+— Cursuri, Oferte Parteneri, Materiale, Aplicații, etc.) care avea deja o
+perioadă de valabilitate setată, comutatorul „Valabilitate temporală”
+apărea greșit ca OFF/gol, ca și cum trebuia setat din nou — deși valoarea
+reală rămânea salvată corect în `catalog.json`. Cauza reală: `SchedulingPicker`
+(componenta reutilizată de toate cele 10 secțiuni) își inițializează starea
+internă o singură dată, la primul render — SwiftUI păstrează aceeași
+instanță de view (și starea ei) între „adaugă nou” și „editează existent”,
+deci schimbarea ulterioară a valorii din formularul părinte nu se mai
+reflectă vizual. Fix: `.id(editingID ?? "new")` pe fiecare `SchedulingPicker`
+— forțează o identitate nouă de view la fiecare editare, deci inițializarea
+citește mereu valoarea reală curentă. (`SeasonalBackgroundView` avea deja
+acest fix, dintr-o sesiune anterioară — doar nu fusese propagat la
+celelalte 10 fișiere care folosesc aceeași componentă.)
+
+## Client v1.20.1 (2026-08-31) — Fix: eticheta „Actualizare disponibilă” persista după update real
+Raportat de Cristi: după ce actualiza o aplicație (ex. DataMover) la ultima
+versiune și dădea „Refresh” în „Aplicațiile mele”, eticheta de actualizare
+rămânea afișată — dispărea DOAR după ce închidea complet și redeschidea GDC
+Plugin Manager. Cauza reală: `Bundle(url:)` cache-uiește `infoDictionary`-ul
+pentru toată durata procesului — o citire ulterioară din același proces
+(inclusiv Refresh) întorcea versiunea veche, chiar dacă `Info.plist`-ul de
+pe disc se schimbase între timp. Fix: citire directă a `Info.plist`-ului
+(`PropertyListSerialization`, fără `Bundle`), fără cache — Refresh reflectă
+mereu starea reală, fără să fie nevoie de o repornire.
+
 ## Furnizor v1.17.0 (2026-08-30) — Pricing Manager: prețuri/oferte dinamice fără recompilare
 Cerință directă a lui Cristi: o ofertă de Black Friday necesita până acum
 recompilarea + resemnarea + republicarea FIECĂREI aplicații standalone

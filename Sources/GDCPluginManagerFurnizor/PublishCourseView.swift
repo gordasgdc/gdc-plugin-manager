@@ -73,6 +73,7 @@ struct PublishCourseView: View {
 
                 CoverImagePicker(preset: .cover, selection: $coverSelection)
                 SchedulingPicker(scheduling: $scheduling)
+                    .id(editingID ?? "new")
                 SocialLinksSection(state: $socialForm)
 
                 if let errorMessage {

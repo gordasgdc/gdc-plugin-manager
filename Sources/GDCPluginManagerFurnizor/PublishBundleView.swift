@@ -95,6 +95,7 @@ struct PublishBundleView: View {
 
                 CoverImagePicker(preset: .cover, selection: $coverSelection)
                 SchedulingPicker(scheduling: $scheduling)
+                    .id(editingID ?? "new")
 
                 if let errorMessage {
                     Label(errorMessage, systemImage: "exclamationmark.triangle.fill")

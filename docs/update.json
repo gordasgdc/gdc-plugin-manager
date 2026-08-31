@@ -1,7 +1,7 @@
 {
-  "version": "1.20.0",
-  "release_date": "2026-08-30",
-  "changes": "Mac + Windows: iconite REALE (extrase din aplicatia instalata) in Aplicatiile Mele si Scurtaturi, in loc de simboluri generice. Mac: adaugare multipla de scurtaturi + watcher live pe /Applications (detecteaza o instalare noua fara sa astepte prima lansare).",
+  "version": "1.20.1",
+  "release_date": "2026-08-31",
+  "changes": "Fix: eticheta \"Actualizare disponibila\" din Aplicatiile Mele nu disparea dupa un update real, pana la o repornire completa a GDC Plugin Manager - cauza reala: Bundle(url:) cache-uia versiunea instalata pentru toata durata procesului. Acum se citeste direct din Info.plist de pe disc, mereu proaspat.",
   "download_url": {
     "mac": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Mac.zip",
     "windows": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Windows.zip"

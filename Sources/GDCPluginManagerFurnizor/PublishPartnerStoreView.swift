@@ -47,6 +47,7 @@ struct PublishPartnerStoreView: View {
 
                 CoverImagePicker(preset: .icon, selection: $coverSelection)
                 SchedulingPicker(scheduling: $scheduling)
+                    .id(editingID ?? "new")
                 SocialLinksSection(state: $socialForm)
 
                 if let errorMessage {

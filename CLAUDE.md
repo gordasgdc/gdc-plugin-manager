@@ -776,6 +776,69 @@ datat sunt mutate în `CLAUDE_ARCHIVE.md` (NU se citește automat) — citește-
 explicit când investighezi o zonă veche de cod. Rezumat "stare curentă" mai
 jos rămâne aici, fiindcă e activ relevant sesiune de sesiune.
 
+## Furnizor v1.17.1 (2026-08-31) — fix real de identitate SwiftUI, sistemic
+
+Raportat de Cristi: edita un Eveniment cu valabilitate temporală deja
+setată, deschidea Edit, iar comutatorul din `SchedulingPicker` aparea OFF,
+ca si cum trebuia setat din nou - desi datele reale ramaneau corecte in
+`catalog.json` (bug PUR VIZUAL, nu pierdere de date - CU EXCEPTIA cazului
+in care Cristi, nestiind asta, chiar interactiona cu comutatorul/date
+picker-ele crezand ca le seteaza din nou - in acel moment `onChange`
+suprascria efectiv valoarea reala cu una noua).
+
+**Cauza radacina reala**: `SchedulingPicker.init(scheduling:)` citeste
+valoarea curenta a binding-ului o SINGURA data, la primul render al
+view-ului - `@State`-ul unui view SwiftUI se initializeaza o singura data,
+la crearea instantei, si NU se re-executa doar pentru ca binding-ul extern
+s-a schimbat ulterior. Toate cele 11 `Publish*View.swift` (Eveniment,
+Curs, Bundle, Oferta Partener, Aplicatie, Audio, Serviciu, Resursa
+descarcabila, Resursa educationala, Magazin Partener) folosesc un SINGUR
+view persistent per sectiune (nu recreat per-eveniment), cu propriul
+`@State private var editingID`/`scheduling` - apasarea "Edit" pe un item
+schimba DOAR valoarea acestor @State-uri ale PARINTELUI, dar `SchedulingPicker`
+insusi (aceeasi identitate de view, needificata) nu-si re-executa `init`-ul,
+deci `isEnabled`/`startDate`/`endDate` interne raman blocate la ce au fost
+la primul render (tipic `nil`/false, din starea initiala "eveniment nou").
+
+**Descoperire importanta**: `SeasonalBackgroundView.swift` avea DEJA acest
+fix (`.id(config.id)`, cu comentariu explicit "starea interna a picker-ului
+e per-intrare") - dintr-o sesiune anterioara, dar NICIODATA propagat la
+celelalte 10 fisiere care folosesc aceeasi componenta `SchedulingPicker`.
+**Regula practica noua**: cand un fix de tipul asta (bug de identitate
+SwiftUI intr-o componenta REUTILIZATA) e gasit si reparat intr-un singur
+loc, verifica explicit `grep -rln "NumeComponenta("` pe tot repo-ul inainte
+de a declara fix-ul complet - un fix izolat intr-un singur fisier, cand
+bug-ul e sistemic in componenta, lasa 9-10 alte locuri sparte identic.
+
+**Fix**: `.id(editingID ?? "new")` adaugat pe fiecare apel `SchedulingPicker(
+scheduling: $scheduling)` in toate cele 10 fisiere ramase - forteaza SwiftUI
+sa arunce instanta veche si sa creeze una noua (deci sa ruleze `init` din
+nou, cu valoarea REALA curenta) de fiecare data cand `editingID` se schimba
+(intre "adauga nou" si "editeaza X", sau intre editarea a doua iteme
+diferite consecutiv).
+
+**Verificat**: `swift build --product GDCPluginManagerFurnizor` - 0 erori.
+**Nu s-a testat inca manual, live** - Cristi urmeaza sa confirme ca, la
+editarea unui Eveniment cu valabilitate deja setata, comutatorul apare
+acum corect ON cu datele reale precompletate.
+
+## Stare curentă (2026-08-31) — versiune Client `1.20.1`
+
+- **Fix real, gasit de Cristi**: eticheta „Actualizare disponibilă” din
+  „Aplicațiile mele” persista dupa un update real, pana la o repornire
+  completa a GDC Plugin Manager. Cauza: `Bundle(url:)` (`MyAppsLauncher.
+  swift`, `refresh()`) cache-uieste `infoDictionary`-ul intern pentru toata
+  durata procesului - o citire ulterioara din ACELASI proces (Refresh
+  inclus) intorcea versiunea VECHE, indiferent ca fisierul `Info.plist` de
+  pe disc se schimbase. Fix: `readInfoPlistVersion()` citeste plist-ul
+  DIRECT (`PropertyListSerialization`), ocolind `Bundle` complet - nu mai
+  are cache, Refresh reflecta mereu starea reala de pe disc. **Regula
+  practica noua**: orice cod care citeste versiunea unei aplicatii TERTE
+  instalate (nu a propriului bundle) foloseste citire directa de plist,
+  niciodata `Bundle(url:)`/`Bundle(path:)` - cache-ul acelei clase e gandit
+  pentru bundle-ul PROPRIU al procesului, nu pentru monitorizarea altor
+  aplicatii care se pot schimba pe disc in timp ce procesul curent ruleaza.
+
 ## Stare curentă (2026-08-29) — versiune Client `1.19.8`
 
 - **Fix real, găsit din log**: retry-ul de filigran sezonier nu reîncerca

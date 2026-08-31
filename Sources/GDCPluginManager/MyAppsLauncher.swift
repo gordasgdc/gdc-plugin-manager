@@ -139,14 +139,31 @@ final class MyAppsStore: NSObject, ObservableObject {
         }
     }
 
+    /// Citeste versiunea instalata DIRECT din bytes-ii de pe disc, ocolind
+    /// `Bundle(url:)` (2026-08-30, bug real gasit de Cristi: "actualizez
+    /// aplicatia, dau refresh, eticheta ramane tot actualizare disponibila").
+    /// Cauza reala: `Bundle` cache-uieste `infoDictionary`-ul intern pentru
+    /// toata durata procesului - odata ce GDC Plugin Manager a citit versiunea
+    /// unei aplicatii (ex. la lansare), citirile ulterioare din ACELASI
+    /// proces (inclusiv Refresh) intorc valoarea VECHE din cache, chiar daca
+    /// fisierul Info.plist s-a schimbat intre timp pe disc - dispare doar
+    /// dupa ce userul inchide complet si redeschide GDC Plugin Manager
+    /// (proces nou = cache Bundle gol). Citirea directa a plist-ului
+    /// (fara `Bundle`) nu are acest cache, deci reflecta mereu starea reala.
+    private static func readInfoPlistVersion(appURL: URL) -> String? {
+        let infoPlistURL = appURL.appendingPathComponent("Contents/Info.plist")
+        guard let data = try? Data(contentsOf: infoPlistURL),
+              let plist = try? PropertyListSerialization.propertyList(from: data, options: [], format: nil) as? [String: Any]
+        else { return nil }
+        return plist["CFBundleShortVersionString"] as? String
+    }
+
     private func refresh(_ app: MyAppEntry) {
         guard let appURL = NSWorkspace.shared.urlForApplication(withBundleIdentifier: app.bundleIdentifier) else {
             statuses[app.id] = Status(isInstalled: false)
             return
         }
-        let installedVersion = (try? FileManager.default.attributesOfItem(atPath: appURL.path)) != nil
-            ? Bundle(url: appURL)?.infoDictionary?["CFBundleShortVersionString"] as? String
-            : nil
+        let installedVersion = Self.readInfoPlistVersion(appURL: appURL)
         statuses[app.id] = Status(isInstalled: true, installedVersion: installedVersion, appPath: appURL.path)
 
         Task {

@@ -58,7 +58,17 @@ struct PublishEventView: View {
                 }
 
                 CoverImagePicker(preset: .cover, selection: $coverSelection)
+                // .id(editingID) - fara asta, SwiftUI pastreaza aceeasi
+                // instanta SchedulingPicker (si @State-ul ei intern) intre
+                // "eveniment nou" si "editare eveniment existent" - init-ul
+                // personalizat, care citeste valoarea reala din `scheduling`,
+                // ruleaza o SINGURA data, la primul render (cand e nil).
+                // Editarea unui eveniment cu valabilitate deja setata arata
+                // gresit comutatorul OFF, desi valoarea reala e intacta -
+                // bug real, raportat de Cristi 2026-08-31 ("dupa ce dau
+                // edit, durata nu-mi apare ca activa").
                 SchedulingPicker(scheduling: $scheduling)
+                    .id(editingID ?? "new-event")
                 SocialLinksSection(state: $socialForm)
 
                 if let errorMessage {
