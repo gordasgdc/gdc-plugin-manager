@@ -1,7 +1,7 @@
 {
-  "version": "1.9.0",
+  "version": "1.9.1",
   "release_date": "2026-08-31",
-  "changes": "v1.9.0: GPU Monitor (utilizare live) și Thermal Monitor (avertizare la supraîncălzire/throttling) — noi module de monitorizare în Dashboard-ul Pro.",
+  "changes": "v1.9.1: suma de donație afișată la activare se actualizează acum automat.",
   "download_url": {
     "mac": "https://github.com/gordasgdc/MediaFlow-Monitor/releases/latest/download/MediaFlowMonitor.pkg",
     "windows": "https://github.com/gordasgdc/MediaFlow-Monitor/releases/latest/download/MediaFlowMonitorSetup-x64.exe"
