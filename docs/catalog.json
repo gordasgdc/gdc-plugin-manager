@@ -169,6 +169,11 @@
       "externalURL" : "https://blackmagicdesign-emea.zoom.us/webinar/register/WN_cbfeBRGDTWOA9MHiD9IYKg#/registration",
       "id" : "Switching",
       "location" : "Online",
+      "scheduling" : {
+        "endDate" : 810433563.777439,
+        "showCountdown" : true,
+        "startDate" : 809828763.777438
+      },
       "title" : "Switching to\nDaVinci Resolve",
       "youtubeURL" : "https://www.blackmagicdesign.com/event/davinci-resolve-online-seminars"
     },
