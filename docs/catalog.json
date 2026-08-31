@@ -423,12 +423,7 @@
     }
   ],
   "partnerOffers" : [
-    {
-      "brandName" : "test",
-      "description" : "test",
-      "id" : "test",
-      "url" : "https://gordas.dev/media-flow-monitor/"
-    }
+
   ],
   "partnerStores" : [
     {
