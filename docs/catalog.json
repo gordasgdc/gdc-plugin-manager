@@ -326,7 +326,7 @@
       "isTrial" : false,
       "name" : "Intermediate Workflow",
       "priceEUR" : 378,
-      "supportedOS" : "windows",
+      "supportedOS" : "crossPlatform",
       "type" : "lut",
       "version" : "1.0.0"
     },
