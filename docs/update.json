@@ -1,7 +1,7 @@
 {
-  "version": "1.24.1",
+  "version": "1.24.2",
   "release_date": "2026-08-31",
-  "changes": "Fix: bannerul de lansare nu se afișa niciodată (nu se descărca fetch-ul intern).",
+  "changes": "Fix: textul bannerului de lansare se suprapunea peste imagine.",
   "download_url": {
     "mac": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Mac.zip",
     "windows": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Windows.zip"

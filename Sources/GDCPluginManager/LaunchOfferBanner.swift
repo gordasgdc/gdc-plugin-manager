@@ -27,7 +27,6 @@ import GDCPluginManagerCore
 struct LaunchOfferBanner: View {
     @ObservedObject private var checker = LaunchBannerChecker.shared
 
-    private static let imageAspectRatio: CGFloat = 1248.0 / 832.0
     private static let maxHeight: CGFloat = 190
 
     var body: some View {
@@ -36,11 +35,32 @@ struct LaunchOfferBanner: View {
                 .frame(width: geo.size.width, height: Self.maxHeight)
                 .overlay(alignment: .bottom) {
                     if let config = checker.config, config.isDisplayable, let nsImage = checker.nsImage {
-                        let height = min(geo.size.width / Self.imageAspectRatio, Self.maxHeight)
-                        ZStack {
+                        // [2026-08-31, BUG REAL #2] Raportul de aspect era
+                        // hardcodat (1248/832, imaginea generată AI inițial)
+                        // — după ce Cristi a republicat o imagine nouă prin
+                        // Furnizor (CoverImagePicker, preset `.cover`, care
+                        // decupează la un alt raport de aspect), imaginea
+                        // reală a devenit 1248x477. Cu raportul vechi
+                        // hardcodat, înălțimea calculată nu mai corespundea
+                        // imaginii REALE — textul (poziționat relativ la
+                        // acea înălțime greșită) ajungea suprapus peste
+                        // conținutul imaginii. Fix: raportul se citește
+                        // DIRECT din imaginea primită, niciodată presupus.
+                        let aspectRatio = max(nsImage.size.width / max(nsImage.size.height, 1), 0.1)
+                        let height = min(geo.size.width / aspectRatio, Self.maxHeight)
+                        ZStack(alignment: .top) {
                             Image(nsImage: nsImage)
                                 .resizable()
                                 .aspectRatio(contentMode: .fill)
+                            // Voal întunecat sus — textul rămâne lizibil
+                            // INDIFERENT ce se află în imagine la acel punct
+                            // (nu ne mai bazăm pe o "bandă goală" anume,
+                            // fiindcă orice imagine viitoare, încărcată prin
+                            // uploader-ul standard de copertă, poate avea
+                            // orice compoziție).
+                            LinearGradient(colors: [.black.opacity(0.55), .black.opacity(0)],
+                                           startPoint: .top, endPoint: .bottom)
+                                .frame(height: min(height * 0.6, 70))
                             VStack(spacing: 4) {
                                 Text(config.topText)
                                     .font(.system(size: 13, weight: .bold))
@@ -55,10 +75,9 @@ struct LaunchOfferBanner: View {
                             }
                             .multilineTextAlignment(.center)
                             .padding(.horizontal, 20)
+                            .padding(.top, 10)
                             .shadow(color: .black.opacity(0.6), radius: 6)
-                            // Textul stă în banda superioară, goală, a imaginii —
-                            // exact zona lăsată liber la generare pentru asta.
-                            .offset(y: -height * 0.22)
+                            .frame(maxWidth: .infinity)
                         }
                         .frame(width: geo.size.width, height: height)
                         .clipped()

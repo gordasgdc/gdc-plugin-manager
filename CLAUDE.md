@@ -838,6 +838,29 @@ datat sunt mutate în `CLAUDE_ARCHIVE.md` (NU se citește automat) — citește-
 explicit când investighezi o zonă veche de cod. Rezumat "stare curentă" mai
 jos rămâne aici, fiindcă e activ relevant sesiune de sesiune.
 
+## Client v1.24.2 (2026-08-31) — FIX REAL: textul se suprapunea peste imagine
+
+Raportat direct de Cristi ("vad ca se pune textul peste imagine la mine").
+Cauza reală: `imageAspectRatio` era hardcodat la `1248.0/832.0` (imaginea
+AI generată inițial). După ce Cristi a republicat o imagine nouă prin
+Furnizor (`CoverImagePicker`, preset `.cover` — decupează la un alt raport
+de aspect), imaginea REALĂ a devenit `1248x477` — confirmat direct cu
+`sips -g pixelWidth -g pixelHeight` pe cache-ul local descărcat de
+aplicație. Cu raportul vechi hardcodat, `height`-ul calculat pentru
+container nu mai corespundea imaginii reale, iar textul (poziționat
+relativ la acel `height` greșit) ajungea suprapus.
+
+**Fix, două părți**:
+1. Raportul de aspect se citește DIRECT din `nsImage.size`
+   (`Image.Source.Width/Height` pe Windows), niciodată presupus/hardcodat.
+2. Voal (gradient) întunecat sub text, INDIFERENT de compoziția imaginii —
+   nu ne mai bazăm pe o "bandă goală" anume generată de AI; orice imagine
+   viitoare, încărcată prin uploader-ul STANDARD de copertă (folosit și de
+   restul catalogului), poate avea orice compoziție/raport de aspect.
+
+**Verificat live**: rebuild+reinstall local + relansare + `grep` pe log
+(`view task pornit`, `OK, enabled=true`).
+
 ## Client v1.24.1 (2026-08-31) — FIX REAL: bannerul nu se afișa niciodată
 
 Raportat direct de Cristi ("nu apare banerul"). `LaunchOfferBanner.swift`

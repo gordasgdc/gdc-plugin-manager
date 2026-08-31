@@ -1,5 +1,13 @@
 # Changelog — GDC Plugin Manager
 
+## Client v1.24.2 (2026-08-31) — Fix: textul bannerului se suprapunea peste imagine
+
+Raportul de aspect al imaginii era hardcodat (cel al imaginii inițiale) —
+după ce imaginea a fost înlocuită prin Furnizor cu un raport diferit,
+textul ajungea poziționat greșit. Fix: raportul se citește acum direct din
+imaginea primită. Adăugat și un voal întunecat sub text, ca să rămână
+lizibil indiferent de conținutul imaginii (Mac + Windows).
+
 ## Client v1.24.1 (2026-08-31) — Fix: bannerul de lansare nu se afișa niciodată
 
 Bug real, identic cu cel deja documentat la filigranul sezonier: `.task`
