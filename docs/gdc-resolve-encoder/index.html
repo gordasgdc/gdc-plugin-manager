@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+  if (location.hostname === "gordasgdc.github.io") {
+    location.replace("https://gordas.dev/gdc-resolve-encoder/" + location.search + location.hash);
+  }
+</script>
+<title>GDC Resolve Encoder</title>
+<meta name="description" content="Encoder open-source pentru DaVinci Resolve Studio — H.264/H.265 prin FFmpeg, cu accelerare hardware automată pe Mac, Windows și Linux.">
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0a0c;
+    --panel:#141416;
+    --panel-2:#1b1b1e;
+    --border:#2a2a2e;
+    --text:#ededed;
+    --muted:#8f8f96;
+    --faint:#5c5c62;
+    --accent:#c79a3d;
+    --accent-ink:#1a1206;
+    --accent-dim:#8a6b2c;
+    --hw:#5fb98a;
+    --cpu:#6b93c9;
+    --mono: 'IBM Plex Mono', ui-monospace, monospace;
+    --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+  body{
+    background:var(--bg); color:var(--text); font-family:var(--sans);
+    line-height:1.6; -webkit-font-smoothing:antialiased;
+  }
+  a{ color:inherit; }
+  img,svg{ display:block; max-width:100%; }
+  .wrap{ max-width:1080px; margin:0 auto; padding:0 24px; }
+  ::selection{ background:var(--accent); color:var(--accent-ink); }
+
+  /* ----------------------------------------------------------------- nav */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(10,10,12,.85); backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+  }
+  .nav{ display:flex; align-items:center; justify-content:space-between; padding:16px 24px; max-width:1080px; margin:0 auto; }
+  .brand{ display:flex; align-items:center; gap:10px; font-family:var(--mono); font-weight:700; font-size:15px; letter-spacing:.02em; }
+  .brand .mark{ width:26px; height:26px; border-radius:6px; background:var(--accent); color:var(--accent-ink); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; }
+  .nav-links{ display:flex; align-items:center; gap:26px; }
+  .nav-links a{ font-size:13.5px; color:var(--muted); text-decoration:none; transition:color .15s ease; }
+  .nav-links a:hover{ color:var(--text); }
+  .lang-switch{ display:flex; gap:4px; background:var(--panel); border:1px solid var(--border); border-radius:8px; padding:3px; }
+  .lang-switch button{
+    font-family:var(--mono); font-size:11.5px; font-weight:600; letter-spacing:.03em;
+    background:none; border:none; color:var(--muted); padding:5px 9px; border-radius:5px; cursor:pointer;
+    transition:all .15s ease;
+  }
+  .lang-switch button.active{ background:var(--accent); color:var(--accent-ink); }
+  .nav-cta{
+    font-family:var(--mono); font-size:12.5px; font-weight:600; color:var(--accent-ink);
+    background:var(--accent); padding:8px 14px; border-radius:7px; text-decoration:none; white-space:nowrap;
+  }
+  @media (max-width:760px){ .nav-links a:not(.nav-cta-mobile){ display:none; } }
+
+  /* ---------------------------------------------------------------- hero */
+  .hero{ padding:88px 0 64px; position:relative; overflow:hidden; }
+  .hero-grid{ display:grid; grid-template-columns:1.1fr .9fr; gap:56px; align-items:center; }
+  @media (max-width:860px){ .hero-grid{ grid-template-columns:1fr; } }
+  .eyebrow{
+    font-family:var(--mono); font-size:12px; font-weight:600; color:var(--accent);
+    letter-spacing:.12em; text-transform:uppercase; margin-bottom:18px; display:flex; align-items:center; gap:8px;
+  }
+  .eyebrow::before{ content:''; width:16px; height:1px; background:var(--accent); }
+  h1{
+    font-family:var(--mono); font-size:clamp(32px,5.2vw,52px); font-weight:700; line-height:1.08;
+    letter-spacing:-.01em; margin-bottom:20px;
+  }
+  h1 .accent{ color:var(--accent); }
+  .hero p.lead{ font-size:16.5px; color:var(--muted); max-width:46ch; margin-bottom:30px; }
+  .hero-actions{ display:flex; gap:12px; flex-wrap:wrap; margin-bottom:28px; }
+  .btn{
+    font-family:var(--mono); font-size:13.5px; font-weight:600; padding:13px 22px; border-radius:8px;
+    text-decoration:none; display:inline-flex; align-items:center; gap:8px; transition:all .18s ease; cursor:pointer; border:1px solid transparent;
+  }
+  .btn-primary{ background:var(--accent); color:var(--accent-ink); }
+  .btn-primary:hover{ background:#dcae52; transform:translateY(-1px); }
+  .btn-ghost{ background:var(--panel); color:var(--text); border-color:var(--border); }
+  .btn-ghost:hover{ border-color:var(--accent-dim); }
+  .hero-meta{ display:flex; gap:18px; flex-wrap:wrap; font-family:var(--mono); font-size:12px; color:var(--faint); }
+  .hero-meta span{ display:flex; align-items:center; gap:6px; }
+  .dot{ width:6px; height:6px; border-radius:50%; background:var(--hw); }
+
+  /* signature element: animated bundle tree */
+  .bundle-tree{
+    background:var(--panel); border:1px solid var(--border); border-radius:12px;
+    font-family:var(--mono); font-size:13px; padding:22px 20px; line-height:1.9;
+    box-shadow:0 30px 60px -20px rgba(0,0,0,.6);
+  }
+  .bundle-tree .tt-bar{ display:flex; gap:6px; margin-bottom:14px; }
+  .tt-bar span{ width:9px; height:9px; border-radius:50%; background:var(--border); }
+  .bundle-line{ opacity:0; transform:translateX(-6px); animation:btIn .4s ease forwards; white-space:pre; }
+  .bundle-line .k{ color:var(--faint); }
+  .bundle-line .file{ color:var(--accent); }
+  .bundle-line .plat{ color:var(--text); }
+  .cursor{ display:inline-block; width:7px; height:15px; background:var(--accent); vertical-align:-2px; animation:blink 1s step-end infinite; opacity:0; }
+  .cursor.show{ opacity:1; }
+  @keyframes btIn{ to{ opacity:1; transform:translateX(0); } }
+  @keyframes blink{ 50%{ opacity:0; } }
+
+  /* -------------------------------------------------------------- reveal */
+  .reveal{ opacity:0; transform:translateY(16px); transition:opacity .6s ease, transform .6s ease; }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+
+  /* ------------------------------------------------------------ section */
+  section{ padding:64px 0; border-top:1px solid var(--border); }
+  .section-head{ margin-bottom:36px; max-width:60ch; }
+  .section-tag{ font-family:var(--mono); font-size:11.5px; color:var(--accent); letter-spacing:.1em; text-transform:uppercase; margin-bottom:10px; }
+  h2{ font-family:var(--mono); font-size:clamp(22px,3vw,30px); font-weight:700; margin-bottom:10px; letter-spacing:-.01em; }
+  section > .wrap > p.section-desc{ color:var(--muted); font-size:15px; max-width:60ch; }
+
+  /* about */
+  .about-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-top:30px; }
+  @media (max-width:760px){ .about-grid{ grid-template-columns:1fr; } }
+  .about-card{ background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:22px; transition:border-color .2s ease, transform .2s ease; }
+  .about-card:hover{ border-color:var(--accent-dim); transform:translateY(-2px); }
+  .about-card .num{ font-family:var(--mono); font-size:11px; color:var(--faint); margin-bottom:10px; }
+  .about-card h3{ font-size:15.5px; font-weight:600; margin-bottom:8px; }
+  .about-card p{ font-size:13.5px; color:var(--muted); }
+
+  /* codec table */
+  table{ width:100%; border-collapse:collapse; font-size:13.5px; margin-top:8px; }
+  thead th{
+    font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--faint);
+    text-align:left; padding:0 14px 12px; font-weight:600;
+  }
+  tbody tr{ background:var(--panel); }
+  tbody tr:hover{ background:var(--panel-2); }
+  td{ padding:14px; border-top:1px solid var(--border); }
+  td:first-child{ border-top-left-radius:8px; border-bottom-left-radius:8px; font-family:var(--mono); font-weight:600; }
+  td:last-child{ border-top-right-radius:8px; border-bottom-right-radius:8px; }
+  .badge{
+    font-family:var(--mono); font-size:10.5px; font-weight:700; letter-spacing:.04em; text-transform:uppercase;
+    padding:3px 8px; border-radius:5px; display:inline-block;
+  }
+  .badge-hw{ background:rgba(95,185,138,.14); color:var(--hw); }
+  .badge-cpu{ background:rgba(107,147,201,.14); color:var(--cpu); }
+  .plat-chip{ font-family:var(--mono); font-size:11.5px; color:var(--muted); }
+
+  /* install tabs */
+  .tabs{ display:flex; gap:8px; margin-bottom:24px; flex-wrap:wrap; }
+  .tab-btn{
+    font-family:var(--mono); font-size:12.5px; font-weight:600; padding:9px 16px; border-radius:8px;
+    background:var(--panel); border:1px solid var(--border); color:var(--muted); cursor:pointer; transition:all .15s ease;
+  }
+  .tab-btn.active{ background:var(--accent); color:var(--accent-ink); border-color:var(--accent); }
+  .tab-panel{ display:none; }
+  .tab-panel.active{ display:block; }
+  .steps{ counter-reset:step; }
+  .step{ display:flex; gap:16px; padding:16px 0; border-top:1px solid var(--border); }
+  .step:first-child{ border-top:none; }
+  .step-num{
+    counter-increment:step; font-family:var(--mono); font-weight:700; color:var(--accent); font-size:13px;
+    width:28px; height:28px; border:1px solid var(--accent-dim); border-radius:50%; display:flex; align-items:center; justify-content:center; flex:none;
+  }
+  .step-num::before{ content: counter(step); }
+  .step-body h4{ font-size:14.5px; font-weight:600; margin-bottom:4px; }
+  .step-body p{ font-size:13.5px; color:var(--muted); }
+  code, .code-line{
+    font-family:var(--mono); font-size:12.5px; background:var(--panel-2); border:1px solid var(--border);
+    border-radius:6px; padding:2px 7px; color:var(--accent);
+  }
+  pre{
+    font-family:var(--mono); font-size:12.5px; background:var(--panel-2); border:1px solid var(--border);
+    border-radius:8px; padding:14px 16px; overflow-x:auto; color:var(--text); margin-top:8px;
+  }
+  pre .c-muted{ color:var(--faint); }
+
+  /* requirements */
+  .req-list{ list-style:none; display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-top:20px; }
+  @media (max-width:600px){ .req-list{ grid-template-columns:1fr; } }
+  .req-list li{ display:flex; gap:10px; align-items:flex-start; font-size:13.5px; color:var(--muted); background:var(--panel); border:1px solid var(--border); padding:12px 14px; border-radius:8px; }
+  .req-list li .ic{ color:var(--accent); font-family:var(--mono); flex:none; }
+
+  /* download */
+  .download-box{
+    background:linear-gradient(155deg, var(--panel) 0%, var(--panel-2) 100%);
+    border:1px solid var(--border); border-radius:14px; padding:40px; text-align:center;
+  }
+  .download-box h2{ margin-bottom:10px; }
+  .download-box p{ color:var(--muted); margin-bottom:26px; }
+  .platform-links{ display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+
+  /* footer */
+  footer{ border-top:1px solid var(--border); padding:40px 0; }
+  .footer-grid{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:20px; }
+  .footer-brand{ font-family:var(--mono); font-size:13px; color:var(--muted); }
+  .footer-links{ display:flex; gap:20px; }
+  .footer-links a{ color:var(--muted); text-decoration:none; font-size:13px; transition:color .15s ease; }
+  .footer-links a:hover{ color:var(--accent); }
+  .footer-license{ font-family:var(--mono); font-size:11px; color:var(--faint); margin-top:18px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <div class="brand"><span class="mark">G</span> GDC Resolve Encoder</div>
+    <div class="nav-links">
+      <a href="#about" data-i18n="nav.about">Despre</a>
+      <a href="#codecs" data-i18n="nav.codecs">Codecuri</a>
+      <a href="#settings" data-i18n="nav.settings">Setări</a>
+      <a href="#install" data-i18n="nav.install">Instalare</a>
+      <a href="#troubleshooting" data-i18n="nav.troubleshooting">Depanare</a>
+      <a href="#activation" data-i18n="nav.activation">Activare</a>
+      <a href="#download" class="nav-cta" data-i18n="nav.download">Descarcă</a>
+      <div class="lang-switch">
+        <button data-lang="ro" class="active">RO</button>
+        <button data-lang="en">EN</button>
+        <button data-lang="es">ES</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="hero" style="border-top:none;">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow" data-i18n="hero.eyebrow">IOPlugin pentru DaVinci Resolve Studio</div>
+      <h1 data-i18n="hero.title">Un encoder <span class="accent">nativ, open-source</span>, pentru export din Resolve</h1>
+      <p class="lead" data-i18n="hero.lead">H.264 și H.265 prin FFmpeg, cu accelerare hardware automată — VideoToolbox pe Mac, NVENC pe Windows/Linux — fără să alegi tu ce backend să folosești.</p>
+      <div class="hero-actions">
+        <a href="https://github.com/gordasgdc/gdc-resolve-encoder/releases/latest/download/gdc-resolve-encoder-mac-arm64.zip" class="btn btn-primary">↓ macOS (arm64)</a>
+        <a href="https://github.com/gordasgdc/gdc-resolve-encoder/releases/latest/download/gdc-resolve-encoder-windows-x64.zip" class="btn btn-primary">↓ Windows (x64)</a>
+        <a href="https://github.com/gordasgdc/gdc-resolve-encoder/releases/latest/download/gdc-resolve-encoder-linux-x64.zip" class="btn btn-primary">↓ Linux (x64)</a>
+      </div>
+      <div class="hero-meta">
+        <span><span class="dot"></span> <span data-i18n="hero.meta_platforms">Mac (arm64) · Windows · Linux</span></span>
+        <span data-i18n="hero.meta_license">Licență MIT</span>
+      </div>
+    </div>
+    <div class="bundle-tree" id="bundleTree">
+      <div class="tt-bar"><span></span><span></span><span></span></div>
+      <div id="treeLines"></div>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="section-tag" data-i18n="about.tag">Despre</div>
+      <h2 data-i18n="about.title">Un singur binar, mai multe backend-uri</h2>
+      <p class="section-desc" data-i18n="about.desc">O singură clasă de encoder generică citește un tabel de variante și alege automat cel mai bun backend disponibil pe mașina pe care rulează — fără build-uri separate pentru fiecare configurație.</p>
+    </div>
+    <div class="about-grid">
+      <div class="about-card reveal">
+        <div class="num">01</div>
+        <h3 data-i18n="about.card1_title">Detectare automată</h3>
+        <p data-i18n="about.card1_desc">La pornire, plugin-ul verifică ce encodere sunt disponibile pe acea mașină și le înregistrează doar pe acelea — VideoToolbox nu apare pe Windows, NVENC nu apare fără placă NVIDIA.</p>
+      </div>
+      <div class="about-card reveal">
+        <div class="num">02</div>
+        <h3 data-i18n="about.card2_title">Construit pe SDK-ul oficial</h3>
+        <p data-i18n="about.card2_desc">Folosește DaVinci Resolve IO Encode Plugin SDK de la Blackmagic Design, exact cum e documentat — nu un hack sau o soluție ocolitoare.</p>
+      </div>
+      <div class="about-card reveal">
+        <div class="num">03</div>
+        <h3 data-i18n="about.card3_title">Deschis, verificabil</h3>
+        <p data-i18n="about.card3_desc">Tot codul sursă e pe GitHub, sub licență MIT. Poți citi exact ce face plugin-ul cu fiecare cadru, sau îl poți compila singur din sursă.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="codecs">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="section-tag" data-i18n="codecs.tag">Codecuri</div>
+      <h2 data-i18n="codecs.title">Ce înregistrează plugin-ul</h2>
+      <p class="section-desc" data-i18n="codecs.desc">Variantele hardware apar în lista de codecuri din Resolve doar dacă mașina ta le poate rula efectiv.</p>
+    </div>
+    <div class="reveal" style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr>
+            <th data-i18n="codecs.th_codec">Codec</th>
+            <th data-i18n="codecs.th_backend">Backend</th>
+            <th data-i18n="codecs.th_type">Tip</th>
+            <th data-i18n="codecs.th_platforms">Platforme</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>GDC H.264</td><td class="plat-chip">libx264</td><td><span class="badge badge-cpu" data-i18n="codecs.cpu">Software</span></td><td class="plat-chip">Mac · Windows · Linux</td></tr>
+          <tr><td>GDC H.265</td><td class="plat-chip">libx265</td><td><span class="badge badge-cpu" data-i18n="codecs.cpu">Software</span></td><td class="plat-chip">Mac · Windows · Linux</td></tr>
+          <tr><td>GDC H.264</td><td class="plat-chip">VideoToolbox</td><td><span class="badge badge-hw" data-i18n="codecs.hw">Hardware</span></td><td class="plat-chip">Mac (Apple Silicon)</td></tr>
+          <tr><td>GDC H.265</td><td class="plat-chip">VideoToolbox</td><td><span class="badge badge-hw" data-i18n="codecs.hw">Hardware</span></td><td class="plat-chip">Mac (Apple Silicon)</td></tr>
+          <tr><td>GDC H.264</td><td class="plat-chip">NVENC</td><td><span class="badge badge-hw" data-i18n="codecs.hw">Hardware</span></td><td class="plat-chip">Windows · Linux (NVIDIA)</td></tr>
+          <tr><td>GDC H.265</td><td class="plat-chip">NVENC</td><td><span class="badge badge-hw" data-i18n="codecs.hw">Hardware</span></td><td class="plat-chip">Windows · Linux (NVIDIA)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="settings">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="section-tag" data-i18n="settings.tag">Setări</div>
+      <h2 data-i18n="settings.title">Ce înseamnă fiecare setare</h2>
+      <p class="section-desc" data-i18n="settings.desc">Explicat simplu, cu recomandări concrete — nu doar denumirea tehnică.</p>
+    </div>
+
+    <div class="reveal" style="margin-bottom:28px;">
+      <h3 style="font-size:15.5px;font-weight:600;margin-bottom:10px;" data-i18n="settings.preset_h">Preset — viteză vs eficiență</h3>
+      <p style="color:var(--muted);font-size:13.5px;margin-bottom:14px;" data-i18n="settings.preset_desc">Nu schimbă direct calitatea vizibilă — schimbă cât timp caută encoder-ul cea mai bună compresie. Un preset mai lent produce fișiere mai mici la aceeași calitate, dar durează mai mult.</p>
+      <table>
+        <thead><tr><th data-i18n="settings.th_preset">Preset</th><th data-i18n="settings.th_recom">Recomandat pentru</th></tr></thead>
+        <tbody>
+          <tr><td>ultrafast / superfast</td><td data-i18n="settings.preset_r1">Teste rapide, previzualizări — nu pentru livrare finală.</td></tr>
+          <tr><td>fast / medium</td><td data-i18n="settings.preset_r2">Bun echilibru — medium e alegerea implicită.</td></tr>
+          <tr><td>slow / slower</td><td data-i18n="settings.preset_r3">Livrare finală, fișier mai mic, export mai lent.</td></tr>
+          <tr><td>veryslow</td><td data-i18n="settings.preset_r4">Compresie maximă — doar dacă ai timp de așteptat.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="reveal" style="margin-bottom:28px;">
+      <h3 style="font-size:15.5px;font-weight:600;margin-bottom:10px;" data-i18n="settings.rc_h">Rate Control — CRF, Bitrate, sau QP?</h3>
+      <p style="color:var(--muted);font-size:13.5px;margin-bottom:14px;" data-i18n="settings.rc_desc">Trei moduri diferite de a spune encoder-ului „cât de mult să comprime". Se alege doar unul.</p>
+      <table>
+        <thead><tr><th data-i18n="settings.th_mode">Mod</th><th data-i18n="settings.th_explain">Explicație</th></tr></thead>
+        <tbody>
+          <tr><td>CRF</td><td data-i18n="settings.crf_desc">Calitate constantă — encoder-ul decide singur bitrate-ul, cadru cu cadru. Recomandat pentru majoritatea cazurilor. 23 e valoarea implicită; 18-20 pentru calitate foarte apropiată de original.</td></tr>
+          <tr><td>Bitrate</td><td data-i18n="settings.br_desc">Îi spui exact câți kbps să folosească. Util când ai o limită strictă de dimensiune fișier.</td></tr>
+          <tr><td>QP</td><td data-i18n="settings.qp_desc">Ca și CRF ca scală, dar fără ajustare adaptivă — fiecare cadru primește exact aceeași compresie. Rar folosit în producție normală.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="about-grid" style="grid-template-columns:1fr 1fr;">
+      <div class="about-card reveal">
+        <h3 data-i18n="settings.profile_h">Profile (doar H.264, 8-bit, software)</h3>
+        <p data-i18n="settings.profile_desc"><strong>high</strong> e alegerea implicită — compatibil cu aproape orice player modern, cea mai bună compresie. <strong>baseline</strong> doar pentru dispozitive foarte vechi.</p>
+      </div>
+      <div class="about-card reveal">
+        <h3 data-i18n="settings.tune_h">Tune — optimizări pe tip de conținut</h3>
+        <p data-i18n="settings.tune_desc">Opțional. <strong>film</strong> pentru filmare normală, <strong>animation</strong> pentru desene, <strong>grain</strong> pentru grain vizibil. Dacă nu ești sigur, lasă pe „none".</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="install">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="section-tag" data-i18n="install.tag">Instalare</div>
+      <h2 data-i18n="install.title">Pune plugin-ul la locul lui</h2>
+      <p class="section-desc" data-i18n="install.desc">Descarcă arhiva pentru platforma ta din Releases, dezarhiveaz-o, apoi urmează pașii de mai jos.</p>
+    </div>
+    <div class="reveal">
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="mac">macOS</button>
+        <button class="tab-btn" data-tab="win">Windows</button>
+        <button class="tab-btn" data-tab="linux">Linux</button>
+      </div>
+
+      <div class="tab-panel active" data-panel="mac">
+        <div class="steps">
+          <div class="step">
+            <div class="step-num"></div>
+            <div class="step-body">
+              <h4 data-i18n="install.mac.s0_title">Instalează FFmpeg</h4>
+              <p data-i18n="install.mac.s0_desc">Plugin-ul se leagă la FFmpeg-ul din sistem — nu e inclus în arhivă. Sari peste acest pas dacă îl ai deja instalat.</p>
+              <pre>brew install ffmpeg</pre>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num"></div>
+            <div class="step-body">
+              <h4 data-i18n="install.mac.s1_title">Elimină carantina</h4>
+              <p data-i18n="install.mac.s1_desc">Binarul nu e notarizat de Apple — fără acest pas, macOS îl blochează și spune că e „deteriorat".</p>
+              <pre>xattr -rd com.apple.quarantine gdc_resolve_encoder.dvcp.bundle</pre>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num"></div>
+            <div class="step-body">
+              <h4 data-i18n="install.mac.s2_title">Copiază bundle-ul</h4>
+              <p data-i18n="install.mac.s2_desc">Mută folderul complet <code>.dvcp.bundle</code> (nu doar fișierul din interior) în:</p>
+              <pre>/Library/Application Support/Blackmagic Design/DaVinci Resolve/IOPlugins/</pre>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num"></div>
+            <div class="step-body">
+              <h4 data-i18n="install.mac.s3_title">Repornește Resolve</h4>
+              <p data-i18n="install.mac.s3_desc">Codecurile GDC apar în lista de format-uri MP4/QuickTime de pe pagina Deliver.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-panel" data-panel="win">
+        <p style="font-size:13px; color:var(--muted); margin-bottom:18px;" data-i18n="install.win.note">Nu ai nevoie de FFmpeg separat — DLL-urile necesare vin deja incluse în arhivă.</p>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num"></div>
+            <div class="step-body">
+              <h4 data-i18n="install.win.s1_title">Dezarhivează</h4>
+              <p data-i18n="install.win.s1_desc">Extrage arhiva descărcată — vei obține folderul <code>gdc_resolve_encoder.dvcp.bundle</code>.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num"></div>
+            <div class="step-body">
+              <h4 data-i18n="install.win.s2_title">Copiază bundle-ul</h4>
+              <p data-i18n="install.win.s2_desc">Mută folderul complet în:</p>
+              <pre>%ProgramData%\Blackmagic Design\DaVinci Resolve\Support\IOPlugins\</pre>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num"></div>
+            <div class="step-body">
+              <h4 data-i18n="install.win.s3_title">Repornește Resolve</h4>
+              <p data-i18n="install.win.s3_desc">Codecurile GDC apar în lista de format-uri MP4/QuickTime de pe pagina Deliver.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-panel" data-panel="linux">
+        <div class="steps">
+          <div class="step">
+            <div class="step-num"></div>
+            <div class="step-body">
+              <h4 data-i18n="install.linux.s0_title">Instalează FFmpeg</h4>
+              <p data-i18n="install.linux.s0_desc">Plugin-ul se leagă la FFmpeg-ul din sistem — nu e inclus în arhivă.</p>
+              <pre>sudo apt install ffmpeg<span class="c-muted">   # Debian/Ubuntu</span>
+sudo dnf install ffmpeg<span class="c-muted">   # Fedora</span>
+sudo pacman -S ffmpeg<span class="c-muted">     # Arch</span></pre>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num"></div>
+            <div class="step-body">
+              <h4 data-i18n="install.linux.s1_title">Dezarhivează</h4>
+              <p data-i18n="install.linux.s1_desc">Extrage arhiva descărcată — vei obține folderul <code>gdc_resolve_encoder.dvcp.bundle</code>.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num"></div>
+            <div class="step-body">
+              <h4 data-i18n="install.linux.s2_title">Copiază bundle-ul</h4>
+              <p data-i18n="install.linux.s2_desc">Mută folderul complet în:</p>
+              <pre>/opt/resolve/IOPlugins/</pre>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num"></div>
+            <div class="step-body">
+              <h4 data-i18n="install.linux.s3_title">Repornește Resolve</h4>
+              <p data-i18n="install.linux.s3_desc">Codecurile GDC apar în lista de format-uri MP4/QuickTime de pe pagina Deliver.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="usage">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="section-tag" data-i18n="usage.tag">Utilizare</div>
+      <h2 data-i18n="usage.title">Cum îl folosești</h2>
+    </div>
+    <div class="steps reveal">
+      <div class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <h4 data-i18n="usage.s1_title">Deschide pagina Deliver</h4>
+          <p data-i18n="usage.s1_desc">În proiectul tău din Resolve, mergi la pagina Deliver, ca pentru orice export normal.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <h4 data-i18n="usage.s2_title">Alege formatul MP4 sau QuickTime</h4>
+          <p data-i18n="usage.s2_desc">Codecurile GDC apar în lista de codecuri, alături de cele native ale Resolve.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <h4 data-i18n="usage.s3_title">Alege un codec GDC și exportă</h4>
+          <p data-i18n="usage.s3_desc">Setările de calitate (CRF sau bitrate țintă) apar direct în panoul de export.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="recipes">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="section-tag" data-i18n="recipes.tag">Rețete</div>
+      <h2 data-i18n="recipes.title">Combinații gata făcute</h2>
+      <p class="section-desc" data-i18n="recipes.desc">Dacă nu vrei să analizezi fiecare setare separat, iată combinații pentru situații comune.</p>
+    </div>
+    <div class="about-grid" style="grid-template-columns:repeat(2,1fr);">
+      <div class="about-card reveal">
+        <h3 data-i18n="recipes.r1_h">Livrare client, calitate maximă</h3>
+        <p data-i18n="recipes.r1_desc">H.264 Software · Preset <strong>slow</strong> · CRF <strong>18-20</strong> · Profile <strong>high</strong></p>
+      </div>
+      <div class="about-card reveal">
+        <h3 data-i18n="recipes.r2_h">Preview rapid pentru aprobare</h3>
+        <p data-i18n="recipes.r2_desc">H.264 Hardware (dacă disponibil) · CRF <strong>26-28</strong></p>
+      </div>
+      <div class="about-card reveal">
+        <h3 data-i18n="recipes.r3_h">Export YouTube / web</h3>
+        <p data-i18n="recipes.r3_desc">H.264 Software · Preset <strong>medium/slow</strong> · CRF <strong>20-23</strong> · Profile <strong>high</strong></p>
+      </div>
+      <div class="about-card reveal">
+        <h3 data-i18n="recipes.r4_h">Arhivare / master</h3>
+        <p data-i18n="recipes.r4_desc">H.265 Software 10-bit · Preset <strong>slow/veryslow</strong> · CRF <strong>16-18</strong></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="troubleshooting">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="section-tag" data-i18n="tsh.tag">Depanare</div>
+      <h2 data-i18n="tsh.title">Probleme frecvente</h2>
+    </div>
+    <ul class="req-list reveal" style="grid-template-columns:1fr;">
+      <li><span class="ic">▸</span><span data-i18n="tsh.item1"><strong>Codec-ul nu apare în listă:</strong> ai repornit complet Resolve după instalare? Pe Mac, ai rulat install.sh sau ai eliminat manual carantina?</span></li>
+      <li><span class="ic">▸</span><span data-i18n="tsh.item2"><strong>Randarea eșuează imediat:</strong> încearcă o rezoluție standard (1920x1080) ca test și verifică spațiul liber pe disc.</span></li>
+      <li><span class="ic">▸</span><span data-i18n="tsh.item3"><strong>Fișierul are doar audio, fără video:</strong> actualizează la ultima versiune — a fost o problemă cunoscută, deja rezolvată.</span></li>
+      <li><span class="ic">▸</span><span data-i18n="tsh.item4"><strong>Export foarte lent:</strong> încearcă un preset mai rapid (medium/fast) sau varianta hardware, dacă e disponibilă.</span></li>
+    </ul>
+    <p style="color:var(--muted);font-size:13.5px;margin-top:16px;" data-i18n="tsh.more">Ghidul PDF complet, inclus în fiecare arhivă de descărcare, are o listă mai extinsă de probleme și soluții.</p>
+  </div>
+</section>
+
+<section id="requirements">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="section-tag" data-i18n="req.tag">Cerințe</div>
+      <h2 data-i18n="req.title">Ce ai nevoie</h2>
+    </div>
+    <ul class="req-list reveal">
+      <li><span class="ic">▸</span><span data-i18n="req.item1"><strong>DaVinci Resolve Studio</strong> — versiunea gratuită nu suportă IOPlugins.</span></li>
+      <li><span class="ic">▸</span><span data-i18n="req.item2"><strong>macOS Apple Silicon</strong>, Windows 64-bit, sau Linux — Mac Intel nu e suportat.</span></li>
+      <li><span class="ic">▸</span><span data-i18n="req.item3">Pentru NVENC: <strong>placă video NVIDIA</strong> cu driver actualizat.</span></li>
+      <li><span class="ic">▸</span><span data-i18n="req.item4"><strong>FFmpeg instalat separat</strong> pe Mac/Linux (<code>brew install ffmpeg</code> / <code>apt install ffmpeg</code>) — pe Windows, DLL-urile necesare vin deja incluse în arhivă.</span></li>
+    </ul>
+  </div>
+</section>
+
+<section id="activation">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="section-tag" data-i18n="act.tag">Activare</div>
+      <h2 data-i18n="act.title">Cod de activare</h2>
+    </div>
+    <p class="reveal" style="color:var(--muted);font-size:13.5px;margin-bottom:14px;max-width:70ch;" data-i18n="act.p1">Codul sursă e open-source, dar plugin-ul are nevoie de un cod de activare, legat de calculatorul tău, ca să poată randa. Este o donație, nu un preț de listă — mă ajută să acopăr costurile de dezvoltare (abonamente, unelte de lucru) și să continui să întrețin și îmbunătățesc plugin-ul.</p>
+    <ul class="req-list reveal" style="grid-template-columns:1fr;margin-bottom:18px;">
+      <li><span class="ic">▸</span><span data-i18n="act.step1">Deschizi panoul <strong>Plugin Settings</strong> din Resolve (Deliver → orice codec GDC) — vezi un <strong>ID de mașină</strong> afișat direct acolo, nu trebuie să rulezi nimic separat.</span></li>
+      <li><span class="ic">▸</span><span data-i18n="act.step2">Îmi scrii pe WhatsApp (buton mai jos) — îți trimit un link de plată pe Revolut.</span></li>
+      <li><span class="ic">▸</span><span data-i18n="act.step3">După plată, îmi trimiți ID-ul de mașină și primești codul personal de activare, legat exact de acel calculator.</span></li>
+      <li><span class="ic">▸</span><span data-i18n="act.step4">Îl introduci în câmpul "Cod licenta" — o singură dată. După prima activare reușită, câmpul dispare din panou, înlocuit cu "Licenta: activa".</span></li>
+    </ul>
+    <a class="btn btn-primary reveal" style="margin-bottom:18px;"
+       href="https://wa.me/34643109970?text=Salut!%20Vreau%20sa%20activez%20GDC%20Resolve%20Encoder."
+       target="_blank" rel="noopener" data-i18n="act.wa_btn">&#128172; Scrie-mi pe WhatsApp</a>
+  </div>
+</section>
+
+<section id="download">
+  <div class="wrap">
+    <div class="download-box reveal">
+      <h2 data-i18n="dl.title">Descarcă GDC Resolve Encoder</h2>
+      <p data-i18n="dl.desc">Open-source, sub licență MIT.</p>
+      <div class="platform-links">
+        <a href="https://github.com/gordasgdc/gdc-resolve-encoder/releases/latest/download/gdc-resolve-encoder-mac-arm64.zip" class="btn btn-primary">macOS (arm64)</a>
+        <a href="https://github.com/gordasgdc/gdc-resolve-encoder/releases/latest/download/gdc-resolve-encoder-windows-x64.zip" class="btn btn-primary">Windows (x64)</a>
+        <a href="https://github.com/gordasgdc/gdc-resolve-encoder/releases/latest/download/gdc-resolve-encoder-linux-x64.zip" class="btn btn-primary">Linux (x64)</a>
+      </div>
+      <p style="color:var(--muted);font-size:13px;margin-top:18px;" data-i18n="dl.pdf_note">Fiecare arhivă include și ghidul complet PDF, în română, engleză și spaniolă.</p>
+    </div>
+  </div>
+</section>
+
+<section id="licenses">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="section-tag" data-i18n="lic.tag">Licențe</div>
+      <h2 data-i18n="lic.title">Licențe și atribuiri</h2>
+    </div>
+    <p class="reveal" style="color:var(--muted);font-size:13.5px;margin-bottom:14px;max-width:70ch;" data-i18n="lic.p1">Codul propriu al acestui plugin e licențiat MIT. Plugin-ul leagă (links) librării GPL — FFmpeg, libx264, libx265 — deci binarul compilat este, ca distribuție, supus condițiilor GPL, indiferent de licența codului propriu.</p>
+    <p class="reveal" style="color:var(--faint);font-size:12.5px;margin-bottom:18px;max-width:70ch;" data-i18n="lic.p2">Nu constituie consultanță juridică. Detalii complete în fișierul THIRD_PARTY_LICENSES din repository.</p>
+    <ul class="req-list reveal" style="grid-template-columns:1fr;">
+      <li><span class="ic">▸</span><span>FFmpeg — <a href="https://ffmpeg.org" style="color:var(--accent);">ffmpeg.org</a> — © FFmpeg contributors</span></li>
+      <li><span class="ic">▸</span><span>libx264 — <a href="https://www.videolan.org/developers/x264.html" style="color:var(--accent);">videolan.org</a> — © x264 project contributors</span></li>
+      <li><span class="ic">▸</span><span>libx265 — <a href="https://www.videolan.org/developers/x265.html" style="color:var(--accent);">videolan.org</a> — © MulticoreWare Inc.</span></li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">GDC Resolve Encoder — <span data-i18n="footer.by">de</span> Cristi Gordas</div>
+      <div class="footer-links">
+        <a href="https://web.facebook.com/cristiGDC">Facebook</a>
+        <a href="https://www.youtube.com/@cristigordas">YouTube</a>
+        <a href="https://gordas.dev/termeni">Termeni și Condiții</a>
+        <a href="https://gordas.dev/confidentialitate">Politică de Confidențialitate (GDPR)</a>
+        <a href="https://gordas.dev/cookie">Cookie-uri</a>
+        <a href="mailto:academiagdc@gmail.com">Contact</a>
+      </div>
+    </div>
+    <div class="footer-license" data-i18n="footer.license">Licență MIT · Nu este afiliat cu Blackmagic Design. „DaVinci Resolve" este marcă înregistrată a Blackmagic Design Pty. Ltd.</div>
+    <div class="footer-license" style="margin-top:6px;opacity:.75;">© 2026 GDC / Gordas. Toate drepturile rezervate. gordas.dev este o platformă administrată de dezvoltatori independenți. Aplicațiile și resursele sunt furnizate ca atare (AS IS), iar susținerea proiectului se bazează pe contribuții opționale de sprijin și donații.</div>
+  </div>
+</footer>
+
+<script>
+const translations = {
+  ro: {
+    "nav.about":"Despre","nav.codecs":"Codecuri","nav.install":"Instalare","nav.download":"Descarcă",
+    "hero.eyebrow":"IOPlugin pentru DaVinci Resolve Studio",
+    "hero.title":'Un encoder <span class="accent">nativ, open-source</span>, pentru export din Resolve',
+    "hero.lead":"H.264 și H.265 prin FFmpeg, cu accelerare hardware automată — VideoToolbox pe Mac, NVENC pe Windows/Linux — fără să alegi tu ce backend să folosești.",
+    "hero.cta_source":"Vezi codul sursă",
+    "hero.meta_platforms":"Mac (arm64) · Windows · Linux","hero.meta_license":"Licență MIT",
+    "about.tag":"Despre","about.title":"Un singur binar, mai multe backend-uri",
+    "about.desc":"O singură clasă de encoder generică citește un tabel de variante și alege automat cel mai bun backend disponibil pe mașina pe care rulează — fără build-uri separate pentru fiecare configurație.",
+    "about.card1_title":"Detectare automată",
+    "about.card1_desc":"La pornire, plugin-ul verifică ce encodere sunt disponibile pe acea mașină și le înregistrează doar pe acelea — VideoToolbox nu apare pe Windows, NVENC nu apare fără placă NVIDIA.",
+    "about.card2_title":"Construit pe SDK-ul oficial",
+    "about.card2_desc":"Folosește DaVinci Resolve IO Encode Plugin SDK de la Blackmagic Design, exact cum e documentat — nu un hack sau o soluție ocolitoare.",
+    "about.card3_title":"Deschis, verificabil",
+    "about.card3_desc":"Tot codul sursă e pe GitHub, sub licență MIT. Poți citi exact ce face plugin-ul cu fiecare cadru, sau îl poți compila singur din sursă.",
+    "codecs.tag":"Codecuri","codecs.title":"Ce înregistrează plugin-ul",
+    "codecs.desc":"Variantele hardware apar în lista de codecuri din Resolve doar dacă mașina ta le poate rula efectiv.",
+    "codecs.th_codec":"Codec","codecs.th_backend":"Backend","codecs.th_type":"Tip","codecs.th_platforms":"Platforme",
+    "codecs.cpu":"Software","codecs.hw":"Hardware",
+    "install.tag":"Instalare","install.title":"Pune plugin-ul la locul lui",
+    "install.desc":"Descarcă arhiva pentru platforma ta din Releases, dezarhiveaz-o, apoi urmează pașii de mai jos.",
+    "install.mac.s0_title":"Instalează FFmpeg","install.mac.s0_desc":"Plugin-ul se leagă la FFmpeg-ul din sistem — nu e inclus în arhivă. Sari peste acest pas dacă îl ai deja instalat.",
+    "install.mac.s1_title":"Elimină carantina","install.mac.s1_desc":"Binarul nu e notarizat de Apple — fără acest pas, macOS îl blochează și spune că e „deteriorat\".",
+    "install.mac.s2_title":"Copiază bundle-ul","install.mac.s2_desc":"Mută folderul complet .dvcp.bundle (nu doar fișierul din interior) în:",
+    "install.mac.s3_title":"Repornește Resolve","install.mac.s3_desc":"Codecurile GDC apar în lista de format-uri MP4/QuickTime de pe pagina Deliver.",
+    "install.win.note":"Nu ai nevoie de FFmpeg separat — DLL-urile necesare vin deja incluse în arhivă.",
+    "install.win.s1_title":"Dezarhivează","install.win.s1_desc":"Extrage arhiva descărcată — vei obține folderul gdc_resolve_encoder.dvcp.bundle.",
+    "install.win.s2_title":"Copiază bundle-ul","install.win.s2_desc":"Mută folderul complet în:",
+    "install.win.s3_title":"Repornește Resolve","install.win.s3_desc":"Codecurile GDC apar în lista de format-uri MP4/QuickTime de pe pagina Deliver.",
+    "install.linux.s0_title":"Instalează FFmpeg","install.linux.s0_desc":"Plugin-ul se leagă la FFmpeg-ul din sistem — nu e inclus în arhivă.",
+    "install.linux.s1_title":"Dezarhivează","install.linux.s1_desc":"Extrage arhiva descărcată — vei obține folderul gdc_resolve_encoder.dvcp.bundle.",
+    "install.linux.s2_title":"Copiază bundle-ul","install.linux.s2_desc":"Mută folderul complet în:",
+    "install.linux.s3_title":"Repornește Resolve","install.linux.s3_desc":"Codecurile GDC apar în lista de format-uri MP4/QuickTime de pe pagina Deliver.",
+    "usage.tag":"Utilizare","usage.title":"Cum îl folosești",
+    "usage.s1_title":"Deschide pagina Deliver","usage.s1_desc":"În proiectul tău din Resolve, mergi la pagina Deliver, ca pentru orice export normal.",
+    "usage.s2_title":"Alege formatul MP4 sau QuickTime","usage.s2_desc":"Codecurile GDC apar în lista de codecuri, alături de cele native ale Resolve.",
+    "usage.s3_title":"Alege un codec GDC și exportă","usage.s3_desc":"Setările de calitate (CRF sau bitrate țintă) apar direct în panoul de export.",
+    "req.tag":"Cerințe","req.title":"Ce ai nevoie",
+    "req.item1":"<strong>DaVinci Resolve Studio</strong> — versiunea gratuită nu suportă IOPlugins.",
+    "req.item2":"<strong>macOS Apple Silicon</strong>, Windows 64-bit, sau Linux — Mac Intel nu e suportat.",
+    "req.item3":"Pentru NVENC: <strong>placă video NVIDIA</strong> cu driver actualizat.",
+    "req.item4":"<strong>FFmpeg instalat separat</strong> pe Mac/Linux (brew install ffmpeg / apt install ffmpeg) — pe Windows, DLL-urile necesare vin deja incluse în arhivă.",
+    "dl.title":"Descarcă GDC Resolve Encoder","dl.desc":"Open-source, sub licență MIT.",
+    "dl.pdf_note":"Fiecare arhivă include și ghidul complet PDF, în română, engleză și spaniolă.",
+    "act.tag":"Activare","act.title":"Cod de activare",
+    "act.p1":"Codul sursă e open-source, dar plugin-ul are nevoie de un cod de activare, legat de calculatorul tău, ca să poată randa. Este o donație, nu un preț de listă — mă ajută să acopăr costurile de dezvoltare (abonamente, unelte de lucru) și să continui să întrețin și îmbunătățesc plugin-ul.",
+    "act.step1":"Deschizi panoul <strong>Plugin Settings</strong> din Resolve (Deliver → orice codec GDC) — vezi un <strong>ID de mașină</strong> afișat direct acolo, nu trebuie să rulezi nimic separat.",
+    "act.step2":"Îmi scrii pe WhatsApp (buton mai jos) — îți trimit un link de plată pe Revolut.",
+    "act.step3":"După plată, îmi trimiți ID-ul de mașină și primești codul personal de activare, legat exact de acel calculator.",
+    "act.step4":"Îl introduci în câmpul \"Cod licenta\" — o singură dată. După prima activare reușită, câmpul dispare din panou, înlocuit cu \"Licenta: activa\".",
+    "act.wa_btn":"&#128172; Scrie-mi pe WhatsApp",
+    "nav.settings":"Setări","nav.troubleshooting":"Depanare","nav.activation":"Activare",
+    "settings.tag":"Setări","settings.title":"Ce înseamnă fiecare setare",
+    "settings.desc":"Explicat simplu, cu recomandări concrete — nu doar denumirea tehnică.",
+    "settings.preset_h":"Preset — viteză vs eficiență",
+    "settings.preset_desc":"Nu schimbă direct calitatea vizibilă — schimbă cât timp caută encoder-ul cea mai bună compresie. Un preset mai lent produce fișiere mai mici la aceeași calitate, dar durează mai mult.",
+    "settings.th_preset":"Preset","settings.th_recom":"Recomandat pentru",
+    "settings.preset_r1":"Teste rapide, previzualizări — nu pentru livrare finală.",
+    "settings.preset_r2":"Bun echilibru — medium e alegerea implicită.",
+    "settings.preset_r3":"Livrare finală, fișier mai mic, export mai lent.",
+    "settings.preset_r4":"Compresie maximă — doar dacă ai timp de așteptat.",
+    "settings.rc_h":"Rate Control — CRF, Bitrate, sau QP?",
+    "settings.rc_desc":"Trei moduri diferite de a spune encoder-ului „cât de mult să comprime\". Se alege doar unul.",
+    "settings.th_mode":"Mod","settings.th_explain":"Explicație",
+    "settings.crf_desc":"Calitate constantă — encoder-ul decide singur bitrate-ul, cadru cu cadru. Recomandat pentru majoritatea cazurilor. 23 e valoarea implicită; 18-20 pentru calitate foarte apropiată de original.",
+    "settings.br_desc":"Îi spui exact câți kbps să folosească. Util când ai o limită strictă de dimensiune fișier.",
+    "settings.qp_desc":"Ca și CRF ca scală, dar fără ajustare adaptivă — fiecare cadru primește exact aceeași compresie. Rar folosit în producție normală.",
+    "settings.profile_h":"Profile (doar H.264, 8-bit, software)",
+    "settings.profile_desc":"<strong>high</strong> e alegerea implicită — compatibil cu aproape orice player modern, cea mai bună compresie. <strong>baseline</strong> doar pentru dispozitive foarte vechi.",
+    "settings.tune_h":"Tune — optimizări pe tip de conținut",
+    "settings.tune_desc":"Opțional. <strong>film</strong> pentru filmare normală, <strong>animation</strong> pentru desene, <strong>grain</strong> pentru grain vizibil. Dacă nu ești sigur, lasă pe „none\".",
+    "recipes.tag":"Rețete","recipes.title":"Combinații gata făcute",
+    "recipes.desc":"Dacă nu vrei să analizezi fiecare setare separat, iată combinații pentru situații comune.",
+    "recipes.r1_h":"Livrare client, calitate maximă",
+    "recipes.r1_desc":"H.264 Software · Preset <strong>slow</strong> · CRF <strong>18-20</strong> · Profile <strong>high</strong>",
+    "recipes.r2_h":"Preview rapid pentru aprobare",
+    "recipes.r2_desc":"H.264 Hardware (dacă disponibil) · CRF <strong>26-28</strong>",
+    "recipes.r3_h":"Export YouTube / web",
+    "recipes.r3_desc":"H.264 Software · Preset <strong>medium/slow</strong> · CRF <strong>20-23</strong> · Profile <strong>high</strong>",
+    "recipes.r4_h":"Arhivare / master",
+    "recipes.r4_desc":"H.265 Software 10-bit · Preset <strong>slow/veryslow</strong> · CRF <strong>16-18</strong>",
+    "tsh.tag":"Depanare","tsh.title":"Probleme frecvente",
+    "tsh.item1":"<strong>Codec-ul nu apare în listă:</strong> ai repornit complet Resolve după instalare? Pe Mac, ai rulat install.sh sau ai eliminat manual carantina?",
+    "tsh.item2":"<strong>Randarea eșuează imediat:</strong> încearcă o rezoluție standard (1920x1080) ca test și verifică spațiul liber pe disc.",
+    "tsh.item3":"<strong>Fișierul are doar audio, fără video:</strong> actualizează la ultima versiune — a fost o problemă cunoscută, deja rezolvată.",
+    "tsh.item4":"<strong>Export foarte lent:</strong> încearcă un preset mai rapid (medium/fast) sau varianta hardware, dacă e disponibilă.",
+    "tsh.more":"Ghidul PDF complet, inclus în fiecare arhivă de descărcare, are o listă mai extinsă de probleme și soluții.",
+    "lic.tag":"Licențe","lic.title":"Licențe și atribuiri",
+    "lic.p1":"Codul propriu al acestui plugin e licențiat MIT. Plugin-ul leagă (links) librării GPL — FFmpeg, libx264, libx265 — deci binarul compilat este, ca distribuție, supus condițiilor GPL, indiferent de licența codului propriu.",
+    "lic.p2":"Nu constituie consultanță juridică. Detalii complete în fișierul THIRD_PARTY_LICENSES din repository.",
+    "footer.by":"de","footer.license":"Licență MIT · Nu este afiliat cu Blackmagic Design. „DaVinci Resolve\" este marcă înregistrată a Blackmagic Design Pty. Ltd.",
+  },
+  en: {
+    "nav.about":"About","nav.codecs":"Codecs","nav.install":"Install","nav.download":"Download",
+    "hero.eyebrow":"IOPlugin for DaVinci Resolve Studio",
+    "hero.title":'A <span class="accent">native, open-source</span> encoder for Resolve exports',
+    "hero.lead":"H.264 and H.265 via FFmpeg, with automatic hardware acceleration — VideoToolbox on Mac, NVENC on Windows/Linux — without you having to pick the backend.",
+    "hero.cta_source":"View source code",
+    "hero.meta_platforms":"Mac (arm64) · Windows · Linux","hero.meta_license":"MIT License",
+    "about.tag":"About","about.title":"One binary, several backends",
+    "about.desc":"A single generic encoder class reads a table of variants and automatically picks the best backend available on the machine it's running on — no separate builds per configuration.",
+    "about.card1_title":"Automatic detection",
+    "about.card1_desc":"On startup, the plugin checks which encoders are actually available on that machine and only registers those — VideoToolbox won't show up on Windows, NVENC won't show up without an NVIDIA card.",
+    "about.card2_title":"Built on the official SDK",
+    "about.card2_desc":"Uses Blackmagic Design's DaVinci Resolve IO Encode Plugin SDK exactly as documented — not a hack or a workaround.",
+    "about.card3_title":"Open, verifiable",
+    "about.card3_desc":"All source code is on GitHub, MIT licensed. You can read exactly what the plugin does with every frame, or build it yourself from source.",
+    "codecs.tag":"Codecs","codecs.title":"What the plugin registers",
+    "codecs.desc":"Hardware variants only appear in Resolve's codec list if your machine can actually run them.",
+    "codecs.th_codec":"Codec","codecs.th_backend":"Backend","codecs.th_type":"Type","codecs.th_platforms":"Platforms",
+    "codecs.cpu":"Software","codecs.hw":"Hardware",
+    "install.tag":"Installation","install.title":"Put the plugin where it belongs",
+    "install.desc":"Download the archive for your platform from Releases, unzip it, then follow the steps below.",
+    "install.mac.s0_title":"Install FFmpeg","install.mac.s0_desc":"The plugin links against the system's FFmpeg — it isn't bundled in the archive. Skip this step if you already have it installed.",
+    "install.mac.s1_title":"Remove quarantine","install.mac.s1_desc":"The binary isn't notarized by Apple — without this step, macOS blocks it and says it's damaged.",
+    "install.mac.s2_title":"Copy the bundle","install.mac.s2_desc":"Move the whole .dvcp.bundle folder (not just the file inside it) to:",
+    "install.mac.s3_title":"Restart Resolve","install.mac.s3_desc":"The GDC codecs show up in the MP4/QuickTime format list on the Deliver page.",
+    "install.win.note":"No separate FFmpeg install needed — the required DLLs already ship in the archive.",
+    "install.win.s1_title":"Unzip","install.win.s1_desc":"Extract the downloaded archive — you'll get the gdc_resolve_encoder.dvcp.bundle folder.",
+    "install.win.s2_title":"Copy the bundle","install.win.s2_desc":"Move the whole folder to:",
+    "install.win.s3_title":"Restart Resolve","install.win.s3_desc":"The GDC codecs show up in the MP4/QuickTime format list on the Deliver page.",
+    "install.linux.s0_title":"Install FFmpeg","install.linux.s0_desc":"The plugin links against the system's FFmpeg — it isn't bundled in the archive.",
+    "install.linux.s1_title":"Unzip","install.linux.s1_desc":"Extract the downloaded archive — you'll get the gdc_resolve_encoder.dvcp.bundle folder.",
+    "install.linux.s2_title":"Copy the bundle","install.linux.s2_desc":"Move the whole folder to:",
+    "install.linux.s3_title":"Restart Resolve","install.linux.s3_desc":"The GDC codecs show up in the MP4/QuickTime format list on the Deliver page.",
+    "usage.tag":"Usage","usage.title":"How to use it",
+    "usage.s1_title":"Open the Deliver page","usage.s1_desc":"In your Resolve project, go to the Deliver page, same as any normal export.",
+    "usage.s2_title":"Pick MP4 or QuickTime format","usage.s2_desc":"The GDC codecs appear in the codec list, alongside Resolve's own.",
+    "usage.s3_title":"Pick a GDC codec and export","usage.s3_desc":"Quality settings (CRF or target bitrate) show up directly in the export panel.",
+    "req.tag":"Requirements","req.title":"What you need",
+    "req.item1":"<strong>DaVinci Resolve Studio</strong> — the free edition doesn't support IOPlugins.",
+    "req.item2":"<strong>macOS Apple Silicon</strong>, Windows 64-bit, or Linux — Intel Macs aren't supported.",
+    "req.item3":"For NVENC: an <strong>NVIDIA GPU</strong> with an up-to-date driver.",
+    "req.item4":"<strong>FFmpeg installed separately</strong> on Mac/Linux (brew install ffmpeg / apt install ffmpeg) — on Windows, the required DLLs already ship in the archive.",
+    "dl.title":"Download GDC Resolve Encoder","dl.desc":"Open-source, MIT licensed.",
+    "dl.pdf_note":"Every archive also includes the full PDF guide, in Romanian, English, and Spanish.",
+    "act.tag":"Activation","act.title":"Activation code",
+    "act.p1":"The source code is open-source, but the plugin needs an activation code, tied to your computer, to be able to render. It's a donation, not a list price — it helps me cover development costs (subscriptions, tools) and keep maintaining and improving the plugin.",
+    "act.step1":"Open the <strong>Plugin Settings</strong> panel in Resolve (Deliver → any GDC codec) — you'll see a <strong>Machine ID</strong> displayed right there, no need to run anything separately.",
+    "act.step2":"Message me on WhatsApp (button below) — I'll send you a Revolut payment link.",
+    "act.step3":"After payment, send me the machine ID and you'll get your personal activation code, tied to exactly that computer.",
+    "act.step4":"You enter it in the \"Cod licenta\" field — once. After successful activation, the field disappears from the panel, replaced by \"Licenta: activa\".",
+    "act.wa_btn":"&#128172; Message me on WhatsApp",
+    "nav.settings":"Settings","nav.troubleshooting":"Troubleshooting","nav.activation":"Activation",
+    "settings.tag":"Settings","settings.title":"What every setting means",
+    "settings.desc":"Explained plainly, with concrete recommendations — not just the technical name.",
+    "settings.preset_h":"Preset — speed vs efficiency",
+    "settings.preset_desc":"Doesn't directly change visible quality — it changes how much time the encoder spends searching for the best compression. A slower preset produces smaller files at the same quality, but takes longer.",
+    "settings.th_preset":"Preset","settings.th_recom":"Recommended for",
+    "settings.preset_r1":"Quick tests, previews — not for final delivery.",
+    "settings.preset_r2":"Good balance — medium is the default choice.",
+    "settings.preset_r3":"Final delivery, smaller file, slower export.",
+    "settings.preset_r4":"Maximum compression — only if you have time to spare.",
+    "settings.rc_h":"Rate Control — CRF, Bitrate, or QP?",
+    "settings.rc_desc":"Three different ways of telling the encoder \"how much to compress\". You pick just one.",
+    "settings.th_mode":"Mode","settings.th_explain":"Explanation",
+    "settings.crf_desc":"Constant quality — the encoder decides the bitrate itself, frame by frame. Recommended for most cases. 23 is the default; 18-20 for quality very close to the original.",
+    "settings.br_desc":"You tell it exactly how many kbps to use. Useful when you have a strict file-size limit.",
+    "settings.qp_desc":"Same scale as CRF, but without adaptive adjustment — every frame gets exactly the same compression. Rarely used in normal production.",
+    "settings.profile_h":"Profile (H.264 only, 8-bit, software)",
+    "settings.profile_desc":"<strong>high</strong> is the default — compatible with almost any modern player, best compression. <strong>baseline</strong> only for very old devices.",
+    "settings.tune_h":"Tune — content-type optimizations",
+    "settings.tune_desc":"Optional. <strong>film</strong> for normal filmed content, <strong>animation</strong> for cartoons, <strong>grain</strong> for visible grain. If unsure, leave it on \"none\".",
+    "recipes.tag":"Recipes","recipes.title":"Ready-made combinations",
+    "recipes.desc":"If you'd rather not analyze every setting individually, here are combinations for common situations.",
+    "recipes.r1_h":"Client delivery, maximum quality",
+    "recipes.r1_desc":"H.264 Software · Preset <strong>slow</strong> · CRF <strong>18-20</strong> · Profile <strong>high</strong>",
+    "recipes.r2_h":"Quick preview for approval",
+    "recipes.r2_desc":"H.264 Hardware (if available) · CRF <strong>26-28</strong>",
+    "recipes.r3_h":"Export for YouTube / web",
+    "recipes.r3_desc":"H.264 Software · Preset <strong>medium/slow</strong> · CRF <strong>20-23</strong> · Profile <strong>high</strong>",
+    "recipes.r4_h":"Archival / master",
+    "recipes.r4_desc":"H.265 Software 10-bit · Preset <strong>slow/veryslow</strong> · CRF <strong>16-18</strong>",
+    "tsh.tag":"Troubleshooting","tsh.title":"Common issues",
+    "tsh.item1":"<strong>The codec doesn't show up:</strong> did you fully restart Resolve after installing? On Mac, did you run install.sh or manually remove the quarantine?",
+    "tsh.item2":"<strong>Rendering fails immediately:</strong> try a standard resolution (1920x1080) as a test and check free disk space.",
+    "tsh.item3":"<strong>The file has audio only, no video:</strong> update to the latest version — this was a known issue, already fixed.",
+    "tsh.item4":"<strong>Export is very slow:</strong> try a faster preset (medium/fast) or the hardware variant, if available.",
+    "tsh.more":"The full PDF guide, included in every download archive, has a more extensive list of issues and solutions.",
+    "lic.tag":"Licenses","lic.title":"Licenses and attribution",
+    "lic.p1":"This plugin's own code is MIT licensed. The plugin links against GPL libraries — FFmpeg, libx264, libx265 — so the compiled binary is, as a distribution, subject to GPL terms, regardless of the license of the plugin's own code.",
+    "lic.p2":"This isn't legal advice. Full details in the THIRD_PARTY_LICENSES file in the repository.",
+    "footer.by":"by","footer.license":"MIT License · Not affiliated with Blackmagic Design. \"DaVinci Resolve\" is a trademark of Blackmagic Design Pty. Ltd.",
+  },
+  es: {
+    "nav.about":"Acerca de","nav.codecs":"Códecs","nav.install":"Instalación","nav.download":"Descargar",
+    "hero.eyebrow":"IOPlugin para DaVinci Resolve Studio",
+    "hero.title":'Un códec <span class="accent">nativo y de código abierto</span> para exportar desde Resolve',
+    "hero.lead":"H.264 y H.265 mediante FFmpeg, con aceleración por hardware automática — VideoToolbox en Mac, NVENC en Windows/Linux — sin que tengas que elegir el backend.",
+    "hero.cta_source":"Ver código fuente",
+    "hero.meta_platforms":"Mac (arm64) · Windows · Linux","hero.meta_license":"Licencia MIT",
+    "about.tag":"Acerca de","about.title":"Un solo binario, varios backends",
+    "about.desc":"Una única clase de codificador genérica lee una tabla de variantes y elige automáticamente el mejor backend disponible en la máquina donde se ejecuta — sin builds separados por configuración.",
+    "about.card1_title":"Detección automática",
+    "about.card1_desc":"Al iniciar, el plugin comprueba qué codificadores están realmente disponibles en esa máquina y solo registra esos — VideoToolbox no aparece en Windows, NVENC no aparece sin una GPU NVIDIA.",
+    "about.card2_title":"Construido sobre el SDK oficial",
+    "about.card2_desc":"Usa el DaVinci Resolve IO Encode Plugin SDK de Blackmagic Design exactamente como está documentado — no es un truco ni una solución alternativa.",
+    "about.card3_title":"Abierto, verificable",
+    "about.card3_desc":"Todo el código fuente está en GitHub, con licencia MIT. Puedes leer exactamente qué hace el plugin con cada fotograma, o compilarlo tú mismo desde el código fuente.",
+    "codecs.tag":"Códecs","codecs.title":"Qué registra el plugin",
+    "codecs.desc":"Las variantes de hardware solo aparecen en la lista de códecs de Resolve si tu máquina realmente puede ejecutarlas.",
+    "codecs.th_codec":"Códec","codecs.th_backend":"Backend","codecs.th_type":"Tipo","codecs.th_platforms":"Plataformas",
+    "codecs.cpu":"Software","codecs.hw":"Hardware",
+    "install.tag":"Instalación","install.title":"Coloca el plugin donde corresponde",
+    "install.desc":"Descarga el archivo para tu plataforma desde Releases, descomprímelo y sigue los pasos siguientes.",
+    "install.mac.s0_title":"Instala FFmpeg","install.mac.s0_desc":"El plugin se enlaza al FFmpeg del sistema — no viene incluido en el archivo. Omite este paso si ya lo tienes instalado.",
+    "install.mac.s1_title":"Quita la cuarentena","install.mac.s1_desc":"El binario no está notarizado por Apple — sin este paso, macOS lo bloquea y dice que está dañado.",
+    "install.mac.s2_title":"Copia el bundle","install.mac.s2_desc":"Mueve la carpeta completa .dvcp.bundle (no solo el archivo interior) a:",
+    "install.mac.s3_title":"Reinicia Resolve","install.mac.s3_desc":"Los códecs GDC aparecen en la lista de formatos MP4/QuickTime en la página Deliver.",
+    "install.win.note":"No hace falta instalar FFmpeg por separado — los DLL necesarios ya vienen en el archivo.",
+    "install.win.s1_title":"Descomprime","install.win.s1_desc":"Extrae el archivo descargado — obtendrás la carpeta gdc_resolve_encoder.dvcp.bundle.",
+    "install.win.s2_title":"Copia el bundle","install.win.s2_desc":"Mueve la carpeta completa a:",
+    "install.win.s3_title":"Reinicia Resolve","install.win.s3_desc":"Los códecs GDC aparecen en la lista de formatos MP4/QuickTime en la página Deliver.",
+    "install.linux.s0_title":"Instala FFmpeg","install.linux.s0_desc":"El plugin se enlaza al FFmpeg del sistema — no viene incluido en el archivo.",
+    "install.linux.s1_title":"Descomprime","install.linux.s1_desc":"Extrae el archivo descargado — obtendrás la carpeta gdc_resolve_encoder.dvcp.bundle.",
+    "install.linux.s2_title":"Copia el bundle","install.linux.s2_desc":"Mueve la carpeta completa a:",
+    "install.linux.s3_title":"Reinicia Resolve","install.linux.s3_desc":"Los códecs GDC aparecen en la lista de formatos MP4/QuickTime en la página Deliver.",
+    "usage.tag":"Uso","usage.title":"Cómo usarlo",
+    "usage.s1_title":"Abre la página Deliver","usage.s1_desc":"En tu proyecto de Resolve, ve a la página Deliver, como en cualquier exportación normal.",
+    "usage.s2_title":"Elige el formato MP4 o QuickTime","usage.s2_desc":"Los códecs GDC aparecen en la lista de códecs, junto a los nativos de Resolve.",
+    "usage.s3_title":"Elige un códec GDC y exporta","usage.s3_desc":"Los ajustes de calidad (CRF o bitrate objetivo) aparecen directamente en el panel de exportación.",
+    "req.tag":"Requisitos","req.title":"Qué necesitas",
+    "req.item1":"<strong>DaVinci Resolve Studio</strong> — la edición gratuita no soporta IOPlugins.",
+    "req.item2":"<strong>macOS Apple Silicon</strong>, Windows de 64 bits, o Linux — los Mac Intel no son compatibles.",
+    "req.item3":"Para NVENC: una <strong>GPU NVIDIA</strong> con driver actualizado.",
+    "req.item4":"<strong>FFmpeg instalado por separado</strong> en Mac/Linux (brew install ffmpeg / apt install ffmpeg) — en Windows, los DLL necesarios ya vienen incluidos en el archivo.",
+    "dl.title":"Descarga GDC Resolve Encoder","dl.desc":"De código abierto, licencia MIT.",
+    "dl.pdf_note":"Cada archivo incluye también la guía completa en PDF, en rumano, inglés y español.",
+    "act.tag":"Activación","act.title":"Código de activación",
+    "act.p1":"El código fuente es de código abierto, pero el plugin necesita un código de activación, vinculado a tu ordenador, para poder renderizar. Es una donación, no un precio de lista — me ayudan a cubrir los costos de desarrollo (suscripciones, herramientas) y a seguir manteniendo y mejorando el plugin.",
+    "act.step1":"Abres el panel <strong>Plugin Settings</strong> en Resolve (Deliver → cualquier códec GDC) — verás un <strong>ID de máquina</strong> mostrado ahí mismo, sin necesidad de ejecutar nada aparte.",
+    "act.step2":"Me escribes por WhatsApp (botón abajo) — te envío un enlace de pago por Revolut.",
+    "act.step3":"Tras el pago, me envías el ID de máquina y recibes tu código de activación personal, vinculado exactamente a ese ordenador.",
+    "act.step4":"Lo introduces en el campo \"Cod licenta\" — una sola vez. Tras la primera activación exitosa, el campo desaparece del panel, reemplazado por \"Licenta: activa\".",
+    "act.wa_btn":"&#128172; Escríbeme por WhatsApp",
+    "nav.settings":"Ajustes","nav.troubleshooting":"Solución de problemas","nav.activation":"Activación",
+    "settings.tag":"Ajustes","settings.title":"Qué significa cada ajuste",
+    "settings.desc":"Explicado de forma sencilla, con recomendaciones concretas — no solo el nombre técnico.",
+    "settings.preset_h":"Preset — velocidad vs eficiencia",
+    "settings.preset_desc":"No cambia directamente la calidad visible — cambia cuánto tiempo pasa el codificador buscando la mejor compresión. Un preset más lento produce archivos más pequeños con la misma calidad, pero tarda más.",
+    "settings.th_preset":"Preset","settings.th_recom":"Recomendado para",
+    "settings.preset_r1":"Pruebas rápidas, previsualizaciones — no para entrega final.",
+    "settings.preset_r2":"Buen equilibrio — medium es la opción por defecto.",
+    "settings.preset_r3":"Entrega final, archivo más pequeño, exportación más lenta.",
+    "settings.preset_r4":"Compresión máxima — solo si tienes tiempo de sobra.",
+    "settings.rc_h":"Rate Control — ¿CRF, Bitrate, o QP?",
+    "settings.rc_desc":"Tres formas distintas de decirle al codificador \"cuánto comprimir\". Se elige solo una.",
+    "settings.th_mode":"Modo","settings.th_explain":"Explicación",
+    "settings.crf_desc":"Calidad constante — el codificador decide el bitrate por sí mismo, fotograma a fotograma. Recomendado para la mayoría de los casos. 23 es el valor por defecto; 18-20 para calidad muy cercana al original.",
+    "settings.br_desc":"Le dices exactamente cuántos kbps usar. Útil cuando tienes un límite estricto de tamaño de archivo.",
+    "settings.qp_desc":"Misma escala que CRF, pero sin ajuste adaptativo — cada fotograma recibe exactamente la misma compresión. Raramente usado en producción normal.",
+    "settings.profile_h":"Profile (solo H.264, 8 bits, software)",
+    "settings.profile_desc":"<strong>high</strong> es la opción por defecto — compatible con casi cualquier reproductor moderno, mejor compresión. <strong>baseline</strong> solo para dispositivos muy antiguos.",
+    "settings.tune_h":"Tune — optimizaciones según el tipo de contenido",
+    "settings.tune_desc":"Opcional. <strong>film</strong> para filmación normal, <strong>animation</strong> para dibujos, <strong>grain</strong> para grano visible. Si tienes dudas, déjalo en \"none\".",
+    "recipes.tag":"Recetas","recipes.title":"Combinaciones ya preparadas",
+    "recipes.desc":"Si prefieres no analizar cada ajuste por separado, aquí tienes combinaciones para situaciones comunes.",
+    "recipes.r1_h":"Entrega a cliente, máxima calidad",
+    "recipes.r1_desc":"H.264 Software · Preset <strong>slow</strong> · CRF <strong>18-20</strong> · Profile <strong>high</strong>",
+    "recipes.r2_h":"Previsualización rápida para aprobación",
+    "recipes.r2_desc":"H.264 Hardware (si está disponible) · CRF <strong>26-28</strong>",
+    "recipes.r3_h":"Exportación para YouTube / web",
+    "recipes.r3_desc":"H.264 Software · Preset <strong>medium/slow</strong> · CRF <strong>20-23</strong> · Profile <strong>high</strong>",
+    "recipes.r4_h":"Archivo / máster",
+    "recipes.r4_desc":"H.265 Software 10 bits · Preset <strong>slow/veryslow</strong> · CRF <strong>16-18</strong>",
+    "tsh.tag":"Solución de problemas","tsh.title":"Problemas frecuentes",
+    "tsh.item1":"<strong>El códec no aparece:</strong> ¿reiniciaste completamente Resolve después de instalar? En Mac, ¿ejecutaste install.sh o eliminaste manualmente la cuarentena?",
+    "tsh.item2":"<strong>El renderizado falla inmediatamente:</strong> prueba con una resolución estándar (1920x1080) y comprueba el espacio libre en disco.",
+    "tsh.item3":"<strong>El archivo solo tiene audio, sin vídeo:</strong> actualiza a la última versión — fue un problema conocido, ya solucionado.",
+    "tsh.item4":"<strong>La exportación es muy lenta:</strong> prueba un preset más rápido (medium/fast) o la variante por hardware, si está disponible.",
+    "tsh.more":"La guía completa en PDF, incluida en cada archivo de descarga, tiene una lista más extensa de problemas y soluciones.",
+    "lic.tag":"Licencias","lic.title":"Licencias y atribuciones",
+    "lic.p1":"El código propio de este plugin está licenciado bajo MIT. El plugin enlaza con librerías GPL — FFmpeg, libx264, libx265 — por lo que el binario compilado está, como distribución, sujeto a los términos GPL, independientemente de la licencia del código propio.",
+    "lic.p2":"Esto no constituye asesoramiento legal. Detalles completos en el archivo THIRD_PARTY_LICENSES del repositorio.",
+    "footer.by":"por","footer.license":"Licencia MIT · No afiliado con Blackmagic Design. «DaVinci Resolve» es una marca registrada de Blackmagic Design Pty. Ltd.",
+  }
+};
+
+function applyLang(lang) {
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    const val = translations[lang][key];
+    if (val !== undefined) el.innerHTML = val;
+  });
+  document.querySelectorAll('.lang-switch button').forEach(b => {
+    b.classList.toggle('active', b.dataset.lang === lang);
+  });
+  localStorage.setItem('gdc_lang', lang);
+}
+
+document.querySelectorAll('.lang-switch button').forEach(btn => {
+  btn.addEventListener('click', () => applyLang(btn.dataset.lang));
+});
+
+const savedLang = localStorage.getItem('gdc_lang');
+applyLang(savedLang && translations[savedLang] ? savedLang : 'ro');
+
+// tabs
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelector(`.tab-panel[data-panel="${btn.dataset.tab}"]`).classList.add('active');
+  });
+});
+
+// scroll reveal
+const revealEls = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+}, { threshold: 0.15 });
+revealEls.forEach(el => io.observe(el));
+
+// signature bundle-tree typewriter animation
+const treeData = [
+  { k: '', file: 'gdc_resolve_encoder', plat: '.dvcp.bundle/' },
+  { k: '└─ ', file: 'Contents/', plat: '' },
+  { k: '   ├─ ', file: 'MacOS/', plat: '' },
+  { k: '   │   └─ ', file: 'gdc_resolve_encoder.dvcp', plat: '  ← arm64' },
+  { k: '   ├─ ', file: 'Win64/', plat: '' },
+  { k: '   │   └─ ', file: 'gdc_resolve_encoder.dvcp', plat: '  ← x64' },
+  { k: '   └─ ', file: 'Linux-x86-64/', plat: '' },
+  { k: '       └─ ', file: 'gdc_resolve_encoder.dvcp', plat: '  ← x64' },
+];
+const treeContainer = document.getElementById('treeLines');
+let ti = 0;
+function typeNextLine() {
+  if (ti >= treeData.length) {
+    const cur = document.createElement('span');
+    cur.className = 'cursor show';
+    treeContainer.appendChild(cur);
+    return;
+  }
+  const row = treeData[ti];
+  const line = document.createElement('div');
+  line.className = 'bundle-line';
+  line.style.animationDelay = '0s';
+  line.innerHTML = `<span class="k">${row.k}</span><span class="file">${row.file}</span><span class="plat">${row.plat}</span>`;
+  treeContainer.appendChild(line);
+  requestAnimationFrame(() => { line.style.animation = 'btIn .35s ease forwards'; });
+  ti++;
+  setTimeout(typeNextLine, 220);
+}
+setTimeout(typeNextLine, 400);
+</script>
+</body>
+</html>

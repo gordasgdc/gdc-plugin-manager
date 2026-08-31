@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+  if (location.hostname === "gordasgdc.github.io") {
+    location.replace("https://gordas.dev/cursorpro-gdc/" + location.search + location.hash);
+  }
+</script>
+<title>CursorPro GDC</title>
+<meta name="description" content="CursorPro GDC — Halo, Spotlight, Desen și Zoom live pentru prezentări și cursuri pe Mac. Trial gratuit de 3 zile.">
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0912;
+    --bg-2:#120f1e;
+    --panel:#171325;
+    --panel-2:#1d1830;
+    --border:#2b2440;
+    --text:#f1eef9;
+    --muted:#a49bc4;
+    --faint:#6b6390;
+    --accent:#f0c250;
+    --accent-ink:#231704;
+    --accent-dim:#8a6b2c;
+    --violet:#7a4ee0;
+    --violet-2:#a06bff;
+    --mono: 'IBM Plex Mono', ui-monospace, monospace;
+    --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+  body{
+    background:
+      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(122,78,224,.35), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 100% 10%, rgba(240,194,80,.12), transparent 55%),
+      var(--bg);
+    color:var(--text); font-family:var(--sans);
+    line-height:1.6; -webkit-font-smoothing:antialiased;
+  }
+  a{ color:inherit; }
+  img,svg{ display:block; max-width:100%; }
+  .wrap{ max-width:1080px; margin:0 auto; padding:0 24px; }
+  ::selection{ background:var(--accent); color:var(--accent-ink); }
+
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(10,9,18,.82); backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--border);
+  }
+  .nav{ display:flex; align-items:center; justify-content:space-between; padding:16px 24px; max-width:1080px; margin:0 auto; }
+  .brand{ display:flex; align-items:center; gap:10px; font-family:var(--mono); font-weight:700; font-size:15px; letter-spacing:.02em; }
+  .brand .mark{ width:28px; height:28px; border-radius:8px; background:linear-gradient(145deg,var(--violet-2),var(--violet)); display:flex; align-items:center; justify-content:center; box-shadow:0 0 0 1px rgba(255,255,255,.08) inset; }
+  .brand .mark svg{ width:16px; height:16px; }
+  .nav-links{ display:flex; align-items:center; gap:26px; }
+  .nav-links a{ font-size:13.5px; color:var(--muted); text-decoration:none; transition:color .15s ease; }
+  .nav-links a:hover{ color:var(--text); }
+  .nav-cta{
+    font-family:var(--mono); font-size:12.5px; font-weight:600; color:var(--accent-ink);
+    background:var(--accent); padding:9px 16px; border-radius:8px; text-decoration:none; white-space:nowrap;
+  }
+  @media (max-width:760px){ .nav-links a:not(.nav-cta){ display:none; } }
+
+  .hero{ padding:96px 0 70px; position:relative; overflow:hidden; }
+  .hero-grid{ display:grid; grid-template-columns:1.05fr .95fr; gap:56px; align-items:center; }
+  @media (max-width:860px){ .hero-grid{ grid-template-columns:1fr; } }
+  .eyebrow{
+    font-family:var(--mono); font-size:12px; font-weight:600; color:var(--accent);
+    letter-spacing:.12em; text-transform:uppercase; margin-bottom:18px; display:flex; align-items:center; gap:8px;
+  }
+  .eyebrow::before{ content:''; width:16px; height:1px; background:var(--accent); }
+  h1{
+    font-family:var(--mono); font-size:clamp(32px,5vw,50px); font-weight:700; line-height:1.1;
+    letter-spacing:-.01em; margin-bottom:20px;
+  }
+  h1 .accent{ background:linear-gradient(135deg,var(--accent),var(--violet-2)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .hero p.lead{ font-size:16.5px; color:var(--muted); max-width:48ch; margin-bottom:30px; }
+  .hero-actions{ display:flex; gap:12px; flex-wrap:wrap; margin-bottom:26px; }
+  .btn{
+    font-family:var(--mono); font-size:13.5px; font-weight:600; padding:14px 24px; border-radius:9px;
+    text-decoration:none; display:inline-flex; align-items:center; gap:8px; transition:all .18s ease; cursor:pointer; border:1px solid transparent;
+  }
+  .btn-primary{ background:var(--accent); color:var(--accent-ink); }
+  .btn-primary:hover{ background:#f7cf74; transform:translateY(-1px); box-shadow:0 10px 30px -8px rgba(240,194,80,.5); }
+  .btn-ghost{ background:var(--panel); color:var(--text); border-color:var(--border); }
+  .btn-ghost:hover{ border-color:var(--violet-2); }
+  .hero-meta{ display:flex; gap:18px; flex-wrap:wrap; font-family:var(--mono); font-size:12px; color:var(--faint); }
+  .hero-meta span{ display:flex; align-items:center; gap:6px; }
+  .dot{ width:6px; height:6px; border-radius:50%; background:#5fd98a; }
+
+  .loupe-demo{
+    background:var(--panel); border:1px solid var(--border); border-radius:16px;
+    padding:28px; box-shadow:0 40px 80px -30px rgba(0,0,0,.7); position:relative; overflow:hidden;
+  }
+  .loupe-demo .tt-bar{ display:flex; gap:6px; margin-bottom:20px; }
+  .tt-bar span{ width:9px; height:9px; border-radius:50%; background:var(--border); }
+  .demo-canvas{ position:relative; height:260px; border-radius:10px; background:linear-gradient(160deg,#1a1530,#0e0c18); overflow:hidden; }
+  .demo-line{ position:absolute; left:24px; right:24px; height:8px; border-radius:4px; background:rgba(255,255,255,.06); }
+  .demo-line.l1{ top:36px; width:60%; }
+  .demo-line.l2{ top:58px; width:40%; }
+  .demo-line.l3{ top:110px; width:75%; }
+  .demo-line.l4{ top:132px; width:30%; }
+  .halo-ring{
+    position:absolute; width:64px; height:64px; border-radius:50%;
+    border:3px solid var(--accent); box-shadow:0 0 24px 4px rgba(240,194,80,.5);
+    top:150px; left:150px; animation:haloMove 5s ease-in-out infinite;
+  }
+  @keyframes haloMove{
+    0%,100%{ top:150px; left:150px; }
+    30%{ top:70px; left:200px; }
+    60%{ top:170px; left:60px; }
+  }
+  .spot-mask{
+    position:absolute; inset:0; background:rgba(6,5,12,.78);
+    -webkit-mask: radial-gradient(circle 70px at 60% 40%, transparent 68px, black 70px);
+    mask: radial-gradient(circle 70px at 60% 40%, transparent 68px, black 70px);
+    opacity:0; animation:spotFade 5s ease-in-out infinite; animation-delay:.2s;
+  }
+  @keyframes spotFade{ 0%,20%{opacity:0;} 30%,55%{opacity:1;} 65%,100%{opacity:0;} }
+
+  .reveal{ opacity:0; transform:translateY(16px); transition:opacity .6s ease, transform .6s ease; }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+
+  section{ padding:68px 0; border-top:1px solid var(--border); }
+  .section-head{ margin-bottom:38px; max-width:60ch; }
+  .section-tag{ font-family:var(--mono); font-size:11.5px; color:var(--accent); letter-spacing:.1em; text-transform:uppercase; margin-bottom:10px; }
+  h2{ font-family:var(--mono); font-size:clamp(22px,3vw,30px); font-weight:700; margin-bottom:10px; letter-spacing:-.01em; }
+  section > .wrap > p.section-desc{ color:var(--muted); font-size:15px; max-width:60ch; }
+
+  .feature-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:18px; margin-top:36px; }
+  @media (max-width:700px){ .feature-grid{ grid-template-columns:1fr; } }
+  .feature-card{
+    background:var(--panel); border:1px solid var(--border); border-radius:14px; padding:26px;
+    transition:border-color .2s ease, transform .2s ease;
+  }
+  .feature-card:hover{ border-color:var(--violet-2); transform:translateY(-2px); }
+  .feature-icon{
+    width:44px; height:44px; border-radius:11px; display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(145deg,var(--violet-2),var(--violet)); margin-bottom:16px; font-size:20px;
+  }
+  .feature-card h3{ font-size:16.5px; font-weight:700; margin-bottom:8px; }
+  .feature-card p{ font-size:14px; color:var(--muted); }
+
+  .steps{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-top:36px; counter-reset:step; }
+  @media (max-width:760px){ .steps{ grid-template-columns:1fr; } }
+  .step{ position:relative; padding-left:44px; }
+  .step::before{
+    counter-increment:step; content:counter(step);
+    position:absolute; left:0; top:0; width:30px; height:30px; border-radius:50%;
+    background:var(--panel-2); border:1px solid var(--border); color:var(--accent);
+    font-family:var(--mono); font-weight:700; font-size:13px; display:flex; align-items:center; justify-content:center;
+  }
+  .step h4{ font-size:15px; font-weight:700; margin-bottom:6px; }
+  .step p{ font-size:13.5px; color:var(--muted); }
+
+  .price-card{
+    margin-top:36px; background:linear-gradient(150deg,var(--panel-2),var(--panel));
+    border:1px solid var(--border); border-radius:18px; padding:40px; display:flex; align-items:center; justify-content:space-between; gap:32px; flex-wrap:wrap;
+  }
+  .price-tag{ font-family:var(--mono); font-size:44px; font-weight:700; color:var(--accent); }
+  .price-tag sub{ font-size:14px; color:var(--muted); font-weight:500; }
+  .price-note{ font-size:13.5px; color:var(--muted); margin-top:4px; }
+
+  footer{ border-top:1px solid var(--border); padding:36px 0; }
+  .footer-row{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; font-size:13px; color:var(--faint); }
+  .footer-row a{ color:var(--muted); text-decoration:none; }
+  .footer-row a:hover{ color:var(--text); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <div class="brand">
+      <span class="mark">
+        <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="#fff" stroke-width="2"/><circle cx="12" cy="12" r="2" fill="#fff"/></svg>
+      </span>
+      CursorPro GDC
+    </div>
+    <div class="nav-links">
+      <a href="#features">Funcții</a>
+      <a href="#how">Cum funcționează</a>
+      <a href="#price">Donație</a>
+      <a class="nav-cta" href="https://github.com/gordasgdc/cursorpro-gdc/releases/latest/download/CursorProGDC-Mac.zip">Descarcă</a>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">macOS · Apple Silicon</div>
+      <h1>Arată exact ce vrei<br>să vadă <span class="accent">studenții tăi</span>.</h1>
+      <p class="lead">Halo pe cursor, spotlight care întunecă restul ecranului, desen live peste orice aplicație și o lupă care mărește exact zona de care ai nevoie — toate dintr-o singură aplicație ușoară, nativă pentru Mac.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="https://github.com/gordasgdc/cursorpro-gdc/releases/latest/download/CursorProGDC-Mac.zip">⬇ Descarcă gratuit</a>
+        <a class="btn btn-ghost" href="#how">Vezi cum funcționează</a>
+        <a class="btn btn-ghost" href="https://github.com/gordasgdc/cursorpro-gdc/releases/latest/download/Instructiuni-CursorProGDC.pdf">📄 Instrucțiuni (PDF)</a>
+      </div>
+      <div class="hero-meta">
+        <span><span class="dot"></span> Trial 3 zile, fără card</span>
+        <span><span class="dot"></span> Nativ Apple Silicon</span>
+        <span><span class="dot"></span> Română · English · Español</span>
+      </div>
+    </div>
+    <div class="loupe-demo reveal">
+      <div class="tt-bar"><span></span><span></span><span></span></div>
+      <div class="demo-canvas">
+        <div class="demo-line l1"></div>
+        <div class="demo-line l2"></div>
+        <div class="demo-line l3"></div>
+        <div class="demo-line l4"></div>
+        <div class="spot-mask"></div>
+        <div class="halo-ring"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="features">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="section-tag">Funcții</div>
+      <h2>Patru unelte, o singură tastă apăsată</h2>
+      <p class="section-desc">Fiecare mod se activează ținând o tastă — nimic nu rămâne pornit din greșeală în timpul unei prezentări live.</p>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card reveal">
+        <div class="feature-icon">◎</div>
+        <h3>Halo cursor</h3>
+        <p>Un cerc vizibil în jurul cursorului, ca publicul să-l urmărească ușor pe ecran proiectat sau distribuit. Stil, culoare și mărime — toate reglabile.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">◑</div>
+        <h3>Spotlight</h3>
+        <p>Întunecă tot ecranul, mai puțin un cerc luminos în jurul cursorului — perfect ca să atragi atenția exact acolo unde vorbești.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">✎</div>
+        <h3>Desen live</h3>
+        <p>Liber, săgeți, cercuri sau cadre de selecție, peste orice aplicație — fiecare unealtă cu propria tastă rapidă, reconfigurabilă.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">🔍</div>
+        <h3>Zoom live</h3>
+        <p>O lupă rotundă care mărește live zona din jurul cursorului — arată clar detalii mici, fără să dai zoom în aplicația prezentată.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="section-tag">Instalare</div>
+      <h2>Gata de folosit în două minute</h2>
+    </div>
+    <div class="steps">
+      <div class="step reveal">
+        <h4>Descarcă și deschide</h4>
+        <p>Descarcă arhiva .zip, dezarhiveaz-o, apoi dublu-click pe CursorProGDC.pkg — aplicație semnată și verificată oficial de Apple, fără avertismente.</p>
+      </div>
+      <div class="step reveal">
+        <h4>Acordă permisiunile</h4>
+        <p>La prima pornire, macOS cere Accesibilitate și Înregistrare Ecran — necesare ca aplicația să funcționeze pe tot ecranul.</p>
+      </div>
+      <div class="step reveal">
+        <h4>Folosește 3 zile gratuit</h4>
+        <p>Trial-ul pornește automat. Toate funcțiile sunt active — activezi o licență direct din Preferințe, oricând vrei.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="price">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="section-tag">Susține dezvoltarea</div>
+      <h2>Simplu, o donație unică</h2>
+    </div>
+    <div class="price-card reveal">
+      <div>
+        <div class="price-tag">Donație unică</div>
+        <div class="price-note">Suma exactă (poate include oferte temporare) apare direct în aplicație, la fereastra de Activare. Fără abonament. Actualizări gratuite. Funcționează pe orice Mac Apple Silicon.</div>
+      </div>
+      <a class="btn btn-primary" id="whatsapp-buy-btn" href="#">💬 Scrie-mi pe WhatsApp</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap footer-row">
+    <span>© 2026 GDC / Gordas. Toate drepturile rezervate.</span>
+    <span>
+      <a href="https://github.com/gordasgdc/cursorpro-gdc">GitHub</a> ·
+      <a href="https://github.com/gordasgdc/cursorpro-gdc/releases/latest">Toate versiunile</a> ·
+      <a href="https://gordas.dev/termeni">Termeni și Condiții</a> ·
+      <a href="https://gordas.dev/confidentialitate">Politică de Confidențialitate (GDPR)</a> ·
+      <a href="https://gordas.dev/cookie">Cookie-uri</a> ·
+      <a href="mailto:academiagdc@gmail.com">Contact</a>
+    </span>
+  </div>
+  <div class="wrap" style="margin-top:8px;font-size:11px;opacity:.75;text-align:center;">gordas.dev este o platformă administrată de dezvoltatori independenți. Aplicațiile și resursele sunt furnizate ca atare (AS IS), iar susținerea proiectului se bazează pe contribuții opționale de sprijin și donații.</div>
+</footer>
+
+<script>
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: .15 });
+  revealEls.forEach(el => io.observe(el));
+
+  // Numarul de WhatsApp nu e scris in clar in HTML — reconstruit din
+  // bucati la incarcarea paginii, ca sa nu fie usor de extras de
+  // crawlere automate care aduna numere pentru spam.
+  const waParts = ['34', '643', '109', '970'];
+  const waNumber = waParts.join('');
+  const waText = encodeURIComponent('Salut! Vreau să cumpăr o licență CursorPro GDC.');
+  const waBtn = document.getElementById('whatsapp-buy-btn');
+  if (waBtn) waBtn.href = `https://wa.me/${waNumber}?text=${waText}`;
+</script>
+
+</body>
+</html>

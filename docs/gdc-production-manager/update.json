@@ -1,0 +1,11 @@
+{
+  "version": "1.3.0",
+  "release_date": "2026-08-27",
+  "changes": "Self-Updater real: butonul de actualizare descarca si instaleaza direct din aplicatie, fara sa mai deschida un tab de browser catre GitHub.",
+  "download_url": {
+    "mac": "https://github.com/gordasgdc/gdc-production-manager/releases/latest/download/GDCProductionManager.pkg",
+    "windows": "https://github.com/gordasgdc/gdc-production-manager/releases/latest/download/GDCProductionManagerSetup.exe"
+  },
+  "mandatory": false,
+  "min_version": "1.0.0"
+}

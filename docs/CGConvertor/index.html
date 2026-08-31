@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="page-title">CG Convertor</title>
+<meta id="meta-desc" name="description" content="CG Convertor — transcode & rewrap ProRes/DNxHD pentru DaVinci Resolve, pe Mac și Windows. Probă gratuită 15 zile.">
+<link rel="icon" type="image/png" href="assets/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* Identitatea "Shift" — aceeasi paleta ca aplicatia (Theme.swift / theme.py):
+     dark, accent cupru/amber, ton "Color page" DaVinci Resolve. */
+  :root{
+    --bg:#14161A; --bg-2:#0F1114; --panel:#1A1D22; --panel-2:#20232A;
+    --border:#2B2F36; --text:#EDEFF2; --muted:#93989F; --faint:#5C6169;
+    --accent:#E8963C; --accent-ink:#1A1108; --accent-dim:#7A5426;
+    --accent-2:#F2A94F;
+    --success:#4CAF7D; --error:#E2584A;
+    --mono:'IBM Plex Mono', ui-monospace, monospace;
+    --sans:'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+  body{
+    background:
+      radial-gradient(ellipse 900px 500px at 85% -10%, rgba(232,150,60,.16), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 0% 15%, rgba(242,169,79,.10), transparent 55%),
+      var(--bg);
+    color:var(--text); font-family:var(--sans); line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{ color:inherit; }
+  img{ display:block; max-width:100%; }
+  .wrap{ max-width:1080px; margin:0 auto; padding:0 24px; }
+  ::selection{ background:var(--accent); color:var(--accent-ink); }
+  code{ font-family:var(--mono); background:var(--panel-2); padding:1px 6px; border-radius:4px; font-size:.9em; }
+
+  header{ position:sticky; top:0; z-index:50; background:rgba(20,22,26,.82); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); }
+  .header-inner{ display:flex; align-items:center; justify-content:space-between; padding:14px 24px; max-width:1080px; margin:0 auto; }
+  .brand{ display:flex; align-items:center; gap:10px; font-family:var(--mono); font-weight:700; font-size:15px; }
+  .brand .mark{ width:28px; height:28px; border-radius:8px; background:linear-gradient(135deg, var(--accent), var(--accent-dim)); display:flex; align-items:center; justify-content:center; font-size:14px; }
+  #lang-switch{ display:flex; gap:4px; }
+  #lang-switch button{ font-family:var(--mono); font-size:11.5px; font-weight:600; color:var(--muted); background:transparent; border:1px solid var(--border); border-radius:6px; padding:5px 9px; cursor:pointer; }
+  #lang-switch button:hover{ color:var(--text); border-color:var(--accent); }
+  #lang-switch button.active{ color:var(--accent-ink); background:var(--accent); border-color:var(--accent); }
+
+  .hero{ padding:76px 0 52px; text-align:center; }
+  .eyebrow{ display:inline-block; font-family:var(--mono); font-size:12px; color:var(--accent); background:rgba(232,150,60,.10); border:1px solid rgba(232,150,60,.3); padding:5px 12px; border-radius:999px; margin-bottom:22px; }
+  .hero h1{ font-size:46px; font-weight:800; letter-spacing:-.02em; margin-bottom:16px; text-wrap:balance; }
+  .hero h1 .accent{ color:var(--accent); }
+  .hero p.tagline{ font-size:17px; color:var(--muted); max-width:600px; margin:0 auto 34px; }
+
+  .btn{ display:inline-flex; align-items:center; gap:8px; font-family:var(--mono); font-size:13.5px; font-weight:600; padding:12px 22px; border-radius:9px; text-decoration:none; white-space:nowrap; }
+  .btn-primary{ background:var(--accent); color:var(--accent-ink); }
+  .btn-primary:hover{ background:var(--accent-2); }
+  .btn-ghost{ border:1px solid var(--border); color:var(--text); }
+  .btn-ghost:hover{ border-color:var(--accent); }
+  .btn-row{ display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
+  .signed-note{ margin-top:20px; font-size:12.5px; color:var(--faint); display:flex; align-items:center; justify-content:center; gap:6px; }
+  .signed-note .dot{ width:6px; height:6px; border-radius:50%; background:var(--success); }
+
+  section{ padding:58px 0; border-top:1px solid var(--border); }
+  section h2{ font-size:27px; font-weight:800; margin-bottom:32px; text-align:center; text-wrap:balance; }
+
+  .features{ display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:20px; }
+  .feature{ background:var(--panel); border:1px solid var(--border); border-radius:14px; padding:22px; }
+  .feature .icon{ font-size:26px; margin-bottom:10px; }
+  .feature h3{ font-size:15.5px; font-weight:700; margin-bottom:8px; }
+  .feature p{ font-size:13.5px; color:var(--muted); line-height:1.55; }
+
+  .codecs{ display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-top:8px; }
+  .codec-pill{ font-family:var(--mono); font-size:12.5px; background:var(--panel-2); border:1px solid var(--border); color:var(--muted); padding:7px 14px; border-radius:999px; }
+
+  .steps{ counter-reset:step; max-width:640px; margin:0 auto; }
+  .step{ display:flex; gap:16px; padding:16px 0; border-bottom:1px solid var(--border); }
+  .step:last-child{ border-bottom:none; }
+  .step .num{ font-family:var(--mono); font-weight:700; color:var(--accent); font-size:15px; flex-shrink:0; width:24px; }
+  .step h4{ font-size:14.5px; font-weight:700; margin-bottom:4px; }
+  .step p{ font-size:13px; color:var(--muted); line-height:1.6; }
+
+  .pricing{ max-width:560px; margin:0 auto; background:var(--panel); border:1px solid var(--border); border-radius:18px; padding:36px; text-align:center; }
+  .pricing .badge{ font-family:var(--mono); font-size:13px; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; }
+  .pricing .price{ font-family:var(--mono); font-size:44px; font-weight:700; color:var(--accent); margin:12px 0 4px; }
+  .pricing .price small{ font-size:14px; color:var(--muted); font-weight:500; }
+  .pricing ul{ list-style:none; text-align:left; margin:24px 0; padding:0; }
+  .pricing li{ font-size:13.5px; color:var(--muted); padding:6px 0; padding-left:22px; position:relative; }
+  .pricing li::before{ content:"✓"; position:absolute; left:0; color:var(--accent); font-weight:700; }
+  .pricing .promo-note{ margin-top:20px; font-size:12px; line-height:1.6; color:var(--faint); text-align:left; background:var(--panel-2); border-radius:8px; padding:12px 14px; }
+
+  footer{ border-top:1px solid var(--border); padding:32px 24px; text-align:center; font-size:12.5px; color:var(--faint); }
+  footer a{ color:var(--muted); text-decoration:none; }
+  footer a:hover{ color:var(--text); }
+  footer .links{ display:flex; gap:16px; justify-content:center; flex-wrap:wrap; margin-bottom:8px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="brand"><span class="mark">🎞</span> CG Convertor</div>
+    <div id="lang-switch">
+      <button data-lang="ro">RO</button>
+      <button data-lang="en">EN</button>
+      <button data-lang="es">ES</button>
+    </div>
+  </div>
+</header>
+
+<div class="hero wrap">
+  <div class="eyebrow" data-i18n="hero.eyebrow">Mac · Windows · DaVinci Resolve</div>
+  <h1 data-i18n-html="hero.h1">Transcode &amp; Rewrap, <span class="accent">gata pentru grading.</span></h1>
+  <p class="tagline" data-i18n="hero.tagline">Convertește orice sursă video în ProRes sau DNxHD/DNxHR direct pentru DaVinci Resolve — păstrează timecode-ul original, bit depth-ul audio, și interfața nativă, rapidă, în stil "Shift".</p>
+  <div class="btn-row">
+    <a class="btn btn-primary" data-i18n="hero.mac" href="https://github.com/gordasgdc/CGConvertor/releases/latest/download/CGConvertor-Mac.zip">⬇ Descarcă pentru Mac</a>
+    <a class="btn btn-ghost" data-i18n="hero.win" href="https://github.com/gordasgdc/CGConvertor/releases/latest/download/CGConvertor-Windows-Setup.exe">⬇ Descarcă pentru Windows</a>
+  </div>
+  <div class="signed-note"><span class="dot"></span><span data-i18n="hero.signed">Pachetul Mac e semnat și notarizat oficial de Apple — se instalează direct, fără avertismente.</span></div>
+</div>
+
+<section>
+  <div class="wrap">
+    <h2 data-i18n="features.title">Ce face CG Convertor</h2>
+    <div class="features">
+      <div class="feature">
+        <div class="icon">⚡</div>
+        <h3 data-i18n="f1.h">Rewrap instant</h3>
+        <p data-i18n="f1.p">Schimbă doar containerul, fără re-encode — rapid, fără pierdere de calitate, ideal pentru fișiere deja în codecul potrivit.</p>
+      </div>
+      <div class="feature">
+        <div class="icon">🎨</div>
+        <h3 data-i18n="f2.h">Transcode complet</h3>
+        <p data-i18n="f2.p">Re-encode în ProRes 422/422 HQ/422 LT/4444 sau DNxHD/DNxHR HQ, cu recomandări clare pentru fiecare codec în funcție de sursă.</p>
+      </div>
+      <div class="feature">
+        <div class="icon">🕐</div>
+        <h3 data-i18n="f3.h">Timecode păstrat</h3>
+        <p data-i18n="f3.p">Timecode-ul original al sursei se păstrează exact la transcode — esențial pentru workflow-uri multicam sau cu editor offline.</p>
+      </div>
+      <div class="feature">
+        <div class="icon">🔊</div>
+        <h3 data-i18n="f4.h">Audio fără compromis</h3>
+        <p data-i18n="f4.p">Bit depth-ul audio original (16/24/32-bit) rămâne neatins — nu se retrogradează silențios la 16-bit, ca la alte convertoare.</p>
+      </div>
+      <div class="feature">
+        <div class="icon">📦</div>
+        <h3 data-i18n="f5.h">Coadă & drag-and-drop</h3>
+        <p data-i18n="f5.p">Trage oricâte fișiere vrei, procesare secvențială cu progres pe fiecare, oprire oricând fără să pierzi fișierele rămase.</p>
+      </div>
+      <div class="feature">
+        <div class="icon">🌍</div>
+        <h3 data-i18n="f6.h">RO / EN / ES</h3>
+        <p data-i18n="f6.p">Interfață completă în trei limbi, pe ambele platforme, cu comenzi rapide de tastatură (⌘O / ⌘⏎ / ⌘K).</p>
+      </div>
+    </div>
+    <div class="codecs">
+      <span class="codec-pill">ProRes 422</span>
+      <span class="codec-pill">ProRes 422 HQ</span>
+      <span class="codec-pill">ProRes 422 LT</span>
+      <span class="codec-pill">ProRes 4444</span>
+      <span class="codec-pill">DNxHD</span>
+      <span class="codec-pill">DNxHR HQ</span>
+    </div>
+  </div>
+</section>
+
+<section id="install">
+  <div class="wrap">
+    <h2 data-i18n="install.title">Instalare</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="num">1</div>
+        <div><h4 data-i18n="install.s1.h">Descarcă</h4><p data-i18n-html="install.s1.p">Alege pachetul de mai sus pentru platforma ta — Mac (<code>.zip</code>) sau Windows (<code>.exe</code>).</p></div>
+      </div>
+      <div class="step">
+        <div class="num">2</div>
+        <div><h4 data-i18n="install.s2.h">Instalează</h4><p data-i18n-html="install.s2.p"><b>Mac:</b> dezarhivează, apoi dublu-click pe <code>CGConvertor.pkg</code> — se instalează direct în /Applications, fără avertismente Gatekeeper. <b>Windows:</b> rulează installer-ul — se instalează în Program Files, cu scurtături pe Desktop și Start Menu.</p></div>
+      </div>
+      <div class="step">
+        <div class="num">3</div>
+        <div><h4 data-i18n="install.s3.h">Probă gratuită</h4><p data-i18n="install.s3.p">15 zile de acces complet, fără card, fără cont. Activarea licenței Lifetime se face prin WhatsApp, direct din aplicație.</p></div>
+      </div>
+      <div class="step">
+        <div class="num">4</div>
+        <div><h4 data-i18n="install.s4.h">Dezinstalare</h4><p data-i18n-html="install.s4.p">Pe Mac, rulează <code>Dezinstalare_CGConvertor.command</code> din arhiva descărcată. Pe Windows, folosește "Apps & Features" — dezinstalarea e nativă.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="licenta">
+  <div class="wrap">
+    <h2 data-i18n="license.title">Susține dezvoltarea</h2>
+    <div class="pricing">
+      <div class="badge" data-i18n="license.plan">Donație Lifetime</div>
+      <div class="price" data-i18n="license.once">Donație unică</div>
+      <ul>
+        <li data-i18n="license.li1">15 zile probă gratuită, acces complet</li>
+        <li data-i18n="license.li2">Deblocare permanentă pentru un calculator</li>
+        <li data-i18n="license.li3">Fără abonament, fără reînnoiri</li>
+        <li data-i18n="license.li4">Activare prin WhatsApp — răspuns rapid, direct de la dezvoltator</li>
+      </ul>
+      <div class="promo-note" data-i18n="license.note">
+        Suma exactă (poate include oferte temporare) apare direct în aplicație, la fereastra de Activare — e o donație pentru continuarea dezvoltării aplicației și a platformei, nu un preț de listă și nu o vânzare, activată prin WhatsApp după cele 15 zile de probă.
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="links">
+    <a href="https://github.com/gordasgdc/CGConvertor" data-i18n="footer.source">Cod sursă pe GitHub</a>
+    <a href="https://github.com/gordasgdc/CGConvertor/releases" data-i18n="footer.releases">Toate versiunile</a>
+    <a href="https://youtube.com/@cristigordas" target="_blank" rel="noopener">YouTube — @cristigordas</a>
+    <a href="https://gordas.dev/termeni">Termeni și Condiții</a>
+    <a href="https://gordas.dev/confidentialitate">Politică de Confidențialitate (GDPR)</a>
+    <a href="https://gordas.dev/cookie">Cookie-uri</a>
+    <a href="mailto:academiagdc@gmail.com">Contact</a>
+  </div>
+  <div data-i18n="footer.tag">CG Convertor — parte din ecosistemul GDC.</div>
+  <div style="margin-top:6px;font-size:11px;opacity:.75;">© 2026 GDC / Gordas. Toate drepturile rezervate. gordas.dev este o platformă administrată de dezvoltatori independenți. Aplicațiile și resursele sunt furnizate ca atare (AS IS), iar susținerea proiectului se bazează pe contribuții opționale de sprijin și donații.</div>
+</footer>
+
+<script>
+  const translations = {
+    ro: {
+      'hero.eyebrow': 'Mac · Windows · DaVinci Resolve',
+      'hero.h1': 'Transcode &amp; Rewrap, <span class="accent">gata pentru grading.</span>',
+      'hero.tagline': 'Convertește orice sursă video în ProRes sau DNxHD/DNxHR direct pentru DaVinci Resolve — păstrează timecode-ul original, bit depth-ul audio, și interfața nativă, rapidă, în stil "Shift".',
+      'hero.mac': '⬇ Descarcă pentru Mac', 'hero.win': '⬇ Descarcă pentru Windows',
+      'hero.signed': 'Pachetul Mac e semnat și notarizat oficial de Apple — se instalează direct, fără avertismente.',
+      'features.title': 'Ce face CG Convertor',
+      'f1.h': 'Rewrap instant', 'f1.p': 'Schimbă doar containerul, fără re-encode — rapid, fără pierdere de calitate, ideal pentru fișiere deja în codecul potrivit.',
+      'f2.h': 'Transcode complet', 'f2.p': 'Re-encode în ProRes 422/422 HQ/422 LT/4444 sau DNxHD/DNxHR HQ, cu recomandări clare pentru fiecare codec în funcție de sursă.',
+      'f3.h': 'Timecode păstrat', 'f3.p': 'Timecode-ul original al sursei se păstrează exact la transcode — esențial pentru workflow-uri multicam sau cu editor offline.',
+      'f4.h': 'Audio fără compromis', 'f4.p': 'Bit depth-ul audio original (16/24/32-bit) rămâne neatins — nu se retrogradează silențios la 16-bit, ca la alte convertoare.',
+      'f5.h': 'Coadă & drag-and-drop', 'f5.p': 'Trage oricâte fișiere vrei, procesare secvențială cu progres pe fiecare, oprire oricând fără să pierzi fișierele rămase.',
+      'f6.h': 'RO / EN / ES', 'f6.p': 'Interfață completă în trei limbi, pe ambele platforme, cu comenzi rapide de tastatură (⌘O / ⌘⏎ / ⌘K).',
+      'install.title': 'Instalare',
+      'install.s1.h': 'Descarcă', 'install.s1.p': 'Alege pachetul de mai sus pentru platforma ta — Mac (<code>.zip</code>) sau Windows (<code>.exe</code>).',
+      'install.s2.h': 'Instalează', 'install.s2.p': '<b>Mac:</b> dezarhivează, apoi dublu-click pe <code>CGConvertor.pkg</code> — se instalează direct în /Applications, fără avertismente Gatekeeper. <b>Windows:</b> rulează installer-ul — se instalează în Program Files, cu scurtături pe Desktop și Start Menu.',
+      'install.s3.h': 'Probă gratuită', 'install.s3.p': '15 zile de acces complet, fără card, fără cont. Activarea licenței Lifetime se face prin WhatsApp, direct din aplicație.',
+      'install.s4.h': 'Dezinstalare', 'install.s4.p': 'Pe Mac, rulează <code>Dezinstalare_CGConvertor.command</code> din arhiva descărcată. Pe Windows, folosește "Apps & Features" — dezinstalarea e nativă.',
+      'license.title': 'Susține dezvoltarea', 'license.plan': 'Donație Lifetime', 'license.once': 'Donație unică',
+      'license.li1': '15 zile probă gratuită, acces complet', 'license.li2': 'Deblocare permanentă pentru un calculator',
+      'license.li3': 'Fără abonament, fără reînnoiri', 'license.li4': 'Activare prin WhatsApp — răspuns rapid, direct de la dezvoltator',
+      'license.note': 'Suma exactă (poate include oferte temporare) apare direct în aplicație, la fereastra de Activare — e o donație pentru continuarea dezvoltării aplicației și a platformei, nu un preț de listă și nu o vânzare, activată prin WhatsApp după cele 15 zile de probă.',
+      'footer.source': 'Cod sursă pe GitHub', 'footer.releases': 'Toate versiunile', 'footer.tag': 'CG Convertor — parte din ecosistemul GDC.',
+    },
+    en: {
+      'hero.eyebrow': 'Mac · Windows · DaVinci Resolve',
+      'hero.h1': 'Transcode &amp; Rewrap, <span class="accent">ready for grading.</span>',
+      'hero.tagline': 'Convert any video source to ProRes or DNxHD/DNxHR straight for DaVinci Resolve — keeps the original timecode, the audio bit depth, and a fast, native "Shift"-style interface.',
+      'hero.mac': '⬇ Download for Mac', 'hero.win': '⬇ Download for Windows',
+      'hero.signed': 'The Mac package is officially signed and notarized by Apple — installs directly, no warnings.',
+      'features.title': 'What CG Convertor does',
+      'f1.h': 'Instant rewrap', 'f1.p': 'Swaps only the container, no re-encode — fast, no quality loss, ideal for files already in the right codec.',
+      'f2.h': 'Full transcode', 'f2.p': 'Re-encode to ProRes 422/422 HQ/422 LT/4444 or DNxHD/DNxHR HQ, with clear recommendations for each codec based on your source.',
+      'f3.h': 'Timecode preserved', 'f3.p': 'The source\'s original timecode is preserved exactly on transcode — essential for multicam or offline-edit workflows.',
+      'f4.h': 'No audio compromise', 'f4.p': 'Original audio bit depth (16/24/32-bit) stays untouched — no silent downgrade to 16-bit like other converters.',
+      'f5.h': 'Queue & drag-and-drop', 'f5.p': 'Drag as many files as you want, sequential processing with per-file progress, stop anytime without losing the remaining files.',
+      'f6.h': 'RO / EN / ES', 'f6.p': 'Full interface in three languages, on both platforms, with keyboard shortcuts (⌘O / ⌘⏎ / ⌘K).',
+      'install.title': 'Installation',
+      'install.s1.h': 'Download', 'install.s1.p': 'Pick the package above for your platform — Mac (<code>.zip</code>) or Windows (<code>.exe</code>).',
+      'install.s2.h': 'Install', 'install.s2.p': '<b>Mac:</b> unzip, then double-click <code>CGConvertor.pkg</code> — installs directly into /Applications, no Gatekeeper warnings. <b>Windows:</b> run the installer — installs into Program Files, with Desktop and Start Menu shortcuts.',
+      'install.s3.h': 'Free trial', 'install.s3.p': '15 days of full access, no card, no account. Lifetime license activation happens over WhatsApp, right from the app.',
+      'install.s4.h': 'Uninstalling', 'install.s4.p': 'On Mac, run <code>Dezinstalare_CGConvertor.command</code> from the downloaded archive. On Windows, use "Apps & Features" — uninstall is native.',
+      'license.title': 'Support development', 'license.plan': 'Lifetime donation', 'license.once': 'One-time donation',
+      'license.li1': '15-day free trial, full access', 'license.li2': 'Permanent unlock for one computer',
+      'license.li3': 'No subscription, no renewals', 'license.li4': 'Activation via WhatsApp — fast reply, directly from the developer',
+      'license.note': 'The exact amount (may include limited-time offers) is shown directly in the app, in the Activation window — it is a donation to support ongoing development of the app and the platform, not a list price and not a sale, activated over WhatsApp after the 15-day trial.',
+      'footer.source': 'Source code on GitHub', 'footer.releases': 'All releases', 'footer.tag': 'CG Convertor — part of the GDC ecosystem.',
+    },
+    es: {
+      'hero.eyebrow': 'Mac · Windows · DaVinci Resolve',
+      'hero.h1': 'Transcode y Rewrap, <span class="accent">listo para el grading.</span>',
+      'hero.tagline': 'Convierte cualquier fuente de vídeo a ProRes o DNxHD/DNxHR directamente para DaVinci Resolve — conserva el timecode original, la profundidad de bits del audio y una interfaz nativa y rápida, estilo "Shift".',
+      'hero.mac': '⬇ Descargar para Mac', 'hero.win': '⬇ Descargar para Windows',
+      'hero.signed': 'El paquete de Mac está firmado y notarizado oficialmente por Apple — se instala directamente, sin avisos.',
+      'features.title': 'Qué hace CG Convertor',
+      'f1.h': 'Rewrap instantáneo', 'f1.p': 'Cambia solo el contenedor, sin re-codificación — rápido, sin pérdida de calidad, ideal para archivos ya en el códec correcto.',
+      'f2.h': 'Transcodificación completa', 'f2.p': 'Re-codifica a ProRes 422/422 HQ/422 LT/4444 o DNxHD/DNxHR HQ, con recomendaciones claras para cada códec según tu fuente.',
+      'f3.h': 'Timecode conservado', 'f3.p': 'El timecode original de la fuente se conserva exactamente al transcodificar — esencial para flujos multicámara o con editor offline.',
+      'f4.h': 'Audio sin compromisos', 'f4.p': 'La profundidad de bits original del audio (16/24/32 bits) queda intacta — sin degradación silenciosa a 16 bits como en otros conversores.',
+      'f5.h': 'Cola y arrastrar y soltar', 'f5.p': 'Arrastra tantos archivos como quieras, procesamiento secuencial con progreso por archivo, detén cuando quieras sin perder los archivos restantes.',
+      'f6.h': 'RO / EN / ES', 'f6.p': 'Interfaz completa en tres idiomas, en ambas plataformas, con atajos de teclado (⌘O / ⌘⏎ / ⌘K).',
+      'install.title': 'Instalación',
+      'install.s1.h': 'Descarga', 'install.s1.p': 'Elige el paquete de arriba para tu plataforma — Mac (<code>.zip</code>) o Windows (<code>.exe</code>).',
+      'install.s2.h': 'Instala', 'install.s2.p': '<b>Mac:</b> descomprime, luego doble clic en <code>CGConvertor.pkg</code> — se instala directamente en /Applications, sin avisos de Gatekeeper. <b>Windows:</b> ejecuta el instalador — se instala en Program Files, con accesos directos en el Escritorio y el Menú Inicio.',
+      'install.s3.h': 'Prueba gratuita', 'install.s3.p': '15 días de acceso completo, sin tarjeta, sin cuenta. La activación de la licencia Lifetime se hace por WhatsApp, directamente desde la app.',
+      'install.s4.h': 'Desinstalación', 'install.s4.p': 'En Mac, ejecuta <code>Dezinstalare_CGConvertor.command</code> desde el archivo descargado. En Windows, usa "Aplicaciones y características" — la desinstalación es nativa.',
+      'license.title': 'Apoya el desarrollo', 'license.plan': 'Donación Lifetime', 'license.once': 'Donación única',
+      'license.li1': '15 días de prueba gratuita, acceso completo', 'license.li2': 'Desbloqueo permanente para un ordenador',
+      'license.li3': 'Sin suscripción, sin renovaciones', 'license.li4': 'Activación por WhatsApp — respuesta rápida, directamente del desarrollador',
+      'license.note': 'El importe exacto (puede incluir ofertas por tiempo limitado) aparece directamente en la app, en la ventana de Activación — es una donación para apoyar el desarrollo continuo de la app y la plataforma, no un precio de lista ni una venta, activada por WhatsApp tras los 15 días de prueba.',
+      'footer.source': 'Código fuente en GitHub', 'footer.releases': 'Todas las versiones', 'footer.tag': 'CG Convertor — parte del ecosistema GDC.',
+    },
+  };
+
+  function t(key) {
+    const lang = document.documentElement.lang || 'ro';
+    return (translations[lang] && translations[lang][key]) || translations.ro[key] || key;
+  }
+
+  function applyLanguage(lang) {
+    if (!translations[lang]) lang = 'ro';
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.getAttribute('data-i18n')); });
+    document.querySelectorAll('[data-i18n-html]').forEach(el => { el.innerHTML = t(el.getAttribute('data-i18n-html')); });
+    document.querySelectorAll('#lang-switch button').forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+    });
+    localStorage.setItem('cgconvertor_lang', lang);
+  }
+
+  document.querySelectorAll('#lang-switch button').forEach(btn => {
+    btn.addEventListener('click', () => applyLanguage(btn.getAttribute('data-lang')));
+  });
+
+  const savedLang = localStorage.getItem('cgconvertor_lang');
+  const browserLang = (navigator.language || 'ro').slice(0, 2);
+  const initialLang = savedLang || (translations[browserLang] ? browserLang : 'ro');
+  applyLanguage(initialLang);
+</script>
+
+</body>
+</html>
