@@ -104,6 +104,11 @@
       "externalURL" : "https://blackmagicdesign-emea.zoom.us/webinar/register/WN_CTUf_NcdQ4e1f4LtCi9S0w#/registration",
       "id" : "Color Fundamentals",
       "location" : "Online",
+      "scheduling" : {
+        "endDate" : 810433495.481167,
+        "showCountdown" : true,
+        "startDate" : 809828695.481166
+      },
       "title" : "Color Fundamentals\nfor Editors",
       "youtubeURL" : "https://www.blackmagicdesign.com/event/davinci-resolve-online-seminars"
     },
