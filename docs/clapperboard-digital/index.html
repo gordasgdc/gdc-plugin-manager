@@ -117,13 +117,24 @@
   .info-cell:first-child{ border-left:none; }
   .info-cell:active{ background:#e6e3db; }
   .info-label{
-    font-size:10px; letter-spacing:.14em; font-weight:800; text-transform:uppercase; color:#8a8578;
+    font-size:10.5px; letter-spacing:.16em; font-weight:900; text-transform:uppercase; color:#6b6a63;
   }
   .info-value{
-    font-size:clamp(14px,3.4vw,19px); font-weight:700; color:#141414;
+    /* Contrast marit (2026-08-31) — cerinta: "trebuie sa fie vizibila si
+       toata placa", nu doar timecode-ul. Negru pur (nu #141414) + weight
+       900 + spatiere usoara = citire clara de la distanta pe orice camera,
+       chiar la o expunere putin gresita. */
+    font-size:clamp(15px,3.6vw,21px); font-weight:900; color:#000; letter-spacing:.01em;
     overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
   }
-  .info-cell.empty .info-value{ color:#b3ada0; font-weight:600; }
+  .info-cell.empty .info-value{ color:#a19b8d; font-weight:700; }
+
+  /* Take = "sticker" mare (2026-08-31) — cerinta: sa fie vizibil clar de
+     la 5-10m; e cifra pe care editorul o cauta primul in fiecare clip. */
+  #row-take{ flex:1.6; background:var(--yellow); }
+  #row-take .info-label{ color:var(--yellow-ink); opacity:.65; }
+  #row-take .info-value{ font-size:clamp(26px,7.5vw,40px); color:var(--yellow-ink); line-height:1; }
+  #row-take:active{ background:var(--yellow); filter:brightness(0.93); }
 
   .action-row{ display:flex; gap:8px; align-items:stretch; }
   .take-btn{
@@ -154,6 +165,17 @@
 
   .flash{ position:fixed; inset:0; background:#fff; opacity:0; pointer-events:none; z-index:95; transition:opacity .08s ease; }
   .flash.on{ opacity:.9; }
+
+  /* Contur galben la CLAP (2026-08-31) — cerinta: sa se vada un semnal
+     chiar daca o camera cu shutter/frame rate diferit prinde un SINGUR
+     cadru din momentul apasarii. Flash-ul alb dureaza doar 110ms (poate
+     fi ratat de un cadru); conturul galben dureaza ceva mai mult (220ms)
+     si e suficient de gros ca sa fie distinct chiar dintr-un cadru izolat. */
+  .flash-border{
+    position:fixed; inset:0; border:14px solid var(--yellow); box-sizing:border-box;
+    opacity:0; pointer-events:none; z-index:94; transition:opacity .06s ease;
+  }
+  .flash-border.on{ opacity:1; }
 
   .overlay{
     position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:60;
@@ -252,6 +274,23 @@
 
   .hidden{ display:none !important; }
 
+  /* Temă Zi (2026-08-31) — cerinta: fundal alb + text negru pentru filmari
+     la soare puternic, unde tema intunecata devine ilizibila pe ecranul
+     telefonului (stralucirea ecranului nu mai are cum sa "castige" in fata
+     luminii directe). Cifrele de timecode raman NEGRE (nu culoarea aleasa
+     din selector) — o culoare "aprinsa" tip LED e gandita pentru un fundal
+     intunecat, pe fundal alb in soare puternic negrul plin ramane cel mai
+     lizibil, indiferent de alegerea din selector. */
+  :root[data-theme="day"]{
+    --bg:#f2f1ec; --panel:#ffffff; --panel-2:#e9e8e2; --border:#c7c6bf; --text:#141414; --muted:#5c5b55;
+  }
+  :root[data-theme="day"] .tc-block{ background:#fff; }
+  :root[data-theme="day"] .tc-block::before{ background-image: radial-gradient(rgba(0,0,0,.05) 1px, transparent 1px); }
+  :root[data-theme="day"] .tc-digits, :root[data-theme="day"] .tc-digits .frames{ color:#000; text-shadow:none; }
+  :root[data-theme="day"] .tc-label{ color:#7a7972; }
+  :root[data-theme="day"] .slate-card{ background:#fff; }
+  :root[data-theme="day"] .stripes{ background:#e9e8e2; }
+
   @media (max-height: 640px){
     .exit-hint{ display:none; }
     .tc-block{ padding:1.4vh 4vw 1vh; }
@@ -298,6 +337,7 @@
 <body>
 
 <div class="flash" id="flash"></div>
+<div class="flash-border" id="flash-border"></div>
 
 <div class="slate" id="slate">
   <div class="topbar">
@@ -308,6 +348,7 @@
         <button class="lang-btn" data-lang="en">EN</button>
         <button class="lang-btn" data-lang="es">ES</button>
       </div>
+      <button class="icon-btn" id="theme-toggle-btn" data-i18n-title="title_theme" title="Mod zi/noapte">🌙</button>
       <button class="icon-btn" id="qr-btn" data-i18n-title="title_qr" title="Cod QR">▦</button>
       <button class="icon-btn" id="history-btn" data-i18n-title="title_history" title="Istoric (h)">📜</button>
       <button class="icon-btn" id="export-btn" data-i18n-title="title_export" title="Exportă metadate">⤓</button>
@@ -508,7 +549,7 @@
   const LANG_KEY = "clapperboard_lang";
   const TRANSLATIONS = {
     ro: {
-      title_qr: "Cod QR", title_history: "Istoric (h)", title_export: "Exportă metadate",
+      title_theme: "Mod zi/noapte", title_qr: "Cod QR", title_history: "Istoric (h)", title_export: "Exportă metadate",
       title_edit: "Editează", title_fullscreen: "Ecran complet (f)", title_guide: "Ghid de utilizare",
       tc_label: "TIMECODE — atinge pentru a seta manual",
       label_camera: "Cameră", label_scene: "Scenă", label_take: "Take", label_project: "Proiect",
@@ -569,7 +610,7 @@
       guide_footer: "Clapperboard Digital · gratuit și open-source (MIT)",
     },
     en: {
-      title_qr: "QR code", title_history: "History (h)", title_export: "Export metadata",
+      title_theme: "Day/night mode", title_qr: "QR code", title_history: "History (h)", title_export: "Export metadata",
       title_edit: "Edit", title_fullscreen: "Fullscreen (f)", title_guide: "User guide",
       tc_label: "TIMECODE — tap to set manually",
       label_camera: "Camera", label_scene: "Scene", label_take: "Take", label_project: "Project",
@@ -630,7 +671,7 @@
       guide_footer: "Clapperboard Digital · free and open-source (MIT)",
     },
     es: {
-      title_qr: "Código QR", title_history: "Historial (h)", title_export: "Exportar metadatos",
+      title_theme: "Modo día/noche", title_qr: "Código QR", title_history: "Historial (h)", title_export: "Exportar metadatos",
       title_edit: "Editar", title_fullscreen: "Pantalla completa (f)", title_guide: "Guía de uso",
       tc_label: "TIMECODE — toca para ajustar manualmente",
       label_camera: "Cámara", label_scene: "Escena", label_take: "Toma", label_project: "Proyecto",
@@ -736,6 +777,14 @@
   const STATE_KEY = "clapperboard_state_v2";
   const HISTORY_KEY = "clapperboard_history";
   const TC_COLOR_KEY = "clapperboard_tc_color";
+  const THEME_KEY = "clapperboard_theme";
+
+  function applyTheme(theme) {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem(THEME_KEY, theme);
+    const btn = document.getElementById("theme-toggle-btn");
+    if (btn) btn.textContent = theme === "day" ? "☀️" : "🌙";
+  }
   const MAX_HISTORY = 200;
 
   // Paleta de culori pentru cifrele de timecode (2026-08-31) — restransa
@@ -841,6 +890,7 @@
   }
   applyLang(lang);
   applyTcColor(loadTcColor());
+  applyTheme(localStorage.getItem(THEME_KEY) === "day" ? "day" : "night");
 
   // Banda de chevron-uri (colorate -> grayscale), ca pe clapetele
   // profesionale reale - generata in SVG, nu cu imagini, ca sa ramana
@@ -919,6 +969,9 @@
     const flash = document.getElementById("flash");
     flash.classList.add("on");
     setTimeout(() => flash.classList.remove("on"), 110);
+    const border = document.getElementById("flash-border");
+    border.classList.add("on");
+    setTimeout(() => border.classList.remove("on"), 220);
   }
 
   let audioCtx = null;
@@ -1154,6 +1207,9 @@
     });
   }
 
+  document.getElementById("theme-toggle-btn").addEventListener("click", () => {
+    applyTheme(document.documentElement.getAttribute("data-theme") === "day" ? "night" : "day");
+  });
   document.getElementById("qr-btn").addEventListener("click", () => { renderQr(); openOverlay("qr-overlay"); });
   document.getElementById("close-qr-btn").addEventListener("click", () => closeOverlay("qr-overlay"));
 
