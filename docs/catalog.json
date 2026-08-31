@@ -469,7 +469,8 @@
   ],
   "partnerStores" : [
     {
-      "coverImage" : "covers/MITMAG.png?v=956e15cf",
+      "address" : "Bd-ul Mihail Kogălniceanu, nr. 49, scara B, ap.66, sector 5, cod postal 050104",
+      "coverImage" : "covers/MITMAG.jpg?v=39d86f4a",
       "description" : "MITMAG | Echipamente foto-video alese de Adrian Mitranescu (fotograf cu peste 15 ani de experiență în nunți). Înțelegem fricile dar si nevoile comunitatii foto-video din România. Consultanță de la coleg la coleg și produse testate pe teren!",
       "id" : "MITMAG",
       "name" : "MITMAG",
