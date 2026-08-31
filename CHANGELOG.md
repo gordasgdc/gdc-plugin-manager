@@ -1,5 +1,19 @@
 # Changelog — GDC Plugin Manager
 
+## Furnizor v1.23.0 (2026-08-31) — FIX CRITIC: publicarea putea șterge tot catalogul
+
+**Cauza reală**: dacă `docs/catalog.json` lipsea de pe disc în momentul unei
+publicări (folder șters extern, ex. de un curățător de disc), Furnizor trata
+tăcut situația ca „catalog gol" și republica DOAR produsul curent — ștergând
+ireversibil (după push) toate celelalte produse/aplicații/evenimente din
+catalog, fără nicio eroare vizibilă. Așa au dispărut produse publicate
+anterior (LUT/DCTL/PowerGrade).
+
+**Fix**: dacă fișierul lipsește, Furnizor încearcă întâi să-l recupereze
+singur din git (recuperare automată); dacă tot nu reușește, publicarea
+eșuează cu eroare clară — nu mai rescrie niciodată tăcut catalogul cu date
+incomplete.
+
 ## Client v1.25.0 + Furnizor v1.22.0 (2026-08-31) — Preț/ofertă/countdown pe cardurile din „Aplicații”
 
 Cardurile din „Aplicații” (CG Convertor, CursorPro, DataMover, GDC Vault,

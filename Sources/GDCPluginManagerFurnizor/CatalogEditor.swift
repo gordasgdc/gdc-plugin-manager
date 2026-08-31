@@ -36,7 +36,24 @@ enum CatalogEditorError: Error, LocalizedError {
 /// Pages. Only this file is touched in that checkout; app source lives
 /// in a separate working tree entirely (see RepoCheckoutPaths).
 enum CatalogEditor {
+    /// BUG REAL, GRAV (2026-08-31): pana acum, `upsert*`/`setSeasonalBackgrounds`
+    /// foloseau `(try? load()) ?? Catalog(items: [])` — daca `docs/catalog.json`
+    /// lipsea de pe disc (unelte de "curatare" precum CleanMyMac stergeau tot
+    /// folderul `docs/`, vezi CLAUDE.md), `load()` arunca, `try?` inghitea
+    /// eroarea TACUT, iar publicarea urmatoare rescria fisierul de la zero cu
+    /// DOAR itemul curent — stergand ireversibil (dupa push) toate celelalte
+    /// produse/aplicatii/evenimente/etc. Asa au disparut produse reale
+    /// publicate anterior, fara nicio eroare aratata furnizorului.
+    /// Fix, doua parti: (1) daca fisierul lipseste, incearca intai
+    /// auto-recuperare din git (acelasi remediu aplicat manual, repetat, in
+    /// aceasta sesiune) inainte de a ceda; (2) daca tot esueaza (git lipseste,
+    /// checkout corupt etc.), ARUNCA eroarea mai departe — niciun apelant nu
+    /// mai are voie sa o transforme in "catalog gol", publicarea trebuie sa
+    /// esueze vizibil (eroare in UI), nu sa stearga tacut restul catalogului.
     static func load() throws -> Catalog {
+        if !FileManager.default.fileExists(atPath: RepoCheckoutPaths.catalogJSONURL.path) {
+            try? GitOps.run(["checkout", "--", "docs/"], at: RepoCheckoutPaths.publicCatalogRepo)
+        }
         let data = try Data(contentsOf: RepoCheckoutPaths.catalogJSONURL)
         return try JSONDecoder().decode(Catalog.self, from: data)
     }
@@ -47,7 +64,7 @@ enum CatalogEditor {
     /// (an update — id, and therefore its crypto product hash, never
     /// changes). Updates `updatedAt` to today.
     static func upsert(_ item: PluginItem) throws {
-        let catalog = (try? load()) ?? Catalog(updatedAt: nil, items: [])
+        let catalog = try load()
         var items = catalog.items.filter { $0.id != item.id }
         items.append(item)
         items.sort { $0.name < $1.name }
@@ -70,7 +87,7 @@ enum CatalogEditor {
     // MARK: - Courses
 
     static func upsertCourse(_ course: Course) throws {
-        let catalog = (try? load()) ?? Catalog(updatedAt: nil, items: [])
+        let catalog = try load()
         var courses = catalog.courses.filter { $0.id != course.id }
         courses.append(course)
         courses.sort { $0.name < $1.name }
@@ -89,7 +106,7 @@ enum CatalogEditor {
     // MARK: - App links
 
     static func upsertApp(_ app: AppLink) throws {
-        let catalog = (try? load()) ?? Catalog(updatedAt: nil, items: [])
+        let catalog = try load()
         var apps = catalog.apps.filter { $0.id != app.id }
         apps.append(app)
         apps.sort { $0.name < $1.name }
@@ -108,7 +125,7 @@ enum CatalogEditor {
     // MARK: - Audio (secțiunea "Audio", modelată pe Aplicații)
 
     static func upsertAudioTrack(_ track: AudioTrack) throws {
-        let catalog = (try? load()) ?? Catalog(updatedAt: nil, items: [])
+        let catalog = try load()
         var audioTracks = catalog.audioTracks.filter { $0.id != track.id }
         audioTracks.append(track)
         audioTracks.sort { $0.name < $1.name }
@@ -127,7 +144,7 @@ enum CatalogEditor {
     // MARK: - Educational resources (books / online courses / guides sold externally)
 
     static func upsertEducationalResource(_ resource: EducationalResource) throws {
-        let catalog = (try? load()) ?? Catalog(updatedAt: nil, items: [])
+        let catalog = try load()
         var resources = catalog.educationalResources.filter { $0.id != resource.id }
         resources.append(resource)
         resources.sort { $0.name < $1.name }
@@ -146,7 +163,7 @@ enum CatalogEditor {
     // MARK: - Events (workshops, cohorts, festivals)
 
     static func upsertEvent(_ event: Event) throws {
-        let catalog = (try? load()) ?? Catalog(updatedAt: nil, items: [])
+        let catalog = try load()
         var events = catalog.events.filter { $0.id != event.id }
         events.append(event)
         events.sort { $0.title < $1.title }
@@ -165,7 +182,7 @@ enum CatalogEditor {
     // MARK: - Partner stores
 
     static func upsertPartnerStore(_ store: PartnerStore) throws {
-        let catalog = (try? load()) ?? Catalog(updatedAt: nil, items: [])
+        let catalog = try load()
         var stores = catalog.partnerStores.filter { $0.id != store.id }
         stores.append(store)
         stores.sort { $0.name < $1.name }
@@ -184,7 +201,7 @@ enum CatalogEditor {
     // MARK: - Service centers (Service & Reparații Echipament)
 
     static func upsertServiceCenter(_ center: ServiceCenter) throws {
-        let catalog = (try? load()) ?? Catalog(updatedAt: nil, items: [])
+        let catalog = try load()
         var centers = catalog.serviceCenters.filter { $0.id != center.id }
         centers.append(center)
         centers.sort { $0.name < $1.name }
@@ -203,7 +220,7 @@ enum CatalogEditor {
     // MARK: - Downloadable resources (LUT/SFX/VFX/Plugin — download direct, Etapa 2)
 
     static func upsertDownloadableResource(_ resource: DownloadableResource) throws {
-        let catalog = (try? load()) ?? Catalog(updatedAt: nil, items: [])
+        let catalog = try load()
         var resources = catalog.downloadableResources.filter { $0.id != resource.id }
         resources.append(resource)
         resources.sort { $0.name < $1.name }
@@ -222,7 +239,7 @@ enum CatalogEditor {
     // MARK: - Partner offers (Oferte/Promoții branduri partenere, Etapa 4)
 
     static func upsertPartnerOffer(_ offer: PartnerOffer) throws {
-        let catalog = (try? load()) ?? Catalog(updatedAt: nil, items: [])
+        let catalog = try load()
         var offers = catalog.partnerOffers.filter { $0.id != offer.id }
         offers.append(offer)
         offers.sort { $0.brandName < $1.brandName }
@@ -245,12 +262,12 @@ enum CatalogEditor {
     // comutator propriu — vezi `SeasonalBackgroundConfig` (Core).
 
     static func setSeasonalBackgrounds(_ configs: [SeasonalBackgroundConfig]) throws {
-        let catalog = (try? load()) ?? Catalog(updatedAt: nil, items: [])
+        let catalog = try load()
         try write(catalog: catalog, seasonalBackgrounds: configs)
     }
 
     static func upsertSeasonalBackground(_ config: SeasonalBackgroundConfig) throws {
-        let catalog = (try? load()) ?? Catalog(updatedAt: nil, items: [])
+        let catalog = try load()
         var list = catalog.seasonalBackgrounds
         // Păstrează POZIȚIA în listă la editare (ordinea contează: la
         // coliziune de poziție câștigă ultimul — vezi Core).
@@ -263,14 +280,14 @@ enum CatalogEditor {
     }
 
     static func removeSeasonalBackground(id: String) throws {
-        let catalog = (try? load()) ?? Catalog(updatedAt: nil, items: [])
+        let catalog = try load()
         try write(catalog: catalog, seasonalBackgrounds: catalog.seasonalBackgrounds.filter { $0.id != id })
     }
 
     // MARK: - Pachete/Bundle-uri (Etapa 9, 2026-08-29)
 
     static func upsertBundle(_ bundle: ProductBundle) throws {
-        let catalog = (try? load()) ?? Catalog(updatedAt: nil, items: [])
+        let catalog = try load()
         var bundles = catalog.productBundles.filter { $0.id != bundle.id }
         bundles.append(bundle)
         bundles.sort { $0.name < $1.name }
