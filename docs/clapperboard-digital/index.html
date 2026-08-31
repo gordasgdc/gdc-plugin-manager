@@ -307,23 +307,37 @@
      scroll si ascunzand butonul CLAP. Landscape-ul are din start avantajul
      de LATIME, nu de inaltime — solutia e sa folosim acea latime: cele 4
      randuri de informatii devin 2 coloane x 2 randuri (jumatate din
-     inaltime), iar cifrele de timecode se micsoreaza usor. */
+     inaltime), iar cifrele de timecode se micsoreaza usor.
+
+     BUG REAL #2 (2026-08-31, raportat de Cristi: "pe tableta se umple
+     ecranul, pe telefon ramane la jumatate") — fix-ul de mai sus repara
+     overflow-ul, dar `.slate-card`/`.action-row` nu aveau `flex-grow`,
+     deci ramaneau la inaltimea lor de continut (fonturi mici, fixe) si
+     lasau tot spatiul ramas gol sub butonul CLAP — masurat: doar ~240px
+     din 390px inaltime ecran ocupati efectiv (~60%). Fix: `.slate-card`
+     creste sa umple spatiul liber, iar `.tc-block`/`.info-cell` isi
+     centreaza continutul pe verticala in acel spatiu; fonturile folosesc
+     acum `vh` (nu `vw`) ca sa creasca odata cu inaltimea disponibila reala,
+     nu doar cu latimea — verificat sa nu reapara overflow-ul de la 320px
+     pana la 500px inaltime. */
   @media (orientation: landscape) and (max-height: 500px){
     .slate{ gap:5px; padding: calc(5px + var(--safe-top)) 10px calc(6px + var(--safe-bottom)); }
     .topbar{ min-height:0; }
     .icon-btn, .lang-btn{ width:30px; height:30px; min-width:26px; }
     .stripes{ height:12px; }
-    .tc-block{ padding:0.6vh 3vw 0.3vh; }
-    .tc-digits{ font-size:clamp(22px, 6vw, 40px); }
-    .tc-label{ margin-top:2px; font-size:8px; }
-    .info-grid{ flex-direction:row; flex-wrap:wrap; }
+    .slate-card{ flex:1 1 auto; }
+    .tc-block{ display:flex; flex-direction:column; justify-content:center; flex:1 1 auto; padding:0.4vh 3vw; }
+    .tc-digits{ font-size:clamp(26px, 11vh, 64px); }
+    .tc-label{ margin-top:4px; font-size:9px; }
+    .info-grid{ flex-direction:row; flex-wrap:wrap; flex:1.6 1 auto; }
     .info-row{ flex:1 1 50%; border-top:none; }
     .info-row:nth-child(even){ border-left:1px solid #cfccc3; }
-    .info-cell{ padding:0.5vh 2vw; }
-    .info-label{ font-size:8px; }
-    .info-value{ font-size:clamp(12px,2.6vw,15px); }
+    .info-cell{ padding:0.4vh 2vw; justify-content:center; }
+    .info-label{ font-size:9px; }
+    .info-value{ font-size:clamp(14px,4vh,20px); }
+    #row-take .info-value{ font-size:clamp(20px,6.5vh,34px); }
     .action-row{ gap:6px; }
-    .take-btn, .clap-btn{ min-height:34px; font-size:11px; }
+    .take-btn, .clap-btn{ min-height:42px; font-size:13px; }
     .exit-hint{ display:none; }
   }
 
