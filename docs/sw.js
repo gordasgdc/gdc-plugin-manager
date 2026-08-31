@@ -21,7 +21,7 @@
    aplicatie imediat ce publici catalogul — FARA APK nou si fara reinstalare.
 ============================================================================= */
 
-const CACHE_VERSION = 'v17';                 // <-- INCREMENTEAZA la fiecare update de pagina
+const CACHE_VERSION = 'v18';                 // <-- INCREMENTEAZA la fiecare update de pagina
 const SHELL_CACHE   = `gdc-shell-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `gdc-runtime-${CACHE_VERSION}`;
 
@@ -122,8 +122,13 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Date "vii": catalogul de produse/cursuri/evenimente si versiunile.
-  if (/\/(catalog|update)\.json$/.test(url.pathname)) {
+  // Date "vii": catalogul de produse/cursuri/evenimente, versiunile,
+  // preturile/ofertele (pricing.json) si bannerul de lansare — BUG REAL
+  // gasit 2026-08-31: pricing.json/launch-banner.json lipseau din acest
+  // regex, deci cadeau pe cache-first de mai jos si nu se mai re-descarcau
+  // NICIODATA dupa prima vizita, indiferent cat de des le republica
+  // Furnizorul (Cristi: "am modificat preturile... nu se vad modificarile").
+  if (/\/(catalog|update|pricing|launch-banner)\.json$/.test(url.pathname)) {
     event.respondWith(networkFirst(request, RUNTIME_CACHE));
     return;
   }
