@@ -444,24 +444,6 @@
       "type" : "lut",
       "version" : "1.0.0",
       "youtubeURL" : "https://www.youtube.com/@cristigordas"
-    },
-    {
-      "description" : "Test",
-      "files" : [
-        {
-          "path" : "Raz/1.0.0/Raz_1.1.1.drx",
-          "sha256" : "77f0ddf1d0de8b4865d7c973af4a9a72bc6d1e9c388ad8cbd927a8831397d90b"
-        }
-      ],
-      "iconSymbol" : "paintpalette",
-      "id" : "Raz",
-      "isFree" : true,
-      "isTrial" : false,
-      "name" : "Test",
-      "priceEUR" : 0,
-      "supportedOS" : "crossPlatform",
-      "type" : "powerGrade",
-      "version" : "1.0.0"
     }
   ],
   "partnerOffers" : [
