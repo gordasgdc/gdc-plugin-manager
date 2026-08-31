@@ -199,6 +199,11 @@
       "externalURL" : "https://blackmagicdesign-emea.zoom.us/webinar/register/WN_4SMOr7J6QJaZKJFrmaTugQ#/registration",
       "id" : "Workflows from\nCamera to Delivery",
       "location" : "Online",
+      "scheduling" : {
+        "endDate" : 810433590.245154,
+        "showCountdown" : true,
+        "startDate" : 809828790.245153
+      },
       "title" : "Workflows from\nCamera to Delivery",
       "youtubeURL" : "https://www.blackmagicdesign.com/event/davinci-resolve-online-seminars"
     }
