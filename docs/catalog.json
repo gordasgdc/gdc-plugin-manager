@@ -440,7 +440,7 @@
       "isTrial" : false,
       "name" : "LiniarWorkflow",
       "priceEUR" : 487,
-      "supportedOS" : "macOS",
+      "supportedOS" : "crossPlatform",
       "type" : "lut",
       "version" : "1.0.0",
       "youtubeURL" : "https://www.youtube.com/@cristigordas"
