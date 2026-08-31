@@ -12,6 +12,7 @@ struct LaunchBannerManagerView: View {
     @State private var draftTopText = "LANSARE"
     @State private var draftMainText = "PREȚURI SPECIALE DE DESCHIDERE"
     @State private var coverSelection: CoverImageSelection = .none
+    @State private var draftTextOnTop = true
     @State private var scheduling: Scheduling?
     /// Incrementat la fiecare `reload()` reușit - vezi `.id()` de mai jos.
     /// Fără el, `SchedulingPicker` (view persistent, nu recreat) și-ar
@@ -43,6 +44,11 @@ struct LaunchBannerManagerView: View {
                             .textFieldStyle(.roundedBorder)
                         TextField("Text mare, principal (ex. PREȚURI SPECIALE DE DESCHIDERE)", text: $draftMainText)
                             .textFieldStyle(.roundedBorder)
+                        Picker("Poziția textului", selection: $draftTextOnTop) {
+                            Text("Deasupra imaginii").tag(true)
+                            Text("Sub imagine").tag(false)
+                        }
+                        .pickerStyle(.segmented)
                     }
                     .padding(8)
                 }
@@ -82,6 +88,7 @@ struct LaunchBannerManagerView: View {
             draftTopText = loaded.topText.isEmpty ? draftTopText : loaded.topText
             draftMainText = loaded.mainText.isEmpty ? draftMainText : loaded.mainText
             coverSelection = loaded.imagePath.isEmpty ? .none : .existing(loaded.imagePath)
+            draftTextOnTop = loaded.textOnTop
             scheduling = loaded.scheduling
             loadGeneration += 1
         } catch {
@@ -100,11 +107,12 @@ struct LaunchBannerManagerView: View {
         let mainText = draftMainText
         let selection = coverSelection
         let schedulingValue = scheduling
+        let textOnTop = draftTextOnTop
 
         DispatchQueue.global(qos: .userInitiated).async {
             do {
                 let imagePath = try CoverImageStore.commit(selection, id: "launch-banner", previous: previousImagePath) ?? ""
-                let updated = LaunchBannerConfig(enabled: enabled, imagePath: imagePath, topText: topText, mainText: mainText, scheduling: schedulingValue)
+                let updated = LaunchBannerConfig(enabled: enabled, imagePath: imagePath, topText: topText, mainText: mainText, scheduling: schedulingValue, textOnTop: textOnTop)
                 try LaunchBannerEditor.publish(updated, message: "Banner Lansare: \(enabled ? "activat" : "dezactivat")")
                 DispatchQueue.main.async {
                     config = updated

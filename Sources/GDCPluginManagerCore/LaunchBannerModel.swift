@@ -22,18 +22,24 @@ public struct LaunchBannerConfig: Codable, Equatable {
     /// (Evenimente, Cursuri, etc.). `nil` = mereu vizibil cât timp
     /// `enabled == true`, exact ca înainte de acest câmp.
     public var scheduling: Scheduling?
+    /// Poziția benzii de text solide față de imagine — `true` = deasupra,
+    /// `false` = dedesubt (cerut explicit de Cristi, 2026-08-31, ca opțiune
+    /// aleasă de el, nu fixă în cod). Implicit `true` (deasupra).
+    public var textOnTop: Bool
 
     public init(enabled: Bool = false, imagePath: String = "", topText: String = "",
-                mainText: String = "", updatedAt: String = "", scheduling: Scheduling? = nil) {
+                mainText: String = "", updatedAt: String = "", scheduling: Scheduling? = nil,
+                textOnTop: Bool = true) {
         self.enabled = enabled
         self.imagePath = imagePath
         self.topText = topText
         self.mainText = mainText
         self.updatedAt = updatedAt
         self.scheduling = scheduling
+        self.textOnTop = textOnTop
     }
 
-    enum CodingKeys: String, CodingKey { case enabled, imagePath, topText, mainText, updatedAt, scheduling }
+    enum CodingKeys: String, CodingKey { case enabled, imagePath, topText, mainText, updatedAt, scheduling, textOnTop }
 
     /// Decodare tolerantă — un `launch-banner.json` viitor cu un câmp în
     /// plus, sau un client vechi care citește un JSON mai nou, nu trebuie
@@ -46,6 +52,7 @@ public struct LaunchBannerConfig: Codable, Equatable {
         mainText = try c.decodeIfPresent(String.self, forKey: .mainText) ?? ""
         updatedAt = try c.decodeIfPresent(String.self, forKey: .updatedAt) ?? ""
         scheduling = try c.decodeIfPresent(Scheduling.self, forKey: .scheduling)
+        textOnTop = try c.decodeIfPresent(Bool.self, forKey: .textOnTop) ?? true
     }
 
     public var imageURL: URL? { CatalogAssets.imageURL(for: imagePath) }

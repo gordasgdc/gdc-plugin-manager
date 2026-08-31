@@ -1,5 +1,11 @@
 # Changelog — GDC Plugin Manager
 
+## Client v1.24.3 (2026-08-31) — Poziție text sus/jos, aleasă din Furnizor
+
+- Bannerul de lansare nu mai suprapune textul peste imagine — text și
+  imagine sunt elemente separate, unul deasupra celuilalt.
+- Furnizor: opțiune nouă „Poziția textului" (deasupra/sub imagine).
+
 ## Client v1.24.2 (2026-08-31) — Fix: textul bannerului se suprapunea peste imagine
 
 Raportul de aspect al imaginii era hardcodat (cel al imaginii inițiale) —

@@ -14,81 +14,86 @@ import GDCPluginManagerCore
 /// Complet ascuns dacă bannerul e dezactivat din Furnizor sau nu s-a putut
 /// încărca nimic, nici măcar din cache local.
 ///
-/// [2026-08-31, BUG REAL găsit și reparat — identic cu cel deja documentat
-/// la `SeasonalBackgroundLayer`] `.task` era atașat pe un
-/// `Group { if let ... }` — la primul randaj (`checker.config` încă `nil`,
-/// înainte ca `refresh()` să apuce să ruleze), acel Group nu are NICIUN
-/// copil concret, iar SwiftUI nu garantează `.task`/`onAppear` pe un
-/// asemenea "gol condițional" — confirmat direct din
-/// `%TEMP%/gdcpm-crash.log`: zero apeluri "LaunchBanner" vreodată, deci
-/// `refresh()` nu pornea NICIODATĂ. Fix: `.task` atașat pe un container
-/// CONCRET, mereu prezent (`Color.clear` cu `frame` fix), cu conținutul
-/// condiționat suprapus DOAR când există.
+/// [2026-08-31, BUG REAL #1, reparat] `.task` era atașat pe un
+/// `Group { if let ... }` — la primul randaj (`checker.config` încă `nil`),
+/// acel Group n-are niciun copil concret, iar SwiftUI nu garantează
+/// `.task` pe un asemenea gol condițional. Confirmat din log (zero apeluri
+/// "LaunchBanner"). Fix: `.task` atașat pe un container CONCRET, mereu
+/// prezent.
+///
+/// [2026-08-31, BUG REAL #2, reparat] Textul suprapus PESTE imagine
+/// (poziționat relativ la o "bandă goală" presupusă în imagine) s-a
+/// dovedit fragil de două ori la rând — o dată din cauza unui raport de
+/// aspect hardcodat greșit, a doua oară din motive tot legate de
+/// poziționare relativă la conținutul imaginii. DECIZIE FINALĂ: textul nu
+/// mai stă NICIODATĂ suprapus peste imagine — stă într-o bandă SOLIDĂ,
+/// SEPARATĂ, sub imagine. Zero ambiguitate: banda are propriul fundal
+/// opac, propria înălțime fixă, complet independentă de ce se află în
+/// imagine sau de raportul ei de aspect.
 struct LaunchOfferBanner: View {
     @ObservedObject private var checker = LaunchBannerChecker.shared
 
-    private static let maxHeight: CGFloat = 190
+    private static let imageHeight: CGFloat = 150
+    private static let textBandHeight: CGFloat = 46
 
     var body: some View {
-        GeometryReader { geo in
-            Color.clear
-                .frame(width: geo.size.width, height: Self.maxHeight)
-                .overlay(alignment: .bottom) {
-                    if let config = checker.config, config.isDisplayable, let nsImage = checker.nsImage {
-                        // [2026-08-31, BUG REAL #2] Raportul de aspect era
-                        // hardcodat (1248/832, imaginea generată AI inițial)
-                        // — după ce Cristi a republicat o imagine nouă prin
-                        // Furnizor (CoverImagePicker, preset `.cover`, care
-                        // decupează la un alt raport de aspect), imaginea
-                        // reală a devenit 1248x477. Cu raportul vechi
-                        // hardcodat, înălțimea calculată nu mai corespundea
-                        // imaginii REALE — textul (poziționat relativ la
-                        // acea înălțime greșită) ajungea suprapus peste
-                        // conținutul imaginii. Fix: raportul se citește
-                        // DIRECT din imaginea primită, niciodată presupus.
-                        let aspectRatio = max(nsImage.size.width / max(nsImage.size.height, 1), 0.1)
-                        let height = min(geo.size.width / aspectRatio, Self.maxHeight)
-                        ZStack(alignment: .top) {
-                            Image(nsImage: nsImage)
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                            // Voal întunecat sus — textul rămâne lizibil
-                            // INDIFERENT ce se află în imagine la acel punct
-                            // (nu ne mai bazăm pe o "bandă goală" anume,
-                            // fiindcă orice imagine viitoare, încărcată prin
-                            // uploader-ul standard de copertă, poate avea
-                            // orice compoziție).
-                            LinearGradient(colors: [.black.opacity(0.55), .black.opacity(0)],
-                                           startPoint: .top, endPoint: .bottom)
-                                .frame(height: min(height * 0.6, 70))
-                            VStack(spacing: 4) {
-                                Text(config.topText)
-                                    .font(.system(size: 13, weight: .bold))
-                                    .tracking(3)
-                                    .foregroundStyle(.white.opacity(0.9))
-                                Text(config.mainText)
-                                    .font(.system(size: 20, weight: .heavy, design: .rounded))
-                                    .foregroundStyle(
-                                        LinearGradient(colors: [Color(red: 1, green: 0.87, blue: 0.6), Color(red: 0.85, green: 0.65, blue: 0.25)],
-                                                       startPoint: .top, endPoint: .bottom)
-                                    )
-                            }
-                            .multilineTextAlignment(.center)
-                            .padding(.horizontal, 20)
-                            .padding(.top, 10)
-                            .shadow(color: .black.opacity(0.6), radius: 6)
-                            .frame(maxWidth: .infinity)
+        Color.clear
+            .frame(height: Self.imageHeight + Self.textBandHeight)
+            .overlay(alignment: .bottom) {
+                if let config = checker.config, config.isDisplayable, let nsImage = checker.nsImage {
+                    // Poziția benzii de text (sus/jos) e o opțiune aleasă
+                    // de Cristi din Furnizor (`config.textOnTop`), nu fixă
+                    // în cod — vezi `LaunchBannerConfig.textOnTop`.
+                    VStack(spacing: 0) {
+                        if config.textOnTop {
+                            textBand(config)
+                            imageView(nsImage)
+                        } else {
+                            imageView(nsImage)
+                            textBand(config)
                         }
-                        .frame(width: geo.size.width, height: height)
-                        .clipped()
                     }
                 }
+            }
+            .allowsHitTesting(false)
+            .task {
+                await checker.refresh()
+                DiagnosticLog.write("LaunchBanner", "task finalizat, config=\(String(describing: checker.config)), image=\(checker.nsImage != nil)")
+            }
+    }
+
+    /// Bandă SOLIDĂ, separată de imagine — textul nu depinde deloc de ce
+    /// se află în imagine.
+    @ViewBuilder
+    private func textBand(_ config: LaunchBannerConfig) -> some View {
+        ZStack {
+            Color.black.opacity(0.82)
+            VStack(spacing: 2) {
+                Text(config.topText)
+                    .font(.system(size: 11, weight: .bold))
+                    .tracking(2)
+                    .foregroundStyle(.white.opacity(0.85))
+                Text(config.mainText)
+                    .font(.system(size: 15, weight: .heavy, design: .rounded))
+                    .foregroundStyle(
+                        LinearGradient(colors: [Color(red: 1, green: 0.87, blue: 0.6), Color(red: 0.85, green: 0.65, blue: 0.25)],
+                                       startPoint: .top, endPoint: .bottom)
+                    )
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.6)
+            }
+            .multilineTextAlignment(.center)
+            .padding(.horizontal, 16)
         }
-        .frame(height: Self.maxHeight)
-        .allowsHitTesting(false)
-        .task {
-            DiagnosticLog.write("LaunchBanner", "view task pornit")
-            await checker.refresh()
-        }
+        .frame(height: Self.textBandHeight)
+    }
+
+    @ViewBuilder
+    private func imageView(_ nsImage: NSImage) -> some View {
+        Image(nsImage: nsImage)
+            .resizable()
+            .aspectRatio(contentMode: .fill)
+            .frame(height: Self.imageHeight)
+            .clipped()
     }
 }
