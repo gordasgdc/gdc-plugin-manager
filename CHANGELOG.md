@@ -416,3 +416,13 @@ Orice funcționalitate nouă adăugată **doar pe o platformă** trebuie:
 - **Bug fix web**: pagina principală (gordas.dev) avea un preview de
   catalog separat de aplicație, cu 4 rubrici lipsă (Resurse Download,
   Oferte Parteneri, Service & Reparații, Pachete) — corectat.
+
+## Furnizor v1.23.1 (2026-08-31) — FIX: republicarea unei coperte/filigran cu același nume eșua
+
+**Cauza reală**: la reîncărcarea unei imagini pentru un produs/eveniment/
+magazin/filigran deja publicat, dacă fișierul vechi de pe disc nu putea fi
+șters (rămas dintr-un ciclu extern de ștergere/restaurare), copierea noii
+imagini eșua cu „fișier deja existent" — singurul ocol era să schimbi
+numele produsului. Fix: fișierul vechi se șterge explicit înainte de
+copiere, de fiecare dată — republicarea funcționează acum indiferent de
+starea anterioară a fișierului.

@@ -46,6 +46,13 @@ enum SeasonalBackgroundStore {
 
         let ext = source.pathExtension.isEmpty ? "png" : source.pathExtension.lowercased()
         let destination = directory.appendingPathComponent("\(id).\(ext)")
+        // BUG REAL (2026-08-31): `copyItem` arunca "already exists" daca
+        // fisierul vechi mai era pe disc (ex. `removeFiles` de mai sus nu-l
+        // gasise dupa un ciclu extern de stergere/restaurare a `docs/`) —
+        // republicarea aceleiasi intrari devenea imposibila fara sa
+        // redenumesti id-ul, ca sa ocolesti coliziunea. Stergere explicita
+        // inainte de copiere elimina complet aceasta clasa de eroare.
+        try? FileManager.default.removeItem(at: destination)
         try FileManager.default.copyItem(at: source, to: destination)
 
         let data = try Data(contentsOf: destination)
