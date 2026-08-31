@@ -1,5 +1,20 @@
 # Changelog — GDC Plugin Manager
 
+## Client v1.25.0 + Furnizor v1.22.0 (2026-08-31) — Preț/ofertă/countdown pe cardurile din „Aplicații”
+
+Cardurile din „Aplicații” (CG Convertor, CursorPro, DataMover, GDC Vault,
+Master Control Studio Pro, MediaFlow Monitor) arată acum preț, ofertă activă
+și countdown direct pe card, citind `pricing.json` — exact ca la LUT/DCTL/
+PowerGrade. Furnizor capătă un câmp nou (opțional) în „Aplicații”: ID din
+Pricing Manager, care leagă cardul de produsul corespunzător.
+
+**Fix separat, real**: fișierul comprimat ales pentru coperta unui produs
+era ținut într-un folder temporar de sistem (`/var/folders/.../T/`) până la
+„Publică” — un curățător de disc (CleanMyMac, între timp eliminat) putea
+șterge acel fișier între alegere și publicare, iar Furnizor eșua cu o
+eroare care arăta un nume de fișier intern (UUID), nu numele ales de
+furnizor. Mutat în Application Support, niciodată tratat ca temp/cache.
+
 ## Client v1.24.5 (2026-08-31) — Fix real: Mărime Text nu făcea nimic (Mac)
 
 `dynamicTypeSize` (infrastructura de accesibilitate SwiftUI) nu producea

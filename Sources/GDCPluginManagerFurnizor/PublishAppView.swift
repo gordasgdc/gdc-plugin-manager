@@ -16,6 +16,11 @@ struct PublishAppView: View {
     /// formă, nu după detaliu, la fel ca la Magazine partenere.
     @State private var coverSelection: CoverImageSelection = .none
     @State private var scheduling: Scheduling?
+    /// Leagă cardul de un produs din Pricing Manager (Regula 27, 2026-08-31)
+    /// — dacă `productID`-ul se potrivește cu unul din `pricing.json`,
+    /// cardul din „Aplicații” arată automat preț/ofertă/countdown, la fel
+    /// ca la LUT/DCTL/PowerGrade. Gol = cardul rămâne neschimbat.
+    @State private var pricingProductID = ""
     // Rețele sociale opționale (2026-08-29) — vezi SocialLinksEditor.swift.
     @State private var socialForm = SocialLinksFormState()
 
@@ -37,6 +42,10 @@ struct PublishAppView: View {
                         TextField("Nume aplicație", text: $name).textFieldStyle(.roundedBorder)
                         TextField("Link (https://…)", text: $url).textFieldStyle(.roundedBorder)
                         TextField("Link tutorial YouTube (opțional, nelistat)", text: $youtubeURL).textFieldStyle(.roundedBorder)
+                        TextField("ID din Pricing Manager (opțional, ex. cgconvertor)", text: $pricingProductID)
+                            .textFieldStyle(.roundedBorder)
+                        Text("Dacă se potrivește cu un produs din „Prețuri & Oferte”, cardul arată automat preț/ofertă/countdown la clienți.")
+                            .font(.caption).foregroundStyle(.secondary)
                     }
                     .padding(8)
                 }
@@ -141,6 +150,7 @@ struct PublishAppView: View {
         // furnizorul n-o atinge.
         coverSelection = app.coverImage.map { .existing($0) } ?? .none
         scheduling = app.scheduling
+        pricingProductID = app.pricingProductID ?? ""
         socialForm = SocialLinksFormState(app.socialLinks)
         successMessage = nil
         errorMessage = nil
@@ -154,6 +164,7 @@ struct PublishAppView: View {
         youtubeURL = ""
         coverSelection = .none
         scheduling = nil
+        pricingProductID = ""
         socialForm.reset()
     }
 
@@ -177,10 +188,12 @@ struct PublishAppView: View {
             let previousCover = existingApps.first { $0.id == appID }?.coverImage
             let coverImage = try CoverImageStore.commit(coverSelection, id: appID, previous: previousCover)
 
+            let trimmedPricingID = pricingProductID.trimmingCharacters(in: .whitespaces)
             let app = AppLink(id: appID, name: name, url: url,
                                youtubeURL: trimmedYouTube.isEmpty ? nil : trimmedYouTube,
                                coverImage: coverImage, scheduling: scheduling,
-                               socialLinks: socialForm.model)
+                               socialLinks: socialForm.model,
+                               pricingProductID: trimmedPricingID.isEmpty ? nil : trimmedPricingID)
             try CatalogEditor.upsertApp(app)
             try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Aplicatie: \(app.name)", paths: ["docs/catalog.json", "docs/covers"])
             successMessage = "„\(app.name)” e publicată — apare la clienți la următorul refresh de catalog."

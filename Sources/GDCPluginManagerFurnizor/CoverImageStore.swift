@@ -60,8 +60,19 @@ enum CoverImageStore {
     /// la publicare, tocmai ca furnizorul sa vada in preview exact fisierul
     /// care va ajunge la clienti (si cat s-a castigat).
     static func prepareLocal(source: URL, preset: ImageProcessor.Preset) throws -> CoverImageSelection {
-        let tempDir = FileManager.default.temporaryDirectory
-            .appendingPathComponent("gdc-covers", isDirectory: true)
+        // BUG REAL (2026-08-31): foloseam `FileManager.default.temporaryDirectory`
+        // (`/var/folders/.../T/`) — exact tipul de folder pe care unelte de
+        // curatare (CleanMyMac etc.) il considera "junk" si il sterg agresiv
+        // la scanare. Daca un scan rula intre alegerea imaginii si "Publică",
+        // fisierul disparea, iar publicarea esua cu o eroare care arata
+        // calea interna (nume UUID), nu numele ales de furnizor ("brown.png")
+        // — extrem de confuz, parea un bug de aplicatie. Mutat in Application
+        // Support (niciodata tratat ca temp/cache de vreun cleaner) — acelasi
+        // tipar folosit deja pentru cache-urile Client-ului (launch-banner-cache-image).
+        let tempDir = try FileManager.default
+            .url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+            .appendingPathComponent("GDCPluginManagerFurnizor", isDirectory: true)
+            .appendingPathComponent("pending-covers", isDirectory: true)
         try FileManager.default.createDirectory(at: tempDir, withIntermediateDirectories: true)
 
         // Nume unic: acelasi fisier ales de doua ori la rand nu trebuie sa

@@ -628,8 +628,17 @@ public struct AppLink: Codable, Identifiable, Hashable {
     public let scheduling: Scheduling?
     /// Rețele sociale opționale — 2026-08-29. Vezi `Course.socialLinks`.
     public let socialLinks: SocialLinks?
+    /// Leagă acest card de un `productID` din `pricing.json` (Regula 27) —
+    /// 2026-08-31, cerut explicit de Cristi ("la LUT-uri/DCTL-uri pot pune
+    /// prețul, de ce nu și la aplicații?"). Doar aplicațiile standalone GDC
+    /// cu preț de donație dinamic (CG Convertor, CursorPro, DataMover, GDC
+    /// Vault, Master Control Studio Pro, MediaFlow Monitor) au un id aici —
+    /// restul (Clapperboard Digital, GDC Metadata View Premium etc.) rămân
+    /// `nil`, cardul lor arată la fel ca înainte. Câmp lipsă în catalogul
+    /// vechi decodează automat `nil` (Optional).
+    public let pricingProductID: String?
 
-    public init(id: String, name: String, url: String, youtubeURL: String? = nil, coverImage: String? = nil, scheduling: Scheduling? = nil, socialLinks: SocialLinks? = nil) {
+    public init(id: String, name: String, url: String, youtubeURL: String? = nil, coverImage: String? = nil, scheduling: Scheduling? = nil, socialLinks: SocialLinks? = nil, pricingProductID: String? = nil) {
         self.youtubeURL = youtubeURL
         self.id = id
         self.name = name
@@ -637,6 +646,7 @@ public struct AppLink: Codable, Identifiable, Hashable {
         self.coverImage = coverImage
         self.scheduling = scheduling
         self.socialLinks = socialLinks
+        self.pricingProductID = pricingProductID
     }
 
     public var coverImageURL: URL? { CatalogAssets.imageURL(for: coverImage) }
