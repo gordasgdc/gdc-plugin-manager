@@ -1,5 +1,16 @@
 # Changelog — GDC Plugin Manager
 
+## Client v1.26.0 + Furnizor v1.25.0 (2026-09-01) — Tutoriale (YouTube embedded) + căutare în meniu
+
+- **Secțiune nouă „Tutoriale”** (Comunitate & Educație) — video-uri YouTube
+  afișate ca playere embedded: imagine, titlu și descriere preluate automat
+  de la link, descriere expandabilă la cerere, taguri, grupare pe
+  categorie (liberă) și căutare deasupra grilei.
+- Furnizor primește un panou dedicat de publicare a tutorialelor, cu
+  preluare automată a informațiilor de pe YouTube și editare liberă a
+  tuturor câmpurilor înainte de publicare, inclusiv valabilitate temporală
+  opțională (perioadă de afișare).
+
 ## Client v1.25.1 + Furnizor v1.24.1 (2026-09-01) — Iconiță nouă: roata de culori
 
 Iconița aplicației (Mac + Windows) a fost înlocuită cu un design nou —

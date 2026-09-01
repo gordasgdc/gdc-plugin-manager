@@ -13,6 +13,7 @@ enum CatalogEditorError: Error, LocalizedError {
     case downloadableResourceNotFound(String)
     case partnerOfferNotFound(String)
     case bundleNotFound(String)
+    case tutorialNotFound(String)
 
     var errorDescription: String? {
         switch self {
@@ -27,6 +28,7 @@ enum CatalogEditorError: Error, LocalizedError {
         case .downloadableResourceNotFound(let id): return "Nu există nicio resursă de download cu id-ul „\(id)” în catalog."
         case .partnerOfferNotFound(let id): return "Nu există nicio ofertă parteneră cu id-ul „\(id)” în catalog."
         case .bundleNotFound(let id): return "Nu există niciun pachet cu id-ul „\(id)” în catalog."
+        case .tutorialNotFound(let id): return "Nu există niciun tutorial cu id-ul „\(id)” în catalog."
         }
     }
 }
@@ -303,6 +305,25 @@ enum CatalogEditor {
         try write(catalog: catalog, productBundles: bundles)
     }
 
+    // MARK: - Tutorials (embedded YouTube videos)
+
+    static func upsertTutorial(_ tutorial: Tutorial) throws {
+        let catalog = try load()
+        var tutorials = catalog.tutorials.filter { $0.id != tutorial.id }
+        tutorials.append(tutorial)
+        tutorials.sort { ($0.addedAt ?? "") > ($1.addedAt ?? "") } // cele mai noi primele
+        try write(catalog: catalog, tutorials: tutorials)
+    }
+
+    static func removeTutorial(id: String) throws {
+        let catalog = try load()
+        let tutorials = catalog.tutorials.filter { $0.id != id }
+        guard tutorials.count != catalog.tutorials.count else {
+            throw CatalogEditorError.tutorialNotFound(id)
+        }
+        try write(catalog: catalog, tutorials: tutorials)
+    }
+
     // MARK: - Write
 
     /// Rewrites docs/catalog.json, starting from `catalog` and replacing
@@ -322,7 +343,8 @@ enum CatalogEditor {
         downloadableResources: [DownloadableResource]? = nil,
         partnerOffers: [PartnerOffer]? = nil,
         seasonalBackgrounds: [SeasonalBackgroundConfig]? = nil,
-        productBundles: [ProductBundle]? = nil
+        productBundles: [ProductBundle]? = nil,
+        tutorials: [Tutorial]? = nil
     ) throws {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
@@ -339,7 +361,8 @@ enum CatalogEditor {
             downloadableResources: downloadableResources ?? catalog.downloadableResources,
             partnerOffers: partnerOffers ?? catalog.partnerOffers,
             seasonalBackgrounds: seasonalBackgrounds ?? catalog.seasonalBackgrounds,
-            productBundles: productBundles ?? catalog.productBundles
+            productBundles: productBundles ?? catalog.productBundles,
+            tutorials: tutorials ?? catalog.tutorials
         )
 
         let encoder = JSONEncoder()

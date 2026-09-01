@@ -9,6 +9,7 @@ enum SidebarSection: Hashable {
     case download(DownloadCategory)
     case courses
     case educationalResources
+    case tutorials
     case events
     case partnerOffers
     case bundles
@@ -228,17 +229,22 @@ struct ContentView: View {
     /// Nume din TOATE categoriile — folosit ca sugestii live pentru bara
     /// de căutare globală (istoricul recent se adaugă separat, în SearchBar).
     private var globalSearchSuggestions: [String] {
-        catalog.items.map(\.name)
-            + catalog.apps.map(\.name)
-            + catalog.courses.map(\.name)
-            + catalog.audioTracks.map(\.name)
-            + catalog.events.map(\.title)
-            + catalog.educationalResources.map(\.name)
-            + catalog.partnerStores.map(\.name)
-            + catalog.serviceCenters.map(\.name)
-            + catalog.downloadableResources.map(\.name)
-            + catalog.partnerOffers.map(\.brandName)
-            + catalog.productBundles.map(\.name)
+        // Acumulator, nu un lung lanț de `+` (Swift a depășit timeout-ul de
+        // type-check pe expresia unică după adăugarea celui de-al 12-lea
+        // termen — vezi comentariul de mai jos despre `detailContent`).
+        var names: [String] = catalog.items.map(\.name)
+        names += catalog.apps.map(\.name)
+        names += catalog.courses.map(\.name)
+        names += catalog.audioTracks.map(\.name)
+        names += catalog.events.map(\.title)
+        names += catalog.educationalResources.map(\.name)
+        names += catalog.tutorials.map(\.title)
+        names += catalog.partnerStores.map(\.name)
+        names += catalog.serviceCenters.map(\.name)
+        names += catalog.downloadableResources.map(\.name)
+        names += catalog.partnerOffers.map(\.brandName)
+        names += catalog.productBundles.map(\.name)
+        return names
     }
 
     // Extras din body — switch cu multe cazuri inline facea type-check-ul
@@ -258,6 +264,8 @@ struct ContentView: View {
             CoursesGrid(courses: catalog.courses.filter { $0.scheduling?.isActiveNow ?? true })
         case .educationalResources:
             EducationalResourcesGrid(resources: catalog.educationalResources.filter { $0.scheduling?.isActiveNow ?? true })
+        case .tutorials:
+            TutorialsGrid(tutorials: catalog.tutorials.filter { $0.scheduling?.isActiveNow ?? true })
         case .events:
             EventsGrid(events: catalog.events.filter { $0.scheduling?.isActiveNow ?? true })
         case .partnerOffers:
@@ -344,6 +352,8 @@ struct ContentView: View {
                         .tag(SidebarSection.courses)
                     Label(L.t("sidebar.educationalResources"), systemImage: "book")
                         .tag(SidebarSection.educationalResources)
+                    Label(L.t("sidebar.tutorials"), systemImage: "play.rectangle")
+                        .tag(SidebarSection.tutorials)
                     Label(L.t("sidebar.events"), systemImage: "calendar")
                         .tag(SidebarSection.events)
                     // Etapa 4 (2026-08-29) — Oferte Parteneri.
@@ -678,6 +688,9 @@ private struct GlobalSearchResults: View {
     private var matchedResources: [EducationalResource] {
         catalog.educationalResources.filter { ($0.scheduling?.isActiveNow ?? true) && FuzzySearch.matches(query: query, inAny: [$0.name, $0.description, $0.kind.label, $0.id]) }
     }
+    private var matchedTutorials: [Tutorial] {
+        catalog.tutorials.filter { ($0.scheduling?.isActiveNow ?? true) && FuzzySearch.matches(query: query, inAny: [$0.title, $0.description, $0.category, $0.id] + $0.tags) }
+    }
     private var matchedOffers: [PartnerOffer] {
         catalog.partnerOffers.filter { ($0.scheduling?.isActiveNow ?? true) && FuzzySearch.matches(query: query, inAny: [$0.brandName, $0.description, $0.id, $0.couponCode]) }
     }
@@ -696,7 +709,7 @@ private struct GlobalSearchResults: View {
 
     private var totalMatches: Int {
         matchedItems.count + matchedApps.count + matchedCourses.count + matchedAudio.count
-            + matchedEvents.count + matchedResources.count + matchedStores.count + matchedCenters.count
+            + matchedEvents.count + matchedResources.count + matchedTutorials.count + matchedStores.count + matchedCenters.count
             + matchedDownloads.count + matchedOffers.count + matchedBundles.count
     }
 
@@ -732,6 +745,11 @@ private struct GlobalSearchResults: View {
                     section(title: L.t("sidebar.educationalResources"), isEmpty: matchedResources.isEmpty) {
                         LazyVGrid(columns: wideColumns, spacing: 14) {
                             ForEach(matchedResources) { EducationalResourceCard(resource: $0) }
+                        }
+                    }
+                    section(title: L.t("sidebar.tutorials"), isEmpty: matchedTutorials.isEmpty) {
+                        LazyVGrid(columns: wideColumns, spacing: 14) {
+                            ForEach(matchedTutorials) { TutorialCard(tutorial: $0) }
                         }
                     }
                     section(title: L.t("sidebar.events"), isEmpty: matchedEvents.isEmpty) {
@@ -1374,6 +1392,188 @@ private struct CourseCard: View {
     private func contactURL(for option: CourseOption) -> URL {
         let text = String(format: L.t("courses.contact.message"), course.name, option.label, option.priceDisplay)
         return WhatsAppLink.url(text: text)
+    }
+}
+
+/// Secțiunea "Tutoriale" — cerință directă (2026-09-01): căutare + grupare
+/// pe categorie (liberă, aleasă de Furnizor) + carduri compacte în grilă
+/// largă (nu listă lungă), cu descriere expandabilă la cerere.
+private struct TutorialsGrid: View {
+    let tutorials: [Tutorial]
+    @State private var searchText = ""
+    @State private var selectedCategory: String?
+
+    private var categories: [String] {
+        Array(Set(tutorials.map(\.category))).sorted()
+    }
+
+    private var filtered: [Tutorial] {
+        tutorials.filter { tutorial in
+            let matchesCategory = selectedCategory == nil || tutorial.category == selectedCategory
+            let matchesSearch = searchText.isEmpty
+                || FuzzySearch.matches(query: searchText, inAny: [tutorial.title, tutorial.description, tutorial.category] + tutorial.tags)
+            return matchesCategory && matchesSearch
+        }
+    }
+
+    private let columns = [GridItem(.adaptive(minimum: 280, maximum: 340), spacing: 16)]
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 14) {
+                HStack {
+                    Image(systemName: "magnifyingglass").foregroundStyle(.secondary)
+                    TextField(L.t("tutorials.search"), text: $searchText)
+                        .textFieldStyle(.plain)
+                    if !searchText.isEmpty {
+                        Button { searchText = "" } label: { Image(systemName: "xmark.circle.fill") }
+                            .buttonStyle(.plain).foregroundStyle(.secondary)
+                    }
+                }
+                .padding(8)
+                .background(RoundedRectangle(cornerRadius: 8).fill(.background.secondary))
+
+                if categories.count > 1 {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 8) {
+                            categoryChip(nil, label: L.t("tutorials.allCategories"))
+                            ForEach(categories, id: \.self) { cat in categoryChip(cat, label: cat) }
+                        }
+                    }
+                }
+
+                if filtered.isEmpty {
+                    Text(L.t("search.noResults")).foregroundStyle(.secondary).padding(40)
+                } else {
+                    LazyVGrid(columns: columns, spacing: 16) {
+                        ForEach(filtered) { TutorialCard(tutorial: $0) }
+                    }
+                }
+            }
+            .padding(24)
+        }
+    }
+
+    @ViewBuilder
+    private func categoryChip(_ value: String?, label: String) -> some View {
+        Button {
+            selectedCategory = value
+        } label: {
+            Text(label).font(.caption).fontWeight(selectedCategory == value ? .bold : .regular)
+                .padding(.horizontal, 12).padding(.vertical, 6)
+                .background(Capsule().fill(selectedCategory == value ? Color.accentColor.opacity(0.3) : Color.gray.opacity(0.15)))
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+private struct TutorialCard: View {
+    let tutorial: Tutorial
+    @State private var showDescription = false
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            ZStack {
+                if let url = tutorial.thumbnail {
+                    AsyncImage(url: url) { phase in
+                        if let image = phase.image {
+                            image.resizable().aspectRatio(16/9, contentMode: .fill)
+                        } else {
+                            Rectangle().fill(Color.gray.opacity(0.2))
+                        }
+                    }
+                } else {
+                    Rectangle().fill(Color.gray.opacity(0.2))
+                }
+                if let watch = tutorial.watchURL {
+                    Button { NSWorkspace.shared.open(watch) } label: {
+                        Image(systemName: "play.circle.fill")
+                            .font(.system(size: 34))
+                            .foregroundStyle(.white)
+                            .shadow(radius: 4)
+                    }
+                    .buttonStyle(.plain)
+                    .help(L.t("card.youtubeLink"))
+                }
+            }
+            .frame(height: 160)
+            .clipShape(RoundedRectangle(cornerRadius: 8))
+            .clipped()
+
+            HStack {
+                Text(tutorial.category).font(.caption2).fontWeight(.semibold)
+                    .padding(.horizontal, 8).padding(.vertical, 3)
+                    .background(Capsule().fill(.tint.opacity(0.18)))
+                Spacer()
+                CountdownBadge(scheduling: tutorial.scheduling)
+            }
+
+            Text(tutorial.title).font(.headline).lineLimit(2)
+
+            if !tutorial.tags.isEmpty {
+                FlowLayout(spacing: 6) {
+                    ForEach(tutorial.tags, id: \.self) { tag in
+                        Text(tag).font(.caption2).foregroundStyle(.secondary)
+                            .padding(.horizontal, 7).padding(.vertical, 2)
+                            .background(Capsule().fill(Color.gray.opacity(0.15)))
+                    }
+                }
+            }
+
+            if !tutorial.description.isEmpty {
+                DisclosureGroup(isExpanded: $showDescription) {
+                    Text(tutorial.description)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .padding(.top, 4)
+                } label: {
+                    Text(L.t("tutorials.showDescription")).font(.caption).foregroundStyle(.secondary)
+                }
+            }
+        }
+        .padding(12)
+        .background(RoundedRectangle(cornerRadius: 10).fill(.background.secondary))
+    }
+}
+
+/// Layout simplu de tip "flow" (wrap la lățime) pentru chip-uri de taguri —
+/// spre deosebire de un HStack, nu taie/ascunde tagurile care nu încap pe
+/// un singur rând, le trece pe rândul următor.
+private struct FlowLayout: Layout {
+    var spacing: CGFloat = 6
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        let maxWidth = proposal.width ?? .infinity
+        var rowWidth: CGFloat = 0, rowHeight: CGFloat = 0, totalHeight: CGFloat = 0, totalWidth: CGFloat = 0
+        for subview in subviews {
+            let size = subview.sizeThatFits(.unspecified)
+            if rowWidth + size.width > maxWidth, rowWidth > 0 {
+                totalHeight += rowHeight + spacing
+                totalWidth = max(totalWidth, rowWidth)
+                rowWidth = 0; rowHeight = 0
+            }
+            rowWidth += size.width + spacing
+            rowHeight = max(rowHeight, size.height)
+        }
+        totalHeight += rowHeight
+        totalWidth = max(totalWidth, rowWidth)
+        return CGSize(width: min(totalWidth, maxWidth), height: totalHeight)
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        var x = bounds.minX, y = bounds.minY, rowHeight: CGFloat = 0
+        for subview in subviews {
+            let size = subview.sizeThatFits(.unspecified)
+            if x + size.width > bounds.maxX, x > bounds.minX {
+                x = bounds.minX
+                y += rowHeight + spacing
+                rowHeight = 0
+            }
+            subview.place(at: CGPoint(x: x, y: y), proposal: .unspecified)
+            x += size.width + spacing
+            rowHeight = max(rowHeight, size.height)
+        }
     }
 }
 

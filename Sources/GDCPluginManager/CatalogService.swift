@@ -27,6 +27,7 @@ final class CatalogService: ObservableObject {
     /// coliziunilor de poziție se fac în `Catalog.activeSeasonalBackgrounds`.
     @Published private(set) var seasonalBackgrounds: [SeasonalBackgroundConfig] = []
     @Published private(set) var productBundles: [ProductBundle] = []
+    @Published private(set) var tutorials: [Tutorial] = []
     @Published private(set) var isLoading = false
     @Published private(set) var loadError: String?
 
@@ -71,6 +72,7 @@ final class CatalogService: ObservableObject {
                 partnerOffers = catalog.partnerOffers
                 seasonalBackgrounds = catalog.seasonalBackgrounds
                 productBundles = catalog.productBundles
+                tutorials = catalog.tutorials
                 saveToCache(data: data)
             } catch {
                 throw CatalogFetchError.decodeFailed
@@ -114,6 +116,7 @@ final class CatalogService: ObservableObject {
         partnerOffers = catalog.partnerOffers
         seasonalBackgrounds = catalog.seasonalBackgrounds
         productBundles = catalog.productBundles
+        tutorials = catalog.tutorials
     }
 
     private func saveToCache(data: Data) {

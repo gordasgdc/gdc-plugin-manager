@@ -8,6 +8,7 @@ enum FurnizorSection: Hashable {
     case analytics
     case courses
     case educationalResources
+    case tutorials
     case events
     case partnerStores
     case serviceCenters
@@ -41,6 +42,7 @@ struct FurnizorContentView: View {
                 Divider()
                 Label("Cursuri", systemImage: "graduationcap").tag(FurnizorSection.courses)
                 Label("Materiale", systemImage: "book").tag(FurnizorSection.educationalResources)
+                Label("Tutoriale", systemImage: "play.rectangle").tag(FurnizorSection.tutorials)
                 Label("Evenimente", systemImage: "calendar").tag(FurnizorSection.events)
                 Label("Magazine partenere", systemImage: "storefront").tag(FurnizorSection.partnerStores)
                 Label("Service & Reparații", systemImage: "wrench.and.screwdriver").tag(FurnizorSection.serviceCenters)
@@ -88,6 +90,8 @@ struct FurnizorContentView: View {
                     PublishCourseView()
                 case .educationalResources:
                     PublishEducationalResourceView()
+                case .tutorials:
+                    PublishTutorialView()
                 case .events:
                     PublishEventView()
                 case .partnerStores:

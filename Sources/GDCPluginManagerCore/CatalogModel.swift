@@ -1099,6 +1099,49 @@ public struct PartnerOffer: Codable, Identifiable, Hashable {
 /// Tipul de conținut referit dintr-un pachet — un `ProductBundle` poate
 /// combina produse din categorii diferite (ex. un Curs + un pachet de
 /// LUT-uri), deci referința trebuie să spună ȘI unde să caute ID-ul.
+/// Un tutorial YouTube embedded — secțiunea "Tutoriale" din
+/// Comunitate & Educație (cerință directă, 2026-09-01: "vreau ca atunci
+/// când bag linkul de la tutorialul de pe YouTube, să creeze ca un fel de
+/// embedded" — thumbnail + titlu + descriere expandabilă + taguri,
+/// preluate automat de la YouTube prin `YouTubeMetadataFetcher`, dar toate
+/// editabile manual în Furnizor după preluare).
+public struct Tutorial: Codable, Identifiable, Hashable {
+    public let id: String
+    public let youtubeURL: String
+    public let videoID: String
+    public let title: String
+    public let description: String
+    public let thumbnailURL: String
+    public let tags: [String]
+    /// Categorie liberă, aleasă/gestionată de Furnizor (nu un enum fix) —
+    /// cerință directă: "vreau ca eu să controlez acea rubrică și să fac
+    /// și selecțiile" (ex. "Color Grading", "Instalare", "Randare").
+    public let category: String
+    public let addedAt: String?
+    /// Valabilitate temporală opțională (2026-09-01, cerință directă:
+    /// "să pun unitate de timp să fie valabil din perioada aia ... sau să
+    /// se șteargă din perioada aia") — reutilizează `Scheduling`, ca
+    /// restul catalogului: în afara ferestrei, tutorialul dispare din
+    /// lista clientului (rămâne editabil/vizibil doar în Furnizor).
+    public let scheduling: Scheduling?
+
+    public init(id: String, youtubeURL: String, videoID: String, title: String, description: String, thumbnailURL: String, tags: [String] = [], category: String = "General", addedAt: String? = nil, scheduling: Scheduling? = nil) {
+        self.id = id
+        self.youtubeURL = youtubeURL
+        self.videoID = videoID
+        self.title = title
+        self.description = description
+        self.thumbnailURL = thumbnailURL
+        self.tags = tags
+        self.category = category
+        self.addedAt = addedAt
+        self.scheduling = scheduling
+    }
+
+    public var watchURL: URL? { URL(string: youtubeURL) }
+    public var thumbnail: URL? { URL(string: thumbnailURL) }
+}
+
 public enum BundleItemKind: String, Codable, CaseIterable {
     case product        // PluginItem (catalog.items)
     case download       // DownloadableResource (catalog.downloadableResources)
@@ -1300,8 +1343,10 @@ public struct Catalog: Codable {
     public let seasonalBackgrounds: [SeasonalBackgroundConfig]
     /// Pachete/Bundle-uri — Etapa 9 (2026-08-29). Default `[]`: retrocompatibil.
     public let productBundles: [ProductBundle]
+    /// Tutoriale YouTube embedded — 2026-09-01. Default `[]`: retrocompatibil.
+    public let tutorials: [Tutorial]
 
-    public init(updatedAt: String?, items: [PluginItem], courses: [Course] = [], apps: [AppLink] = [], audioTracks: [AudioTrack] = [], educationalResources: [EducationalResource] = [], events: [Event] = [], partnerStores: [PartnerStore] = [], serviceCenters: [ServiceCenter] = [], downloadableResources: [DownloadableResource] = [], partnerOffers: [PartnerOffer] = [], seasonalBackgrounds: [SeasonalBackgroundConfig] = [], productBundles: [ProductBundle] = []) {
+    public init(updatedAt: String?, items: [PluginItem], courses: [Course] = [], apps: [AppLink] = [], audioTracks: [AudioTrack] = [], educationalResources: [EducationalResource] = [], events: [Event] = [], partnerStores: [PartnerStore] = [], serviceCenters: [ServiceCenter] = [], downloadableResources: [DownloadableResource] = [], partnerOffers: [PartnerOffer] = [], seasonalBackgrounds: [SeasonalBackgroundConfig] = [], productBundles: [ProductBundle] = [], tutorials: [Tutorial] = []) {
         self.updatedAt = updatedAt
         self.items = items
         self.courses = courses
@@ -1315,13 +1360,14 @@ public struct Catalog: Codable {
         self.partnerOffers = partnerOffers
         self.seasonalBackgrounds = seasonalBackgrounds
         self.productBundles = productBundles
+        self.tutorials = tutorials
     }
 
     // Custom decode: every collection defaults to `[]` if absent, so a
     // catalog published before a given field existed keeps decoding
     // cleanly after this update ships to clients.
     private enum CodingKeys: String, CodingKey {
-        case updatedAt, items, courses, apps, audioTracks, educationalResources, events, partnerStores, serviceCenters, downloadableResources, partnerOffers, seasonalBackgrounds, productBundles
+        case updatedAt, items, courses, apps, audioTracks, educationalResources, events, partnerStores, serviceCenters, downloadableResources, partnerOffers, seasonalBackgrounds, productBundles, tutorials
     }
 
     /// Cheia SINGULARĂ, doar pentru citirea unui `catalog.json` publicat
@@ -1345,6 +1391,7 @@ public struct Catalog: Codable {
         downloadableResources = try c.decodeIfPresent([DownloadableResource].self, forKey: .downloadableResources) ?? []
         partnerOffers = try c.decodeIfPresent([PartnerOffer].self, forKey: .partnerOffers) ?? []
         productBundles = try c.decodeIfPresent([ProductBundle].self, forKey: .productBundles) ?? []
+        tutorials = try c.decodeIfPresent([Tutorial].self, forKey: .tutorials) ?? []
 
         // MIGRARE SILENȚIOASĂ (2026-08-29): un `catalog.json` publicat
         // înainte de bibliotecă are `seasonalBackground` (String). Îl
