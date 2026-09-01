@@ -1,5 +1,12 @@
 # Changelog — GDC Plugin Manager
 
+## Furnizor v1.25.1 (2026-09-01) — Ghid pas-cu-pas pentru cheia YouTube Data API
+
+Panoul „Tutoriale” din Furnizor arată acum un ghid desfășurabil cu 4 pași
+pentru obținerea unei chei YouTube Data API v3 (buton spre fiecare pagină
+relevantă din Google Cloud Console), plus un buton „Testează cheia” care
+verifică imediat dacă e configurată corect.
+
 ## Client v1.26.0 + Furnizor v1.25.0 (2026-09-01) — Tutoriale (YouTube embedded) + căutare în meniu
 
 - **Secțiune nouă „Tutoriale”** (Comunitate & Educație) — video-uri YouTube

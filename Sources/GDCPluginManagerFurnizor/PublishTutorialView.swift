@@ -1,4 +1,5 @@
 import SwiftUI
+import AppKit
 import GDCPluginManagerCore
 
 /// Manages the "Tutoriale" catalog section — embedded YouTube videos.
@@ -25,6 +26,10 @@ struct PublishTutorialView: View {
     @State private var successMessage: String?
     @State private var pendingDelete: Tutorial?
     @State private var apiKeyInput = YouTubeMetadataFetcher.dataAPIKey
+    @State private var showApiKeyGuide = false
+    @State private var isTestingApiKey = false
+    @State private var apiKeyTestResult: String?
+    @State private var apiKeyTestSucceeded = false
 
     /// Categoriile deja folosite — Cristi le controlează pe măsură ce
     /// adaugă tutoriale, nu un enum fix predefinit de noi.
@@ -38,12 +43,56 @@ struct PublishTutorialView: View {
                 Text("Tutoriale (video-uri YouTube embedded)").font(.title2).fontWeight(.semibold)
 
                 GroupBox("Cheie YouTube Data API v3 (opțional)") {
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text("Fără ea vin automat doar titlul și imaginea. Cu o cheie (gratuită, din Google Cloud Console → activează „YouTube Data API v3” → Credentials → API Key) vin automat și descrierea + tagurile.")
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Fără ea vin automat doar titlul și imaginea. Cu o cheie (gratuită) vin automat și descrierea + tagurile.")
                             .font(.caption).foregroundStyle(.secondary)
+
+                        Button(showApiKeyGuide ? "▾ Ascunde pașii" : "▸ Cum obțin o cheie? (ghid pas cu pas)") {
+                            showApiKeyGuide.toggle()
+                        }
+                        .font(.caption)
+
+                        if showApiKeyGuide {
+                            VStack(alignment: .leading, spacing: 10) {
+                                apiKeyStep(
+                                    number: 1,
+                                    text: "Deschide Google Cloud Console și creează un proiect nou (sau alege unul existent).",
+                                    buttonLabel: "Deschide Google Cloud Console",
+                                    url: "https://console.cloud.google.com/projectcreate"
+                                )
+                                apiKeyStep(
+                                    number: 2,
+                                    text: "Activează „YouTube Data API v3” pentru acel proiect — apasă butonul albastru „Enable” de pe pagina care se deschide.",
+                                    buttonLabel: "Deschide pagina YouTube Data API v3",
+                                    url: "https://console.cloud.google.com/apis/library/youtube.googleapis.com"
+                                )
+                                apiKeyStep(
+                                    number: 3,
+                                    text: "Creează o cheie: „+ CREATE CREDENTIALS” → „API key”. Google generează cheia instant, o afișează pe ecran.",
+                                    buttonLabel: "Deschide pagina de Credentials",
+                                    url: "https://console.cloud.google.com/apis/credentials"
+                                )
+                                Text("4. Copiază cheia generată și lipește-o mai jos, apoi apasă „Salvează”.")
+                                    .font(.caption)
+                            }
+                            .padding(10)
+                            .background(RoundedRectangle(cornerRadius: 8).fill(Color.gray.opacity(0.08)))
+                        }
+
                         HStack {
                             SecureField("Cheie API", text: $apiKeyInput).textFieldStyle(.roundedBorder)
-                            Button("Salvează") { YouTubeMetadataFetcher.dataAPIKey = apiKeyInput }
+                            Button("Salvează") {
+                                YouTubeMetadataFetcher.dataAPIKey = apiKeyInput
+                                apiKeyTestResult = nil
+                            }
+                            if isTestingApiKey { ProgressView().controlSize(.small) }
+                            Button("Testează cheia") { Task { await testApiKey() } }
+                                .disabled(apiKeyInput.trimmingCharacters(in: .whitespaces).isEmpty || isTestingApiKey)
+                        }
+                        if let apiKeyTestResult {
+                            Label(apiKeyTestResult, systemImage: apiKeyTestSucceeded ? "checkmark.circle.fill" : "exclamationmark.triangle.fill")
+                                .font(.caption)
+                                .foregroundStyle(apiKeyTestSucceeded ? .green : .red)
                         }
                     }
                     .padding(8)
@@ -164,6 +213,40 @@ struct PublishTutorialView: View {
 
     private var isFormValid: Bool {
         !videoID.trimmingCharacters(in: .whitespaces).isEmpty && !title.trimmingCharacters(in: .whitespaces).isEmpty
+    }
+
+    @ViewBuilder
+    private func apiKeyStep(number: Int, text: String, buttonLabel: String, url: String) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text("\(number). \(text)").font(.caption)
+            if let link = URL(string: url) {
+                Button(buttonLabel) { NSWorkspace.shared.open(link) }
+                    .controlSize(.small)
+            }
+        }
+    }
+
+    private func testApiKey() async {
+        apiKeyTestResult = nil
+        isTestingApiKey = true
+        defer { isTestingApiKey = false }
+        YouTubeMetadataFetcher.dataAPIKey = apiKeyInput
+        // "dQw4w9WgXcQ" - orice video public real, folosit doar ca sa
+        // verificam ca cheia intoarce un raspuns valid, nu ca sa afisam
+        // continutul lui.
+        do {
+            let meta = try await YouTubeMetadataFetcher.fetch(youtubeURL: "https://www.youtube.com/watch?v=dQw4w9WgXcQ")
+            if meta.description.isEmpty {
+                apiKeyTestSucceeded = false
+                apiKeyTestResult = "Cheia nu a adus descriere/taguri — verifică pașii 2-3 de mai sus (API-ul trebuie activat pentru acest proiect)."
+            } else {
+                apiKeyTestSucceeded = true
+                apiKeyTestResult = "Cheia funcționează — descrierea și tagurile vor veni automat de acum."
+            }
+        } catch {
+            apiKeyTestSucceeded = false
+            apiKeyTestResult = "Eroare la testare: \(error.localizedDescription)"
+        }
     }
 
     private func addTag() {
