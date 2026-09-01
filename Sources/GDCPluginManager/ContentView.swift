@@ -1124,13 +1124,7 @@ private struct PluginCard: View {
             }
             Text(item.name).font(.headline)
             CountdownBadge(scheduling: item.scheduling)
-            Text(item.description)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                // 5 rânduri, nu 3: descrierile reale de produs erau tăiate
-                // la jumătate de frază.
-                .lineLimit(5)
-                .fixedSize(horizontal: false, vertical: true)
+            CollapsibleDescription(text: item.description)
             Text("\(L.t("card.version")) \(item.version)")
                 .font(.caption2)
                 .foregroundStyle(.tertiary)
@@ -1364,12 +1358,7 @@ private struct CourseCard: View {
             )
             Text(course.name).font(.headline)
             CountdownBadge(scheduling: course.scheduling)
-            Text(course.description)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                // Fără limită de rânduri + fixedSize: descrierea se vede
-                // întreagă, nu trunchiată de layout.
-                .fixedSize(horizontal: false, vertical: true)
+            CollapsibleDescription(text: course.description)
 
             VStack(alignment: .leading, spacing: 6) {
                 ForEach(course.options) { option in
@@ -1469,7 +1458,7 @@ private struct TutorialsGrid: View {
 
 private struct TutorialCard: View {
     let tutorial: Tutorial
-    @State private var showDescription = false
+    @State private var showTags = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -1511,26 +1500,21 @@ private struct TutorialCard: View {
             Text(tutorial.title).font(.headline).lineLimit(2)
 
             if !tutorial.tags.isEmpty {
-                FlowLayout(spacing: 6) {
-                    ForEach(tutorial.tags, id: \.self) { tag in
-                        Text(tag).font(.caption2).foregroundStyle(.secondary)
-                            .padding(.horizontal, 7).padding(.vertical, 2)
-                            .background(Capsule().fill(Color.gray.opacity(0.15)))
+                DisclosureGroup(isExpanded: $showTags) {
+                    FlowLayout(spacing: 6) {
+                        ForEach(tutorial.tags, id: \.self) { tag in
+                            Text(tag).font(.caption2).foregroundStyle(.secondary)
+                                .padding(.horizontal, 7).padding(.vertical, 2)
+                                .background(Capsule().fill(Color.gray.opacity(0.15)))
+                        }
                     }
+                    .padding(.top, 4)
+                } label: {
+                    Text(String(format: L.t("tutorials.showTags"), tutorial.tags.count)).font(.caption).foregroundStyle(.secondary)
                 }
             }
 
-            if !tutorial.description.isEmpty {
-                DisclosureGroup(isExpanded: $showDescription) {
-                    Text(tutorial.description)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .padding(.top, 4)
-                } label: {
-                    Text(L.t("tutorials.showDescription")).font(.caption).foregroundStyle(.secondary)
-                }
-            }
+            CollapsibleDescription(text: tutorial.description)
         }
         .padding(12)
         .background(RoundedRectangle(cornerRadius: 10).fill(.background.secondary))
@@ -1573,6 +1557,32 @@ private struct FlowLayout: Layout {
             subview.place(at: CGPoint(x: x, y: y), proposal: .unspecified)
             x += size.width + spacing
             rowHeight = max(rowHeight, size.height)
+        }
+    }
+}
+
+/// Descriere colapsabilă, reutilizabilă în ORICE card din catalog —
+/// cerință directă (2026-09-01): "la tot unde am tema de descriere ...
+/// să se poată desfășura", generalizarea disclosure-ului deja făcut la
+/// Tutoriale peste toate celelalte 8 tipuri de card (Produse/Cursuri/
+/// Materiale/Evenimente/Pachete/Oferte/Magazine/Resurse Download/Audio).
+/// Colapsat implicit — text ascuns complet, doar eticheta "Descriere" —
+/// apasă săgeata ca să se desfacă. Nimic randat dacă textul e gol.
+private struct CollapsibleDescription: View {
+    let text: String
+    @State private var expanded = false
+
+    var body: some View {
+        if !text.isEmpty {
+            DisclosureGroup(isExpanded: $expanded) {
+                Text(text)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.top, 4)
+            } label: {
+                Text(L.t("card.showDescription")).font(.caption).foregroundStyle(.secondary)
+            }
         }
     }
 }
@@ -1629,10 +1639,7 @@ private struct EducationalResourceCard: View {
             }
             Text(resource.name).font(.headline)
             CountdownBadge(scheduling: resource.scheduling)
-            Text(resource.description)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .fixedSize(horizontal: false, vertical: true)
+            CollapsibleDescription(text: resource.description)
             Spacer(minLength: 0)
             if let url = URL(string: resource.externalURL) {
                 Button(L.t("resources.buy")) { NSWorkspace.shared.open(url) }
@@ -1703,10 +1710,7 @@ private struct EventCard: View {
                     .font(.caption).foregroundStyle(.secondary)
                 MapButton(mapsURL: event.mapsURL)
             }
-            Text(event.description)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .fixedSize(horizontal: false, vertical: true)
+            CollapsibleDescription(text: event.description)
             Spacer(minLength: 0)
             if let url = URL(string: event.externalURL) {
                 Button(L.t("events.details")) { NSWorkspace.shared.open(url) }
@@ -1796,10 +1800,7 @@ private struct BundleCard: View {
             )
             Text(bundle.name).font(.headline)
             CountdownBadge(scheduling: bundle.scheduling)
-            Text(bundle.description)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .fixedSize(horizontal: false, vertical: true)
+            CollapsibleDescription(text: bundle.description)
 
             VStack(alignment: .leading, spacing: 3) {
                 Text(L.t("bundles.includes")).font(.caption2).foregroundStyle(.secondary)
@@ -1896,10 +1897,7 @@ private struct PartnerOfferCard: View {
             }
             Text(offer.brandName).font(.headline)
             CountdownBadge(scheduling: offer.scheduling)
-            Text(offer.description)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .fixedSize(horizontal: false, vertical: true)
+            CollapsibleDescription(text: offer.description)
             if let coupon = offer.couponCode {
                 HStack(spacing: 4) {
                     Text(L.t("partnerOffers.coupon")).font(.caption2).foregroundStyle(.secondary)
@@ -1969,10 +1967,7 @@ private struct PartnerStoreCard: View {
             )
             Text(store.name).font(.headline)
             CountdownBadge(scheduling: store.scheduling)
-            Text(store.description)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .fixedSize(horizontal: false, vertical: true)
+            CollapsibleDescription(text: store.description)
             Spacer(minLength: 0)
             HStack {
                 if let url = URL(string: store.url) {
@@ -2042,10 +2037,7 @@ private struct ServiceCenterCard: View {
             )
             Text(center.name).font(.headline)
             CountdownBadge(scheduling: center.scheduling)
-            Text(center.specialization)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .fixedSize(horizontal: false, vertical: true)
+            CollapsibleDescription(text: center.specialization)
             Spacer(minLength: 0)
             HStack {
                 if let url = URL(string: center.contactURL) {
@@ -2259,12 +2251,7 @@ private struct DownloadResourceCard: View {
             )
             Text(resource.name).font(.headline)
             CountdownBadge(scheduling: resource.scheduling)
-            if !resource.description.isEmpty {
-                Text(resource.description)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(4)
-            }
+            CollapsibleDescription(text: resource.description)
             ExtraLinksRow(purchaseURL: resource.purchaseURL, demoURL: resource.demoURL, social: resource.socialLinks)
             // Etapa 5+ (2026-08-29, cerut explicit): "să aibă posibilitatea
             // să își pună path-ul... ca să știe tot timpul unde l-a
@@ -2427,12 +2414,7 @@ private struct AudioCard: View {
             )
             Text(track.name).font(.headline)
             CountdownBadge(scheduling: track.scheduling)
-            if !track.description.isEmpty {
-                Text(track.description)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(3)
-            }
+            CollapsibleDescription(text: track.description)
             Spacer(minLength: 0)
             if let url = URL(string: track.url) {
                 Button(L.t("audio.open")) { NSWorkspace.shared.open(url) }

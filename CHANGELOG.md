@@ -1,5 +1,13 @@
 # Changelog — GDC Plugin Manager
 
+## Client v1.27.0 (2026-09-01) — Descriere colapsabilă peste tot în catalog
+
+Toate cardurile din catalog (Produse, Cursuri, Materiale, Evenimente,
+Pachete, Oferte, Magazine, Service, Resurse Download, Audio, Tutoriale)
+au acum descrierea ascunsă implicit, cu un buton „Descriere” care o
+desfășoară la cerere — cardurile ocupă mai puțin spațiu, dar poți citi
+oricând detaliile complete. Tagurile de la Tutoriale se comportă la fel.
+
 ## Furnizor v1.25.1 (2026-09-01) — Ghid pas-cu-pas pentru cheia YouTube Data API
 
 Panoul „Tutoriale” din Furnizor arată acum un ghid desfășurabil cu 4 pași

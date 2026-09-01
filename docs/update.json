@@ -1,7 +1,7 @@
 {
-  "version": "1.26.0",
+  "version": "1.27.0",
   "release_date": "2026-09-01",
-  "changes": "Secțiune nouă Tutoriale (video-uri YouTube) + căutare în meniu.",
+  "changes": "Descriere colapsabilă (buton „Descriere”) în toate cardurile din catalog.",
   "download_url": {
     "mac": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Mac.zip",
     "windows": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Windows.zip"
