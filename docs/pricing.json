@@ -71,7 +71,7 @@
       ]
     },
     "media-flow-monitor" : {
-      "basePrice" : 23,
+      "basePrice" : 32,
       "currency" : "EUR",
       "name" : "MediaFlow Monitor",
       "promoSchedule" : [
@@ -85,5 +85,5 @@
       ]
     }
   },
-  "updatedAt" : "2026-08-31"
+  "updatedAt" : "2026-09-01"
 }
