@@ -81,6 +81,13 @@
           "price" : 15,
           "showCountdown" : true,
           "startsAt" : "2026-08-31T05:16:03Z"
+        },
+        {
+          "endsAt" : "2026-09-11T10:07:17Z",
+          "label" : "Oferta lansare",
+          "price" : 20,
+          "showCountdown" : true,
+          "startsAt" : "2026-09-04T10:07:17Z"
         }
       ]
     }
