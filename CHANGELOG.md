@@ -1,5 +1,11 @@
 # Changelog — GDC Plugin Manager
 
+## Client v1.25.1 + Furnizor v1.24.1 (2026-09-01) — Iconiță nouă: roata de culori
+
+Iconița aplicației (Mac + Windows) a fost înlocuită cu un design nou —
+un inel plin cu spectrul complet de culori — la cererea lui Cristi.
+Aplicată identic pe Client, Furnizor și clientul Windows.
+
 ## Furnizor v1.23.0 (2026-08-31) — FIX CRITIC: publicarea putea șterge tot catalogul
 
 **Cauza reală**: dacă `docs/catalog.json` lipsea de pe disc în momentul unei
