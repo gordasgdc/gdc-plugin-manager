@@ -1,7 +1,7 @@
 {
   "version": "1.25.1",
-  "release_date": "2026-08-31",
-  "changes": "Nou: prețurile și ofertele active apar acum direct pe cardurile aplicațiilor din secțiunea Aplicații, cu ceas de numărătoare inversă pentru ofertele cu termen limită.",
+  "release_date": "2026-09-01",
+  "changes": "Iconiță nouă a aplicației.",
   "download_url": {
     "mac": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Mac.zip",
     "windows": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Windows.zip"
