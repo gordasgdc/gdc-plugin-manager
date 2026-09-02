@@ -1,6 +1,6 @@
 {
   "enabled" : true,
-  "imagePath" : "covers/launch-banner.jpg?v=bdae004c",
+  "imagePath" : "",
   "mainText" : "PREȚURI SPECIALE DE DESCHIDERE",
   "scheduling" : {
     "endDate" : 810814208.762217,
@@ -9,5 +9,5 @@
   },
   "textOnTop" : false,
   "topText" : "LANSARE",
-  "updatedAt" : "2026-09-01"
+  "updatedAt" : "2026-09-02"
 }
