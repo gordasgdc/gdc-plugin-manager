@@ -20,6 +20,7 @@ enum FurnizorSection: Hashable {
     case seasonalBackground
     case pricing
     case launchBanner
+    case backup
 }
 
 struct FurnizorContentView: View {
@@ -53,6 +54,8 @@ struct FurnizorContentView: View {
                 Label("Pachete / Bundle-uri", systemImage: "shippingbox").tag(FurnizorSection.bundles)
                 Divider()
                 Label("Interfață Client (Filigran)", systemImage: "photo.on.rectangle.angled").tag(FurnizorSection.seasonalBackground)
+                Divider()
+                Label("Backup & Restaurare", systemImage: "lock.doc").tag(FurnizorSection.backup)
             }
             .navigationSplitViewColumnWidth(min: 180, ideal: 200, max: 340)
             .safeAreaInset(edge: .bottom) {
@@ -110,6 +113,8 @@ struct FurnizorContentView: View {
                     PublishBundleView()
                 case .seasonalBackground:
                     SeasonalBackgroundView()
+                case .backup:
+                    BackupView()
                 }
             }
         }

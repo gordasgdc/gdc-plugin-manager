@@ -1,5 +1,37 @@
 # Changelog — GDC Plugin Manager
 
+## Furnizor v1.26.0 — Backup criptat și portabil al întregii stări (2026-09-03)
+
+**Modul nou: Backup & Restaurare** (meniul Furnizor, ultima poziție).
+
+Constatare de la auditul care a precedat implementarea: cheia privată Ed25519
+cu care se semnează licențele pentru **tot** ecosistemul GDC exista într-un
+singur exemplar, pe un singur Mac, fără Time Machine configurat și fără
+nicio altă copie. Dacă discul ceda: licențele deja vândute ar fi continuat să
+funcționeze (se verifică local, cu cheia publică din fiecare aplicație), dar
+nu s-ar mai fi putut emite niciuna nouă — pentru niciun produs, niciodată.
+Singura reparație ar fi fost o cheie nouă plus o versiune nouă a fiecărei
+aplicații din ecosistem și reemiterea fiecărei licențe vândute.
+
+- **Un singur fișier criptat** conține: cheia privată și cea publică,
+  jurnalul de vânzări și clienți, coperțile în lucru, tokenul GitHub de
+  publicare și cheia de administrare Supabase (ultimele două sunt fișiere
+  sursă excluse din git — un `git clone` pe alt Mac **nu** le aduce), plus,
+  opțional, catalogul publicat și repo-ul de fișiere vandabile.
+- **Criptare AES-256-GCM**, cu cheie derivată din parola master prin PBKDF2.
+  Numărul de iterații se **calibrează la mașină**, nu e hardcodat: pe acest
+  Mac o constantă „sigură" de 600.000 se consumă în 0,096 s, pentru că
+  SHA-256 e accelerat hardware — calibrarea la un timp țintă păstrează costul
+  real constant pe orice calculator. Nimic din arhivă nu e lizibil din
+  exterior; verificat pe date reale.
+- **Restaurare pe un Mac nou:** aplicația își recreează singură folderele și
+  își pune fișierele exact unde trebuie, recalculând căile pentru contul de
+  utilizator curent. Permisiunile cheii private rămân 0600.
+- **Nu se șterge nimic definitiv:** ce există deja e păstrat alături, cu
+  sufixul `.inainte-de-restaurare`.
+- Arhivele trunchiate sau modificate sunt **respinse**, nu restaurate parțial
+  în tăcere: fiecare bloc criptat își autentifică poziția în fișier.
+
 ## Client v1.27.2 (2026-09-03) — Versiuni Mac/Windows independente
 
 Schimbare internă: `update.json` ține acum câte un număr de versiune
