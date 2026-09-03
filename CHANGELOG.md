@@ -1,5 +1,14 @@
 # Changelog — GDC Plugin Manager
 
+## Furnizor v1.29.1 — Ghid de reînnoire token, complet cu comenzi gata de rulat (2026-09-03)
+
+Ghidul „Cum reînnoiesc token-ul GitHub?" (accesibil oricând din toolbar-ul
+Furnizorului) avea nevoie de intervenție manuală în cod la pasul de
+înlocuire a token-ului. Acum fiecare pas care implică Terminal vine cu
+comanda exactă, gata de copiat-lipit, în ordine: înlocuirea token-ului
+(`sed`), verificare, bump de versiune, build + commit + push, și
+confirmare finală înainte de a revoca token-ul vechi.
+
 ## Furnizor v1.29.0 — Statistici care răspund la întrebări (Faza 3 CRM) (2026-09-03)
 
 Panoul de Statistici capătă trei secțiuni noi, peste datele deja existente

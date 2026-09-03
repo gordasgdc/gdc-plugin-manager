@@ -40,24 +40,29 @@ struct TokenRenewalGuideView: View {
                     )
                     step(
                         number: 5,
-                        title: "Pune-l în cod",
-                        body: "Deschide Sources/GDCPluginManagerCore/PrivateCatalogAuth.swift (în GDCPluginManager, folderul de cod, nu Furnizor) și înlocuiește valoarea lui „token” cu cel nou."
+                        title: "Pune-l în cod (comandă gata de lipit în Terminal)",
+                        body: "cd ~/Developer/gdc-plugin-manager-catalog-vendor && sed -i '' 's#public static let token = \".*\"#public static let token = \"TOKENUL_TAU_NOU_AICI\"#' Sources/GDCPluginManagerCore/PrivateCatalogAuth.swift — înlocuiește TOKENUL_TAU_NOU_AICI cu tokenul copiat la pasul 4 (păstrează ghilimelele), apoi Enter."
                     )
                     step(
                         number: 6,
-                        title: "Build + versiune nouă + republicare",
-                        body: "Bumpează versiunea aplicației (Info.plist), rulează ./build_app.sh, apoi ./build_installer.sh (sau fluxul CI existent, tag vX.Y.Z). Important: clienții care au deja aplicația instalată tot folosesc token-ul VECHI până actualizează — bannerul de „versiune nouă” din aplicație îi anunță, dar dacă tot nu actualizează până expiră token-ul vechi, instalarea de produse le va da eroare de autentificare. Ideal: fă asta cu câteva săptămâni înainte de expirare, nu chiar în ultima zi."
+                        title: "Verifică, apoi bump versiune (comandă gata de lipit)",
+                        body: "grep 'public static let token' Sources/GDCPluginManagerCore/PrivateCatalogAuth.swift — confirmă că apare noul token. Apoi deschide Info.plist (Client) și crește CFBundleShortVersionString + CFBundleVersion cu 1 (ex. 1.27.3 → 1.27.4), la fel în CHANGELOG.md (o linie: „Reînnoire token intern de acces la fișiere”)."
                     )
                     step(
                         number: 7,
-                        title: "Șterge token-ul vechi din GitHub",
-                        body: "Din aceeași pagină (Fine-grained tokens), după ce ai confirmat că noul token funcționează (deschide clientul rebuild-uit, instalează ceva), poți șterge/revoca token-ul vechi."
+                        title: "Build + republicare (comenzi gata de lipit, în ordine)",
+                        body: "./build_app.sh && ./build_furnizor_app.sh   (rebuild ambele — regula CLAUDE.md 0). Apoi git add -A && git commit -m \"Reînnoire token GitHub intern\" && git push. În final, urcă build-ul nou pe releases/latest ca la orice release normal (build_installer.sh / fluxul CI + gh release upload)."
+                    )
+                    step(
+                        number: 8,
+                        title: "Confirmă + curăță",
+                        body: "Deschide clientul rebuild-uit, instalează orice produs din catalog — dacă merge, tokenul nou funcționează. Abia apoi șterge/revocă tokenul vechi din GitHub (pasul văzut la generare, secțiunea Fine-grained tokens). Important: clienții deja instalați tot folosesc tokenul VECHI până actualizează — dacă acesta expiră înainte ca ei să updateze, le va da eroare de autentificare la instalare de produse. Fă asta cu câteva săptămâni înainte de expirare, nu în ultima zi."
                     )
                 }
                 .padding(24)
             }
         }
-        .frame(width: 560, height: 560)
+        .frame(width: 620, height: 660)
     }
 
     private func step(number: Int, title: String, body: String) -> some View {
