@@ -5,9 +5,21 @@ struct UpdateInfo: Decodable {
     let version: String
     let release_date: String?
     let changes: String?
-    let download_url: [String: String]
+    let download_url: String
     let mandatory: Bool?
     let min_version: String?
+}
+
+/// [2026-09-03] `update.json` a trecut de la un singur camp `version`
+/// comun ambelor platforme la doua sectiuni separate (`mac`/`windows`) —
+/// motiv real: un fix Windows-only obliga inainte la un "bump doar de
+/// versiune" si pe Mac (fara nicio schimbare de cod), doar ca sa ramana
+/// numerele sincronizate — un release Mac inutil de fiecare data cand doar
+/// Windows se schimba, si invers. Fiecare platforma isi are acum propriul
+/// numar de versiune, complet independent.
+private struct UpdateManifest: Decodable {
+    let mac: UpdateInfo?
+    let windows: UpdateInfo?
 }
 
 /// Verifica docs/update.json (acelasi pattern de JSON static ca in
@@ -43,11 +55,15 @@ struct UpdateInfo: Decodable {
 /// implementat; daca cineva cere "update cu 1 click", asta e piesa care
 /// lipseste.
 ///
-/// WARNING: `update.json` are UN SINGUR camp `version`, comun ambelor
-/// platforme. Orice rebuild real trebuie sa creasca versiunea in Info.plist
-/// (Mac), in .csproj + installer.iss (Windows) SI in update.json. Refolosirea
-/// aceluiasi tag cu `--clobber` lasa update.json in urma si notificarea nu
-/// se mai declanseaza niciodata pentru cei care au deja aplicatia instalata.
+/// WARNING: `update.json` are sectiuni SEPARATE `mac`/`windows` (din
+/// 2026-09-03) — fiecare platforma isi are propriul numar de versiune,
+/// independent. Orice rebuild real Mac trebuie sa creasca versiunea in
+/// Info.plist SI in `update.json` -> `mac.version`; un rebuild Windows,
+/// la fel, doar in `.csproj`/`installer.iss` + `update.json` -> `windows.version`
+/// — NU mai e nevoie de "bump doar de sincronizare" pe cealalta platforma
+/// cand doar una s-a schimbat. Refolosirea aceluiasi tag cu `--clobber`
+/// lasa update.json in urma si notificarea nu se mai declanseaza niciodata
+/// pentru cei care au deja aplicatia instalata.
 @MainActor
 final class UpdateChecker: ObservableObject {
     static let shared = UpdateChecker()
@@ -109,12 +125,16 @@ final class UpdateChecker: ObservableObject {
             DiagnosticLog.write("UpdateChecker", "Status neasteptat, opresc aici.")
             return
         }
-        let info: UpdateInfo
+        let manifest: UpdateManifest
         do {
-            info = try JSONDecoder().decode(UpdateInfo.self, from: data)
+            manifest = try JSONDecoder().decode(UpdateManifest.self, from: data)
         } catch {
             let body = String(data: data, encoding: .utf8) ?? "<nu e text UTF-8>"
             DiagnosticLog.write("UpdateChecker", "Decodare esuata: \(error). Body: \(body)")
+            return
+        }
+        guard let info = manifest.mac else {
+            DiagnosticLog.write("UpdateChecker", "update.json nu are sectiunea \"mac\".")
             return
         }
         DiagnosticLog.write("UpdateChecker", "info.version=\(info.version)")

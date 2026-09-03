@@ -1,5 +1,13 @@
 # Changelog — GDC Plugin Manager
 
+## Client v1.27.2 (2026-09-03) — Versiuni Mac/Windows independente
+
+Schimbare internă: `update.json` ține acum câte un număr de versiune
+separat pentru Mac și pentru Windows, în loc de unul singur comun. Practic
+pentru utilizator: nicio schimbare vizibilă — beneficiul e că, de acum,
+o actualizare doar pe Windows nu mai obligă la un release și pe Mac (și
+invers), doar ca să rămână numerele sincronizate.
+
 ## Client v1.27.1 (2026-09-03) — Fix Windows: imagini care nu se afișau pe unele Windows 10
 
 Fără schimbări de cod pe Mac — bump doar de versiune, ca `update.json`

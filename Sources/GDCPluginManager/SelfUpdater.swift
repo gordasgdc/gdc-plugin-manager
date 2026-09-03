@@ -61,13 +61,13 @@ enum SelfUpdater {
         }
     }
 
-    /// Descarca arhiva Mac din `info.download_url["mac"]`, o dezarhiveaza,
+    /// Descarca arhiva Mac din `info.download_url`, o dezarhiveaza,
     /// gaseste `.pkg`-ul dinauntru, il redenumeste cu versiunea si porneste
     /// instalarea. La succes, aplicatia curenta se inchide singura —
     /// scriptul de instalare o relanseaza dupa ce termina.
     @MainActor
     static func downloadAndInstall(info: UpdateInfo) async {
-        guard let urlString = info.download_url["mac"], let zipURL = URL(string: urlString) else {
+        guard let zipURL = URL(string: info.download_url) else {
             presentFailure(UpdateError.downloadFailed("Lipsește link-ul de descărcare pentru Mac în update.json"))
             return
         }

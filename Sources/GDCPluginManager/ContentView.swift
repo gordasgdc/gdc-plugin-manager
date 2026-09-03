@@ -531,9 +531,9 @@ struct ContentView: View {
             // apelam dismiss() imediat: daca instalarea esueaza si userul
             // mai are nevoie sa vada popup-ul din nou, availableUpdate
             // ramane populat (SelfUpdater arata propria alerta de eroare).
-            // Garda pe download_url["mac"] pastrata ca inainte — butonul
-            // nu apare deloc daca update.json n-are link pentru Mac.
-            if info.download_url["mac"] != nil {
+            // Garda pe download_url pastrata ca inainte — butonul nu apare
+            // deloc daca update.json n-are link pentru Mac.
+            if !info.download_url.isEmpty {
                 Button(L.t("update.popup.now")) {
                     Task { await SelfUpdater.downloadAndInstall(info: info) }
                 }
@@ -573,7 +573,7 @@ private struct UpdateBanner: View {
             }
             Spacer()
             // Nu mai deschide browserul — vezi SelfUpdater.swift.
-            if update.download_url["mac"] != nil {
+            if !update.download_url.isEmpty {
                 Button(L.t("update.download")) {
                     Task { await SelfUpdater.downloadAndInstall(info: update) }
                 }
