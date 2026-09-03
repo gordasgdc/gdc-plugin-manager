@@ -213,7 +213,6 @@ struct ContentView: View {
     @ObservedObject private var languageStore = LanguageStore.shared
 
     @State private var selection: SidebarSection? = .all
-    @State private var resolveWarningVisible = false
     @State private var showOnboarding = false
     @State private var missingDependencies: [SystemDependency] = []
     @State private var allDependencies: [SystemDependency] = []

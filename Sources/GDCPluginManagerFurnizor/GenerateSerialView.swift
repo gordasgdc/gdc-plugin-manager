@@ -67,7 +67,6 @@ struct GenerateSerialView: View {
     @State private var customerName = ""
     @State private var email = ""
     @State private var machineID = ""
-    @State private var expiresDays = "0" // 0 = never
     // Generare flexibila (Faza 3, vezi CLAUDE.md Partea 1 Regula 12):
     // acelasi camp `expiresAt` (unix seconds, 0 = pe viata) din LicenseCore
     // - nicio schimbare de format criptografic, doar UI mai clar decat un

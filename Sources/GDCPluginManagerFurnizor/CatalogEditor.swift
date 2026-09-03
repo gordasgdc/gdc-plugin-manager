@@ -54,7 +54,7 @@ enum CatalogEditor {
     /// esueze vizibil (eroare in UI), nu sa stearga tacut restul catalogului.
     static func load() throws -> Catalog {
         if !FileManager.default.fileExists(atPath: RepoCheckoutPaths.catalogJSONURL.path) {
-            try? GitOps.run(["checkout", "--", "docs/"], at: RepoCheckoutPaths.publicCatalogRepo)
+            _ = try? GitOps.run(["checkout", "--", "docs/"], at: RepoCheckoutPaths.publicCatalogRepo)
         }
         let data = try Data(contentsOf: RepoCheckoutPaths.catalogJSONURL)
         return try JSONDecoder().decode(Catalog.self, from: data)

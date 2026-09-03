@@ -1,5 +1,25 @@
 # Changelog — GDC Plugin Manager
 
+## Client v1.28.1 + Furnizor v1.30.1 — Curățare cod (zero-legacy) (2026-09-03)
+
+Audit complet Client + Furnizor + Core: build integral cu warning-uri
+forțate vizibile (nu doar incremental) pe toate cele 3 target-uri, căutare
+sistematică de cod neutilizat (funcții/proprietăți/tipuri `private`/
+`fileprivate`/interne, verificate cu numărare de referințe pe tot repo-ul,
+nu doar pe fișier), TODO/FIXME uitate, flag-uri de mod test/debug scăpate
+în cod de producție, fișiere duplicate/„_old"/„copy". Rezultat: codebase-ul
+era deja aproape curat — găsite și eliminate doar 2 rămășițe reale:
+- `resolveWarningVisible` (`ContentView.swift`) — stare moartă, înlocuită
+  demult de `showResolveWarning` din view-ul real care afișează alerta.
+- `expiresDays` (`GenerateSerialView.swift`) — câmp din generarea de
+  licențe dinaintea Fazei 3 (Zile/Luni/Ani/Lifetime), niciodată citit după
+  acea migrare.
+
+Plus un singur warning real de compilare (`try?` cu rezultat nefolosit,
+`CatalogEditor.swift`) — discardat explicit (`_ = try?`), fără nicio
+schimbare de comportament. Verificat: 0 warning-uri pe build complet
+(Core + Client + Furnizor).
+
 ## Client v1.28.0 — Cursuri: model de acces, format & valabilitate (2026-09-03)
 
 Fiecare curs poate fi clasificat explicit — Gratuit, Plată Unică, Abonament
