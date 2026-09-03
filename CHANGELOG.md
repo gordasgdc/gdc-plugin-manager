@@ -1,5 +1,13 @@
 # Changelog — GDC Plugin Manager
 
+## Furnizor v1.27.0 — Fișa clientului (Faza 1 din CRM) (2026-09-03)
+
+Panoul de Clienți arăta doar tranzacții (un rând per licență generată).
+Acum orice nume de client din tabel se poate apăsa pentru a deschide fișa
+lui completă, într-un singur loc: istoric complet de achiziții, toate
+dispozitivele asociate, descărcările recente, și un câmp de note libere.
+Nimic din datele existente nu s-a mutat — fișa doar le agregă, pe email.
+
 ## Furnizor v1.26.0 — Backup criptat și portabil al întregii stări (2026-09-03)
 
 **Modul nou: Backup & Restaurare** (meniul Furnizor, ultima poziție).

@@ -43,6 +43,15 @@ struct SalesHistoryView: View {
     @State private var syncStatus: String?
     @State private var trackerOnlyClients: [ClientRecord] = []
 
+    // MARK: - Fișa clientului (Faza 1 CRM, 2026-09-03) — vezi ClientProfile.swift.
+    // Devices/events se aduc o singură dată, lazy, la prima deschidere a unei
+    // fișe — nu la fiecare randare a tabelului de tranzacții (acela rămâne
+    // rapid, fără cerere de rețea).
+    @State private var selectedProfile: ClientProfile?
+    @State private var remoteDevices: [DeviceRecord] = []
+    @State private var remoteEvents: [DownloadEventRecord] = []
+    @State private var remoteLoaded = false
+
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack {
@@ -146,7 +155,17 @@ struct SalesHistoryView: View {
                 Table(filteredEntries) {
                     TableColumn("Dată") { entry in Text(shortDate(entry.dateUTC)) }
                     TableColumn("Produs") { entry in Text(entry.productName) }
-                    TableColumn("Client") { entry in Text(entry.customer) }
+                    TableColumn("Client") { entry in
+                        Button {
+                            openProfile(for: entry)
+                        } label: {
+                            Text(entry.customer.isEmpty ? "Anonim" : entry.customer)
+                                .underline()
+                        }
+                        .buttonStyle(.plain)
+                        .foregroundStyle(.blue)
+                        .help("Deschide fișa clientului")
+                    }
                     // Copiere rapida (cerut explicit 2026-08-26) - direct din
                     // randul tabelului, fara sa deschizi editarea.
                     TableColumn("Email") { entry in copyableCell(entry.email, key: "email:\(entry.serial)") }
@@ -223,6 +242,11 @@ struct SalesHistoryView: View {
             Button("Anulează", role: .cancel) { pendingDelete = nil }
         } message: {
             Text("Elimină doar rândul din jurnal — codul rămâne activ dacă a fost deja folosit de client.")
+        }
+        .sheet(item: $selectedProfile) { profile in
+            ClientDetailView(profile: profile) {
+                selectedProfile = nil
+            }
         }
         .sheet(item: $editingEntry) { entry in
             EditSalesEntryView(entry: entry) {
@@ -350,6 +374,29 @@ struct SalesHistoryView: View {
 
     private func loadEntries() {
         entries = SalesLog.readAll()
+    }
+
+    /// Deschide fișa clientului căruia îi aparține `entry`. Prima apăsare
+    /// din întreaga sesiune aduce dispozitivele + descărcările din Supabase
+    /// (posibil lent/fără conexiune) — dacă eșuează, fișa tot se deschide,
+    /// doar cu secțiunile de dispozitive/descărcări goale (fail-open, ca
+    /// restul integrărilor Supabase din acest ecosistem).
+    private func openProfile(for entry: SalesLog.Entry) {
+        Task {
+            if !remoteLoaded {
+                remoteLoaded = true
+                async let devices = try? AnalyticsAdminClient.fetchDevices()
+                async let events = try? AnalyticsAdminClient.fetchDownloadEvents()
+                remoteDevices = await devices ?? []
+                remoteEvents = await events ?? []
+            }
+            let profiles = ClientProfileBuilder.buildAll(purchases: entries, devices: remoteDevices, events: remoteEvents)
+            let normalizedEmail = entry.email.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+            let key = normalizedEmail.isEmpty
+                ? (entry.machineID.isEmpty ? "name:\(entry.customer)" : "hwid:\(entry.machineID)")
+                : "email:\(normalizedEmail)"
+            selectedProfile = profiles.first(where: { $0.key == key })
+        }
     }
 
     private func shortDate(_ isoUTC: String) -> String {
