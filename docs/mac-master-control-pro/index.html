@@ -37,12 +37,16 @@
   header{ position:sticky; top:0; z-index:50; background:rgba(20,22,26,.82); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); }
   .header-inner{ display:flex; align-items:center; justify-content:space-between; padding:14px 24px; max-width:1080px; margin:0 auto; }
   .brand{ display:flex; align-items:center; gap:10px; font-family:var(--mono); font-weight:700; font-size:15px; }
-  .brand .badge{ width:28px; height:28px; border-radius:8px; background:var(--accent); display:flex; align-items:center; justify-content:center; font-size:15px; }
+  .brand .badge{ width:28px; height:28px; border-radius:8px; background:var(--accent); color:var(--accent-ink); display:flex; align-items:center; justify-content:center; }
+  .brand .badge svg{ width:16px; height:16px; }
+  .btn svg{ width:15px; height:15px; flex-shrink:0; }
+  h2 svg{ width:22px; height:22px; vertical-align:-5px; color:var(--accent); margin-right:4px; }
   .back-link{ font-size:13px; color:var(--muted); text-decoration:none; }
   .back-link:hover{ color:var(--text); }
 
   .hero{ padding:64px 0 44px; text-align:center; }
-  .hero .badge-lg{ width:96px; height:96px; border-radius:22px; margin:0 auto 26px; background:var(--accent); display:flex; align-items:center; justify-content:center; font-size:44px; box-shadow:0 20px 60px rgba(0,0,0,.4); }
+  .hero .badge-lg{ width:96px; height:96px; border-radius:22px; margin:0 auto 26px; background:var(--accent); color:var(--accent-ink); display:flex; align-items:center; justify-content:center; box-shadow:0 20px 60px rgba(0,0,0,.4); }
+  .hero .badge-lg svg{ width:44px; height:44px; }
   .hero h1{ font-size:42px; font-weight:800; letter-spacing:-.02em; margin-bottom:14px; }
   .hero p.tagline{ font-size:17px; color:var(--muted); max-width:600px; margin:0 auto 30px; }
 
@@ -63,7 +67,8 @@
 
   .features{ display:grid; grid-template-columns:repeat(auto-fit, minmax(230px, 1fr)); gap:18px; }
   .feature{ background:var(--panel); border:1px solid var(--border); border-radius:14px; padding:20px; }
-  .feature .icon{ font-size:24px; margin-bottom:8px; }
+  .feature .icon{ margin-bottom:10px; color:var(--accent); }
+  .feature .icon svg{ width:26px; height:26px; display:block; }
   .feature h3{ font-size:15px; font-weight:700; margin-bottom:6px; }
   .feature p{ font-size:13px; color:var(--muted); line-height:1.55; }
 
@@ -86,20 +91,121 @@
 </head>
 <body>
 
+<!-- Sprite de iconite SVG, monocrome, tip contur — inlocuieste emoji-urile
+     colorate cu acelasi limbaj vizual simplu, profesional, folosit deja in
+     aplicatie (SF Symbols). Fiecare <symbol> e refolosit prin <use>. -->
+<svg style="display:none" aria-hidden="true">
+  <defs>
+    <symbol id="icon-gear" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+      <circle cx="12" cy="12" r="5.5"/>
+      <circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/>
+      <line x1="19" y1="12" x2="21.3" y2="12"/>
+      <line x1="16.95" y1="16.95" x2="18.5" y2="18.5"/>
+      <line x1="12" y1="19" x2="12" y2="21.3"/>
+      <line x1="7.05" y1="16.95" x2="5.5" y2="18.5"/>
+      <line x1="5" y1="12" x2="2.7" y2="12"/>
+      <line x1="7.05" y1="7.05" x2="5.5" y2="5.5"/>
+      <line x1="12" y1="5" x2="12" y2="2.7"/>
+      <line x1="16.95" y1="7.05" x2="18.5" y2="5.5"/>
+    </symbol>
+    <symbol id="icon-zap" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+      <polygon points="13,2 5,14 11,14 10,22 19,10 13,10"/>
+    </symbol>
+    <symbol id="icon-piechart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9"/>
+      <path d="M12 3 A9 9 0 0 1 21 12 L12 12 Z" fill="currentColor" stroke="none"/>
+    </symbol>
+    <symbol id="icon-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+      <circle cx="12" cy="12" r="9"/>
+      <ellipse cx="12" cy="12" rx="4" ry="9"/>
+      <line x1="3" y1="12" x2="21" y2="12"/>
+    </symbol>
+    <symbol id="icon-cloud" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M7 18h10a4 4 0 0 0 .5-7.97A5.5 5.5 0 0 0 7.1 8.5 4.5 4.5 0 0 0 7 18z"/>
+    </symbol>
+    <symbol id="icon-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="4" y1="7" x2="20" y2="7"/>
+      <path d="M6 7l1 13a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-13"/>
+      <line x1="9" y1="4" x2="15" y2="4"/>
+      <line x1="9" y1="4" x2="9" y2="7"/>
+      <line x1="15" y1="4" x2="15" y2="7"/>
+      <line x1="10" y1="11" x2="10" y2="17"/>
+      <line x1="14" y1="11" x2="14" y2="17"/>
+    </symbol>
+    <symbol id="icon-wrench" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6.5 17.5 15 9"/>
+      <path d="M19 4a4 4 0 0 1-5.5 5.5L6 17l-2 2 2 2 2-2 7.5-7.5A4 4 0 0 1 19 4z"/>
+    </symbol>
+    <symbol id="icon-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 3l7 3v6c0 4.5-3 7.7-7 9-4-1.3-7-4.5-7-9V6z"/>
+      <polyline points="9,12 11,14 15,10"/>
+    </symbol>
+    <symbol id="icon-cpu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="6" y="6" width="12" height="12" rx="1.5"/>
+      <rect x="9" y="9" width="6" height="6" rx="1"/>
+      <line x1="12" y1="1.5" x2="12" y2="4"/>
+      <line x1="12" y1="20" x2="12" y2="22.5"/>
+      <line x1="1.5" y1="12" x2="4" y2="12"/>
+      <line x1="20" y1="12" x2="22.5" y2="12"/>
+    </symbol>
+    <symbol id="icon-box" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 3 20 7.5 V16.5 L12 21 4 16.5 V7.5 Z"/>
+      <polyline points="4,7.5 12,12 20,7.5"/>
+      <line x1="12" y1="12" x2="12" y2="21"/>
+    </symbol>
+    <symbol id="icon-harddrive" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="3" y1="12" x2="21" y2="12"/>
+      <path d="M5.5 5h13L21 12v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-6z"/>
+      <circle cx="7" cy="16" r="0.6" fill="currentColor" stroke="none"/>
+      <line x1="11" y1="16" x2="13" y2="16"/>
+    </symbol>
+    <symbol id="icon-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 21s7-6.5 7-12a7 7 0 0 0-14 0c0 5.5 7 12 7 12z"/>
+      <circle cx="12" cy="9" r="2.4"/>
+    </symbol>
+    <symbol id="icon-bars" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+      <line x1="5" y1="19" x2="5" y2="13"/>
+      <line x1="12" y1="19" x2="12" y2="7"/>
+      <line x1="19" y1="19" x2="19" y2="10"/>
+    </symbol>
+    <symbol id="icon-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+      <circle cx="10.5" cy="10.5" r="6.5"/>
+      <line x1="15.5" y1="15.5" x2="21" y2="21"/>
+    </symbol>
+    <symbol id="icon-updown" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="8" y1="4" x2="8" y2="16"/>
+      <polyline points="4.5,7.5 8,4 11.5,7.5"/>
+      <line x1="16" y1="20" x2="16" y2="8"/>
+      <polyline points="12.5,16.5 16,20 19.5,16.5"/>
+    </symbol>
+    <symbol id="icon-sync" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20 11A8 8 0 0 0 6.3 6.3L4 8.5"/>
+      <polyline points="4,4 4,8.5 8.5,8.5"/>
+      <path d="M4 13a8 8 0 0 0 13.7 4.7L20 15.5"/>
+      <polyline points="20,20 20,15.5 15.5,15.5"/>
+    </symbol>
+    <symbol id="icon-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="12" y1="3" x2="12" y2="15"/>
+      <polyline points="7,10 12,15 17,10"/>
+      <line x1="4" y1="20" x2="20" y2="20"/>
+    </symbol>
+  </defs>
+</svg>
+
 <header>
   <div class="header-inner">
-    <div class="brand"><span class="badge">⚙️</span> Master Control Studio Pro</div>
+    <div class="brand"><span class="badge"><svg><use href="#icon-gear"/></svg></span> Master Control Studio Pro</div>
     <a class="back-link" href="/">← gordas.dev</a>
   </div>
 </header>
 
 <div class="hero wrap">
-  <div class="badge-lg">⚙️</div>
+  <div class="badge-lg"><svg><use href="#icon-gear"/></svg></div>
   <h1>Master Control Studio Pro</h1>
   <p class="tagline">Optimizare de sistem, montare Cloud universală, analiză de disc și pregătire pentru viitoarele versiuni de macOS — un singur panou nativ pentru tot ce faci acum din Terminal.</p>
   <div class="btn-row">
-    <a id="btn-mac" class="btn btn-primary" href="https://github.com/gordasgdc/mac-master-control-pro/releases/latest/download/MacMasterControlPro-Mac.zip">⬇ Descarcă pentru Mac <span class="ver" id="ver-mac"></span></a>
-    <a id="btn-win" class="btn btn-primary" href="https://github.com/gordasgdc/mac-master-control-pro-win/releases/latest/download/MacMasterControlProSetup.exe">⬇ Descarcă pentru Windows <span class="ver" id="ver-win"></span></a>
+    <a id="btn-mac" class="btn btn-primary" href="https://github.com/gordasgdc/mac-master-control-pro/releases/latest/download/MacMasterControlPro-Mac.zip"><svg><use href="#icon-download"/></svg> Descarcă pentru Mac <span class="ver" id="ver-mac"></span></a>
+    <a id="btn-win" class="btn btn-primary" href="https://github.com/gordasgdc/mac-master-control-pro-win/releases/latest/download/MacMasterControlProSetup.exe"><svg><use href="#icon-download"/></svg> Descarcă pentru Windows <span class="ver" id="ver-win"></span></a>
   </div>
   <p class="os-note" id="os-note"></p>
   <div class="btn-row" style="margin-top:10px;">
@@ -111,28 +217,28 @@
 <section class="wrap">
   <h2>Module</h2>
   <div class="features">
-    <div class="feature"><div class="icon">⚡️</div><h3>Mod Randare</h3><p>Un click pune pe pauză Time Machine și indexarea Spotlight, apoi ridică prioritatea aplicației care randează — recunoaște automat DaVinci Resolve, Final Cut Pro, Premiere Pro, Media Encoder, After Effects, Logic Pro și altele, oricâte rulează simultan.</p></div>
-    <div class="feature"><div class="icon">📊</div><h3>Analiză Disc</h3><p>Indexare completă, o singură dată — apoi navigarea în orice subfolder e instantă, gen DaisyDisk. Vezi exact ce ocupă spațiul, oricât de adânc, fără nicio rescanare.</p></div>
-    <div class="feature"><div class="icon">🌐</div><h3>Rețea & TCP Tuning</h3><p>Forțare 1 Gbps Full-Duplex, DNS Cloudflare/Google, buffere kernel 1MB, la un click.</p></div>
-    <div class="feature"><div class="icon">☁️</div><h3>Cloud Manager Universal</h3><p>Google Drive, Dropbox, OneDrive, pCloud, Degoo, Mega, S3, WebDAV, SFTP/NAS — montate ca disc, cu upload/download/sincronizare integrate. Detalii mai jos ⬇</p></div>
-    <div class="feature"><div class="icon">🧹</div><h3>Curățare & RAM</h3><p>Cache DaVinci Resolve, Adobe, Xcode DerivedData, Time Machine Snapshots, purjare RAM + flush DNS.</p></div>
-    <div class="feature"><div class="icon">🛠️</div><h3>Tweak-uri Sistem</h3><p>Finder avansat, blocare .DS_Store pe USB/NAS, Touch ID pentru sudo, Spotlight Shield pe orice disc extern sau folder ales.</p></div>
-    <div class="feature"><div class="icon">🛡️</div><h3>Backup & Securitate</h3><p>Backup al bazei de date de proiecte DaVinci Resolve, notificare la final de randare (inclusiv pe email), plus verificare dintr-o privire a FileVault, Firewall, Gatekeeper și XProtect.</p></div>
-    <div class="feature"><div class="icon">🧭</div><h3>Rosetta 2 Inspector</h3><p>Scanează /Applications pentru cod Intel, verifică starea Rosetta, elimină mediul de traducere când nu mai e nevoie.</p></div>
-    <div class="feature"><div class="icon">🧩</div><h3>Dependency Auto-Installer</h3><p>Detectează Homebrew/Rclone/macFUSE și le instalează cu un click, fără Terminal.</p></div>
+    <div class="feature"><div class="icon"><svg><use href="#icon-zap"/></svg></div><h3>Mod Randare</h3><p>Un click pune pe pauză Time Machine și indexarea Spotlight, apoi ridică prioritatea aplicației care randează — recunoaște automat DaVinci Resolve, Final Cut Pro, Premiere Pro, Media Encoder, After Effects, Logic Pro și altele, oricâte rulează simultan.</p></div>
+    <div class="feature"><div class="icon"><svg><use href="#icon-piechart"/></svg></div><h3>Analiză Disc</h3><p>Indexare completă, o singură dată — apoi navigarea în orice subfolder e instantă, gen DaisyDisk. Vezi exact ce ocupă spațiul, oricât de adânc, fără nicio rescanare.</p></div>
+    <div class="feature"><div class="icon"><svg><use href="#icon-globe"/></svg></div><h3>Rețea & TCP Tuning</h3><p>Forțare 1 Gbps Full-Duplex, DNS Cloudflare/Google, buffere kernel 1MB, la un click.</p></div>
+    <div class="feature"><div class="icon"><svg><use href="#icon-cloud"/></svg></div><h3>Cloud Manager Universal</h3><p>Google Drive, Dropbox, OneDrive, pCloud, Degoo, Mega, S3, WebDAV, SFTP/NAS — montate ca disc, cu upload/download/sincronizare integrate. Detalii mai jos.</p></div>
+    <div class="feature"><div class="icon"><svg><use href="#icon-trash"/></svg></div><h3>Curățare & RAM</h3><p>Cache DaVinci Resolve, Adobe, Xcode DerivedData, Time Machine Snapshots, purjare RAM + flush DNS.</p></div>
+    <div class="feature"><div class="icon"><svg><use href="#icon-wrench"/></svg></div><h3>Tweak-uri Sistem</h3><p>Finder avansat, blocare .DS_Store pe USB/NAS, Touch ID pentru sudo, Spotlight Shield pe orice disc extern sau folder ales.</p></div>
+    <div class="feature"><div class="icon"><svg><use href="#icon-shield"/></svg></div><h3>Backup & Securitate</h3><p>Backup al bazei de date de proiecte DaVinci Resolve, notificare la final de randare (inclusiv pe email), plus verificare dintr-o privire a FileVault, Firewall, Gatekeeper și XProtect.</p></div>
+    <div class="feature"><div class="icon"><svg><use href="#icon-cpu"/></svg></div><h3>Rosetta 2 Inspector</h3><p>Scanează /Applications pentru cod Intel, verifică starea Rosetta, elimină mediul de traducere când nu mai e nevoie.</p></div>
+    <div class="feature"><div class="icon"><svg><use href="#icon-box"/></svg></div><h3>Dependency Auto-Installer</h3><p>Detectează Homebrew/Rclone/macFUSE și le instalează cu un click, fără Terminal.</p></div>
   </div>
 </section>
 
 <section class="wrap" id="cloud-manager">
-  <h2>☁️ Cloud Manager — motor Rclone, interfață 100% nativă</h2>
+  <h2><svg><use href="#icon-cloud"/></svg> Cloud Manager — motor Rclone, interfață 100% nativă</h2>
   <p class="req" style="margin-bottom:16px;">Sub capotă rulează <a href="https://rclone.org" target="_blank" rel="noopener">Rclone</a> — motorul open-source de sincronizare cloud folosit de zeci de mii de proiecte — dar TU nu vezi niciodată linie de comandă. Totul e vizual, în stilul dark/amber al aplicației.</p>
   <div class="features">
-    <div class="feature"><div class="icon">💽</div><h3>Montare ca disc real</h3><p>Orice cont cloud apare ca un folder pe care îl deschizi direct în Finder/Explorer — copiezi, muți, redenumești, exact ca pe un disc extern.</p></div>
-    <div class="feature"><div class="icon">📍</div><h3>Locație de montare la alegere</h3><p>SSD intern mic? Montezi pe orice disc extern Thunderbolt/USB-C — nu mai ocupi spațiu pe unitatea principală.</p></div>
-    <div class="feature"><div class="icon">📊</div><h3>Statistici live de transfer</h3><p>Viteză, bytes transferați, transferuri active — actualizate la 2 secunde, direct sub numele contului.</p></div>
-    <div class="feature"><div class="icon">🔎</div><h3>Explorare fără montare</h3><p>Răsfoiești conținutul unui cont cloud instant, fără să-l montezi — ideal pentru o verificare rapidă.</p></div>
-    <div class="feature"><div class="icon">⬆️</div><h3>Upload / Download direct</h3><p>Încarci sau descarci fișiere și foldere întregi din aplicație, cu progres live, fără să deschizi pagina web a providerului.</p></div>
-    <div class="feature"><div class="icon">🔄</div><h3>Sincronizare inteligentă</h3><p>Un folder local ↔ cloud, în orice direcție. Implicit non-distructiv (doar adaugă/actualizează) — oglindă exactă doar dacă bifezi explicit.</p></div>
+    <div class="feature"><div class="icon"><svg><use href="#icon-harddrive"/></svg></div><h3>Montare ca disc real</h3><p>Orice cont cloud apare ca un folder pe care îl deschizi direct în Finder/Explorer — copiezi, muți, redenumești, exact ca pe un disc extern.</p></div>
+    <div class="feature"><div class="icon"><svg><use href="#icon-pin"/></svg></div><h3>Locație de montare la alegere</h3><p>SSD intern mic? Montezi pe orice disc extern Thunderbolt/USB-C — nu mai ocupi spațiu pe unitatea principală.</p></div>
+    <div class="feature"><div class="icon"><svg><use href="#icon-bars"/></svg></div><h3>Statistici live de transfer</h3><p>Viteză, bytes transferați, transferuri active — actualizate la 2 secunde, direct sub numele contului.</p></div>
+    <div class="feature"><div class="icon"><svg><use href="#icon-search"/></svg></div><h3>Explorare fără montare</h3><p>Răsfoiești conținutul unui cont cloud instant, fără să-l montezi — ideal pentru o verificare rapidă.</p></div>
+    <div class="feature"><div class="icon"><svg><use href="#icon-updown"/></svg></div><h3>Upload / Download direct</h3><p>Încarci sau descarci fișiere și foldere întregi din aplicație, cu progres live, fără să deschizi pagina web a providerului.</p></div>
+    <div class="feature"><div class="icon"><svg><use href="#icon-sync"/></svg></div><h3>Sincronizare inteligentă</h3><p>Un folder local ↔ cloud, în orice direcție. Implicit non-distructiv (doar adaugă/actualizează) — oglindă exactă doar dacă bifezi explicit.</p></div>
   </div>
 </section>
 
