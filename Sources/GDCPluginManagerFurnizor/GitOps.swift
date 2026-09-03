@@ -77,6 +77,30 @@ enum GitOps {
             try run(["push"], at: directory)
             return
         }
+        // GUARD REAL (2026-09-04): `git add docs/covers` (mai jos) prinde
+        // ORICE stare curentă a folderului, inclusiv fișiere dispărute de
+        // pe disc din motive care n-au NIMIC de-a face cu publicarea asta.
+        // Incident real, de două ori (2026-08-31 și 2026-09-03): toate
+        // cele 14 coperte din `docs/covers/` au dispărut de pe disc (cel
+        // mai probabil CleanMyMac/Hazel, vezi Regula 1 — nu confirmat cu
+        // certitudine, dar exact tiparul deja documentat în
+        // `CoverImageStore.prepareLocal`), iar URMĂTOAREA publicare
+        // oarecare din Furnizor (ex. "Banner Lansare: activat" — o
+        // acțiune complet neînrudită) a văzut folderul gol, a făcut
+        // `git add docs/covers`, și a COMIS + PUSH-UIT ștergerea tuturor
+        // celor 14 imagini sub un mesaj care n-avea nicio treabă cu ele.
+        // Toate cele 24 de locuri din Furnizor care publică pe
+        // `publicCatalogRepo` trec prin ACEASTĂ funcție cu `paths`
+        // incluzând "docs/covers" — o singură gardă aici le protejează pe
+        // toate. O publicare normală șterge cel mult 1-2 fișiere din
+        // covers/ (coperta veche a produsului tocmai editat/șters, plus
+        // eventual `previous` — vezi `CoverImageStore.removeLocalFiles`);
+        // orice număr mai mare de ștergeri neașteptate oprește publicarea
+        // ÎNAINTE de orice `git add`, ca nimic să nu ajungă stage-uit.
+        if paths != nil {
+            try guardAgainstUnexpectedDeletions(at: directory, candidatePaths: existingPaths)
+        }
+
         try run(["add"] + addArgs, at: directory)
         // Nothing to commit is not an error (e.g. re-publishing the same
         // bytes) — git exits non-zero for "nothing to commit", so check
@@ -104,5 +128,35 @@ enum GitOps {
             try run(["commit", "-m", message], at: directory)
         }
         try run(["push"], at: directory)
+    }
+
+    /// Peste câte fișiere dispărute (nu atinse de publicarea curentă) e
+    /// clar o anomalie externă, nu o ștergere intenționată — vezi comentariul
+    /// din `commitAndPush`. 2 acoperă cazul legitim cel mai larg (coperta
+    /// veche a produsului + `previous` de alt nume); orice publicare normală
+    /// nu atinge niciodată mai mult de atât într-un singur pas.
+    private static let maxExpectedDeletions = 2
+
+    private static func guardAgainstUnexpectedDeletions(at directory: URL, candidatePaths: [String]) throws {
+        guard !candidatePaths.isEmpty else { return }
+        let status = try run(["status", "--porcelain"] + candidatePaths, at: directory)
+        let deletedLines = status
+            .split(separator: "\n")
+            .filter { line in
+                guard line.count >= 2 else { return false }
+                let index = line.index(line.startIndex, offsetBy: 1)
+                return line.first == "D" || line[index] == "D"
+            }
+        guard deletedLines.count > maxExpectedDeletions else { return }
+        let names = deletedLines.map { String($0.dropFirst(3)) }.joined(separator: "\n")
+        throw GitError(
+            command: "add (gardă anti-ștergere neașteptată)",
+            output: "Publicarea a fost OPRITĂ înainte de orice modificare în git: "
+                + "\(deletedLines.count) fișiere din \(candidatePaths.joined(separator: ", ")) "
+                + "au dispărut de pe disc, fără legătură cu ce publici acum:\n\(names)\n\n"
+                + "Probabil CleanMyMac/Hazel sau altă unealtă de curățare (vezi CLAUDE.md Regula 1) — "
+                + "verifică Coșul de gunoi / backup-ul zilnic (~/.gdc-developer-backup) și restaurează "
+                + "manual înainte de a republica. Nimic n-a fost șters din repo de această publicare."
+        )
     }
 }

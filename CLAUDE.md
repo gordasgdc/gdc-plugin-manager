@@ -870,6 +870,55 @@ datat sunt mutate în `CLAUDE_ARCHIVE.md` (NU se citește automat) — citește-
 explicit când investighezi o zonă veche de cod. Rezumat "stare curentă" mai
 jos rămâne aici, fiindcă e activ relevant sesiune de sesiune.
 
+## Furnizor v1.31.1 (2026-09-04) — FIX REAL SISTEMIC: publicarea putea șterge tăcut `docs/covers/` întreg
+
+**Raportat de Cristi**: "iarăși a dispărut folderul cu imagini" — toate
+cele 14 coperte din `docs/covers/` lipseau de pe disc (confirmat: `git
+ls-tree HEAD -- docs/covers/` arăta doar `launch-banner.jpg`).
+
+**Investigație** (nu presupunere — verificat prin `~/.gdc-developer-backup`,
+LaunchAgent-ul de backup zilnic către `github.com/gordasgdc/developer-backup`,
+creat tot într-un incident anterior legat de CleanMyMac): istoricul acelui
+backup arată clar toate cele 14 imagini prezente la 31 aug. 08:49, complet
+dispărute de pe disc la 08:50 (un minut mai târziu) — exact tiparul deja
+documentat în `CoverImageStore.prepareLocal` (CleanMyMac/Hazel tratează
+foldere ca "junk" la scanare, vezi Regula 1). Incidentul s-a repetat 3 sept.:
+`git log --diff-filter=D -- "docs/covers/CG Convertor.png"` a dus direct la
+commit-ul `9ae47cf "Banner Lansare: activat"` — o acțiune complet neînrudită
+cu copertele — care a șters toate cele 14 fișiere în același commit.
+
+**Cauza reală, sistemică**: TOATE cele 24 de apeluri `GitOps.commitAndPush`
+din Furnizor (fiecare `Publish*View.swift` + `LaunchBannerEditor`) trec
+`paths: ["docs/catalog.json", "docs/covers"]` — `git add docs/covers`
+stage-uiește ORICE stare curentă a folderului, inclusiv fișiere dispărute
+de pe disc din motive complet neînrudite cu publicarea în curs. Dacă
+CleanMyMac ștergea folderul ÎNTRE două publicări, PRIMA publicare
+următoare (oricare ar fi fost ea) confirma și trimitea acea ștergere pe
+GitHub, tăcut, sub un mesaj de commit fără nicio legătură.
+
+**Fix**: `GitOps.commitAndPush` (`guardAgainstUnexpectedDeletions`) rulează
+acum `git status --porcelain` pe path-urile de publicat ÎNAINTE de orice
+`git add` — dacă apar mai mult de 2 fișiere șterse neașteptat (o publicare
+normală atinge cel mult coperta veche a produsului curent + `previous`),
+publicarea se oprește cu o eroare clară, în loc să confirme silențios
+ștergerea. O singură gardă, centralizată în `GitOps.swift`, protejează
+toate cele 24 de locuri deodată — nu a fost nevoie să ating fiecare
+`Publish*View.swift` individual.
+
+**Restaurare**: cele 14 coperte recuperate din ultimul commit bun al
+PROPRIULUI repo (`d02904b`, tot de azi) — nimic pierdut ireversibil,
+istoricul git chiar a funcționat ca plasă de siguranță aici.
+
+**Rămâne nerezolvat, semnalat explicit lui Cristi**: cine/ce anume șterge
+fișierele de pe disc (CleanMyMac e suspectul cu cel mai mult precedent
+documentat în acest repo, dar nu confirmat cu certitudine absolută — nu
+există un log de sistem care să identifice exact procesul). Recomandare
+directă: exclude `~/Developer` din scanările CleanMyMac (Preferences →
+Ignore List), și verifică dacă Hazel are vreo regulă activă pe acel folder.
+Garda de mai sus previne PROPAGAREA pagubei către git/GitHub de-acum
+înainte, dar nu previne ștergerea inițială de pe disc — asta rămâne de
+rezolvat la nivel de sistem, nu de cod.
+
 ## Client v1.24.2 (2026-08-31) — FIX REAL: textul se suprapunea peste imagine
 
 Raportat direct de Cristi ("vad ca se pune textul peste imagine la mine").

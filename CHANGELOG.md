@@ -1,5 +1,27 @@
 # Changelog — GDC Plugin Manager
 
+## Furnizor v1.31.1 — Restaurate cele 14 coperte + fix real: publicarea putea șterge tăcut tot folderul de coperte (2026-09-04)
+
+**Ce s-a întâmplat**: toate cele 14 imagini din `docs/covers/` (coperte
+aplicații/materiale/evenimente pe gordas.dev) au dispărut de pe disc de
+două ori (31 aug., apoi din nou 3 sept.) — cel mai probabil o unealtă de
+curățare (CleanMyMac/Hazel, deja un risc cunoscut pe acest Mac). Bug real
+descoperit acum: ORICE publicare din Furnizor (nu doar cele legate de
+coperte — un Eveniment, un Curs, chiar bannerul de lansare) făcea
+`git add docs/covers` pe TOT folderul înainte de commit — dacă imaginile
+lipseau deja de pe disc din alt motiv, publicarea următoare, complet
+neînrudită, confirma și trimitea acea ștergere pe GitHub, tăcut.
+
+**Reparat definitiv**: `GitOps.commitAndPush` oprește acum publicarea
+înainte de orice `git add` dacă apar mai mult de 2 fișiere dispărute
+neașteptat dintr-un folder — o singură gardă, valabilă pentru toate cele
+24 de locuri din Furnizor care publică pe `docs/`. O publicare normală nu
+mai poate niciodată să șteargă alte fișiere decât cele pe care chiar le
+atinge.
+
+**Cele 14 coperte, restaurate** din ultimul commit bun (nimic pierdut
+definitiv — istoricul git le păstra).
+
 ## Furnizor v1.31.0 — Primele ghiduri PDF (Cursuri, Produse, Licențe, Backup) + fix packaging (2026-09-03)
 
 Furnizorul capătă un meniu Ajutor (nu exista deloc până acum) cu 4 ghiduri
