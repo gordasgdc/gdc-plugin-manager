@@ -605,6 +605,8 @@
     <a class="btn btn-primary" id="downloadBtnWin" href="https://github.com/gordasgdc/datamover/releases/latest/download/DataMover-WPF-Windows.zip" data-i18n="hero.download_win">Descarca pentru Windows (.zip)</a>
   </div>
   <p class="hero-links">
+    <a id="guideLink" href="guides/DataMover_Ghid_RO.pdf" target="_blank" rel="noopener" data-i18n="hero.guide">Ghid de utilizare (PDF)</a>
+    <span>&middot;</span>
     <a href="https://github.com/gordasgdc/datamover" data-i18n="hero.source">Vezi codul sursa</a>
     <span aria-hidden="true">&middot;</span>
     <a href="https://github.com/gordasgdc/datamover/releases" data-i18n="footer.releases">Toate versiunile</a>
@@ -617,20 +619,16 @@
 
   <div class="shot-gallery">
     <figure>
-      <img src="img/mac-ui-main.png" alt="Fereastra principala DataMover pe macOS — surse, discuri si destinatii" loading="lazy" width="1408" height="1079">
-      <figcaption data-i18n="shots.main">Layout pe 3 coloane — surse, discuri, destinatii</figcaption>
+      <img src="img/ui-main-dark.png" alt="Fereastra principala DataMover pe macOS - surse, discuri detectate, destinatii si coada de carduri" loading="lazy" width="1600" height="1340">
+      <figcaption data-i18n="shots.main">Fereastra principala - surse, discuri detectate, destinatii si coada de carduri</figcaption>
     </figure>
     <figure>
-      <img src="img/mac-ui-settings.png" alt="Setari de copiere DataMover — model de verificare, excluderi" loading="lazy" width="1408" height="1079">
-      <figcaption data-i18n="shots.settings">Model de verificare, excluderi si limba</figcaption>
+      <img src="img/ui-settings-dark.png" alt="Panoul de setari DataMover - verificare xxHash64, MHL, reincercare automata, metadate de productie" loading="lazy" width="1600" height="1340">
+      <figcaption data-i18n="shots.settings">Toate setarile intr-un singur panou - verificare, MHL, productie, sablon de denumire</figcaption>
     </figure>
     <figure>
-      <img src="img/mac-ui-history.png" alt="Istoricul copierilor DataMover" loading="lazy" width="1408" height="1079">
-      <figcaption data-i18n="shots.history">Istoric complet, cu stergere</figcaption>
-    </figure>
-    <figure>
-      <img src="img/mac-ui-help.png" alt="Ghidul de utilizare integrat DataMover" loading="lazy" width="1288" height="959">
-      <figcaption data-i18n="shots.help">Ghid de utilizare integrat</figcaption>
+      <img src="img/ui-settings-light.png" alt="DataMover in tema luminoasa, cu interfata in engleza" loading="lazy" width="1600" height="1340">
+      <figcaption data-i18n="shots.light">Tema luminoasa si interfata in engleza - alegi tema si limba independent de sistem</figcaption>
     </figure>
   </div>
 
@@ -672,13 +670,28 @@
       </div>
       <div class="feature-card">
         <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4l7 8H5l7-8z"/><rect x="5" y="17" width="14" height="3" rx="0.6"/></svg></div>
-        <h3 data-i18n="features.eject.title">Ejectare card (Mac)</h3>
-        <p data-i18n="features.eject.desc">Scoate in siguranta cardul direct din aplicatie dupa un offload verificat.</p>
+        <h3 data-i18n="features.eject.title">Ejectare automata a cardului</h3>
+        <p data-i18n="features.eject.desc">Cardul se scoate singur la final - dar numai daca transferul a fost complet curat.</p>
       </div>
       <div class="feature-card">
         <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/></svg></div>
         <h3 data-i18n="features.dark.title">Tema intunecata</h3>
         <p data-i18n="features.dark.desc">Interfata gandita pentru lucru pe platou sau in camera de montaj, seara.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/><path d="M9 11.5l2 2 4-4"/></svg></div>
+        <h3 data-i18n="features.mhl.title">Fisier MHL</h3>
+        <p data-i18n="features.mhl.desc">Certificatul de integritate citit de Silverstack, YoYotta, ShotPut Pro si casele de post.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="13" height="6" rx="1.5"/><rect x="3" y="14" width="13" height="6" rx="1.5"/><path d="M19 7h2M19 17h2"/></svg></div>
+        <h3 data-i18n="features.queue.title">Coada de carduri</h3>
+        <p data-i18n="features.queue.desc">Pui mai multe carduri la rand si se descarca unul dupa altul, nesupravegheat.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h11v10H3z"/><path d="M14 11l7-4v10l-7-4z"/></svg></div>
+        <h3 data-i18n="features.cards.title">Recunoaste cardurile de camera</h3>
+        <p data-i18n="features.cards.desc">RED, ARRI, Sony, Panasonic, Canon, Blackmagic - si te avertizeaza la clipuri incomplete.</p>
       </div>
       <div class="feature-card">
         <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 16V8M8 12l4-4 4 4"/></svg></div>
@@ -692,6 +705,7 @@
     <p class="eyebrow" data-i18n="algo.eyebrow">Algoritmi de verificare</p>
     <h2 data-i18n="algo.title">Alegi nivelul de siguranta.</h2>
     <div class="chip-row">
+      <span class="chip"><span class="dot"></span>xxHash64</span>
       <span class="chip"><span class="dot"></span>MD5</span>
       <span class="chip"><span class="dot"></span>SHA-1</span>
       <span class="chip"><span class="dot"></span>SHA-256</span>
@@ -849,6 +863,7 @@
       'hero.verified': 'VERIFICAT',
       'hero.sub': 'Offload verificat pentru echipele de productie video.',
       'hero.download': 'Descarca ultima versiune',
+      'hero.guide': 'Ghid de utilizare (PDF)',
       'hero.download_mac': 'Descarca pentru Mac (.zip)',
       'hero.download_win': 'Descarca pentru Windows (.zip)',
       'hero.source': 'Vezi codul sursa',
@@ -913,16 +928,22 @@
       'footer.releases': 'Toate versiunile',
       'footer.terms': 'Termeni &amp; Confidențialitate',
       'footer.fine': 'DataMover &middot; Licenta MIT &middot; proiect open-source pentru comunitatea video',
-      'shots.main': 'Layout pe 3 coloane — surse, discuri, destinatii',
-      'shots.settings': 'Model de verificare, excluderi si limba',
-      'shots.history': 'Istoric complet, cu stergere',
-      'shots.help': 'Ghid de utilizare integrat'
+      'shots.main': 'Fereastra principala - surse, discuri detectate, destinatii si coada de carduri',
+      'shots.settings': 'Toate setarile intr-un singur panou - verificare, MHL, productie, sablon de denumire',
+      'shots.light': 'Tema luminoasa si interfata in engleza - alegi tema si limba independent de sistem',
+      'features.cards.desc': 'RED, ARRI, Sony, Panasonic, Canon, Blackmagic - si te avertizeaza la clipuri incomplete.',
+      'features.cards.title': 'Recunoaste cardurile de camera',
+      'features.queue.desc': 'Pui mai multe carduri la rand si se descarca unul dupa altul, nesupravegheat.',
+      'features.queue.title': 'Coada de carduri',
+      'features.mhl.desc': 'Certificatul de integritate citit de Silverstack, YoYotta, ShotPut Pro si casele de post.',
+      'features.mhl.title': 'Fisier MHL',
     },
     en: {
       'hero.eyebrow': 'macOS &amp; Windows',
       'hero.verified': 'VERIFIED',
       'hero.sub': 'Verified offload for video production teams.',
       'hero.download': 'Download latest version',
+      'hero.guide': 'User guide (PDF)',
       'hero.download_mac': 'Download for Mac (.zip)',
       'hero.download_win': 'Download for Windows (.zip)',
       'hero.source': 'View source code',
@@ -933,17 +954,17 @@
       'features.copy.title': 'Simultaneous copy',
       'features.copy.desc': 'To any number of destinations at once — external drives, NAS, or local folders.',
       'features.verify.title': 'Integrity verification',
-      'features.verify.desc': 'MD5, SHA-1, SHA-256, SHA-512, or a quick size-only comparison.',
+      'features.verify.desc': 'xxHash64 (cel mai rapid), MD5, SHA-1, SHA-256, SHA-512 sau comparatie dupa dimensiune.',
       'features.resume.title': 'Automatic resume',
       'features.resume.desc': 'Checkpoints on every file — if interrupted, it picks up exactly where it left off.',
       'features.reports.title': 'Professional reports',
-      'features.reports.desc': 'CSV and PDF export, with color-coded status per file and exact timestamps.',
+      'features.reports.desc': 'CSV, PDF si HTML, cu logo-ul si datele productiei tale in antet.',
       'features.detect.title': 'Automatic volume detection',
       'features.detect.desc': 'Recognizes inserted cards without you hunting through Finder or Explorer.',
       'features.skip.title': 'Skips identical files',
       'features.skip.desc': 'Won\'t recopy what\'s already been copied correctly — saves time on large cards.',
-      'features.eject.title': 'Card eject (Mac)',
-      'features.eject.desc': 'Safely eject the card directly from the app after a verified offload.',
+      'features.eject.title': 'Ejectare automata a cardului',
+      'features.eject.desc': 'Cardul se scoate singur la final - dar numai daca transferul a fost complet curat.',
       'features.dark.title': 'Dark theme',
       'features.dark.desc': 'Interface built for working on set or in the edit bay at night.',
       'features.update.title': 'Automatic updates',
@@ -987,16 +1008,22 @@
       'footer.releases': 'All releases',
       'footer.terms': 'Terms &amp; Privacy',
       'footer.fine': 'DataMover &middot; MIT License &middot; open-source project for the video community',
-      'shots.main': '3-column layout — sources, disks, destinations',
-      'shots.settings': 'Verification model, exclusions and language',
-      'shots.history': 'Full history, with delete',
-      'shots.help': 'Built-in user guide'
+      'shots.main': 'Main window - sources, detected disks, destinations and card queue',
+      'shots.settings': 'Every setting in one panel - verification, MHL, production, naming template',
+      'shots.light': 'Light theme and English interface - theme and language are yours to choose',
+      'features.cards.desc': 'RED, ARRI, Sony, Panasonic, Canon, Blackmagic - and warns you about incomplete clips.',
+      'features.cards.title': 'Recognises camera cards',
+      'features.queue.desc': 'Line up several cards and they offload one after another, unattended.',
+      'features.queue.title': 'Card queue',
+      'features.mhl.desc': 'The integrity certificate read by Silverstack, YoYotta, ShotPut Pro and post houses.',
+      'features.mhl.title': 'MHL file',
     },
     es: {
       'hero.eyebrow': 'macOS y Windows',
       'hero.verified': 'VERIFICADO',
       'hero.sub': 'Copia de seguridad verificada para equipos de produccion de video.',
       'hero.download': 'Descargar ultima version',
+      'hero.guide': 'Guía de uso (PDF)',
       'hero.download_mac': 'Descargar para Mac (.zip)',
       'hero.download_win': 'Descargar para Windows (.zip)',
       'hero.source': 'Ver codigo fuente',
@@ -1007,17 +1034,17 @@
       'features.copy.title': 'Copia simultanea',
       'features.copy.desc': 'A cualquier numero de destinos a la vez — discos externos, NAS o carpetas locales.',
       'features.verify.title': 'Verificacion de integridad',
-      'features.verify.desc': 'MD5, SHA-1, SHA-256, SHA-512, o una comparacion rapida por tamano.',
+      'features.verify.desc': 'xxHash64 (fastest), MD5, SHA-1, SHA-256, SHA-512 or a quick size comparison.',
       'features.resume.title': 'Reanudacion automatica',
       'features.resume.desc': 'Checkpoint en cada archivo — si se interrumpe, continua justo donde quedo.',
       'features.reports.title': 'Informes profesionales',
-      'features.reports.desc': 'Exportacion CSV y PDF, con estado codificado por color y marca de tiempo exacta.',
+      'features.reports.desc': 'CSV, PDF and HTML, with your logo and production details in the header.',
       'features.detect.title': 'Deteccion automatica de volumenes',
       'features.detect.desc': 'Reconoce las tarjetas insertadas sin que tengas que buscarlas manualmente.',
       'features.skip.title': 'Omite archivos identicos',
       'features.skip.desc': 'No vuelve a copiar lo que ya se copio correctamente — ahorra tiempo en tarjetas grandes.',
-      'features.eject.title': 'Expulsar tarjeta (Mac)',
-      'features.eject.desc': 'Expulsa la tarjeta de forma segura directamente desde la app tras una copia verificada.',
+      'features.eject.title': 'Automatic card eject',
+      'features.eject.desc': 'The card ejects itself when done - but only if the transfer was completely clean.',
       'features.dark.title': 'Tema oscuro',
       'features.dark.desc': 'Interfaz pensada para trabajar en set o en la sala de edicion por la noche.',
       'features.update.title': 'Actualizaciones automaticas',
@@ -1061,10 +1088,19 @@
       'footer.releases': 'Todas las versiones',
       'footer.terms': 'Terminos y Privacidad',
       'footer.fine': 'DataMover &middot; Licencia MIT &middot; proyecto de codigo abierto para la comunidad de video',
-      'shots.main': 'Diseno de 3 columnas — origenes, discos, destinos',
-      'shots.settings': 'Modelo de verificacion, exclusiones e idioma',
-      'shots.history': 'Historial completo, con eliminacion',
-      'shots.help': 'Guia de uso integrada'
+      'shots.main': 'Ventana principal - origenes, discos detectados, destinos y cola de tarjetas',
+      'shots.settings': 'Todos los ajustes en un solo panel - verificacion, MHL, produccion, plantilla de nombres',
+      'shots.light': 'Tema claro e interfaz en ingles - eliges tema e idioma con independencia del sistema',
+      'features.reports.desc': 'CSV, PDF y HTML, con tu logo y los datos de produccion en la cabecera.',
+      'features.verify.desc': 'xxHash64 (el mas rapido), MD5, SHA-1, SHA-256, SHA-512 o comparacion por tamano.',
+      'features.eject.desc': 'La tarjeta se expulsa sola al terminar, pero solo si la transferencia fue impecable.',
+      'features.eject.title': 'Expulsion automatica de la tarjeta',
+      'features.cards.desc': 'RED, ARRI, Sony, Panasonic, Canon, Blackmagic - y te avisa de clips incompletos.',
+      'features.cards.title': 'Reconoce las tarjetas de camara',
+      'features.queue.desc': 'Pones varias tarjetas en fila y se descargan una tras otra, sin supervision.',
+      'features.queue.title': 'Cola de tarjetas',
+      'features.mhl.desc': 'El certificado de integridad que leen Silverstack, YoYotta, ShotPut Pro y las casas de post.',
+      'features.mhl.title': 'Archivo MHL',
     }
   };
 
@@ -1089,6 +1125,8 @@
       btn.classList.toggle('active', btn.dataset.lang === lang);
     });
     localStorage.setItem('dm-lang', lang);
+    // Ghidul PDF trebuie sa urmeze limba aleasa (vezi syncGuideLink).
+    if (window.syncGuideLink) window.syncGuideLink();
   }
 
   document.querySelectorAll('.lang-btn').forEach(btn => {
@@ -1099,6 +1137,17 @@
   // ALWAYS use "releases/latest/download/" so this always resolves to the newest
   // published, non-draft release automatically. See CLAUDE.md "Regula Domeniului & Download".
   //
+  // [2026-09-03] Ghidul PDF urmeaza limba aleasa in pagina - altfel un
+  // vizitator spaniol ar primi PDF-ul in romana. Rulam si la incarcare, si
+  // la fiecare schimbare de limba (vezi apelul din setLanguage).
+  window.syncGuideLink = function () {
+    const files = { ro: 'DataMover_Ghid_RO.pdf', en: 'DataMover_Guide_EN.pdf', es: 'DataMover_Guia_ES.pdf' };
+    const lang = localStorage.getItem('dm-lang') || 'ro';
+    const link = document.getElementById('guideLink');
+    if (link) link.href = 'guides/' + (files[lang] || files.ro);
+  };
+  window.syncGuideLink();
+
   // [2026-09-03] Cristi a cerut explicit doua butoane SEPARATE si mereu
   // vizibile (Mac + Windows), nu un singur buton "auto-detectat" cu un
   // link secundar ascuns — userul alege singur, fara ghicit de platforma.
