@@ -1,5 +1,19 @@
 # Changelog — GDC Plugin Manager
 
+## Furnizor v1.29.0 — Statistici care răspund la întrebări (Faza 3 CRM) (2026-09-03)
+
+Panoul de Statistici capătă trei secțiuni noi, peste datele deja existente
+(nicio sursă nouă de date):
+- **Venituri pe lună** — tendința reală, nu doar totalul cumulat.
+- **Retenție clienți** — procentul celor care au cumpărat mai mult de o
+  dată, calculat pe aceeași agregare pe email din fișa clientului (Faza 1).
+- **Descărcări pe categorie** (LUT/SFX/VFX/Plugin) — grupate după catalogul
+  local, fără nicio coloană nouă în Supabase.
+
+Progresul la cursuri rămâne netratat — necesită o schimbare în aplicația
+Client (raportare de progres), cu implicații de confidențialitate care
+trebuie confirmate separat înainte de implementare.
+
 ## Furnizor v1.28.0 — Acțiuni pe licență direct din fișă (Faza 2 CRM) (2026-09-03)
 
 Din fișa clientului, orice achiziție are acum trei acțiuni reale, nu doar
