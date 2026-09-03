@@ -19,6 +19,17 @@ cp .build/release/GDCPluginManagerFurnizor "$BUILD_OUT/Contents/MacOS/GDCPluginM
 cp Info-Furnizor.plist "$BUILD_OUT/Contents/Info.plist"
 cp AppIcon.icns "$BUILD_OUT/Contents/Resources/AppIcon.icns"
 
+# BUG REAL, gasit 2026-09-03: acest pas lipsea complet — SPM pune bundle-ul
+# de resurse (SeasonalPresets PNG-uri, acum si ghidurile PDF) langa
+# executabil in .build/release/, NU-l copiaza automat in .app. Fara asta,
+# Bundle.module.url(...) intoarce nil in aplicatia INSTALATA (desi merge la
+# `swift run` local, care rezolva Bundle.module direct din .build/) — exact
+# tiparul deja documentat in build_app.sh pentru Client.
+SPM_RESOURCE_BUNDLE=".build/release/GDCPluginManager_GDCPluginManagerFurnizor.bundle"
+if [ -d "$SPM_RESOURCE_BUNDLE" ]; then
+    cp -R "$SPM_RESOURCE_BUNDLE" "$BUILD_OUT/Contents/Resources/"
+fi
+
 SIGN_IDENTITY="CursorPro"
 codesign --force --deep --sign "$SIGN_IDENTITY" "$BUILD_OUT"
 

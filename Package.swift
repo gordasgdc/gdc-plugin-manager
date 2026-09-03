@@ -40,6 +40,12 @@ let package = Package(
                 // gasit ca bug real, nu presupunere - toate cele 7 preseturi
                 // aveau text complet invizibil).
                 .copy("Resources/SeasonalPresets"),
+                // Ghiduri PDF dedicate — vezi FurnizorGuidePDF.swift (nou,
+                // 2026-09-03). Generate cu installer/generate_furnizor_guides.py.
+                .copy("Resources/Ghid-Furnizor-Cursuri.pdf"),
+                .copy("Resources/Ghid-Furnizor-Produse.pdf"),
+                .copy("Resources/Ghid-Furnizor-Licente.pdf"),
+                .copy("Resources/Ghid-Furnizor-Backup.pdf"),
             ]
         )
     ]

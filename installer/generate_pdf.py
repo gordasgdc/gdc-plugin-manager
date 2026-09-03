@@ -33,7 +33,7 @@ from reportlab.platypus import (
 
 OUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "Sources", "GDCPluginManager", "Resources")
 SCREENSHOTS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "screenshots")
-APP_VERSION = "1.19.14"
+APP_VERSION = "1.28.1"
 
 pdfmetrics.registerFont(TTFont("Arial", "/System/Library/Fonts/Supplemental/Arial.ttf"))
 pdfmetrics.registerFont(TTFont("Arial-Bold", "/System/Library/Fonts/Supplemental/Arial Bold.ttf"))
@@ -200,7 +200,10 @@ RO = dict(
              ("__note__", ("Notă:", "după ce descarci o resursă, aplicația îți oferă un buton „Unde l-ai salvat?” — alegi folderul, iar aplicația reține calea, ca să găsești rapid fișierul mai târziu cu „Deschide folderul”.")),
          ]),
         ("5. Comunitate & Educație",
-         "Cursuri (rezervare directă prin WhatsApp, cu opțiuni de preț), Materiale educaționale (cărți/cursuri online/ghiduri recomandate, cu link extern), Evenimente (workshop-uri și festivaluri, cu buton de hartă dacă au adresă fizică), Magazine partenere și Service & Reparații (echipament foto-video) — toate în bara laterală, grupul „COMUNITATE & EDUCAȚIE”."),
+         [
+             "Cursuri (rezervare directă prin WhatsApp, cu opțiuni de preț), Materiale educaționale (cărți/cursuri online/ghiduri recomandate, cu link extern), Evenimente (workshop-uri și festivaluri, cu buton de hartă dacă au adresă fizică), Magazine partenere și Service & Reparații (echipament foto-video) — toate în bara laterală, grupul „COMUNITATE & EDUCAȚIE”.",
+             ("__note__", ("Nou:", "fiecare curs arată acum clar tipul de acces — Gratuit, Plată Unică, Abonament sau Live/Mentorat 1-la-1 — plus Format & Durată și Valabilitatea accesului (pe viață sau limitată la un număr de zile). Cursurile cu link de acces (Zoom/Meet/platformă proprie) au un buton direct.")),
+         ]),
         ("6. Aplicațiile Mele",
          "Detectează automat celelalte aplicații GDC deja instalate pe acest calculator (DataMover, CursorPro GDC, GDC Vault, MediaFlow Monitor) și le arată cu buton de lansare rapidă + indicator dacă există o versiune mai nouă. Poți adăuga și scurtături proprii către orice altă aplicație (ex. DaVinci Resolve, Premiere) cu „Adaugă scurtătură”."),
         ("7. Oferte Parteneri & Susținere promoțională",
@@ -274,7 +277,10 @@ EN = dict(
              ("__note__", ("Note:", "after downloading a resource, the app offers a \"Where did you save it?\" button — pick the folder, and the app remembers the path so you can find the file quickly later with \"Open folder\".")),
          ]),
         ("5. Community & Education",
-         "Courses (booked directly via WhatsApp, with price options), Learning materials (recommended books/online courses/guides, with an external link), Events (workshops and festivals, with a map button if a physical address is set), Partner stores and Service & Repair (photo/video gear) — all in the sidebar, under the \"COMMUNITY & EDUCATION\" group."),
+         [
+             "Courses (booked directly via WhatsApp, with price options), Learning materials (recommended books/online courses/guides, with an external link), Events (workshops and festivals, with a map button if a physical address is set), Partner stores and Service & Repair (photo/video gear) — all in the sidebar, under the \"COMMUNITY & EDUCATION\" group.",
+             ("__note__", ("New:", "every course now clearly shows its access type — Free, One-time Purchase, Subscription or Live/1-on-1 Mentoring — plus Format & Duration and access Validity (lifetime or limited to a number of days). Courses with an access link (Zoom/Meet/own platform) get a direct button.")),
+         ]),
         ("6. My Apps",
          "Automatically detects the other GDC apps already installed on this computer (DataMover, CursorPro GDC, GDC Vault, MediaFlow Monitor) and shows them with a quick-launch button plus an indicator if a newer version exists. You can also add your own shortcuts to any other app (e.g. DaVinci Resolve, Premiere) with \"Add shortcut\"."),
         ("7. Partner Offers & Promotional Support",
@@ -348,7 +354,10 @@ ES = dict(
              ("__note__", ("Nota:", "después de descargar un recurso, la app ofrece un botón \"¿Dónde lo guardaste?\" — eliges la carpeta, y la app recuerda la ruta para que encuentres el archivo rápidamente después con \"Abrir carpeta\".")),
          ]),
         ("5. Comunidad y Educación",
-         "Cursos (reserva directa por WhatsApp, con opciones de precio), Materiales educativos (libros/cursos online/guías recomendadas, con enlace externo), Eventos (talleres y festivales, con botón de mapa si tienen dirección física), Tiendas asociadas y Servicio y Reparación (equipo foto/video) — todo en la barra lateral, en el grupo \"COMUNIDAD Y EDUCACIÓN\"."),
+         [
+             "Cursos (reserva directa por WhatsApp, con opciones de precio), Materiales educativos (libros/cursos online/guías recomendadas, con enlace externo), Eventos (talleres y festivales, con botón de mapa si tienen dirección física), Tiendas asociadas y Servicio y Reparación (equipo foto/video) — todo en la barra lateral, en el grupo \"COMUNIDAD Y EDUCACIÓN\".",
+             ("__note__", ("Novedad:", "cada curso muestra ahora claramente su tipo de acceso — Gratis, Pago Único, Suscripción o En Vivo/Mentoría 1-a-1 — además de Formato y Duración y la Validez del acceso (de por vida o limitada a un número de días). Los cursos con enlace de acceso (Zoom/Meet/plataforma propia) tienen un botón directo.")),
+         ]),
         ("6. Mis Aplicaciones",
          "Detecta automáticamente las demás apps de GDC ya instaladas en este ordenador (DataMover, CursorPro GDC, GDC Vault, MediaFlow Monitor) y las muestra con un botón de acceso rápido más un indicador si existe una versión más nueva. También puedes añadir tus propios accesos directos a cualquier otra app (p. ej. DaVinci Resolve, Premiere) con \"Añadir acceso directo\"."),
         ("7. Ofertas de Socios y Apoyo promocional",

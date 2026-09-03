@@ -1,5 +1,33 @@
 # Changelog — GDC Plugin Manager
 
+## Furnizor v1.31.0 — Primele ghiduri PDF (Cursuri, Produse, Licențe, Backup) + fix packaging (2026-09-03)
+
+Furnizorul capătă un meniu Ajutor (nu exista deloc până acum) cu 4 ghiduri
+PDF noi, dedicate modulelor administrative: Gestionarea Cursurilor,
+Gestionarea Produselor, Licențe (generare/revocare/prelungire) și Backup &
+Securitate. Doar în română — Furnizorul e exclusiv pentru Cristi.
+
+**Bug real, găsit în timpul acestui audit**: `build_furnizor_app.sh` nu
+copia NICIODATĂ bundle-ul de resurse SPM (`GDCPluginManager_
+GDCPluginManagerFurnizor.bundle`) în aplicația instalată — afecta deja
+tăcut presetul de filigrane sezoniere (`SeasonalPresets`, funcțional doar
+la `swift run` local, nu și în `.app`-ul din `/Applications`). Reparat
+odată cu adăugarea ghidurilor noi, care foloseau exact același mecanism.
+
+## Client v1.28.2 — Ghidul de utilizare actualizat cu noul model de acces al cursurilor (2026-09-03)
+
+Secțiunea „Comunitate & Educație” din Ghidul de Utilizare (RO/EN/ES)
+menționează acum explicit noile etichete de tip acces (Gratuit/Plată
+Unică/Abonament/Live), Format & Durată și Valabilitatea accesului.
+
+## Website (gordas.dev) — sincronizare catalog + eliminare emoji (2026-09-03)
+
+Cardul de curs de pe pagina publică arată acum aceleași informații ca în
+aplicație: etichetă de tip acces, Format & Durată, Valabilitate. Toate
+iconițele emoji rămase pe pagină (descărcare, telefon, cele 3 „funcții”)
+au fost înlocuite cu un sprite SVG în stilul liniar deja folosit pe
+mac-master-control-pro — același limbaj vizual pe toate site-urile GDC.
+
 ## Client v1.28.1 + Furnizor v1.30.1 — Curățare cod (zero-legacy) (2026-09-03)
 
 Audit complet Client + Furnizor + Core: build integral cu warning-uri
