@@ -418,6 +418,8 @@ struct ContentView: View {
                 }
                 if let update = updateChecker.availableUpdate {
                     UpdateBanner(update: update)
+                } else if updateChecker.checkFailed {
+                    CheckFailedBanner()
                 }
                 // Bară de căutare GLOBALĂ (Etapa 1, extinsă 2026-08-29 —
                 // cerut explicit: "trebuie să cuprindă tot ce există în
@@ -493,7 +495,12 @@ struct ContentView: View {
                 // de dismissal) — o versiune respinsa candva facea
                 // verificarea manuala sa minta "esti la zi". latestInfo nu
                 // e filtrat — vezi comentariul din UpdateChecker.swift.
-                if let update = updateChecker.latestInfo {
+                // [2026-09-03] Adaugat checkFailed: fara el, o verificare
+                // esuata (retea/parsare) minea la fel "esti la zi" ca un
+                // caz de succes real — vezi UpdateChecker.checkFailed.
+                if updateChecker.checkFailed {
+                    manualUpdateCheckMessage = L.t("update.check.failed")
+                } else if let update = updateChecker.latestInfo {
                     manualUpdateCheckMessage = String(format: L.t("update.check.available"), update.version)
                 } else {
                     manualUpdateCheckMessage = L.t("update.check.upToDate")
@@ -555,6 +562,32 @@ struct ContentView: View {
         }
     }
 
+}
+
+/// [2026-09-03] Port 1:1 al bannerului de pe Windows — vezi
+/// UpdateChecker.checkFailed. Aratat DOAR cand nu exista deja un
+/// UpdateBanner normal de aratat (else-branch in body), ca sa nu se
+/// suprapuna doua bannere de update.
+private struct CheckFailedBanner: View {
+    @ObservedObject private var updateChecker = UpdateChecker.shared
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: "exclamationmark.triangle.fill").foregroundStyle(.orange)
+            Text(L.t("update.check.failed"))
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            Spacer()
+            Button(L.t("update.check.openWebsite")) {
+                NSWorkspace.shared.open(URL(string: "https://gordas.dev/")!)
+            }
+            Button(L.t("update.dismiss")) { updateChecker.dismissCheckFailedBanner() }
+                .buttonStyle(.plain)
+                .foregroundStyle(.secondary)
+        }
+        .padding(12)
+        .background(Color.orange.opacity(0.10))
+    }
 }
 
 private struct UpdateBanner: View {

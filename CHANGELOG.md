@@ -156,6 +156,14 @@ directă a întregului conținut. Confirmat funcțional de Cristi.
   imagine sunt elemente separate, unul deasupra celuilalt.
 - Furnizor: opțiune nouă „Poziția textului" (deasupra/sub imagine).
 
+## Client v1.27.3 — Avertisment vizibil când verificarea de actualizări eșuează (2026-09-03)
+
+Port 1:1 al fix-ului de pe Windows, după un incident real acolo: până acum,
+o verificare eșuată (rețea, sau un format de update.json neparsabil pe o
+versiune veche) se comporta identic cu "ești la zi" — fără niciun semn
+vizibil. Acum apare un banner separat + un mesaj distinct la verificarea
+manuală, cu buton direct către gordas.dev.
+
 ## Client v1.24.2 (2026-08-31) — Fix: textul bannerului se suprapunea peste imagine
 
 Raportul de aspect al imaginii era hardcodat (cel al imaginii inițiale) —

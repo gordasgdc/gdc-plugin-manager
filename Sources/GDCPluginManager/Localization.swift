@@ -76,6 +76,9 @@ enum L {
         "update.check.title": [.ro: "Actualizări", .en: "Updates", .es: "Actualizaciones"],
         "update.check.available": [.ro: "Versiunea %@ este disponibilă!", .en: "Version %@ is available!", .es: "¡La versión %@ está disponible!"],
         "update.check.upToDate": [.ro: "Sunteți pe cea mai nouă versiune.", .en: "You're on the latest version.", .es: "Tienes la última versión."],
+        // [2026-09-03] Distinct de "up to date" — vezi UpdateChecker.checkFailed.
+        "update.check.failed": [.ro: "Nu am putut verifica automat dacă există o versiune nouă — descarcă manual de pe gordas.dev, ca să fii sigur.", .en: "We couldn't automatically check for a new version — download manually from gordas.dev to be sure.", .es: "No pudimos comprobar automáticamente si hay una versión nueva — descarga manualmente desde gordas.dev para estar seguro."],
+        "update.check.openWebsite": [.ro: "Deschide gordas.dev", .en: "Open gordas.dev", .es: "Abrir gordas.dev"],
         "common.ok": [.ro: "OK", .en: "OK", .es: "OK"],
         "dependency.missing.title": [.ro: "Dependință de sistem lipsă", .en: "Missing system dependency", .es: "Falta una dependencia del sistema"],
         "dependency.install.button": [.ro: "Instalează %@", .en: "Install %@", .es: "Instalar %@"],

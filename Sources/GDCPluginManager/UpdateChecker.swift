@@ -84,6 +84,16 @@ final class UpdateChecker: ObservableObject {
     /// verificare declansata manual de user trebuie sa citeasca de aici.
     @Published private(set) var latestInfo: UpdateInfo?
 
+    /// [2026-09-03] Port 1:1 al fix-ului de pe Windows (UpdateChecker.cs),
+    /// dupa un incident real acolo: cand `update.json` si-a schimbat
+    /// formatul, un client vechi nu mai putea PARSA raspunsul deloc —
+    /// `check()` scria eroarea in log si se oprea in tacere, `availableUpdate`
+    /// ramanea `nil`, identic cu "esti la zi". Userul n-avea NICIO cale sa
+    /// afle ca verificarea a esuat, nu ca chiar era la zi. `checkFailed`
+    /// distinge explicit cele doua cazuri — resetat la orice verificare
+    /// reusita, ca sa nu ramana agatat dupa ce problema trece.
+    @Published private(set) var checkFailed = false
+
     private var currentVersion: String {
         Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "0"
     }
@@ -114,15 +124,18 @@ final class UpdateChecker: ObservableObject {
             (data, response) = try await URLSession.shared.data(from: url)
         } catch {
             DiagnosticLog.write("UpdateChecker", "Cerere esuata: \(error)")
+            checkFailed = true
             return
         }
         guard let http = response as? HTTPURLResponse else {
             DiagnosticLog.write("UpdateChecker", "Raspuns fara HTTPURLResponse (neasteptat).")
+            checkFailed = true
             return
         }
         DiagnosticLog.write("UpdateChecker", "HTTP \(http.statusCode)")
         guard (200...299).contains(http.statusCode) else {
             DiagnosticLog.write("UpdateChecker", "Status neasteptat, opresc aici.")
+            checkFailed = true
             return
         }
         let manifest: UpdateManifest
@@ -131,12 +144,15 @@ final class UpdateChecker: ObservableObject {
         } catch {
             let body = String(data: data, encoding: .utf8) ?? "<nu e text UTF-8>"
             DiagnosticLog.write("UpdateChecker", "Decodare esuata: \(error). Body: \(body)")
+            checkFailed = true
             return
         }
         guard let info = manifest.mac else {
             DiagnosticLog.write("UpdateChecker", "update.json nu are sectiunea \"mac\".")
+            checkFailed = true
             return
         }
+        checkFailed = false
         DiagnosticLog.write("UpdateChecker", "info.version=\(info.version)")
 
         guard Self.isNewer(info.version, than: currentVersion) else {
@@ -166,6 +182,14 @@ final class UpdateChecker: ObservableObject {
             UserDefaults.standard.set(info.version, forKey: dismissedVersionKey)
         }
         availableUpdate = nil
+    }
+
+    /// Ascunde bannerul de eșec — nepersistat (spre deosebire de
+    /// `dismiss()`, care ține minte versiunea respinsă): un eșec de rețea
+    /// tranzitoriu nu are un "număr de versiune" de reținut, iar
+    /// următorul `check()` reușit resetează oricum `checkFailed` singur.
+    func dismissCheckFailedBanner() {
+        checkFailed = false
     }
 
     /// Simple dot-separated integer version comparison (1.2.0 > 1.10.0
