@@ -1,7 +1,7 @@
 {
-  "version": "2.7.2",
-  "release_date": "2026-08-29",
-  "changes": "Windows: panou unificat Setari copiere + tema Sistem/Luminos/Intunecat + Manager de Dependinte real (Visual C++ Redistributable) + fix titlu versiune stale. Ghidurile PDF (RO/EN/ES) redesenate cu coperta, capturi reale, culori de brand. Site web: hero optimizat pentru monitoare mari + animatie noua card->linie neon->hard disk (transfer).",
+  "version": "2.11.0",
+  "release_date": "2026-09-03",
+  "changes": "Flux profesional de offload: fisier MHL pentru post-productie, verificare xxHash64 (mult mai rapida), reincercare automata a fisierelor esuate, verificare de spatiu liber inainte de start, coada de carduri, pornire automata la introducerea cardului, sablon liber pentru numele folderelor, recunoasterea cardurilor de camera, rapoarte brandate (logo, client, operator, note) + raport HTML, ejectare automata si notificare la final.",
   "download_url": {
     "windows": "https://github.com/gordasgdc/datamover/releases/latest/download/DataMover-Windows.zip",
     "mac": "https://github.com/gordasgdc/datamover/releases/latest/download/DataMover-Mac.zip",

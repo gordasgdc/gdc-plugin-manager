@@ -289,6 +289,14 @@
   .app-shot img {
     display: block;
     width: 100%;
+    /* [2026-09-03] BUG REAL reparat (raportat de Cristi: capturile sunt
+       "strangulate, stranse, deformate"): tag-urile <img> au atribute
+       width/height (corect, previn saltul de layout la incarcare), dar CSS-ul
+       suprascria DOAR latimea cu 100%. Inaltimea ramanea fixata la valoarea
+       din atribut (1079px), asa ca la orice latime de ecran diferita de cea
+       originala imaginea era intinsa pe verticala si strivita pe orizontala.
+       `height: auto` obliga browserul sa pastreze raportul real al imaginii. */
+    height: auto;
     border-radius: 12px;
     border: 1px solid var(--line);
     box-shadow: 0 40px 100px -30px rgba(0,0,0,0.7), 0 0 0 1px rgba(79,209,139,0.06);
@@ -306,6 +314,14 @@
   .shot-gallery img {
     display: block;
     width: 100%;
+    /* [2026-09-03] BUG REAL reparat (raportat de Cristi: capturile sunt
+       "strangulate, stranse, deformate"): tag-urile <img> au atribute
+       width/height (corect, previn saltul de layout la incarcare), dar CSS-ul
+       suprascria DOAR latimea cu 100%. Inaltimea ramanea fixata la valoarea
+       din atribut (1079px), asa ca la orice latime de ecran diferita de cea
+       originala imaginea era intinsa pe verticala si strivita pe orizontala.
+       `height: auto` obliga browserul sa pastreze raportul real al imaginii. */
+    height: auto;
     border-radius: 14px;
     border: 1px solid var(--line);
     box-shadow: 0 40px 100px -30px rgba(0,0,0,0.7), 0 0 0 1px rgba(79,209,139,0.06);
@@ -585,8 +601,8 @@
   <p class="sub" data-i18n="hero.sub">Offload verificat pentru echipele de productie video.</p>
 
   <div class="hero-actions">
-    <a class="btn btn-primary" id="downloadBtn" href="https://github.com/gordasgdc/datamover/releases/latest" data-i18n="hero.download">Descarca ultima versiune</a>
-    <a class="btn btn-ghost" id="altDownloadLink" href="https://github.com/gordasgdc/datamover/releases/latest" data-i18n="hero.download" style="display:none;">Descarca ultima versiune</a>
+    <a class="btn btn-primary" id="downloadBtnMac" href="https://github.com/gordasgdc/datamover/releases/latest/download/DataMover-Mac.zip" data-i18n="hero.download_mac">Descarca pentru Mac (.zip)</a>
+    <a class="btn btn-primary" id="downloadBtnWin" href="https://github.com/gordasgdc/datamover/releases/latest/download/DataMover-WPF-Windows.zip" data-i18n="hero.download_win">Descarca pentru Windows (.zip)</a>
   </div>
   <p class="hero-links">
     <a href="https://github.com/gordasgdc/datamover" data-i18n="hero.source">Vezi codul sursa</a>
@@ -950,7 +966,7 @@
       'act.eyebrow': 'Activation',
       'act.title': 'Development donation.',
       'act.trial': '✓ Free 7-day trial, fully functional — no card, no account.',
-      'act.p1': 'The source code is available on GitHub under the MIT license, but the compiled app needs an activation code, tied to your computer, to be able to start. It's a donation, not a list price — it helps me cover development costs (subscriptions, tools) and keep maintaining and improving the app.',
+      'act.p1': 'The source code is available on GitHub under the MIT license, but the compiled app needs an activation code, tied to your computer, to be able to start. It\'s a donation, not a list price — it helps me cover development costs (subscriptions, tools) and keep maintaining and improving the app.',
       'act.step1_label': 'Step 1',
       'act.step1': 'Open the app — you\'ll see a Machine ID right in the activation window.',
       'act.step2_label': 'Step 2',
@@ -1079,52 +1095,16 @@
     btn.addEventListener('click', () => applyLang(btn.dataset.lang));
   });
 
-  // WARNING: DO NOT HARDCODE A VERSION TAG IN RELEASE_BASE (ex. ".../v2.4.0/download/") —
+  // WARNING: DO NOT HARDCODE A VERSION TAG in these hrefs (ex. ".../v2.4.0/download/") —
   // ALWAYS use "releases/latest/download/" so this always resolves to the newest
   // published, non-draft release automatically. See CLAUDE.md "Regula Domeniului & Download".
   //
-  // Descarcare directa a fisierului potrivit (Mac/Windows), fara sa
-  // mai treaca prin pagina de Releases de pe GitHub - detectat din
-  // platforma browserului. Foloseste link-ul "latest/download/..." al
-  // GitHub, care redirectioneaza direct catre fisier (mereu ultima
-  // versiune, fara nicio intretinere manuala aici la fiecare release).
-  (function initDirectDownload() {
-    const RELEASE_BASE = 'https://github.com/gordasgdc/datamover/releases/latest/download/';
-    // 2026-08-28: butonul Windows trece la clientul WPF nou
-    // (DataMover-WPF-Windows.zip) - design "Shift" aliniat cu Mac,
-    // cerut explicit de Cristi. Clientul Python vechi (DataMover-Windows.zip)
-    // ramane publicat pe fiecare release, accesibil manual din pagina de
-    // Releases GitHub, dar nu mai e ce ofera site-ul implicit.
-    const FILES = { mac: RELEASE_BASE + 'DataMover-Mac.zip', win: RELEASE_BASE + 'DataMover-WPF-Windows.zip' };
-
-    const ua = navigator.userAgent || '';
-    const plat = navigator.platform || '';
-    const isMac = /Mac|iPhone|iPad|iPod/i.test(plat) || /Macintosh/i.test(ua);
-    const isWin = /Win/i.test(plat) || /Windows/i.test(ua);
-    if (!isMac && !isWin) return; // Linux/necunoscut - ramane linkul generic catre Releases
-
-    const btn = document.getElementById('downloadBtn');
-    const altLink = document.getElementById('altDownloadLink');
-    if (!btn || !altLink) return;
-
-    const primary = isMac
-      ? { key: 'hero.download_mac', url: FILES.mac }
-      : { key: 'hero.download_win', url: FILES.win };
-    const alt = isMac
-      ? { key: 'hero.download_win', url: FILES.win }
-      : { key: 'hero.download_mac', url: FILES.mac };
-
-    btn.href = primary.url;
-    btn.setAttribute('data-i18n', primary.key);
-    altLink.href = alt.url;
-    altLink.setAttribute('data-i18n', alt.key);
-    altLink.style.display = '';
-
-    const lang = (localStorage.getItem('dm-lang') && translations[localStorage.getItem('dm-lang')]) ? localStorage.getItem('dm-lang') : 'ro';
-    const dict = translations[lang];
-    if (dict[primary.key]) btn.innerHTML = dict[primary.key];
-    if (dict[alt.key]) altLink.innerHTML = dict[alt.key];
-  })();
+  // [2026-09-03] Cristi a cerut explicit doua butoane SEPARATE si mereu
+  // vizibile (Mac + Windows), nu un singur buton "auto-detectat" cu un
+  // link secundar ascuns — userul alege singur, fara ghicit de platforma.
+  // `href`-urile sunt deja corecte direct in HTML (vezi butoanele
+  // #downloadBtnMac/#downloadBtnWin mai sus) - JS-ul de-aici nu mai are
+  // nimic de rescris, doar traducerea eticheteler ramane prin data-i18n.
 
   const saved = localStorage.getItem('dm-lang');
   if (saved && translations[saved]) applyLang(saved);
