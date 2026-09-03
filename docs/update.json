@@ -1,7 +1,7 @@
 {
-  "version": "1.27.0",
-  "release_date": "2026-09-01",
-  "changes": "Descriere colapsabilă (buton „Descriere”) în toate cardurile din catalog.",
+  "version": "1.27.1",
+  "release_date": "2026-09-03",
+  "changes": "Fix (Windows): imagini care nu se afișau la unele instalări Windows 10.",
   "download_url": {
     "mac": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Mac.zip",
     "windows": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Windows.zip"

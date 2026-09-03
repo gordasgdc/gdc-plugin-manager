@@ -1,5 +1,12 @@
 # Changelog — GDC Plugin Manager
 
+## Client v1.27.1 (2026-09-03) — Fix Windows: imagini care nu se afișau pe unele Windows 10
+
+Fără schimbări de cod pe Mac — bump doar de versiune, ca `update.json`
+(comun ambelor platforme) să reflecte fix-ul real din versiunea Windows
+(forțare TLS 1.2/1.3 explicit, pentru instalări Windows 10 la care
+imaginile din catalog nu se afișau).
+
 ## Client v1.27.0 (2026-09-01) — Descriere colapsabilă peste tot în catalog
 
 Toate cardurile din catalog (Produse, Cursuri, Materiale, Evenimente,
