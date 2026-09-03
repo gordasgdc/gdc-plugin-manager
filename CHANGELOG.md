@@ -1,5 +1,33 @@
 # Changelog — GDC Plugin Manager
 
+## Client v1.28.0 — Cursuri: model de acces, format & valabilitate (2026-09-03)
+
+Fiecare curs poate fi clasificat explicit — Gratuit, Plată Unică, Abonament
+sau Live / Mentorat 1-la-1 — afișat ca etichetă colorată pe card, alături de
+Format & Durată și Valabilitatea accesului (pe viață sau limitată la un
+număr de zile de la înscriere). Cursurile cu Link Acces / Școală Online
+(Zoom, Meet, platformă proprie) arată un buton direct, fără login.
+„Abonament" rămâne strict o etichetă informativă — nu există (încă) un
+sistem real de membri/tiere. Port 1:1 pe Windows (`GDCPluginManagerWin`,
+`Course`/`CourseAccessType`/`CourseValidity` în `CatalogModel.cs`).
+
+Retrocompatibil: orice curs publicat înainte de această versiune decodează
+automat ca Plată Unică + acces pe viață — comportamentul lui de facto de
+până acum, fără nicio pierdere de date.
+
+**TODO**: `docs/update.json` (mac/windows) rămâne neactualizat până la
+publicarea reală a pachetelor semnate (Mac `.pkg` notarizat + Windows
+`.exe`) — bump-ul de aici e doar pe sursă/build local, nu pe releasul
+descărcabil.
+
+## Furnizor v1.30.0 — Formular „Cursuri" extins: tip acces, link, format, valabilitate (2026-09-03)
+
+Formularul de publicare a cursurilor capătă patru câmpuri noi: selector de
+Tip Acces (Gratuit / Plată Unică / Abonament / Live), Link Acces / Școală
+Online, Format & Durată (text liber) și Valabilitate (pe viață sau N zile
+de la înscriere). Secțiunile existente (opțiuni de preț, copertă,
+valabilitate temporală, rețele sociale) rămân neschimbate.
+
 ## Furnizor v1.29.1 — Ghid de reînnoire token, complet cu comenzi gata de rulat (2026-09-03)
 
 Ghidul „Cum reînnoiesc token-ul GitHub?" (accesibil oricând din toolbar-ul

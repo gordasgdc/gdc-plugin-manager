@@ -1389,9 +1389,30 @@ private struct CourseCard: View {
                 height: 150,
                 lightboxTitle: course.name
             )
-            Text(course.name).font(.headline)
-            CountdownBadge(scheduling: course.scheduling)
+            HStack(alignment: .top, spacing: 6) {
+                Text(course.name).font(.headline)
+                Spacer(minLength: 4)
+                BadgePill(text: L.t(accessTypeKey), color: accessTypeColor)
+            }
+            HStack(spacing: 8) {
+                CountdownBadge(scheduling: course.scheduling)
+                if let formatLabel = course.formatLabel, !formatLabel.trimmingCharacters(in: .whitespaces).isEmpty {
+                    Label(formatLabel, systemImage: "clock").font(.caption2).foregroundStyle(.secondary)
+                }
+            }
+            Text(validityText).font(.caption2).foregroundStyle(.secondary)
             CollapsibleDescription(text: course.description)
+
+            if let accessLink = course.accessLink,
+               !accessLink.trimmingCharacters(in: .whitespaces).isEmpty,
+               let url = URL(string: accessLink) {
+                Button {
+                    NSWorkspace.shared.open(url)
+                } label: {
+                    Label(L.t("courses.access.link"), systemImage: "link")
+                }
+                .controlSize(.small)
+            }
 
             VStack(alignment: .leading, spacing: 6) {
                 ForEach(course.options) { option in
@@ -1409,6 +1430,24 @@ private struct CourseCard: View {
         .padding(12)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(RoundedRectangle(cornerRadius: 10).fill(.background.secondary))
+    }
+
+    private var accessTypeKey: String { "courses.access.\(course.accessType.rawValue)" }
+
+    private var accessTypeColor: Color {
+        switch course.accessType {
+        case .free: return .green
+        case .oneTime: return .accentColor
+        case .subscription: return .purple
+        case .liveMentoring: return .orange
+        }
+    }
+
+    private var validityText: String {
+        switch course.validity {
+        case .lifetime: return L.t("courses.validity.lifetime")
+        case .days(let d): return String(format: L.t("courses.validity.days"), d)
+        }
     }
 
     private func contactURL(for option: CourseOption) -> URL {

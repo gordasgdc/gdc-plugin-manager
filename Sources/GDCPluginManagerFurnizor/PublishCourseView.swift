@@ -21,6 +21,12 @@ struct PublishCourseView: View {
     @State private var scheduling: Scheduling?
     // Rețele sociale opționale (2026-08-29) — vezi SocialLinksEditor.swift.
     @State private var socialForm = SocialLinksFormState()
+    // Model de acces + detalii desfășurare/valabilitate — Etapa 2026-09-03.
+    @State private var accessType: CourseAccessType = .oneTime
+    @State private var accessLink = ""
+    @State private var formatLabel = ""
+    @State private var validityIsLimited = false
+    @State private var validityDays = ""
 
     @State private var isBusy = false
     @State private var errorMessage: String?
@@ -39,6 +45,39 @@ struct PublishCourseView: View {
                             .disabled(editingID != nil)
                         TextField("Nume", text: $name).textFieldStyle(.roundedBorder)
                         TextField("Descriere", text: $description).textFieldStyle(.roundedBorder)
+
+                        Divider()
+                        Text("Tip Curs (Model de Acces)").font(.subheadline).fontWeight(.medium)
+                        Picker("Tip acces", selection: $accessType) {
+                            ForEach(CourseAccessType.allCases, id: \.self) { type in
+                                Text(type.label).tag(type)
+                            }
+                        }
+                        .pickerStyle(.segmented)
+                        .labelsHidden()
+                        if accessType == .subscription {
+                            Label("Etichetă informativă — nu există încă un sistem real de abonamente/membri, cursul rămâne accesibil prin contact ca oricare altul.", systemImage: "info.circle")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                        TextField("Link Acces / Școală Online (Zoom, Meet, platformă proprie) — opțional", text: $accessLink)
+                            .textFieldStyle(.roundedBorder)
+                        TextField("Format & Durată (ex. „6 ore, 4 module” sau „1 sesiune 1-la-1”)", text: $formatLabel)
+                            .textFieldStyle(.roundedBorder)
+
+                        Divider()
+                        Text("Valabilitate Acces").font(.subheadline).fontWeight(.medium)
+                        Picker("Valabilitate", selection: $validityIsLimited) {
+                            Text("Acces pe viață").tag(false)
+                            Text("Limitată (zile)").tag(true)
+                        }
+                        .pickerStyle(.segmented)
+                        .labelsHidden()
+                        if validityIsLimited {
+                            TextField("Număr de zile de la înscriere (ex. 30, 90, 365)", text: $validityDays)
+                                .textFieldStyle(.roundedBorder)
+                                .frame(maxWidth: 220)
+                        }
 
                         Divider()
                         Text("Opțiuni (durată / tip + preț)").font(.subheadline).fontWeight(.medium)
@@ -174,6 +213,17 @@ struct PublishCourseView: View {
         coverSelection = course.coverImage.map { .existing($0) } ?? .none
         scheduling = course.scheduling
         socialForm = SocialLinksFormState(course.socialLinks)
+        accessType = course.accessType
+        accessLink = course.accessLink ?? ""
+        formatLabel = course.formatLabel ?? ""
+        switch course.validity {
+        case .lifetime:
+            validityIsLimited = false
+            validityDays = ""
+        case .days(let d):
+            validityIsLimited = true
+            validityDays = String(d)
+        }
         successMessage = nil
         errorMessage = nil
     }
@@ -189,6 +239,11 @@ struct PublishCourseView: View {
         coverSelection = .none
         scheduling = nil
         socialForm.reset()
+        accessType = .oneTime
+        accessLink = ""
+        formatLabel = ""
+        validityIsLimited = false
+        validityDays = ""
     }
 
     private func publish() async {
@@ -210,11 +265,19 @@ struct PublishCourseView: View {
             let previousCover = existingCourses.first { $0.id == courseID }?.coverImage
             let coverImage = try CoverImageStore.commit(coverSelection, id: courseID, previous: previousCover)
 
+            let trimmedLink = accessLink.trimmingCharacters(in: .whitespaces)
+            let trimmedFormat = formatLabel.trimmingCharacters(in: .whitespaces)
+            let validity: CourseValidity = validityIsLimited ? .days(max(1, Int(validityDays) ?? 30)) : .lifetime
+
             let course = Course(
                 id: courseID, name: name,
                 description: description, options: options,
                 coverImage: coverImage, scheduling: scheduling,
-                socialLinks: socialForm.model
+                socialLinks: socialForm.model,
+                accessType: accessType,
+                accessLink: trimmedLink.isEmpty ? nil : trimmedLink,
+                formatLabel: trimmedFormat.isEmpty ? nil : trimmedFormat,
+                validity: validity
             )
 
             try CatalogEditor.upsertCourse(course)

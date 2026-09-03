@@ -577,6 +577,73 @@ public struct Scheduling: Codable, Hashable {
     }
 }
 
+/// Model de acces al unui curs (Etapa 2026-09-03, cerut explicit de
+/// Cristi: clasificare clară Gratuit / Plată Unică / Abonament / Live —
+/// determină ce câmpuri arată formularul din Furnizor și cum e etichetat
+/// cardul în Client. NU declanșează nicio verificare reală de acces —
+/// GDC Plugin Manager n-are login/cont; `.subscription` rămâne strict
+/// etichetă vizuală/informativă, fără infrastructură de membri/tiere
+/// (decizie explicită Cristi, 2026-09-03: "Doar etichetă vizuală").
+public enum CourseAccessType: String, Codable, Hashable, CaseIterable {
+    case free
+    case oneTime
+    case subscription
+    case liveMentoring
+
+    public var label: String {
+        switch self {
+        case .free: return "Gratuit"
+        case .oneTime: return "Plată Unică"
+        case .subscription: return "Abonament"
+        case .liveMentoring: return "Live / Mentorat 1-la-1"
+        }
+    }
+}
+
+/// Valabilitatea accesului odată obținut — lifetime (implicit, comportamentul
+/// de până acum) sau limitat la N zile de la înregistrare.
+public enum CourseValidity: Codable, Hashable {
+    case lifetime
+    case days(Int)
+
+    private enum CodingKeys: String, CodingKey {
+        case kind, days
+    }
+
+    public init(from decoder: Decoder) throws {
+        // Cheie lipsă într-un catalog.json vechi = container inexistent
+        // sau `kind` absent -> lifetime, comportamentul de dinaintea acestui câmp.
+        guard let c = try? decoder.container(keyedBy: CodingKeys.self),
+              let kind = try? c.decode(String.self, forKey: .kind) else {
+            self = .lifetime
+            return
+        }
+        if kind == "days", let d = try? c.decode(Int.self, forKey: .days) {
+            self = .days(d)
+        } else {
+            self = .lifetime
+        }
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var c = encoder.container(keyedBy: CodingKeys.self)
+        switch self {
+        case .lifetime:
+            try c.encode("lifetime", forKey: .kind)
+        case .days(let d):
+            try c.encode("days", forKey: .kind)
+            try c.encode(d, forKey: .days)
+        }
+    }
+
+    public var label: String {
+        switch self {
+        case .lifetime: return "Acces pe viață"
+        case .days(let d): return "Acces \(d) zile"
+        }
+    }
+}
+
 public struct Course: Codable, Identifiable, Hashable {
     public let id: String
     public let name: String
@@ -593,8 +660,22 @@ public struct Course: Codable, Identifiable, Hashable {
     /// o cheie lipsă într-un `catalog.json` vechi decodează nil automat, iar
     /// encoderul o omite când e nil — 100% retrocompatibil, ca `scheduling`.
     public let socialLinks: SocialLinks?
+    /// Model de acces — Etapa 2026-09-03. Vezi `CourseAccessType`. Cursurile
+    /// publicate înainte de acest câmp decodează `.oneTime`, comportamentul
+    /// lor de facto de până acum (preț fix, contact WhatsApp).
+    public let accessType: CourseAccessType
+    /// Link Acces / Școală Online (Zoom/Meet/platformă proprie) — activat
+    /// automat la achiziție/acces, arătat de Client ca buton direct, fără
+    /// login. Relevant mai ales pentru `.liveMentoring`, dar disponibil
+    /// pentru orice tip de curs.
+    public let accessLink: String?
+    /// Format & Durată — text liber ("6 ore, 4 module", "1 sesiune 1-la-1").
+    public let formatLabel: String?
+    /// Valabilitate acces — implicit `.lifetime`, ca la orice curs publicat
+    /// înainte de acest câmp. Vezi `CourseValidity`.
+    public let validity: CourseValidity
 
-    public init(id: String, name: String, description: String, options: [CourseOption], coverImage: String? = nil, scheduling: Scheduling? = nil, socialLinks: SocialLinks? = nil) {
+    public init(id: String, name: String, description: String, options: [CourseOption], coverImage: String? = nil, scheduling: Scheduling? = nil, socialLinks: SocialLinks? = nil, accessType: CourseAccessType = .oneTime, accessLink: String? = nil, formatLabel: String? = nil, validity: CourseValidity = .lifetime) {
         self.id = id
         self.name = name
         self.description = description
@@ -602,6 +683,29 @@ public struct Course: Codable, Identifiable, Hashable {
         self.coverImage = coverImage
         self.scheduling = scheduling
         self.socialLinks = socialLinks
+        self.accessType = accessType
+        self.accessLink = accessLink
+        self.formatLabel = formatLabel
+        self.validity = validity
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case id, name, description, options, coverImage, scheduling, socialLinks, accessType, accessLink, formatLabel, validity
+    }
+
+    public init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        id = try c.decode(String.self, forKey: .id)
+        name = try c.decode(String.self, forKey: .name)
+        description = try c.decode(String.self, forKey: .description)
+        options = try c.decode([CourseOption].self, forKey: .options)
+        coverImage = try c.decodeIfPresent(String.self, forKey: .coverImage)
+        scheduling = try c.decodeIfPresent(Scheduling.self, forKey: .scheduling)
+        socialLinks = try c.decodeIfPresent(SocialLinks.self, forKey: .socialLinks)
+        accessType = try c.decodeIfPresent(CourseAccessType.self, forKey: .accessType) ?? .oneTime
+        accessLink = try c.decodeIfPresent(String.self, forKey: .accessLink)
+        formatLabel = try c.decodeIfPresent(String.self, forKey: .formatLabel)
+        validity = try c.decodeIfPresent(CourseValidity.self, forKey: .validity) ?? .lifetime
     }
 
     public var coverImageURL: URL? { CatalogAssets.imageURL(for: coverImage) }
