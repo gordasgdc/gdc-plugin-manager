@@ -15,6 +15,14 @@ struct ClientDetailView: View {
     @State private var notes: String = ""
     @State private var justCopied: String?
 
+    // MARK: - Faza 2 CRM (2026-09-03): actiuni pe licenta — vezi LicenseActionLog.swift.
+    @State private var revocations: [RevocationRecord] = []
+    @State private var revocationsLoaded = false
+    @State private var busyMachineIDs: Set<String> = []
+    @State private var actionError: String?
+    @State private var extendingPurchase: SalesLog.Entry?
+    @State private var actionRecords: [LicenseActionRecord] = []
+
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             header
@@ -31,7 +39,21 @@ struct ClientDetailView: View {
             }
         }
         .frame(width: 620, height: 620)
-        .onAppear { notes = ClientNotesStore.note(for: profile.key) }
+        .sheet(item: $extendingPurchase) { purchase in
+            ExtendLicenseView(purchase: purchase) { detail in
+                LicenseActionLog.record(machineID: purchase.machineID, productID: purchase.productID,
+                                        productName: purchase.productName, action: .extended, detail: detail)
+                actionRecords = profile.allMachineIDs.flatMap { LicenseActionLog.entries(forMachineID: $0) }
+                extendingPurchase = nil
+            } onCancel: {
+                extendingPurchase = nil
+            }
+        }
+        .onAppear {
+            notes = ClientNotesStore.note(for: profile.key)
+            actionRecords = profile.allMachineIDs.flatMap { LicenseActionLog.entries(forMachineID: $0) }
+            Task { await loadRevocations() }
+        }
     }
 
     private var header: some View {
@@ -76,20 +98,81 @@ struct ClientDetailView: View {
 
     private var purchaseHistorySection: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text("Istoric achiziții (\(profile.purchases.count))").font(.headline)
+            HStack {
+                Text("Istoric achiziții (\(profile.purchases.count))").font(.headline)
+                Spacer()
+                if let actionError {
+                    Text(actionError).font(.caption).foregroundStyle(.red)
+                }
+            }
             Table(profile.purchases) {
-                TableColumn("Dată") { p in Text(shortDate(p.dateUTC)) }.width(90)
+                TableColumn("Dată") { p in Text(shortDate(p.dateUTC)) }.width(80)
                 TableColumn("Produs") { p in Text(p.productName) }
-                TableColumn("Preț") { p in Text(p.priceDisplay) }.width(80)
-                TableColumn("Expiră") { p in Text(p.expiresDisplay) }.width(110)
-                TableColumn("Cod") { p in
-                    Button(justCopied == p.serial ? "Copiat" : "Copiază") {
-                        copyToClipboard(p.serial, key: p.serial)
-                    }
-                    .controlSize(.small)
-                }.width(70)
+                TableColumn("Preț") { p in Text(p.priceDisplay) }.width(70)
+                TableColumn("Expiră") { p in Text(p.expiresDisplay) }.width(100)
+                TableColumn("Status") { p in statusBadge(for: p) }.width(80)
+                TableColumn("") { p in purchaseActions(for: p) }.width(190)
             }
             .frame(height: min(CGFloat(profile.purchases.count), 6) * 28 + 30)
+            if !actionRecords.isEmpty {
+                DisclosureGroup("Jurnal acțiuni (\(actionRecords.count))") {
+                    ForEach(actionRecords) { record in
+                        HStack {
+                            Text(record.action.rawValue).fontWeight(.medium)
+                            Text(record.productName).foregroundStyle(.secondary)
+                            Spacer()
+                            Text(shortDate(record.dateUTC)).foregroundStyle(.tertiary)
+                        }
+                        .font(.caption)
+                    }
+                }
+                .font(.caption)
+            }
+        }
+    }
+
+    /// Blocată/Activă — citit din `revocations` (Supabase), nu presupus.
+    /// Fără machineID (vânzare manuală veche), nu există nimic de blocat —
+    /// arătăm "—", nu o presupunere greșită de "Activă".
+    private func isBlocked(_ p: SalesLog.Entry) -> Bool {
+        !p.machineID.isEmpty && revocations.contains { $0.machine_id == p.machineID && $0.product_id == p.productID }
+    }
+
+    private func statusBadge(for p: SalesLog.Entry) -> some View {
+        Group {
+            if p.machineID.isEmpty {
+                Text("—").foregroundStyle(.tertiary)
+            } else if isBlocked(p) {
+                Label("Blocată", systemImage: "lock.fill").foregroundStyle(.red)
+            } else {
+                Label("Activă", systemImage: "checkmark").foregroundStyle(.green)
+            }
+        }
+        .font(.caption)
+    }
+
+    private func purchaseActions(for p: SalesLog.Entry) -> some View {
+        HStack(spacing: 6) {
+            Button(justCopied == p.serial ? "Copiat" : "Copiază") {
+                copyToClipboard(p.serial, key: p.serial)
+            }
+            .controlSize(.small)
+
+            if !p.machineID.isEmpty {
+                if busyMachineIDs.contains(p.machineID) {
+                    ProgressView().controlSize(.small)
+                } else if isBlocked(p) {
+                    Button("Deblochează") { Task { await unblock(p) } }
+                        .controlSize(.small)
+                } else {
+                    Button("Blochează") { Task { await block(p) } }
+                        .controlSize(.small)
+                        .tint(.red)
+                }
+            }
+            Button("Prelungește…") { extendingPurchase = p }
+                .controlSize(.small)
+                .disabled(p.machineID.isEmpty)
         }
     }
 
@@ -152,5 +235,47 @@ struct ClientDetailView: View {
     private func shortDate(_ raw: String) -> String {
         guard raw.count >= 10 else { return raw }
         return String(raw.prefix(10))
+    }
+
+    // MARK: - Faza 2 CRM: acțiuni reale pe licență
+
+    private func loadRevocations() async {
+        guard !revocationsLoaded else { return }
+        revocationsLoaded = true
+        revocations = (try? await RevocationAdminClient.fetchAll()) ?? []
+    }
+
+    private func block(_ p: SalesLog.Entry) async {
+        busyMachineIDs.insert(p.machineID)
+        actionError = nil
+        do {
+            try await RevocationAdminClient.revoke(machineID: p.machineID, productID: p.productID, reason: "Blocat manual din fișa clientului")
+            revocations = (try? await RevocationAdminClient.fetchAll()) ?? revocations
+            LicenseActionLog.record(machineID: p.machineID, productID: p.productID, productName: p.productName,
+                                     action: .blocked, detail: "Licență blocată manual.")
+            actionRecords = profile.allMachineIDs.flatMap { LicenseActionLog.entries(forMachineID: $0) }
+        } catch {
+            actionError = error.localizedDescription
+        }
+        busyMachineIDs.remove(p.machineID)
+    }
+
+    private func unblock(_ p: SalesLog.Entry) async {
+        busyMachineIDs.insert(p.machineID)
+        actionError = nil
+        guard let record = revocations.first(where: { $0.machine_id == p.machineID && $0.product_id == p.productID }) else {
+            busyMachineIDs.remove(p.machineID)
+            return
+        }
+        do {
+            try await RevocationAdminClient.unrevoke(id: record.id)
+            revocations = (try? await RevocationAdminClient.fetchAll()) ?? revocations.filter { $0.id != record.id }
+            LicenseActionLog.record(machineID: p.machineID, productID: p.productID, productName: p.productName,
+                                     action: .unblocked, detail: "Licență deblocată manual.")
+            actionRecords = profile.allMachineIDs.flatMap { LicenseActionLog.entries(forMachineID: $0) }
+        } catch {
+            actionError = error.localizedDescription
+        }
+        busyMachineIDs.remove(p.machineID)
     }
 }

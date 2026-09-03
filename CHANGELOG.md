@@ -1,5 +1,18 @@
 # Changelog — GDC Plugin Manager
 
+## Furnizor v1.28.0 — Acțiuni pe licență direct din fișă (Faza 2 CRM) (2026-09-03)
+
+Din fișa clientului, orice achiziție are acum trei acțiuni reale, nu doar
+vizualizare: **Blochează** / **Deblochează** licența (prin sistemul de
+revocare deja existent), și **Prelungește…**, care generează un cod nou,
+semnat, pentru același produs și dispozitiv, cu o dată de expirare nouă —
+codul vechi rămâne neschimbat. Fiecare acțiune apare într-un jurnal vizibil
+în fișă, cu dată și detalii.
+
+Mecanismul de prelungire a fost verificat criptografic (nu doar compilat)
+cu cheia reală de producție: codul nou e acceptat ca valid, păstrează
+dispozitivul și noua expirare, iar cel vechi rămâne neafectat.
+
 ## Furnizor v1.27.0 — Fișa clientului (Faza 1 din CRM) (2026-09-03)
 
 Panoul de Clienți arăta doar tranzacții (un rând per licență generată).
