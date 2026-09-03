@@ -1,7 +1,7 @@
 {
-    "version": "2.2.0",
-    "release_date": "2026-08-30",
-    "changes": "Selectie granulara (checkbox-uri per element) in Curatare & RAM, Rosetta Inspector, Tweak-uri Sistem. Nou: Trimite la Cos aplicatiile Intel selectate.",
+    "version": "2.30.0",
+    "release_date": "2026-09-04",
+    "changes": "Analiza Disc complet refacuta: rezultatul ramane salvat pe disc si se incarca instant la redeschidere, cu buton dedicat pentru rescanarea doar a schimbarilor recente. Foldere le poti acum deschide direct, nu doar evidentia in Finder.",
     "download_url": {
         "mac": "https://github.com/gordasgdc/mac-master-control-pro/releases/latest/download/MacMasterControlPro-Mac.zip"
     },
