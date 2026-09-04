@@ -1,7 +1,7 @@
 {
-  "version": "2.0.1",
+  "version": "2.0.2",
   "release_date": "2026-09-04",
-  "changes": "Fereastră nativă, fără aspect de browser. Pipeline de producție complet configurabil (tipuri de proiect și etape proprii, redenumibile și reordonabile), cu istoric complet al avansării fiecărui proiect. Clienți: persoane fizice, juridice sau contacte neoficiale, cu marcaj de atenționare. Rest de plată calculat automat, monedă USD adăugată. Checklist-uri aplicate automat după tipul proiectului, cu legătură directă la inventarul de echipamente. Predare/returnare echipamente cu stare reală (OK / lipsă / avariat). Profil și ID de mașină vizibile direct în meniu, cu preț dinamic sincronizat automat.",
+  "changes": "Ghid PDF actualizat: instrucțiuni pentru un start complet curat (ștergerea datelor vechi înainte de o instalare nouă) și corectată durata reală a probei gratuite (25 de zile). Pagina de prezentare curățată de orice referință externă.",
   "download_url": {
     "mac": "https://github.com/gordasgdc/gdc-production-manager/releases/latest/download/GDCProductionManager.pkg",
     "windows": "https://github.com/gordasgdc/gdc-production-manager/releases/latest/download/GDCProductionManagerSetup.exe"
