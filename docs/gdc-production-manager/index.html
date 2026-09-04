@@ -9,7 +9,7 @@
   }
 </script>
 <title>GDC Production Manager</title>
-<meta name="description" content="Aplicație desktop pentru gestionarea proiectelor de producție video, cursuri 1-la-1 și produse digitale — totul local, fără cloud. 7 zile gratuit, apoi activare unică.">
+<meta name="description" content="Aplicație desktop pentru gestionarea proiectelor de producție video, cursuri 1-la-1 și produse digitale — totul local, fără cloud. 25 de zile gratuit, apoi activare unică.">
 <link rel="icon" href="../icon/icon.svg" type="image/svg+xml">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
@@ -181,9 +181,6 @@
     <a class="btn btn-primary" href="https://github.com/gordasgdc/gdc-production-manager/releases/latest/download/GDCProductionManager-mac.zip" data-t="cta_download_mac"></a>
     <a class="btn btn-primary" href="https://github.com/gordasgdc/gdc-production-manager/releases/latest/download/GDCProductionManagerSetup.exe" data-t="cta_download_win"></a>
   </div>
-  <div class="cta-row" style="margin-top:8px;">
-    <a class="btn btn-secondary" href="https://github.com/gordasgdc/gdc-production-manager" data-t="cta_source"></a>
-  </div>
   <p style="color:var(--text-faint); font-size:12.5px; margin-top:14px;" data-t="pricing_line"></p>
   <div class="pipeline-strip">
     <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
@@ -276,7 +273,6 @@
 <footer class="wrap">
   <div data-t="footer_line"></div>
   <div style="margin-top:8px;">
-    <a href="https://github.com/gordasgdc">GitHub</a> ·
     <a href="https://web.facebook.com/cristiGDC">Facebook</a> ·
     <a href="https://www.youtube.com/@cristigordas">YouTube</a> ·
     <a href="https://gordas.dev/termeni">Termeni și Condiții</a> ·
@@ -321,12 +317,11 @@ const T = {
     cta_download: "Descarcă ultima versiune",
     cta_download_mac: "Descarcă pentru Mac",
     cta_download_win: "Descarcă pentru Windows",
-    cta_source: "Cod sursă (GitHub)",
-    pricing_line: "7 zile gratuit, apoi activare unică — fără abonament.",
+    pricing_line: "25 de zile gratuit, apoi activare unică — fără abonament.",
     pricing_title: "Donație",
     pricing_sub: "Simplu: probă gratuită, apoi plătești o singură dată.",
     pricing_amount: "Vezi la Activare · lifetime",
-    pricing_detail: "7 zile de probă completă, apoi activare pe viață — fără abonament, fără reînnoiri.",
+    pricing_detail: "25 de zile de probă completă, apoi activare pe viață — fără abonament, fără reînnoiri.",
     pricing_cta: "Donează pe WhatsApp",
     about_title: "Despre aplicație",
     about_text: "GDC Production Manager este o aplicație desktop, standalone, pentru gestionarea activității de editor video și colorist. Urmărești proiecte de producție video prin toate etapele lor, ții evidența clienților, programezi cursuri 1-la-1 și îți administrezi produsele digitale (DCTL-uri, PowerGrade, LUT-uri). Fiecare utilizator o instalează pe propriul laptop; datele rămân locale.",
@@ -336,15 +331,15 @@ const T = {
     roadmap_title: "Ce urmează",
     roadmap_sub: "Funcționalități recent adăugate și în lucru.",
     download_title: "Descarcă și instalează",
-    download_sub: "Alege pachetul pentru sistemul tău din ultima versiune de pe GitHub.",
+    download_sub: "Alege pachetul pentru sistemul tău din ultima versiune.",
     mac_hint: "Dezarhivează .zip-ul, apoi dublu-click pe GDCProductionManager.pkg — aplicație semnată și verificată oficial de Apple, fără avertismente. Ghidul PDF e inclus în arhivă.",
     win_hint: "Dezarhivează .zip-ul, apoi dublu-click pe .exe — ghidul PDF e inclus în arhivă.",
-    footer_line: "GDC Production Manager · cod sursă open-source (MIT) · realizat de Cristi Gordas",
-    guide_note: "Fiecare release include și un ghid PDF complet (instalare, funcționalități explicate, exemple, depanare), în română, engleză și spaniolă — disponibil în arhivă și în docs/guides din repository.",
+    footer_line: "GDC Production Manager · realizat de Cristi Gordas",
+    guide_note: "Fiecare arhivă include și un ghid PDF complet (instalare, funcționalități explicate, exemple, depanare), în română, engleză și spaniolă.",
     tsh_title: "Probleme frecvente",
     tsh_sub: "Cele mai comune întrebări, cu răspuns direct.",
     license_title: "Licență",
-    license_text: "Codul sursă e licențiat MIT — complet disponibil pe GitHub. Aplicația compilată, distribuită (.pkg/.exe), are 7 zile de probă gratuită, apoi necesită activare (sumă afișată la Activare, o singură dată, lifetime) — la fel ca celelalte aplicații GDC.",
+    license_text: "Aplicația compilată, distribuită (.pkg/.exe), are 25 de zile de probă gratuită, apoi necesită activare (sumă afișată la Activare, o singură dată, lifetime) — la fel ca celelalte aplicații GDC.",
     troubleshooting: [
       ["browser","Nu se deschide browserul automat","Verifică fereastra aplicației — adresa locală (http://127.0.0.1:xxxx) e afișată acolo. Copiaz-o manual într-un browser."],
       ["database","Am pierdut datele după reinstalare","Datele sunt locale, în SQLite. Fă export JSON periodic din Setări, mai ales înainte de o reinstalare majoră."],
@@ -368,7 +363,7 @@ const T = {
       ["lock","100% local","Fără cont online, fără cloud — datele rămân pe laptopul tău."],
     ],
     steps: [
-      ["Descarcă aplicația de pe GitHub Releases"],
+      ["Descarcă aplicația"],
       ["Instalează (.pkg pe Mac, .exe pe Windows)"],
       ["Rulează și creează un cont local"],
       ["Adaugă proiecte, clienți, cursuri și produse"],
@@ -393,12 +388,11 @@ const T = {
     cta_download: "Download latest version",
     cta_download_mac: "Download for Mac",
     cta_download_win: "Download for Windows",
-    cta_source: "Source code (GitHub)",
-    pricing_line: "7 days free, then a one-time activation — no subscription.",
+    pricing_line: "25 days free, then a one-time activation — no subscription.",
     pricing_title: "Donation",
     pricing_sub: "Simple: a free trial, then a single one-time payment.",
     pricing_amount: "Vezi la Activare · lifetime",
-    pricing_detail: "7 days full trial, then a lifetime activation — no subscription, no renewals.",
+    pricing_detail: "25 days full trial, then a lifetime activation — no subscription, no renewals.",
     pricing_cta: "Donate on WhatsApp",
     about_title: "About the app",
     about_text: "GDC Production Manager is a standalone desktop app for running a video editing and coloring business. Track video production projects through every stage, keep client records, schedule 1-on-1 courses, and manage your digital products (DCTLs, PowerGrades, LUTs). Each user installs it on their own laptop; data stays local.",
@@ -408,15 +402,15 @@ const T = {
     roadmap_title: "What's next",
     roadmap_sub: "Recently shipped and in-progress features.",
     download_title: "Download & install",
-    download_sub: "Pick the package for your system from the latest GitHub release.",
+    download_sub: "Pick the package for your system from the latest release.",
     mac_hint: "Unzip the download, then double-click GDCProductionManager.pkg — signed and officially verified by Apple, no warnings. The PDF guide is included in the archive.",
     win_hint: "Unzip the download, then double-click the .exe — the PDF guide is included in the archive.",
-    footer_line: "GDC Production Manager · open-source source code (MIT) · built by Cristi Gordas",
-    guide_note: "Every release also includes a complete PDF guide (installation, features explained, examples, troubleshooting), in Romanian, English, and Spanish — available in the archive and in docs/guides in the repository.",
+    footer_line: "GDC Production Manager · built by Cristi Gordas",
+    guide_note: "Every release also includes a complete PDF guide (installation, features explained, examples, troubleshooting), in Romanian, English, and Spanish — included in the download archive.",
     tsh_title: "Common issues",
     tsh_sub: "The most common questions, answered directly.",
     license_title: "License",
-    license_text: "The source code is MIT licensed — fully available on GitHub. The distributed, compiled app (.pkg/.exe) has a 7-day free trial, then requires activation (amount shown at Activation, one-time, lifetime) — same as the other GDC apps.",
+    license_text: "The distributed, compiled app (.pkg/.exe) has a 25-day free trial, then requires activation (amount shown at Activation, one-time, lifetime) — same as the other GDC apps.",
     troubleshooting: [
       ["browser","Browser doesn't open automatically","Check the app window — the local address (http://127.0.0.1:xxxx) is shown there. Copy it manually into a browser."],
       ["database","Lost data after reinstalling","Data is local, in SQLite. Do periodic JSON exports from Settings, especially before a major reinstall."],
@@ -440,7 +434,7 @@ const T = {
       ["lock","100% local","No online account, no cloud — your data stays on your laptop."],
     ],
     steps: [
-      ["Download the app from GitHub Releases"],
+      ["Download the app"],
       ["Install (.pkg on Mac, .exe on Windows)"],
       ["Run it and create a local account"],
       ["Add projects, clients, courses and products"],
@@ -465,12 +459,11 @@ const T = {
     cta_download: "Descargar última versión",
     cta_download_mac: "Descargar para Mac",
     cta_download_win: "Descargar para Windows",
-    cta_source: "Código fuente (GitHub)",
-    pricing_line: "7 días gratis, luego una activación única — sin suscripción.",
+    pricing_line: "25 días gratis, luego una activación única — sin suscripción.",
     pricing_title: "Donación",
     pricing_sub: "Simple: una prueba gratuita, luego un único pago.",
     pricing_amount: "Ver en Activación · de por vida",
-    pricing_detail: "7 días de prueba completa, luego una activación de por vida — sin suscripción, sin renovaciones.",
+    pricing_detail: "25 días de prueba completa, luego una activación de por vida — sin suscripción, sin renovaciones.",
     pricing_cta: "Donar por WhatsApp",
     about_title: "Sobre la aplicación",
     about_text: "GDC Production Manager es una app de escritorio independiente para gestionar un negocio de edición y etalonaje de vídeo. Sigue tus proyectos de producción por todas sus etapas, mantén tus clientes, programa cursos 1 a 1 y administra tus productos digitales (DCTLs, PowerGrades, LUTs). Cada usuario la instala en su propio portátil; los datos se quedan en local.",
@@ -480,15 +473,15 @@ const T = {
     roadmap_title: "Qué sigue",
     roadmap_sub: "Funciones recién añadidas y en desarrollo.",
     download_title: "Descargar e instalar",
-    download_sub: "Elige el paquete para tu sistema desde la última versión de GitHub.",
+    download_sub: "Elige el paquete para tu sistema desde la última versión.",
     mac_hint: "Descomprime el .zip y haz doble clic en GDCProductionManager.pkg — aplicación firmada y verificada oficialmente por Apple, sin advertencias. La guía en PDF está incluida en el archivo.",
     win_hint: "Descomprime el .zip y haz doble clic en el .exe — la guía en PDF está incluida en el archivo.",
-    footer_line: "GDC Production Manager · código fuente abierto (MIT) · creado por Cristi Gordas",
-    guide_note: "Cada versión incluye también una guía completa en PDF (instalación, funciones explicadas, ejemplos, solución de problemas), en rumano, inglés y español — disponible en el archivo y en docs/guides del repositorio.",
+    footer_line: "GDC Production Manager · creado por Cristi Gordas",
+    guide_note: "Cada versión incluye también una guía completa en PDF (instalación, funciones explicadas, ejemplos, solución de problemas), en rumano, inglés y español — incluida en el archivo de descarga.",
     tsh_title: "Problemas frecuentes",
     tsh_sub: "Las preguntas más comunes, con respuesta directa.",
     license_title: "Licencia",
-    license_text: "El código fuente está licenciado bajo MIT — totalmente disponible en GitHub. La app compilada y distribuida (.pkg/.exe) tiene una prueba gratuita de 7 días, luego requiere activación (importe mostrado en Activación, pago único, de por vida) — igual que las demás apps de GDC.",
+    license_text: "La app compilada y distribuida (.pkg/.exe) tiene una prueba gratuita de 25 días, luego requiere activación (importe mostrado en Activación, pago único, de por vida) — igual que las demás apps de GDC.",
     troubleshooting: [
       ["browser","El navegador no se abre automáticamente","Comprueba la ventana de la aplicación — la dirección local (http://127.0.0.1:xxxx) se muestra ahí. Cópiala manualmente en un navegador."],
       ["database","Perdí los datos tras reinstalar","Los datos son locales, en SQLite. Haz exportaciones JSON periódicas desde Ajustes, sobre todo antes de una reinstalación importante."],
@@ -512,7 +505,7 @@ const T = {
       ["lock","100% local","Sin cuenta en línea, sin nube — tus datos se quedan en tu portátil."],
     ],
     steps: [
-      ["Descarga la app desde GitHub Releases"],
+      ["Descarga la app"],
       ["Instala (.pkg en Mac, .exe en Windows)"],
       ["Ejecútala y crea una cuenta local"],
       ["Añade proyectos, clientes, cursos y productos"],
