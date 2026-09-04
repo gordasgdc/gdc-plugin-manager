@@ -42,6 +42,12 @@
         }
       ]
     },
+    "gdc-production-manager" : {
+      "basePrice" : 25,
+      "currency" : "EUR",
+      "name" : "GDC Production Manager",
+      "promoSchedule" : []
+    },
     "gdc-vault" : {
       "basePrice" : 18,
       "currency" : "EUR",

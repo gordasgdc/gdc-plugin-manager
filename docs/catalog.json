@@ -42,6 +42,7 @@
       "coverImage" : "covers/GDC Production Manager.png?v=b20467c6",
       "id" : "GDC Production Manager",
       "name" : "GDC Production Manager",
+      "pricingProductID" : "gdc-production-manager",
       "url" : "https://gordas.dev/gdc-production-manager/",
       "youtubeURL" : "https://www.youtube.com/@cristigordas"
     },

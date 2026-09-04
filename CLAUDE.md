@@ -870,6 +870,38 @@ datat sunt mutate în `CLAUDE_ARCHIVE.md` (NU se citește automat) — citește-
 explicit când investighezi o zonă veche de cod. Rezumat "stare curentă" mai
 jos rămâne aici, fiindcă e activ relevant sesiune de sesiune.
 
+## `docs/catalog.json` + `docs/pricing.json` (2026-09-04) — GDC Production Manager capătă preț propriu
+
+Completare cerută din sesiunea de refactorizare majoră a
+`gdc-production-manager` (Regula 12/27 — profil+HWID, revocare, preț
+dinamic) — acea aplicație era deja în `catalog.json`, dar fără
+`pricingProductID`, deci `AppPricingFetcher`/cardul din "Aplicațiile mele"
+n-avea de unde citi un preț pentru ea.
+
+- `docs/catalog.json` — adăugat `"pricingProductID": "gdc-production-manager"`
+  pe intrarea deja existentă. Editat CHIRURGICAL (o linie) — prima
+  încercare, prin `json.dump(..., sort_keys=True)` din Python, a rescris
+  formatarea ÎNTREGULUI fișier (847 din ~/900 linii schimbate doar pentru
+  un câmp) fiindcă ordinea cheilor și stilul de indentare al scriptului nu
+  coincideau cu cele ale fișierului original — anulată explicit
+  (`git checkout`) înainte de commit, refăcută ca edit de text simplu.
+  **Regulă practică**: orice modificare a acestui fișier (sau a
+  `pricing.json`) prin script/cod, nu prin editare directă de text, TREBUIE
+  să păstreze formatarea exactă existentă (indent 2 spații, `"cheie" :
+  valoare` cu spațiu înainte de `:`) — un rescrieri complet, chiar dacă
+  JSON-ul rezultat e semantic identic, face imposibil de recenzat diff-ul
+  și riscă regresii de formatare într-un fișier live, citit de toți
+  clienții din ecosistem.
+- `docs/pricing.json` — intrare nouă `"gdc-production-manager"`
+  (`basePrice: 25 EUR`, `promoSchedule: []`) — 25 €, suma deja documentată
+  de acel repo (nu 23 € generic, Regula 3), fără nicio promoție
+  programată automat — decizie de preț/ofertă rămâne a lui Cristi, din
+  Furnizor.
+- **Stare la commit**: modificate local, NEPUBLICATE încă (necesită
+  `git add docs/catalog.json docs/pricing.json && git commit && git push`
+  în acest repo) — Claude nu a împins automat o schimbare cu efect
+  imediat pe toate aplicațiile client care citesc aceste fișiere live.
+
 ## Furnizor v1.31.1 (2026-09-04) — FIX REAL SISTEMIC: publicarea putea șterge tăcut `docs/covers/` întreg
 
 **Raportat de Cristi**: "iarăși a dispărut folderul cu imagini" — toate
