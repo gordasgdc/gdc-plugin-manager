@@ -116,6 +116,9 @@
       "externalURL" : "https://blackmagicdesign-emea.zoom.us/webinar/register/WN_CTUf_NcdQ4e1f4LtCi9S0w#/registration",
       "id" : "Color Fundamentals",
       "location" : "Online",
+      "occurrences" : [
+
+      ],
       "scheduling" : {
         "endDate" : 810433495.481167,
         "showCountdown" : true,
@@ -131,6 +134,9 @@
       "externalURL" : "https://blackmagicdesign-emea.zoom.us/webinar/register/WN_0_KeO82lSiWK1zbesPsC7A#/registration",
       "id" : "Photo-to-Video",
       "location" : "Online",
+      "occurrences" : [
+
+      ],
       "scheduling" : {
         "endDate" : 810433533.536226,
         "showCountdown" : true,
@@ -146,6 +152,9 @@
       "externalURL" : "https://blackmagicdesign-emea.zoom.us/webinar/register/WN_9gsd7fYVRVW5mlcap7dsyw#/registration",
       "id" : "New-Users-Davinci",
       "location" : "Online",
+      "occurrences" : [
+
+      ],
       "scheduling" : {
         "endDate" : 810433549.820505,
         "showCountdown" : true,
@@ -161,6 +170,9 @@
       "externalURL" : "https://docs.google.com/forms/d/e/1FAIpQLScOSgscKxzXugU7QkTkktefVJiQq50ZZoDOZL1WGjHqyXoJ-w/viewform",
       "id" : "Don't Be Like Me Workshop",
       "location" : "Sighisoara",
+      "occurrences" : [
+
+      ],
       "scheduling" : {
         "endDate" : 812435826.730138,
         "showCountdown" : true,
@@ -175,12 +187,42 @@
       "youtubeURL" : "https://www.facebook.com/bogdan.damian.735/posts/pfbid0bnPWobkt8QuDDYk2JUE69ojzXs2wRs4i2PG3zqB92Cwiw47jcY7qcRVNWUQxF6Djl"
     },
     {
+      "coverImage" : "https://eduardcarp.com/wp-content/uploads/2026/09/MK-2027-site-1.jpg",
+      "dateDisplay" : "23 - 25 martie 2027",
+      "description" : "Visezi să creezi filme de nuntă pline de emoție? Vrei să te diferențiezi de ceilalți videografi și să atragi clienți de top? Atunci acest MASTERCLASS este perfect pentru tine!",
+      "externalURL" : "https://eduardcarp.com/workshop/",
+      "id" : "MASTERCLASS  Eduard Carp",
+      "location" : "BRASOV",
+      "occurrences" : [
+        {
+          "dateDisplay" : "30 martie - 1 aprilie 2027",
+          "id" : "50818328-632B-4F24-8A41-FE796D98575E",
+          "location" : "BUCUREȘTI",
+          "priceEUR" : 500
+        }
+      ],
+      "scheduling" : {
+        "endDate" : 827457646.108086,
+        "showCountdown" : true,
+        "startDate" : 810260446.108086
+      },
+      "socialLinks" : {
+        "facebookURL" : "https://www.facebook.com/eduardcarpvideographer",
+        "instagramURL" : "https://www.instagram.com/eduardcarp_videographer/",
+        "youtubeURL" : "https://www.youtube.com/@EduardCarp"
+      },
+      "title" : "MASTERCLASS  Eduard Carp"
+    },
+    {
       "coverImage" : "https://images.blackmagicdesign.com/images/invites/davinci-resolve-online-seminars/seminars/switching-to-davinci-resolve.jpg?_v=1787704362",
       "dateDisplay" : "Friday 30th October   14:00 (GMT)",
       "description" : "Designed for editors switching to DaVinci Resolve, this seminar will cover the overall layout and organization of tools. Building on your existing editing knowledge, you’ll learn how to organise media, prepare timelines and build collaborative projects that your whole team can share.",
       "externalURL" : "https://blackmagicdesign-emea.zoom.us/webinar/register/WN_cbfeBRGDTWOA9MHiD9IYKg#/registration",
       "id" : "Switching",
       "location" : "Online",
+      "occurrences" : [
+
+      ],
       "scheduling" : {
         "endDate" : 810433563.777439,
         "showCountdown" : true,
@@ -196,6 +238,9 @@
       "externalURL" : "https://blackmagicdesign-emea.zoom.us/webinar/register/WN_A21ElzjKR1i3kOtwHdA7bw#/registration",
       "id" : "Work Smarter\nwith AI Tools",
       "location" : "Online",
+      "occurrences" : [
+
+      ],
       "scheduling" : {
         "endDate" : 810433578.899774,
         "showCountdown" : true,
@@ -211,6 +256,9 @@
       "externalURL" : "https://blackmagicdesign-emea.zoom.us/webinar/register/WN_4SMOr7J6QJaZKJFrmaTugQ#/registration",
       "id" : "Workflows from\nCamera to Delivery",
       "location" : "Online",
+      "occurrences" : [
+
+      ],
       "scheduling" : {
         "endDate" : 810433590.245154,
         "showCountdown" : true,
@@ -514,6 +562,9 @@
   ],
   "partnerStores" : [
     {
+      "additionalAddresses" : [
+
+      ],
       "address" : "Bd-ul Mihail Kogălniceanu, nr. 49, scara B, ap.66, sector 5, cod postal 050104",
       "coverImage" : "covers/MITMAG.jpg?v=39d86f4a",
       "description" : "MITMAG | Echipamente foto-video alese de Adrian Mitranescu (fotograf cu peste 15 ani de experiență în nunți). Înțelegem fricile dar si nevoile comunitatii foto-video din România. Consultanță de la coleg la coleg și produse testate pe teren!",
@@ -581,6 +632,9 @@
   ],
   "serviceCenters" : [
     {
+      "additionalAddresses" : [
+
+      ],
       "address" : "Clinica Dronelor\nGalați, Bd. George Coșbuc 116–118",
       "category" : "drone",
       "contactURL" : "https://clinicadronelor.ro/#formular-reparatie",
@@ -651,5 +705,5 @@
       "youtubeURL" : "https://www.youtube.com/watch?v=dnkUIGXIzIM"
     }
   ],
-  "updatedAt" : "2026-09-03"
+  "updatedAt" : "2026-09-05"
 }
