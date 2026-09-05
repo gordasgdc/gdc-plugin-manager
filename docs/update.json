@@ -1,8 +1,8 @@
 {
   "mac": {
-    "version": "1.27.3",
-    "release_date": "2026-09-03",
-    "changes": "Când verificarea de actualizări eșuează (rețea sau server), aplicația te avertizează explicit și te trimite să descarci manual de pe gordas.dev — nu mai pare tăcut că ești la zi.",
+    "version": "1.29.2",
+    "release_date": "2026-09-05",
+    "changes": "Evenimente cu mai multe locații/perioade și preț opțional per locație; adrese suplimentare pentru service/magazine partenere; banner de lansare corect fără imagine; CGConvertor și DisplayCAL-CG apar acum automat în Aplicațiile Mele.",
     "download_url": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Mac.zip",
     "mandatory": false,
     "min_version": "1.0.0"
