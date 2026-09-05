@@ -870,6 +870,61 @@ datat sunt mutate în `CLAUDE_ARCHIVE.md` (NU se citește automat) — citește-
 explicit când investighezi o zonă veche de cod. Rezumat "stare curentă" mai
 jos rămâne aici, fiindcă e activ relevant sesiune de sesiune.
 
+## Client v1.29.0 / Furnizor v1.32.0 (2026-09-05) — Evenimente multi-locație, sedii suplimentare
+
+Cerință explicită: un eveniment (workshop/curs/festival) rulează des în
+mai multe orașe/perioade, uneori cu bilet/cost diferit pe locație — modelul
+vechi (o singură `location`/`dateDisplay`, zero preț) nu acoperea asta.
+Extins și la `ServiceCenter`/`PartnerStore` (singurele entități cu adresă
+unică OPȚIONALĂ, structural identice ca nevoie — "mai multe sedii ale
+aceleiași afaceri"). `Course` (`options: [CourseOption]`) și `ProductBundle`
+(`items: [BundleItemRef]`) NU s-au atins — au deja tiparul echivalent.
+
+**Model (`CatalogModel.swift`)**: `EventOccurrence` (nou struct — `location`/
+`dateDisplay` libere, `priceEUR`/`priceLabel` opționale) +
+`Event.occurrences: [EventOccurrence]`. `ServiceCenter`/`PartnerStore`
+capătă `additionalAddresses: [String]`. Toate trei structuri au primit un
+`init(from: Decoder)` CUSTOM nou (nu existau înainte, erau sintetizate) —
+altfel array-urile non-optionale noi ar fi aruncat la decodare pentru
+orice eveniment/service/magazin deja publicat (cheia lipsește din
+`catalog.json`-ul lor). Verificat REAL, nu presupus: rulat un decoder de
+test direct pe `docs/catalog.json` (7 evenimente, 1 service, 1 magazin) —
+zero erori, toate cu `occurrences`/`additionalAddresses` goale ca înainte;
+plus un round-trip encode/decode complet pe date noi, plus JSON vechi
+("fără cheia nouă deloc") construit manual, confirmat că decodează la `[]`.
+
+**Furnizor**: `PublishEventView.swift` — listă nouă (add/remove) +
+`AddEventOccurrenceSheet.swift` (locație/interval/preț/etichetă, TOATE
+opționale, pe tiparul `AddPromoWindowSheet` din `PricingManagerView.swift`).
+`PublishServiceCenterView.swift`/`PublishPartnerStoreView.swift` —
+`AdditionalAddressesEditor.swift` (nou, reutilizat de amândouă — listă
+inline simplă, fără sheet, un singur câmp).
+
+**Client**: `EventCard` — rând suplimentar per ocurență (locație+interval,
+buton hartă propriu, badge de preț dacă există), linia principală
+neschimbată. `PartnerStoreCard`/`ServiceCenterCard` — câte un rând per
+adresă suplimentară.
+
+**Windows (`GDCPluginManagerWin`, doar Core+Client — fără Furnizor,
+confirmat din CLAUDE.md-ul acelui repo)**: `EventOccurrence` record nou +
+`Event.Occurrences`/`ServiceCenter.AdditionalAddresses`/`PartnerStore.
+AdditionalAddresses` (`IReadOnlyList<T>` cu default `Array.Empty<T>()` —
+System.Text.Json lasă implicit valoarea declarată când cheia lipsește,
+retrocompatibil fără niciun converter custom, spre deosebire de Swift).
+`EventViewModel`/`AddressLinkViewModel` (nou, reutilizat de PartnerStore/
+ServiceCenter) + `MainWindow.xaml` — `ItemsControl` nou per card. Verificat
+cu `dotnet build ... -r win-x64` (0 erori) + un decoder de test separat,
+rulat REAL pe același `catalog.json` de producție + round-trip + JSON vechi
+construit manual — identic ca acoperire cu testul Swift de mai sus.
+
+**Verificat**: `swift build` (Client+Core+Furnizor) — 0 erori. `dotnet
+build src/GDCPluginManager.Client/GDCPluginManager.Client.csproj -r
+win-x64` — 0 erori. Versiune bump-uită doar în sursă (`Info.plist`/
+`Info-Furnizor.plist`/`.csproj`/`installer.iss`) — **`docs/update.json`
+NU e atins încă**, intenționat: bump-ul lui e rezervat momentului în care
+un release real, descărcabil, chiar există (Regula 14/istoricul de bug-uri
+404 deja documentat în acest fișier).
+
 ## `docs/catalog.json` + `docs/pricing.json` (2026-09-04) — GDC Production Manager capătă preț propriu
 
 Completare cerută din sesiunea de refactorizare majoră a

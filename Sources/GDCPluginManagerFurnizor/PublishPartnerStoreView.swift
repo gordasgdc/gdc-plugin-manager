@@ -20,6 +20,8 @@ struct PublishPartnerStoreView: View {
     @State private var scheduling: Scheduling?
     // Rețele sociale opționale (2026-08-29) — vezi SocialLinksEditor.swift.
     @State private var socialForm = SocialLinksFormState()
+    // Multi-Locație (2026-09-05) — magazine/sedii suplimentare, opționale.
+    @State private var additionalAddresses: [String] = []
 
     @State private var isBusy = false
     @State private var errorMessage: String?
@@ -48,6 +50,8 @@ struct PublishPartnerStoreView: View {
                 CoverImagePicker(preset: .icon, selection: $coverSelection)
                 SchedulingPicker(scheduling: $scheduling)
                     .id(editingID ?? "new")
+                AdditionalAddressesEditor(addresses: $additionalAddresses,
+                                           existingValues: existingStores.compactMap(\.address))
                 SocialLinksSection(state: $socialForm)
 
                 if let errorMessage {
@@ -148,6 +152,7 @@ struct PublishPartnerStoreView: View {
         coverSelection = store.coverImage.map { .existing($0) } ?? .none
         scheduling = store.scheduling
         socialForm = SocialLinksFormState(store.socialLinks)
+        additionalAddresses = store.additionalAddresses
         successMessage = nil
         errorMessage = nil
     }
@@ -162,6 +167,7 @@ struct PublishPartnerStoreView: View {
         coverSelection = .none
         scheduling = nil
         socialForm.reset()
+        additionalAddresses = []
     }
 
     private func publish() async {
@@ -189,7 +195,7 @@ struct PublishPartnerStoreView: View {
                 description: description, url: url.trimmingCharacters(in: .whitespaces),
                 coverImage: coverImage, scheduling: scheduling,
                 address: trimmedAddress.isEmpty ? nil : trimmedAddress,
-                socialLinks: socialForm.model
+                socialLinks: socialForm.model, additionalAddresses: additionalAddresses
             )
 
             try CatalogEditor.upsertPartnerStore(store)

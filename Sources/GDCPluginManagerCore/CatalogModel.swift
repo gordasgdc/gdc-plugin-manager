@@ -859,8 +859,14 @@ public struct Event: Codable, Identifiable, Hashable {
     public let scheduling: Scheduling?
     /// Rețele sociale opționale — 2026-08-29. Vezi `Course.socialLinks`.
     public let socialLinks: SocialLinks?
+    /// Locații/perioade/prețuri SUPLIMENTARE — Multi-Locație (2026-09-05).
+    /// `location`/`dateDisplay` de mai sus rămân "principalele", complet
+    /// neschimbate — un eveniment cu 0 `occurrences` se afișează byte-identic
+    /// ca înainte. Fiecare ocurență e complet opțională în conținut
+    /// (locație/interval pot fi goale, prețul poate lipsi = gratuit).
+    public let occurrences: [EventOccurrence]
 
-    public init(id: String, title: String, description: String, dateDisplay: String, location: String, externalURL: String, youtubeURL: String? = nil, coverImage: String? = nil, scheduling: Scheduling? = nil, socialLinks: SocialLinks? = nil) {
+    public init(id: String, title: String, description: String, dateDisplay: String, location: String, externalURL: String, youtubeURL: String? = nil, coverImage: String? = nil, scheduling: Scheduling? = nil, socialLinks: SocialLinks? = nil, occurrences: [EventOccurrence] = []) {
         self.socialLinks = socialLinks
         self.id = id
         self.title = title
@@ -871,11 +877,77 @@ public struct Event: Codable, Identifiable, Hashable {
         self.youtubeURL = youtubeURL
         self.coverImage = coverImage
         self.scheduling = scheduling
+        self.occurrences = occurrences
+    }
+
+    // Decoder custom (nou, 2026-09-05) — `occurrences` e un array
+    // NON-optional cu fallback `[]`; sintetizarea automată Decodable ar
+    // arunca la decodare pentru orice eveniment publicat înainte de
+    // această schimbare (cheia lipsește din `catalog.json`-ul lor). Toate
+    // celelalte câmpuri decodează identic cu varianta sintetizată dinainte.
+    private enum CodingKeys: String, CodingKey {
+        case id, title, description, dateDisplay, location, externalURL, youtubeURL, coverImage, scheduling, socialLinks, occurrences
+    }
+    public init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        id = try c.decode(String.self, forKey: .id)
+        title = try c.decode(String.self, forKey: .title)
+        description = try c.decode(String.self, forKey: .description)
+        dateDisplay = try c.decode(String.self, forKey: .dateDisplay)
+        location = try c.decode(String.self, forKey: .location)
+        externalURL = try c.decode(String.self, forKey: .externalURL)
+        youtubeURL = try c.decodeIfPresent(String.self, forKey: .youtubeURL)
+        coverImage = try c.decodeIfPresent(String.self, forKey: .coverImage)
+        scheduling = try c.decodeIfPresent(Scheduling.self, forKey: .scheduling)
+        socialLinks = try c.decodeIfPresent(SocialLinks.self, forKey: .socialLinks)
+        occurrences = try c.decodeIfPresent([EventOccurrence].self, forKey: .occurrences) ?? []
     }
 
     public var coverImageURL: URL? { CatalogAssets.imageURL(for: coverImage) }
     /// Link Google Maps generat din `location` — Etapa 5 (2026-08-29).
     public var mapsURL: URL? { MapsLink.url(for: location) }
+}
+
+/// O locație/interval/preț SUPLIMENTAR pentru un `Event` — Multi-Locație
+/// (2026-09-05). Vezi comentariul de pe `Event.occurrences`. Toate câmpurile
+/// sunt libere/opționale prin design — un eveniment poate avea doar o
+/// locație secundară fără preț, doar un preț fără locație nouă (ex. o
+/// categorie de bilet suplimentară pentru aceeași locație/dată), etc.
+public struct EventOccurrence: Codable, Identifiable, Hashable {
+    public let id: String
+    /// Text liber, la fel ca `Event.location` — poate rămâne gol.
+    public let location: String
+    /// Text liber, la fel ca `Event.dateDisplay` — poate rămâne gol.
+    public let dateDisplay: String
+    /// `nil` = fără preț/gratuit — NICIODATĂ un câmp obligatoriu.
+    public let priceEUR: Double?
+    /// Etichetă opțională a categoriei de preț (ex. "Early bird", "VIP") —
+    /// utilă mai ales când mai multe ocurențe au aceeași locație/dată dar
+    /// prețuri diferite (categorii de bilete).
+    public let priceLabel: String?
+
+    public init(id: String = UUID().uuidString, location: String, dateDisplay: String,
+                priceEUR: Double? = nil, priceLabel: String? = nil) {
+        self.id = id
+        self.location = location
+        self.dateDisplay = dateDisplay
+        self.priceEUR = priceEUR
+        self.priceLabel = priceLabel
+    }
+
+    public var mapsURL: URL? { MapsLink.url(for: location) }
+
+    /// "23 €" sau "Early bird: 23 €" — `nil` dacă `priceEUR` lipsește
+    /// (afișare "gratuit"/fără preț, nu un rând gol în UI).
+    public var priceDisplay: String? {
+        guard let priceEUR else { return nil }
+        let isWhole = priceEUR.truncatingRemainder(dividingBy: 1) == 0
+        let amount = isWhole ? String(Int(priceEUR)) : String(priceEUR)
+        if let priceLabel, !priceLabel.trimmingCharacters(in: .whitespaces).isEmpty {
+            return "\(priceLabel): \(amount) €"
+        }
+        return "\(amount) €"
+    }
 }
 
 /// Categoria unui service partener din secțiunea "Service & Reparații
@@ -957,9 +1029,13 @@ public struct ServiceCenter: Codable, Identifiable, Hashable {
     public let address: String?
     /// Rețele sociale opționale — 2026-08-29. Vezi `Course.socialLinks`.
     public let socialLinks: SocialLinks?
+    /// Sedii/locații SUPLIMENTARE ale aceleiași afaceri — Multi-Locație
+    /// (2026-09-05). `address` de mai sus rămâne sediul "principal",
+    /// neschimbat — complet opțional, poate rămâne gol.
+    public let additionalAddresses: [String]
 
     public init(id: String, name: String, category: ServiceCategory, specialization: String,
-                contactURL: String, websiteURL: String? = nil, coverImage: String? = nil, scheduling: Scheduling? = nil, address: String? = nil, socialLinks: SocialLinks? = nil) {
+                contactURL: String, websiteURL: String? = nil, coverImage: String? = nil, scheduling: Scheduling? = nil, address: String? = nil, socialLinks: SocialLinks? = nil, additionalAddresses: [String] = []) {
         self.socialLinks = socialLinks
         self.id = id
         self.name = name
@@ -970,6 +1046,26 @@ public struct ServiceCenter: Codable, Identifiable, Hashable {
         self.coverImage = coverImage
         self.scheduling = scheduling
         self.address = address
+        self.additionalAddresses = additionalAddresses
+    }
+
+    // Decoder custom (nou, 2026-09-05) — vezi motivul identic pe `Event`.
+    private enum CodingKeys: String, CodingKey {
+        case id, name, category, specialization, contactURL, websiteURL, coverImage, scheduling, address, socialLinks, additionalAddresses
+    }
+    public init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        id = try c.decode(String.self, forKey: .id)
+        name = try c.decode(String.self, forKey: .name)
+        category = try c.decode(ServiceCategory.self, forKey: .category)
+        specialization = try c.decode(String.self, forKey: .specialization)
+        contactURL = try c.decode(String.self, forKey: .contactURL)
+        websiteURL = try c.decodeIfPresent(String.self, forKey: .websiteURL)
+        coverImage = try c.decodeIfPresent(String.self, forKey: .coverImage)
+        scheduling = try c.decodeIfPresent(Scheduling.self, forKey: .scheduling)
+        address = try c.decodeIfPresent(String.self, forKey: .address)
+        socialLinks = try c.decodeIfPresent(SocialLinks.self, forKey: .socialLinks)
+        additionalAddresses = try c.decodeIfPresent([String].self, forKey: .additionalAddresses) ?? []
     }
 
     public var coverImageURL: URL? { CatalogAssets.imageURL(for: coverImage) }
@@ -995,8 +1091,11 @@ public struct PartnerStore: Codable, Identifiable, Hashable {
     public let address: String?
     /// Rețele sociale opționale — 2026-08-29. Vezi `Course.socialLinks`.
     public let socialLinks: SocialLinks?
+    /// Magazine/locații SUPLIMENTARE ale aceluiași partener — Multi-Locație
+    /// (2026-09-05). Vezi `ServiceCenter.additionalAddresses`.
+    public let additionalAddresses: [String]
 
-    public init(id: String, name: String, description: String, url: String, coverImage: String? = nil, scheduling: Scheduling? = nil, address: String? = nil, socialLinks: SocialLinks? = nil) {
+    public init(id: String, name: String, description: String, url: String, coverImage: String? = nil, scheduling: Scheduling? = nil, address: String? = nil, socialLinks: SocialLinks? = nil, additionalAddresses: [String] = []) {
         self.socialLinks = socialLinks
         self.id = id
         self.name = name
@@ -1005,6 +1104,24 @@ public struct PartnerStore: Codable, Identifiable, Hashable {
         self.coverImage = coverImage
         self.scheduling = scheduling
         self.address = address
+        self.additionalAddresses = additionalAddresses
+    }
+
+    // Decoder custom (nou, 2026-09-05) — vezi motivul identic pe `Event`.
+    private enum CodingKeys: String, CodingKey {
+        case id, name, description, url, coverImage, scheduling, address, socialLinks, additionalAddresses
+    }
+    public init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        id = try c.decode(String.self, forKey: .id)
+        name = try c.decode(String.self, forKey: .name)
+        description = try c.decode(String.self, forKey: .description)
+        url = try c.decode(String.self, forKey: .url)
+        coverImage = try c.decodeIfPresent(String.self, forKey: .coverImage)
+        scheduling = try c.decodeIfPresent(Scheduling.self, forKey: .scheduling)
+        address = try c.decodeIfPresent(String.self, forKey: .address)
+        socialLinks = try c.decodeIfPresent(SocialLinks.self, forKey: .socialLinks)
+        additionalAddresses = try c.decodeIfPresent([String].self, forKey: .additionalAddresses) ?? []
     }
 
     public var coverImageURL: URL? { CatalogAssets.imageURL(for: coverImage) }

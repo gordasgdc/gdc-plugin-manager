@@ -1781,6 +1781,24 @@ private struct EventCard: View {
                     .font(.caption).foregroundStyle(.secondary)
                 MapButton(mapsURL: event.mapsURL)
             }
+            // Multi-Locație (2026-09-05) — locații/perioade/prețuri
+            // suplimentare, câte un rând per ocurență. Un eveniment fără
+            // nicio ocurență suplimentară arată identic ca înainte.
+            ForEach(event.occurrences) { occurrence in
+                HStack(spacing: 6) {
+                    Text([occurrence.dateDisplay, occurrence.location]
+                        .filter { !$0.isEmpty }.joined(separator: " · "))
+                        .font(.caption).foregroundStyle(.secondary)
+                    MapButton(mapsURL: occurrence.mapsURL)
+                    if let priceDisplay = occurrence.priceDisplay {
+                        Text(priceDisplay)
+                            .font(.caption2).fontWeight(.medium)
+                            .foregroundStyle(.secondary)
+                            .padding(.horizontal, 6).padding(.vertical, 2)
+                            .background(Capsule().fill(.background.tertiary))
+                    }
+                }
+            }
             CollapsibleDescription(text: event.description)
             Spacer(minLength: 0)
             if let url = URL(string: event.externalURL) {
@@ -2047,6 +2065,13 @@ private struct PartnerStoreCard: View {
                 }
                 MapButton(mapsURL: store.mapsURL)
             }
+            // Multi-Locație (2026-09-05) — sedii suplimentare, câte un rând.
+            ForEach(store.additionalAddresses, id: \.self) { addr in
+                HStack(spacing: 6) {
+                    Text(addr).font(.caption).foregroundStyle(.secondary)
+                    MapButton(mapsURL: MapsLink.url(for: addr))
+                }
+            }
             SocialLinksRow(store.socialLinks)
         }
         .padding(12)
@@ -2120,6 +2145,13 @@ private struct ServiceCenterCard: View {
                         .controlSize(.small)
                 }
                 MapButton(mapsURL: center.mapsURL)
+            }
+            // Multi-Locație (2026-09-05) — sedii suplimentare, câte un rând.
+            ForEach(center.additionalAddresses, id: \.self) { addr in
+                HStack(spacing: 6) {
+                    Text(addr).font(.caption).foregroundStyle(.secondary)
+                    MapButton(mapsURL: MapsLink.url(for: addr))
+                }
             }
             SocialLinksRow(center.socialLinks)
         }

@@ -24,6 +24,10 @@ struct PublishEventView: View {
     @State private var scheduling: Scheduling?
     // Rețele sociale opționale (2026-08-29) — vezi SocialLinksEditor.swift.
     @State private var socialForm = SocialLinksFormState()
+    // Multi-Locație (2026-09-05) — locații/perioade/prețuri suplimentare,
+    // complet opționale. Vezi Event.occurrences.
+    @State private var occurrences: [EventOccurrence] = []
+    @State private var showAddOccurrenceSheet = false
 
     @State private var isBusy = false
     @State private var errorMessage: String?
@@ -69,6 +73,49 @@ struct PublishEventView: View {
                 // edit, durata nu-mi apare ca activa").
                 SchedulingPicker(scheduling: $scheduling)
                     .id(editingID ?? "new-event")
+
+                // Multi-Locație (2026-09-05) — locație/dată de mai sus rămân
+                // "principalele"; acestea sunt ocurențe ÎN PLUS, opționale.
+                GroupBox {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Locații și perioade suplimentare (opțional)").fontWeight(.medium)
+                        Text("Folosește dacă evenimentul rulează și în alte orașe/perioade, eventual cu preț diferit.")
+                            .font(.caption).foregroundStyle(.secondary)
+                        ForEach(occurrences) { occ in
+                            HStack {
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(occ.location.isEmpty ? "(fără locație)" : occ.location)
+                                    if !occ.dateDisplay.isEmpty {
+                                        Text(occ.dateDisplay).font(.caption).foregroundStyle(.secondary)
+                                    }
+                                }
+                                Spacer()
+                                if let priceDisplay = occ.priceDisplay {
+                                    Text(priceDisplay).font(.caption).foregroundStyle(.secondary)
+                                }
+                                Button(role: .destructive) {
+                                    occurrences.removeAll { $0.id == occ.id }
+                                } label: {
+                                    Image(systemName: "minus.circle.fill")
+                                }
+                                .buttonStyle(.plain)
+                                .foregroundStyle(.red)
+                            }
+                        }
+                        Button {
+                            showAddOccurrenceSheet = true
+                        } label: {
+                            Label("Adaugă locație/perioadă", systemImage: "plus.circle")
+                        }
+                    }
+                    .padding(8)
+                }
+                .sheet(isPresented: $showAddOccurrenceSheet) {
+                    AddEventOccurrenceSheet(existingLocations: existingEvents.map(\.location)) { new in
+                        occurrences.append(new)
+                    }
+                }
+
                 SocialLinksSection(state: $socialForm)
 
                 if let errorMessage {
@@ -171,6 +218,7 @@ struct PublishEventView: View {
         coverSelection = event.coverImage.map { .existing($0) } ?? .none
         scheduling = event.scheduling
         socialForm = SocialLinksFormState(event.socialLinks)
+        occurrences = event.occurrences
         successMessage = nil
         errorMessage = nil
     }
@@ -187,6 +235,7 @@ struct PublishEventView: View {
         coverSelection = .none
         scheduling = nil
         socialForm.reset()
+        occurrences = []
     }
 
     private func publish() async {
@@ -215,7 +264,7 @@ struct PublishEventView: View {
                 externalURL: externalURL.trimmingCharacters(in: .whitespaces),
                 youtubeURL: trimmedYouTube.isEmpty ? nil : trimmedYouTube,
                 coverImage: coverImage, scheduling: scheduling,
-                socialLinks: socialForm.model
+                socialLinks: socialForm.model, occurrences: occurrences
             )
 
             try CatalogEditor.upsertEvent(event)

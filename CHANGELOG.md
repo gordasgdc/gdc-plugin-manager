@@ -1,5 +1,19 @@
 # Changelog — GDC Plugin Manager
 
+## Client v1.29.0 / Furnizor v1.32.0 — Evenimente multi-locație, sedii suplimentare pentru service/magazine partenere (2026-09-05)
+
+- **Evenimente**: pe lângă locația și data principale, un eveniment poate
+  avea acum orice număr de locații/perioade suplimentare — util pentru
+  workshop-uri/festivaluri care rulează în mai multe orașe sau serii de
+  date. Fiecare locație suplimentară poate avea, opțional, un preț/bilet
+  (cu etichetă de categorie, ex. „Early bird”) — total opțional, un
+  eveniment poate rămâne complet gratuit sau cu preț nestabilit.
+- **Service & Reparații Echipament / Magazine partenere**: pot avea acum
+  sedii suplimentare (mai multe adrese pentru aceeași afacere), fiecare cu
+  propriul buton spre Google Maps.
+- Toate câmpurile noi sunt complet opționale — evenimentele/service-urile/
+  magazinele deja publicate rămân neschimbate.
+
 ## Furnizor v1.31.1 — Restaurate cele 14 coperte + fix real: publicarea putea șterge tăcut tot folderul de coperte (2026-09-04)
 
 **Ce s-a întâmplat**: toate cele 14 imagini din `docs/covers/` (coperte
