@@ -30,28 +30,46 @@ import GDCPluginManagerCore
 /// SEPARATĂ, sub imagine. Zero ambiguitate: banda are propriul fundal
 /// opac, propria înălțime fixă, complet independentă de ce se află în
 /// imagine sau de raportul ei de aspect.
+///
+/// [2026-09-05, cerut explicit de Cristi] Banda de text NU mai depinde de
+/// prezența imaginii — întregul banner era ascuns dacă Furnizorul alegea
+/// "Fără imagine" (`checker.nsImage == nil`), deși Cristi ține la formatul
+/// benzii independent de fotografie. `imageView` se afișează DOAR când
+/// există o imagine încărcată; banda de text rămâne mereu prezentă cât
+/// timp `config.isDisplayable`.
 struct LaunchOfferBanner: View {
     @ObservedObject private var checker = LaunchBannerChecker.shared
 
     private static let imageHeight: CGFloat = 150
     private static let textBandHeight: CGFloat = 46
 
+    /// Fără imagine, banner-ul ocupă doar înălțimea benzii de text — nu
+    /// mai rezervăm cei 150pt de imagine ca spațiu gol.
+    private var bannerHeight: CGFloat {
+        checker.nsImage != nil ? Self.imageHeight + Self.textBandHeight : Self.textBandHeight
+    }
+
     var body: some View {
         Color.clear
-            .frame(height: Self.imageHeight + Self.textBandHeight)
+            .frame(height: bannerHeight)
             .overlay(alignment: .bottom) {
-                if let config = checker.config, config.isDisplayable, let nsImage = checker.nsImage {
+                if let config = checker.config, config.isDisplayable {
                     // Poziția benzii de text (sus/jos) e o opțiune aleasă
                     // de Cristi din Furnizor (`config.textOnTop`), nu fixă
-                    // în cod — vezi `LaunchBannerConfig.textOnTop`.
-                    VStack(spacing: 0) {
-                        if config.textOnTop {
-                            textBand(config)
-                            imageView(nsImage)
-                        } else {
-                            imageView(nsImage)
-                            textBand(config)
+                    // în cod — vezi `LaunchBannerConfig.textOnTop`. Imaginea
+                    // e opțională: fără ea, rămâne doar banda de text.
+                    if let nsImage = checker.nsImage {
+                        VStack(spacing: 0) {
+                            if config.textOnTop {
+                                textBand(config)
+                                imageView(nsImage)
+                            } else {
+                                imageView(nsImage)
+                                textBand(config)
+                            }
                         }
+                    } else {
+                        textBand(config)
                     }
                 }
             }

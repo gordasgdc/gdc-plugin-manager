@@ -54,6 +54,14 @@ let knownGDCApps: [MyAppEntry] = [
     MyAppEntry(id: "mac-master-control-pro", name: "Master Control Studio Pro", bundleIdentifier: "com.gordasgdc.macmastercontrolpro",
                iconSymbol: "gearshape.2", tint: .yellow,
                versionSource: .githubReleases(repo: "gordasgdc/mac-master-control-pro")),
+    // 2026-09-05: lipsea complet din listă — CGConvertor e o aplicație GDC
+    // reală, semnată, deja instalabilă, dar userii trebuiau s-o adauge
+    // manual ca "scurtătură personalizată" (exact regula pe care Cristi a
+    // cerut-o: doar aplicațiile EXTERNE ajung acolo, ale noastre apar
+    // automat la instalare).
+    MyAppEntry(id: "cgconvertor", name: "CGConvertor", bundleIdentifier: "com.cristigordas.CGConvertor",
+               iconSymbol: "film.stack", tint: .purple,
+               versionSource: .githubReleases(repo: "gordasgdc/CGConvertor")),
 ]
 
 /// O scurtătură personalizată către o aplicație aleasă liber de user (ex.

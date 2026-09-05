@@ -1,5 +1,16 @@
 # Changelog — GDC Plugin Manager
 
+## Client v1.29.1 — Banner de lansare vizibil fără imagine + CGConvertor apare automat în Aplicațiile Mele (2026-09-05)
+
+- **Banner Lansare**: banda de text (titlu + text principal) rămâne acum
+  vizibilă chiar dacă Furnizorul alege „Fără imagine” — până acum întregul
+  banner dispărea fără o fotografie, deși formatul benzii de text nu
+  depinde de ea.
+- **Aplicațiile Mele**: CGConvertor apare acum automat în secțiunea
+  „Aplicații GDC instalate”, ca oricare altă aplicație proprie — până acum
+  lipsea din listă și trebuia adăugat manual ca scurtătură personalizată,
+  ca și cum ar fi o aplicație externă.
+
 ## Client v1.29.0 / Furnizor v1.32.0 — Evenimente multi-locație, sedii suplimentare pentru service/magazine partenere (2026-09-05)
 
 - **Evenimente**: pe lângă locația și data principale, un eveniment poate

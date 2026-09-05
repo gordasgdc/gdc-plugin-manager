@@ -58,10 +58,14 @@ public struct LaunchBannerConfig: Codable, Equatable {
     public var imageURL: URL? { CatalogAssets.imageURL(for: imagePath) }
 
     /// True doar dacă totul e configurat corect ȘI valabilitatea temporală
-    /// (dacă e setată) e activă ACUM — un `enabled: true` cu imagine/text
-    /// lipsă, sau o fereastră de timp deja expirată, nu ar arăta un banner
-    /// util.
+    /// (dacă e setată) e activă ACUM — un `enabled: true` cu text lipsă,
+    /// sau o fereastră de timp deja expirată, nu ar arăta un banner util.
+    /// Imaginea e OPȚIONALĂ (2026-09-05, cerut explicit de Cristi: banda
+    /// de text trebuie să rămână vizibilă și fără fotografie, fiindcă îi
+    /// place formatul ei independent de imagine) — banner-ul e afișabil
+    /// doar pe baza textului; `LaunchOfferBanner` (Client) decide separat
+    /// dacă mai arată și imaginea, când există.
     public var isDisplayable: Bool {
-        enabled && imageURL != nil && !topText.isEmpty && !mainText.isEmpty && (scheduling?.isActiveNow ?? true)
+        enabled && !topText.isEmpty && !mainText.isEmpty && (scheduling?.isActiveNow ?? true)
     }
 }
