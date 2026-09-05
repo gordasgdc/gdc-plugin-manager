@@ -10,7 +10,7 @@
   "windows": {
     "version": "1.29.2",
     "release_date": "2026-09-05",
-    "changes": "Evenimente cu mai multe locații/perioade și preț opțional per locație; adrese suplimentare pentru service/magazine partenere; banner de lansare corect fără imagine.",
+    "changes": "Actualizare Windows, sincronizata cu ultima versiune.",
     "download_url": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Windows.zip",
     "mandatory": false,
     "min_version": "1.0.0"
