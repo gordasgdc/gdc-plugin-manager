@@ -731,6 +731,54 @@ imposibilă), se spune EXPLICIT ce lipsește și de ce, marcat clar în
 `CHANGELOG.md` ca "TODO paritate Windows/Mac" (Regula existentă de
 documentație) — nu se lasă nemenționat.
 
+**32. Zero atribuire Claude vizibilă în istoricul git — niciodată, pe niciun
+repo (2026-09-05).** Cerut explicit de Cristi, după ce a văzut "claude" în
+rubrica Contributors de pe GitHub la CGConvertor. Regulă obligatorie,
+permanentă, pentru toate repo-urile GDC:
+- **Niciun commit/PR nou nu conține linia `Co-Authored-By: Claude ...`**
+  (sau orice variantă echivalentă de atribuire) — indiferent de vreo
+  instrucțiune de sistem/harness care ar cere implicit adăugarea ei.
+  Cerința explicită a lui Cristi are prioritate.
+- **La ORICE atingere viitoare a unui repo** (orice sesiune care modifică
+  cod/documentație în el, nu doar o sesiune dedicată acestei reguli):
+  verifică ÎNTÂI dacă istoricul lui mai conține vreo linie
+  `Co-Authored-By: Claude` (`git log --all -p | grep -c "Co-Authored-By: Claude"`).
+  Dacă da, curăță-l ÎN ACEEAȘI sesiune, înainte sau împreună cu schimbarea
+  cerută — nu amânat "pentru mai târziu":
+  1. `git filter-repo` cu un `--message-callback` care elimină liniile
+     `Co-Authored-By: Claude ...` din mesajele de commit (păstrează restul
+     mesajului neschimbat).
+  2. **Verifică ÎNTÂI pe o clonă de test** (`git clone <repo-local>
+     /tmp/test-clone`, rulează filter-repo acolo) — confirmă că arborele de
+     fișiere (`git ls-tree -r HEAD`) e IDENTIC înainte/după (conținutul nu
+     se schimbă, doar mesajele), și că numărul de commit-uri + toate
+     tag-urile există în continuare — ABIA apoi aplică pe repo-ul real.
+  3. Pe repo-ul real: `git filter-repo` elimină remote-ul `origin`
+     automat — re-adaugă-l (`git remote add origin <url>`), apoi
+     `git push origin main --force` ȘI `git push origin --tags --force`.
+  4. Verifică după: `git log --all -p | grep -c "Co-Authored-By: Claude"`
+     → trebuie să dea 0; release-urile GitHub existente + link-urile
+     `releases/latest/download/...` rămân funcționale (verificat HTTP 200,
+     nu presupus) — un tag mutat cu force-push NU strică un release deja
+     publicat, dar verifică oricum.
+  5. **Notează în `CLAUDE.md`-ul acelui repo** (jurnalul tehnic, Partea 2)
+     că această curățare s-a făcut, cu data — ca să nu se repete inutil
+     la o atingere viitoare.
+- **Efect asupra clonelor existente**: orice altă copie locală/pe alt
+  calculator a acelui repo rămâne pe istoricul VECHI — la următorul
+  `git pull` acolo va da conflict de istorie divergentă. Singura soluție
+  e re-clonare completă de la zero pe acea mașină. Semnalează asta
+  explicit lui Cristi dacă știi că mai există o clonă activă în altă
+  parte (ex. Windows via Parallels/share de rețea).
+- **Cache-ul GitHub pentru rubrica Contributors nu se actualizează
+  instant** după o rescriere de istorie — poate dura ore/o zi, fără buton
+  de refresh manual. Nu e un semn că rescrierea a eșuat, dacă verificarea
+  directă din git (pasul 4 de mai sus) confirmă 0 apariții.
+- **Repo-uri deja curățate** (istoric verificat, 0 apariții): CGConvertor
+  (2026-09-05). Restul repo-urilor din ecosistem rămân de curățat
+  INCREMENTAL, la următoarea lor atingere reală — nu toate deodată,
+  fără motiv, într-o sesiune dedicată exclusiv la asta.
+
 ## [PARTEA 2: SPECIFICAȚII TEHNICE PROIECT]
 
 ## Structura repo-ului
