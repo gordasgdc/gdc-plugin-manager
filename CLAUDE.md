@@ -774,10 +774,14 @@ permanentă, pentru toate repo-urile GDC:
   instant** după o rescriere de istorie — poate dura ore/o zi, fără buton
   de refresh manual. Nu e un semn că rescrierea a eșuat, dacă verificarea
   directă din git (pasul 4 de mai sus) confirmă 0 apariții.
-- **Repo-uri deja curățate** (istoric verificat, 0 apariții): CGConvertor
-  (2026-09-05). Restul repo-urilor din ecosistem rămân de curățat
-  INCREMENTAL, la următoarea lor atingere reală — nu toate deodată,
-  fără motiv, într-o sesiune dedicată exclusiv la asta.
+- **Repo-uri deja curățate** (istoric verificat, 0 apariții reale — cele
+  câteva găsite ulterior sunt mențiuni ale regulii ÎN CONȚINUTUL acestui
+  fișier, nu atribuiri reale de commit): CGConvertor (2026-09-05),
+  **gdc-plugin-manager (acest repo, 2026-09-05)** — `git filter-repo`
+  rulat, verificat pe clonă de test (arbore identic, 603 commit-uri/60
+  tag-uri păstrate), apoi aplicat pe repo-ul real + `push --force` pe
+  `main` și toate tag-urile. Restul repo-urilor din ecosistem rămân de
+  curățat INCREMENTAL, la următoarea lor atingere reală.
 
 ## [PARTEA 2: SPECIFICAȚII TEHNICE PROIECT]
 
