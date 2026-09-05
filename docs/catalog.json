@@ -32,6 +32,11 @@
       "youtubeURL" : "https://www.youtube.com/@cristigordas"
     },
     {
+      "id" : "displaycal-cg",
+      "name" : "DisplayCAL-CG",
+      "url" : "https://gordas.dev/DisplayCAL-CG/"
+    },
+    {
       "coverImage" : "covers/GDC Metadata View Premium.png",
       "id" : "GDC Metadata View Premium",
       "name" : "GDC Metadata View Premium",
