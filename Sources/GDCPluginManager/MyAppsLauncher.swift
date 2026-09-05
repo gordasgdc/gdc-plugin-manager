@@ -62,6 +62,13 @@ let knownGDCApps: [MyAppEntry] = [
     MyAppEntry(id: "cgconvertor", name: "CGConvertor", bundleIdentifier: "com.cristigordas.CGConvertor",
                iconSymbol: "film.stack", tint: .purple,
                versionSource: .githubReleases(repo: "gordasgdc/CGConvertor")),
+    // 2026-09-05: aceeași regulă — orice aplicație GDC proprie trebuie
+    // să apară automat aici la instalare, fără pas manual. DisplayCAL-CG
+    // (fork rebrandat GDC al DisplayCAL) confirmat lipsă de Cristi live,
+    // testând chiar acest meniu după instalarea pachetului.
+    MyAppEntry(id: "displaycal-cg", name: "DisplayCAL-CG", bundleIdentifier: "dev.gordas.DisplayCAL",
+               iconSymbol: "camera.aperture", tint: .indigo,
+               versionSource: .githubReleases(repo: "gordasgdc/displaycal-py3")),
 ]
 
 /// O scurtătură personalizată către o aplicație aleasă liber de user (ex.
