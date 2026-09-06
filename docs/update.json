@@ -10,7 +10,7 @@
   "windows": {
     "version": "1.29.3",
     "release_date": "2026-09-06",
-    "changes": "Ghid de utilizare (PDF) nou, in fereastra de Setari.",
+    "changes": "Actualizare Windows, sincronizata cu ultima versiune.",
     "download_url": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Windows.zip",
     "mandatory": false,
     "min_version": "1.0.0"
