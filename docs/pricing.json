@@ -29,7 +29,7 @@
       ]
     },
     "gdc-datamover" : {
-      "basePrice" : 45,
+      "basePrice" : 56,
       "currency" : "EUR",
       "name" : "DataMover",
       "promoSchedule" : [
@@ -46,7 +46,9 @@
       "basePrice" : 25,
       "currency" : "EUR",
       "name" : "GDC Production Manager",
-      "promoSchedule" : []
+      "promoSchedule" : [
+
+      ]
     },
     "gdc-vault" : {
       "basePrice" : 18,
@@ -98,5 +100,5 @@
       ]
     }
   },
-  "updatedAt" : "2026-09-01"
+  "updatedAt" : "2026-09-06"
 }
