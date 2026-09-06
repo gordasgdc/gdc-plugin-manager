@@ -6,11 +6,11 @@
       "name" : "CG Convertor",
       "promoSchedule" : [
         {
-          "endsAt" : "2026-09-04T05:15:24Z",
+          "endsAt" : "2026-09-11T15:36:45Z",
           "label" : "Oferta lansare",
-          "price" : 23,
+          "price" : 35,
           "showCountdown" : true,
-          "startsAt" : "2026-08-31T05:15:24Z"
+          "startsAt" : "2026-09-06T15:36:45Z"
         }
       ]
     },
