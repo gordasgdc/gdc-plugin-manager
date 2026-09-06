@@ -79,24 +79,11 @@
       ]
     },
     "media-flow-monitor" : {
-      "basePrice" : 32,
+      "basePrice" : 3,
       "currency" : "EUR",
       "name" : "MediaFlow Monitor",
       "promoSchedule" : [
-        {
-          "endsAt" : "2026-09-04T05:16:03Z",
-          "label" : "Oferta lansare",
-          "price" : 15,
-          "showCountdown" : true,
-          "startsAt" : "2026-08-31T05:16:03Z"
-        },
-        {
-          "endsAt" : "2026-09-11T10:07:17Z",
-          "label" : "Oferta lansare",
-          "price" : 20,
-          "showCountdown" : true,
-          "startsAt" : "2026-09-04T10:07:17Z"
-        }
+
       ]
     }
   },
