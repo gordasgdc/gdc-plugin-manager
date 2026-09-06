@@ -1,7 +1,7 @@
 {
   "products" : {
     "cgconvertor" : {
-      "basePrice" : 46,
+      "basePrice" : 72,
       "currency" : "EUR",
       "name" : "CG Convertor",
       "promoSchedule" : [
