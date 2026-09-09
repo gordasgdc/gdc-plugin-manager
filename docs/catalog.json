@@ -116,24 +116,6 @@
   ],
   "events" : [
     {
-      "coverImage" : "https://images.blackmagicdesign.com/images/invites/davinci-resolve-online-seminars/seminars/switching-to-davinci-resolve.jpg?_v=1787704362",
-      "dateDisplay" : "Friday 30th October   14:00 (GMT)",
-      "description" : "Designed for editors switching to DaVinci Resolve, this seminar will cover the overall layout and organization of tools. Building on your existing editing knowledge, you’ll learn how to organise media, prepare timelines and build collaborative projects that your whole team can share.",
-      "externalURL" : "https://blackmagicdesign-emea.zoom.us/webinar/register/WN_cbfeBRGDTWOA9MHiD9IYKg#/registration",
-      "id" : "Switching",
-      "location" : "Online",
-      "occurrences" : [
-
-      ],
-      "scheduling" : {
-        "endDate" : 810433563.777439,
-        "showCountdown" : true,
-        "startDate" : 809828763.777438
-      },
-      "title" : "Switching to\nDaVinci Resolve",
-      "youtubeURL" : "https://www.blackmagicdesign.com/event/davinci-resolve-online-seminars"
-    },
-    {
       "coverImage" : "https://images.blackmagicdesign.com/images/invites/davinci-resolve-online-seminars/seminars/ai-tools.jpg?_v=1787704361",
       "dateDisplay" : "Friday 27th November   14:00 (GMT)",
       "description" : "Discover powerful DaVinci AI Neural Engine tools including Object Removal, IntelliScript, IntelliSearch, Magic Mask, Voice Isolation and cinematic effects. You’ll learn how these tools can take care of repetitive, time consuming tasks, giving you more time to focus on creative editing.",
