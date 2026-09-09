@@ -116,33 +116,6 @@
   ],
   "events" : [
     {
-      "coverImage" : "https://eduardcarp.com/wp-content/uploads/2026/09/MK-2027-site-1.jpg",
-      "dateDisplay" : "23 - 25 martie 2027",
-      "description" : "Visezi să creezi filme de nuntă pline de emoție? Vrei să te diferențiezi de ceilalți videografi și să atragi clienți de top? Atunci acest MASTERCLASS este perfect pentru tine!",
-      "externalURL" : "https://eduardcarp.com/workshop/",
-      "id" : "MASTERCLASS  Eduard Carp",
-      "location" : "BRASOV",
-      "occurrences" : [
-        {
-          "dateDisplay" : "30 martie - 1 aprilie 2027",
-          "id" : "50818328-632B-4F24-8A41-FE796D98575E",
-          "location" : "BUCUREȘTI",
-          "priceEUR" : 500
-        }
-      ],
-      "scheduling" : {
-        "endDate" : 827457646.108086,
-        "showCountdown" : true,
-        "startDate" : 810260446.108086
-      },
-      "socialLinks" : {
-        "facebookURL" : "https://www.facebook.com/eduardcarpvideographer",
-        "instagramURL" : "https://www.instagram.com/eduardcarp_videographer/",
-        "youtubeURL" : "https://www.youtube.com/@EduardCarp"
-      },
-      "title" : "MASTERCLASS  Eduard Carp"
-    },
-    {
       "coverImage" : "https://images.blackmagicdesign.com/images/invites/davinci-resolve-online-seminars/seminars/switching-to-davinci-resolve.jpg?_v=1787704362",
       "dateDisplay" : "Friday 30th October   14:00 (GMT)",
       "description" : "Designed for editors switching to DaVinci Resolve, this seminar will cover the overall layout and organization of tools. Building on your existing editing knowledge, you’ll learn how to organise media, prepare timelines and build collaborative projects that your whole team can share.",
