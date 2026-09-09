@@ -66,6 +66,13 @@
       "url" : "https://gordas.dev/gdc-vault"
     },
     {
+      "coverImage" : "covers/iina.jpg?v=236721c2",
+      "id" : "iina",
+      "name" : "IINA",
+      "url" : "https://iina.io/",
+      "youtubeURL" : "https://youtu.be/shVXLlCkzKw"
+    },
+    {
       "coverImage" : "covers/Master Control Studio Pro.png?v=0ac85e07",
       "id" : "mac-master-control-pro",
       "name" : "Master Control Studio Pro",
