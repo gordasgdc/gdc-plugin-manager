@@ -33,13 +33,7 @@
       "currency" : "EUR",
       "name" : "DataMover",
       "promoSchedule" : [
-        {
-          "endsAt" : "2026-09-11T05:08:30Z",
-          "label" : "Oferta lansare",
-          "price" : 25,
-          "showCountdown" : true,
-          "startsAt" : "2026-08-31T05:08:30Z"
-        }
+
       ]
     },
     "gdc-production-manager" : {
