@@ -94,6 +94,13 @@
       "name" : "Simulator DOF",
       "url" : "https://gordas.dev/depth-of-field/",
       "youtubeURL" : "https://www.youtube.com/@cristigordas"
+    },
+    {
+      "coverImage" : "https://spektrafilm.114c.de/_astro/banner.OzsgG9rP_K4owY.webp",
+      "id" : "spektrafilm",
+      "name" : "spektrafilm",
+      "url" : "https://spektrafilm.114c.de/#download",
+      "youtubeURL" : "https://spektrafilm.114c.de/technical/"
     }
   ],
   "audioTracks" : [
@@ -543,5 +550,5 @@
       "youtubeURL" : "https://www.youtube.com/watch?v=dnkUIGXIzIM"
     }
   ],
-  "updatedAt" : "2026-09-09"
+  "updatedAt" : "2026-09-11"
 }
