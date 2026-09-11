@@ -1,7 +1,7 @@
 {
-  "version": "2.0.2",
-  "release_date": "2026-09-04",
-  "changes": "Ghid PDF actualizat: instrucțiuni pentru un start complet curat (ștergerea datelor vechi înainte de o instalare nouă) și corectată durata reală a probei gratuite (25 de zile). Pagina de prezentare curățată de orice referință externă.",
+  "version": "2.0.4",
+  "release_date": "2026-09-07",
+  "changes": "Actualizare de mentenanță: infrastructură internă de securitate pentru versiunea Windows.",
   "download_url": {
     "mac": "https://github.com/gordasgdc/gdc-production-manager/releases/latest/download/GDCProductionManager.pkg",
     "windows": "https://github.com/gordasgdc/gdc-production-manager/releases/latest/download/GDCProductionManagerSetup.exe"
