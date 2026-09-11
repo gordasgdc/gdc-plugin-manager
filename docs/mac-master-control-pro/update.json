@@ -1,10 +1,10 @@
 {
-    "version": "2.30.0",
-    "release_date": "2026-09-04",
-    "changes": "Analiza Disc complet refacuta: rezultatul ramane salvat pe disc si se incarca instant la redeschidere, cu buton dedicat pentru rescanarea doar a schimbarilor recente. Foldere le poti acum deschide direct, nu doar evidentia in Finder.",
-    "download_url": {
-        "mac": "https://github.com/gordasgdc/mac-master-control-pro/releases/latest/download/MacMasterControlPro-Mac.zip"
-    },
-    "mandatory": false,
-    "min_version": "1.0.0"
+  "version": "2.32.0",
+  "release_date": "2026-09-11",
+  "changes": "Analiza de disc și căutarea de duplicate nu mai blochează aplicația: căutare mult mai rapidă pe volume mari, scanare care continuă în fundal, fișierele mici grupate pentru o listă lizibilă, și instalarea componentelor lipsă cu un singur buton.",
+  "download_url": {
+    "mac": "https://github.com/gordasgdc/mac-master-control-pro/releases/latest/download/MacMasterControlPro-Mac.zip"
+  },
+  "mandatory": false,
+  "min_version": "1.0.0"
 }
