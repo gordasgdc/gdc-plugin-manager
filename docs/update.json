@@ -8,8 +8,8 @@
     "min_version": "1.0.0"
   },
   "windows": {
-    "version": "1.29.3",
-    "release_date": "2026-09-06",
+    "version": "1.29.4",
+    "release_date": "2026-09-11",
     "changes": "Actualizare Windows, sincronizata cu ultima versiune.",
     "download_url": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Windows.zip",
     "mandatory": false,
