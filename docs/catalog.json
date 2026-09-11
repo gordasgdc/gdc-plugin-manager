@@ -17,9 +17,17 @@
       "youtubeURL" : "https://www.youtube.com/@cristigordas"
     },
     {
+      "access" : {
+        "group" : "gdc",
+        "kind" : "free",
+        "tags" : [
+          "Utilitare"
+        ]
+      },
       "coverImage" : "covers/Clapperboard Digital.png?v=34e6cc74",
       "id" : "Clapperboard Digital",
       "name" : "Clapperboard Digital",
+      "supportedOS" : "crossPlatform",
       "url" : "https://gordas.dev/clapperboard-digital/",
       "youtubeURL" : "https://www.youtube.com/@cristigordas"
     },
