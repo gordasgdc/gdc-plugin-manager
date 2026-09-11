@@ -32,10 +32,18 @@
       "youtubeURL" : "https://www.youtube.com/@cristigordas"
     },
     {
+      "access" : {
+        "group" : "gdc",
+        "kind" : "trial",
+        "tags" : [
+          "Utilitare"
+        ]
+      },
       "coverImage" : "covers/CursorPro GDC.png?v=2fffe981",
       "id" : "CursorPro GDC",
       "name" : "CursorPro GDC",
       "pricingProductID" : "cursorpro",
+      "supportedOS" : "crossPlatform",
       "url" : "https://gordas.dev/cursorpro-gdc/",
       "youtubeURL" : "https://www.youtube.com/@cristigordas"
     },
