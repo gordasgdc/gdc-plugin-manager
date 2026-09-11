@@ -169,10 +169,18 @@
       "youtubeURL" : "https://www.youtube.com/@cristigordas"
     },
     {
+      "access" : {
+        "group" : "gdc",
+        "kind" : "trial",
+        "tags" : [
+
+        ]
+      },
       "coverImage" : "covers/MediaFlow Monitor.png?v=87048a71",
       "id" : "media-flow-monitor",
       "name" : "MediaFlow Monitor",
       "pricingProductID" : "media-flow-monitor",
+      "supportedOS" : "crossPlatform",
       "url" : "https://gordas.dev/media-flow-monitor",
       "youtubeURL" : "https://www.youtube.com/@cristigordas"
     },
