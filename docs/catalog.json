@@ -185,9 +185,17 @@
       "youtubeURL" : "https://www.youtube.com/@cristigordas"
     },
     {
+      "access" : {
+        "group" : "gdc",
+        "kind" : "free",
+        "tags" : [
+          "Utilitare"
+        ]
+      },
       "coverImage" : "covers/Simulator DOF.jpg?v=e0576314",
       "id" : "Simulator DOF",
       "name" : "Simulator DOF",
+      "supportedOS" : "crossPlatform",
       "url" : "https://gordas.dev/depth-of-field/",
       "youtubeURL" : "https://www.youtube.com/@cristigordas"
     },
