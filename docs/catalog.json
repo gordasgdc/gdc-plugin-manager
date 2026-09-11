@@ -1,10 +1,18 @@
 {
   "apps" : [
     {
+      "access" : {
+        "group" : "gdc",
+        "kind" : "trial",
+        "tags" : [
+
+        ]
+      },
       "coverImage" : "covers/CG Convertor.png?v=093a3167",
       "id" : "CG Convertor",
       "name" : "CG Convertor",
       "pricingProductID" : "cgconvertor",
+      "supportedOS" : "crossPlatform",
       "url" : "https://gordas.dev/CGConvertor/",
       "youtubeURL" : "https://www.youtube.com/@cristigordas"
     },
