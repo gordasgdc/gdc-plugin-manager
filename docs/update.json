@@ -1,4 +1,14 @@
 {
+  "_comment_legacy": "Campurile de la radacina exista DOAR pentru clientii <= 1.27, care decodeaza 'version' si 'download_url' ca OBLIGATORII de aici. Fara ele, decodarea lor arunca si update checker-ul lor esueaza tacut, raportand 'sunteti pe cea mai noua versiune' la infinit. Clientii >= 1.28 citesc sectiunile mac/windows de mai jos si ignora acest bloc. A NU SE STERGE.",
+  "version": "1.30.0",
+  "release_date": "2026-09-11",
+  "changes": "Sistem unificat de filtrare în toate secțiunile: filtre rapide Toate/Gratuite/Premium și Mac/Windows, grupare pe categorii și etichete de tip, plus etichete clare de status (Gratuit / Trial / Extern) pe carduri.",
+  "download_url": {
+    "mac": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Mac.zip",
+    "windows": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Windows.zip"
+  },
+  "mandatory": false,
+  "min_version": "1.0.0",
   "mac": {
     "version": "1.30.0",
     "release_date": "2026-09-11",
