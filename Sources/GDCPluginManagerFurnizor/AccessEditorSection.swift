@@ -64,6 +64,10 @@ struct AccessFormState {
 
 struct AccessEditorSection: View {
     @Binding var state: AccessFormState
+
+    /// Etichetele deja folosite oriunde in catalog — incarcate o singura data,
+    /// la aparitia sectiunii. Vezi CatalogTagIndex.
+    @State private var publishedTags: [String] = []
     /// Fals pentru sectiunile cu camp nativ de pret/gratuit — vezi nota de sus.
     var showsKind: Bool = true
     /// Fals pentru sectiunile fara pret propriu de referinta.
@@ -104,18 +108,19 @@ struct AccessEditorSection: View {
                     }
                 }
 
-                TextField("Etichete, separate prin virgulă", text: $state.tagsText)
-                    .textFieldStyle(.roundedBorder)
-                if tagSuggestions.isEmpty {
-                    Text("Apar ca filtru rapid de tip în secțiunea clientului.")
-                        .font(.caption).foregroundStyle(.secondary)
-                } else {
-                    Text("Sugestii: " + tagSuggestions.joined(separator: ", "))
-                        .font(.caption).foregroundStyle(.secondary)
-                }
+                // Editor cu selectie multipla + sugestii din etichetele DEJA
+                // publicate oriunde in catalog (2026-09-11, cerut de Cristi:
+                // "sa pot sa aleg pur si simplu... daca a fost deja publicata").
+                Text("Etichete").font(.caption).foregroundStyle(.secondary)
+                AccessTagsEditor(
+                    tagsText: $state.tagsText,
+                    publishedTags: publishedTags,
+                    domainSuggestions: tagSuggestions
+                )
             }
             .padding(8)
         }
+        .task { publishedTags = CatalogTagIndex.loadAllTags() }
     }
 }
 

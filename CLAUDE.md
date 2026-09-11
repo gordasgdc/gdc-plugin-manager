@@ -1356,3 +1356,45 @@ Furnizorul scrie `access` doar la următoarea editare a fiecărui element.
 
 Versiuni: Client 1.29.2 → **1.30.0**, Furnizor 1.32.0 → **1.33.0** (MINOR,
 Regula 14 — funcționalitate nouă vizibilă). Windows: vezi `GDCPluginManagerWin`.
+
+## Etapa 2026-09-11 (2) — Furnizor 1.34.0: etichete cu selecție + autocompletare
+
+Cerut de Cristi imediat după livrarea sistemului de etichete: *"tot ce introduc,
+tag-uri sau chiar și nume, să-mi apară sau să se autocompleteze când încep să
+scriu ceva și deja a mai fost scris... sau la tag-uri să am posibilitatea să le
+aleg pur și simplu"*.
+
+**Infrastructura exista deja** — `AutocompleteTextField.swift` (2026-08-29,
+aceeași cerință, pentru locații/adrese/branduri). Nu s-a inventat un tipar nou:
+s-a extins cel existent, cu aceeași decizie de fond — **fără store propriu de
+istoric**, sursa de sugestii e catalogul publicat, nu un fișier local paralel
+care ar putea diverge.
+
+**`AccessTagsEditor` (nou)** — selecție multiplă pentru `CatalogAccess.tags`:
+etichetele alese apar ca „chips" cu x, cele deja folosite oriunde în catalog
+apar ca butoane sub câmp (un click le adaugă), iar la tastare se filtrează cu
+`FuzzySearch`. Sursa de adevăr rămâne `tagsText` (același `String` ca în model)
+— se parsează/recompune, fără o a doua stare care ar putea diverge de formular.
+Duplicatele se elimină case-insensitive, deci „Emulare Film" și „emulare film"
+nu mai pot coexista ca etichete distincte. Folosit automat de toate cele 11
+panouri, fiind în `AccessEditorSection`.
+
+**`CatalogTagIndex`** — colectează etichetele din TOATE cele 12 colecții prin
+`resolvedAccess`, plus `loadValues(_:)` pentru orice câmp text repetitiv.
+
+**`FlowRow`** — `Layout` propriu, cu revenire pe rând nou: `HStack` ar tăia
+etichetele care nu încap, iar `LazyVGrid` cere coloane de lățime fixă (etichetele
+au lățimi foarte diferite). SwiftUI n-are FlowLayout nativ pe macOS 14.
+
+**`TagSuggestionsRow`** — pentru `PublishTutorialView`, care are deja propriul
+editor de tag-uri (`TagChipsFlow`, câmpul nativ `Tutorial.tags`): nu i s-a
+înlocuit editorul, doar i s-au adăugat sugestiile.
+
+**Autocompletare adăugată la**: `Tutorial.category` (String liber, cel mai
+repetitiv câmp din catalog), `Course.formatLabel`, etichetele opțiunilor de
+curs, și `AppLink.pricingProductID` — ultimul sugerat din `pricing.json` REAL
+(`PricingEditor.load()`), nu din catalog: o literă greșită acolo rupea tăcut
+legătura prețului dinamic, fără niciun avertisment.
+
+Versiune: Furnizor 1.33.0 → **1.34.0** (MINOR). Clientul rămâne 1.30.0 —
+schimbarea e strict în panoul de publicare, nu atinge nimic la client.

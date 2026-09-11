@@ -25,6 +25,9 @@ struct PublishTutorialView: View {
     // `tags`/`category` proprii: etichetele din `access` le COMPLETEAZA, nu
     // le inlocuiesc (decizie explicita a lui Cristi) — vezi Tutorial.resolvedAccess.
     @State private var accessForm = AccessFormState()
+    /// Valori deja publicate, pentru autocomplete (2026-09-11).
+    @State private var knownCategories: [String] = []
+    @State private var knownTags: [String] = []
 
     @State private var isBusy = false
     @State private var errorMessage: String?
@@ -129,7 +132,7 @@ struct PublishTutorialView: View {
                             .overlay(RoundedRectangle(cornerRadius: 6).stroke(.separator))
 
                         HStack {
-                            TextField("Categorie (ex. Color Grading, Instalare)", text: $category)
+                            AutocompleteTextField(placeholder: "Categorie (ex. Color Grading, Instalare)", text: $category, existingValues: knownCategories)
                                 .textFieldStyle(.roundedBorder)
                             if !existingCategories.isEmpty {
                                 Menu("Existente") {
@@ -148,6 +151,18 @@ struct PublishTutorialView: View {
                                 .onSubmit { addTag() }
                             Button("Adaugă") { addTag() }
                                 .disabled(newTag.trimmingCharacters(in: .whitespaces).isEmpty)
+                        }
+                        // Sugestii din tot ce s-a publicat deja — un click in
+                        // loc sa retii cum ai scris eticheta data trecuta.
+                        TagSuggestionsRow(
+                            suggestions: knownTags,
+                            draft: newTag,
+                            alreadyChosen: tags
+                        ) { suggestion in
+                            if !tags.contains(where: { $0.caseInsensitiveCompare(suggestion) == .orderedSame }) {
+                                tags.append(suggestion)
+                            }
+                            newTag = ""
                         }
                     }
                     .padding(8)
@@ -226,7 +241,10 @@ struct PublishTutorialView: View {
             }
             Button("Anulează", role: .cancel) { pendingDelete = nil }
         }
-        .task { loadExisting() }
+        .task {
+            knownCategories = CatalogTagIndex.loadValues { $0.tutorials.map(\.category) }
+            knownTags = CatalogTagIndex.loadTutorialTags()
+ loadExisting() }
     }
 
     private var isFormValid: Bool {

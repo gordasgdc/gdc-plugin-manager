@@ -31,6 +31,10 @@ struct PublishCourseView: View {
     // Acces/grup/etichete — editor COMUN (2026-09-11), vezi AccessEditorSection.swift
 
     @State private var accessForm = AccessFormState()
+    /// Valori deja publicate, pentru autocomplete (2026-09-11) — formatul unui
+    /// curs si etichetele optiunilor („1 oră", „2 ore") se repeta mult.
+    @State private var knownFormats: [String] = []
+    @State private var knownOptionLabels: [String] = []
 
 
     @State private var isBusy = false
@@ -67,7 +71,7 @@ struct PublishCourseView: View {
                         }
                         TextField("Link Acces / Școală Online (Zoom, Meet, platformă proprie) — opțional", text: $accessLink)
                             .textFieldStyle(.roundedBorder)
-                        TextField("Format & Durată (ex. „6 ore, 4 module” sau „1 sesiune 1-la-1”)", text: $formatLabel)
+                        AutocompleteTextField(placeholder: "Format & Durată (ex. „6 ore, 4 module” sau „1 sesiune 1-la-1”)", text: $formatLabel, existingValues: knownFormats)
                             .textFieldStyle(.roundedBorder)
 
                         Divider()
@@ -103,7 +107,7 @@ struct PublishCourseView: View {
                         }
 
                         HStack {
-                            TextField("ex. 1 oră, 2 ore, 1 la 1…", text: $newOptionLabel)
+                            AutocompleteTextField(placeholder: "ex. 1 oră, 2 ore, 1 la 1…", text: $newOptionLabel, existingValues: knownOptionLabels)
                                 .textFieldStyle(.roundedBorder)
                             TextField("Preț (EUR)", text: $newOptionPrice)
                                 .textFieldStyle(.roundedBorder)
@@ -194,7 +198,10 @@ struct PublishCourseView: View {
             }
             Button("Anulează", role: .cancel) { pendingDelete = nil }
         }
-        .task { loadExisting() }
+        .task {
+            knownFormats = CatalogTagIndex.loadValues { $0.courses.compactMap(\.formatLabel) }
+            knownOptionLabels = CatalogTagIndex.loadValues { $0.courses.flatMap { $0.options.map(\.label) } }
+ loadExisting() }
     }
 
     private var isFormValid: Bool {

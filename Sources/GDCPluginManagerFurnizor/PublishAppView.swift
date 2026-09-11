@@ -24,6 +24,9 @@ struct PublishAppView: View {
     // Acces/grup/etichete — editor COMUN, refolosit in toate panourile
     // Publish*View (2026-09-11). Vezi AccessEditorSection.swift.
     @State private var accessForm = AccessFormState()
+    /// ID-urile reale din Pricing Manager — sugerate ca sa nu se scrie gresit
+    /// (2026-09-11). O litera in plus rupe tacut legatura pretului dinamic.
+    @State private var knownPricingIDs: [String] = []
     @State private var supportedOS: SupportedOS?
     // Rețele sociale opționale (2026-08-29) — vezi SocialLinksEditor.swift.
     @State private var socialForm = SocialLinksFormState()
@@ -46,8 +49,7 @@ struct PublishAppView: View {
                         TextField("Nume aplicație", text: $name).textFieldStyle(.roundedBorder)
                         TextField("Link (https://…)", text: $url).textFieldStyle(.roundedBorder)
                         TextField("Link tutorial YouTube (opțional, nelistat)", text: $youtubeURL).textFieldStyle(.roundedBorder)
-                        TextField("ID din Pricing Manager (opțional, ex. cgconvertor)", text: $pricingProductID)
-                            .textFieldStyle(.roundedBorder)
+                        AutocompleteTextField(placeholder: "ID din Pricing Manager (opțional, ex. cgconvertor)", text: $pricingProductID, existingValues: knownPricingIDs)
                         Text("Dacă se potrivește cu un produs din „Prețuri & Oferte”, cardul arată automat preț/ofertă/countdown la clienți.")
                             .font(.caption).foregroundStyle(.secondary)
                     }
@@ -136,7 +138,10 @@ struct PublishAppView: View {
             }
             Button("Anulează", role: .cancel) { pendingDelete = nil }
         }
-        .task { loadExisting() }
+        .task {
+            loadExisting()
+            knownPricingIDs = (try? PricingEditor.load())?.products.keys.sorted() ?? []
+        }
     }
 
     private var isFormValid: Bool {

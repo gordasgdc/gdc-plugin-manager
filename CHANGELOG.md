@@ -1,5 +1,18 @@
 # Changelog — GDC Plugin Manager
 
+## Furnizor v1.34.0 — Etichete alese dintr-un click + autocompletare peste tot (2026-09-11)
+
+### Added
+- **Etichetele se aleg, nu se mai scriu de fiecare dată**: ce ai folosit deja
+  oriunde în catalog apare ca sugestie sub câmp — un click o adaugă. Cele
+  alese apar ca etichete cu „x", deci se pot scoate la fel de ușor. Gata cu
+  „Emulare Film" scris azi și „emulare film" mâine, ca două etichete diferite.
+- **Autocompletare la câmpurile care se repetă**: categoria unui tutorial,
+  formatul unui curs, etichetele opțiunilor de curs („1 oră", „2 ore") și
+  ID-ul din Pricing Manager — toate propun ce s-a mai folosit, pe măsură ce
+  scrii. La ID-ul de preț asta previne și o greșeală tăcută: o literă în plus
+  rupea legătura prețului dinamic fără niciun avertisment.
+
 ## Client v1.30.0 + Furnizor v1.33.0 — Sistem unificat de filtrare, grupare și etichete (2026-09-11)
 
 ### Added
