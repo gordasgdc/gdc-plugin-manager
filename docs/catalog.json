@@ -109,8 +109,16 @@
       "youtubeURL" : "https://www.youtube.com/@cristigordas"
     },
     {
+      "access" : {
+        "group" : "gdc",
+        "kind" : "trial",
+        "tags" : [
+
+        ]
+      },
       "id" : "gdc-resolve-encoder",
       "name" : "GDC Resolve Encoder",
+      "supportedOS" : "crossPlatform",
       "url" : "https://gordas.dev/gdc-resolve-encoder/",
       "youtubeURL" : "https://www.youtube.com/@cristigordas"
     },
