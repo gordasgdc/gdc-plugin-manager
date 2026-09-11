@@ -48,10 +48,18 @@
       "youtubeURL" : "https://www.youtube.com/@cristigordas"
     },
     {
+      "access" : {
+        "group" : "gdc",
+        "kind" : "trial",
+        "tags" : [
+
+        ]
+      },
       "coverImage" : "covers/DataMover.png?v=c6cb52ae",
       "id" : "DataMover",
       "name" : "DataMover",
       "pricingProductID" : "gdc-datamover",
+      "supportedOS" : "crossPlatform",
       "url" : "https://gordas.dev/datamover/",
       "youtubeURL" : "https://www.youtube.com/@cristigordas"
     },
