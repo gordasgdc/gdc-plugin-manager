@@ -93,10 +93,18 @@
       "youtubeURL" : "https://www.youtube.com/@cristigordas"
     },
     {
+      "access" : {
+        "group" : "gdc",
+        "kind" : "trial",
+        "tags" : [
+
+        ]
+      },
       "coverImage" : "covers/GDC Production Manager.png?v=b20467c6",
       "id" : "GDC Production Manager",
       "name" : "GDC Production Manager",
       "pricingProductID" : "gdc-production-manager",
+      "supportedOS" : "crossPlatform",
       "url" : "https://gordas.dev/gdc-production-manager/",
       "youtubeURL" : "https://www.youtube.com/@cristigordas"
     },
