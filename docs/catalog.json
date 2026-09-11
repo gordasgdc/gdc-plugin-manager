@@ -123,10 +123,18 @@
       "youtubeURL" : "https://www.youtube.com/@cristigordas"
     },
     {
+      "access" : {
+        "group" : "gdc",
+        "kind" : "trial",
+        "tags" : [
+
+        ]
+      },
       "coverImage" : "covers/GDC Vault.png?v=66cf5d83",
       "id" : "gdc-vault",
       "name" : "GDC Vault",
       "pricingProductID" : "gdc-vault",
+      "supportedOS" : "crossPlatform",
       "url" : "https://gordas.dev/gdc-vault"
     },
     {
