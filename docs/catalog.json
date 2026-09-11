@@ -138,9 +138,17 @@
       "url" : "https://gordas.dev/gdc-vault"
     },
     {
+      "access" : {
+        "group" : "external",
+        "kind" : "free",
+        "tags" : [
+
+        ]
+      },
       "coverImage" : "covers/iina.jpg?v=236721c2",
       "id" : "iina",
       "name" : "IINA",
+      "supportedOS" : "macOS",
       "url" : "https://iina.io/",
       "youtubeURL" : "https://youtu.be/shVXLlCkzKw"
     },
