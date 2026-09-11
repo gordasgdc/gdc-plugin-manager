@@ -64,9 +64,17 @@
       "youtubeURL" : "https://www.youtube.com/@cristigordas"
     },
     {
+      "access" : {
+        "group" : "gdc",
+        "kind" : "free",
+        "tags" : [
+
+        ]
+      },
       "coverImage" : "covers/displaycal-cg.jpg?v=8ec0d79a",
       "id" : "displaycal-cg",
       "name" : "DisplayCAL-CG",
+      "supportedOS" : "crossPlatform",
       "url" : "https://gordas.dev/DisplayCAL-CG/"
     },
     {
