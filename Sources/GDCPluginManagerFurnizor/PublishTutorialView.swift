@@ -21,6 +21,11 @@ struct PublishTutorialView: View {
     @State private var originalAddedAt: String?
 
     @State private var isFetching = false
+    // Acces/grup/etichete — editor COMUN (2026-09-11). Tutorialele au deja
+    // `tags`/`category` proprii: etichetele din `access` le COMPLETEAZA, nu
+    // le inlocuiesc (decizie explicita a lui Cristi) — vezi Tutorial.resolvedAccess.
+    @State private var accessForm = AccessFormState()
+
     @State private var isBusy = false
     @State private var errorMessage: String?
     @State private var successMessage: String?
@@ -147,6 +152,19 @@ struct PublishTutorialView: View {
                     }
                     .padding(8)
                 }
+
+                AccessEditorSection(
+
+                    state: $accessForm,
+
+                    showsKind: true,
+
+                    showsReferencePrice: true,
+
+                    tagSuggestions: AccessTagSuggestions.learning
+
+                )
+
 
                 SchedulingPicker(scheduling: $scheduling)
                     .id(editingID ?? "new")
@@ -288,6 +306,7 @@ struct PublishTutorialView: View {
         tags = tutorial.tags
         category = tutorial.category
         scheduling = tutorial.scheduling
+        accessForm = AccessFormState(tutorial.access)
         originalAddedAt = tutorial.addedAt
         successMessage = nil
         errorMessage = nil
@@ -304,6 +323,7 @@ struct PublishTutorialView: View {
         newTag = ""
         category = "General"
         scheduling = nil
+        accessForm.reset()
         originalAddedAt = nil
     }
 
@@ -325,7 +345,7 @@ struct PublishTutorialView: View {
             category: category.trimmingCharacters(in: .whitespaces).isEmpty ? "General" : category.trimmingCharacters(in: .whitespaces),
             addedAt: originalAddedAt ?? formatter.string(from: Date()),
             scheduling: scheduling
-        )
+        , access: accessForm.model)
 
         do {
             try GitOps.pull(at: RepoCheckoutPaths.publicCatalogRepo)

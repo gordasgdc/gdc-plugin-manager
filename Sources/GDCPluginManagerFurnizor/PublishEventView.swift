@@ -29,6 +29,11 @@ struct PublishEventView: View {
     @State private var occurrences: [EventOccurrence] = []
     @State private var showAddOccurrenceSheet = false
 
+    // Acces/grup/etichete — editor COMUN (2026-09-11), vezi AccessEditorSection.swift
+
+    @State private var accessForm = AccessFormState()
+
+
     @State private var isBusy = false
     @State private var errorMessage: String?
     @State private var successMessage: String?
@@ -60,6 +65,19 @@ struct PublishEventView: View {
                     }
                     .padding(8)
                 }
+
+                AccessEditorSection(
+
+                    state: $accessForm,
+
+                    showsKind: true,
+
+                    showsReferencePrice: true,
+
+                    tagSuggestions: AccessTagSuggestions.learning
+
+                )
+
 
                 CoverImagePicker(preset: .cover, selection: $coverSelection)
                 // .id(editingID) - fara asta, SwiftUI pastreaza aceeasi
@@ -217,6 +235,7 @@ struct PublishEventView: View {
         // publicata si nu trebuie rescrisă dacă furnizorul n-o atinge.
         coverSelection = event.coverImage.map { .existing($0) } ?? .none
         scheduling = event.scheduling
+        accessForm = AccessFormState(event.access)
         socialForm = SocialLinksFormState(event.socialLinks)
         occurrences = event.occurrences
         successMessage = nil
@@ -234,6 +253,7 @@ struct PublishEventView: View {
         youtubeURL = ""
         coverSelection = .none
         scheduling = nil
+        accessForm.reset()
         socialForm.reset()
         occurrences = []
     }
@@ -265,7 +285,7 @@ struct PublishEventView: View {
                 youtubeURL: trimmedYouTube.isEmpty ? nil : trimmedYouTube,
                 coverImage: coverImage, scheduling: scheduling,
                 socialLinks: socialForm.model, occurrences: occurrences
-            )
+            , access: accessForm.model)
 
             try CatalogEditor.upsertEvent(event)
             try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Eveniment: \(event.title)", paths: ["docs/catalog.json", "docs/covers"])

@@ -1,5 +1,27 @@
 # Changelog — GDC Plugin Manager
 
+## Client v1.30.0 + Furnizor v1.33.0 — Sistem unificat de filtrare, grupare și etichete (2026-09-11)
+
+### Added
+- **Filtre rapide în toate secțiunile** (LUT, DCTL, PowerGrade, OFX, Cursuri,
+  Materiale, Audio, Tutoriale, Evenimente, Pachete, Magazine, Aplicații):
+  Toate / Gratuite / Premium, plus Mac / Windows acolo unde are sens.
+- **Grupare pe categorii** (Proiecte GDC, Parteneri, Resursele mele, Externe)
+  și **etichete de tip** (ex. Emulare Film, Utility, SFX, Overlays) — ambele
+  configurabile din Furnizor, pentru orice element din catalog.
+- **Etichete de status pe carduri**: Gratuit / Licență / Probă / Extern, plus
+  un aviz liber („Trial 14 zile", „Licența se cumpără de pe site-ul
+  producătorului") și un preț de referință pentru elementele externe.
+
+### Changed
+- Bara de filtre și badge-urile sunt acum componente unice, folosite identic
+  în toate secțiunile — înainte erau copiate separat în fiecare secțiune.
+
+### Notes
+- Catalogul existent rămâne valabil neschimbat: toate câmpurile noi sunt
+  opționale, iar elementele deja publicate arată exact ca înainte până când
+  sunt editate din Furnizor.
+
 ## Client v1.29.1 — Banner de lansare vizibil fără imagine + CGConvertor apare automat în Aplicațiile Mele (2026-09-05)
 
 - **Banner Lansare**: banda de text (titlu + text principal) rămâne acum

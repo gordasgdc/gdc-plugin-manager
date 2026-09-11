@@ -1295,3 +1295,64 @@ acum corect ON cu datele reale precompletate.
   `GDCPluginManagerWin/CLAUDE.md`.
 - Detalii complete: `CLAUDE_ARCHIVE.md` (ultimele 2 intrări) sau
   `CHANGELOG.md` (`Client v1.19.7`/`v1.19.8`).
+
+## Etapa 2026-09-11 — Sistem universal de acces/filtrare/grupare (`CatalogAccess`)
+
+Cerut de Cristi: aceleași badge-uri de status/preț, aceeași bară de filtre și
+aceleași grupuri/etichete în TOATE secțiunile, nu doar la Aplicații. Plan
+aprobat explicit înainte de implementare (analiza modelelor → structură comună
+→ componente UI → compatibilitate).
+
+**Ce a găsit auditul modelelor (verificat în cod, nu presupus)**: existau deja
+PATRU dialecte diferite de „e gratuit?" — `PluginItem.isFree`+`priceEUR`,
+`DownloadableResource.isFree`+`priceEUR`, `Course.accessType`+`options[]`,
+`AppLink.pricingProductID`→`pricing.json` — plus `ProductBundle.bundlePriceEUR`
+fără noțiune de gratuit, și TREI dialecte de categorie (enum tipizat, String
+liber la `Tutorial`, sau nimic). Problema reală nu era lipsa câmpurilor, ci
+fragmentarea lor.
+
+**Decizia de arhitectură**: `CatalogAccess` e un strat **DERIVAT**, nu paralel.
+Dacă ar fi stocat și el un `isFree`/`kind` peste cele existente, s-ar fi creat
+exact a doua sursă de adevăr interzisă de Regula 30.
+
+**REGULA DE PRECEDENȚĂ** (unică, explicită, aplicată în `resolvedAccess`):
+1. Câmpul NATIV al modelului câștigă ÎNTOTDEAUNA.
+2. `access.kind`/`referencePriceEUR` se consultă DOAR dacă modelul n-are nativ
+   acea informație.
+3. `group`/`tags`/`note` sunt pur aditive — nu există nicăieri azi.
+
+Practic: `PluginItem` NU primește niciodată un `kind` propriu. În Furnizor,
+`AccessEditorSection(showsKind: false)` pentru secțiunile cu câmp nativ —
+un al doilea selector acolo ar fi fost fix bug-ul de evitat.
+
+`isFree == nil` înseamnă NECUNOSCUT, deliberat: un element fără informație de
+preț apare doar la „Toate", niciodată clasificat greșit ca „premium".
+
+**Decizii explicite ale lui Cristi**: (1) `Tutorial.category` rămâne `String`
+liber — etichetele din `access` îl COMPLETEAZĂ (reunite fără duplicate în
+`Tutorial.resolvedAccess`), nu îl înlocuiesc; (2) câmpurile adăugate inițial
+direct pe `AppLink` (`accessType`/`tags`/`group`) au fost mutate sub
+`CatalogAccess` înainte de orice publicare, pentru uniformitate din start.
+
+**Eliminare de cod duplicat**: `PriceFilter`/`OSFilter` trăiau în
+`ContentView.swift` și erau copiate, cu propriul `@State` și propriile
+`Picker`-e, în fiecare secțiune (14 apariții). Înlocuite cu
+`CatalogFilterBar.swift` — `CatalogFilterState` + `CatalogFilterBar` +
+`AccessBadge`/`AccessPriceLabel`/`AccessTagsRow` + `FilteredCatalogSection`
+(înfășoară o secțiune întreagă prin shadowing pe numele colecției, deci
+corpul vechi al fiecărui grid rămâne neschimbat).
+
+**Compatibilitate — verificat pe catalogul LIVE real, nu presupus**: 14
+aplicații + 3 plugin-uri + 1 tutorial de pe `gordas.dev/catalog.json`,
+decodare + round-trip, zero regresie. Test separat al precedenței: un plugin
+cu `isFree=true` nativ ȘI `access.kind=.paid`/999 € → nativul câștigă, 999 €
+ignorat, tag-urile/grupul preluate. `CatalogAccess` are decodor explicit
+(`tags` e array non-optional); modelele primesc doar un `access` Optional,
+deci Codable-ul sintetizat le acoperă — cele 7 cu decodor custom au primit
+linia manual.
+
+**Fără migrare de date**: catalogul existent rămâne valid byte-for-byte;
+Furnizorul scrie `access` doar la următoarea editare a fiecărui element.
+
+Versiuni: Client 1.29.2 → **1.30.0**, Furnizor 1.32.0 → **1.33.0** (MINOR,
+Regula 14 — funcționalitate nouă vizibilă). Windows: vezi `GDCPluginManagerWin`.

@@ -28,6 +28,11 @@ struct PublishBundleView: View {
     @State private var apps: [AppLink] = []
     @State private var educationalResources: [EducationalResource] = []
 
+    // Acces/grup/etichete — editor COMUN (2026-09-11), vezi AccessEditorSection.swift
+
+    @State private var accessForm = AccessFormState()
+
+
     @State private var isBusy = false
     @State private var errorMessage: String?
     @State private var successMessage: String?
@@ -92,6 +97,23 @@ struct PublishBundleView: View {
                     }
                     .padding(8)
                 }
+
+                AccessEditorSection(
+
+                    state: $accessForm,
+
+                    // showsKind: false — aceasta sectiune are DEJA un camp nativ de
+
+                    // gratuit/pret; un al doilea selector ar crea a doua sursa de adevar.
+
+                    showsKind: false,
+
+                    showsReferencePrice: false,
+
+                    tagSuggestions: AccessTagSuggestions.plugins
+
+                )
+
 
                 CoverImagePicker(preset: .cover, selection: $coverSelection)
                 SchedulingPicker(scheduling: $scheduling)
@@ -229,6 +251,7 @@ struct PublishBundleView: View {
         youtubeURL = bundle.youtubeURL ?? ""
         socialForm = SocialLinksFormState(bundle.socialLinks)
         scheduling = bundle.scheduling
+        accessForm = AccessFormState(bundle.access)
         coverSelection = bundle.coverImage.map { .existing($0) } ?? .none
         successMessage = nil
         errorMessage = nil
@@ -244,6 +267,7 @@ struct PublishBundleView: View {
         youtubeURL = ""
         socialForm.reset()
         scheduling = nil
+        accessForm.reset()
         coverSelection = .none
     }
 
@@ -270,7 +294,7 @@ struct PublishBundleView: View {
                 id: bundleID, name: name, description: description, items: Array(selectedItems),
                 bundlePriceEUR: price, coverImage: coverImage, youtubeURL: nilIfEmpty(youtubeURL),
                 socialLinks: socialForm.model, scheduling: scheduling
-            )
+            , access: accessForm.model)
             try CatalogEditor.upsertBundle(bundle)
             try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Pachet: \(bundle.name)", paths: ["docs/catalog.json", "docs/covers"])
             successMessage = "„\(bundle.name)” e publicat — apare la clienți la următorul refresh de catalog."

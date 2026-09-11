@@ -22,6 +22,11 @@ struct PublishServiceCenterView: View {
     // Multi-Locație (2026-09-05) — sedii suplimentare, opționale.
     @State private var additionalAddresses: [String] = []
 
+    // Acces/grup/etichete — editor COMUN (2026-09-11), vezi AccessEditorSection.swift
+
+    @State private var accessForm = AccessFormState()
+
+
     @State private var isBusy = false
     @State private var errorMessage: String?
     @State private var successMessage: String?
@@ -54,6 +59,19 @@ struct PublishServiceCenterView: View {
                     }
                     .padding(8)
                 }
+
+                AccessEditorSection(
+
+                    state: $accessForm,
+
+                    showsKind: true,
+
+                    showsReferencePrice: true,
+
+                    tagSuggestions: AccessTagSuggestions.apps
+
+                )
+
 
                 CoverImagePicker(preset: .icon, selection: $coverSelection)
                 SchedulingPicker(scheduling: $scheduling)
@@ -154,6 +172,7 @@ struct PublishServiceCenterView: View {
         address = center.address ?? ""
         coverSelection = center.coverImage.map { .existing($0) } ?? .none
         scheduling = center.scheduling
+        accessForm = AccessFormState(center.access)
         socialForm = SocialLinksFormState(center.socialLinks)
         additionalAddresses = center.additionalAddresses
         successMessage = nil
@@ -171,6 +190,7 @@ struct PublishServiceCenterView: View {
         address = ""
         coverSelection = .none
         scheduling = nil
+        accessForm.reset()
         socialForm.reset()
         additionalAddresses = []
     }
@@ -197,7 +217,7 @@ struct PublishServiceCenterView: View {
                 coverImage: coverImage, scheduling: scheduling,
                 address: address.trimmingCharacters(in: .whitespaces).isEmpty ? nil : address.trimmingCharacters(in: .whitespaces),
                 socialLinks: socialForm.model, additionalAddresses: additionalAddresses
-            )
+            , access: accessForm.model)
 
             try CatalogEditor.upsertServiceCenter(center)
             try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Service partener: \(center.name)", paths: ["docs/catalog.json", "docs/covers"])

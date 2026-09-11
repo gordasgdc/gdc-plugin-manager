@@ -20,6 +20,11 @@ struct PublishPartnerOfferView: View {
     @State private var scheduling: Scheduling?
     @State private var coverSelection: CoverImageSelection = .none
 
+    // Acces/grup/etichete — editor COMUN (2026-09-11), vezi AccessEditorSection.swift
+
+    @State private var accessForm = AccessFormState()
+
+
     @State private var isBusy = false
     @State private var errorMessage: String?
     @State private var successMessage: String?
@@ -61,6 +66,19 @@ struct PublishPartnerOfferView: View {
                     }
                     .padding(8)
                 }
+
+                AccessEditorSection(
+
+                    state: $accessForm,
+
+                    showsKind: true,
+
+                    showsReferencePrice: true,
+
+                    tagSuggestions: AccessTagSuggestions.apps
+
+                )
+
 
                 CoverImagePicker(preset: .cover, selection: $coverSelection)
                 SchedulingPicker(scheduling: $scheduling)
@@ -176,6 +194,7 @@ struct PublishPartnerOfferView: View {
         youtubeURL = offer.youtubeURL ?? ""
         socialForm = SocialLinksFormState(offer.socialLinks)
         scheduling = offer.scheduling
+        accessForm = AccessFormState(offer.access)
         coverSelection = offer.coverImage.map { .existing($0) } ?? .none
         successMessage = nil
         errorMessage = nil
@@ -192,6 +211,7 @@ struct PublishPartnerOfferView: View {
         youtubeURL = ""
         socialForm.reset()
         scheduling = nil
+        accessForm.reset()
         coverSelection = .none
     }
 
@@ -218,7 +238,7 @@ struct PublishPartnerOfferView: View {
                 discountText: nilIfEmpty(discountText), couponCode: nilIfEmpty(couponCode),
                 url: url, youtubeURL: nilIfEmpty(youtubeURL), coverImage: coverImage,
                 socialLinks: socialForm.model, scheduling: scheduling
-            )
+            , access: accessForm.model)
             try CatalogEditor.upsertPartnerOffer(offer)
             try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Ofertă parteneră: \(offer.brandName)", paths: ["docs/catalog.json", "docs/covers"])
             successMessage = "„\(offer.brandName)” e publicat — apare la clienți la următorul refresh de catalog."

@@ -18,6 +18,11 @@ struct PublishAudioView: View {
     @State private var coverSelection: CoverImageSelection = .none
     @State private var scheduling: Scheduling?
 
+    // Acces/grup/etichete — editor COMUN (2026-09-11), vezi AccessEditorSection.swift
+
+    @State private var accessForm = AccessFormState()
+
+
     @State private var isBusy = false
     @State private var errorMessage: String?
     @State private var successMessage: String?
@@ -50,6 +55,19 @@ struct PublishAudioView: View {
                     }
                     .padding(8)
                 }
+
+                AccessEditorSection(
+
+                    state: $accessForm,
+
+                    showsKind: true,
+
+                    showsReferencePrice: true,
+
+                    tagSuggestions: AccessTagSuggestions.audioVFX
+
+                )
+
 
                 CoverImagePicker(preset: .icon, selection: $coverSelection)
                 SchedulingPicker(scheduling: $scheduling)
@@ -151,6 +169,7 @@ struct PublishAudioView: View {
         // furnizorul n-o atinge.
         coverSelection = track.coverImage.map { .existing($0) } ?? .none
         scheduling = track.scheduling
+        accessForm = AccessFormState(track.access)
         successMessage = nil
         errorMessage = nil
     }
@@ -164,6 +183,7 @@ struct PublishAudioView: View {
         youtubeURL = ""
         coverSelection = .none
         scheduling = nil
+        accessForm.reset()
     }
 
     private func publish() async {
@@ -187,7 +207,7 @@ struct PublishAudioView: View {
 
             let track = AudioTrack(id: trackID, name: name, description: description, url: url,
                                     youtubeURL: trimmedYouTube.isEmpty ? nil : trimmedYouTube,
-                                    coverImage: coverImage, scheduling: scheduling)
+                                    coverImage: coverImage, scheduling: scheduling, access: accessForm.model)
             try CatalogEditor.upsertAudioTrack(track)
             try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Audio: \(track.name)", paths: ["docs/catalog.json", "docs/covers"])
             successMessage = "„\(track.name)” e publicat — apare la clienți la următorul refresh de catalog."

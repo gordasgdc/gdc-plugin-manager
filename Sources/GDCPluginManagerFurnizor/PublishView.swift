@@ -53,6 +53,11 @@ struct PublishView: View {
     /// for the same metadata-only-edit reason as `existingFiles` above.
     @State private var existingBundleFolderName: String?
 
+    // Acces/grup/etichete — editor COMUN (2026-09-11), vezi AccessEditorSection.swift
+
+    @State private var accessForm = AccessFormState()
+
+
     @State private var isBusy = false
     @State private var statusLines: [String] = []
     @State private var errorMessage: String?
@@ -177,6 +182,23 @@ struct PublishView: View {
                     }
                     .padding(8)
                 }
+
+                AccessEditorSection(
+
+                    state: $accessForm,
+
+                    // showsKind: false — aceasta sectiune are DEJA un camp nativ de
+
+                    // gratuit/pret; un al doilea selector ar crea a doua sursa de adevar.
+
+                    showsKind: false,
+
+                    showsReferencePrice: false,
+
+                    tagSuggestions: AccessTagSuggestions.plugins
+
+                )
+
 
                 CoverImagePicker(preset: .icon, selection: $coverSelection)
                 SchedulingPicker(scheduling: $scheduling)
@@ -325,6 +347,7 @@ struct PublishView: View {
         demoURL = item.demoURL ?? ""
         socialForm = SocialLinksFormState(item.socialLinks)
         scheduling = item.scheduling
+        accessForm = AccessFormState(item.access)
         promoPriceText = item.promoPriceEUR.map { String($0) } ?? ""
         existingFiles = item.files
         existingBundleFolderName = item.bundleFolderName
@@ -429,7 +452,7 @@ struct PublishView: View {
                 socialLinks: socialForm.model,
                 scheduling: scheduling,
                 promoPriceEUR: Double(promoPriceText.trimmingCharacters(in: .whitespaces))
-            )
+            , access: accessForm.model)
             try CatalogEditor.upsert(item)
             log("Catalog actualizat local")
 
@@ -520,6 +543,7 @@ struct PublishView: View {
         demoURL = ""
         socialForm.reset()
         scheduling = nil
+        accessForm.reset()
         promoPriceText = ""
         existingFiles = []
         existingBundleFolderName = nil

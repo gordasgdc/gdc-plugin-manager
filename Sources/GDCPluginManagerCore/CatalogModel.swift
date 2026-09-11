@@ -207,7 +207,7 @@ public enum CatalogAssets {
 /// pentru Resolve) chiar RULEAZA identic pe ambele platforme, asa ca
 /// decodarea unei intrari vechi (fara aceasta cheie) trebuie sa insemne
 /// "merge oriunde", nu "ascunde-l pe toata lumea".
-public enum SupportedOS: String, Codable, CaseIterable, Identifiable {
+public enum SupportedOS: String, Codable, CaseIterable, Identifiable, Sendable {
     case macOS
     case windows
     case crossPlatform
@@ -365,12 +365,17 @@ public struct PluginItem: Codable, Identifiable, Hashable {
     /// branduri PARTENERE, `PartnerOffer`, o relație comercială diferită).
     public let promoPriceEUR: Double?
 
+    /// Acces/grup/etichete comune — vezi `CatalogAccess`.
+    /// Optional: catalogul deja publicat decodeaza neschimbat.
+    public let access: CatalogAccess?
+
     public init(id: String, name: String, type: PluginType, description: String, version: String,
                 files: [PluginFile], iconSymbol: String?, priceEUR: Double, isFree: Bool = false, isTrial: Bool = false,
                 youtubeURL: String? = nil, bundleFolderName: String? = nil, coverImage: String? = nil, supportedOS: SupportedOS = .crossPlatform,
                 purchaseURL: String? = nil, demoURL: String? = nil, socialLinks: SocialLinks? = nil,
-                scheduling: Scheduling? = nil, promoPriceEUR: Double? = nil) {
+                scheduling: Scheduling? = nil, promoPriceEUR: Double? = nil, access: CatalogAccess? = nil) {
         self.id = id
+        self.access = access
         self.name = name
         self.type = type
         self.description = description
@@ -410,11 +415,12 @@ public struct PluginItem: Codable, Identifiable, Hashable {
     // `isFree`/`isTrial`/`youtubeURL`/`bundleFolderName`), so any entry
     // ever published still decodes cleanly.
     private enum CodingKeys: String, CodingKey {
-        case id, name, type, description, version, files, filePath, sha256, iconSymbol, priceEUR, isFree, isTrial, youtubeURL, bundleFolderName, coverImage, supportedOS, purchaseURL, demoURL, socialLinks, scheduling, promoPriceEUR
+        case id, name, type, description, version, files, filePath, sha256, iconSymbol, priceEUR, isFree, isTrial, youtubeURL, bundleFolderName, coverImage, supportedOS, purchaseURL, demoURL, socialLinks, scheduling, promoPriceEUR, access
     }
 
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
+        access = try c.decodeIfPresent(CatalogAccess.self, forKey: .access)
         id = try c.decode(String.self, forKey: .id)
         name = try c.decode(String.self, forKey: .name)
         type = try c.decode(PluginType.self, forKey: .type)
@@ -675,8 +681,13 @@ public struct Course: Codable, Identifiable, Hashable {
     /// înainte de acest câmp. Vezi `CourseValidity`.
     public let validity: CourseValidity
 
-    public init(id: String, name: String, description: String, options: [CourseOption], coverImage: String? = nil, scheduling: Scheduling? = nil, socialLinks: SocialLinks? = nil, accessType: CourseAccessType = .oneTime, accessLink: String? = nil, formatLabel: String? = nil, validity: CourseValidity = .lifetime) {
+    /// Acces/grup/etichete comune — vezi `CatalogAccess`.
+    /// Optional: catalogul deja publicat decodeaza neschimbat.
+    public let access: CatalogAccess?
+
+    public init(id: String, name: String, description: String, options: [CourseOption], coverImage: String? = nil, scheduling: Scheduling? = nil, socialLinks: SocialLinks? = nil, accessType: CourseAccessType = .oneTime, accessLink: String? = nil, formatLabel: String? = nil, validity: CourseValidity = .lifetime, access: CatalogAccess? = nil) {
         self.id = id
+        self.access = access
         self.name = name
         self.description = description
         self.options = options
@@ -690,11 +701,12 @@ public struct Course: Codable, Identifiable, Hashable {
     }
 
     private enum CodingKeys: String, CodingKey {
-        case id, name, description, options, coverImage, scheduling, socialLinks, accessType, accessLink, formatLabel, validity
+        case id, name, description, options, coverImage, scheduling, socialLinks, accessType, accessLink, formatLabel, validity, access
     }
 
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
+        access = try c.decodeIfPresent(CatalogAccess.self, forKey: .access)
         id = try c.decode(String.self, forKey: .id)
         name = try c.decode(String.self, forKey: .name)
         description = try c.decode(String.self, forKey: .description)
@@ -742,7 +754,19 @@ public struct AppLink: Codable, Identifiable, Hashable {
     /// vechi decodează automat `nil` (Optional).
     public let pricingProductID: String?
 
-    public init(id: String, name: String, url: String, youtubeURL: String? = nil, coverImage: String? = nil, scheduling: Scheduling? = nil, socialLinks: SocialLinks? = nil, pricingProductID: String? = nil) {
+    // MARK: - Acces, grupare si etichete (2026-09-11)
+
+    /// Datele comune de acces/grup/etichete — vezi `CatalogAccess`. Pentru
+    /// aplicatii, pasul 1 al precedentei e Pricing Manager
+    /// (`pricingProductID`); `access.kind`/`referencePriceEUR` intra in joc
+    /// doar cand acela lipseste (tipic aplicatiile externe).
+    public let access: CatalogAccess?
+    /// Platformele pe care ruleaza aplicatia — alimenteaza filtrul rapid
+    /// Mac/Windows. `nil` = necunoscut, apare la orice filtru (fail-open,
+    /// nu ascundem un card din lipsa de date).
+    public let supportedOS: SupportedOS?
+
+    public init(id: String, name: String, url: String, youtubeURL: String? = nil, coverImage: String? = nil, scheduling: Scheduling? = nil, socialLinks: SocialLinks? = nil, pricingProductID: String? = nil, access: CatalogAccess? = nil, supportedOS: SupportedOS? = nil) {
         self.youtubeURL = youtubeURL
         self.id = id
         self.name = name
@@ -751,6 +775,8 @@ public struct AppLink: Codable, Identifiable, Hashable {
         self.scheduling = scheduling
         self.socialLinks = socialLinks
         self.pricingProductID = pricingProductID
+        self.access = access
+        self.supportedOS = supportedOS
     }
 
     public var coverImageURL: URL? { CatalogAssets.imageURL(for: coverImage) }
@@ -774,8 +800,13 @@ public struct AudioTrack: Codable, Identifiable, Hashable {
     /// Valabilitate temporală opțională — Etapa 4 extinsă (2026-08-29). Vezi `Scheduling`.
     public let scheduling: Scheduling?
 
-    public init(id: String, name: String, description: String, url: String, youtubeURL: String? = nil, coverImage: String? = nil, scheduling: Scheduling? = nil) {
+    /// Acces/grup/etichete comune — vezi `CatalogAccess`.
+    /// Optional: catalogul deja publicat decodeaza neschimbat.
+    public let access: CatalogAccess?
+
+    public init(id: String, name: String, description: String, url: String, youtubeURL: String? = nil, coverImage: String? = nil, scheduling: Scheduling? = nil, access: CatalogAccess? = nil) {
         self.id = id
+        self.access = access
         self.name = name
         self.description = description
         self.url = url
@@ -817,8 +848,13 @@ public struct EducationalResource: Codable, Identifiable, Hashable {
     /// Rețele sociale opționale — 2026-08-29. Vezi `Course.socialLinks`.
     public let socialLinks: SocialLinks?
 
-    public init(id: String, name: String, description: String, kind: Kind, externalURL: String, youtubeURL: String? = nil, coverImage: String? = nil, scheduling: Scheduling? = nil, socialLinks: SocialLinks? = nil) {
+    /// Acces/grup/etichete comune — vezi `CatalogAccess`.
+    /// Optional: catalogul deja publicat decodeaza neschimbat.
+    public let access: CatalogAccess?
+
+    public init(id: String, name: String, description: String, kind: Kind, externalURL: String, youtubeURL: String? = nil, coverImage: String? = nil, scheduling: Scheduling? = nil, socialLinks: SocialLinks? = nil, access: CatalogAccess? = nil) {
         self.id = id
+        self.access = access
         self.name = name
         self.description = description
         self.kind = kind
@@ -866,9 +902,14 @@ public struct Event: Codable, Identifiable, Hashable {
     /// (locație/interval pot fi goale, prețul poate lipsi = gratuit).
     public let occurrences: [EventOccurrence]
 
-    public init(id: String, title: String, description: String, dateDisplay: String, location: String, externalURL: String, youtubeURL: String? = nil, coverImage: String? = nil, scheduling: Scheduling? = nil, socialLinks: SocialLinks? = nil, occurrences: [EventOccurrence] = []) {
+    /// Acces/grup/etichete comune — vezi `CatalogAccess`.
+    /// Optional: catalogul deja publicat decodeaza neschimbat.
+    public let access: CatalogAccess?
+
+    public init(id: String, title: String, description: String, dateDisplay: String, location: String, externalURL: String, youtubeURL: String? = nil, coverImage: String? = nil, scheduling: Scheduling? = nil, socialLinks: SocialLinks? = nil, occurrences: [EventOccurrence] = [], access: CatalogAccess? = nil) {
         self.socialLinks = socialLinks
         self.id = id
+        self.access = access
         self.title = title
         self.description = description
         self.dateDisplay = dateDisplay
@@ -886,10 +927,11 @@ public struct Event: Codable, Identifiable, Hashable {
     // această schimbare (cheia lipsește din `catalog.json`-ul lor). Toate
     // celelalte câmpuri decodează identic cu varianta sintetizată dinainte.
     private enum CodingKeys: String, CodingKey {
-        case id, title, description, dateDisplay, location, externalURL, youtubeURL, coverImage, scheduling, socialLinks, occurrences
+        case id, title, description, dateDisplay, location, externalURL, youtubeURL, coverImage, scheduling, socialLinks, occurrences, access
     }
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
+        access = try c.decodeIfPresent(CatalogAccess.self, forKey: .access)
         id = try c.decode(String.self, forKey: .id)
         title = try c.decode(String.self, forKey: .title)
         description = try c.decode(String.self, forKey: .description)
@@ -1034,10 +1076,15 @@ public struct ServiceCenter: Codable, Identifiable, Hashable {
     /// neschimbat — complet opțional, poate rămâne gol.
     public let additionalAddresses: [String]
 
+    /// Acces/grup/etichete comune — vezi `CatalogAccess`.
+    /// Optional: catalogul deja publicat decodeaza neschimbat.
+    public let access: CatalogAccess?
+
     public init(id: String, name: String, category: ServiceCategory, specialization: String,
-                contactURL: String, websiteURL: String? = nil, coverImage: String? = nil, scheduling: Scheduling? = nil, address: String? = nil, socialLinks: SocialLinks? = nil, additionalAddresses: [String] = []) {
+                contactURL: String, websiteURL: String? = nil, coverImage: String? = nil, scheduling: Scheduling? = nil, address: String? = nil, socialLinks: SocialLinks? = nil, additionalAddresses: [String] = [], access: CatalogAccess? = nil) {
         self.socialLinks = socialLinks
         self.id = id
+        self.access = access
         self.name = name
         self.category = category
         self.specialization = specialization
@@ -1051,10 +1098,11 @@ public struct ServiceCenter: Codable, Identifiable, Hashable {
 
     // Decoder custom (nou, 2026-09-05) — vezi motivul identic pe `Event`.
     private enum CodingKeys: String, CodingKey {
-        case id, name, category, specialization, contactURL, websiteURL, coverImage, scheduling, address, socialLinks, additionalAddresses
+        case id, name, category, specialization, contactURL, websiteURL, coverImage, scheduling, address, socialLinks, additionalAddresses, access
     }
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
+        access = try c.decodeIfPresent(CatalogAccess.self, forKey: .access)
         id = try c.decode(String.self, forKey: .id)
         name = try c.decode(String.self, forKey: .name)
         category = try c.decode(ServiceCategory.self, forKey: .category)
@@ -1095,9 +1143,14 @@ public struct PartnerStore: Codable, Identifiable, Hashable {
     /// (2026-09-05). Vezi `ServiceCenter.additionalAddresses`.
     public let additionalAddresses: [String]
 
-    public init(id: String, name: String, description: String, url: String, coverImage: String? = nil, scheduling: Scheduling? = nil, address: String? = nil, socialLinks: SocialLinks? = nil, additionalAddresses: [String] = []) {
+    /// Acces/grup/etichete comune — vezi `CatalogAccess`.
+    /// Optional: catalogul deja publicat decodeaza neschimbat.
+    public let access: CatalogAccess?
+
+    public init(id: String, name: String, description: String, url: String, coverImage: String? = nil, scheduling: Scheduling? = nil, address: String? = nil, socialLinks: SocialLinks? = nil, additionalAddresses: [String] = [], access: CatalogAccess? = nil) {
         self.socialLinks = socialLinks
         self.id = id
+        self.access = access
         self.name = name
         self.description = description
         self.url = url
@@ -1109,10 +1162,11 @@ public struct PartnerStore: Codable, Identifiable, Hashable {
 
     // Decoder custom (nou, 2026-09-05) — vezi motivul identic pe `Event`.
     private enum CodingKeys: String, CodingKey {
-        case id, name, description, url, coverImage, scheduling, address, socialLinks, additionalAddresses
+        case id, name, description, url, coverImage, scheduling, address, socialLinks, additionalAddresses, access
     }
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
+        access = try c.decodeIfPresent(CatalogAccess.self, forKey: .access)
         id = try c.decode(String.self, forKey: .id)
         name = try c.decode(String.self, forKey: .name)
         description = try c.decode(String.self, forKey: .description)
@@ -1193,11 +1247,16 @@ public struct DownloadableResource: Codable, Identifiable, Hashable {
     /// (aceleași reguli de conformitate cu Regula 3: rămâne donație).
     public let promoPriceEUR: Double?
 
+    /// Acces/grup/etichete comune — vezi `CatalogAccess`.
+    /// Optional: catalogul deja publicat decodeaza neschimbat.
+    public let access: CatalogAccess?
+
     public init(id: String, name: String, description: String, category: DownloadCategory, url: String,
                 youtubeURL: String? = nil, coverImage: String? = nil, supportedOS: SupportedOS = .crossPlatform,
                 purchaseURL: String? = nil, demoURL: String? = nil, socialLinks: SocialLinks? = nil, scheduling: Scheduling? = nil,
-                isFree: Bool = true, isTrial: Bool = false, priceEUR: Double = 0, promoPriceEUR: Double? = nil) {
+                isFree: Bool = true, isTrial: Bool = false, priceEUR: Double = 0, promoPriceEUR: Double? = nil, access: CatalogAccess? = nil) {
         self.id = id
+        self.access = access
         self.name = name
         self.description = description
         self.category = category
@@ -1231,11 +1290,12 @@ public struct DownloadableResource: Codable, Identifiable, Hashable {
     // acest câmp (liberă, fără cod), nu transformă silențios resurse deja
     // publicate în "produse plătite fără licență activabilă".
     private enum CodingKeys: String, CodingKey {
-        case id, name, description, category, url, youtubeURL, coverImage, supportedOS, purchaseURL, demoURL, socialLinks, scheduling, isFree, isTrial, priceEUR, promoPriceEUR
+        case id, name, description, category, url, youtubeURL, coverImage, supportedOS, purchaseURL, demoURL, socialLinks, scheduling, isFree, isTrial, priceEUR, promoPriceEUR, access
     }
 
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
+        access = try c.decodeIfPresent(CatalogAccess.self, forKey: .access)
         id = try c.decode(String.self, forKey: .id)
         name = try c.decode(String.self, forKey: .name)
         description = try c.decode(String.self, forKey: .description)
@@ -1299,10 +1359,15 @@ public struct PartnerOffer: Codable, Identifiable, Hashable {
     public let socialLinks: SocialLinks?
     public let scheduling: Scheduling?
 
+    /// Acces/grup/etichete comune — vezi `CatalogAccess`.
+    /// Optional: catalogul deja publicat decodeaza neschimbat.
+    public let access: CatalogAccess?
+
     public init(id: String, brandName: String, description: String, discountText: String? = nil,
                 couponCode: String? = nil, url: String, youtubeURL: String? = nil, coverImage: String? = nil,
-                socialLinks: SocialLinks? = nil, scheduling: Scheduling? = nil) {
+                socialLinks: SocialLinks? = nil, scheduling: Scheduling? = nil, access: CatalogAccess? = nil) {
         self.id = id
+        self.access = access
         self.brandName = brandName
         self.description = description
         self.discountText = discountText
@@ -1346,8 +1411,13 @@ public struct Tutorial: Codable, Identifiable, Hashable {
     /// lista clientului (rămâne editabil/vizibil doar în Furnizor).
     public let scheduling: Scheduling?
 
-    public init(id: String, youtubeURL: String, videoID: String, title: String, description: String, thumbnailURL: String, tags: [String] = [], category: String = "General", addedAt: String? = nil, scheduling: Scheduling? = nil) {
+    /// Acces/grup/etichete comune — vezi `CatalogAccess`.
+    /// Optional: catalogul deja publicat decodeaza neschimbat.
+    public let access: CatalogAccess?
+
+    public init(id: String, youtubeURL: String, videoID: String, title: String, description: String, thumbnailURL: String, tags: [String] = [], category: String = "General", addedAt: String? = nil, scheduling: Scheduling? = nil, access: CatalogAccess? = nil) {
         self.id = id
+        self.access = access
         self.youtubeURL = youtubeURL
         self.videoID = videoID
         self.title = title
@@ -1405,9 +1475,14 @@ public struct ProductBundle: Codable, Identifiable, Hashable {
     public let socialLinks: SocialLinks?
     public let scheduling: Scheduling?
 
+    /// Acces/grup/etichete comune — vezi `CatalogAccess`.
+    /// Optional: catalogul deja publicat decodeaza neschimbat.
+    public let access: CatalogAccess?
+
     public init(id: String, name: String, description: String, items: [BundleItemRef], bundlePriceEUR: Double,
-                coverImage: String? = nil, youtubeURL: String? = nil, socialLinks: SocialLinks? = nil, scheduling: Scheduling? = nil) {
+                coverImage: String? = nil, youtubeURL: String? = nil, socialLinks: SocialLinks? = nil, scheduling: Scheduling? = nil, access: CatalogAccess? = nil) {
         self.id = id
+        self.access = access
         self.name = name
         self.description = description
         self.items = items

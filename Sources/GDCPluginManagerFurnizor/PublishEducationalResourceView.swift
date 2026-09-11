@@ -24,6 +24,11 @@ struct PublishEducationalResourceView: View {
     // Rețele sociale opționale (2026-08-29) — vezi SocialLinksEditor.swift.
     @State private var socialForm = SocialLinksFormState()
 
+    // Acces/grup/etichete — editor COMUN (2026-09-11), vezi AccessEditorSection.swift
+
+    @State private var accessForm = AccessFormState()
+
+
     @State private var isBusy = false
     @State private var errorMessage: String?
     @State private var successMessage: String?
@@ -56,6 +61,19 @@ struct PublishEducationalResourceView: View {
                     }
                     .padding(8)
                 }
+
+                AccessEditorSection(
+
+                    state: $accessForm,
+
+                    showsKind: true,
+
+                    showsReferencePrice: true,
+
+                    tagSuggestions: AccessTagSuggestions.learning
+
+                )
+
 
                 CoverImagePicker(preset: .cover, selection: $coverSelection)
                 SchedulingPicker(scheduling: $scheduling)
@@ -160,6 +178,7 @@ struct PublishEducationalResourceView: View {
         // furnizorul n-o atinge.
         coverSelection = resource.coverImage.map { .existing($0) } ?? .none
         scheduling = resource.scheduling
+        accessForm = AccessFormState(resource.access)
         socialForm = SocialLinksFormState(resource.socialLinks)
         successMessage = nil
         errorMessage = nil
@@ -175,6 +194,7 @@ struct PublishEducationalResourceView: View {
         youtubeURL = ""
         coverSelection = .none
         scheduling = nil
+        accessForm.reset()
         socialForm.reset()
     }
 
@@ -205,7 +225,7 @@ struct PublishEducationalResourceView: View {
                 youtubeURL: trimmedYouTube.isEmpty ? nil : trimmedYouTube,
                 coverImage: coverImage, scheduling: scheduling,
                 socialLinks: socialForm.model
-            )
+            , access: accessForm.model)
 
             try CatalogEditor.upsertEducationalResource(resource)
             try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Material: \(resource.name)", paths: ["docs/catalog.json", "docs/covers"])

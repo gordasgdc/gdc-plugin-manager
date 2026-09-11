@@ -21,6 +21,10 @@ struct PublishAppView: View {
     /// cardul din „Aplicații” arată automat preț/ofertă/countdown, la fel
     /// ca la LUT/DCTL/PowerGrade. Gol = cardul rămâne neschimbat.
     @State private var pricingProductID = ""
+    // Acces/grup/etichete — editor COMUN, refolosit in toate panourile
+    // Publish*View (2026-09-11). Vezi AccessEditorSection.swift.
+    @State private var accessForm = AccessFormState()
+    @State private var supportedOS: SupportedOS?
     // Rețele sociale opționale (2026-08-29) — vezi SocialLinksEditor.swift.
     @State private var socialForm = SocialLinksFormState()
 
@@ -46,6 +50,26 @@ struct PublishAppView: View {
                             .textFieldStyle(.roundedBorder)
                         Text("Dacă se potrivește cu un produs din „Prețuri & Oferte”, cardul arată automat preț/ofertă/countdown la clienți.")
                             .font(.caption).foregroundStyle(.secondary)
+                    }
+                    .padding(8)
+                }
+
+                AccessEditorSection(
+                    state: $accessForm,
+                    // Aplicatiile n-au camp nativ de gratuit/platit, deci
+                    // selectorul de tip acces E sursa de adevar aici (pasul 2
+                    // al precedentei) — spre deosebire de plugin-uri/resurse.
+                    showsKind: true,
+                    showsReferencePrice: true,
+                    tagSuggestions: AccessTagSuggestions.apps
+                )
+
+                GroupBox("Platformă") {
+                    Picker("Rulează pe", selection: $supportedOS) {
+                        Text("Nespecificat").tag(SupportedOS?.none)
+                        Text("Mac").tag(SupportedOS?.some(.macOS))
+                        Text("Windows").tag(SupportedOS?.some(.windows))
+                        Text("Mac + Windows").tag(SupportedOS?.some(.crossPlatform))
                     }
                     .padding(8)
                 }
@@ -151,6 +175,8 @@ struct PublishAppView: View {
         coverSelection = app.coverImage.map { .existing($0) } ?? .none
         scheduling = app.scheduling
         pricingProductID = app.pricingProductID ?? ""
+        accessForm = AccessFormState(app.access)
+        supportedOS = app.supportedOS
         socialForm = SocialLinksFormState(app.socialLinks)
         successMessage = nil
         errorMessage = nil
@@ -165,6 +191,8 @@ struct PublishAppView: View {
         coverSelection = .none
         scheduling = nil
         pricingProductID = ""
+        accessForm.reset()
+        supportedOS = nil
         socialForm.reset()
     }
 
@@ -193,7 +221,9 @@ struct PublishAppView: View {
                                youtubeURL: trimmedYouTube.isEmpty ? nil : trimmedYouTube,
                                coverImage: coverImage, scheduling: scheduling,
                                socialLinks: socialForm.model,
-                               pricingProductID: trimmedPricingID.isEmpty ? nil : trimmedPricingID)
+                               pricingProductID: trimmedPricingID.isEmpty ? nil : trimmedPricingID,
+                               access: accessForm.model,
+                               supportedOS: supportedOS)
             try CatalogEditor.upsertApp(app)
             try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Aplicatie: \(app.name)", paths: ["docs/catalog.json", "docs/covers"])
             successMessage = "„\(app.name)” e publicată — apare la clienți la următorul refresh de catalog."

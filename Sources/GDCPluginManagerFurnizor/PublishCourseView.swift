@@ -28,6 +28,11 @@ struct PublishCourseView: View {
     @State private var validityIsLimited = false
     @State private var validityDays = ""
 
+    // Acces/grup/etichete — editor COMUN (2026-09-11), vezi AccessEditorSection.swift
+
+    @State private var accessForm = AccessFormState()
+
+
     @State private var isBusy = false
     @State private var errorMessage: String?
     @State private var successMessage: String?
@@ -109,6 +114,23 @@ struct PublishCourseView: View {
                     }
                     .padding(8)
                 }
+
+                AccessEditorSection(
+
+                    state: $accessForm,
+
+                    // showsKind: false — aceasta sectiune are DEJA un camp nativ de
+
+                    // gratuit/pret; un al doilea selector ar crea a doua sursa de adevar.
+
+                    showsKind: false,
+
+                    showsReferencePrice: false,
+
+                    tagSuggestions: AccessTagSuggestions.learning
+
+                )
+
 
                 CoverImagePicker(preset: .cover, selection: $coverSelection)
                 SchedulingPicker(scheduling: $scheduling)
@@ -212,6 +234,7 @@ struct PublishCourseView: View {
         // furnizorul n-o atinge.
         coverSelection = course.coverImage.map { .existing($0) } ?? .none
         scheduling = course.scheduling
+        accessForm = AccessFormState(course.access)
         socialForm = SocialLinksFormState(course.socialLinks)
         accessType = course.accessType
         accessLink = course.accessLink ?? ""
@@ -238,6 +261,7 @@ struct PublishCourseView: View {
         newOptionPrice = ""
         coverSelection = .none
         scheduling = nil
+        accessForm.reset()
         socialForm.reset()
         accessType = .oneTime
         accessLink = ""
@@ -278,7 +302,7 @@ struct PublishCourseView: View {
                 accessLink: trimmedLink.isEmpty ? nil : trimmedLink,
                 formatLabel: trimmedFormat.isEmpty ? nil : trimmedFormat,
                 validity: validity
-            )
+            , access: accessForm.model)
 
             try CatalogEditor.upsertCourse(course)
             try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Curs: \(course.name)", paths: ["docs/catalog.json", "docs/covers"])

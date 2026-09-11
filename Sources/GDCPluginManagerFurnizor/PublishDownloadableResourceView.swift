@@ -33,6 +33,11 @@ struct PublishDownloadableResourceView: View {
     @State private var coverSelection: CoverImageSelection = .none
     @State private var scheduling: Scheduling?
 
+    // Acces/grup/etichete — editor COMUN (2026-09-11), vezi AccessEditorSection.swift
+
+    @State private var accessForm = AccessFormState()
+
+
     @State private var isBusy = false
     @State private var errorMessage: String?
     @State private var successMessage: String?
@@ -117,6 +122,23 @@ struct PublishDownloadableResourceView: View {
                     }
                     .padding(8)
                 }
+
+                AccessEditorSection(
+
+                    state: $accessForm,
+
+                    // showsKind: false — aceasta sectiune are DEJA un camp nativ de
+
+                    // gratuit/pret; un al doilea selector ar crea a doua sursa de adevar.
+
+                    showsKind: false,
+
+                    showsReferencePrice: false,
+
+                    tagSuggestions: AccessTagSuggestions.audioVFX
+
+                )
+
 
                 CoverImagePicker(preset: .icon, selection: $coverSelection)
                 SchedulingPicker(scheduling: $scheduling)
@@ -233,6 +255,7 @@ struct PublishDownloadableResourceView: View {
         socialForm = SocialLinksFormState(resource.socialLinks)
         coverSelection = resource.coverImage.map { .existing($0) } ?? .none
         scheduling = resource.scheduling
+        accessForm = AccessFormState(resource.access)
         accessMode = resource.isTrial ? .trial : (resource.isFree ? .free : .paid)
         priceText = String(resource.priceEUR)
         promoPriceText = resource.promoPriceEUR.map { String($0) } ?? ""
@@ -254,6 +277,7 @@ struct PublishDownloadableResourceView: View {
         socialForm.reset()
         coverSelection = .none
         scheduling = nil
+        accessForm.reset()
         accessMode = .free
         priceText = "0"
         promoPriceText = ""
@@ -287,7 +311,7 @@ struct PublishDownloadableResourceView: View {
                 socialLinks: socialForm.model, scheduling: scheduling,
                 isFree: isFreeFlag, isTrial: isTrialFlag, priceEUR: price,
                 promoPriceEUR: Double(promoPriceText.trimmingCharacters(in: .whitespaces))
-            )
+            , access: accessForm.model)
             try CatalogEditor.upsertDownloadableResource(resource)
             try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Resursă download: \(resource.name)", paths: ["docs/catalog.json", "docs/covers"])
             successMessage = "„\(resource.name)” e publicat — apare la clienți la următorul refresh de catalog."

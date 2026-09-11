@@ -233,6 +233,20 @@ enum L {
         "apps.empty": [.ro: "Nicio aplicație listată momentan.", .en: "No apps listed right now.", .es: "Ninguna aplicación listada por ahora."],
         "apps.open": [.ro: "Deschide", .en: "Open", .es: "Abrir"],
         "apps.badge": [.ro: "Aplicație", .en: "App", .es: "Aplicación"],
+        // Sistem universal de acces/grupare/etichete (2026-09-11) —
+        // cheile vin din AccessKind/CatalogGroup.localizationKey, folosite
+        // identic in TOATE sectiunile, nu doar la Aplicatii.
+        "access.kind.free": [.ro: "GRATUIT", .en: "FREE", .es: "GRATIS"],
+        "access.kind.paid": [.ro: "PLĂTIT", .en: "PAID", .es: "DE PAGO"],
+        "access.kind.trial": [.ro: "TRIAL", .en: "TRIAL", .es: "PRUEBA"],
+        "access.kind.external": [.ro: "EXTERN", .en: "EXTERNAL", .es: "EXTERNO"],
+        "access.group.all": [.ro: "Toate", .en: "All", .es: "Todo"],
+        "access.group.gdc": [.ro: "Proiecte GDC", .en: "GDC projects", .es: "Proyectos GDC"],
+        "access.group.partners": [.ro: "Parteneri", .en: "Partners", .es: "Socios"],
+        "access.group.mine": [.ro: "Resursele mele", .en: "My resources", .es: "Mis recursos"],
+        "access.group.external": [.ro: "Externe", .en: "External", .es: "Externos"],
+        "access.tag.all": [.ro: "Toate tipurile", .en: "All types", .es: "Todos los tipos"],
+        "access.filter.none": [.ro: "Niciun rezultat pentru filtrele alese.", .en: "No results match the selected filters.", .es: "Ningún resultado coincide con los filtros."],
         "audio.empty": [.ro: "Niciun element audio listat momentan.", .en: "No audio listed right now.", .es: "Ningún audio listado por ahora."],
         "audio.open": [.ro: "Descarcă", .en: "Download", .es: "Descargar"],
         "audio.badge": [.ro: "Audio", .en: "Audio", .es: "Audio"],

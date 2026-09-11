@@ -646,50 +646,12 @@ private struct DependencyBanner: View {
     }
 }
 
-/// Filtru rapid Toate/Gratuite/Premium — cerut explicit 2026-08-24, ca
-/// cine vrea doar uneltele gratuite sa le gaseasca instant, fara sa
-/// citeasca fiecare card in parte.
-private enum PriceFilter: String, CaseIterable, Identifiable {
-    case all, free, paid
-    var id: String { rawValue }
-    var label: String {
-        switch self {
-        case .all: return L.t("filter.price.all")
-        case .free: return L.t("filter.price.free")
-        case .paid: return L.t("filter.price.paid")
-        }
-    }
-    func matches(_ item: PluginItem) -> Bool {
-        switch self {
-        case .all: return true
-        case .free: return item.isFree
-        case .paid: return !item.isFree
-        }
-    }
-}
-
-/// Filtru OS Toate/Mac/Windows — Etapa 1 din planul de upgrade
-/// (2026-08-29). Produsele `.crossPlatform` apar la orice filtru ales
-/// (ele chiar rulează pe ambele), la fel cum se comportă deja badge-ul
-/// 🔄 pe card.
-private enum OSFilter: String, CaseIterable, Identifiable {
-    case all, mac, windows
-    var id: String { rawValue }
-    var label: String {
-        switch self {
-        case .all: return L.t("filter.os.all")
-        case .mac: return L.t("filter.os.mac")
-        case .windows: return L.t("filter.os.windows")
-        }
-    }
-    func matches(_ supportedOS: SupportedOS) -> Bool {
-        switch self {
-        case .all: return true
-        case .mac: return supportedOS == .macOS || supportedOS == .crossPlatform
-        case .windows: return supportedOS == .windows || supportedOS == .crossPlatform
-        }
-    }
-}
+/// [ÎNLOCUIT 2026-09-11] `PriceFilter`/`OSFilter` traiau aici si erau
+/// copiate, cu propriul `@State` si propriile `Picker`-e, in fiecare
+/// sectiune. Au fost unificate in `CatalogFilterBar.swift`
+/// (`AccessPriceFilter`/`AccessOSFilter`/`CatalogFilterState`), care
+/// filtreaza pe `ResolvedAccess` — deci regula „ce inseamna gratuit" e
+/// aplicata o singura data, in Core, nu reinterpretata per sectiune.
 
 /// Rezultate unificate ale căutării globale — combină toate cele 8
 /// colecții din catalog, fiecare filtrată cu `FuzzySearch` pe câmpurile ei
@@ -837,41 +799,29 @@ private struct GlobalSearchResults: View {
 private struct CatalogGrid: View {
     let items: [PluginItem]
     @EnvironmentObject private var catalog: CatalogService
-    @State private var priceFilter: PriceFilter = .all
-    @State private var osFilter: OSFilter = .all
+
+    // Filtrele locale (priceFilter/osFilter, copiate si in celelalte
+    // sectiuni) au fost inlocuite 2026-09-11 cu bara COMUNA — pentru
+    // plugin-uri, `isFree`/`supportedOS` raman sursa de adevar, derivate
+    // prin `resolvedAccess` (pasul 1 al precedentei), deci filtrarea da
+    // exact aceleasi rezultate ca inainte, dar dintr-un singur loc.
+    @StateObject private var filters = CatalogFilterState()
 
     // 240 (de la 220): cardul are acum și copertă, iar descrierea urcă la
     // 5 rânduri — sub 240 textul se rupe urât.
     private let columns = [GridItem(.adaptive(minimum: 240, maximum: 300), spacing: 14)]
 
-    private var filteredItems: [PluginItem] {
-        items.filter { priceFilter.matches($0) && osFilter.matches($0.supportedOS) }
-    }
+    private var filteredItems: [PluginItem] { filters.filter(items) }
 
     var body: some View {
         VStack(spacing: 0) {
             if !items.isEmpty {
-                HStack {
-                    Picker("", selection: $priceFilter) {
-                        ForEach(PriceFilter.allCases) { filter in
-                            Text(filter.label).tag(filter)
-                        }
-                    }
-                    .pickerStyle(.segmented)
-                    .labelsHidden()
-                    .frame(maxWidth: 280)
-
-                    Picker("", selection: $osFilter) {
-                        ForEach(OSFilter.allCases) { filter in
-                            Text(filter.label).tag(filter)
-                        }
-                    }
-                    .pickerStyle(.segmented)
-                    .labelsHidden()
-                    .frame(maxWidth: 220)
-                }
-                .padding(.horizontal, 16)
-                .padding(.top, 10)
+                CatalogFilterBar(
+                    state: filters,
+                    options: .product,
+                    availableTags: CatalogFacets.tags(items),
+                    availableGroups: CatalogFacets.groups(items)
+                )
             }
 
             ScrollView {
@@ -1361,6 +1311,10 @@ private struct CoursesGrid: View {
     private let columns = [GridItem(.adaptive(minimum: 300, maximum: 400), spacing: 16)]
 
     var body: some View {
+        // Bara de filtre comuna (2026-09-11) — shadowing pe `courses`,
+        // deci corpul de mai jos ramane neschimbat, dar primeste lista
+        // deja filtrata. Vezi CatalogFilterBar.swift.
+        FilteredCatalogSection(items: courses, options: .content) { courses in
         ScrollView {
             if courses.isEmpty {
                 Text(L.t("courses.empty")).foregroundStyle(.secondary).padding(40)
@@ -1372,6 +1326,7 @@ private struct CoursesGrid: View {
                 }
                 .padding(16)
             }
+        }
         }
     }
 }
@@ -1667,6 +1622,10 @@ private struct EducationalResourcesGrid: View {
     private let columns = [GridItem(.adaptive(minimum: 300, maximum: 400), spacing: 16)]
 
     var body: some View {
+        // Bara de filtre comuna (2026-09-11) — shadowing pe `resources`,
+        // deci corpul de mai jos ramane neschimbat, dar primeste lista
+        // deja filtrata. Vezi CatalogFilterBar.swift.
+        FilteredCatalogSection(items: resources, options: .content) { resources in
         ScrollView {
             if resources.isEmpty {
                 Text(L.t("resources.empty")).foregroundStyle(.secondary).padding(40)
@@ -1678,6 +1637,7 @@ private struct EducationalResourcesGrid: View {
                 }
                 .padding(16)
             }
+        }
         }
     }
 }
@@ -1733,6 +1693,10 @@ private struct EventsGrid: View {
     private let columns = [GridItem(.adaptive(minimum: 300, maximum: 400), spacing: 16)]
 
     var body: some View {
+        // Bara de filtre comuna (2026-09-11) — shadowing pe `events`,
+        // deci corpul de mai jos ramane neschimbat, dar primeste lista
+        // deja filtrata. Vezi CatalogFilterBar.swift.
+        FilteredCatalogSection(items: events, options: .content) { events in
         ScrollView {
             if events.isEmpty {
                 Text(L.t("events.empty")).foregroundStyle(.secondary).padding(40)
@@ -1744,6 +1708,7 @@ private struct EventsGrid: View {
                 }
                 .padding(16)
             }
+        }
         }
     }
 }
@@ -1827,6 +1792,10 @@ private struct BundleGrid: View {
     private let columns = [GridItem(.adaptive(minimum: 300, maximum: 400), spacing: 16)]
 
     var body: some View {
+        // Bara de filtre comuna (2026-09-11) — shadowing pe `bundles`,
+        // deci corpul de mai jos ramane neschimbat, dar primeste lista
+        // deja filtrata. Vezi CatalogFilterBar.swift.
+        FilteredCatalogSection(items: bundles, options: .content) { bundles in
         ScrollView {
             if bundles.isEmpty {
                 Text(L.t("bundles.empty")).foregroundStyle(.secondary).padding(40)
@@ -1838,6 +1807,7 @@ private struct BundleGrid: View {
                 }
                 .padding(16)
             }
+        }
         }
     }
 }
@@ -1945,6 +1915,10 @@ private struct PartnerOffersGrid: View {
     private let columns = [GridItem(.adaptive(minimum: 300, maximum: 400), spacing: 16)]
 
     var body: some View {
+        // Bara de filtre comuna (2026-09-11) — shadowing pe `offers`,
+        // deci corpul de mai jos ramane neschimbat, dar primeste lista
+        // deja filtrata. Vezi CatalogFilterBar.swift.
+        FilteredCatalogSection(items: offers, options: .content) { offers in
         ScrollView {
             if offers.isEmpty {
                 Text(L.t("partnerOffers.empty")).foregroundStyle(.secondary).padding(40)
@@ -1956,6 +1930,7 @@ private struct PartnerOffersGrid: View {
                 }
                 .padding(16)
             }
+        }
         }
     }
 }
@@ -2027,6 +2002,10 @@ private struct PartnerStoresGrid: View {
     private let columns = [GridItem(.adaptive(minimum: 300, maximum: 400), spacing: 16)]
 
     var body: some View {
+        // Bara de filtre comuna (2026-09-11) — shadowing pe `stores`,
+        // deci corpul de mai jos ramane neschimbat, dar primeste lista
+        // deja filtrata. Vezi CatalogFilterBar.swift.
+        FilteredCatalogSection(items: stores, options: .content) { stores in
         ScrollView {
             if stores.isEmpty {
                 Text(L.t("stores.empty")).foregroundStyle(.secondary).padding(40)
@@ -2038,6 +2017,7 @@ private struct PartnerStoresGrid: View {
                 }
                 .padding(16)
             }
+        }
         }
     }
 }
@@ -2090,6 +2070,10 @@ private struct ServiceCentersGrid: View {
     private let columns = [GridItem(.adaptive(minimum: 280, maximum: 380), spacing: 16)]
 
     var body: some View {
+        // Bara de filtre comuna (2026-09-11) — shadowing pe `centers`,
+        // deci corpul de mai jos ramane neschimbat, dar primeste lista
+        // deja filtrata. Vezi CatalogFilterBar.swift.
+        FilteredCatalogSection(items: centers, options: .content) { centers in
         ScrollView {
             if centers.isEmpty {
                 Text(L.t("servicecenters.empty")).foregroundStyle(.secondary).padding(40)
@@ -2115,6 +2099,7 @@ private struct ServiceCentersGrid: View {
                 }
                 .padding(16)
             }
+        }
         }
     }
 }
@@ -2164,29 +2149,47 @@ private struct ServiceCenterCard: View {
 private struct AppsGrid: View {
     let apps: [AppLink]
 
+    // Bara de filtre si badge-urile vin din componentele COMUNE
+    // (CatalogFilterBar.swift) — aceleasi in toate sectiunile.
+    @StateObject private var filters = CatalogFilterState()
+
     private let columns = [GridItem(.adaptive(minimum: 220, maximum: 280), spacing: 14)]
 
+    private var filtered: [AppLink] { filters.filter(apps) }
+
     var body: some View {
-        ScrollView {
-            if apps.isEmpty {
-                Text(L.t("apps.empty")).foregroundStyle(.secondary).padding(40)
-            } else {
-                LazyVGrid(columns: columns, spacing: 14) {
-                    // Preț dinamic (Regula 27) - un singur fetch pentru
-                    // tot grid-ul, nu unul per card.
-                    ForEach(apps) { app in
-                        AppCard(app: app)
+        VStack(spacing: 0) {
+            CatalogFilterBar(
+                state: filters,
+                options: .product,
+                availableTags: CatalogFacets.tags(apps),
+                availableGroups: CatalogFacets.groups(apps)
+            )
+            Divider()
+            ScrollView {
+                if apps.isEmpty {
+                    Text(L.t("apps.empty")).foregroundStyle(.secondary).padding(40)
+                } else if filtered.isEmpty {
+                    Text(L.t("access.filter.none")).foregroundStyle(.secondary).padding(40)
+                } else {
+                    LazyVGrid(columns: columns, spacing: 14) {
+                        // Preț dinamic (Regula 27) - un singur fetch pentru
+                        // tot grid-ul, nu unul per card.
+                        ForEach(filtered) { app in
+                            AppCard(app: app)
+                        }
                     }
+                    .padding(16)
                 }
-                .padding(16)
             }
+            // Atasat pe ScrollView (mereu prezent), nu pe LazyVGrid din
+            // ramura `else` - acelasi bug de `.task` pe conditional gol deja
+            // documentat la SeasonalBackgroundLayer/LaunchOfferBanner.
+            .task { await AppPricingFetcher.shared.refresh() }
         }
-        // Atasat pe ScrollView (mereu prezent), nu pe LazyVGrid din
-        // ramura `else` - acelasi bug de `.task` pe conditional gol deja
-        // documentat la SeasonalBackgroundLayer/LaunchOfferBanner.
-        .task { await AppPricingFetcher.shared.refresh() }
     }
 }
+
 
 private struct AppCard: View {
     let app: AppLink
@@ -2212,14 +2215,19 @@ private struct AppCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(L.t("apps.badge"))
-                .font(.system(size: 9, weight: .bold))
-                .tracking(0.5)
-                .foregroundStyle(tint)
-                .padding(.horizontal, 8)
-                .padding(.vertical, 3)
-                .background(Capsule().fill(tint.opacity(0.15)))
-                .frame(maxWidth: .infinity, alignment: .center)
+            HStack(spacing: 6) {
+                Text(L.t("apps.badge"))
+                    .font(.system(size: 9, weight: .bold))
+                    .tracking(0.5)
+                    .foregroundStyle(tint)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 3)
+                    .background(Capsule().fill(tint.opacity(0.15)))
+                // Badge de status comun (GRATUIT/TRIAL/EXTERN) — nu apare
+                // deloc daca furnizorul n-a declarat un tip de acces.
+                AccessBadge(access: app.resolvedAccess)
+            }
+            .frame(maxWidth: .infinity, alignment: .center)
             // Coperta, daca aplicatia are una — altfel cade pe simbolul
             // "app.badge" de mai jos, la aceeasi inaltime (CoverThumbnail
             // face fallback-ul singur, vezi CoverImageViews.swift).
@@ -2247,8 +2255,12 @@ private struct AppCard: View {
                         .foregroundStyle(.secondary)
                 }
             } else {
+                // Fara pret dinamic din Pricing Manager, `resolvedAccess`
+                // aplica pasul 2 al precedentei (pret de referinta + aviz).
+                AccessPriceLabel(access: app.resolvedAccess)
                 CountdownBadge(scheduling: app.scheduling)
             }
+            AccessTagsRow(tags: app.resolvedAccess.tags)
             Spacer(minLength: 0)
             if let url = URL(string: app.url) {
                 Button(L.t("apps.open")) { NSWorkspace.shared.open(url) }
@@ -2284,27 +2296,25 @@ private struct AppCard: View {
 /// specifice unei singure platforme.
 private struct DownloadResourceGrid: View {
     let resources: [DownloadableResource]
-    @State private var osFilter: OSFilter = .all
+
+    // Filtru OS local inlocuit 2026-09-11 cu bara COMUNA, care aduce si
+    // pret/grup/etichete. `isFree`/`supportedOS` proprii resursei raman
+    // sursa de adevar (pasul 1 al precedentei).
+    @StateObject private var filters = CatalogFilterState()
 
     private let columns = [GridItem(.adaptive(minimum: 220, maximum: 280), spacing: 14)]
 
-    private var filteredResources: [DownloadableResource] {
-        resources.filter { osFilter.matches($0.supportedOS) }
-    }
+    private var filteredResources: [DownloadableResource] { filters.filter(resources) }
 
     var body: some View {
         VStack(spacing: 0) {
             if !resources.isEmpty {
-                Picker("", selection: $osFilter) {
-                    ForEach(OSFilter.allCases) { filter in
-                        Text(filter.label).tag(filter)
-                    }
-                }
-                .pickerStyle(.segmented)
-                .labelsHidden()
-                .frame(maxWidth: 220)
-                .padding(.horizontal, 16)
-                .padding(.top, 12)
+                CatalogFilterBar(
+                    state: filters,
+                    options: .product,
+                    availableTags: CatalogFacets.tags(resources),
+                    availableGroups: CatalogFacets.groups(resources)
+                )
             }
             ScrollView {
                 if resources.isEmpty {
@@ -2475,6 +2485,10 @@ private struct AudioGrid: View {
     private let columns = [GridItem(.adaptive(minimum: 220, maximum: 280), spacing: 14)]
 
     var body: some View {
+        // Bara de filtre comuna (2026-09-11) — shadowing pe `tracks`,
+        // deci corpul de mai jos ramane neschimbat, dar primeste lista
+        // deja filtrata. Vezi CatalogFilterBar.swift.
+        FilteredCatalogSection(items: tracks, options: .content) { tracks in
         ScrollView {
             if tracks.isEmpty {
                 Text(L.t("audio.empty")).foregroundStyle(.secondary).padding(40)
@@ -2486,6 +2500,7 @@ private struct AudioGrid: View {
                 }
                 .padding(16)
             }
+        }
         }
     }
 }
