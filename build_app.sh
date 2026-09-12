@@ -44,12 +44,33 @@ cp -R PythonRuntime "$BUILD_OUT/Contents/Resources/PythonRuntime"
 if [ -n "${APPLE_SIGN_IDENTITY_APP:-}" ]; then
     ./codesigning/sign-and-notarize.sh app "$BUILD_OUT"
 else
-    # Same local trusted certificate reused across every GDC Mac app this
-    # session - this app needs no TCC-gated permissions, so a dedicated cert
-    # isn't necessary, but a stable identity still avoids Gatekeeper "unknown
-    # developer" friction being different every rebuild.
-    SIGN_IDENTITY="CursorPro"
-    codesign --force --deep --sign "$SIGN_IDENTITY" "$BUILD_OUT"
+    # [2026-09-12] Fallback-ul de dinainte semna TACIT cu certificatul local
+    # auto-semnat "CursorPro" — numele altei aplicatii, copiat aici si ramas
+    # nesincronizat. Doua probleme reale, nu teoretice:
+    #   1. Un build local inlocuia aplicatia din /Applications cu una
+    #      auto-semnata, iar `build_installer.sh` putea ambala EXACT acel
+    #      binar intr-un pachet destinat clientilor.
+    #   2. Identitatea de semnare se schimba intre build-ul local si cel
+    #      livrat, iar macOS leaga permisiunile de semnatura — vezi cazul
+    #      CursorPro, unde asta cerea permisiunile la fiecare pornire.
+    # Acum se cauta identitatea reala din breloc; fallback-ul auto-semnat
+    # ramane posibil, dar explicit si zgomotos.
+    DEV_ID=$(security find-identity -v -p codesigning 2>/dev/null \
+             | grep -m1 "Developer ID Application" | sed -E 's/.*"(.*)"/\1/')
+    if [ -n "$DEV_ID" ]; then
+        echo "==> Semnez cu identitatea reala din breloc: $DEV_ID"
+        codesign --force --deep --sign "$DEV_ID" --options runtime "$BUILD_OUT"
+    elif [ "${GDCPM_ALLOW_SELFSIGNED:-}" = "1" ]; then
+        echo "ATENTIE: semnez cu certificatul local auto-semnat. NU impacheta" >&2
+        echo "acest build pentru clienti — ramane nesemnat pentru Gatekeeper." >&2
+        codesign --force --deep --sign "CursorPro" "$BUILD_OUT"
+    else
+        echo "EROARE: niciun 'Developer ID Application' in breloc si nici" >&2
+        echo "APPLE_SIGN_IDENTITY_APP setat — refuz sa semnez cu un certificat" >&2
+        echo "auto-semnat, ca sa nu ajunga din greseala intr-un pachet livrat." >&2
+        echo "Pentru un test local izolat: GDCPM_ALLOW_SELFSIGNED=1 ./build_app.sh" >&2
+        exit 1
+    fi
 fi
 
 INSTALLED="/Applications/GDCPluginManager.app"

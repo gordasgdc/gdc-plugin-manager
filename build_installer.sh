@@ -114,6 +114,28 @@ cp "Sources/GDCPluginManager/Resources/Ghid-GDCPluginManager-ro.pdf" "$ZIP_STAGE
 ( cd "$ZIP_STAGE" && zip -q -r -y "../GDCPluginManager-Mac.zip" . )
 rm -rf "$ZIP_STAGE"
 
+# [2026-09-12] Garda finala: un pachet NESEMNAT nu trebuie sa poata fi
+# incarcat din greseala pe un release. Mesajul "sar peste semnare" apare la
+# mijlocul unui log lung si e usor de ratat — asta esueaza la final, unde se
+# vede. Se poate ocoli explicit pentru un build local de test.
+if ! pkgutil --check-signature "$FINAL_PKG" 2>/dev/null | grep -q "Status: signed"; then
+    if [ "${GDCPM_ALLOW_UNSIGNED_PKG:-}" = "1" ]; then
+        echo "ATENTIE: pachet NESEMNAT (permis explicit). Nu-l publica." >&2
+    else
+        echo "" >&2
+        echo "EROARE: $FINAL_PKG a iesit NESEMNAT." >&2
+        echo "Un pachet nesemnat e blocat de Gatekeeper la clienti si e o" >&2
+        echo "regresie fata de release-ul anterior, care era semnat+notarizat." >&2
+        echo "" >&2
+        echo "Seteaza identitatile inainte de build:" >&2
+        echo "  export APPLE_SIGN_IDENTITY_APP=\"Developer ID Application: ...\"" >&2
+        echo "  export APPLE_SIGN_IDENTITY_INSTALLER=\"Developer ID Installer: ...\"" >&2
+        echo "(numele exacte: security find-identity -v)" >&2
+        echo "Pentru un build local de test: GDCPM_ALLOW_UNSIGNED_PKG=1 ./build_installer.sh" >&2
+        exit 1
+    fi
+fi
+
 echo "==> Done: $FINAL_PKG"
 echo "==> Also: $DIST_DIR/GDCPluginManager.pkg, $DIST_DIR/Dezinstalare_GDCPluginManager.command, $DIST_DIR/GDCPluginManager-Mac.zip"
 echo "    Upload GDCPluginManager-Mac.zip to the GitHub release (that's what the website links to)."

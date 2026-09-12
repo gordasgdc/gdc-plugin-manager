@@ -1554,3 +1554,29 @@ listată în clientul Windows, deci acolo defectul era latent, nu vizibil.
 Windows la `1.30.0` (nimic livrat pe Windows acum), iar câmpul de la rădăcină —
 cel citit de clienții ≤1.27 pentru AMBELE platforme — a fost pus la MINIMUL
 dintre ele (`1.30.0`), nu la maxim.
+
+### Adăugat la publicarea 1.30.1 — două găuri de proces în scripturile de build
+
+Găsite chiar în timpul acestei publicări, nu raportate de nimeni:
+
+1. **`build_app.sh` semna TĂCIT cu certificatul local auto-semnat
+   `"CursorPro"`** — numele altei aplicații, copiat aici și rămas
+   nesincronizat (exact tiparul din regula „zero drift de identitate între
+   repo-uri"). Efectul real, verificat: primul build al acestei sesiuni a
+   înlocuit `/Applications/GDCPluginManager.app` cu un binar semnat
+   `Authority=CursorPro, TeamIdentifier=not set`, iar `build_installer.sh` a
+   împachetat exact acel binar. Acum scriptul caută identitatea reală din
+   breloc și **eșuează** dacă nu o găsește; fallback-ul auto-semnat cere
+   `GDCPM_ALLOW_SELFSIGNED=1`.
+2. **`build_installer.sh` producea liniștit un `.pkg` NESEMNAT** când
+   `APPLE_SIGN_IDENTITY_APP` nu era exportată. Mesajul „sar peste semnare"
+   apărea la mijlocul unui log de sute de linii — l-am ratat prima dată și
+   pachetul nesemnat era gata de urcat pe release, o regresie față de v1.30.0
+   care e semnat + notarizat. Adăugată o gardă finală care verifică semnătura
+   pachetului rezultat și oprește scriptul cu instrucțiunile exacte;
+   ocolibilă doar explicit, cu `GDCPM_ALLOW_UNSIGNED_PKG=1`.
+
+Ambele identități există în brelocul mașinii (`Developer ID Application` și
+`Developer ID Installer`), iar notarizarea locală merge prin profilul salvat
+`gdc-notary` — nu lipsea nimic, doar nu erau exportate variabilele. De aceea
+garda e la nivel de script, nu o notă în jurnal.
