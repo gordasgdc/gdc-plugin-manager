@@ -1,7 +1,7 @@
 {
-  "version": "2.0.4",
-  "release_date": "2026-09-07",
-  "changes": "Actualizare de mentenanță: infrastructură internă de securitate pentru versiunea Windows.",
+  "version": "2.1.0",
+  "release_date": "2026-09-12",
+  "changes": "Aplicația e gratuită și fără limitări cât timp e în dezvoltare — fără perioadă de probă. Sugestiile de dezvoltare se pot trimite direct din aplicație.",
   "download_url": {
     "mac": "https://github.com/gordasgdc/gdc-production-manager/releases/latest/download/GDCProductionManager.pkg",
     "windows": "https://github.com/gordasgdc/gdc-production-manager/releases/latest/download/GDCProductionManagerSetup.exe"
