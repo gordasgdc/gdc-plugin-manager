@@ -1496,3 +1496,61 @@ legătura prețului dinamic, fără niciun avertisment.
 
 Versiune: Furnizor 1.33.0 → **1.34.0** (MINOR). Clientul rămâne 1.30.0 —
 schimbarea e strict în panoul de publicare, nu atinge nimic la client.
+
+## Etapa 2026-09-12 (v1.30.1) — „Aplicațiile mele": avizul de actualizare nu dispărea
+
+Raportat de Cristi: în „Aplicațiile mele", avizul „există actualizare" rămânea
+aprins și DUPĂ ce actualizarea fusese instalată — cel mai vizibil la
+DisplayCAL-CG.
+
+**Cauza, verificată direct pe mașina reală, nu presupusă — DOUĂ defecte care se
+compun:**
+
+1. **Versiunea instalată se citea din alt loc decât cea publicată.**
+   `readInfoPlistVersion` citea `CFBundleShortVersionString`, care pentru
+   DisplayCAL-CG păstrează versiunea proiectului ORIGINAL (`3.10.0.dev82`) —
+   numărul de build GDC stă separat, în `Contents/Resources/CG_BUILD` (`3`).
+   Tag-ul publicat e însă `v3.10.0.dev82-cg.3`. Comparația se făcea deci între
+   `3.10.0.dev82` și `3.10.0.dev82-cg.3`: două forme ale ACELEIAȘI versiuni,
+   care nu puteau ieși egale niciodată.
+
+   Dovadă, rulată pe bundle-ul instalat:
+   ```
+   citire VECHE (doar Info.plist): 3.10.0.dev82
+   citire NOUA (VERSION+CG_BUILD):  3.10.0.dev82-cg.3
+   tag publicat:                    v3.10.0.dev82-cg.3
+   ```
+
+2. **Comparatorul elimina componentele netextuale în loc să le păstreze pe
+   poziție.** `a.split(".").compactMap { Int($0) }` nu ignoră „dev82-cg" — îl
+   **scoate din listă**, urcând ce vine după el cu o poziție. Pe
+   `3.10.0.dev82-cg.3` rezulta `[3, 10, 0, 3]`, unde `3`-ul final e numărul de
+   build ajuns pe poziția a patra de versiune, comparat cu `[3, 10, 0]` al
+   versiunii instalate → „3 > 0" → actualizare disponibilă permanent.
+
+**Reparat:**
+- `MyAppEntry.installedVersionSource` (`.infoPlist` implicit,
+  `.versionPlusCGBuild` pentru DisplayCAL-CG) — versiunea instalată se compune
+  în exact forma tag-ului: `<VERSION>-cg.<CG_BUILD>`. Fișierele se citesc direct
+  de pe disc, fără `Bundle`, din același motiv documentat deja pentru
+  `readInfoPlistVersion`: fără cache, deci avizul dispare imediat după
+  actualizare, fără repornirea aplicației.
+- `isNewer` desparte explicit nucleul de build-ul GDC și compară componentele
+  pe poziția lor reală (numeric unde ambele sunt numere, altfel textual, ordonat
+  natural). Fără `-cg.`, comportamentul rămâne identic cu cel de dinainte.
+- Verificat cu 10 cazuri reale din ecosistem (DisplayCAL egal/mai nou/mai vechi,
+  nucleu mai nou vs build mai mare, DataMover, CGConvertor, CursorPro, Plugin
+  Manager, plus o capcană lexicală `2.0.0` vs `10.0.0`) — toate trec.
+
+**Paritate Windows (Regula 31)**: `VersionCompare.IsNewer`
+(`GDCPluginManagerWin`) nu avea bug-ul de *eliminare* — `Parse` mapează
+componentele netextuale la `0`, deci nu decalează pozițiile — dar avea aceeași
+slăbiciune de fond: un `-cg.N` ar fi bătut un nucleu egal, pe o poziție de
+versiune. Portat `SplitBuild` + tie-break pe build. DisplayCAL-CG nu e încă
+listată în clientul Windows, deci acolo defectul era latent, nu vizibil.
+`dotnet build` pe Core: 0 erori.
+
+**Regula 35 respectată la bump**: `docs/update.json` are Mac la `1.30.1` și
+Windows la `1.30.0` (nimic livrat pe Windows acum), iar câmpul de la rădăcină —
+cel citit de clienții ≤1.27 pentru AMBELE platforme — a fost pus la MINIMUL
+dintre ele (`1.30.0`), nu la maxim.

@@ -1,5 +1,15 @@
 # Changelog — GDC Plugin Manager
 
+## v1.30.1 (2026-09-12) — „Aplicațiile mele": notificarea de actualizare nu mai rămâne afișată
+
+### Fixed
+- **Avizul de actualizare rămânea aprins și după ce actualizarea era făcută**
+  (vizibil în special la DisplayCAL-CG). Aplicația își ține numărul de versiune
+  în alt loc decât restul, iar comparația se făcea între două forme diferite ale
+  aceleiași versiuni — deci ieșea mereu „există o versiune mai nouă", oricâte
+  actualizări s-ar fi instalat. Versiunea instalată se citește acum în forma
+  reală, iar comparația tratează corect numerele de build.
+
 ## Furnizor v1.34.0 — Etichete alese dintr-un click + autocompletare peste tot (2026-09-11)
 
 ### Added

@@ -24,6 +24,20 @@ enum VersionSource {
     case updateJSON(url: URL)
 }
 
+/// De unde se citește versiunea INSTALATĂ. Majoritatea aplicațiilor o țin în
+/// `Info.plist`, dar nu toate: DisplayCAL-CG e un fork al unui proiect extern,
+/// unde `CFBundleShortVersionString` păstrează versiunea proiectului original
+/// (`3.10.0.dev82`), iar numărul de build GDC stă separat, într-un fișier
+/// `CG_BUILD`. Citind doar plist-ul, versiunea instalată apărea mereu mai mică
+/// decât tag-ul publicat (`3.10.0.dev82-cg.3`) — deci „există actualizare",
+/// la nesfârșit, oricâte actualizări ar fi făcut userul.
+enum InstalledVersionSource {
+    case infoPlist
+    /// `Contents/Resources/VERSION` + `Contents/Resources/CG_BUILD`, compuse
+    /// în exact forma folosită de tag-urile de release: `<VERSION>-cg.<BUILD>`.
+    case versionPlusCGBuild
+}
+
 struct MyAppEntry: Identifiable {
     let id: String
     let name: String
@@ -31,6 +45,7 @@ struct MyAppEntry: Identifiable {
     let iconSymbol: String
     let tint: Color
     let versionSource: VersionSource
+    var installedVersionSource: InstalledVersionSource = .infoPlist
 }
 
 /// Cele 4 aplicații GDC cu bundle .app real, lansabil direct pe Mac.
@@ -68,7 +83,8 @@ let knownGDCApps: [MyAppEntry] = [
     // testând chiar acest meniu după instalarea pachetului.
     MyAppEntry(id: "displaycal-cg", name: "DisplayCAL-CG", bundleIdentifier: "dev.gordas.DisplayCAL",
                iconSymbol: "camera.aperture", tint: .indigo,
-               versionSource: .githubReleases(repo: "gordasgdc/displaycal-py3")),
+               versionSource: .githubReleases(repo: "gordasgdc/displaycal-py3"),
+               installedVersionSource: .versionPlusCGBuild),
 ]
 
 /// O scurtătură personalizată către o aplicație aleasă liber de user (ex.
@@ -173,12 +189,37 @@ final class MyAppsStore: NSObject, ObservableObject {
         return plist["CFBundleShortVersionString"] as? String
     }
 
+    /// Versiunea instalată reală, în ACEEAȘI formă ca tag-ul publicat — altfel
+    /// comparația e între două lucruri diferite și nu poate ieși niciodată
+    /// egală. Fișierele se citesc direct de pe disc (fără `Bundle`), din
+    /// același motiv ca `readInfoPlistVersion`: fără cache, deci o actualizare
+    /// se vede imediat, fără repornirea aplicației.
+    private static func readInstalledVersion(appURL: URL, source: InstalledVersionSource) -> String? {
+        switch source {
+        case .infoPlist:
+            return readInfoPlistVersion(appURL: appURL)
+        case .versionPlusCGBuild:
+            let resources = appURL.appendingPathComponent("Contents/Resources")
+            let base = (try? String(contentsOf: resources.appendingPathComponent("VERSION"), encoding: .utf8))?
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+            guard let base, !base.isEmpty else {
+                // Fără fișierul de versiune nu inventăm nimic — mai bine
+                // necunoscut decât o valoare care produce o notificare falsă.
+                return readInfoPlistVersion(appURL: appURL)
+            }
+            let build = (try? String(contentsOf: resources.appendingPathComponent("CG_BUILD"), encoding: .utf8))?
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+            if let build, !build.isEmpty { return "\(base)-cg.\(build)" }
+            return base
+        }
+    }
+
     private func refresh(_ app: MyAppEntry) {
         guard let appURL = NSWorkspace.shared.urlForApplication(withBundleIdentifier: app.bundleIdentifier) else {
             statuses[app.id] = Status(isInstalled: false)
             return
         }
-        let installedVersion = Self.readInfoPlistVersion(appURL: appURL)
+        let installedVersion = Self.readInstalledVersion(appURL: appURL, source: app.installedVersionSource)
         statuses[app.id] = Status(isInstalled: true, installedVersion: installedVersion, appPath: appURL.path)
 
         Task {
@@ -187,7 +228,7 @@ final class MyAppsStore: NSObject, ObservableObject {
             var status = statuses[app.id] ?? Status(isInstalled: true, installedVersion: installedVersion, appPath: appURL.path)
             status.latestVersion = latest
             if let installedVersion {
-                status.hasUpdate = isNewer(latest, than: installedVersion)
+                status.hasUpdate = Self.isNewer(latest, than: installedVersion)
             }
             statuses[app.id] = status
         }
@@ -211,17 +252,45 @@ final class MyAppsStore: NSObject, ObservableObject {
         }
     }
 
-    /// Comparare semver simplă, componentă cu componentă — suficientă
-    /// pentru formatul `MAJOR.MINOR.PATCH` folosit peste tot în ecosistem.
-    private func isNewer(_ a: String, than b: String) -> Bool {
-        let av = a.split(separator: ".").compactMap { Int($0) }
-        let bv = b.split(separator: ".").compactMap { Int($0) }
-        for i in 0..<max(av.count, bv.count) {
-            let x = i < av.count ? av[i] : 0
-            let y = i < bv.count ? bv[i] : 0
-            if x != y { return x > y }
+    /// Comparare de versiuni, componentă cu componentă.
+    ///
+    /// Varianta anterioară folosea `compactMap { Int($0) }`, care nu ignoră
+    /// doar componentele netextuale — le **elimină din listă**, mutând ce vine
+    /// după ele pe poziții greșite. Pe `3.10.0.dev82-cg.3` asta dădea
+    /// `[3, 10, 0, 3]` (unde `3`-ul final e numărul de build, urcat pe poziția
+    /// de PATCH+1), comparat cu `[3, 10, 0]` al versiunii instalate: a patra
+    /// componentă „3 > 0" însemna actualizare disponibilă permanent, oricâte
+    /// actualizări ar fi făcut userul.
+    ///
+    /// Acum versiunea se desparte explicit în nucleu (`3.10.0.dev82`) și build
+    /// GDC (`-cg.3`), iar componentele se compară pe poziția lor reală:
+    /// numeric unde ambele sunt numere, altfel textual. Un build GDC mai mare
+    /// pe același nucleu e mai nou; lipsa lui înseamnă build 0.
+    static func isNewer(_ a: String, than b: String) -> Bool {
+        let (aCore, aBuild) = splitVersion(a)
+        let (bCore, bBuild) = splitVersion(b)
+
+        for i in 0..<max(aCore.count, bCore.count) {
+            let x = i < aCore.count ? aCore[i] : "0"
+            let y = i < bCore.count ? bCore[i] : "0"
+            if x == y { continue }
+            if let xi = Int(x), let yi = Int(y) { return xi > yi }
+            return x.compare(y, options: .numeric) == .orderedDescending
         }
-        return false
+        return aBuild > bBuild
+    }
+
+    /// `"3.10.0.dev82-cg.3"` → (`["3","10","0","dev82"]`, `3`).
+    /// Orice altă formă de sufix după `-` care nu e `cg.<număr>` e păstrată ca
+    /// parte a ultimei componente, ca să nu fie tăcut ignorată.
+    private static func splitVersion(_ v: String) -> ([String], Int) {
+        let trimmed = v.hasPrefix("v") ? String(v.dropFirst()) : v
+        if let range = trimmed.range(of: "-cg.", options: .backwards) {
+            let core = String(trimmed[trimmed.startIndex..<range.lowerBound])
+            let build = Int(trimmed[range.upperBound...]) ?? 0
+            return (core.split(separator: ".").map(String.init), build)
+        }
+        return (trimmed.split(separator: ".").map(String.init), 0)
     }
 
     func launch(_ app: MyAppEntry) {
