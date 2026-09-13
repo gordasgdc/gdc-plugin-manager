@@ -617,6 +617,44 @@
   ],
   "tutorials" : [
     {
+      "access" : {
+        "kind" : "free",
+        "tags" : [
+
+        ]
+      },
+      "addedAt" : "2026-09-13T16:24:53Z",
+      "category" : "General",
+      "description" : "Te-ai intrebat vreodata de ce multi experti recomanda setarea luminantei pe zero sau trecerea gain-ului pe liniar in DaVinci Resolve? In acest tutorial detaliat, demontam miturile si explicam logica matematica din spatele acestor setari esentiale pentru a-ti imbunatati considerabil workflow-ul de colorizare.\nDescarca gratuit: https://gordas.dev/\n\nDescopera cum sa configurezi corect un proiect de la zero, evitand greselile comune legate de frame rate si flicker care iti pot compromite materialul final. Invatam despre importanta gestionarii culorilor pentru profile logaritmice precum Sony S-Log 3 si de ce un colorist profesionist alege sa dezactiveze functiile de asistenta automata ale software-ului. Vom analiza impreuna cum functioneaza rotile HDR, de ce este crucial sa lucram cu luminanta pe zero pentru un balans de alb precis si cum sa folosim monitoarele de control precum Parade, Waveform sau False Color pentru a obtine tonuri de piele perfecte si o expunere echilibrata.\n\nFie ca esti la inceput de drum sau vrei sa treci la un nivel avansat, acest ghid iti va oferi claritatea necesara pentru a nu mai lucra dupa ureche. La final, vei intelege ordinea corecta a operatiunilor intr-un flux de lucru profesional, de la reglarea expunerii si a contrastului pana la finisarea cromaticii, astfel incat imaginea ta sa nu arate doar bine, ci sa fie corecta din punct de vedere tehnic.\n\nChapters\n\n0:00 Introducere si logica setarilor de luminanta\n1:45 Configurarea proiectului si alegerea frame rate-ului corect\n3:30 Evitarea flicker-ului si setari de scalare\n4:50 Color Management si setari pentru Sony S-Log 3\n7:20 Utilizarea nodurilor si a instrumentelor de monitorizare\n9:15 Importanta rotilor HDR si a spatiului de lucru matematic\n11:40 Explicatia functiei Use S-curve for contrast\n14:10 Demonstratie practica cu Grayscale si Color Bar\n17:05 De ce profesionistii dezactiveaza ajutoarele automate\n19:20 Balansul de alb si controlul precis al canalelor de culoare\n21:40 HDR Wheels vs Linear Gain pentru rezultate optime\n23:50 Workflow profesional: Expunere, Contrast si White Balance\n25:45 Analiza tonurilor de piele si utilizarea False Color\n26:55 Concluzii si resurse gratuite pe platforma\n\nDaca ti-a fost util acest videoclip, nu uita sa apesi butonul de like si sa te abonezi pentru a nu rata viitoarele lectii despre productia video. Viziteaza platforma noastra mentionata in video pentru a descarca LUT-uri de transformare gratuite si alte instrumente utile pentru editori si coloristi.\n\n#DaVinciResolve #ColorGrading #EditareVideo #TutorialDaVinciResolve #SonyS-Log3 #Corecțiedeculoare #SetăriproiectDaVinci #ColorManagement #HDRWheelsDaVinci #LuminanceMixer #FalseColor #WorkflowColorizare #TutorialVideoRomână #TehniciEditare2024 #Balansdealb #TransformareLUT #Rec709 #FrameRateVideo #S-Gamut #Post-producțievideo",
+      "id" : "6Frk0ZapQp4",
+      "tags" : [
+        "Balans de alb",
+        "Color Grading",
+        "Color Management",
+        "Corecție de culoare",
+        "DaVinci Resolve",
+        "Editare Video",
+        "False Color",
+        "Frame Rate Video",
+        "HDR Wheels DaVinci",
+        "Luminance Mixer",
+        "Post-producție video",
+        "Rec 709",
+        "S-Gamut",
+        "Setări proiect DaVinci",
+        "Sony S-Log 3",
+        "Tehnici Editare 2024",
+        "Transformare LUT",
+        "Tutorial DaVinci Resolve",
+        "Tutorial Video Română",
+        "Workflow Colorizare"
+      ],
+      "thumbnailURL" : "https://img.youtube.com/vi/6Frk0ZapQp4/maxresdefault.jpg",
+      "title" : "De ce punem Luminance pe ZERO în DaVinci Resolve?",
+      "videoID" : "6Frk0ZapQp4",
+      "youtubeURL" : "https://youtu.be/6Frk0ZapQp4"
+    },
+    {
       "addedAt" : "2026-09-01T13:21:25Z",
       "category" : "General",
       "description" : "🎥 Nu te mai baza pe waveform! Descoperă secretul care schimbă jocul în sincronizarea audio – Timecode-ul! În acest videoclip, explic de ce timecode-ul este soluția ideală pentru sincronizarea perfectă între camere și dispozitivele audio, indiferent de condiții. Vei învăța cum să eviți problemele comune ale sincronizării prin waveform într-un mediu zgomotos și cum să folosești echipamente precum lavalierele, microfoanele shotgun și dispozitivele profesionale pentru rezultate impecabile.\n\n🔍 Află de ce timecode-ul este esențial pentru proiectele tale și cum poate transforma workflow-ul tău, asigurând o sincronizare rapidă și precisă, chiar și în cele mai complicate situații. Fie că filmezi evenimente, interviuri sau producții cinematografice, această metodă îți garantează un sunet curat și un proces de editare mai eficient.\n\n💡 În plus, vei vedea demonstrații practice cu echipamente precum Sound Devices, DJI, Sennheiser și Blackmagic, și vei înțelege cum să integrezi timecode-ul în proiectele tale ca un profesionist. Prin exemple clare în DaVinci Resolve Studio, îți arăt cât de ușor este să sincronizezi sunetul și imaginea, fără bătăi de cap.\n\n👉 Împărtășește în comentarii experiențele tale cu sincronizarea audio sau spune-ne ce echipamente preferi să folosești! Nu uita să te abonezi la canal pentru mai multe sfaturi și trucuri despre producția video și audio!\n\n#canal #YouTube #conținut #timecode #synchronizare #audio #FullHD #4K #filmare #videografie #editare #DaVinciResolve #sounddesign #lavaliere #microfoane #tehnologie #producțievideo #workflow #profesionalism\n\n#timecodevideo #sistemwireless #tehnicifilmare #echipamentvideo #camerevideo\n\n#registraresunet #timecodevideo #tehnicifilmare #captaresunet #controlwireless\n\nCHAPTERS:\n00:00 - De ce este ideal să folosiți timecode\n00:57 - Calitatea sunetului microfoanelor\n04:04 - Avantajele microfoanelor shotgun\n06:29 - Importanța color checkers",
@@ -654,5 +692,5 @@
       "youtubeURL" : "https://www.youtube.com/watch?v=dnkUIGXIzIM"
     }
   ],
-  "updatedAt" : "2026-09-12"
+  "updatedAt" : "2026-09-13"
 }
