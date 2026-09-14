@@ -4,6 +4,15 @@ import PackageDescription
 let package = Package(
     name: "GDCPluginManager",
     platforms: [.macOS(.v14)],
+    dependencies: [
+        // Raportare de erori și crash-uri (2026-09-14). Produsul „Sentry" e
+        // xcframework STATIC — se leagă în binar, deci nu apare niciun
+        // framework imbricat de semnat separat în .app. Alegerea contează:
+        // varianta dinamică ar fi cerut un pas nou de semnare în
+        // build_app.sh, iar o semnătură lipsă pe un framework imbricat pică
+        // notarizarea abia la final, după 40 de minute de așteptare.
+        .package(url: "https://github.com/getsentry/sentry-cocoa.git", from: "8.58.4"),
+    ],
     targets: [
         // Shared between the client app and the vendor app: license
         // verification, machine ID, and the catalog data model. No
@@ -17,7 +26,10 @@ let package = Package(
         // The distributed client app - what customers download and run.
         .executableTarget(
             name: "GDCPluginManager",
-            dependencies: ["GDCPluginManagerCore"],
+            dependencies: [
+                "GDCPluginManagerCore",
+                .product(name: "Sentry", package: "sentry-cocoa"),
+            ],
             path: "Sources/GDCPluginManager",
             resources: [
                 .copy("Resources/Ghid-GDCPluginManager-ro.pdf"),

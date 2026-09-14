@@ -4,6 +4,16 @@ import GDCPluginManagerCore
 
 @main
 struct GDCPluginManagerApp: App {
+
+    /// Raportarea pornește în `init`, ÎNAINTE de construirea ferestrei: o
+    /// eroare apărută în timpul pornirii (catalog nedecodabil, preferință
+    /// coruptă) e exact genul pe care nu-l vede nimeni altfel, fiindcă
+    /// aplicația moare înainte să apară vreo interfață.
+    /// Fără DSN configurat nu se pornește nimic — vezi CrashReportingConfig.
+    init() {
+        CrashReporter.start()
+    }
+
     var body: some Scene {
         WindowGroup {
             ScaledContentView()

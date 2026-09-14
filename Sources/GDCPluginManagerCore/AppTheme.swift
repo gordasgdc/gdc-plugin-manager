@@ -52,17 +52,39 @@ public final class ThemeManager: ObservableObject {
 
     @Published public private(set) var current: AppTheme
 
+    /// Ce valoare s-a găsit în preferințe la pornire. `nil` = nicio alegere
+    /// salvată încă (prima pornire), ceea ce e diferit de „s-a salvat ceva ce
+    /// nu s-a putut interpreta" — distincția contează la diagnosticarea unei
+    /// teme care nu se păstrează.
+    public private(set) var valueReadAtLaunch: String?
+
     private init() {
         let saved = UserDefaults.standard.string(forKey: Self.key)
+        valueReadAtLaunch = saved
         current = saved.flatMap(AppTheme.init(rawValue:)) ?? .system
         apply()
     }
 
+    /// Notificat la fiecare schimbare, cu tema cerută și cu ce s-a putut
+    /// CITI ÎNAPOI din preferințe imediat după scriere.
+    ///
+    /// [2026-09-14] Adăugat ca mecanism de diagnostic: dacă tema nu s-ar mai
+    /// păstra între porniri, singura întrebare care contează e „scrierea a
+    /// eșuat, sau citirea de la pornire?". Fără citirea de verificare de mai
+    /// jos, un raport ar arăta doar că utilizatorul a ales Dark — nu și dacă
+    /// alegerea a ajuns pe disc. Closure opțional, nu o dependință: Core e
+    /// folosit și de Furnizor, care nu are raportare de erori.
+    public static var changeObserver: ((_ theme: AppTheme, _ persisted: String?) -> Void)?
+
     public func set(_ theme: AppTheme) {
         guard theme != current else { return }
         UserDefaults.standard.set(theme.rawValue, forKey: Self.key)
+        // Citire imediată, din aceeași sursă din care se va citi la
+        // următoarea pornire.
+        let persisted = UserDefaults.standard.string(forKey: Self.key)
         current = theme
         apply()
+        Self.changeObserver?(theme, persisted)
     }
 
     /// Apelat o dată la pornire (init) și la fiecare schimbare.
