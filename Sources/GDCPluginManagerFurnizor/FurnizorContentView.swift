@@ -21,6 +21,7 @@ enum FurnizorSection: Hashable {
     case pricing
     case launchBanner
     case backup
+    case secrets
 }
 
 struct FurnizorContentView: View {
@@ -56,6 +57,7 @@ struct FurnizorContentView: View {
                 Label("Interfață Client (Filigran)", systemImage: "photo.on.rectangle.angled").tag(FurnizorSection.seasonalBackground)
                 Divider()
                 Label("Backup & Restaurare", systemImage: "lock.doc").tag(FurnizorSection.backup)
+                Label("Token-uri & Chei", systemImage: "key.horizontal").tag(FurnizorSection.secrets)
             }
             .navigationSplitViewColumnWidth(min: 180, ideal: 200, max: 340)
             .safeAreaInset(edge: .bottom) {
@@ -115,6 +117,8 @@ struct FurnizorContentView: View {
                     SeasonalBackgroundView()
                 case .backup:
                     BackupView()
+                case .secrets:
+                    SecretsDashboardView()
                 }
             }
         }

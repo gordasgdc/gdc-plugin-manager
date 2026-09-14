@@ -36,3 +36,4 @@ PythonRuntime/
 *.pem
 *.mobileprovision
 __pycache__/
+dist-furnizor/

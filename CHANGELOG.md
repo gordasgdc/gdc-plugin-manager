@@ -1,5 +1,20 @@
 # Changelog — GDC Plugin Manager
 
+## v1.39.0 Furnizor (2026-09-14) — Dashboard Token-uri & Chei
+
+### Added
+- **Secțiune nouă „Token-uri & Chei"** — toate cele 8 secrete de care depinde
+  ecosistemul, cu starea fiecăruia (verde / galben / roșu), data exactă de
+  expirare și, pentru fiecare, ce anume se rupe dacă expiră. Până acum era
+  urmărit doar PAT-ul GitHub, deși de el depindeau încă șapte.
+- **Verificare de oglinzi** — tokenul din sursa Mac e comparat cu cel din
+  sursa Windows și cu secretul de CI, prin amprentă SHA-256 (valorile nu ies
+  niciodată din aplicație). Un token rotit pe Mac și uitat pe Windows se vede
+  imediat, nu peste săptămâni, la un build picat.
+- **Pași de urmat după înlocuire**, scriși pe fiecare secret — inclusiv
+  avertismentul că înlocuirea PAT-ului nu ajunge la clienții deja instalați
+  până la un release nou.
+
 ## v1.38.0 Furnizor (2026-09-14) — Refolosirea fișierelor & ștergeri independente
 
 ### Added
