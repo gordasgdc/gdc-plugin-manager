@@ -35,6 +35,9 @@ final class CatalogService: ObservableObject {
     @Published private(set) var seasonalBackgrounds: [SeasonalBackgroundConfig] = []
     @Published private(set) var productBundles: [ProductBundle] = []
     @Published private(set) var tutorials: [Tutorial] = []
+    /// [2026-09-14] Canale de comunitate și suport. Lipsa cheii din catalog
+    /// dă `[]`, deci secțiunea arată starea goală — nu o eroare.
+    @Published private(set) var communityChannels: [CommunityChannel] = []
     @Published private(set) var isLoading = false
     @Published private(set) var loadError: String?
 
@@ -83,6 +86,7 @@ final class CatalogService: ObservableObject {
                 seasonalBackgrounds = catalog.seasonalBackgrounds
                 productBundles = catalog.productBundles
                 tutorials = catalog.tutorials
+                communityChannels = catalog.communityChannels
                 saveToCache(data: data)
             } catch {
                 throw CatalogFetchError.decodeFailed
@@ -130,6 +134,7 @@ final class CatalogService: ObservableObject {
         seasonalBackgrounds = catalog.seasonalBackgrounds
         productBundles = catalog.productBundles
         tutorials = catalog.tutorials
+        communityChannels = catalog.communityChannels
     }
 
     private func saveToCache(data: Data) {

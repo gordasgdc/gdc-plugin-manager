@@ -1,5 +1,16 @@
 # Changelog — GDC Plugin Manager
 
+## v1.35.0 Client / v1.43.0 Furnizor (2026-09-14) — Comunitate
+
+### Added
+- **Secțiune nouă „Comunitate"** în aplicație — grupurile și canalele de suport
+  (Facebook, WhatsApp, YouTube, documentație, raportare de probleme) ca grilă de
+  carduri, fiecare cu iconiță, descriere scurtă și un buton care deschide
+  link-ul în browserul tău obișnuit.
+- **Editor în Furnizor** pentru canale — se adaugă, se modifică și se șterg fără
+  nicio versiune nouă de aplicație. Adresa trebuie să fie `https://`.
+- Aceeași secțiune pe **Windows**, cu aceleași canale.
+
 ## v1.42.0 Furnizor (2026-09-14) — Banc de imagini
 
 ### Added

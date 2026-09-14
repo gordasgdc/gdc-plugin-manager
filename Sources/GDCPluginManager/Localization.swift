@@ -49,6 +49,21 @@ enum L {
         "app.name": [.ro: "GDC Plugin Manager", .en: "GDC Plugin Manager", .es: "GDC Plugin Manager"],
         "app.tagline": [.ro: "Aplicație gratuită pentru Mac — instalează DCTL-uri, LUT-uri și Fuse-uri direct în DaVinci Resolve. Cumperi doar produsele pe care le vrei.", .en: "Free Mac app — install DCTLs, LUTs and Fuses straight into DaVinci Resolve. You only pay for the products you want.", .es: "Aplicación gratuita para Mac — instala DCTLs, LUTs y Fuses directamente en DaVinci Resolve. Solo pagas por los productos que quieres."],
 
+        "sidebar.community": [.ro: "Comunitate", .en: "Community", .es: "Comunidad"],
+        // Etichetele butoanelor din Comunitate vin din `kind`, nu din
+        // catalog: textul publicat e mono-lingv, iar un „Intră în grup"
+        // scris acolo ar fi rămas în română pentru utilizatorii englezi
+        // și spanioli.
+        "community.action.community": [.ro: "Intră în grup", .en: "Join group", .es: "Unirse al grupo"],
+        "community.action.chat": [.ro: "Deschide chat-ul", .en: "Open chat", .es: "Abrir el chat"],
+        "community.action.video": [.ro: "Deschide canalul", .en: "Open channel", .es: "Abrir el canal"],
+        "community.action.docs": [.ro: "Deschide ghidul", .en: "Open guide", .es: "Abrir la guía"],
+        "community.action.feedback": [.ro: "Raportează o problemă", .en: "Report an issue", .es: "Reportar un problema"],
+        "community.empty.title": [.ro: "Niciun canal încă", .en: "No channels yet", .es: "Aún no hay canales"],
+        "community.empty.subtitle": [
+            .ro: "Grupurile și canalele de suport apar aici imediat ce sunt publicate.",
+            .en: "Support groups and channels appear here as soon as they are published.",
+            .es: "Los grupos y canales de soporte aparecerán aquí en cuanto se publiquen."],
         "sidebar.all": [.ro: "Toate", .en: "All", .es: "Todos"],
         "sidebar.dctl": [.ro: "DCTL", .en: "DCTL", .es: "DCTL"],
         "sidebar.lut": [.ro: "LUT", .en: "LUT", .es: "LUT"],

@@ -1815,6 +1815,104 @@ public struct SeasonalBackgroundConfig: Codable, Hashable, Identifiable {
     public var imageURL: URL? { CatalogAssets.imageURL(for: imagePath) }
 }
 
+// MARK: - Comunitate
+
+/// Ce fel de canal e — determină ETICHETA butonului, tradusă de client.
+///
+/// DE CE eticheta NU stă în JSON: clientul e RO/EN/ES, iar textul din catalog
+/// e mono-lingv. Un „Intră în grup" scris în catalog ar fi rămas în română
+/// pentru fiecare utilizator spaniol. Derivată din `kind`, eticheta trece
+/// prin `L.t` și se traduce singură — fără să fie nevoie să scrii trei limbi
+/// pentru fiecare canal.
+///
+/// `kind` e separat de `icon` deliberat: un canal de suport pe Discord e
+/// `.chat` cu iconița Discord, iar un canal de feedback tot pe Discord e
+/// `.feedback` — buton diferit, aceeași iconiță.
+public enum CommunityKind: String, Codable, CaseIterable, Hashable {
+    case community, chat, video, docs, feedback
+
+    /// Valoare necunoscută → `.community`, NU eroare. Un `kind` adăugat într-o
+    /// versiune viitoare a Furnizorului nu are voie să facă întreg catalogul
+    /// nedecodabil pe clienții deja instalați — aceeași regulă ca la
+    /// `DownloadCategory` și `PluginType`.
+    public init(from decoder: Decoder) throws {
+        let raw = try decoder.singleValueContainer().decode(String.self)
+        self = CommunityKind(rawValue: raw) ?? .community
+    }
+
+    /// Cheia de traducere a butonului, rezolvată în client prin `L.t`.
+    public var actionLabelKey: String { "community.action.\(rawValue)" }
+}
+
+/// Un canal din secțiunea Comunitate.
+///
+/// Cheie NOUĂ de nivel superior în `catalog.json` (`communityChannels`), nu un
+/// câmp adăugat unei entități existente: decodoarele vechi ignoră tăcut
+/// cheile pe care nu le cunosc, deci clienții deja instalați nu văd secțiunea,
+/// dar continuă să funcționeze exact ca înainte. Vezi `Catalog.pdfResources`
+/// pentru cazul în care regula asta a fost verificată experimental.
+public struct CommunityChannel: Codable, Identifiable, Hashable {
+    public let id: String
+    public let kind: CommunityKind
+    /// Cheia de brand a iconiței („facebook", „whatsapp", „youtube"…).
+    /// String liber, nu enum: o iconiță nouă adăugată în catalog trebuie să
+    /// degradeze elegant pe un client vechi (simbol neutru), nu să-l rupă.
+    public let icon: String
+    public let title: String
+    public let description: String
+    public let url: String
+    /// Ordinea în grilă; lipsă = 0.
+    public let order: Int
+
+    public init(id: String, kind: CommunityKind = .community, icon: String,
+                title: String, description: String, url: String, order: Int = 0) {
+        self.id = id
+        self.kind = kind
+        self.icon = icon
+        self.title = title
+        self.description = description
+        self.url = url
+        self.order = order
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case id, kind, icon, title, description, url, order
+    }
+
+    public init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        id = try c.decode(String.self, forKey: .id)
+        kind = try c.decodeIfPresent(CommunityKind.self, forKey: .kind) ?? .community
+        icon = try c.decodeIfPresent(String.self, forKey: .icon) ?? ""
+        title = try c.decodeIfPresent(String.self, forKey: .title) ?? id
+        description = try c.decodeIfPresent(String.self, forKey: .description) ?? ""
+        url = try c.decodeIfPresent(String.self, forKey: .url) ?? ""
+        order = try c.decodeIfPresent(Int.self, forKey: .order) ?? 0
+    }
+
+    /// URL-ul valid, dacă e unul. Un canal fără adresă utilizabilă nu se
+    /// afișează deloc — vezi `Array.publishedSorted`.
+    public var destination: URL? {
+        let trimmed = url.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty, let url = URL(string: trimmed), url.scheme != nil else { return nil }
+        return url
+    }
+}
+
+public extension Array where Element == CommunityChannel {
+    /// Canalele afișabile, în ordinea cerută. Cele fără adresă validă sunt
+    /// excluse: un card cu buton care nu duce nicăieri e mai rău decât
+    /// absența lui. La `order` egal, ordinea alfabetică ține lista stabilă
+    /// între rulări, în loc să depindă de ordinea din fișier.
+    var publishedSorted: [CommunityChannel] {
+        filter { $0.destination != nil }
+            .sorted {
+                $0.order != $1.order ? $0.order < $1.order
+                    : $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending
+            }
+    }
+}
+
 public struct Catalog: Codable {
     public let updatedAt: String?
     public let items: [PluginItem]
@@ -1863,8 +1961,11 @@ public struct Catalog: Codable {
     public let productBundles: [ProductBundle]
     /// Tutoriale YouTube embedded — 2026-09-01. Default `[]`: retrocompatibil.
     public let tutorials: [Tutorial]
+    /// [2026-09-14] Canale de comunitate și suport — cheie nouă de nivel
+    /// superior, deci clienții deja instalați o ignoră și rămân intacți.
+    public let communityChannels: [CommunityChannel]
 
-    public init(updatedAt: String?, items: [PluginItem], courses: [Course] = [], apps: [AppLink] = [], audioTracks: [AudioTrack] = [], educationalResources: [EducationalResource] = [], events: [Event] = [], partnerStores: [PartnerStore] = [], serviceCenters: [ServiceCenter] = [], downloadableResources: [DownloadableResource] = [], pdfResources: [DownloadableResource] = [], scriptItems: [PluginItem] = [], scriptResources: [DownloadableResource] = [], partnerOffers: [PartnerOffer] = [], seasonalBackgrounds: [SeasonalBackgroundConfig] = [], productBundles: [ProductBundle] = [], tutorials: [Tutorial] = []) {
+    public init(updatedAt: String?, items: [PluginItem], courses: [Course] = [], apps: [AppLink] = [], audioTracks: [AudioTrack] = [], educationalResources: [EducationalResource] = [], events: [Event] = [], partnerStores: [PartnerStore] = [], serviceCenters: [ServiceCenter] = [], downloadableResources: [DownloadableResource] = [], pdfResources: [DownloadableResource] = [], scriptItems: [PluginItem] = [], scriptResources: [DownloadableResource] = [], partnerOffers: [PartnerOffer] = [], seasonalBackgrounds: [SeasonalBackgroundConfig] = [], productBundles: [ProductBundle] = [], tutorials: [Tutorial] = [], communityChannels: [CommunityChannel] = []) {
         self.updatedAt = updatedAt
         self.items = items
         self.courses = courses
@@ -1882,13 +1983,14 @@ public struct Catalog: Codable {
         self.seasonalBackgrounds = seasonalBackgrounds
         self.productBundles = productBundles
         self.tutorials = tutorials
+        self.communityChannels = communityChannels
     }
 
     // Custom decode: every collection defaults to `[]` if absent, so a
     // catalog published before a given field existed keeps decoding
     // cleanly after this update ships to clients.
     private enum CodingKeys: String, CodingKey {
-        case updatedAt, items, courses, apps, audioTracks, educationalResources, events, partnerStores, serviceCenters, downloadableResources, pdfResources, scriptItems, scriptResources, partnerOffers, seasonalBackgrounds, productBundles, tutorials
+        case updatedAt, items, courses, apps, audioTracks, educationalResources, events, partnerStores, serviceCenters, downloadableResources, pdfResources, scriptItems, scriptResources, partnerOffers, seasonalBackgrounds, productBundles, tutorials, communityChannels
     }
 
     /// Cheia SINGULARĂ, doar pentru citirea unui `catalog.json` publicat
@@ -1916,6 +2018,7 @@ public struct Catalog: Codable {
         partnerOffers = try c.decodeIfPresent([PartnerOffer].self, forKey: .partnerOffers) ?? []
         productBundles = try c.decodeIfPresent([ProductBundle].self, forKey: .productBundles) ?? []
         tutorials = try c.decodeIfPresent([Tutorial].self, forKey: .tutorials) ?? []
+        communityChannels = try c.decodeIfPresent([CommunityChannel].self, forKey: .communityChannels) ?? []
 
         // MIGRARE SILENȚIOASĂ (2026-08-29): un `catalog.json` publicat
         // înainte de bibliotecă are `seasonalBackground` (String). Îl

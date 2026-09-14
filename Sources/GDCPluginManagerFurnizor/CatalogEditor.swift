@@ -14,6 +14,7 @@ enum CatalogEditorError: Error, LocalizedError {
     case partnerOfferNotFound(String)
     case bundleNotFound(String)
     case tutorialNotFound(String)
+    case communityChannelNotFound(String)
 
     var errorDescription: String? {
         switch self {
@@ -29,6 +30,7 @@ enum CatalogEditorError: Error, LocalizedError {
         case .partnerOfferNotFound(let id): return "Nu există nicio ofertă parteneră cu id-ul „\(id)” în catalog."
         case .bundleNotFound(let id): return "Nu există niciun pachet cu id-ul „\(id)” în catalog."
         case .tutorialNotFound(let id): return "Nu există niciun tutorial cu id-ul „\(id)” în catalog."
+        case .communityChannelNotFound(let id): return "Nu există niciun canal de comunitate cu id-ul „\(id)” în catalog."
         }
     }
 }
@@ -381,6 +383,29 @@ enum CatalogEditor {
         try write(catalog: catalog, tutorials: tutorials)
     }
 
+    /// [2026-09-14] Canale de comunitate. Ordinea din fișier o dă `order`;
+    /// clientul o aplică oricum la afișare (`publishedSorted`), dar un fișier
+    /// sortat e mai ușor de citit când te uiți direct în el.
+    static func upsertCommunityChannel(_ channel: CommunityChannel) throws {
+        let catalog = try load()
+        var channels = catalog.communityChannels.filter { $0.id != channel.id }
+        channels.append(channel)
+        channels.sort {
+            $0.order != $1.order ? $0.order < $1.order
+                : $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending
+        }
+        try write(catalog: catalog, communityChannels: channels)
+    }
+
+    static func removeCommunityChannel(id: String) throws {
+        let catalog = try load()
+        let channels = catalog.communityChannels.filter { $0.id != id }
+        guard channels.count != catalog.communityChannels.count else {
+            throw CatalogEditorError.communityChannelNotFound(id)
+        }
+        try write(catalog: catalog, communityChannels: channels)
+    }
+
     // MARK: - Write
 
     /// Rewrites docs/catalog.json, starting from `catalog` and replacing
@@ -404,7 +429,8 @@ enum CatalogEditor {
         partnerOffers: [PartnerOffer]? = nil,
         seasonalBackgrounds: [SeasonalBackgroundConfig]? = nil,
         productBundles: [ProductBundle]? = nil,
-        tutorials: [Tutorial]? = nil
+        tutorials: [Tutorial]? = nil,
+        communityChannels: [CommunityChannel]? = nil
     ) throws {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
@@ -427,6 +453,7 @@ enum CatalogEditor {
         let newBackgrounds = seasonalBackgrounds ?? catalog.seasonalBackgrounds
         let newBundles = productBundles ?? catalog.productBundles
         let newTutorials = tutorials ?? catalog.tutorials
+        let newCommunity = communityChannels ?? catalog.communityChannels
 
         let updated = Catalog(
             updatedAt: formatter.string(from: Date()),
@@ -445,7 +472,8 @@ enum CatalogEditor {
             partnerOffers: newOffers,
             seasonalBackgrounds: newBackgrounds,
             productBundles: newBundles,
-            tutorials: newTutorials
+            tutorials: newTutorials,
+            communityChannels: newCommunity
         )
 
         let encoder = JSONEncoder()

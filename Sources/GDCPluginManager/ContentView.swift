@@ -20,6 +20,7 @@ enum SidebarSection: Hashable {
     case android
     case license
     case help
+    case community
 }
 
 /// Filigran sezonier — Etapa 6 (2026-08-29). O imagine MARE (nu o
@@ -280,6 +281,8 @@ struct ContentView: View {
             CoursesGrid(courses: catalog.courses.filter { $0.scheduling?.isActiveNow ?? true })
         case .educationalResources:
             EducationalResourcesGrid(resources: catalog.educationalResources.filter { $0.scheduling?.isActiveNow ?? true })
+        case .community:
+            CommunityGrid(channels: catalog.communityChannels.publishedSorted)
         case .tutorials:
             TutorialsGrid(tutorials: catalog.tutorials.filter { $0.scheduling?.isActiveNow ?? true })
         case .events:
@@ -388,6 +391,9 @@ struct ContentView: View {
                         .tag(SidebarSection.partnerStores)
                     Label(L.t("sidebar.serviceCenters"), systemImage: "wrench.and.screwdriver")
                         .tag(SidebarSection.serviceCenters)
+                    // [2026-09-14] Hub de grupuri și canale de suport.
+                    Label(L.t("sidebar.community"), systemImage: "person.2.wave.2")
+                        .tag(SidebarSection.community)
                 }
 
                 // Grup 4: ecosistemul GDC — alte aplicații ale lui Cristi.
@@ -936,34 +942,8 @@ private func LinkIconButton(systemImage: String, tooltip: String, url: URL) -> s
 /// aceeași tehnică deja verificată pe filigranul sezonier (`ImageIO` are
 /// suport SVG pe macOS 12+, INCLUSIV gradienți liniari — verificat direct
 /// cu un test izolat înainte de a alege această cale pentru Instagram).
-enum SocialIconKind {
-    case facebook, youtube, instagram, tiktok, linkedin
-
-    var svg: String {
-        switch self {
-        case .facebook:
-            return ##"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#1877F2"/><path fill="#fff" d="M15.1 12.7h-2.1v6.8h-2.8v-6.8H8.6v-2.4h1.6V8.7c0-1.9 1-3 3.1-3h1.9v2.4h-1.2c-.8 0-.9.3-.9 1v1.2h2.2z"/></svg>"##
-        case .youtube:
-            return ##"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="5" fill="#FF0000"/><path fill="#fff" d="M10 8.3l6.2 3.7-6.2 3.7z"/></svg>"##
-        case .instagram:
-            return ##"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><defs><linearGradient id="igGrad" x1="0" y1="1" x2="1" y2="0"><stop offset="0%" stop-color="#FEDA75"/><stop offset="30%" stop-color="#FA7E1E"/><stop offset="55%" stop-color="#D62976"/><stop offset="80%" stop-color="#962FBF"/><stop offset="100%" stop-color="#4F5BD5"/></linearGradient></defs><rect x="1.5" y="1.5" width="21" height="21" rx="6.3" fill="url(#igGrad)"/><rect x="6.7" y="6.7" width="10.6" height="10.6" rx="3.4" fill="none" stroke="#fff" stroke-width="1.6"/><circle cx="12" cy="12" r="3" fill="none" stroke="#fff" stroke-width="1.6"/><circle cx="17.1" cy="6.9" r="1.1" fill="#fff"/></svg>"##
-        case .tiktok:
-            return ##"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect x="1" y="1" width="22" height="22" rx="6.5" fill="#010101"/><path fill="#25F4EE" d="M14.8 4.4c.4 2 1.9 3.4 3.9 3.6v2.5c-1.4 0-2.8-.4-3.9-1.2v6c0 3-2.4 5.4-5.3 5.4-2.9 0-5.3-2.4-5.3-5.4 0-2.9 2.3-5.2 5.1-5.4v2.6c-1.3.2-2.3 1.3-2.3 2.7 0 1.5 1.3 2.8 2.8 2.8 1.6 0 2.8-1.3 2.8-2.8V4.4h2.2z"/><path fill="#FE2C55" d="M13.5 4.4c.4 2 1.9 3.4 3.9 3.6v2.5c-1.4 0-2.8-.4-3.9-1.2v6c0 3-2.4 5.4-5.3 5.4-1.1 0-2.2-.4-3-1 .8.3 1.7.4 2.6.2 1.9-.3 3.4-1.9 3.5-3.8V4.4h2.2z" opacity=".8"/></svg>"##
-        case .linkedin:
-            return ##"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect x="1" y="1" width="22" height="22" rx="4.5" fill="#0A66C2"/><circle cx="7.2" cy="7.6" r="1.7" fill="#fff"/><rect x="5.7" y="10.3" width="3" height="8.1" fill="#fff"/><path fill="#fff" d="M11.1 10.3h2.9v1.3h.04c.4-.75 1.4-1.5 2.9-1.5 3.1 0 3.6 2 3.6 4.6v4.7h-3v-4.2c0-1 0-2.3-1.4-2.3-1.4 0-1.6 1.1-1.6 2.2v4.3h-3z"/></svg>"##
-        }
-    }
-
-    var label: String {
-        switch self {
-        case .facebook: return "Facebook"
-        case .youtube: return "YouTube"
-        case .instagram: return "Instagram"
-        case .tiktok: return "TikTok"
-        case .linkedin: return "LinkedIn"
-        }
-    }
-}
+// `SocialIconKind` a fost mutat în BrandIcon.swift (2026-09-14): îl
+// folosesc acum două ecrane — cardurile de produs și secțiunea Comunitate.
 
 private func SocialIconButton(kind: SocialIconKind, tooltip: String, url: URL) -> some View {
     Button {

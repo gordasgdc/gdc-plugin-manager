@@ -24,6 +24,7 @@ enum FurnizorSection: Hashable {
     case secrets
     case repoStorage
     case imageLibrary
+    case communityChannels
 }
 
 struct FurnizorContentView: View {
@@ -55,6 +56,7 @@ struct FurnizorContentView: View {
                 Label("Resurse Download (LUT/SFX/VFX/Plugin)", systemImage: "arrow.down.circle").tag(FurnizorSection.downloadResources)
                 Label("Oferte Parteneri", systemImage: "tag").tag(FurnizorSection.partnerOffers)
                 Label("Pachete / Bundle-uri", systemImage: "shippingbox").tag(FurnizorSection.bundles)
+                Label("Comunitate", systemImage: "person.2.wave.2").tag(FurnizorSection.communityChannels)
                 Divider()
                 Label("Interfață Client (Filigran)", systemImage: "photo.on.rectangle.angled").tag(FurnizorSection.seasonalBackground)
                 Divider()
@@ -117,6 +119,8 @@ struct FurnizorContentView: View {
                     PublishPartnerOfferView()
                 case .bundles:
                     PublishBundleView()
+                case .communityChannels:
+                    PublishCommunityChannelView()
                 case .seasonalBackground:
                     SeasonalBackgroundView()
                 case .backup:
