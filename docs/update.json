@@ -1,8 +1,8 @@
 {
   "_comment_legacy": "Campurile de la radacina exista DOAR pentru clientii <= 1.27, care decodeaza 'version' si 'download_url' ca OBLIGATORII de aici. Fara ele, decodarea lor arunca si update checker-ul lor esueaza tacut, raportand 'sunteti pe cea mai noua versiune' la infinit. Clientii >= 1.28 citesc sectiunile mac/windows de mai jos si ignora acest bloc. A NU SE STERGE.",
-  "version": "1.36.0",
+  "version": "1.37.0",
   "release_date": "2026-09-14",
-  "changes": "Meniul lateral se pliază: fiecare secțiune se deschide și se închide cu un click, iar aplicația ține minte cum l-ai lăsat.",
+  "changes": "Aplicația raportează automat erorile neașteptate, ca să poată fi reparate. Nu se trimit date personale — detalii în politica de confidențialitate.",
   "download_url": {
     "mac": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Mac.zip",
     "windows": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Windows.zip"
@@ -10,9 +10,9 @@
   "mandatory": false,
   "min_version": "1.0.0",
   "mac": {
-    "version": "1.36.0",
+    "version": "1.37.0",
     "release_date": "2026-09-14",
-    "changes": "Meniul lateral se pliază: fiecare secțiune se deschide și se închide cu un click, iar aplicația ține minte cum l-ai lăsat.",
+    "changes": "Aplicația raportează automat erorile neașteptate, ca să poată fi reparate. Nu se trimit date personale — detalii în politica de confidențialitate.",
     "download_url": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Mac.zip",
     "mandatory": false,
     "min_version": "1.0.0"
@@ -20,7 +20,7 @@
   "windows": {
     "version": "1.37.0",
     "release_date": "2026-09-14",
-    "changes": "Actualizare Windows, sincronizata cu ultima versiune.",
+    "changes": "Aplicația raportează automat erorile neașteptate, ca să poată fi reparate. Nu se trimit date personale — detalii în politica de confidențialitate.",
     "download_url": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Windows.zip",
     "mandatory": false,
     "min_version": "1.0.0"
