@@ -530,7 +530,27 @@
       "url" : "https://mitmag.ro/"
     }
   ],
+  "pdfResources" : [
+    {
+      "category" : "pdf",
+      "description" : "Ghidul complet de EQ pentru dialog în DaVinci Resolve",
+      "filePath" : "EQ_RO_final/EQ_RO_final.pdf",
+      "fileRepo" : "pdfs",
+      "fileSHA256" : "46add3f65f2ec9eb735a51342560d1fe9b07ca36f38af3f74761cfc5127e35f6",
+      "id" : "EQ_RO_final",
+      "isFree" : true,
+      "isTrial" : false,
+      "name" : "EQ_RO_final",
+      "pdfKind" : "technicalGuide",
+      "priceEUR" : 0,
+      "supportedOS" : "crossPlatform",
+      "url" : ""
+    }
+  ],
   "productBundles" : [
+
+  ],
+  "scriptItems" : [
 
   ],
   "seasonalBackgrounds" : [
