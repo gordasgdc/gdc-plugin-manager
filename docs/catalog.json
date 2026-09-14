@@ -217,6 +217,39 @@
     {
       "category" : "lut",
       "description" : "Lut de conversie din profilul camerei in Rec 709",
+      "fileRepo" : "resources",
+      "files" : [
+        {
+          "path" : "ProGDC/ProGDC/Fujifilm_FLog2.cube",
+          "repo" : "resources",
+          "sha256" : "5c74e31093838d051ba8754f50c0b6e86b3e345e3392dca70cedce6f67eab4ca"
+        },
+        {
+          "path" : "ProGDC/ProGDC/Nikon_NLog.cube",
+          "repo" : "resources",
+          "sha256" : "1d7b19ec5d4d97b26365a3934bf4906a47809c65237e264c6aa4a9e64d9af5b6"
+        },
+        {
+          "path" : "ProGDC/ProGDC/Panasonic_VLog.cube",
+          "repo" : "resources",
+          "sha256" : "3bd9f4c59737431af93ec6b6c37c7d8e023b41d71a921dd329483243b8b8eca0"
+        },
+        {
+          "path" : "ProGDC/ProGDC/RED_Log3G10.cube",
+          "repo" : "resources",
+          "sha256" : "5a4e4ff413361b81cdfbf0722e8367c549ce9cbb2240e30f696a3026e8e9a603"
+        },
+        {
+          "path" : "ProGDC/ProGDC/Canon_CLog2.cube",
+          "repo" : "resources",
+          "sha256" : "0b9307d052a8770d323086d0931540435db3c940893f82e7e1ab62556205066b"
+        },
+        {
+          "path" : "ProGDC/ProGDC/Sony_SLog3_to_Rec709.cube",
+          "repo" : "resources",
+          "sha256" : "d3beab8b6b6f950e7794ec7410b2ff64513c88a39fd8edc39c99bba7d45f159f"
+        }
+      ],
       "id" : "ProGDC",
       "isFree" : true,
       "isTrial" : false,
@@ -566,6 +599,9 @@
 
   ],
   "scriptItems" : [
+
+  ],
+  "scriptResources" : [
 
   ],
   "seasonalBackgrounds" : [
