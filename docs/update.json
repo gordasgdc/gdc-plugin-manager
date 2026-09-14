@@ -20,7 +20,7 @@
   "windows": {
     "version": "1.36.0",
     "release_date": "2026-09-14",
-    "changes": "Meniul lateral se pliază: fiecare secțiune se deschide și se închide cu un click, iar aplicația ține minte cum l-ai lăsat.",
+    "changes": "Actualizare Windows, sincronizata cu ultima versiune.",
     "download_url": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Windows.zip",
     "mandatory": false,
     "min_version": "1.0.0"
