@@ -10,9 +10,9 @@
   "mandatory": false,
   "min_version": "1.0.0",
   "mac": {
-    "version": "1.30.1",
-    "release_date": "2026-09-12",
-    "changes": "Notificarea de actualizare din „Aplicațiile mele” nu mai rămâne afișată după ce actualizarea a fost deja făcută.",
+    "version": "1.33.0",
+    "release_date": "2026-09-14",
+    "changes": "Secțiune nouă de PDF-uri și ghiduri cu descărcare directă, categorie nouă de scripturi pentru DaVinci Resolve cu instalare automată, și confirmare clară după fiecare instalare.",
     "download_url": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Mac.zip",
     "mandatory": false,
     "min_version": "1.0.0"
