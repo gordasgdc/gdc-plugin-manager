@@ -135,7 +135,13 @@ struct FurnizorContentView: View {
             }
         }
         .sheet(isPresented: $showRenewalGuide) {
-            TokenRenewalGuideView()
+            // Înlocuiește vechiul `TokenRenewalGuideView` (șters în 1.40.0):
+            // acela descria un singur repo privat și rămăsese în urmă față de
+            // arhitectura multi-repo. Wizardul își ia pașii din `SecretRegistry`,
+            // deci nu mai poate rămâne în urmă față de realitate.
+            if let pat = SecretRegistry.shared.secrets.first(where: { $0.id == "github-pat" }) {
+                SecretRenewalWizardView(secret: pat)
+            }
         }
         .task {
             await tokenStatus.check()

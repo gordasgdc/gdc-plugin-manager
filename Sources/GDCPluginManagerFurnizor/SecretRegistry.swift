@@ -54,6 +54,16 @@ enum SecretLocation {
         }
     }
 
+    /// Se poate scrie de aici valoarea nouă? Un certificat se instalează
+    /// prin Xcode/Keychain Access, nu prin aplicație — wizardul trebuie să
+    /// spună asta, nu să ofere un câmp care oricum ar eșua la salvare.
+    var isWritableFromApp: Bool {
+        switch self {
+        case .sourceFile, .userDefaults, .diskFile, .githubActionsSecret: return true
+        case .keychainCertificate: return false
+        }
+    }
+
     var humanDescription: String {
         switch self {
         case .sourceFile(let path, _): return path
@@ -109,6 +119,9 @@ struct ManagedSecret: Identifiable {
     /// neutră, nu o alarmă: dacă un secret opțional necompletat ar apărea
     /// roșu, roșul ar înceta să mai însemne „oprește-te și rezolvă acum".
     let isOptional: Bool
+    /// Cum se verifică o valoare nouă înainte de a fi scrisă — vezi
+    /// `SecretValidator`.
+    let validation: ValidationKind
     /// Ce mai trebuie făcut DUPĂ înlocuire ca schimbarea să ajungă la cine
     /// trebuie. Pentru PAT: un simplu „am pus tokenul nou" nu e suficient —
     /// clienții deja instalați îl folosesc pe cel vechi până la un release.
@@ -117,7 +130,8 @@ struct ManagedSecret: Identifiable {
     init(id: String, name: String, purpose: String, impact: String,
          location: SecretLocation, expiry: ExpirySource, renewURL: String? = nil,
          requiredScopes: [String] = [], mirrors: [SecretMirror] = [],
-         isOptional: Bool = false, afterRenewal: [String] = []) {
+         isOptional: Bool = false, validation: ValidationKind = .none,
+         afterRenewal: [String] = []) {
         self.id = id
         self.name = name
         self.purpose = purpose
@@ -128,6 +142,7 @@ struct ManagedSecret: Identifiable {
         self.requiredScopes = requiredScopes
         self.mirrors = mirrors
         self.isOptional = isOptional
+        self.validation = validation
         self.afterRenewal = afterRenewal
     }
 }
@@ -202,6 +217,8 @@ extension SecretRegistry {
                     SecretMirror(label: "Secret CI Windows",
                                  location: .githubActionsSecret(repo: winRepo, name: "PRIVATE_CATALOG_TOKEN")),
                 ],
+                validation: .githubPAT(repos: ["gdc-plugin-manager-files", "gdc-plugin-manager-pdfs",
+                                               "gdc-plugin-manager-scripts", "gdc-plugin-manager-resources"]),
                 afterRenewal: [
                     "./build_app.sh && ./build_furnizor_app.sh (Regula 0 — se verifică versiunea INSTALATĂ)",
                     "Bump versiune Client + CHANGELOG, commit, push",
@@ -251,6 +268,7 @@ extension SecretRegistry {
                 expiry: .jwtExp,
                 renewURL: "https://supabase.com/dashboard/project/jvxrclpyngdcqnbwvtfn/settings/api-keys",
                 requiredScopes: ["Secret key / service_role — NU publishable/anon"],
+                validation: .supabaseKey(table: "devices"),
                 afterRenewal: ["Rebuild Furnizor (./build_furnizor_app.sh). Nu afectează clienții — cheia nu e în Client."]
             ),
             ManagedSecret(
@@ -282,7 +300,8 @@ extension SecretRegistry {
                 expiry: .neverExpires,
                 renewURL: "https://console.cloud.google.com/apis/credentials",
                 requiredScopes: ["API key cu YouTube Data API v3 activat"],
-                isOptional: true
+                isOptional: true,
+                validation: .youTubeAPIKey
             ),
         ]
     }
@@ -477,8 +496,13 @@ extension SecretRegistry {
         guard let (_, response) = try? await URLSession.shared.data(for: request),
               let http = response as? HTTPURLResponse,
               let raw = http.value(forHTTPHeaderField: "github-authentication-token-expiration") else { return nil }
-        // GitHub trimite "2027-08-16 22:00:00 UTC" — nu ISO-8601, deci are
-        // nevoie de formatterul lui.
+        return parseGitHubExpiration(raw)
+    }
+
+    /// GitHub trimite "2027-08-16 22:00:00 UTC" — nu ISO-8601, deci are nevoie
+    /// de formatterul lui. Extras ca să-l folosească și validarea din wizard,
+    /// care citește același header cu tokenul NOU, înainte de a-l salva.
+    nonisolated static func parseGitHubExpiration(_ raw: String) -> Date? {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss 'UTC'"
@@ -488,7 +512,7 @@ extension SecretRegistry {
 
     /// `exp` din payload-ul unui JWT. Local, fără rețea — deci funcționează
     /// și când n-ai internet, exact când ai mai mare nevoie de dashboard.
-    static func jwtExpiry(_ token: String) -> Date? {
+    nonisolated static func jwtExpiry(_ token: String) -> Date? {
         let parts = token.split(separator: ".")
         guard parts.count == 3 else { return nil }
         var payload = String(parts[1])

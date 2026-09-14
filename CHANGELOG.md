@@ -1,5 +1,26 @@
 # Changelog — GDC Plugin Manager
 
+## v1.40.0 Furnizor (2026-09-14) — Asistent de reînnoire & ghid de urgență
+
+### Added
+- **Asistent pas cu pas pentru reînnoirea oricărui token**, direct în aplicație:
+  pagina exactă de generare, lista fixă de permisiuni de bifat, câmp pentru
+  valoarea nouă. Nimic nu se salvează până când valoarea nu trece o verificare
+  reală — un token care nu vede toate cele 4 repo-uri private e respins pe loc,
+  cu numele celor lipsă.
+- **Actualizare simultană a „oglinzilor"** — la o bifă, aceeași valoare ajunge
+  și în sursa Windows, și în secretul de CI. Cea mai costisitoare clasă de
+  greșeală (rotit într-un loc, uitat în celelalte) nu mai depinde de memorie.
+- **Copie de siguranță înainte de fiecare scriere**, în
+  `~/Library/Application Support/GDCPluginManagerFurnizor/secret-backups/`.
+- **Ghid de urgență în PDF**, generat la cerere din același inventar pe care îl
+  arată dashboard-ul — de ținut pe telefon sau tipărit, pentru situația în care
+  nu ai acces la Mac. Nu conține nicio valoare de token.
+
+### Changed
+- Ghidul vechi de reînnoire a token-ului a fost înlocuit de asistent. Descria
+  un singur repo privat și rămăsese în urmă față de arhitectura multi-repo.
+
 ## v1.39.1 Furnizor (2026-09-14) — Corecții la dashboard-ul de token-uri
 
 ### Fixed

@@ -11,6 +11,8 @@ import SwiftUI
 struct SecretsDashboardView: View {
     @StateObject private var registry = SecretRegistry.shared
     @State private var expanded: Set<String> = []
+    @State private var renewing: ManagedSecret?
+    @State private var exportedTo: URL?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -24,6 +26,9 @@ struct SecretsDashboardView: View {
                     }
                 }
             }
+        }
+        .sheet(item: $renewing) { secret in
+            SecretRenewalWizardView(secret: secret)
         }
         .task {
             // Doar prima dată: o reîmprospătare la fiecare intrare în
@@ -56,6 +61,20 @@ struct SecretsDashboardView: View {
                 }
                 .disabled(registry.isRefreshing)
 
+                Button {
+                    exportedTo = EmergencyGuidePDF.export(statuses: registry.statuses)
+                } label: {
+                    Label("Ghid de urgență (PDF)", systemImage: "doc.richtext")
+                }
+                .help("Toate procedurile manuale, într-un PDF de ținut pe telefon. Nu conține nicio valoare de token.")
+
+                if let exported = exportedTo {
+                    Button("Arată ghidul salvat") {
+                        NSWorkspace.shared.activateFileViewerSelecting([exported])
+                    }
+                    .buttonStyle(.link)
+                    .font(.caption2)
+                }
                 if let last = registry.lastRefresh {
                     Text("Verificat \(SecretRegistry.relative(last))")
                         .font(.caption2).foregroundStyle(.secondary)
@@ -185,9 +204,18 @@ struct SecretsDashboardView: View {
                 }
             }
 
-            if let url = secret.renewURL {
-                Link(destination: url) {
-                    Label("Deschide pagina de reînnoire", systemImage: "arrow.up.right.square")
+            HStack(spacing: 12) {
+                Button {
+                    renewing = secret
+                } label: {
+                    Label("Reînnoiește pas cu pas", systemImage: "wand.and.stars")
+                }
+                .buttonStyle(.borderedProminent)
+
+                if let url = secret.renewURL {
+                    Link(destination: url) {
+                        Label("Deschide pagina de reînnoire", systemImage: "arrow.up.right.square")
+                    }
                 }
             }
         }
