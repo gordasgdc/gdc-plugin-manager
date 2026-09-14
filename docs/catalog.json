@@ -603,6 +603,28 @@
     },
     {
       "category" : "pdf",
+      "description" : "W H I T E PA P E R T E H N I C · G H I D D E D E C I Z I E",
+      "filePath" : "GDC Vault — Whitepaper Tehnic/GDC Vault — Whitepaper Tehnic.pdf",
+      "fileRepo" : "pdfs",
+      "fileSHA256" : "baf2c027a1ad129f88402d66f5db3ff9db34afcb3e664aaaf45d6d6a8af45b3a",
+      "files" : [
+        {
+          "path" : "GDC Vault — Whitepaper Tehnic/GDC Vault — Whitepaper Tehnic.pdf",
+          "repo" : "pdfs",
+          "sha256" : "baf2c027a1ad129f88402d66f5db3ff9db34afcb3e664aaaf45d6d6a8af45b3a"
+        }
+      ],
+      "id" : "GDC Vault — Whitepaper Tehnic",
+      "isFree" : true,
+      "isTrial" : false,
+      "name" : "GDC Vault — Whitepaper Tehnic",
+      "pdfKind" : "technicalGuide",
+      "priceEUR" : 0,
+      "supportedOS" : "crossPlatform",
+      "url" : ""
+    },
+    {
+      "category" : "pdf",
       "description" : "Scurtături\nDaVinci Resolve",
       "filePath" : "SHORTCUTS_RO/SHORTCUTS_RO.pdf",
       "fileRepo" : "pdfs",
