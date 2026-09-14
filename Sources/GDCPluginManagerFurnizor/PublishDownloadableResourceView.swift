@@ -6,9 +6,19 @@ import GDCPluginManagerCore
 /// privat de fișiere, ca la produsele Resolve) sau doar un link extern, ca
 /// până acum. Cerut explicit 2026-09-14 — ambele variante rămân posibile.
 enum ResourceFileSource: String, CaseIterable, Identifiable {
-    case upload, externalLink
+    /// [2026-09-14] `reuseProduct`: aceleași fișiere ca un produs deja
+    /// publicat, FĂRĂ să le reîncărcăm. Cerut direct — aceleași LUT-uri se
+    /// oferă și auto-instalabile pentru Resolve, și descărcabile pentru
+    /// Premiere/Final Cut, iar reîncărcarea le-ar stoca de două ori.
+    case upload, reuseProduct, externalLink
     var id: String { rawValue }
-    var label: String { self == .upload ? "Încarcă fișier" : "Link extern" }
+    var label: String {
+        switch self {
+        case .upload: return "Încarcă fișier"
+        case .reuseProduct: return "Fișierele unui produs"
+        case .externalLink: return "Link extern"
+        }
+    }
 }
 
 /// Gestionează secțiunile "Resurse Download" (LUT/SFX/VFX/Plugin) — Etapa 2
@@ -37,6 +47,9 @@ struct PublishDownloadableResourceView: View {
     @State private var existingFileSHA: String?
     @State private var existingFileRepo: String?
     @State private var existingFiles: [PluginFile] = []
+    /// Produsele deja publicate, din care se pot refolosi fișierele.
+    @State private var publishedProducts: [PluginItem] = []
+    @State private var sourceProductID: String = ""
     @State private var youtubeURL = ""
     @State private var supportedOS: SupportedOS = .crossPlatform
     // Licențiere adăugată 2026-08-29 (cerut explicit: "nu am varianta aia
@@ -185,6 +198,23 @@ struct PublishDownloadableResourceView: View {
                         }
                         .pickerStyle(.segmented)
 
+                        if fileSource == .reuseProduct {
+                            Picker("Produs sursă", selection: $sourceProductID) {
+                                Text("— alege un produs —").tag("")
+                                ForEach(publishedProducts) { p in
+                                    Text("\(p.name) (\(p.type.label), \(p.files.count) fișiere)").tag(p.id)
+                                }
+                            }
+                            .pickerStyle(.menu)
+                            if let src = publishedProducts.first(where: { $0.id == sourceProductID }) {
+                                Text("Se vor lega \(src.files.count) fișiere, exact cele ale produsului. Nu se încarcă nimic — același conținut nu se stochează de două ori.")
+                                    .font(.caption).foregroundStyle(.secondary)
+                            } else {
+                                Text("Alege produsul ale cărui fișiere vor fi oferite și aici.")
+                                    .font(.caption).foregroundStyle(.secondary)
+                            }
+                        }
+
                         if fileSource == .upload {
                             HStack(spacing: 10) {
                                 Button("Alege fișier…") { pickFile() }
@@ -312,6 +342,10 @@ struct PublishDownloadableResourceView: View {
                                         .padding(.horizontal, 6).padding(.vertical, 2)
                                         .background(Capsule().fill(resource.category.tintColor.opacity(0.15)))
                                 }
+                                if resource.sourceProductID != nil {
+                                    Text("🔗").font(.caption2)
+                                        .help("Folosește fișierele produsului „\(resource.sourceProductID ?? "")”")
+                                }
                                 Text(resource.hasDirectFile
                                      ? (resource.directFileCount > 1
                                         ? "⤓ \(resource.directFileCount) fișiere pe server"
@@ -348,6 +382,12 @@ struct PublishDownloadableResourceView: View {
 
     private var isFormValid: Bool {
         let hasFile = !pickedURLs.isEmpty || existingFilePath != nil || !existingFiles.isEmpty
+        if fileSource == .reuseProduct {
+            return !id.trimmingCharacters(in: .whitespaces).isEmpty
+                && !name.trimmingCharacters(in: .whitespaces).isEmpty
+                && publishedProducts.contains { $0.id == sourceProductID && !$0.files.isEmpty }
+                && (accessMode != .paid || Double(priceText) != nil)
+        }
         let linkOK = URL(string: url) != nil && (url.hasPrefix("http://") || url.hasPrefix("https://"))
         return !id.trimmingCharacters(in: .whitespaces).isEmpty
             && !name.trimmingCharacters(in: .whitespaces).isEmpty
@@ -362,7 +402,11 @@ struct PublishDownloadableResourceView: View {
         var missing: [String] = []
         if id.trimmingCharacters(in: .whitespaces).isEmpty { missing.append("ID") }
         if name.trimmingCharacters(in: .whitespaces).isEmpty { missing.append("Nume") }
-        if fileSource == .upload {
+        if fileSource == .reuseProduct {
+            if !publishedProducts.contains(where: { $0.id == sourceProductID && !$0.files.isEmpty }) {
+                missing.append("Produsul sursă (unul care are fișiere publicate)")
+            }
+        } else if fileSource == .upload {
             if pickedURLs.isEmpty && existingFilePath == nil && existingFiles.isEmpty { missing.append("Fișierul sau folderul de încărcat") }
         } else if !url.hasPrefix("http://") && !url.hasPrefix("https://") {
             missing.append("Link descărcare (trebuie să înceapă cu http:// sau https://)")
@@ -376,6 +420,9 @@ struct PublishDownloadableResourceView: View {
     private func loadExisting() {
         if let catalog = try? CatalogEditor.load() {
             existingResources = (catalog.downloadableResources + catalog.pdfResources + catalog.scriptResources)
+                .sorted { $0.name < $1.name }
+            publishedProducts = (catalog.items + catalog.scriptItems)
+                .filter { !$0.files.isEmpty }
                 .sorted { $0.name < $1.name }
         }
     }
@@ -392,7 +439,9 @@ struct PublishDownloadableResourceView: View {
         existingFileRepo = resource.fileRepo
         pickedURLs = []
         existingFiles = resource.files
-        fileSource = resource.hasDirectFile ? .upload : .externalLink
+        sourceProductID = resource.sourceProductID ?? ""
+        fileSource = resource.sourceProductID != nil ? .reuseProduct
+                   : (resource.hasDirectFile ? .upload : .externalLink)
         pdfKind = resource.pdfKind ?? .technicalGuide
         youtubeURL = resource.youtubeURL ?? ""
         supportedOS = resource.supportedOS
@@ -419,6 +468,7 @@ struct PublishDownloadableResourceView: View {
         fileSource = .externalLink
         pickedURLs = []
         existingFiles = []
+        sourceProductID = ""
         existingFilePath = nil
         existingFileSHA = nil
         existingFileRepo = nil
@@ -457,6 +507,7 @@ struct PublishDownloadableResourceView: View {
             var fileSHA = existingFileSHA
             var fileRepoKey = existingFileRepo
             var resourceFiles = existingFiles
+            var sourceID: String? = nil
             if fileSource == .upload, !pickedURLs.isEmpty {
                 let picked = try collectPicked()
                 guard !picked.isEmpty else {
@@ -486,10 +537,26 @@ struct PublishDownloadableResourceView: View {
                 }
                 try GitOps.commitAndPush(at: checkout, message: "\(resourceID): \(uploaded.count) fișier(e)")
                 resourceFiles = uploaded
+                sourceID = nil
                 // Forma veche (un singur fisier) ramane completata cand chiar
                 // e un singur fisier — clientii 1.31/1.32 o citesc pe aia.
                 filePath = uploaded.count == 1 ? uploaded[0].path : nil
                 fileSHA = uploaded.count == 1 ? uploaded[0].sha256 : nil
+            } else if fileSource == .reuseProduct {
+                // Nu se urca NIMIC: legam exact fisierele produsului sursa, cu
+                // caile si repo-urile lor. Acelasi continut nu ajunge stocat de
+                // doua ori, iar daca produsul e sters, fisierele raman in repo
+                // (CatalogEditor.remove nu le atinge), deci resursa continua sa
+                // functioneze.
+                guard let src = publishedProducts.first(where: { $0.id == sourceProductID }) else {
+                    errorMessage = "Produsul sursă ales nu mai există în catalog."
+                    return
+                }
+                resourceFiles = src.files
+                sourceID = src.id
+                fileRepoKey = src.files.first?.repo
+                filePath = src.files.count == 1 ? src.files[0].path : nil
+                fileSHA = src.files.count == 1 ? src.files[0].sha256 : nil
             } else if fileSource == .externalLink {
                 // Trecerea înapoi pe link extern nu trebuie să lase în catalog
                 // o referință către un fișier care nu mai e folosit.
@@ -497,6 +564,7 @@ struct PublishDownloadableResourceView: View {
                 fileSHA = nil
                 fileRepoKey = nil
                 resourceFiles = []
+                sourceID = nil
             }
 
             try GitOps.pull(at: RepoCheckoutPaths.publicCatalogRepo)
@@ -516,7 +584,8 @@ struct PublishDownloadableResourceView: View {
                 promoPriceEUR: Double(promoPriceText.trimmingCharacters(in: .whitespaces))
             , access: accessForm.model,
                 filePath: filePath, fileSHA256: fileSHA, fileRepo: fileRepoKey, files: resourceFiles,
-                pdfKind: category == .pdf ? pdfKind : nil)
+                pdfKind: category == .pdf ? pdfKind : nil,
+                sourceProductID: sourceID)
             try CatalogEditor.upsertDownloadableResource(resource)
             try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Resursă download: \(resource.name)", paths: ["docs/catalog.json", "docs/covers"])
             successMessage = "„\(resource.name)” e publicat — apare la clienți la următorul refresh de catalog."

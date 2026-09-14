@@ -1939,3 +1939,55 @@ reconstruit aplicațiile. Până atunci, descărcările din acel repo dau 401.
 `CatalogEditor.write()` a depășit pragul de type-check al compilatorului Swift
 („unable to type-check this expression in reasonable time") la 17 argumente cu
 `??`. Desfăcut în variabile intermediare — rezultat identic, compilează.
+
+## Etapa 2026-09-14 (Furnizor 1.38.0) — refolosirea fișierelor + ștergeri independente
+
+Cerut direct: „vor fi multe lucruri care se vor regăsi identic" și „dacă vreau
+să-l șterg din resurse, să nu fie afectat DaVinci, și invers".
+
+### Refolosirea fișierelor unui produs deja publicat
+
+`ResourceFileSource` capătă a treia variantă, `.reuseProduct`. În loc să reîncarci
+aceleași fișiere, alegi un produs publicat și resursa **leagă exact fișierele
+lui** — aceleași căi, același repo. Nu se urcă niciun octet.
+
+Motivul concret: aceleași LUT-uri se oferă și auto-instalabile pentru Resolve, și
+descărcabile pentru Premiere/Final Cut. Reîncărcarea le stoca de două ori.
+Verificat pe ProGDC: cele 6 fișiere aveau SHA-uri identice în ambele locuri.
+
+`DownloadableResource.sourceProductID` reține de unde vin. Clientul nu-l
+folosește deloc — fiecare fișier își poartă deja calea și repo-ul — dar Furnizor
+îl afișează (🔗 în lista de resurse) și permite o resincronizare ulterioară.
+
+### Ștergerile sunt independente, în ambele direcții
+
+Una din direcții era deja sigură; cealaltă NU:
+
+| Acțiune | Înainte | Acum |
+|---|---|---|
+| Ștergi **resursa** | produsul neatins ✓ | neschimbat ✓ |
+| Ștergi **produsul** | `removeItem(<id>/)` ștergea folderul din repo — o resursă legată rămânea cu descărcări moarte ✗ | fișierele rămân dacă le mai folosește cineva ✓ |
+
+`CatalogEditor.resourcesUsingProductFiles(id:in:)` verifică ambele forme de
+legătură: `sourceProductID` explicit, și calea `<id>/…` pentru resurse publicate
+înainte de câmp.
+
+**Regula e cale + repo, nu doar cale.** Prima variantă compara numai calea și
+dădea fals pozitiv: resursa ProGDC are propria copie, cu aceeași cale `ProGDC/…`,
+dar în repo-ul `resources`, nu `files`. Ar fi păstrat pe veci fișiere pe care
+nimeni nu le mai folosește. Verificat pe catalogul real după corecție:
+
+```
+Intermediate Workflow [repo files] -> fisierele SE STERG
+LiniarWorkflow        [repo files] -> fisierele SE STERG
+ProGDC                [repo files] -> fisierele SE STERG
+caz legat (sourceProductID)        -> RAMAN, folosite de: ProGDC pentru FCP
+```
+
+### Notă
+
+`CatalogEditor.swift` a ajuns temporar nevalid printr-o înlocuire care a
+duplicat o semnătură de funcție pe aceeași linie. Compilatorul a raportat-o la
+50 de linii distanță („expected declaration"), fiindcă parserul pierduse
+echilibrul acoladelor mult mai devreme — numărarea acoladelor a arătat imediat
+unde.

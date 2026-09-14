@@ -1405,6 +1405,15 @@ public struct DownloadableResource: Codable, Identifiable, Hashable {
     public let files: [PluginFile]
     /// Doar pentru `category == .pdf` — vezi `PDFKind`.
     public let pdfKind: PDFKind?
+    /// [2026-09-14] Când resursa REFOLOSEȘTE fișierele unui produs deja
+    /// publicat, în loc să le reîncarce: id-ul acelui produs.
+    ///
+    /// Fișierele din `files` rămân cele ale produsului, cu repo-ul lor —
+    /// nimic nu se copiază, deci același conținut nu se stochează de două ori.
+    /// Câmpul e informativ (se vede în Furnizor de unde vine resursa) și
+    /// permite o resincronizare ulterioară; clientul nu-l folosește deloc,
+    /// fiindcă fiecare fișier își poartă deja calea și repo-ul.
+    public let sourceProductID: String?
 
     /// `true` când resursa se descarcă direct de pe server, fără browser.
     public var hasDirectFile: Bool {
@@ -1427,7 +1436,7 @@ public struct DownloadableResource: Codable, Identifiable, Hashable {
                 purchaseURL: String? = nil, demoURL: String? = nil, socialLinks: SocialLinks? = nil, scheduling: Scheduling? = nil,
                 isFree: Bool = true, isTrial: Bool = false, priceEUR: Double = 0, promoPriceEUR: Double? = nil, access: CatalogAccess? = nil,
                 filePath: String? = nil, fileSHA256: String? = nil, fileRepo: String? = nil,
-                files: [PluginFile] = [], pdfKind: PDFKind? = nil) {
+                files: [PluginFile] = [], pdfKind: PDFKind? = nil, sourceProductID: String? = nil) {
         self.id = id
         self.access = access
         self.filePath = filePath
@@ -1435,6 +1444,7 @@ public struct DownloadableResource: Codable, Identifiable, Hashable {
         self.fileRepo = fileRepo
         self.files = files
         self.pdfKind = pdfKind
+        self.sourceProductID = sourceProductID
         self.name = name
         self.description = description
         self.category = category
@@ -1469,7 +1479,7 @@ public struct DownloadableResource: Codable, Identifiable, Hashable {
     // publicate în "produse plătite fără licență activabilă".
     private enum CodingKeys: String, CodingKey {
         case id, name, description, category, url, youtubeURL, coverImage, supportedOS, purchaseURL, demoURL, socialLinks, scheduling, isFree, isTrial, priceEUR, promoPriceEUR, access
-        case filePath, fileSHA256, fileRepo, files, pdfKind
+        case filePath, fileSHA256, fileRepo, files, pdfKind, sourceProductID
     }
 
     public init(from decoder: Decoder) throws {
@@ -1496,6 +1506,7 @@ public struct DownloadableResource: Codable, Identifiable, Hashable {
         fileRepo = try c.decodeIfPresent(String.self, forKey: .fileRepo)
         files = try c.decodeIfPresent([PluginFile].self, forKey: .files) ?? []
         pdfKind = try c.decodeIfPresent(PDFKind.self, forKey: .pdfKind)
+        sourceProductID = try c.decodeIfPresent(String.self, forKey: .sourceProductID)
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -1510,6 +1521,7 @@ public struct DownloadableResource: Codable, Identifiable, Hashable {
         try c.encodeIfPresent(fileRepo, forKey: .fileRepo)
         if !files.isEmpty { try c.encode(files, forKey: .files) }
         try c.encodeIfPresent(pdfKind, forKey: .pdfKind)
+        try c.encodeIfPresent(sourceProductID, forKey: .sourceProductID)
         try c.encodeIfPresent(youtubeURL, forKey: .youtubeURL)
         try c.encodeIfPresent(coverImage, forKey: .coverImage)
         try c.encode(supportedOS, forKey: .supportedOS)

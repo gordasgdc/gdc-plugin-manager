@@ -1,5 +1,17 @@
 # Changelog — GDC Plugin Manager
 
+## v1.38.0 Furnizor (2026-09-14) — Refolosirea fișierelor & ștergeri independente
+
+### Added
+- **„Fișierele unui produs"** — o resursă descărcabilă poate folosi exact
+  fișierele unui produs deja publicat, fără să le reîncarci. Același pachet
+  oferit în două locuri nu mai ocupă spațiu de două ori.
+
+### Fixed
+- **Ștergerea unui produs nu mai afectează resursa legată de el.** Fișierele
+  rămân pe server dacă le mai folosește altcineva; produsul dispare doar din
+  secțiunea lui. Invers funcționa deja corect.
+
 ## v1.34.0 Client / v1.37.0 Furnizor (2026-09-14) — Pachete întregi și scripturi generale
 
 ### Added

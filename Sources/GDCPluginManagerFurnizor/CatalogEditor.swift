@@ -83,6 +83,37 @@ enum CatalogEditor {
     /// pulled from sale. Does NOT touch the files in the private repo;
     /// callers that also want those gone should remove that folder
     /// themselves (see PublishView.deleteProduct).
+    /// [2026-09-14] Cine ALTCINEVA mai folosește fișierele produsului `id`?
+    ///
+    /// Cerut direct: „dacă vreau să-l șterg din resurse, să nu fie afectat
+    /// DaVinci, și invers". Într-o direcție era deja sigur — ștergerea unei
+    /// resurse nu atinge niciun fișier. În cealaltă NU: ștergerea produsului
+    /// ștergea folderul `<id>/` din repo, iar o resursă legată de acele fișiere
+    /// ar fi rămas cu descărcări moarte.
+    ///
+    /// Verifică ambele forme de legătură: `sourceProductID` (legare explicită)
+    /// și orice fișier a cărui cale începe cu `<id>/` (o resursă publicată
+    /// înainte de acest câmp).
+    static func resourcesUsingProductFiles(id: String, in catalog: Catalog) -> [DownloadableResource] {
+        let all = catalog.downloadableResources + catalog.pdfResources + catalog.scriptResources
+        let prefix = "\(id)/"
+        // Calea singura NU e suficienta: o resursa care si-a urcat PROPRIA copie
+        // are aceeasi cale („<id>/…"), dar in ALT repo. Sa-i pastram fisierele
+        // produsului din cauza ei ar insemna gunoi lasat pe server pentru
+        // totdeauna. Conteaza perechea cale + repo.
+        let product = (catalog.items + catalog.scriptItems).first { $0.id == id }
+        let productRepo = product?.files.first?.repo ?? PrivateCatalogAuth.defaultRepoKey
+        func sameStorage(_ repo: String?) -> Bool {
+            (repo ?? PrivateCatalogAuth.defaultRepoKey) == productRepo
+        }
+        return all.filter { r in
+            if r.sourceProductID == id { return true }
+            if r.files.contains(where: { $0.path.hasPrefix(prefix) && sameStorage($0.repo) }) { return true }
+            if let fp = r.filePath, fp.hasPrefix(prefix), sameStorage(r.fileRepo) { return true }
+            return false
+        }
+    }
+
     static func remove(id: String) throws {
         let catalog = try load()
         let items = catalog.items.filter { $0.id != id }

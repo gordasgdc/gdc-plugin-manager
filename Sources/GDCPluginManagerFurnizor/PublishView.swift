@@ -517,13 +517,24 @@ struct PublishView: View {
             log("Actualizez repo-ul privat (pull)…")
             try GitOps.pull(at: RepoCheckoutPaths.privateFilesRepo)
 
-            let productFolder = RepoCheckoutPaths.privateFilesRepo.appendingPathComponent(deletedID)
-            if FileManager.default.fileExists(atPath: productFolder.path) {
-                try FileManager.default.removeItem(at: productFolder)
-                log("Șters folderul \(deletedID)/ (toate versiunile)")
+            // [2026-09-14] Fisierele se sterg DOAR daca nu le mai foloseste
+            // nimeni. O resursa descarcabila poate fi legata de exact aceste
+            // fisiere (acelasi pachet oferit si pentru Premiere/Final Cut) —
+            // stergerea lor ar lasa acea resursa cu descarcari moarte.
+            let catalogNow = try CatalogEditor.load()
+            let usedBy = CatalogEditor.resourcesUsingProductFiles(id: deletedID, in: catalogNow)
+            if usedBy.isEmpty {
+                let productFolder = RepoCheckoutPaths.privateFilesRepo.appendingPathComponent(deletedID)
+                if FileManager.default.fileExists(atPath: productFolder.path) {
+                    try FileManager.default.removeItem(at: productFolder)
+                    log("Șters folderul \(deletedID)/ (toate versiunile)")
+                }
+                log("Trimit ștergerea (commit + push, repo privat)…")
+                try GitOps.commitAndPush(at: RepoCheckoutPaths.privateFilesRepo, message: "Sterg \(deletedID)")
+            } else {
+                let nume = usedBy.map(\.name).joined(separator: ", ")
+                log("Fișierele RĂMÂN pe server: sunt folosite de \(nume). Produsul dispare doar din secțiunea DaVinci Resolve.")
             }
-            log("Trimit ștergerea (commit + push, repo privat)…")
-            try GitOps.commitAndPush(at: RepoCheckoutPaths.privateFilesRepo, message: "Sterg \(deletedID)")
 
             log("Actualizez catalogul (pull, repo public)…")
             try GitOps.pull(at: RepoCheckoutPaths.publicCatalogRepo)
