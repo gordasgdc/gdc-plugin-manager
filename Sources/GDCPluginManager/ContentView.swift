@@ -214,6 +214,38 @@ struct ContentView: View {
     @ObservedObject private var languageStore = LanguageStore.shared
 
     @State private var selection: SidebarSection? = .all
+
+    /// Deschide secțiunea din care face parte rubrica dată. Nu strânge
+    /// niciodată altceva: o secțiune deschisă manual de utilizator rămâne
+    /// deschisă, fiindcă a deschis-o el.
+    private func expandSection(containing section: SidebarSection?) {
+        guard let section else { return }
+        switch section {
+        case .all, .type:
+            expandResolveInstall = true
+        case .audio, .download:
+            expandDownloadResources = true
+        case .courses, .educationalResources, .tutorials, .events,
+             .partnerOffers, .bundles, .partnerStores, .serviceCenters, .community:
+            expandCommunity = true
+        case .apps, .android, .myApps:
+            expandEcosystem = true
+        case .license, .help:
+            expandAccount = true
+        }
+    }
+
+    // Secțiuni pliabile în bara laterală (2026-09-14). @AppStorage, nu @State:
+    // preferința trebuie să supraviețuiască repornirii — altfel fiecare
+    // pornire ar reface aceleași click-uri de restrângere.
+    //
+    // Implicit doar prima e deschisă: meniul pornește compact, dar niciodată
+    // complet gol — un sidebar în care nu se vede nimic la pornire pare stricat.
+    @AppStorage("sidebar.expanded.resolveInstall") private var expandResolveInstall = true
+    @AppStorage("sidebar.expanded.downloadResources") private var expandDownloadResources = false
+    @AppStorage("sidebar.expanded.community") private var expandCommunity = false
+    @AppStorage("sidebar.expanded.ecosystem") private var expandEcosystem = false
+    @AppStorage("sidebar.expanded.account") private var expandAccount = false
     @State private var showOnboarding = false
     @State private var missingDependencies: [SystemDependency] = []
     @State private var allDependencies: [SystemDependency] = []
@@ -335,7 +367,7 @@ struct ContentView: View {
                 // (Scripting API / foldere native Resolve). Separat vizual
                 // explicit de grupul de mai jos — cerut de Cristi 2026-08-29:
                 // "să nu se încurce lumea" cu resursele de download direct.
-                Section(L.t("sidebar.section.resolveInstall")) {
+                Section(isExpanded: $expandResolveInstall) {
                     Label(L.t("sidebar.all"), systemImage: "square.grid.2x2")
                         .tag(SidebarSection.all)
                     ForEach(PluginType.allCases) { type in
@@ -346,13 +378,15 @@ struct ContentView: View {
                         }
                         .tag(SidebarSection.type(type))
                     }
+                } header: {
+                    Text(L.t("sidebar.section.resolveInstall"))
                 }
 
                 // Grup 2: RESURSE DE DOWNLOAD DIRECT — Premiere Pro/Final Cut/
                 // DaVinci Resolve, NU se instalează automat nicăieri (userul
                 // descarcă și importă manual). Include Audio (deja exista) +
                 // cele 4 categorii noi din Etapa 2 (2026-08-29).
-                Section(L.t("sidebar.section.downloadResources")) {
+                Section(isExpanded: $expandDownloadResources) {
                     Label {
                         Text(L.t("sidebar.audio"))
                     } icon: {
@@ -367,12 +401,14 @@ struct ContentView: View {
                         }
                         .tag(SidebarSection.download(category))
                     }
+                } header: {
+                    Text(L.t("sidebar.section.downloadResources"))
                 }
 
                 // Grup 3: comunitate & educație — conținut informativ, fără
                 // fișiere/instalare, doar link-uri externe (Cursuri/Materiale/
                 // Evenimente) sau contact (Magazine/Service).
-                Section(L.t("sidebar.section.community")) {
+                Section(isExpanded: $expandCommunity) {
                     Label(L.t("sidebar.courses"), systemImage: "graduationcap")
                         .tag(SidebarSection.courses)
                     Label(L.t("sidebar.educationalResources"), systemImage: "book")
@@ -394,10 +430,12 @@ struct ContentView: View {
                     // [2026-09-14] Hub de grupuri și canale de suport.
                     Label(L.t("sidebar.community"), systemImage: "person.2.wave.2")
                         .tag(SidebarSection.community)
+                } header: {
+                    Text(L.t("sidebar.section.community"))
                 }
 
                 // Grup 4: ecosistemul GDC — alte aplicații ale lui Cristi.
-                Section(L.t("sidebar.section.ecosystem")) {
+                Section(isExpanded: $expandEcosystem) {
                     Label(L.t("sidebar.apps"), systemImage: "app.badge")
                         .tag(SidebarSection.apps)
                     // Aplicatia mobila companion (PWA, gordas.dev/app.html —
@@ -407,16 +445,29 @@ struct ContentView: View {
                     // Etapa 3 (2026-08-29) — lansator rapid, vezi MyAppsLauncher.swift.
                     Label(L.t("sidebar.myApps"), systemImage: "square.grid.3x1.folder.badge.plus")
                         .tag(SidebarSection.myApps)
+                } header: {
+                    Text(L.t("sidebar.section.ecosystem"))
                 }
 
                 // Grup 5: contul tău — licență + ajutor, mereu ultimul.
-                Section(L.t("sidebar.section.account")) {
+                Section(isExpanded: $expandAccount) {
                     Label(L.t("sidebar.license"), systemImage: "key.fill")
                         .tag(SidebarSection.license)
                     Label(L.t("sidebar.help"), systemImage: "questionmark.circle")
                         .tag(SidebarSection.help)
+                } header: {
+                    Text(L.t("sidebar.section.account"))
                 }
             }
+            // Secțiunea care conține rubrica selectată se deschide singură.
+            // Fără asta, o navigare venită din altă parte (butonul de licență,
+            // o restaurare de selecție la pornire) ar lăsa lista pe o rubrică
+            // invizibilă, într-o secțiune strânsă — ar părea că aplicația nu
+            // a reacționat la click.
+            .onChange(of: selection) { _, newValue in
+                expandSection(containing: newValue)
+            }
+            .onAppear { expandSection(containing: selection) }
             // BUG REAL gasit 2026-08-26: navigationSplitViewColumnWidth(180)
             // (valoare unica) FIXEAZA latimea coloanei, nu o seteaza doar ca
             // implicita - sidebar-ul nu era deloc redimensionabil prin

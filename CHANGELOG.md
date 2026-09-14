@@ -1,5 +1,15 @@
 # Changelog — GDC Plugin Manager
 
+## v1.36.0 Client (2026-09-14) — Meniu lateral pliabil
+
+### Changed
+- **Secțiunile din meniul lateral se pliază.** Fiecare grup are o săgeată care
+  se rotește lin la deschidere și închidere. La prima pornire e deschisă doar
+  „Instalare DaVinci Resolve", ca meniul să fie compact; aplicația ține minte
+  ce ai lăsat deschis și ce ai închis.
+- Dacă ajungi pe o rubrică dintr-o secțiune închisă, aceasta se deschide
+  singură, ca să vezi unde te afli.
+
 ## v1.35.0 Client / v1.43.0 Furnizor (2026-09-14) — Comunitate
 
 ### Added
