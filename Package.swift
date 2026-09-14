@@ -11,7 +11,7 @@ let package = Package(
         // varianta dinamică ar fi cerut un pas nou de semnare în
         // build_app.sh, iar o semnătură lipsă pe un framework imbricat pică
         // notarizarea abia la final, după 40 de minute de așteptare.
-        .package(url: "https://github.com/getsentry/sentry-cocoa.git", from: "8.58.4"),
+        .package(url: "https://github.com/getsentry/sentry-cocoa.git", from: "9.28.0"),
     ],
     targets: [
         // Shared between the client app and the vendor app: license

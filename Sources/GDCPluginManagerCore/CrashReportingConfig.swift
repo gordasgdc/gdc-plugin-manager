@@ -20,7 +20,7 @@ public enum CrashReportingConfig {
 
     /// PUNE AICI DSN-ul din Sentry → Settings → Projects → Client Keys (DSN).
     /// Gol = raportarea e OPRITĂ complet (vezi `isEnabled`).
-    private static let compiledDSN = ""
+    private static let compiledDSN = "https://1df3dfe13c935d9ac9f2ef9763305de2@o4512086216933376.ingest.de.sentry.io/4512086226305104"
 
     public static var dsn: String {
         let fromEnvironment = ProcessInfo.processInfo.environment[environmentOverrideKey]?
