@@ -214,7 +214,17 @@
 
   ],
   "downloadableResources" : [
-
+    {
+      "category" : "lut",
+      "description" : "Lut de conversie din profilul camerei in Rec 709",
+      "id" : "ProGDC",
+      "isFree" : true,
+      "isTrial" : false,
+      "name" : "ProGDC",
+      "priceEUR" : 0,
+      "supportedOS" : "crossPlatform",
+      "url" : "https://digistorage.net/0y95jfc8"
+    }
   ],
   "educationalResources" : [
     {
