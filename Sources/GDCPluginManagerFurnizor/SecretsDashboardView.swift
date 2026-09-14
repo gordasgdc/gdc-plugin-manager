@@ -74,6 +74,8 @@ struct SecretsDashboardView: View {
         if critical > 0 { parts.append("\(critical) necesită acțiune acum") }
         if missing > 0 { parts.append("\(missing) lipsesc") }
         if warning > 0 { parts.append("\(warning) de urmărit") }
+        let optional = statuses.filter { $0 == .optionalUnset }.count
+        if optional > 0 { parts.append("\(optional) opțional neconfigurat") }
         if parts.isEmpty {
             return registry.lastRefresh == nil ? "Se verifică…" : "Toate cele \(registry.secrets.count) sunt în regulă."
         }
@@ -217,6 +219,7 @@ struct SecretsDashboardView: View {
     private func color(for severity: SecretStatus.Severity) -> Color {
         switch severity {
         case .ok: return .green
+        case .optionalUnset: return .secondary
         case .warning: return .orange
         case .critical, .missing: return .red
         case .unknown: return .secondary
@@ -226,6 +229,7 @@ struct SecretsDashboardView: View {
     private func accessibilityText(_ severity: SecretStatus.Severity) -> String {
         switch severity {
         case .ok: return "în regulă"
+        case .optionalUnset: return "opțional, neconfigurat"
         case .warning: return "expiră curând"
         case .critical: return "necesită acțiune"
         case .missing: return "lipsește"

@@ -1,5 +1,14 @@
 # Changelog — GDC Plugin Manager
 
+## v1.39.1 Furnizor (2026-09-14) — Corecții la dashboard-ul de token-uri
+
+### Fixed
+- **Cele două certificate Developer ID apăreau roșii, „Lipsește"**, deși erau
+  la locul lor și valabile până în 2031. Verificarea de prezență ieșea din
+  funcție înainte să apuce să citească expirarea din keychain.
+- **Un secret opțional necompletat** (cheia YouTube) nu mai apare roșu, ci gri,
+  „opțional". Roșul trebuie să însemne un singur lucru: oprește-te și rezolvă.
+
 ## v1.39.0 Furnizor (2026-09-14) — Dashboard Token-uri & Chei
 
 ### Added

@@ -34,6 +34,26 @@ enum SecretLocation {
     /// doar data ultimei actualizări.
     case githubActionsSecret(repo: String, name: String)
 
+    /// Locațiile din care se poate CITI efectiv o valoare de comparat.
+    /// Un certificat nu are o „valoare" (prezența lui o stabilește sondarea
+    /// din keychain), iar un secret de CI nu e citibil prin API by design.
+    ///
+    /// BUG REAL (2026-09-14, raportat imediat după prima versiune: ambele
+    /// certificate Developer ID apăreau ROȘII, „Lipsește"): verificarea de
+    /// prezență din `probe` trata orice `readValue == nil` ca secret lipsă
+    /// și ieșea din funcție ÎNAINTE să apuce să citească expirarea din
+    /// keychain. Certificatele erau la locul lor, valabile până în 2031.
+    /// Excepția era scrisă doar pentru secretele de CI — un `if case`
+    /// punctual, ușor de uitat la adăugarea unui tip nou de locație. Acum
+    /// regula stă pe locația însăși, deci orice tip viitor trebuie să
+    /// declare explicit dacă are sau nu o valoare citibilă.
+    var hasReadableValue: Bool {
+        switch self {
+        case .sourceFile, .userDefaults, .diskFile: return true
+        case .keychainCertificate, .githubActionsSecret: return false
+        }
+    }
+
     var humanDescription: String {
         switch self {
         case .sourceFile(let path, _): return path
@@ -85,6 +105,10 @@ struct ManagedSecret: Identifiable {
     /// Permisiunile exacte de bifat (pasul 2 din wizard, Etapa 2).
     let requiredScopes: [String]
     let mirrors: [SecretMirror]
+    /// Un secret fără de care ecosistemul funcționează. Lipsa lui e o stare
+    /// neutră, nu o alarmă: dacă un secret opțional necompletat ar apărea
+    /// roșu, roșul ar înceta să mai însemne „oprește-te și rezolvă acum".
+    let isOptional: Bool
     /// Ce mai trebuie făcut DUPĂ înlocuire ca schimbarea să ajungă la cine
     /// trebuie. Pentru PAT: un simplu „am pus tokenul nou" nu e suficient —
     /// clienții deja instalați îl folosesc pe cel vechi până la un release.
@@ -93,7 +117,7 @@ struct ManagedSecret: Identifiable {
     init(id: String, name: String, purpose: String, impact: String,
          location: SecretLocation, expiry: ExpirySource, renewURL: String? = nil,
          requiredScopes: [String] = [], mirrors: [SecretMirror] = [],
-         afterRenewal: [String] = []) {
+         isOptional: Bool = false, afterRenewal: [String] = []) {
         self.id = id
         self.name = name
         self.purpose = purpose
@@ -103,6 +127,7 @@ struct ManagedSecret: Identifiable {
         self.renewURL = renewURL.flatMap(URL.init(string:))
         self.requiredScopes = requiredScopes
         self.mirrors = mirrors
+        self.isOptional = isOptional
         self.afterRenewal = afterRenewal
     }
 }
@@ -111,7 +136,7 @@ struct ManagedSecret: Identifiable {
 
 struct SecretStatus {
     enum Severity: Int, Comparable {
-        case ok, warning, critical, missing, unknown
+        case optionalUnset, ok, warning, critical, missing, unknown
         static func < (a: Severity, b: Severity) -> Bool { a.rawValue < b.rawValue }
     }
 
@@ -256,7 +281,8 @@ extension SecretRegistry {
                 location: .userDefaults(key: "youtube_data_api_key"),
                 expiry: .neverExpires,
                 renewURL: "https://console.cloud.google.com/apis/credentials",
-                requiredScopes: ["API key cu YouTube Data API v3 activat"]
+                requiredScopes: ["API key cu YouTube Data API v3 activat"],
+                isOptional: true
             ),
         ]
     }
@@ -284,7 +310,7 @@ final class SecretRegistry: ObservableObject {
     /// de unelte, ca să nu fie nevoie să deschizi dashboard-ul ca să afli că
     /// ceva e roșu.
     var worstSeverity: SecretStatus.Severity {
-        let relevant = statuses.values.map(\.severity).filter { $0 != .unknown }
+        let relevant = statuses.values.map(\.severity).filter { $0 != .unknown && $0 != .optionalUnset }
         return relevant.max() ?? .unknown
     }
 
@@ -307,11 +333,12 @@ final class SecretRegistry: ObservableObject {
         // iar starea „lipsește" e distinctă de „expirat" — cauza și reparația
         // sunt complet diferite.
         let value = Self.readValue(at: secret.location)
-        if case .githubActionsSecret = secret.location {
-            // Valoarea unui secret de CI nu e citibilă prin API by design.
-        } else if value == nil || value!.isEmpty || Self.isPlaceholder(value!) {
-            status.severity = .missing
-            status.headline = value == nil ? "Lipsește" : "Necompletat (șablon)"
+        if secret.location.hasReadableValue,
+           value == nil || value!.isEmpty || Self.isPlaceholder(value!) {
+            status.severity = secret.isOptional ? .optionalUnset : .missing
+            status.headline = secret.isOptional
+                ? "Neconfigurat (opțional)"
+                : (value == nil ? "Lipsește" : "Necompletat (șablon)")
             status.detail = "Nu am găsit o valoare reală la \(secret.location.humanDescription)."
             return status
         }
