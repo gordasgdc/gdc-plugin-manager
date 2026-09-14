@@ -227,6 +227,16 @@ struct ContentView: View {
 
     /// Nume din TOATE categoriile — folosit ca sugestii live pentru bara
     /// de căutare globală (istoricul recent se adaugă separat, în SearchBar).
+    /// Fiecare categorie nouă își are cheia ei de catalog — vezi
+    /// `Catalog.pdfResources` / `Catalog.scriptResources` pentru motiv.
+    private func resourcesFor(_ category: DownloadCategory) -> [DownloadableResource] {
+        switch category {
+        case .pdf: return catalog.pdfResources
+        case .script: return catalog.scriptResources
+        default: return catalog.downloadableResources
+        }
+    }
+
     /// Toate produsele instalabile, indiferent în ce cheie de catalog stau.
     /// Scripturile au cheia lor (`scriptItems`) din motive de
     /// retrocompatibilitate, dar pentru UI sunt produse ca oricare altele.
@@ -247,6 +257,7 @@ struct ContentView: View {
         names += catalog.serviceCenters.map(\.name)
         names += catalog.downloadableResources.map(\.name)
         names += catalog.pdfResources.map(\.name)
+        names += catalog.scriptResources.map(\.name)
         names += catalog.partnerOffers.map(\.brandName)
         names += catalog.productBundles.map(\.name)
         return names
@@ -290,7 +301,7 @@ struct ContentView: View {
         case .download(let category):
             // PDF-urile stau intr-o cheie separata de catalog (vezi
             // Catalog.pdfResources) — nu se filtreaza din lista comuna.
-            DownloadResourceGrid(resources: (category == .pdf ? catalog.pdfResources : catalog.downloadableResources)
+            DownloadResourceGrid(resources: resourcesFor(category)
                 .filter { $0.category == category && ($0.scheduling?.isActiveNow ?? true) })
         case .android:
             MobileAppPane()
@@ -707,7 +718,7 @@ private struct GlobalSearchResults: View {
         catalog.serviceCenters.filter { ($0.scheduling?.isActiveNow ?? true) && FuzzySearch.matches(query: query, inAny: [$0.name, $0.specialization, serviceCategoryLabel($0.category), $0.id]) }
     }
     private var matchedDownloads: [DownloadableResource] {
-        (catalog.downloadableResources + catalog.pdfResources).filter { ($0.scheduling?.isActiveNow ?? true) && FuzzySearch.matches(query: query, inAny: [$0.name, $0.description, $0.id, $0.category.rawValue]) }
+        (catalog.downloadableResources + catalog.pdfResources + catalog.scriptResources).filter { ($0.scheduling?.isActiveNow ?? true) && FuzzySearch.matches(query: query, inAny: [$0.name, $0.description, $0.id, $0.category.rawValue]) }
     }
     private var matchedBundles: [ProductBundle] {
         catalog.productBundles.filter { ($0.scheduling?.isActiveNow ?? true) && FuzzySearch.matches(query: query, inAny: [$0.name, $0.description, $0.id]) }

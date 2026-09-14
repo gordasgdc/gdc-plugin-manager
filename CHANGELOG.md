@@ -1,5 +1,20 @@
 # Changelog — GDC Plugin Manager
 
+## v1.34.0 Client / v1.37.0 Furnizor (2026-09-14) — Pachete întregi și scripturi generale
+
+### Added
+- **Poți încărca un folder întreg**, cu tot cu subfoldere, în loc să alegi
+  fișierele unul câte unul. Structura ajunge intactă la client.
+- **Categorie nouă „Scripturi"** în Resurse Download — scripturi de uz general,
+  fără legătură cu DaVinci Resolve, cu marcaj Mac / Windows / ambele.
+- Resursele descărcabile au acum propria locație de stocare, separată de arhiva
+  de produse.
+
+### Fixed
+- **Resursele urcate ajungeau în locul greșit.** Orice fișier încărcat din
+  secțiunea de resurse mergea în spațiul rezervat PDF-urilor, indiferent de
+  categorie.
+
 ## v1.33.0 Client (2026-09-14) — Confirmare clară după instalare
 
 ### Added

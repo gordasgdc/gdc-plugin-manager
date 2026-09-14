@@ -26,6 +26,8 @@ final class CatalogService: ObservableObject {
     @Published private(set) var pdfResources: [DownloadableResource] = []
     /// Scripturi Fusion — cheie separată în catalog, vezi `Catalog.scriptItems`.
     @Published private(set) var scriptItems: [PluginItem] = []
+    /// Scripturi de uz general, descărcabile — cheie separată în catalog.
+    @Published private(set) var scriptResources: [DownloadableResource] = []
     @Published private(set) var partnerOffers: [PartnerOffer] = []
     /// Biblioteca de filigrane sezoniere (2026-08-29) — era un singur
     /// `seasonalBackgroundURL`. Filtrarea pe "active acum" + rezolvarea
@@ -76,6 +78,7 @@ final class CatalogService: ObservableObject {
                 downloadableResources = catalog.downloadableResources
                 pdfResources = catalog.pdfResources
                 scriptItems = catalog.scriptItems
+                scriptResources = catalog.scriptResources
                 partnerOffers = catalog.partnerOffers
                 seasonalBackgrounds = catalog.seasonalBackgrounds
                 productBundles = catalog.productBundles
@@ -122,6 +125,7 @@ final class CatalogService: ObservableObject {
         downloadableResources = catalog.downloadableResources
         pdfResources = catalog.pdfResources
         scriptItems = catalog.scriptItems
+        scriptResources = catalog.scriptResources
         partnerOffers = catalog.partnerOffers
         seasonalBackgrounds = catalog.seasonalBackgrounds
         productBundles = catalog.productBundles

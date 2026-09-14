@@ -26,6 +26,7 @@ public struct PrivateRepo: Sendable {
 ///   "files"   → gdc-plugin-manager-files    (LUT/DCTL/Fuse/OFX/PowerGrade)
 ///   "pdfs"    → gdc-plugin-manager-pdfs     (ghiduri, manuale, carti)
 ///   "scripts" → gdc-plugin-manager-scripts  (Lua/Python pentru Fusion)
+///   "resources" → gdc-plugin-manager-resources (LUT/SFX/VFX/Plugin descarcabile)
 ///
 /// UN SINGUR token pentru toate (ales deliberat: mai usor de rotit decat trei).
 /// Daca vreodata se prefera izolare per repo, structura de mai jos o suporta
@@ -47,6 +48,7 @@ public enum PrivateCatalogAuth {
         "files":   PrivateRepo(owner: ownerLogin, name: "gdc-plugin-manager-files",   token: token),
         "pdfs":    PrivateRepo(owner: ownerLogin, name: "gdc-plugin-manager-pdfs",    token: token),
         "scripts": PrivateRepo(owner: ownerLogin, name: "gdc-plugin-manager-scripts", token: token),
+        "resources": PrivateRepo(owner: ownerLogin, name: "gdc-plugin-manager-resources", token: token),
     ]
 
     /// Cheia implicita — tot ce a fost publicat INAINTE de arhitectura

@@ -24,6 +24,7 @@ enum RepoCheckoutPaths {
         "files":   privateFilesRepo,
         "pdfs":    developerDir.appendingPathComponent("gdc-plugin-manager-pdfs"),
         "scripts": developerDir.appendingPathComponent("gdc-plugin-manager-scripts"),
+        "resources": developerDir.appendingPathComponent("gdc-plugin-manager-resources"),
     ]
 
     /// Checkout-ul local pentru o cheie de repo. Arunca explicit daca clona

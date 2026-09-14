@@ -190,6 +190,7 @@ enum L {
         "install.done": [.ro: "Instalat în %@", .en: "Installed in %@", .es: "Instalado en %@"],
         "install.doneShort": [.ro: "Instalat", .en: "Installed", .es: "Instalado"],
         "install.revealInFinder": [.ro: "Arată în Finder", .en: "Show in Finder", .es: "Mostrar en Finder"],
+        "sidebar.download.script": [.ro: "Scripturi (download)", .en: "Scripts (download)", .es: "Scripts (descarga)"],
         "sidebar.download.pdf": [.ro: "PDF-uri / Ghiduri / Cărți", .en: "PDFs / Guides / Books", .es: "PDF / Guías / Libros"],
         "resource.download": [.ro: "Descarcă", .en: "Download", .es: "Descargar"],
         "resource.downloading": [.ro: "Se descarcă…", .en: "Downloading…", .es: "Descargando…"],

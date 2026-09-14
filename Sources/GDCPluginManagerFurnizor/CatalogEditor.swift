@@ -239,21 +239,29 @@ enum CatalogEditor {
         let catalog = try load()
         var plain = catalog.downloadableResources.filter { $0.id != resource.id }
         var pdfs  = catalog.pdfResources.filter { $0.id != resource.id }
-        if resource.category == .pdf { pdfs.append(resource) } else { plain.append(resource) }
+        var scripts = catalog.scriptResources.filter { $0.id != resource.id }
+        switch resource.category {
+        case .pdf:    pdfs.append(resource)
+        case .script: scripts.append(resource)
+        default:      plain.append(resource)
+        }
         plain.sort { $0.name < $1.name }
         pdfs.sort { $0.name < $1.name }
-        try write(catalog: catalog, downloadableResources: plain, pdfResources: pdfs)
+        scripts.sort { $0.name < $1.name }
+        try write(catalog: catalog, downloadableResources: plain, pdfResources: pdfs, scriptResources: scripts)
     }
 
     static func removeDownloadableResource(id: String) throws {
         let catalog = try load()
         let plain = catalog.downloadableResources.filter { $0.id != id }
         let pdfs  = catalog.pdfResources.filter { $0.id != id }
+        let scripts = catalog.scriptResources.filter { $0.id != id }
         guard plain.count != catalog.downloadableResources.count
-                || pdfs.count != catalog.pdfResources.count else {
+                || pdfs.count != catalog.pdfResources.count
+                || scripts.count != catalog.scriptResources.count else {
             throw CatalogEditorError.downloadableResourceNotFound(id)
         }
-        try write(catalog: catalog, downloadableResources: plain, pdfResources: pdfs)
+        try write(catalog: catalog, downloadableResources: plain, pdfResources: pdfs, scriptResources: scripts)
     }
 
     // MARK: - Partner offers (Oferte/Promoții branduri partenere, Etapa 4)
@@ -360,6 +368,7 @@ enum CatalogEditor {
         serviceCenters: [ServiceCenter]? = nil,
         downloadableResources: [DownloadableResource]? = nil,
         pdfResources: [DownloadableResource]? = nil,
+        scriptResources: [DownloadableResource]? = nil,
         scriptItems: [PluginItem]? = nil,
         partnerOffers: [PartnerOffer]? = nil,
         seasonalBackgrounds: [SeasonalBackgroundConfig]? = nil,
@@ -368,23 +377,44 @@ enum CatalogEditor {
     ) throws {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
+        // Variabile intermediare, nu un apel cu 17 argumente `??`: verificatorul
+        // de tipuri Swift renunta ("unable to type-check in reasonable time")
+        // cand expresia creste peste un prag. Rezultatul e identic.
+        let newItems = items ?? catalog.items
+        let newCourses = courses ?? catalog.courses
+        let newApps = apps ?? catalog.apps
+        let newAudio = audioTracks ?? catalog.audioTracks
+        let newEdu = educationalResources ?? catalog.educationalResources
+        let newEvents = events ?? catalog.events
+        let newStores = partnerStores ?? catalog.partnerStores
+        let newCenters = serviceCenters ?? catalog.serviceCenters
+        let newDownloads = downloadableResources ?? catalog.downloadableResources
+        let newPDFs = pdfResources ?? catalog.pdfResources
+        let newScriptRes = scriptResources ?? catalog.scriptResources
+        let newScriptItems = scriptItems ?? catalog.scriptItems
+        let newOffers = partnerOffers ?? catalog.partnerOffers
+        let newBackgrounds = seasonalBackgrounds ?? catalog.seasonalBackgrounds
+        let newBundles = productBundles ?? catalog.productBundles
+        let newTutorials = tutorials ?? catalog.tutorials
+
         let updated = Catalog(
             updatedAt: formatter.string(from: Date()),
-            items: items ?? catalog.items,
-            courses: courses ?? catalog.courses,
-            apps: apps ?? catalog.apps,
-            audioTracks: audioTracks ?? catalog.audioTracks,
-            educationalResources: educationalResources ?? catalog.educationalResources,
-            events: events ?? catalog.events,
-            partnerStores: partnerStores ?? catalog.partnerStores,
-            serviceCenters: serviceCenters ?? catalog.serviceCenters,
-            downloadableResources: downloadableResources ?? catalog.downloadableResources,
-            pdfResources: pdfResources ?? catalog.pdfResources,
-            scriptItems: scriptItems ?? catalog.scriptItems,
-            partnerOffers: partnerOffers ?? catalog.partnerOffers,
-            seasonalBackgrounds: seasonalBackgrounds ?? catalog.seasonalBackgrounds,
-            productBundles: productBundles ?? catalog.productBundles,
-            tutorials: tutorials ?? catalog.tutorials
+            items: newItems,
+            courses: newCourses,
+            apps: newApps,
+            audioTracks: newAudio,
+            educationalResources: newEdu,
+            events: newEvents,
+            partnerStores: newStores,
+            serviceCenters: newCenters,
+            downloadableResources: newDownloads,
+            pdfResources: newPDFs,
+            scriptItems: newScriptItems,
+            scriptResources: newScriptRes,
+            partnerOffers: newOffers,
+            seasonalBackgrounds: newBackgrounds,
+            productBundles: newBundles,
+            tutorials: newTutorials
         )
 
         let encoder = JSONEncoder()

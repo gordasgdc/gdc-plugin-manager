@@ -30,12 +30,13 @@ struct PublishDownloadableResourceView: View {
     @State private var url = ""
     /// Sursa fișierului + fișierul ales (doar pentru upload direct).
     @State private var fileSource: ResourceFileSource = .externalLink
-    @State private var pickedFileURL: URL?
+    @State private var pickedURLs: [URL] = []
     @State private var pdfKind: PDFKind = .technicalGuide
     /// La editare: fișierul deja publicat, păstrat dacă nu se alege altul.
     @State private var existingFilePath: String?
     @State private var existingFileSHA: String?
     @State private var existingFileRepo: String?
+    @State private var existingFiles: [PluginFile] = []
     @State private var youtubeURL = ""
     @State private var supportedOS: SupportedOS = .crossPlatform
     // Licențiere adăugată 2026-08-29 (cerut explicit: "nu am varianta aia
@@ -68,6 +69,7 @@ struct PublishDownloadableResourceView: View {
         case .vfx: return "VFX / Overlays"
         case .plugin: return "Plugin"
         case .pdf: return "PDF / Ghid / Carte"
+        case .script: return "Script (uz general)"
         case .unknown: return "Necunoscut"
         }
     }
@@ -83,19 +85,60 @@ struct PublishDownloadableResourceView: View {
 
     /// Numele fișierului deja încărcat (pentru afișare la editare).
     private var currentFileName: String? {
-        if let pickedFileURL { return pickedFileURL.lastPathComponent }
+        if pickedURLs.count == 1 { return pickedURLs[0].lastPathComponent }
+        if pickedURLs.count > 1 { return "\(pickedURLs.count) elemente alese" }
         guard let existingFilePath else { return nil }
         return (existingFilePath as NSString).lastPathComponent
     }
 
+    /// [2026-09-14] Accepta un FISIER, MAI MULTE fisiere sau un FOLDER intreg
+    /// (cu subfoldere). Raportat direct: un pachet de LUT-uri trebuia urcat
+    /// bucata cu bucata, fiindca selectorul accepta un singur fisier.
     private func pickFile() {
         let panel = NSOpenPanel()
         panel.canChooseFiles = true
-        panel.canChooseDirectories = false
-        panel.allowsMultipleSelection = false
-        panel.allowedContentTypes = category == .pdf ? [.pdf] : []
+        panel.canChooseDirectories = true
+        panel.allowsMultipleSelection = true
+        // Fara filtru de tip nici macar la PDF: un „ghid" poate fi un folder
+        // cu PDF-uri si imagini, iar filtrul ar ascunde folderele din dialog.
+        panel.message = "Alege un fișier, mai multe fișiere sau un folder întreg."
         panel.prompt = "Alege"
-        if panel.runModal() == .OK { pickedFileURL = panel.url }
+        if panel.runModal() == .OK { pickedURLs = panel.urls }
+    }
+
+    /// Fisierele de urcat, cu calea RELATIVA pastrata: un folder ales devine
+    /// „<nume folder>/<subfolder>/<fisier>", exact ca la pachetele de produs.
+    private func collectPicked() throws -> [(url: URL, relativePath: String)] {
+        var out: [(URL, String)] = []
+        let fm = FileManager.default
+        for url in pickedURLs {
+            var isDir: ObjCBool = false
+            guard fm.fileExists(atPath: url.path, isDirectory: &isDir) else { continue }
+            if isDir.boolValue {
+                let root = url.lastPathComponent
+                guard let e = fm.enumerator(at: url, includingPropertiesForKeys: [.isRegularFileKey]) else { continue }
+                for case let child as URL in e {
+                    guard (try? child.resourceValues(forKeys: [.isRegularFileKey]).isRegularFile) == true else { continue }
+                    if child.lastPathComponent == ".DS_Store" { continue }
+                    let rel = child.path.replacingOccurrences(of: url.path + "/", with: "")
+                    out.append((child, "\(root)/\(rel)"))
+                }
+            } else {
+                out.append((url, url.lastPathComponent))
+            }
+        }
+        return out
+    }
+
+    /// Repo-ul de destinatie, dupa categorie — PDF-urile au repo-ul lor, restul
+    /// resurselor descarcabile pe al lor. Nimic nu mai ajunge in arhiva
+    /// principala de produse.
+    private var targetRepoKey: String {
+        switch category {
+        case .pdf: return "pdfs"
+        case .script: return "scripts"      // acelasi repo ca scripturile Resolve
+        default: return "resources"
+        }
     }
 
     var body: some View {
@@ -121,7 +164,7 @@ struct PublishDownloadableResourceView: View {
                             // PDF-urile se încarcă implicit direct pe server —
                             // asta e chiar motivul categoriei. Restul rămân pe
                             // link extern, ca până acum.
-                            if newValue == .pdf && existingFilePath == nil && pickedFileURL == nil {
+                            if newValue == .pdf && existingFilePath == nil && pickedURLs.isEmpty {
                                 fileSource = .upload
                             }
                         }
@@ -147,7 +190,7 @@ struct PublishDownloadableResourceView: View {
                                 Button("Alege fișier…") { pickFile() }
                                 if let currentFileName {
                                     Text(currentFileName).font(.caption).lineLimit(1).truncationMode(.middle)
-                                    if pickedFileURL != nil {
+                                    if !pickedURLs.isEmpty {
                                         Text("(nou)").font(.caption2).foregroundStyle(.green)
                                     }
                                 } else {
@@ -270,7 +313,9 @@ struct PublishDownloadableResourceView: View {
                                         .background(Capsule().fill(resource.category.tintColor.opacity(0.15)))
                                 }
                                 Text(resource.hasDirectFile
-                                     ? "⤓ \(resource.directFileName ?? "fișier pe server")"
+                                     ? (resource.directFileCount > 1
+                                        ? "⤓ \(resource.directFileCount) fișiere pe server"
+                                        : "⤓ \(resource.directFileName ?? "fișier pe server")")
                                      : resource.url)
                                     .font(.caption).foregroundStyle(.secondary).lineLimit(1)
                             }
@@ -302,7 +347,7 @@ struct PublishDownloadableResourceView: View {
     }
 
     private var isFormValid: Bool {
-        let hasFile = pickedFileURL != nil || existingFilePath != nil
+        let hasFile = !pickedURLs.isEmpty || existingFilePath != nil || !existingFiles.isEmpty
         let linkOK = URL(string: url) != nil && (url.hasPrefix("http://") || url.hasPrefix("https://"))
         return !id.trimmingCharacters(in: .whitespaces).isEmpty
             && !name.trimmingCharacters(in: .whitespaces).isEmpty
@@ -318,7 +363,7 @@ struct PublishDownloadableResourceView: View {
         if id.trimmingCharacters(in: .whitespaces).isEmpty { missing.append("ID") }
         if name.trimmingCharacters(in: .whitespaces).isEmpty { missing.append("Nume") }
         if fileSource == .upload {
-            if pickedFileURL == nil && existingFilePath == nil { missing.append("Fișierul de încărcat") }
+            if pickedURLs.isEmpty && existingFilePath == nil && existingFiles.isEmpty { missing.append("Fișierul sau folderul de încărcat") }
         } else if !url.hasPrefix("http://") && !url.hasPrefix("https://") {
             missing.append("Link descărcare (trebuie să înceapă cu http:// sau https://)")
         } else if URL(string: url) == nil {
@@ -330,7 +375,7 @@ struct PublishDownloadableResourceView: View {
 
     private func loadExisting() {
         if let catalog = try? CatalogEditor.load() {
-            existingResources = (catalog.downloadableResources + catalog.pdfResources)
+            existingResources = (catalog.downloadableResources + catalog.pdfResources + catalog.scriptResources)
                 .sorted { $0.name < $1.name }
         }
     }
@@ -345,7 +390,8 @@ struct PublishDownloadableResourceView: View {
         existingFilePath = resource.filePath
         existingFileSHA = resource.fileSHA256
         existingFileRepo = resource.fileRepo
-        pickedFileURL = nil
+        pickedURLs = []
+        existingFiles = resource.files
         fileSource = resource.hasDirectFile ? .upload : .externalLink
         pdfKind = resource.pdfKind ?? .technicalGuide
         youtubeURL = resource.youtubeURL ?? ""
@@ -371,7 +417,8 @@ struct PublishDownloadableResourceView: View {
         category = .lut
         url = ""
         fileSource = .externalLink
-        pickedFileURL = nil
+        pickedURLs = []
+        existingFiles = []
         existingFilePath = nil
         existingFileSHA = nil
         existingFileRepo = nil
@@ -409,32 +456,47 @@ struct PublishDownloadableResourceView: View {
             var filePath = existingFilePath
             var fileSHA = existingFileSHA
             var fileRepoKey = existingFileRepo
-            if fileSource == .upload, let pickedFileURL {
-                let data = try Data(contentsOf: pickedFileURL)
-                fileSHA = SHA256.hash(data: data).compactMap { String(format: "%02x", $0) }.joined()
-                let repoRelativePath = "\(resourceID)/\(pickedFileURL.lastPathComponent)"
-                filePath = repoRelativePath
-                // PDF-urile au repo-ul LOR (arhitectura multi-repo) — vezi
-                // PrivateCatalogAuth.repos. Nimic nu mai intra in repo-ul
-                // principal doar pentru ca "asa era inainte".
-                fileRepoKey = "pdfs"
-                let checkout = try RepoCheckoutPaths.resourceCheckout(for: "pdfs")
-
-                try GitOps.pull(at: checkout)
-                let destURL = checkout.appendingPathComponent(repoRelativePath)
-                try FileManager.default.createDirectory(at: destURL.deletingLastPathComponent(), withIntermediateDirectories: true)
-                if FileManager.default.fileExists(atPath: destURL.path) {
-                    try FileManager.default.removeItem(at: destURL)
+            var resourceFiles = existingFiles
+            if fileSource == .upload, !pickedURLs.isEmpty {
+                let picked = try collectPicked()
+                guard !picked.isEmpty else {
+                    errorMessage = "Selecția nu conține niciun fișier."
+                    return
                 }
-                try FileManager.default.copyItem(at: pickedFileURL, to: destURL)
-                try GitOps.commitAndPush(at: checkout, message: "\(resourceID): \(pickedFileURL.lastPathComponent)")
-                _ = filePath
+                // BUG REPARAT (2026-09-14): repo-ul era hardcodat pe "pdfs",
+                // deci un pachet de LUT-uri urcat aici ajungea in repo-ul de
+                // PDF-uri. Acum destinatia se alege dupa categorie.
+                let repoKey = targetRepoKey
+                fileRepoKey = repoKey
+                let checkout = try RepoCheckoutPaths.resourceCheckout(for: repoKey)
+                try GitOps.pull(at: checkout)
+
+                var uploaded: [PluginFile] = []
+                for (localURL, relativePath) in picked {
+                    let data = try Data(contentsOf: localURL)
+                    let sha = SHA256.hash(data: data).compactMap { String(format: "%02x", $0) }.joined()
+                    let repoRelativePath = "\(resourceID)/\(relativePath)"
+                    let destURL = checkout.appendingPathComponent(repoRelativePath)
+                    try FileManager.default.createDirectory(at: destURL.deletingLastPathComponent(), withIntermediateDirectories: true)
+                    if FileManager.default.fileExists(atPath: destURL.path) {
+                        try FileManager.default.removeItem(at: destURL)
+                    }
+                    try FileManager.default.copyItem(at: localURL, to: destURL)
+                    uploaded.append(PluginFile(path: repoRelativePath, sha256: sha, repo: repoKey))
+                }
+                try GitOps.commitAndPush(at: checkout, message: "\(resourceID): \(uploaded.count) fișier(e)")
+                resourceFiles = uploaded
+                // Forma veche (un singur fisier) ramane completata cand chiar
+                // e un singur fisier — clientii 1.31/1.32 o citesc pe aia.
+                filePath = uploaded.count == 1 ? uploaded[0].path : nil
+                fileSHA = uploaded.count == 1 ? uploaded[0].sha256 : nil
             } else if fileSource == .externalLink {
                 // Trecerea înapoi pe link extern nu trebuie să lase în catalog
                 // o referință către un fișier care nu mai e folosit.
                 filePath = nil
                 fileSHA = nil
                 fileRepoKey = nil
+                resourceFiles = []
             }
 
             try GitOps.pull(at: RepoCheckoutPaths.publicCatalogRepo)
@@ -453,7 +515,7 @@ struct PublishDownloadableResourceView: View {
                 isFree: isFreeFlag, isTrial: isTrialFlag, priceEUR: price,
                 promoPriceEUR: Double(promoPriceText.trimmingCharacters(in: .whitespaces))
             , access: accessForm.model,
-                filePath: filePath, fileSHA256: fileSHA, fileRepo: fileRepoKey,
+                filePath: filePath, fileSHA256: fileSHA, fileRepo: fileRepoKey, files: resourceFiles,
                 pdfKind: category == .pdf ? pdfKind : nil)
             try CatalogEditor.upsertDownloadableResource(resource)
             try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Resursă download: \(resource.name)", paths: ["docs/catalog.json", "docs/covers"])

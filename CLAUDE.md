@@ -1868,3 +1868,74 @@ Concluzie: modulele de instalare NU au nevoie de ajustări pentru versiunile
 noi. Dacă Blackmagic schimbă vreodată structura, `PluginType.installDirectory`
 e singurul loc de modificat — o verificare pe disc, ca cea de mai sus, o va
 prinde.
+
+## Etapa 2026-09-14 (Client 1.34.0 / Furnizor 1.37.0) — pachete întregi + categorie de scripturi generale
+
+Raportat direct: „am încercat să încarc un folder de LUT-uri și mă pune să
+selectez fiecare fișier în parte".
+
+### Două defecte, al doilea nesesizat de nimeni
+
+1. **Selectorul accepta un singur fișier.** `canChooseDirectories = false`,
+   `allowsMultipleSelection = false` — un pachet de zeci de LUT-uri ar fi
+   trebuit urcat bucată cu bucată. Acum acceptă un fișier, mai multe fișiere
+   SAU un folder întreg, cu subfolderele păstrate exact.
+2. **Repo-ul de destinație era hardcodat `"pdfs"`** — scris la Etapa 1, când
+   singurul caz era PDF-ul. Un pachet de LUT-uri urcat prin acel formular ar fi
+   ajuns în repo-ul de PDF-uri. Acum destinația se alege după categorie:
+
+| categorie | repo |
+|---|---|
+| `pdf` | `gdc-plugin-manager-pdfs` |
+| `script` | `gdc-plugin-manager-scripts` |
+| restul (LUT/SFX/VFX/Plugin) | `gdc-plugin-manager-resources` (**nou**) |
+
+Arhiva principală de produse nu mai primește nimic din zona de resurse
+descărcabile — exact cerința: „să nu încărcăm arhiva cu dimensiunea".
+
+### Model: resursă cu MAI MULTE fișiere
+
+`DownloadableResource.files: [PluginFile]` (implicit `[]`). Când e nevidă, are
+prioritate față de `filePath`, care rămâne pentru resursele cu un singur fișier
+deja decodate de clienții 1.31+. Structura relativă se păstrează la urcare ȘI
+la descărcare: un pachet ajunge la user într-un folder propriu, cu subfolderele
+lui; un fișier singur rămâne un fișier, direct în Descărcări.
+
+### Categorie nouă: `DownloadCategory.script`
+
+Scripturi de uz general (optimizare de sistem, automatizări) — **fără legătură
+cu DaVinci Resolve**, deci distinctă de `PluginType.scripts`, care
+auto-instalează în `Fusion/Scripts`. Astea se descarcă, atât.
+
+Compatibilitatea Mac/Windows/ambele **nu a cerut niciun câmp nou**:
+`DownloadableResource.supportedOS` există deja și e afișat pe card.
+
+Cheie nouă de catalog `scriptResources`, după aceeași regulă documentată mai
+sus (o valoare nouă de enum rupe clienții vechi, o cheie nouă nu).
+
+### Verificat
+
+```
+1. Catalog real OK — 1 resurse, 2 PDF, 0 scripturi
+2. Pachet: 3 fisiere | descarcare directa=true | repo=resources
+     Cinematic/warm.cube
+     Cinematic/cold.cube
+     README.txt
+3. Script: categorie=script sistem=macOS fisiere=1
+4. Forma veche: fisiere=1 nume=x.pdf directa=true
+5. Categorie necunoscuta -> unknown
+```
+
+Cele două PDF-uri deja publicate de Cristi sunt în `pdfs`, corect — nu necesită
+migrare.
+
+**DE FĂCUT de Cristi**: repo-ul `gdc-plugin-manager-resources` trebuie adăugat
+în lista de acces a PAT-ului existent (Settings → token → Repository access).
+Valoarea token-ului NU se schimbă, deci nu e nevoie de regenerare și nici de
+reconstruit aplicațiile. Până atunci, descărcările din acel repo dau 401.
+
+### Notă tehnică
+
+`CatalogEditor.write()` a depășit pragul de type-check al compilatorului Swift
+(„unable to type-check this expression in reasonable time") la 17 argumente cu
+`??`. Desfăcut în variabile intermediare — rezultat identic, compilează.

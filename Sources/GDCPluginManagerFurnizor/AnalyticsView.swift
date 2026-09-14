@@ -197,6 +197,7 @@ struct AnalyticsView: View {
         case .vfx: return "VFX"
         case .plugin: return "Plugin"
         case .pdf: return "PDF"
+        case .script: return "Script"
         case .unknown: return "Necunoscut"
         }
     }

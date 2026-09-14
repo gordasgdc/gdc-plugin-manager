@@ -263,17 +263,16 @@ final class InstallManager: ObservableObject {
     /// Întoarce calea locală a fișierului salvat.
     @MainActor
     func downloadResourceFile(_ resource: DownloadableResource) async throws -> URL {
-        guard let path = resource.filePath, !path.isEmpty else {
+        // [2026-09-14] O resursă poate fi un PACHET (folder cu subfoldere), nu
+        // doar un fișier. Forma veche (`filePath`) rămâne suportată pentru
+        // resursele publicate înainte.
+        let toDownload: [PluginFile]
+        if !resource.files.isEmpty {
+            toDownload = resource.files
+        } else if let path = resource.filePath, !path.isEmpty {
+            toDownload = [PluginFile(path: path, sha256: resource.fileSHA256 ?? "", repo: resource.fileRepo)]
+        } else {
             throw InstallError.downloadFailed
-        }
-        let data = try await fetchPrivateFileData(path: path, repoKey: resource.fileRepo)
-
-        // Verificarea de integritate nu e opțională doar pentru că fișierul
-        // e „doar un PDF": un fișier trunchiat se deschide și arată gol, iar
-        // userul ar da vina pe conținut, nu pe descărcare.
-        if let expected = resource.fileSHA256, !expected.isEmpty {
-            let actual = SHA256.hash(data: data).compactMap { String(format: "%02x", $0) }.joined()
-            guard actual == expected else { throw InstallError.checksumMismatch }
         }
 
         let folder: URL
@@ -283,19 +282,39 @@ final class InstallManager: ObservableObject {
             folder = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask).first
                 ?? FileManager.default.temporaryDirectory
         }
-        try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+        // Un pachet ajunge într-un folder propriu, ca să nu împrăștie zeci de
+        // fișiere direct în Descărcări. Un singur fișier rămâne un fișier.
+        let root = toDownload.count > 1 ? folder.appendingPathComponent(resource.id) : folder
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
 
-        let fileName = resource.directFileName ?? "\(resource.id).pdf"
-        let destination = folder.appendingPathComponent(fileName)
-        do {
-            if FileManager.default.fileExists(atPath: destination.path) {
-                try FileManager.default.removeItem(at: destination)
+        var written: [URL] = []
+        for file in toDownload {
+            let data = try await fetchPrivateFileData(path: file.path, repoKey: file.repo ?? resource.fileRepo)
+            // Verificarea de integritate nu e opțională doar pentru că fișierul
+            // e „doar un PDF": un fișier trunchiat se deschide și arată gol, iar
+            // userul ar da vina pe conținut, nu pe descărcare.
+            if !file.sha256.isEmpty {
+                let actual = SHA256.hash(data: data).compactMap { String(format: "%02x", $0) }.joined()
+                guard actual.lowercased() == file.sha256.lowercased() else { throw InstallError.checksumMismatch }
             }
-            try data.write(to: destination)
-        } catch {
-            throw InstallError.writeFailed(destination.path)
+            // Calea relativă la resursă („<id>/subfolder/fișier") se păstrează,
+            // ca structura pachetului să ajungă intactă la user.
+            let prefix = "\(resource.id)/"
+            let relative = file.path.hasPrefix(prefix) ? String(file.path.dropFirst(prefix.count)) : file.filename
+            let destination = root.appendingPathComponent(relative)
+            do {
+                try FileManager.default.createDirectory(at: destination.deletingLastPathComponent(), withIntermediateDirectories: true)
+                if FileManager.default.fileExists(atPath: destination.path) {
+                    try FileManager.default.removeItem(at: destination)
+                }
+                try data.write(to: destination)
+            } catch {
+                throw InstallError.writeFailed(destination.path)
+            }
+            written.append(destination)
         }
-        return destination
+        // Pentru un pachet, arătăm folderul; pentru un fișier, fișierul.
+        return toDownload.count > 1 ? root : (written.first ?? root)
     }
 
     // MARK: - Authenticated fetch from the private files repo
