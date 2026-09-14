@@ -227,11 +227,16 @@ struct ContentView: View {
 
     /// Nume din TOATE categoriile — folosit ca sugestii live pentru bara
     /// de căutare globală (istoricul recent se adaugă separat, în SearchBar).
+    /// Toate produsele instalabile, indiferent în ce cheie de catalog stau.
+    /// Scripturile au cheia lor (`scriptItems`) din motive de
+    /// retrocompatibilitate, dar pentru UI sunt produse ca oricare altele.
+    private var allInstallableItems: [PluginItem] { catalog.items + catalog.scriptItems }
+
     private var globalSearchSuggestions: [String] {
         // Acumulator, nu un lung lanț de `+` (Swift a depășit timeout-ul de
         // type-check pe expresia unică după adăugarea celui de-al 12-lea
         // termen — vezi comentariul de mai jos despre `detailContent`).
-        var names: [String] = catalog.items.map(\.name)
+        var names: [String] = allInstallableItems.map(\.name)
         names += catalog.apps.map(\.name)
         names += catalog.courses.map(\.name)
         names += catalog.audioTracks.map(\.name)
@@ -290,9 +295,12 @@ struct ContentView: View {
         case .android:
             MobileAppPane()
         case .all, .none:
-            CatalogGrid(items: catalog.items.filter { $0.scheduling?.isActiveNow ?? true })
+            CatalogGrid(items: allInstallableItems.filter { $0.scheduling?.isActiveNow ?? true })
         case .type(let type):
-            CatalogGrid(items: catalog.items.filter { $0.type == type && ($0.scheduling?.isActiveNow ?? true) })
+            // Scripturile vin din cheia LOR de catalog — vezi
+            // Catalog.scriptItems pentru motivul retrocompatibilitatii.
+            CatalogGrid(items: (type == .scripts ? catalog.scriptItems : catalog.items)
+                .filter { $0.type == type && ($0.scheduling?.isActiveNow ?? true) })
         }
     }
 
@@ -669,7 +677,7 @@ private struct GlobalSearchResults: View {
     // Evenimente/Materiale/Oferte — un produs/aplicație/resursă expirată
     // sau neînceput încă nu trebuie să apară nici prin căutare globală.
     private var matchedItems: [PluginItem] {
-        catalog.items.filter { ($0.scheduling?.isActiveNow ?? true) && FuzzySearch.matches(query: query, inAny: [$0.name, $0.description, $0.id, $0.type.label]) }
+        (catalog.items + catalog.scriptItems).filter { ($0.scheduling?.isActiveNow ?? true) && FuzzySearch.matches(query: query, inAny: [$0.name, $0.description, $0.id, $0.type.label]) }
     }
     private var matchedApps: [AppLink] {
         catalog.apps.filter { ($0.scheduling?.isActiveNow ?? true) && FuzzySearch.matches(query: query, inAny: [$0.name, $0.id]) }
@@ -1827,10 +1835,10 @@ private struct BundleCard: View {
         bundle.items.compactMap { ref in
             switch ref.kind {
             case .product:
-                guard let item = catalog.items.first(where: { $0.id == ref.id }) else { return nil }
+                guard let item = (catalog.items + catalog.scriptItems).first(where: { $0.id == ref.id }) else { return nil }
                 return (item.name, item.priceEUR)
             case .download:
-                guard let resource = catalog.downloadableResources.first(where: { $0.id == ref.id }) else { return nil }
+                guard let resource = (catalog.downloadableResources + catalog.pdfResources).first(where: { $0.id == ref.id }) else { return nil }
                 return (resource.name, resource.priceEUR)
             case .course:
                 guard let course = catalog.courses.first(where: { $0.id == ref.id }) else { return nil }

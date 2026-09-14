@@ -16,6 +16,33 @@ enum RepoCheckoutPaths {
         .appendingPathComponent("Developer")
         .appendingPathComponent("gdc-plugin-manager-files")
 
+    /// [2026-09-14] Arhitectura multi-repo: fiecare tip de resursa are repo-ul
+    /// lui privat, ca sa nu atingem limitele de dimensiune ale unuia singur.
+    /// Cheia e ACEEASI cu cea din catalog (`PluginFile.repo`) si cu cea din
+    /// `PrivateCatalogAuth.repos` — o singura sursa de adevar pentru nume.
+    static let resourceRepoCheckouts: [String: URL] = [
+        "files":   privateFilesRepo,
+        "pdfs":    developerDir.appendingPathComponent("gdc-plugin-manager-pdfs"),
+        "scripts": developerDir.appendingPathComponent("gdc-plugin-manager-scripts"),
+    ]
+
+    /// Checkout-ul local pentru o cheie de repo. Arunca explicit daca clona
+    /// lipseste — altfel Furnizor ar crea un folder gol si ar face push intr-un
+    /// repo inexistent, esuand mult mai departe, cu un mesaj de neinteles.
+    static func resourceCheckout(for key: String) throws -> URL {
+        guard let url = resourceRepoCheckouts[key] else {
+            throw RepoCheckoutError.unknownRepoKey(key)
+        }
+        guard FileManager.default.fileExists(atPath: url.appendingPathComponent(".git").path) else {
+            throw RepoCheckoutError.missingCheckout(key, url.path)
+        }
+        return url
+    }
+
+    private static var developerDir: URL {
+        FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Developer")
+    }
+
     /// gordasgdc/gdc-plugin-manager (public) — only docs/catalog.json is
     /// touched here, never the app source.
     static let publicCatalogRepo = FileManager.default.homeDirectoryForCurrentUser
@@ -36,5 +63,23 @@ enum RepoCheckoutPaths {
     /// Banner de lansare (2026-08-31) - vezi LaunchBannerModel/Editor.
     static var launchBannerJSONURL: URL {
         publicCatalogRepo.appendingPathComponent("docs").appendingPathComponent("launch-banner.json")
+    }
+}
+
+enum RepoCheckoutError: Error, LocalizedError {
+    case unknownRepoKey(String)
+    case missingCheckout(String, String)
+
+    var errorDescription: String? {
+        switch self {
+        case .unknownRepoKey(let key):
+            return "Cheie de repo necunoscuta: „\(key)”."
+        case .missingCheckout(let key, let path):
+            return """
+            Repo-ul de resurse „\(key)” nu e clonat local (\(path)).
+            Cloneaza-l o singura data:
+                gh repo clone gordasgdc/gdc-plugin-manager-\(key) \(path)
+            """
+        }
     }
 }

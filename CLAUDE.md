@@ -1706,3 +1706,94 @@ Pe catalogul REAL publicat: se decodează neschimbat cu modelul nou (3 produse,
 1 resursă, 0 PDF-uri). Dus-întors pe o resursă PDF sintetică: `filePath`,
 `pdfKind`, `hasDirectFile` și numele fișierului se păstrează corect. Versiuni
 INSTALATE confirmate (Regula 0): Client `1.31.0`, Furnizor `1.35.0`.
+
+## REGULĂ DE ARHITECTURĂ (2026-09-14): compatibilitate de catalog & stocare multi-repo
+
+Două reguli care se aplică de acum înainte oricărei extinderi de catalog, în tot
+ecosistemul (Mac + Windows).
+
+### 1. O VALOARE nouă într-un enum publicat rupe clienții vechi. O CHEIE nouă, nu.
+
+Dovedit experimental, nu presupus, cu modelul exact al clienților deja livrați:
+
+```
+CATALOGUL INTREG A PICAT: DecodingError.dataCorrupted
+  Path: downloadableResources[1].category
+  Cannot initialize OldCategory from invalid String value pdf
+```
+
+Un enum Swift simplu **aruncă** la o valoare necunoscută, iar eroarea urcă până
+la `Catalog` — deci o singură intrare nouă lasă clientul instalat **fără nimic**:
+nici produse, nici cursuri, nici aplicații. Convertorul C# de pe Windows arunca
+la fel de explicit (`throw new JsonException("Unknown ...")`). O cheie nouă de
+nivel superior e, în schimb, pur și simplu ignorată de decodoarele vechi:
+
+```
+CLIENT VECHI: decodat OK, vede 1 resursa — cheia noua ignorata
+```
+
+**Regula practică**: când adaugi un tip/o categorie nouă de conținut,
+- pui elementele într-o **cheie nouă de nivel superior** (`pdfResources`,
+  `scriptItems`), nu într-un array existent;
+- adaugi în paralel un caz `unknown` la enum (exclus din `allCases`, invizibil
+  în UI) și faci convertoarele să **degradeze**, nu să arunce.
+
+Cazuri existente: `Catalog.pdfResources` (PDF-uri), `Catalog.scriptItems`
+(scripturi Fusion). `DownloadCategory.unknown` și `PluginType.unknown` sunt
+plasele de siguranță.
+
+### 2. Stocare multi-repo: fiecare tip de resursă în repo-ul lui privat
+
+Un singur repo de fișiere ajunge la limite de dimensiune și face descărcările să
+concureze între ele. De aceea fișierele se distribuie:
+
+| cheie | repo | conținut |
+|---|---|---|
+| `files` | `gdc-plugin-manager-files` | LUT, DCTL, Fuse, OFX, PowerGrade |
+| `pdfs` | `gdc-plugin-manager-pdfs` | ghiduri, manuale, cărți |
+| `scripts` | `gdc-plugin-manager-scripts` | scripturi Lua/Python pentru Fusion |
+
+Cheia se scrie în catalog pe fișier (`PluginFile.repo`) sau pe resursă
+(`DownloadableResource.fileRepo`). **`nil` înseamnă repo-ul principal**, deci tot
+ce e publicat până acum rămâne valid fără nicio migrare. Maparea cheie → repo
+trăiește într-un singur loc pe fiecare platformă: `PrivateCatalogAuth.repos`
+(Swift) și `PrivateCatalogAuth.Repos` (C#). Furnizor rezolvă checkout-ul local
+prin `RepoCheckoutPaths.resourceCheckout(for:)`, care **eșuează explicit** dacă
+clona lipsește, în loc să creeze un folder gol și să eșueze mai departe.
+
+Token: **un singur PAT fine-grained**, `Contents: Read-only` pe toate cele trei
+repo-uri (decis explicit — mai ușor de rotit decât trei). Structura suportă și
+token per repo, dacă se schimbă vreodată decizia.
+
+**INVARIANT OBLIGATORIU**: o resursă stocată într-un repo secundar trebuie să
+stea într-o cheie de catalog pe care clienții vechi **nu o citesc**. Altfel un
+client vechi ar vedea resursa, ar ignora câmpul `repo` necunoscut și ar căuta
+fișierul în repo-ul principal, unde nu există — eșec de descărcare în loc de
+degradare curată. PDF-urile și scripturile respectă condiția prin construcție.
+
+## Etapa 2026-09-14 (Etapa 2) — categoria „Scripts" pentru DaVinci Resolve
+
+`PluginType.scripts`, cu fișierele în `gdc-plugin-manager-scripts` și intrările
+în `catalog.scriptItems`.
+
+**Verificat pe o instalare reală de Resolve, nu din documentație:**
+- Calea corectă pe macOS e `~/Library/Application Support/Blackmagic Design/
+  DaVinci Resolve/Fusion/Scripts` — **nivel utilizator**. `Support/Fusion/Scripts`
+  din cerință e layout-ul de **Windows**; pe macOS nu există.
+- Subfolderele reale sunt **șapte**: `Comp`, `Tool`, `Utility`, `Edit`, `Color`,
+  `Deliver`, `Coding` — nu trei. Modelate în `ScriptFolder`, implicit `Utility`.
+- Folderul e `drwxrwxrwx`, deci **instalarea unui script NU cere parolă de
+  administrator** — singurul tip din catalog cu această proprietate. `writeFile`
+  încearcă oricum scrierea directă întâi și escaladează doar la eșec, deci nu a
+  fost nevoie de nicio ramură specială.
+
+Scripturile NU intră într-un subfolder numit după `id` (cum fac pack-urile de
+LUT/DCTL): Resolve construiește meniul Scripts din exact cele 7 subfoldere, iar
+un folder în plus ar însemna un submeniu în plus, cu numele produsului. Un pachet
+urcat cu structură proprie (`Utility/X.lua`) și-o păstrează, prin
+`relativeInstallPath`.
+
+**Verificat direct pe mașină**: cele trei subfoldere testate (`Utility`, `Comp`,
+`Deliver`) există și sunt scriabile; un `type` necunoscut decodează la `unknown`
+în loc să dărâme catalogul; un fișier vechi fără câmp `repo` cade corect pe
+repo-ul principal.

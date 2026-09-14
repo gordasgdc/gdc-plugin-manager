@@ -58,6 +58,7 @@ struct PublishView: View {
     @State private var accessForm = AccessFormState()
 
 
+    @State private var scriptFolder: ScriptFolder = .default
     @State private var isBusy = false
     @State private var statusLines: [String] = []
     @State private var errorMessage: String?
@@ -124,6 +125,16 @@ struct PublishView: View {
                         }
                         .disabled(isUpdate)
                         .onChange(of: type) { iconSymbol = type.defaultSymbol }
+
+                        if type == .scripts {
+                            Picker("Subfolder Scripts", selection: $scriptFolder) {
+                                ForEach(ScriptFolder.allCases) { f in
+                                    Text(f.rawValue).tag(f)
+                                }
+                            }
+                            Text("Scriptul se instalează în Fusion/Scripts/\(scriptFolder.rawValue)/ — la nivel de utilizator, deci FĂRĂ parolă de administrator. Un pachet care are deja subfoldere proprii și le păstrează.")
+                                .font(.caption).foregroundStyle(.secondary)
+                        }
 
                         if type == .ofx {
                             Text("Alege folderul întreg „NumePlugin.ofx.bundle” (nu doar fișierul din interior) — Resolve identifică plugin-ul după numele exact al acelui folder.")
@@ -330,7 +341,7 @@ struct PublishView: View {
 
     private func loadExistingIfNeeded() {
         guard let catalog = try? CatalogEditor.load() else { return }
-        existingItems = catalog.items.sorted { $0.name < $1.name }
+        existingItems = (catalog.items + catalog.scriptItems).sorted { $0.name < $1.name }
     }
 
     private func fillFromExisting() {
@@ -395,8 +406,12 @@ struct PublishView: View {
                     return
                 }
 
-                log("Actualizez repo-ul privat (pull)…")
-                try GitOps.pull(at: RepoCheckoutPaths.privateFilesRepo)
+                // Repo-ul de destinatie depinde de tipul produsului
+                // (arhitectura multi-repo) — scripturile au repo-ul lor.
+                let repoKey = type == .scripts ? "scripts" : "files"
+                let checkout = try RepoCheckoutPaths.resourceCheckout(for: repoKey)
+                log("Actualizez repo-ul privat „\(repoKey)” (pull)…")
+                try GitOps.pull(at: checkout)
 
                 pluginFiles = []
                 for (localURL, relativePath) in picked {
@@ -404,18 +419,18 @@ struct PublishView: View {
                     let sha = SHA256.hash(data: data).compactMap { String(format: "%02x", $0) }.joined()
 
                     let repoRelativePath = "\(trimmedID)/\(version)/\(relativePath)"
-                    let destURL = RepoCheckoutPaths.privateFilesRepo.appendingPathComponent(repoRelativePath)
+                    let destURL = checkout.appendingPathComponent(repoRelativePath)
                     try FileManager.default.createDirectory(at: destURL.deletingLastPathComponent(), withIntermediateDirectories: true)
                     if FileManager.default.fileExists(atPath: destURL.path) {
                         try FileManager.default.removeItem(at: destURL)
                     }
                     try FileManager.default.copyItem(at: localURL, to: destURL)
-                    pluginFiles.append(PluginFile(path: repoRelativePath, sha256: sha))
+                    pluginFiles.append(PluginFile(path: repoRelativePath, sha256: sha, repo: repoKey))
                     log("Fișier copiat în \(repoRelativePath)")
                 }
 
                 log("Trimit fișierele (commit + push, repo privat)…")
-                try GitOps.commitAndPush(at: RepoCheckoutPaths.privateFilesRepo, message: "\(trimmedID) \(version)")
+                try GitOps.commitAndPush(at: checkout, message: "\(trimmedID) \(version)")
             } else {
                 // Metadata-only update (e.g. just the YouTube link) — no
                 // new files, so the private files repo isn't touched at all.
@@ -445,6 +460,7 @@ struct PublishView: View {
                 isFree: isFreeFlag, isTrial: isTrialFlag,
                 youtubeURL: trimmedYouTube.isEmpty ? nil : trimmedYouTube,
                 bundleFolderName: bundleFolderName,
+                scriptFolder: type == .scripts ? scriptFolder : nil,
                 coverImage: coverImage,
                 supportedOS: supportedOS,
                 purchaseURL: nilIfEmpty(purchaseURL),

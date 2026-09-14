@@ -65,12 +65,18 @@ enum CatalogEditor {
     /// Adds a new item, or replaces the existing one with the same `id`
     /// (an update — id, and therefore its crypto product hash, never
     /// changes). Updates `updatedAt` to today.
+    /// Scripturile se scriu in `scriptItems`, restul in `items` — vezi
+    /// comentariul de pe `Catalog.scriptItems`. Un produs caruia i s-a
+    /// schimbat tipul se sterge din lista veche si se adauga in cea noua,
+    /// altfel ar aparea de doua ori.
     static func upsert(_ item: PluginItem) throws {
         let catalog = try load()
         var items = catalog.items.filter { $0.id != item.id }
-        items.append(item)
+        var scripts = catalog.scriptItems.filter { $0.id != item.id }
+        if item.type == .scripts { scripts.append(item) } else { items.append(item) }
         items.sort { $0.name < $1.name }
-        try write(catalog: catalog, items: items)
+        scripts.sort { $0.name < $1.name }
+        try write(catalog: catalog, items: items, scriptItems: scripts)
     }
 
     /// Removes an item entirely — for a product published by mistake, or
@@ -80,10 +86,11 @@ enum CatalogEditor {
     static func remove(id: String) throws {
         let catalog = try load()
         let items = catalog.items.filter { $0.id != id }
-        guard items.count != catalog.items.count else {
+        let scripts = catalog.scriptItems.filter { $0.id != id }
+        guard items.count != catalog.items.count || scripts.count != catalog.scriptItems.count else {
             throw CatalogEditorError.itemNotFound(id)
         }
-        try write(catalog: catalog, items: items)
+        try write(catalog: catalog, items: items, scriptItems: scripts)
     }
 
     // MARK: - Courses
@@ -353,6 +360,7 @@ enum CatalogEditor {
         serviceCenters: [ServiceCenter]? = nil,
         downloadableResources: [DownloadableResource]? = nil,
         pdfResources: [DownloadableResource]? = nil,
+        scriptItems: [PluginItem]? = nil,
         partnerOffers: [PartnerOffer]? = nil,
         seasonalBackgrounds: [SeasonalBackgroundConfig]? = nil,
         productBundles: [ProductBundle]? = nil,
@@ -372,6 +380,7 @@ enum CatalogEditor {
             serviceCenters: serviceCenters ?? catalog.serviceCenters,
             downloadableResources: downloadableResources ?? catalog.downloadableResources,
             pdfResources: pdfResources ?? catalog.pdfResources,
+            scriptItems: scriptItems ?? catalog.scriptItems,
             partnerOffers: partnerOffers ?? catalog.partnerOffers,
             seasonalBackgrounds: seasonalBackgrounds ?? catalog.seasonalBackgrounds,
             productBundles: productBundles ?? catalog.productBundles,

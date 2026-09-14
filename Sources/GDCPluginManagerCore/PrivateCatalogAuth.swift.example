@@ -1,30 +1,65 @@
 import Foundation
 
-/// TEMPLATE — copy this file to PrivateCatalogAuth.swift (gitignored,
-/// never commit the real token to this public repo) and paste in a
-/// fine-grained GitHub PAT scoped to ONLY gdc-plugin-manager-files,
-/// permission Contents: Read-only.
-///
-/// Embedded read-only GitHub token for the private product-files repo
-/// (gordasgdc/gdc-plugin-manager-files). The public catalog metadata
-/// (docs/catalog.json) stays public on GitHub Pages — only the actual
-/// product FILES require this to fetch.
-///
-/// This is a deliberately-accepted "obscurity, not real security"
-/// trade-off (discussed and chosen over building a small download-gating
-/// server): anyone who reverse-engineers this binary can extract this
-/// token and read the product files directly, bypassing the app's
-/// license check entirely. Blast radius is bounded by scoping the token
-/// to `Contents: Read-only` on ONLY this one private repo — nothing else
-/// is reachable with it, and it can be rotated (edit here, rebuild,
-/// redistribute) if it ever leaks. If sales volume ever justifies it,
-/// replace this with a server that verifies a license before handing
-/// out a short-lived download link instead.
-public enum PrivateCatalogAuth {
-    public static let owner = "gordasgdc"
-    public static let repo = "gdc-plugin-manager-files"
+/// Un repo privat de resurse: unde stau fisierele si cu ce token se citesc.
+public struct PrivateRepo: Sendable {
+    public let owner: String
+    public let name: String
+    public let token: String
 
-    /// PASTE THE FINE-GRAINED PAT HERE (Contents: Read-only, scoped to
-    /// gdc-plugin-manager-files only) before building the client app.
+    public init(owner: String, name: String, token: String) {
+        self.owner = owner
+        self.name = name
+        self.token = token
+    }
+}
+
+/// TEMPLATE — copiaza acest fisier in PrivateCatalogAuth.swift (gitignored,
+/// tokenul REAL nu se comite niciodata in acest repo public) si pune in el un
+/// PAT fine-grained cu permisiunea Contents: Read-only pe TOATE cele trei
+/// repo-uri de resurse.
+///
+/// ARHITECTURA MULTI-REPO (2026-09-14, decis explicit cu Cristi): fisierele nu
+/// mai stau intr-un singur repo. Fiecare tip de resursa isi are repo-ul lui,
+/// ca sa nu atingem limitele de dimensiune ale unuia singur si ca descarcarile
+/// sa nu concureze intre ele:
+///
+///   "files"   → gdc-plugin-manager-files    (LUT/DCTL/Fuse/OFX/PowerGrade)
+///   "pdfs"    → gdc-plugin-manager-pdfs     (ghiduri, manuale, carti)
+///   "scripts" → gdc-plugin-manager-scripts  (Lua/Python pentru Fusion)
+///
+/// UN SINGUR token pentru toate (ales deliberat: mai usor de rotit decat trei).
+/// Daca vreodata se prefera izolare per repo, structura de mai jos o suporta
+/// deja — se schimba doar valoarea din fiecare intrare.
+///
+/// Compromis acceptat deliberat, neschimbat fata de varianta cu un singur repo:
+/// e "obscuritate, nu securitate reala" — cine dezasambleaza binarul poate
+/// extrage tokenul si citi fisierele direct, ocolind verificarea de licenta.
+/// Raza de actiune ramane marginita de `Contents: Read-only` pe exact aceste
+/// repo-uri, si se poate roti (editezi aici, reconstruiesti, redistribui).
+public enum PrivateCatalogAuth {
+    /// PUNE AICI PAT-ul fine-grained (Contents: Read-only pe cele trei repo-uri).
     public static let token = "PASTE_TOKEN_HERE"
+
+    public static let ownerLogin = "gordasgdc"
+
+    /// Cheia din catalog (`PluginFile.repo`) → repo-ul real.
+    public static let repos: [String: PrivateRepo] = [
+        "files":   PrivateRepo(owner: ownerLogin, name: "gdc-plugin-manager-files",   token: token),
+        "pdfs":    PrivateRepo(owner: ownerLogin, name: "gdc-plugin-manager-pdfs",    token: token),
+        "scripts": PrivateRepo(owner: ownerLogin, name: "gdc-plugin-manager-scripts", token: token),
+    ]
+
+    /// Cheia implicita — tot ce a fost publicat INAINTE de arhitectura
+    /// multi-repo nu are camp `repo` si trebuie sa ramana valid fara migrare.
+    public static let defaultRepoKey = "files"
+
+    /// Repo-ul pentru o cheie data; cade pe cel principal la o cheie
+    /// necunoscuta, in loc sa esueze — vezi regula de invariant din CLAUDE.md.
+    public static func repo(for key: String?) -> PrivateRepo {
+        repos[key ?? defaultRepoKey] ?? repos[defaultRepoKey]!
+    }
+
+    // Compatibilitate cu codul scris inainte de multi-repo.
+    public static var owner: String { repos[defaultRepoKey]!.owner }
+    public static var repo: String { repos[defaultRepoKey]!.name }
 }

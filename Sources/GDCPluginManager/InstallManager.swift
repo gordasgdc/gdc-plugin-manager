@@ -90,6 +90,16 @@ final class InstallManager: ObservableObject {
     /// as before — no behavior change for anything already published.
     private func destinationDirectory(for item: PluginItem) -> URL {
         let base = item.type.installDirectory
+        // [2026-09-14] Scripturile NU intră într-un subfolder numit după id
+        // (cum fac pack-urile de LUT/DCTL): Resolve citește meniul Scripts
+        // direct din cele 7 subfoldere ale lui, iar un folder în plus ar
+        // însemna un submeniu în plus, cu numele produsului — nu ce vrea
+        // nimeni. Merg direct în subfolderul ales (implicit Utility), iar un
+        // pachet care are DEJA structură proprie și-o păstrează prin
+        // `relativeInstallPath`.
+        if item.type == .scripts {
+            return base.appendingPathComponent((item.scriptFolder ?? .default).rawValue)
+        }
         guard item.isPack else { return base }
         return base.appendingPathComponent(item.bundleFolderName ?? item.id)
     }
@@ -103,7 +113,7 @@ final class InstallManager: ObservableObject {
         // Verify every file's checksum BEFORE writing anything, so a bad
         // file in a pack doesn't leave a half-installed folder behind.
         for file in item.files {
-            let data = try await fetchPrivateFileData(path: file.path)
+            let data = try await fetchPrivateFileData(path: file.path, repoKey: file.repo)
             let actualSHA = SHA256.hash(data: data).compactMap { String(format: "%02x", $0) }.joined()
             guard actualSHA.lowercased() == file.sha256.lowercased() else {
                 throw InstallError.checksumMismatch
@@ -211,7 +221,7 @@ final class InstallManager: ObservableObject {
         guard let path = resource.filePath, !path.isEmpty else {
             throw InstallError.downloadFailed
         }
-        let data = try await fetchPrivateFileData(path: path)
+        let data = try await fetchPrivateFileData(path: path, repoKey: resource.fileRepo)
 
         // Verificarea de integritate nu e opțională doar pentru că fișierul
         // e „doar un PDF": un fișier trunchiat se deschide și arată gol, iar
@@ -250,13 +260,17 @@ final class InstallManager: ObservableObject {
     /// (see PrivateCatalogAuth.swift). `catalog.json` itself is NOT fetched
     /// this way — only the actual product files, which never sit at a
     /// plain public URL.
-    private func fetchPrivateFileData(path: String) async throws -> Data {
+    private func fetchPrivateFileData(path: String, repoKey: String? = nil) async throws -> Data {
+        // [2026-09-14] Repo-ul se alege dupa cheia din catalog — vezi
+        // PrivateCatalogAuth.repos. Fara cheie (tot ce e publicat de dinainte)
+        // se foloseste repo-ul principal, exact ca pana acum.
+        let repo = PrivateCatalogAuth.repo(for: repoKey)
         guard let encodedPath = path.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed),
-              let url = URL(string: "https://api.github.com/repos/\(PrivateCatalogAuth.owner)/\(PrivateCatalogAuth.repo)/contents/\(encodedPath)") else {
+              let url = URL(string: "https://api.github.com/repos/\(repo.owner)/\(repo.name)/contents/\(encodedPath)") else {
             throw InstallError.downloadFailed
         }
         var request = URLRequest(url: url)
-        request.setValue("Bearer \(PrivateCatalogAuth.token)", forHTTPHeaderField: "Authorization")
+        request.setValue("Bearer \(repo.token)", forHTTPHeaderField: "Authorization")
         request.setValue("application/vnd.github.raw+json", forHTTPHeaderField: "Accept")
         request.setValue("2022-11-28", forHTTPHeaderField: "X-GitHub-Api-Version")
 

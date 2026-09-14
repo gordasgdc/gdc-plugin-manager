@@ -35,6 +35,7 @@ struct PublishDownloadableResourceView: View {
     /// La editare: fișierul deja publicat, păstrat dacă nu se alege altul.
     @State private var existingFilePath: String?
     @State private var existingFileSHA: String?
+    @State private var existingFileRepo: String?
     @State private var youtubeURL = ""
     @State private var supportedOS: SupportedOS = .crossPlatform
     // Licențiere adăugată 2026-08-29 (cerut explicit: "nu am varianta aia
@@ -343,6 +344,7 @@ struct PublishDownloadableResourceView: View {
         url = resource.url
         existingFilePath = resource.filePath
         existingFileSHA = resource.fileSHA256
+        existingFileRepo = resource.fileRepo
         pickedFileURL = nil
         fileSource = resource.hasDirectFile ? .upload : .externalLink
         pdfKind = resource.pdfKind ?? .technicalGuide
@@ -372,6 +374,7 @@ struct PublishDownloadableResourceView: View {
         pickedFileURL = nil
         existingFilePath = nil
         existingFileSHA = nil
+        existingFileRepo = nil
         pdfKind = .technicalGuide
         youtubeURL = ""
         supportedOS = .crossPlatform
@@ -405,25 +408,33 @@ struct PublishDownloadableResourceView: View {
             // imaginile de copertă.
             var filePath = existingFilePath
             var fileSHA = existingFileSHA
+            var fileRepoKey = existingFileRepo
             if fileSource == .upload, let pickedFileURL {
                 let data = try Data(contentsOf: pickedFileURL)
                 fileSHA = SHA256.hash(data: data).compactMap { String(format: "%02x", $0) }.joined()
-                let repoRelativePath = "\(resourceID)/pdf/\(pickedFileURL.lastPathComponent)"
+                let repoRelativePath = "\(resourceID)/\(pickedFileURL.lastPathComponent)"
                 filePath = repoRelativePath
+                // PDF-urile au repo-ul LOR (arhitectura multi-repo) — vezi
+                // PrivateCatalogAuth.repos. Nimic nu mai intra in repo-ul
+                // principal doar pentru ca "asa era inainte".
+                fileRepoKey = "pdfs"
+                let checkout = try RepoCheckoutPaths.resourceCheckout(for: "pdfs")
 
-                try GitOps.pull(at: RepoCheckoutPaths.privateFilesRepo)
-                let destURL = RepoCheckoutPaths.privateFilesRepo.appendingPathComponent(repoRelativePath)
+                try GitOps.pull(at: checkout)
+                let destURL = checkout.appendingPathComponent(repoRelativePath)
                 try FileManager.default.createDirectory(at: destURL.deletingLastPathComponent(), withIntermediateDirectories: true)
                 if FileManager.default.fileExists(atPath: destURL.path) {
                     try FileManager.default.removeItem(at: destURL)
                 }
                 try FileManager.default.copyItem(at: pickedFileURL, to: destURL)
-                try GitOps.commitAndPush(at: RepoCheckoutPaths.privateFilesRepo, message: "\(resourceID) pdf")
+                try GitOps.commitAndPush(at: checkout, message: "\(resourceID): \(pickedFileURL.lastPathComponent)")
+                _ = filePath
             } else if fileSource == .externalLink {
                 // Trecerea înapoi pe link extern nu trebuie să lase în catalog
                 // o referință către un fișier care nu mai e folosit.
                 filePath = nil
                 fileSHA = nil
+                fileRepoKey = nil
             }
 
             try GitOps.pull(at: RepoCheckoutPaths.publicCatalogRepo)
@@ -442,7 +453,7 @@ struct PublishDownloadableResourceView: View {
                 isFree: isFreeFlag, isTrial: isTrialFlag, priceEUR: price,
                 promoPriceEUR: Double(promoPriceText.trimmingCharacters(in: .whitespaces))
             , access: accessForm.model,
-                filePath: filePath, fileSHA256: fileSHA,
+                filePath: filePath, fileSHA256: fileSHA, fileRepo: fileRepoKey,
                 pdfKind: category == .pdf ? pdfKind : nil)
             try CatalogEditor.upsertDownloadableResource(resource)
             try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Resursă download: \(resource.name)", paths: ["docs/catalog.json", "docs/covers"])

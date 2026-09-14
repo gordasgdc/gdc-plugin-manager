@@ -1,5 +1,16 @@
 # Changelog — GDC Plugin Manager
 
+## v1.32.0 Client / v1.36.0 Furnizor (2026-09-14) — Scripturi DaVinci Resolve + stocare pe mai multe repo-uri
+
+### Added
+- **Categorie nouă „Scripts"** în Instalare DaVinci Resolve. Scriptul se
+  instalează automat în subfolderul potrivit din Fusion/Scripts (Comp, Tool,
+  Utility, Edit, Color, Deliver sau Coding) — **fără parolă de administrator**,
+  spre deosebire de celelalte tipuri.
+- **Stocare pe mai multe repo-uri private**, câte unul pentru fiecare tip de
+  resursă. Previne atingerea limitelor de dimensiune și accelerează
+  descărcările. Nimic din ce e publicat până acum nu are nevoie de migrare.
+
 ## v1.31.0 Client / v1.35.0 Furnizor (2026-09-14) — PDF-uri cu descărcare directă
 
 ### Added

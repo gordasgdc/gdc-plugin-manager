@@ -223,13 +223,14 @@ struct AnalyticsView: View {
     private static func loadCategories() -> [String: DownloadCategory] {
         guard let catalog = try? CatalogEditor.load() else { return [:] }
         var map: [String: DownloadCategory] = [:]
-        for resource in catalog.downloadableResources {
+        for resource in catalog.downloadableResources + catalog.pdfResources {
             map[resource.id] = resource.category
         }
-        for item in catalog.items {
+        for item in catalog.items + catalog.scriptItems {
             switch item.type {
             case .lut: map[item.id] = .lut
-            case .dctl, .fuse, .powerGrade, .ofx: map[item.id] = .plugin
+            case .dctl, .fuse, .powerGrade, .ofx, .scripts: map[item.id] = .plugin
+            case .unknown: break
             }
         }
         return map
