@@ -1,5 +1,22 @@
 # Changelog — GDC Plugin Manager
 
+## v1.41.0 Furnizor (2026-09-14) — Stocare pe repo-uri
+
+### Added
+- **Secțiune nouă „Stocare pe repo-uri"** — grafic cu cât ocupă fiecare repo
+  privat, câte fișiere are și ce anume e stocat acolo. Dimensiunea conținutului
+  și cea raportată de GitHub (care include istoricul) se arată separat, spuse pe
+  nume, în loc să fie amestecate într-un singur număr.
+- **Mapare completă catalog → repo** — pentru fiecare repo, ce produse și resurse
+  trimit spre el.
+- **Două verificări de integritate, în ambele sensuri**: fișiere din catalog care
+  lipsesc de pe disc (clientul ar primi eroare la instalare) și fișiere pe disc pe
+  care nu le mai folosește nimeni.
+- **Detectarea conținutului duplicat între repo-uri**, după amprentă SHA-256, nu
+  după nume — plus cât spațiu ocupă copiile în plus.
+- **Starea checkout-ului local** (modificări necomise, commit-uri nepushate) —
+  cauza obișnuită pentru „am publicat, dar la client nu apare".
+
 ## v1.40.0 Furnizor (2026-09-14) — Asistent de reînnoire & ghid de urgență
 
 ### Added
