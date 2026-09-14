@@ -522,6 +522,44 @@
       "type" : "lut",
       "version" : "1.0.0",
       "youtubeURL" : "https://www.youtube.com/@cristigordas"
+    },
+    {
+      "description" : "Transformare directa din profilul camerei in Rec709",
+      "files" : [
+        {
+          "path" : "ProGDC/1.0.0/Canon_CLog2.cube",
+          "sha256" : "0b9307d052a8770d323086d0931540435db3c940893f82e7e1ab62556205066b"
+        },
+        {
+          "path" : "ProGDC/1.0.0/Fujifilm_FLog2.cube",
+          "sha256" : "5c74e31093838d051ba8754f50c0b6e86b3e345e3392dca70cedce6f67eab4ca"
+        },
+        {
+          "path" : "ProGDC/1.0.0/Nikon_NLog.cube",
+          "sha256" : "1d7b19ec5d4d97b26365a3934bf4906a47809c65237e264c6aa4a9e64d9af5b6"
+        },
+        {
+          "path" : "ProGDC/1.0.0/Panasonic_VLog.cube",
+          "sha256" : "3bd9f4c59737431af93ec6b6c37c7d8e023b41d71a921dd329483243b8b8eca0"
+        },
+        {
+          "path" : "ProGDC/1.0.0/RED_Log3G10.cube",
+          "sha256" : "5a4e4ff413361b81cdfbf0722e8367c549ce9cbb2240e30f696a3026e8e9a603"
+        },
+        {
+          "path" : "ProGDC/1.0.0/Sony_SLog3_to_Rec709.cube",
+          "sha256" : "d3beab8b6b6f950e7794ec7410b2ff64513c88a39fd8edc39c99bba7d45f159f"
+        }
+      ],
+      "iconSymbol" : "eyedropper.halffull",
+      "id" : "ProGDC",
+      "isFree" : true,
+      "isTrial" : false,
+      "name" : "ProGDC",
+      "priceEUR" : 0,
+      "supportedOS" : "crossPlatform",
+      "type" : "lut",
+      "version" : "1.0.0"
     }
   ],
   "partnerOffers" : [
@@ -692,5 +730,5 @@
       "youtubeURL" : "https://www.youtube.com/watch?v=dnkUIGXIzIM"
     }
   ],
-  "updatedAt" : "2026-09-13"
+  "updatedAt" : "2026-09-14"
 }
