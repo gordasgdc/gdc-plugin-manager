@@ -30,8 +30,25 @@ if [ -d "$SPM_RESOURCE_BUNDLE" ]; then
     cp -R "$SPM_RESOURCE_BUNDLE" "$BUILD_OUT/Contents/Resources/"
 fi
 
-SIGN_IDENTITY="CursorPro"
-codesign --force --deep --sign "$SIGN_IDENTITY" "$BUILD_OUT"
+# [2026-09-14] Aceeasi corectie ca in build_app.sh: nu mai semnam cu
+# certificatul local auto-semnat "CursorPro" (numele altei aplicatii, copiat
+# aici si ramas nesincronizat). Identitatea de semnare trebuie sa fie stabila
+# intre build-uri, altfel macOS trateaza aplicatia ca pe una noua.
+DEV_ID=$(security find-identity -v -p codesigning 2>/dev/null \
+         | grep -m1 "Developer ID Application" | sed -E 's/.*"(.*)"/\1/')
+if [ -n "${APPLE_SIGN_IDENTITY_APP:-}" ]; then
+    codesign --force --deep --sign "$APPLE_SIGN_IDENTITY_APP" --options runtime "$BUILD_OUT"
+elif [ -n "$DEV_ID" ]; then
+    echo "==> Semnez Furnizor cu identitatea reala din breloc: $DEV_ID"
+    codesign --force --deep --sign "$DEV_ID" --options runtime "$BUILD_OUT"
+elif [ "${GDCPM_ALLOW_SELFSIGNED:-}" = "1" ]; then
+    echo "ATENTIE: semnez cu certificatul local auto-semnat." >&2
+    codesign --force --deep --sign "CursorPro" "$BUILD_OUT"
+else
+    echo "EROARE: niciun 'Developer ID Application' in breloc." >&2
+    echo "Pentru un build local de test: GDCPM_ALLOW_SELFSIGNED=1 ./build_furnizor_app.sh" >&2
+    exit 1
+fi
 
 INSTALLED="/Applications/GDC Plugin Manager Furnizor.app"
 if [ -d "$INSTALLED" ]; then

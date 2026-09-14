@@ -1,5 +1,15 @@
 # Changelog — GDC Plugin Manager
 
+## v1.34.1 Furnizor (2026-09-14) — Publicarea eșua cu o eroare de git
+
+### Fixed
+- **Publicarea unui produs se oprea cu „There is no tracking information for
+  the current branch”.** Actualizarea repo-ului dinaintea publicării se baza pe
+  o setare locală a copiei de lucru care putea lipsi cu totul; acum
+  destinația e indicată explicit, așa că merge indiferent cum a fost creată
+  copia locală. În plus, prima publicare reușită repară singură setarea care
+  lipsea.
+
 ## v1.30.1 (2026-09-12) — „Aplicațiile mele": notificarea de actualizare nu mai rămâne afișată
 
 ### Fixed

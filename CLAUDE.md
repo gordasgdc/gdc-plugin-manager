@@ -1580,3 +1580,57 @@ Ambele identități există în brelocul mașinii (`Developer ID Application` ș
 `Developer ID Installer`), iar notarizarea locală merge prin profilul salvat
 `gdc-notary` — nu lipsea nimic, doar nu erau exportate variabilele. De aceea
 garda e la nivel de script, nu o notă în jurnal.
+
+## Etapa 2026-09-14 (Furnizor v1.34.1) — publicarea eșua pe `git pull --ff-only`
+
+Raportat de Cristi cu captură din Furnizor, la publicarea unui produs nou
+(LUT „ProGDC"): panoul arăta în roșu
+
+```
+git pull --ff-only a eșuat:
+There is no tracking information for the current branch.
+```
+
+**Cauza reală, verificată direct pe disc, nu presupusă:** în
+`~/Developer/gdc-plugin-manager-files`, ramura `main` **nu avea upstream
+configurat** (`git rev-parse --abbrev-ref @{u}` → `fatal: no upstream
+configured`). `GitOps.pull` rula `git pull --ff-only` fără argumente, care
+depinde exclusiv de configurația de tracking a ramurii locale — lipsă ea,
+comanda eșuează înainte de orice acces la rețea. Nu era o problemă de
+autentificare, de rețea sau de GitHub.
+
+Aceeași slăbiciune o avea și `push` (tot fără remote/ramură explicite), deci ar
+fi eșuat imediat după, chiar dacă pull-ul ar fi trecut.
+
+**Reparat în cod** (`GitOps.swift`):
+- `currentBranch(at:)` nou — citește ramura cu `rev-parse --abbrev-ref HEAD`.
+- `pull` → `git pull --ff-only origin <ramură>`; `push` → `git push -u origin
+  <ramură>`. Explicit, deci independent de configurația locală.
+- `-u` la push **repară singur** configurația lipsă la prima publicare
+  reușită — un checkout pornit greșit nu rămâne defect până când cineva rulează
+  manual `git branch --set-upstream-to`.
+
+**Dovada că fix-ul ține**, pe o clonă de test căreia i-am scos intenționat
+upstream-ul:
+```
+comanda VECHE : There is no tracking information for the current branch.
+comanda NOUĂ  : * branch main -> FETCH_HEAD / Already up to date.
+```
+
+**Reparat și pe disc**, ca să poată publica imediat: `git branch
+--set-upstream-to=origin/main main` în `gdc-plugin-manager-files`.
+
+**Două lucruri găsite pe drum** (Regula 30):
+- `.DS_Store` era **urmărit** în `gdc-plugin-manager-files`, iar publicarea
+  face `git add -A` acolo — fiecare produs publicat căra după el și o
+  modificare de `.DS_Store`, într-un commit fără nicio legătură cu ea.
+  Adăugat `.gitignore` și scos din urmărire.
+- `build_furnizor_app.sh` semna necondiționat cu certificatul local
+  auto-semnat `"CursorPro"` — exact tiparul de identitate copiată din alt
+  repo, reparat deja în `build_app.sh` (2026-09-12). Acum caută întâi
+  `Developer ID Application` din breloc; auto-semnatul cere
+  `GDCPM_ALLOW_SELFSIGNED=1`.
+
+Verificat (Regula 0): versiunea **INSTALATĂ** din
+`/Applications/GDC Plugin Manager Furnizor.app` e `1.34.1`, semnată
+`Developer ID Application: ... (8AR6XP8MG7)`.

@@ -36,10 +36,39 @@ enum GitOps {
         return combined
     }
 
+    /// `-u` nu doar impinge, ci si SCRIE configuratia de tracking lipsa —
+    /// asa ca un checkout care a pornit fara ea se repara singur la prima
+    /// publicare reusita, nu ramane defect pana cand cineva ruleaza manual
+    /// `git branch --set-upstream-to`.
+    static func push(at directory: URL) throws {
+        let branch = try currentBranch(at: directory)
+        try run(["push", "-u", "origin", branch], at: directory)
+    }
+
+    /// Ramura curenta a checkout-ului. Necesara fiindca `git pull`/`git push`
+    /// fara argumente depind de configuratia de "tracking" a ramurii locale —
+    /// care poate lipsi cu totul.
+    ///
+    /// BUG REAL (2026-09-14, raportat din Furnizor la publicarea unui produs):
+    /// `gdc-plugin-manager-files` avea `main` FARA upstream configurat, iar
+    /// `git pull --ff-only` esua cu "There is no tracking information for the
+    /// current branch" — publicarea se oprea inainte sa inceapa. Nu era o
+    /// problema de retea sau de autentificare, ci de configuratie locala a
+    /// unui checkout, care poate aparea la orice clona facuta altfel (ex.
+    /// `git init` + `git remote add` in loc de `git clone`) sau pe o masina
+    /// noua. De aceea remote-ul si ramura se dau acum EXPLICIT: comanda merge
+    /// indiferent de ce e configurat local.
+    static func currentBranch(at directory: URL) throws -> String {
+        let name = try run(["rev-parse", "--abbrev-ref", "HEAD"], at: directory)
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        return name.isEmpty || name == "HEAD" ? "main" : name
+    }
+
     /// Pulls latest before editing, so the vendor app never works from a
     /// stale local checkout (e.g. after publishing from another Mac).
     static func pull(at directory: URL) throws {
-        try run(["pull", "--ff-only"], at: directory)
+        let branch = try currentBranch(at: directory)
+        try run(["pull", "--ff-only", "origin", branch], at: directory)
     }
 
     /// Stages, commits, and pushes — stops (throws) at the first failing
@@ -74,7 +103,7 @@ enum GitOps {
         guard paths == nil || !existingPaths.isEmpty else {
             // Every candidate path was missing — nothing to stage, and an
             // empty `git add` with no args would (dangerously) mean `-A`.
-            try run(["push"], at: directory)
+            try push(at: directory)
             return
         }
         // GUARD REAL (2026-09-04): `git add docs/covers` (mai jos) prinde
@@ -127,7 +156,7 @@ enum GitOps {
         if !status.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             try run(["commit", "-m", message], at: directory)
         }
-        try run(["push"], at: directory)
+        try push(at: directory)
     }
 
     /// Peste câte fișiere dispărute (nu atinse de publicarea curentă) e
