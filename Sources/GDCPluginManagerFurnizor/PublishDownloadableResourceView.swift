@@ -1,5 +1,15 @@
 import SwiftUI
+import CryptoKit
 import GDCPluginManagerCore
+
+/// De unde vine fișierul unei resurse: încărcat direct pe server (repo-ul
+/// privat de fișiere, ca la produsele Resolve) sau doar un link extern, ca
+/// până acum. Cerut explicit 2026-09-14 — ambele variante rămân posibile.
+enum ResourceFileSource: String, CaseIterable, Identifiable {
+    case upload, externalLink
+    var id: String { rawValue }
+    var label: String { self == .upload ? "Încarcă fișier" : "Link extern" }
+}
 
 /// Gestionează secțiunile "Resurse Download" (LUT/SFX/VFX/Plugin) — Etapa 2
 /// din Planul Integrat de Upgrade v2.0 (2026-08-29, confirmat explicit de
@@ -18,6 +28,13 @@ struct PublishDownloadableResourceView: View {
     @State private var description = ""
     @State private var category: DownloadCategory = .lut
     @State private var url = ""
+    /// Sursa fișierului + fișierul ales (doar pentru upload direct).
+    @State private var fileSource: ResourceFileSource = .externalLink
+    @State private var pickedFileURL: URL?
+    @State private var pdfKind: PDFKind = .technicalGuide
+    /// La editare: fișierul deja publicat, păstrat dacă nu se alege altul.
+    @State private var existingFilePath: String?
+    @State private var existingFileSHA: String?
     @State private var youtubeURL = ""
     @State private var supportedOS: SupportedOS = .crossPlatform
     // Licențiere adăugată 2026-08-29 (cerut explicit: "nu am varianta aia
@@ -49,7 +66,35 @@ struct PublishDownloadableResourceView: View {
         case .sfx: return "Efecte Audio / SFX"
         case .vfx: return "VFX / Overlays"
         case .plugin: return "Plugin"
+        case .pdf: return "PDF / Ghid / Carte"
+        case .unknown: return "Necunoscut"
         }
+    }
+
+    private func pdfKindLabel(_ k: PDFKind) -> String {
+        switch k {
+        case .audioInstructions: return "Instrucțiuni Audio"
+        case .technicalGuide: return "Ghid Tehnic"
+        case .book: return "Carte"
+        case .manual: return "Manual"
+        }
+    }
+
+    /// Numele fișierului deja încărcat (pentru afișare la editare).
+    private var currentFileName: String? {
+        if let pickedFileURL { return pickedFileURL.lastPathComponent }
+        guard let existingFilePath else { return nil }
+        return (existingFilePath as NSString).lastPathComponent
+    }
+
+    private func pickFile() {
+        let panel = NSOpenPanel()
+        panel.canChooseFiles = true
+        panel.canChooseDirectories = false
+        panel.allowsMultipleSelection = false
+        panel.allowedContentTypes = category == .pdf ? [.pdf] : []
+        panel.prompt = "Alege"
+        if panel.runModal() == .OK { pickedFileURL = panel.url }
     }
 
     var body: some View {
@@ -71,7 +116,48 @@ struct PublishDownloadableResourceView: View {
                             }
                         }
                         .pickerStyle(.segmented)
-                        TextField("Link fișier de descărcare (https://…)", text: $url).textFieldStyle(.roundedBorder)
+                        .onChange(of: category) { _, newValue in
+                            // PDF-urile se încarcă implicit direct pe server —
+                            // asta e chiar motivul categoriei. Restul rămân pe
+                            // link extern, ca până acum.
+                            if newValue == .pdf && existingFilePath == nil && pickedFileURL == nil {
+                                fileSource = .upload
+                            }
+                        }
+
+                        if category == .pdf {
+                            Picker("Tip", selection: $pdfKind) {
+                                ForEach(PDFKind.allCases) { k in
+                                    Text(pdfKindLabel(k)).tag(k)
+                                }
+                            }
+                            .pickerStyle(.menu)
+                        }
+
+                        Picker("Sursă fișier", selection: $fileSource) {
+                            ForEach(ResourceFileSource.allCases) { src in
+                                Text(src.label).tag(src)
+                            }
+                        }
+                        .pickerStyle(.segmented)
+
+                        if fileSource == .upload {
+                            HStack(spacing: 10) {
+                                Button("Alege fișier…") { pickFile() }
+                                if let currentFileName {
+                                    Text(currentFileName).font(.caption).lineLimit(1).truncationMode(.middle)
+                                    if pickedFileURL != nil {
+                                        Text("(nou)").font(.caption2).foregroundStyle(.green)
+                                    }
+                                } else {
+                                    Text("Niciun fișier ales").font(.caption).foregroundStyle(.secondary)
+                                }
+                            }
+                            Text("Fișierul se încarcă direct pe server. Clientul îl descarcă din aplicație, fără browser.")
+                                .font(.caption).foregroundStyle(.secondary)
+                        } else {
+                            TextField("Link fișier de descărcare (https://…)", text: $url).textFieldStyle(.roundedBorder)
+                        }
                         TextEditor(text: $description)
                             .frame(minHeight: 80)
                             .overlay(alignment: .topLeading) {
@@ -182,7 +268,10 @@ struct PublishDownloadableResourceView: View {
                                         .padding(.horizontal, 6).padding(.vertical, 2)
                                         .background(Capsule().fill(resource.category.tintColor.opacity(0.15)))
                                 }
-                                Text(resource.url).font(.caption).foregroundStyle(.secondary).lineLimit(1)
+                                Text(resource.hasDirectFile
+                                     ? "⤓ \(resource.directFileName ?? "fișier pe server")"
+                                     : resource.url)
+                                    .font(.caption).foregroundStyle(.secondary).lineLimit(1)
                             }
                             Spacer()
                             Button("Editează") { load(resource) }
@@ -212,10 +301,11 @@ struct PublishDownloadableResourceView: View {
     }
 
     private var isFormValid: Bool {
-        !id.trimmingCharacters(in: .whitespaces).isEmpty
+        let hasFile = pickedFileURL != nil || existingFilePath != nil
+        let linkOK = URL(string: url) != nil && (url.hasPrefix("http://") || url.hasPrefix("https://"))
+        return !id.trimmingCharacters(in: .whitespaces).isEmpty
             && !name.trimmingCharacters(in: .whitespaces).isEmpty
-            && URL(string: url) != nil
-            && (url.hasPrefix("http://") || url.hasPrefix("https://"))
+            && (fileSource == .upload ? hasFile : linkOK)
             && (accessMode != .paid || Double(priceText) != nil)
     }
 
@@ -226,7 +316,9 @@ struct PublishDownloadableResourceView: View {
         var missing: [String] = []
         if id.trimmingCharacters(in: .whitespaces).isEmpty { missing.append("ID") }
         if name.trimmingCharacters(in: .whitespaces).isEmpty { missing.append("Nume") }
-        if !url.hasPrefix("http://") && !url.hasPrefix("https://") {
+        if fileSource == .upload {
+            if pickedFileURL == nil && existingFilePath == nil { missing.append("Fișierul de încărcat") }
+        } else if !url.hasPrefix("http://") && !url.hasPrefix("https://") {
             missing.append("Link descărcare (trebuie să înceapă cu http:// sau https://)")
         } else if URL(string: url) == nil {
             missing.append("Link descărcare (format invalid)")
@@ -237,7 +329,8 @@ struct PublishDownloadableResourceView: View {
 
     private func loadExisting() {
         if let catalog = try? CatalogEditor.load() {
-            existingResources = catalog.downloadableResources.sorted { $0.name < $1.name }
+            existingResources = (catalog.downloadableResources + catalog.pdfResources)
+                .sorted { $0.name < $1.name }
         }
     }
 
@@ -248,6 +341,11 @@ struct PublishDownloadableResourceView: View {
         description = resource.description
         category = resource.category
         url = resource.url
+        existingFilePath = resource.filePath
+        existingFileSHA = resource.fileSHA256
+        pickedFileURL = nil
+        fileSource = resource.hasDirectFile ? .upload : .externalLink
+        pdfKind = resource.pdfKind ?? .technicalGuide
         youtubeURL = resource.youtubeURL ?? ""
         supportedOS = resource.supportedOS
         purchaseURL = resource.purchaseURL ?? ""
@@ -270,6 +368,11 @@ struct PublishDownloadableResourceView: View {
         description = ""
         category = .lut
         url = ""
+        fileSource = .externalLink
+        pickedFileURL = nil
+        existingFilePath = nil
+        existingFileSHA = nil
+        pdfKind = .technicalGuide
         youtubeURL = ""
         supportedOS = .crossPlatform
         purchaseURL = ""
@@ -296,6 +399,33 @@ struct PublishDownloadableResourceView: View {
         let resourceID = id.trimmingCharacters(in: .whitespaces)
 
         do {
+            // Fișierul urcă pe server ÎNAINTE de catalog — altfel catalogul ar
+            // referi un fișier încă nepublicat (404 la clienți până la
+            // următorul push). Aceeași ordine ca la produsele Resolve și la
+            // imaginile de copertă.
+            var filePath = existingFilePath
+            var fileSHA = existingFileSHA
+            if fileSource == .upload, let pickedFileURL {
+                let data = try Data(contentsOf: pickedFileURL)
+                fileSHA = SHA256.hash(data: data).compactMap { String(format: "%02x", $0) }.joined()
+                let repoRelativePath = "\(resourceID)/pdf/\(pickedFileURL.lastPathComponent)"
+                filePath = repoRelativePath
+
+                try GitOps.pull(at: RepoCheckoutPaths.privateFilesRepo)
+                let destURL = RepoCheckoutPaths.privateFilesRepo.appendingPathComponent(repoRelativePath)
+                try FileManager.default.createDirectory(at: destURL.deletingLastPathComponent(), withIntermediateDirectories: true)
+                if FileManager.default.fileExists(atPath: destURL.path) {
+                    try FileManager.default.removeItem(at: destURL)
+                }
+                try FileManager.default.copyItem(at: pickedFileURL, to: destURL)
+                try GitOps.commitAndPush(at: RepoCheckoutPaths.privateFilesRepo, message: "\(resourceID) pdf")
+            } else if fileSource == .externalLink {
+                // Trecerea înapoi pe link extern nu trebuie să lase în catalog
+                // o referință către un fișier care nu mai e folosit.
+                filePath = nil
+                fileSHA = nil
+            }
+
             try GitOps.pull(at: RepoCheckoutPaths.publicCatalogRepo)
 
             let previousCover = existingResources.first { $0.id == resourceID }?.coverImage
@@ -311,7 +441,9 @@ struct PublishDownloadableResourceView: View {
                 socialLinks: socialForm.model, scheduling: scheduling,
                 isFree: isFreeFlag, isTrial: isTrialFlag, priceEUR: price,
                 promoPriceEUR: Double(promoPriceText.trimmingCharacters(in: .whitespaces))
-            , access: accessForm.model)
+            , access: accessForm.model,
+                filePath: filePath, fileSHA256: fileSHA,
+                pdfKind: category == .pdf ? pdfKind : nil)
             try CatalogEditor.upsertDownloadableResource(resource)
             try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Resursă download: \(resource.name)", paths: ["docs/catalog.json", "docs/covers"])
             successMessage = "„\(resource.name)” e publicat — apare la clienți la următorul refresh de catalog."

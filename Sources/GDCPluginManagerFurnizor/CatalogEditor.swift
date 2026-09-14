@@ -221,21 +221,32 @@ enum CatalogEditor {
 
     // MARK: - Downloadable resources (LUT/SFX/VFX/Plugin — download direct, Etapa 2)
 
+    /// PDF-urile se scriu in `pdfResources`, restul in `downloadableResources`
+    /// — vezi comentariul de pe `Catalog.pdfResources` pentru motiv (clientii
+    /// deja instalati nu trebuie sa vada o categorie pe care n-o cunosc).
+    ///
+    /// Editarea unei resurse careia i s-a SCHIMBAT categoria (ex. din Plugin in
+    /// PDF) o sterge din lista veche si o adauga in cea noua — altfel ar aparea
+    /// de doua ori, in ambele sectiuni.
     static func upsertDownloadableResource(_ resource: DownloadableResource) throws {
         let catalog = try load()
-        var resources = catalog.downloadableResources.filter { $0.id != resource.id }
-        resources.append(resource)
-        resources.sort { $0.name < $1.name }
-        try write(catalog: catalog, downloadableResources: resources)
+        var plain = catalog.downloadableResources.filter { $0.id != resource.id }
+        var pdfs  = catalog.pdfResources.filter { $0.id != resource.id }
+        if resource.category == .pdf { pdfs.append(resource) } else { plain.append(resource) }
+        plain.sort { $0.name < $1.name }
+        pdfs.sort { $0.name < $1.name }
+        try write(catalog: catalog, downloadableResources: plain, pdfResources: pdfs)
     }
 
     static func removeDownloadableResource(id: String) throws {
         let catalog = try load()
-        let resources = catalog.downloadableResources.filter { $0.id != id }
-        guard resources.count != catalog.downloadableResources.count else {
+        let plain = catalog.downloadableResources.filter { $0.id != id }
+        let pdfs  = catalog.pdfResources.filter { $0.id != id }
+        guard plain.count != catalog.downloadableResources.count
+                || pdfs.count != catalog.pdfResources.count else {
             throw CatalogEditorError.downloadableResourceNotFound(id)
         }
-        try write(catalog: catalog, downloadableResources: resources)
+        try write(catalog: catalog, downloadableResources: plain, pdfResources: pdfs)
     }
 
     // MARK: - Partner offers (Oferte/Promoții branduri partenere, Etapa 4)
@@ -341,6 +352,7 @@ enum CatalogEditor {
         partnerStores: [PartnerStore]? = nil,
         serviceCenters: [ServiceCenter]? = nil,
         downloadableResources: [DownloadableResource]? = nil,
+        pdfResources: [DownloadableResource]? = nil,
         partnerOffers: [PartnerOffer]? = nil,
         seasonalBackgrounds: [SeasonalBackgroundConfig]? = nil,
         productBundles: [ProductBundle]? = nil,
@@ -359,6 +371,7 @@ enum CatalogEditor {
             partnerStores: partnerStores ?? catalog.partnerStores,
             serviceCenters: serviceCenters ?? catalog.serviceCenters,
             downloadableResources: downloadableResources ?? catalog.downloadableResources,
+            pdfResources: pdfResources ?? catalog.pdfResources,
             partnerOffers: partnerOffers ?? catalog.partnerOffers,
             seasonalBackgrounds: seasonalBackgrounds ?? catalog.seasonalBackgrounds,
             productBundles: productBundles ?? catalog.productBundles,

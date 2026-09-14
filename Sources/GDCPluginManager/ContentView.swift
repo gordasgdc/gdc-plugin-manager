@@ -241,6 +241,7 @@ struct ContentView: View {
         names += catalog.partnerStores.map(\.name)
         names += catalog.serviceCenters.map(\.name)
         names += catalog.downloadableResources.map(\.name)
+        names += catalog.pdfResources.map(\.name)
         names += catalog.partnerOffers.map(\.brandName)
         names += catalog.productBundles.map(\.name)
         return names
@@ -282,7 +283,10 @@ struct ContentView: View {
         case .audio:
             AudioGrid(tracks: catalog.audioTracks.filter { $0.scheduling?.isActiveNow ?? true })
         case .download(let category):
-            DownloadResourceGrid(resources: catalog.downloadableResources.filter { $0.category == category && ($0.scheduling?.isActiveNow ?? true) })
+            // PDF-urile stau intr-o cheie separata de catalog (vezi
+            // Catalog.pdfResources) — nu se filtreaza din lista comuna.
+            DownloadResourceGrid(resources: (category == .pdf ? catalog.pdfResources : catalog.downloadableResources)
+                .filter { $0.category == category && ($0.scheduling?.isActiveNow ?? true) })
         case .android:
             MobileAppPane()
         case .all, .none:
@@ -695,7 +699,7 @@ private struct GlobalSearchResults: View {
         catalog.serviceCenters.filter { ($0.scheduling?.isActiveNow ?? true) && FuzzySearch.matches(query: query, inAny: [$0.name, $0.specialization, serviceCategoryLabel($0.category), $0.id]) }
     }
     private var matchedDownloads: [DownloadableResource] {
-        catalog.downloadableResources.filter { ($0.scheduling?.isActiveNow ?? true) && FuzzySearch.matches(query: query, inAny: [$0.name, $0.description, $0.id, $0.category.rawValue]) }
+        (catalog.downloadableResources + catalog.pdfResources).filter { ($0.scheduling?.isActiveNow ?? true) && FuzzySearch.matches(query: query, inAny: [$0.name, $0.description, $0.id, $0.category.rawValue]) }
     }
     private var matchedBundles: [ProductBundle] {
         catalog.productBundles.filter { ($0.scheduling?.isActiveNow ?? true) && FuzzySearch.matches(query: query, inAny: [$0.name, $0.description, $0.id]) }
@@ -2336,6 +2340,8 @@ private struct DownloadResourceGrid: View {
 
 private struct DownloadResourceCard: View {
     let resource: DownloadableResource
+    @State private var isDownloading = false
+    @State private var downloadError: String?
     @ObservedObject private var locations = DownloadLocationStore.shared
     // Licențiere adăugată 2026-08-29 (cerut explicit) — port 1:1 al
     // fluxului de pe `PluginCard` (Gratuit/Probă/Licență + WhatsApp).
@@ -2363,6 +2369,9 @@ private struct DownloadResourceCard: View {
                 lightboxTitle: resource.name
             )
             Text(resource.name).font(.headline)
+            if let kind = resource.pdfKind {
+                BadgePill(text: L.t("pdfKind.\(kind.rawValue)"), color: .red)
+            }
             CountdownBadge(scheduling: resource.scheduling)
             CollapsibleDescription(text: resource.description)
             ExtraLinksRow(purchaseURL: resource.purchaseURL, demoURL: resource.demoURL, social: resource.socialLinks)
@@ -2413,8 +2422,33 @@ private struct DownloadResourceCard: View {
             Text(L.t("card.incompatibleOS")).font(.caption).foregroundStyle(.red)
         } else if !license.isUnlocked(for: resource) {
             Button(L.t("card.buy")) { NSWorkspace.shared.open(buyURL) }
+        } else if resource.hasDirectFile {
+            // [2026-09-14] Fișier încărcat direct pe server: se descarcă din
+            // aplicație și se arată în Finder. Fără browser — vezi Regula 20.
+            HStack(spacing: 8) {
+                Button(isDownloading ? L.t("resource.downloading") : L.t("resource.download")) {
+                    Task { await downloadDirect() }
+                }
+                .disabled(isDownloading)
+                if isDownloading { ProgressView().controlSize(.small) }
+            }
+            if let downloadError {
+                Text(downloadError).font(.caption).foregroundStyle(.red)
+            }
         } else if let url = URL(string: resource.url) {
             Button(L.t("audio.open")) { NSWorkspace.shared.open(url) }
+        }
+    }
+
+    private func downloadDirect() async {
+        downloadError = nil
+        isDownloading = true
+        defer { isDownloading = false }
+        do {
+            let saved = try await InstallManager.shared.downloadResourceFile(resource)
+            NSWorkspace.shared.activateFileViewerSelecting([saved])
+        } catch {
+            downloadError = error.localizedDescription
         }
     }
 

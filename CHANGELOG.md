@@ -1,5 +1,23 @@
 # Changelog — GDC Plugin Manager
 
+## v1.31.0 Client / v1.35.0 Furnizor (2026-09-14) — PDF-uri cu descărcare directă
+
+### Added
+- **Secțiune nouă „PDF-uri / Ghiduri / Cărți"** în Resurse Download. Fișierul se
+  descarcă direct din aplicație și se arată în Finder — fără browser, ca la
+  produsele instalabile.
+- **Furnizor**: PDF-ul se poate **încărca direct pe server** (ca LUT-urile sau
+  DCTL-urile), nu doar pune ca link extern. Ambele variante rămân disponibile,
+  se aleg dintr-un selector. Se poate marca tipul: Instrucțiuni Audio, Ghid
+  Tehnic, Carte sau Manual.
+- Integritatea fișierului descărcat e verificată (SHA-256) înainte să ajungă la
+  utilizator.
+
+### Fixed
+- **O categorie necunoscută nu mai face catalogul ilizibil.** Până acum, o
+  valoare nouă în catalog ar fi oprit din decodare TOT catalogul pe versiunile
+  mai vechi — nu doar resursa respectivă. Verificat direct, nu presupus.
+
 ## v1.34.1 Furnizor (2026-09-14) — Publicarea eșua cu o eroare de git
 
 ### Fixed

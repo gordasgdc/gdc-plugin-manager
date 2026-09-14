@@ -193,6 +193,56 @@ final class InstallManager: ObservableObject {
         return galleryOutcome
     }
 
+    // MARK: - Descărcare directă a unei resurse (PDF/ghid/carte)
+
+    /// [2026-09-14] Descarcă fișierul unei `DownloadableResource` încărcat
+    /// direct în repo-ul privat și îl salvează local — FĂRĂ browser.
+    ///
+    /// DE CE nu reutilizează `install(_:)`: acolo fișierele ajung în
+    /// folderele DaVinci Resolve, unde un PDF n-are ce căuta. Aici userul
+    /// alege unde se salvează (`DownloadLocationStore`, implicit
+    /// `~/Downloads`) și primește fișierul deschis în Finder. Mecanismul de
+    /// ADUCERE a octeților e însă exact același (`fetchPrivateFileData`) —
+    /// o singură implementare autentificată, nu două.
+    ///
+    /// Întoarce calea locală a fișierului salvat.
+    @MainActor
+    func downloadResourceFile(_ resource: DownloadableResource) async throws -> URL {
+        guard let path = resource.filePath, !path.isEmpty else {
+            throw InstallError.downloadFailed
+        }
+        let data = try await fetchPrivateFileData(path: path)
+
+        // Verificarea de integritate nu e opțională doar pentru că fișierul
+        // e „doar un PDF": un fișier trunchiat se deschide și arată gol, iar
+        // userul ar da vina pe conținut, nu pe descărcare.
+        if let expected = resource.fileSHA256, !expected.isEmpty {
+            let actual = SHA256.hash(data: data).compactMap { String(format: "%02x", $0) }.joined()
+            guard actual == expected else { throw InstallError.checksumMismatch }
+        }
+
+        let folder: URL
+        if let saved = DownloadLocationStore.shared.path(for: resource.id) {
+            folder = URL(fileURLWithPath: saved)
+        } else {
+            folder = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask).first
+                ?? FileManager.default.temporaryDirectory
+        }
+        try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+
+        let fileName = resource.directFileName ?? "\(resource.id).pdf"
+        let destination = folder.appendingPathComponent(fileName)
+        do {
+            if FileManager.default.fileExists(atPath: destination.path) {
+                try FileManager.default.removeItem(at: destination)
+            }
+            try data.write(to: destination)
+        } catch {
+            throw InstallError.writeFailed(destination.path)
+        }
+        return destination
+    }
+
     // MARK: - Authenticated fetch from the private files repo
 
     /// Fetches one file's raw bytes from the private gdc-plugin-manager-files

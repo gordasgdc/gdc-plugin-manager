@@ -1634,3 +1634,75 @@ comanda NOUĂ  : * branch main -> FETCH_HEAD / Already up to date.
 Verificat (Regula 0): versiunea **INSTALATĂ** din
 `/Applications/GDC Plugin Manager Furnizor.app` e `1.34.1`, semnată
 `Developer ID Application: ... (8AR6XP8MG7)`.
+
+## Etapa 2026-09-14 (Client 1.31.0 / Furnizor 1.35.0) — PDF-uri cu upload și descărcare directă
+
+Cerut în 3 etape; asta e **Etapa 1**. Etapele 2 (categoria „Scripts" pentru
+Resolve) și 3 (optimizare pentru versiunile noi de Resolve) rămân de făcut.
+
+### Ce s-a construit
+
+`DownloadCategory` capătă `pdf`; `DownloadableResource` capătă `filePath`,
+`fileSHA256` și `pdfKind` (`PDFKind`: instrucțiuni audio / ghid tehnic / carte
+/ manual). Când `filePath` există, clientul descarcă fișierul din repo-ul privat
+prin ACELAȘI mecanism autentificat ca produsele Resolve
+(`InstallManager.fetchPrivateFileData`) — nu s-a scris un al doilea mecanism de
+descărcare — verifică SHA-256, salvează în folderul ales de user
+(`DownloadLocationStore`, implicit `~/Downloads`) și deschide Finder pe fișier.
+**Fără browser** (Regula 20). Link-ul extern rămâne posibil, ca variantă.
+
+În Furnizor, calea e `<id>/pdf/<nume>.pdf` (fără versionare — decis explicit cu
+Cristi: un ghid nu are nevoie de istoric de versiuni), iar fișierul urcă
+ÎNAINTE de catalog, ca la copertele de produs — altfel catalogul ar referi un
+fișier încă nepublicat.
+
+### DEFECT GRAV EVITAT ÎN ULTIMUL MOMENT — de reținut
+
+Planul inițial (aprobat) era `category: "pdf"` în array-ul existent
+`downloadableResources`. **Verificat experimental înainte de a publica ceva**,
+cu modelul exact al clienților deja livrați:
+
+```
+CATALOGUL INTREG A PICAT: DecodingError.dataCorrupted
+  Path: downloadableResources[1].category
+  Cannot initialize OldCategory from invalid String value pdf
+```
+
+Un enum Swift simplu **aruncă** la o valoare necunoscută, iar eroarea urcă până
+la `Catalog` — deci o singură resursă PDF publicată ar fi lăsat **fiecare client
+instalat fără NIMIC**: nici produse, nici cursuri, nici aplicații. Convertorul
+C# de pe Windows era și mai explicit: `throw new JsonException("Unknown
+DownloadCategory")`. Exact tiparul Regulii 35, dar cu efect total, nu tăcut.
+
+**Soluția, verificată la rândul ei:** PDF-urile stau într-o **cheie nouă de
+nivel superior**, `catalog.pdfResources`, cu același tip de date. Decodoarele
+vechi ignoră pur și simplu cheia necunoscută:
+
+```
+CLIENT VECHI: decodat OK, vede 1 resursa — cheia noua ignorata
+```
+
+Zero risc pentru cine n-a actualizat. **Regulă practică de reținut pentru tot
+ecosistemul: o valoare NOUĂ într-un enum deja publicat rupe clienții vechi; o
+CHEIE nouă nu.** Când ai de ales, adaugi o cheie.
+
+Suplimentar, `DownloadCategory` are acum `unknown` ca plasă de siguranță
+(exclus din `allCases`, deci invizibil în UI), iar convertorul C# nu mai aruncă
+— ca următoarea categorie să degradeze la „o resursă pe care versiunea asta
+n-o afișează", nu la un catalog mort.
+
+### Paritate Windows (Regula 31)
+
+Model, convertoare JSON, `Catalog.PdfResources`, `CatalogService.PdfResources` și
+colecția `MainViewModel.DownloadPdfs` — portate și compilate (`dotnet build`: 0
+erori, atât Core cât și Client WPF).
+**RĂMÂNE DE FĂCUT pe Windows**: fila din XAML care afișează `DownloadPdfs` și
+butonul de descărcare directă. Nu am scris XAML pe care nu-l pot vedea randat;
+partea de date e completă, deci e un pas mic.
+
+### Verificat
+
+Pe catalogul REAL publicat: se decodează neschimbat cu modelul nou (3 produse,
+1 resursă, 0 PDF-uri). Dus-întors pe o resursă PDF sintetică: `filePath`,
+`pdfKind`, `hasDirectFile` și numele fișierului se păstrează corect. Versiuni
+INSTALATE confirmate (Regula 0): Client `1.31.0`, Furnizor `1.35.0`.

@@ -1189,7 +1189,31 @@ public struct PartnerStore: Codable, Identifiable, Hashable {
 /// astea sunt cross-host (Premiere/FCP/Resolve), userul le descarcă și le
 /// importă manual, la fel ca `AudioTrack`/`AppLink`.
 public enum DownloadCategory: String, Codable, CaseIterable, Identifiable {
-    case lut, sfx, vfx, plugin
+    /// [2026-09-14] Categorie necunoscută — NU apare în UI și NU e publicabilă.
+    /// Există doar ca plasă de siguranță la decodare.
+    ///
+    /// DOVEDIT experimental, nu presupus: un enum simplu aruncă la o valoare
+    /// nouă, iar eroarea urcă până sus și face ÎNTREG catalogul nedecodabil —
+    /// nu doar resursa aia. Un client vechi n-ar mai vedea absolut nimic:
+    /// nici produse, nici cursuri, nici aplicații. Cu `unknown`, o categorie
+    /// viitoare degradează la „o resursă pe care versiunea asta n-o afișează",
+    /// exact tiparul cerut de Regula 35.
+    /// `pdf` (2026-09-14, cerut explicit): ghiduri, manuale și cărți.
+    /// Spre deosebire de celelalte categorii — unde `url` e un link extern
+    /// deschis în browser — o resursă PDF poate fi ÎNCĂRCATĂ DIRECT în
+    /// repo-ul privat de fișiere și descărcată din aplicație, fără browser
+    /// (Regula 20). Vezi `DownloadableResource.filePath`.
+    case lut, sfx, vfx, plugin, pdf
+    case unknown
+
+    /// `unknown` e exclus deliberat: e o stare de decodare, nu o categorie
+    /// pe care userul o poate alege sau vedea.
+    public static var allCases: [DownloadCategory] { [.lut, .sfx, .vfx, .plugin, .pdf] }
+
+    public init(from decoder: Decoder) throws {
+        let raw = try decoder.singleValueContainer().decode(String.self)
+        self = DownloadCategory(rawValue: raw) ?? .unknown
+    }
 
     public var id: String { rawValue }
 
@@ -1199,6 +1223,8 @@ public enum DownloadCategory: String, Codable, CaseIterable, Identifiable {
         case .sfx: return "waveform"
         case .vfx: return "sparkles"
         case .plugin: return "puzzlepiece.extension"
+        case .pdf: return "doc.richtext"
+        case .unknown: return "questionmark.square.dashed"
         }
     }
 
@@ -1208,6 +1234,27 @@ public enum DownloadCategory: String, Codable, CaseIterable, Identifiable {
         case .sfx: return .teal
         case .vfx: return .purple
         case .plugin: return .orange
+        case .pdf: return .red
+        case .unknown: return .gray
+        }
+    }
+}
+
+/// Ce fel de PDF e — cerut explicit (2026-09-14): „să se poată specifica
+/// tipul de PDF (ex: Instrucțiuni Audio, Ghiduri Tehnice, Cărți, Manuale)".
+/// Opțional pe model: are sens doar pentru `DownloadCategory.pdf`, iar o
+/// resursă publicată fără el rămâne perfect validă.
+public enum PDFKind: String, Codable, CaseIterable, Identifiable, Sendable {
+    case audioInstructions, technicalGuide, book, manual
+
+    public var id: String { rawValue }
+
+    public var defaultSymbol: String {
+        switch self {
+        case .audioInstructions: return "waveform.badge.magnifyingglass"
+        case .technicalGuide: return "book.closed"
+        case .book: return "books.vertical"
+        case .manual: return "wrench.and.screwdriver"
         }
     }
 }
@@ -1251,12 +1298,44 @@ public struct DownloadableResource: Codable, Identifiable, Hashable {
     /// Optional: catalogul deja publicat decodeaza neschimbat.
     public let access: CatalogAccess?
 
+    /// [2026-09-14] Fișier încărcat DIRECT în repo-ul privat de fișiere,
+    /// în loc de un link extern. Format identic cu `PluginFile.path`
+    /// (`"<id>/pdf/<nume>.pdf"`), ca să meargă prin exact același
+    /// mecanism autentificat de descărcare (`InstallManager`).
+    ///
+    /// `nil` = resursa folosește `url` (link extern), ca înainte. Cele
+    /// două se exclud logic, dar NU se validează reciproc la decodare:
+    /// o resursă veche n-are câmpul deloc, iar `url` rămâne obligatoriu
+    /// în schemă (nu-l putem face opțional fără să rupem clienții deja
+    /// publicați care îl decodează ca atare — vezi Regula 35).
+    public let filePath: String?
+    /// SHA-256 al fișierului de mai sus, verificat după descărcare.
+    public let fileSHA256: String?
+    /// Doar pentru `category == .pdf` — vezi `PDFKind`.
+    public let pdfKind: PDFKind?
+
+    /// `true` când resursa se descarcă direct de pe server, fără browser.
+    public var hasDirectFile: Bool {
+        guard let filePath else { return false }
+        return !filePath.trimmingCharacters(in: .whitespaces).isEmpty
+    }
+
+    /// Numele fișierului, așa cum îl vede userul la salvare.
+    public var directFileName: String? {
+        guard let filePath, !filePath.isEmpty else { return nil }
+        return (filePath as NSString).lastPathComponent
+    }
+
     public init(id: String, name: String, description: String, category: DownloadCategory, url: String,
                 youtubeURL: String? = nil, coverImage: String? = nil, supportedOS: SupportedOS = .crossPlatform,
                 purchaseURL: String? = nil, demoURL: String? = nil, socialLinks: SocialLinks? = nil, scheduling: Scheduling? = nil,
-                isFree: Bool = true, isTrial: Bool = false, priceEUR: Double = 0, promoPriceEUR: Double? = nil, access: CatalogAccess? = nil) {
+                isFree: Bool = true, isTrial: Bool = false, priceEUR: Double = 0, promoPriceEUR: Double? = nil, access: CatalogAccess? = nil,
+                filePath: String? = nil, fileSHA256: String? = nil, pdfKind: PDFKind? = nil) {
         self.id = id
         self.access = access
+        self.filePath = filePath
+        self.fileSHA256 = fileSHA256
+        self.pdfKind = pdfKind
         self.name = name
         self.description = description
         self.category = category
@@ -1291,6 +1370,7 @@ public struct DownloadableResource: Codable, Identifiable, Hashable {
     // publicate în "produse plătite fără licență activabilă".
     private enum CodingKeys: String, CodingKey {
         case id, name, description, category, url, youtubeURL, coverImage, supportedOS, purchaseURL, demoURL, socialLinks, scheduling, isFree, isTrial, priceEUR, promoPriceEUR, access
+        case filePath, fileSHA256, pdfKind
     }
 
     public init(from decoder: Decoder) throws {
@@ -1312,6 +1392,9 @@ public struct DownloadableResource: Codable, Identifiable, Hashable {
         isTrial = try c.decodeIfPresent(Bool.self, forKey: .isTrial) ?? false
         priceEUR = try c.decodeIfPresent(Double.self, forKey: .priceEUR) ?? 0
         promoPriceEUR = try c.decodeIfPresent(Double.self, forKey: .promoPriceEUR)
+        filePath = try c.decodeIfPresent(String.self, forKey: .filePath)
+        fileSHA256 = try c.decodeIfPresent(String.self, forKey: .fileSHA256)
+        pdfKind = try c.decodeIfPresent(PDFKind.self, forKey: .pdfKind)
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -1321,6 +1404,9 @@ public struct DownloadableResource: Codable, Identifiable, Hashable {
         try c.encode(description, forKey: .description)
         try c.encode(category, forKey: .category)
         try c.encode(url, forKey: .url)
+        try c.encodeIfPresent(filePath, forKey: .filePath)
+        try c.encodeIfPresent(fileSHA256, forKey: .fileSHA256)
+        try c.encodeIfPresent(pdfKind, forKey: .pdfKind)
         try c.encodeIfPresent(youtubeURL, forKey: .youtubeURL)
         try c.encodeIfPresent(coverImage, forKey: .coverImage)
         try c.encode(supportedOS, forKey: .supportedOS)
@@ -1628,6 +1714,17 @@ public struct Catalog: Codable {
     /// (2026-08-29). Default `[]`: orice catalog publicat înainte de asta
     /// decodează curat, fără eroare.
     public let downloadableResources: [DownloadableResource]
+    /// [2026-09-14] PDF-uri / ghiduri / cărți — CHEIE SEPARATĂ, nu o categorie
+    /// nouă în `downloadableResources`.
+    ///
+    /// DE CE separat, deși tipul e identic: o valoare nouă de `category` în
+    /// array-ul existent face ÎNTREG catalogul nedecodabil pe orice client
+    /// deja instalat (verificat experimental, nu presupus — enum-ul aruncă, iar
+    /// eroarea urcă până la `Catalog`). O cheie nouă de nivel superior e, în
+    /// schimb, pur și simplu ignorată de decodoarele vechi: clientul de ieri
+    /// vede exact ce vedea, cel de azi vede și PDF-urile. Zero risc pentru
+    /// cine n-a actualizat încă.
+    public let pdfResources: [DownloadableResource]
     /// Oferte/Promoții de la branduri partenere — Etapa 4 (2026-08-29).
     /// Default `[]`: retrocompatibil.
     public let partnerOffers: [PartnerOffer]
@@ -1642,7 +1739,7 @@ public struct Catalog: Codable {
     /// Tutoriale YouTube embedded — 2026-09-01. Default `[]`: retrocompatibil.
     public let tutorials: [Tutorial]
 
-    public init(updatedAt: String?, items: [PluginItem], courses: [Course] = [], apps: [AppLink] = [], audioTracks: [AudioTrack] = [], educationalResources: [EducationalResource] = [], events: [Event] = [], partnerStores: [PartnerStore] = [], serviceCenters: [ServiceCenter] = [], downloadableResources: [DownloadableResource] = [], partnerOffers: [PartnerOffer] = [], seasonalBackgrounds: [SeasonalBackgroundConfig] = [], productBundles: [ProductBundle] = [], tutorials: [Tutorial] = []) {
+    public init(updatedAt: String?, items: [PluginItem], courses: [Course] = [], apps: [AppLink] = [], audioTracks: [AudioTrack] = [], educationalResources: [EducationalResource] = [], events: [Event] = [], partnerStores: [PartnerStore] = [], serviceCenters: [ServiceCenter] = [], downloadableResources: [DownloadableResource] = [], pdfResources: [DownloadableResource] = [], partnerOffers: [PartnerOffer] = [], seasonalBackgrounds: [SeasonalBackgroundConfig] = [], productBundles: [ProductBundle] = [], tutorials: [Tutorial] = []) {
         self.updatedAt = updatedAt
         self.items = items
         self.courses = courses
@@ -1653,6 +1750,7 @@ public struct Catalog: Codable {
         self.partnerStores = partnerStores
         self.serviceCenters = serviceCenters
         self.downloadableResources = downloadableResources
+        self.pdfResources = pdfResources
         self.partnerOffers = partnerOffers
         self.seasonalBackgrounds = seasonalBackgrounds
         self.productBundles = productBundles
@@ -1663,7 +1761,7 @@ public struct Catalog: Codable {
     // catalog published before a given field existed keeps decoding
     // cleanly after this update ships to clients.
     private enum CodingKeys: String, CodingKey {
-        case updatedAt, items, courses, apps, audioTracks, educationalResources, events, partnerStores, serviceCenters, downloadableResources, partnerOffers, seasonalBackgrounds, productBundles, tutorials
+        case updatedAt, items, courses, apps, audioTracks, educationalResources, events, partnerStores, serviceCenters, downloadableResources, pdfResources, partnerOffers, seasonalBackgrounds, productBundles, tutorials
     }
 
     /// Cheia SINGULARĂ, doar pentru citirea unui `catalog.json` publicat
@@ -1685,6 +1783,7 @@ public struct Catalog: Codable {
         partnerStores = try c.decodeIfPresent([PartnerStore].self, forKey: .partnerStores) ?? []
         serviceCenters = try c.decodeIfPresent([ServiceCenter].self, forKey: .serviceCenters) ?? []
         downloadableResources = try c.decodeIfPresent([DownloadableResource].self, forKey: .downloadableResources) ?? []
+        pdfResources = try c.decodeIfPresent([DownloadableResource].self, forKey: .pdfResources) ?? []
         partnerOffers = try c.decodeIfPresent([PartnerOffer].self, forKey: .partnerOffers) ?? []
         productBundles = try c.decodeIfPresent([ProductBundle].self, forKey: .productBundles) ?? []
         tutorials = try c.decodeIfPresent([Tutorial].self, forKey: .tutorials) ?? []
