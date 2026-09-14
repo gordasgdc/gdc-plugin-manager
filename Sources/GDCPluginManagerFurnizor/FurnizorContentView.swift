@@ -23,6 +23,7 @@ enum FurnizorSection: Hashable {
     case backup
     case secrets
     case repoStorage
+    case imageLibrary
 }
 
 struct FurnizorContentView: View {
@@ -60,6 +61,7 @@ struct FurnizorContentView: View {
                 Label("Backup & Restaurare", systemImage: "lock.doc").tag(FurnizorSection.backup)
                 Label("Token-uri & Chei", systemImage: "key.horizontal").tag(FurnizorSection.secrets)
                 Label("Stocare pe repo-uri", systemImage: "internaldrive").tag(FurnizorSection.repoStorage)
+                Label("Banc de imagini", systemImage: "photo.stack").tag(FurnizorSection.imageLibrary)
             }
             .navigationSplitViewColumnWidth(min: 180, ideal: 200, max: 340)
             .safeAreaInset(edge: .bottom) {
@@ -123,6 +125,8 @@ struct FurnizorContentView: View {
                     SecretsDashboardView()
                 case .repoStorage:
                     RepoStorageView()
+                case .imageLibrary:
+                    ImageLibraryView()
                 }
             }
         }

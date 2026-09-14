@@ -1,5 +1,16 @@
 # Changelog — GDC Plugin Manager
 
+## v1.42.0 Furnizor (2026-09-14) — Banc de imagini
+
+### Added
+- **Secțiune nouă „Banc de imagini"** — toate imaginile de prezentare publicate,
+  cu dimensiune, rezoluție și cine folosește fiecare. Alegerea unei imagini deja
+  urcate exista de dinainte, în selectorul de copertă; ce lipsea era vederea de
+  ansamblu și posibilitatea de a face curat în siguranță.
+- **Ștergerea imaginilor nefolosite**, cu publicare imediată — o ștergere doar
+  locală ar fi lăsat fișierul viu pe site până la următoarea publicare de produs.
+  O imagine încă folosită nu poate fi ștearsă; aplicația spune de cine.
+
 ## v1.41.0 Furnizor (2026-09-14) — Stocare pe repo-uri
 
 ### Added
