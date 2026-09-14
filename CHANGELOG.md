@@ -1,5 +1,13 @@
 # Changelog — GDC Plugin Manager
 
+## v1.44.0 Furnizor (2026-09-14) — Meniu lateral pliabil
+
+### Changed
+- **Meniul lateral se pliază**, ca în client. Rubricile sunt grupate pe ce faci
+  cu ele: CATALOG, VÂNZĂRI & LICENȚE, INTERFAȚA CLIENTULUI, ÎNTREȚINERE.
+  Implicit e deschis doar CATALOG; aplicația ține minte ce ai lăsat deschis.
+- Secțiunea care conține rubrica pe care ești se deschide singură.
+
 ## v1.36.0 Client (2026-09-14) — Meniu lateral pliabil
 
 ### Changed
