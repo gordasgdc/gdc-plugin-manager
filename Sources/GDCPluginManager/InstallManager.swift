@@ -9,7 +9,10 @@ import GDCPluginManagerCore
 /// because Resolve's scripting bridge wasn't available (see
 /// PowerGradeImporter.swift).
 enum InstallOutcome {
-    case installed
+    /// [2026-09-14] Poarta caile REALE de pe disc, verificate dupa scriere —
+    /// pana acum instalarea reusita nu spunea nimic utilizatorului, nici macar
+    /// unde a ajuns fisierul (`case .installed: break` in ContentView).
+    case installed(paths: [URL])
     /// PowerGrade only: imported straight into Resolve's Gallery, into
     /// this product's own album (see PowerGradeImporter.albumName(for:)).
     case installedToGallery(albumName: String)
@@ -25,6 +28,9 @@ enum InstallError: Error, LocalizedError {
     case downloadFailed
     case authenticationFailed
     case checksumMismatch
+    /// [2026-09-14] Fișierul a fost scris, dar verificarea de după instalare
+    /// nu confirmă că a ajuns întreg la destinație.
+    case verificationFailed(String, String)
     case writeFailed(String)
     /// SECURITATE (raportat de Cristi 2026-08-24): un PowerGrade PLĂTIT a
     /// cărui import automat în Gallery eșuează NU mai are voie să lase pe
@@ -39,6 +45,8 @@ enum InstallError: Error, LocalizedError {
         case .downloadFailed: return "Download failed."
         case .authenticationFailed: return "Couldn't authenticate with the file server — contact support, the access token may need renewing."
         case .checksumMismatch: return "Downloaded file doesn't match the expected checksum."
+        case .verificationFailed(let path, let reason):
+            return "Instalarea nu s-a confirmat: \(reason).\nCale: \(path)"
         case .writeFailed(let detail): return "Couldn't write the file: \(detail)"
         case .paidResourceInstallFailed: return "A apărut o eroare la încărcarea resursei plătite. Te rugăm să contactezi suportul pentru asistență."
         }
@@ -123,6 +131,20 @@ final class InstallManager: ObservableObject {
             tempURLs.append(tempURL)
         }
 
+        // [2026-09-14] CURATARE INAINTE DE SCRIERE, doar acolo unde folderul
+        // apartine EXCLUSIV acestui produs. O versiune noua cu mai putine
+        // fisiere decat cea veche lasa altfel resturi care raman incarcate de
+        // Resolve la nesfarsit (un DCTL sters din pack ramanea pe disc).
+        //
+        // EXCEPTIE CRITICA — scripturile: destinatia lor (Fusion/Scripts/
+        // Utility etc.) e un folder COMUN, al Resolve-ului, in care stau si
+        // scripturile altcuiva. O stergere acolo ar distruge munca userului.
+        // De aceea conditia e „folder propriu", nu „pack".
+        let ownsDestinationFolder = item.isPack && item.type != .scripts
+        if ownsDestinationFolder, FileManager.default.fileExists(atPath: destinationDir.path) {
+            try deleteDirectory(at: destinationDir)
+        }
+
         var writtenURLs: [URL] = []
         for (file, tempURL) in zip(item.files, tempURLs) {
             // Bug real, gasit la implementarea OFX: file.filename e doar
@@ -140,6 +162,29 @@ final class InstallManager: ObservableObject {
             writtenURLs.append(destinationURL)
         }
 
+        // VERIFICARE POST-INSTALARE (cerut explicit): nu ne bazam pe faptul ca
+        // `writeFile` n-a aruncat. Pe calea elevata, copierea se face de un
+        // proces separat (osascript); un esec partial, un disc plin sau un
+        // prompt de parola anulat trebuie sa iasa la iveala AICI, nu peste o
+        // saptamana, cand userul se intreaba de ce nu vede plugin-ul in Resolve.
+        //
+        // Comparam existenta si DIMENSIUNEA fata de sursa temporara. Nu
+        // re-calculam SHA-ul: octetii au fost deja verificati inainte de
+        // scriere (mai sus), iar singurul pas dintre ei si disc e copierea —
+        // o copiere trunchiata se vede ca diferenta de dimensiune.
+        for (destinationURL, tempURL) in zip(writtenURLs, tempURLs) {
+            let fm = FileManager.default
+            guard fm.fileExists(atPath: destinationURL.path) else {
+                throw InstallError.verificationFailed(destinationURL.path, "fișierul nu există după instalare")
+            }
+            let expected = (try? fm.attributesOfItem(atPath: tempURL.path)[.size] as? Int) ?? nil
+            let actual = (try? fm.attributesOfItem(atPath: destinationURL.path)[.size] as? Int) ?? nil
+            if let expected, let actual, expected != actual {
+                throw InstallError.verificationFailed(destinationURL.path,
+                    "dimensiune diferită (\(actual) în loc de \(expected) octeți)")
+            }
+        }
+
         installedVersions[item.id] = item.version
         saveState()
 
@@ -153,7 +198,7 @@ final class InstallManager: ObservableObject {
             try fixOFXBundlePermissions(at: destinationDir)
         }
 
-        guard item.type == .powerGrade else { return .installed }
+        guard item.type == .powerGrade else { return .installed(paths: writtenURLs) }
         switch PowerGradeImporter.importIntoGallery(productName: item.name, files: writtenURLs, stagingFolder: destinationDir) {
         case .importedToGallery(let albumName):
             return .installedToGallery(albumName: albumName)

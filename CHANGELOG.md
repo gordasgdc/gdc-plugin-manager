@@ -1,5 +1,20 @@
 # Changelog — GDC Plugin Manager
 
+## v1.33.0 Client (2026-09-14) — Confirmare clară după instalare
+
+### Added
+- **Instalarea îți spune acum unde a ajuns fișierul**, cu un buton care îl
+  deschide direct în Finder. Până acum, o instalare reușită nu afișa nimic.
+
+### Fixed
+- **Instalarea se confirmă pe disc**, nu se presupune. Dacă fișierul nu ajunge
+  întreg la destinație — disc plin, copiere întreruptă — primești o eroare
+  clară, cu calea exactă, în loc de un succes fals.
+- **Reinstalarea unui pachet nu mai lasă în urmă fișiere din versiunea
+  anterioară.** Scripturile fac excepție intenționat: folderul lor e comun cu
+  al tău, deci acolo se înlocuiesc doar fișierele pachetului, fără să se atingă
+  restul.
+
 ## v1.32.0 Client / v1.36.0 Furnizor (2026-09-14) — Scripturi DaVinci Resolve + stocare pe mai multe repo-uri
 
 ### Added

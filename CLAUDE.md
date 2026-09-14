@@ -1797,3 +1797,74 @@ urcat cu structură proprie (`Utility/X.lua`) și-o păstrează, prin
 `Deliver`) există și sunt scriabile; un `type` necunoscut decodează la `unknown`
 în loc să dărâme catalogul; un fișier vechi fără câmp `repo` cade corect pe
 repo-ul principal.
+
+## Etapa 2026-09-14 (Etapa 3) — verificare post-instalare & compatibilitate cu Resolve 21
+
+### 1. Instalarea reușită nu spunea NIMIC
+
+`ContentView` avea literalmente `case .installed: break` — după o instalare
+reușită de LUT/DCTL/Fuse/OFX/Script, userul nu primea nicio confirmare și,
+mai ales, nu afla **unde** a ajuns fișierul. Singurele tipuri cu feedback erau
+PowerGrade-urile (import în Gallery).
+
+Reparat: `InstallOutcome.installed` poartă acum **căile reale**, iar cardul
+arată „Instalat în ~/Library/…" plus un buton care deschide Finder pe fișier.
+
+### 2. Verificare reală după scriere, nu „n-a aruncat, deci a mers"
+
+Scrierea se putea încheia fără excepție și fără ca fișierul să fie întreg la
+destinație: pe calea elevată copierea o face un proces separat (`osascript`),
+iar un disc plin sau o copiere parțială nu se vedeau nicăieri. Acum, după
+scriere, fiecare fișier e confirmat pe disc: **există** și are **aceeași
+dimensiune** ca sursa temporară.
+
+Nu se recalculează SHA-ul la destinație: octeții au fost deja verificați
+criptografic ÎNAINTE de scriere, iar singurul pas dintre ei și disc e copierea
+— o copiere trunchiată se vede ca diferență de dimensiune. Verificat pe fișiere
+reale:
+
+```
+1. copiere corecta -> TRECE
+2. trunchiat -> PRINS: dimensiune diferita (1200 in loc de 5000)
+3. lipsa     -> PRINS: fisierul nu exista dupa instalare
+```
+
+Eroarea nouă (`verificationFailed`) spune EXACT ce și unde, nu „a eșuat".
+
+### 3. Coliziuni de nume și resturi de la versiunea anterioară
+
+Un pack reinstalat peste o versiune mai veche lăsa în urmă fișierele care nu
+mai existau în versiunea nouă (un DCTL scos din pachet rămânea încărcat de
+Resolve la nesfârșit). Acum folderul produsului se curăță înainte de scriere.
+
+**EXCEPȚIE CRITICĂ, nu o scăpare — scripturile.** Destinația lor
+(`Fusion/Scripts/Utility` etc.) e un folder COMUN al Resolve-ului, în care stau
+și scripturile utilizatorului sau ale altor furnizori. O ștergere de folder
+acolo ar distruge munca lui. De aceea condiția e `item.isPack && item.type !=
+.scripts` — „folderul îmi aparține mie", nu „e un pack". Pentru scripturi,
+coliziunea se rezolvă la nivel de fișier: `writeFile` șterge fișierul existent
+înainte de copiere, deci suprascrierea e curată, fără să atingă vecinii.
+
+### 4. Compatibilitate cu build-urile noi de Resolve — VERIFICAT, nimic de schimbat
+
+Două verificări independente, niciuna presupusă:
+
+- **Changelog-ul oficial, 25 de versiuni** (19.0.1 → 21.0.4), filtrat după
+  LUT/DCTL/OFX/Fuse/Scripts/Gallery: **nicio schimbare de structură de
+  directoare**. Schimbările pe DCTL sunt de funcționalitate (color picker,
+  ACES 2.0, criptare în LUT browser), nu de amplasare.
+- **Instalarea reală de pe această mașină (Resolve 21.1.0)** — toate cele cinci
+  căi există și sunt populate:
+
+```
+/Library/.../DaVinci Resolve/LUT              42 intrari
+/Library/.../DaVinci Resolve/LUT/DCTL         29 intrari
+/Library/.../DaVinci Resolve/Fusion/Fuses      0 intrari
+/Library/OFX/Plugins                          19 intrari
+~/Library/.../Fusion/Scripts                   7 intrari
+```
+
+Concluzie: modulele de instalare NU au nevoie de ajustări pentru versiunile
+noi. Dacă Blackmagic schimbă vreodată structura, `PluginType.installDirectory`
+e singurul loc de modificat — o verificare pe disc, ca cea de mai sus, o va
+prinde.

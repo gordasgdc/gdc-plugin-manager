@@ -1036,6 +1036,8 @@ private struct PluginCard: View {
     @State private var isBusy = false
     @State private var errorMessage: String?
     @State private var statusMessage: String?
+    /// Caile REALE unde a ajuns produsul, verificate dupa instalare.
+    @State private var installedPaths: [URL] = []
     @State private var showResolveWarning = false
     /// Eșec de instalare pentru o resursă PLĂTITĂ (vezi InstallError.
     /// paidResourceInstallFailed / InstallManager.swift) — mesaj generic +
@@ -1135,6 +1137,13 @@ private struct PluginCard: View {
             }
             if let statusMessage {
                 Text(statusMessage).font(.caption2).foregroundStyle(.blue)
+                if let first = installedPaths.first {
+                    Button(L.t("install.revealInFinder")) {
+                        NSWorkspace.shared.activateFileViewerSelecting([first])
+                    }
+                    .buttonStyle(.link)
+                    .font(.caption2)
+                }
             }
             if showPaidResourceSupportError {
                 Button {
@@ -1272,6 +1281,7 @@ private struct PluginCard: View {
     private func install() {
         errorMessage = nil
         statusMessage = nil
+        installedPaths = []
         showPaidResourceSupportError = false
         isBusy = true
         Task {
@@ -1283,8 +1293,18 @@ private struct PluginCard: View {
                     statusMessage = String(format: L.t("powergrade.imported"), albumName)
                 case .installedNeedsManualStep(let folder):
                     statusMessage = String(format: L.t("powergrade.manualstep"), folder.path)
-                case .installed:
-                    break
+                case .installed(let paths):
+                    // [2026-09-14] Pana acum o instalare reusita nu spunea
+                    // NIMIC. Acum arata unde a ajuns efectiv fisierul, verificat
+                    // pe disc, si ofera un buton care il deschide in Finder.
+                    installedPaths = paths
+                    if let first = paths.first {
+                        let folder = first.deletingLastPathComponent().path
+                            .replacingOccurrences(of: NSHomeDirectory(), with: "~")
+                        statusMessage = String(format: L.t("install.done"), folder)
+                    } else {
+                        statusMessage = L.t("install.doneShort")
+                    }
                 }
             } catch InstallError.paidResourceInstallFailed {
                 // Mesaj generic, fără cale de fișier/instrucțiuni — vezi
