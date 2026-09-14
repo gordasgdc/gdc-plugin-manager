@@ -86,12 +86,14 @@
     <tr><td>Machine ID (identificator de mașină)</td><td>Legarea licenței de un dispozitiv, prevenirea folosirii neautorizate</td><td>Generat local, automat, de aplicație — nu identifică personal, direct, o persoană</td></tr>
     <tr><td>Preferințe locale (temă, limbă, filtre)</td><td>Funcționarea corectă a aplicației/site-ului</td><td>Stocate local pe dispozitivul tău (vezi și Politica de Cookies)</td></tr>
     <tr><td>Jurnale tehnice de server (IP, user-agent)</td><td>Funcționare standard hosting (GitHub Pages), securitate</td><td>Generate automat de infrastructura de găzduire, nu de noi direct</td></tr>
+    <tr><td>Rapoarte automate de eroare</td><td>Detectarea și repararea defectelor aplicației</td><td>Trimise automat de aplicație doar când apare o eroare: tipul erorii, versiunea aplicației, sistemul de operare, limba și tema alese. NU conțin adresa ta IP, numele tău de utilizator, fișierele tale sau conținutul lor</td></tr>
   </table>
 
   <h2>3. Unde sunt stocate datele</h2>
   <ul>
     <li><strong>Local, pe dispozitivul tău</strong> — majoritatea datelor (preferințe, cache catalog, fișier de licență) nu părăsesc niciodată calculatorul tău.</li>
     <li><strong>Supabase</strong> (bază de date folosită pentru gestionarea licențelor și revocări) — stochează Machine ID, produsul licențiat și, dacă l-ai furnizat, emailul asociat.</li>
+    <li><strong>Sentry</strong> (serviciu de raportare a erorilor, <strong>regiunea Uniunea Europeană</strong>) — primește rapoartele automate de eroare descrise mai sus. Nu primește adrese IP, nume de utilizator, Machine ID sau conținutul fișierelor tale. Rapoartele se păstrează 90 de zile, apoi se șterg automat.</li>
     <li><strong>GitHub</strong> — găzduiește catalogul public de produse (fără date personale) și, pentru istoricul intern de vânzări al dezvoltatorului, date minime necesare gestionării licențelor deja acordate.</li>
   </ul>
 
