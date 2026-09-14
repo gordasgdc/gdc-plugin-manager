@@ -49,6 +49,28 @@
     },
     {
       "access" : {
+        "group" : "partners",
+        "kind" : "external",
+        "note" : "One-time payment",
+        "referencePriceEUR" : 49,
+        "tags" : [
+          "Cut Valet",
+          "AI"
+        ]
+      },
+      "coverImage" : "https://cutvalet.com/assets/logo-512.png",
+      "id" : "Cut Valet",
+      "name" : "Cut Valet",
+      "socialLinks" : {
+        "instagramURL" : "https://www.instagram.com/joelschat",
+        "youtubeURL" : "https://www.youtube.com/@JoelSchat/videos"
+      },
+      "supportedOS" : "crossPlatform",
+      "url" : "https://cutvalet.com/",
+      "youtubeURL" : "https://cutvalet.com/tutorials"
+    },
+    {
+      "access" : {
         "group" : "gdc",
         "kind" : "trial",
         "tags" : [
