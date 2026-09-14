@@ -545,6 +545,21 @@
       "priceEUR" : 0,
       "supportedOS" : "crossPlatform",
       "url" : ""
+    },
+    {
+      "category" : "pdf",
+      "description" : "Scurtături\nDaVinci Resolve",
+      "filePath" : "SHORTCUTS_RO/SHORTCUTS_RO.pdf",
+      "fileRepo" : "pdfs",
+      "fileSHA256" : "74d8bed7236c831bdca81325d5619fed69ea268b3cc0a6b66712d0ebcc5de316",
+      "id" : "SHORTCUTS_RO",
+      "isFree" : true,
+      "isTrial" : false,
+      "name" : "SHORTCUTS_RO",
+      "pdfKind" : "technicalGuide",
+      "priceEUR" : 0,
+      "supportedOS" : "crossPlatform",
+      "url" : ""
     }
   ],
   "productBundles" : [
