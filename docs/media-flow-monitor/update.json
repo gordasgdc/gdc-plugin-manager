@@ -1,7 +1,7 @@
 {
-  "version": "1.9.1",
-  "release_date": "2026-08-31",
-  "changes": "v1.9.1: suma de donație afișată la activare se actualizează acum automat.",
+  "version": "1.10.0",
+  "release_date": "2026-09-15",
+  "changes": "v1.10.0: badge de scurtatura prominent cu tastele desenate (⌘⇧M), panoul se deschide la pornire (cu optiunea 'Porneste minimizat'), confirmari de siguranta inainte de Optimizare si Golire cache, tooltips pe toate actiunile, detectare aplicatie de montaj activa cu consumul ei de RAM, avertizari de memorie la 85%/95% si calificativ de sanatate.",
   "download_url": {
     "mac": "https://github.com/gordasgdc/MediaFlow-Monitor/releases/latest/download/MediaFlowMonitor.pkg",
     "windows": "https://github.com/gordasgdc/MediaFlow-Monitor/releases/latest/download/MediaFlowMonitorSetup-x64.exe"
