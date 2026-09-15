@@ -1,0 +1,10 @@
+{
+  "version": "2.0.0",
+  "app_version": "2.0.0",
+  "engine_version_required": "4.5.1",
+  "changes": "Prima versiune publică: alerte cu semafor în română, Mod Silențios, Rules Manager și filtrare de domenii pe liste StevenBlack.",
+  "download_url": {
+    "mac": "https://github.com/gordasgdc/gdc-firewall/releases/latest/download/GDCFirewall.pkg"
+  },
+  "mandatory": false
+}

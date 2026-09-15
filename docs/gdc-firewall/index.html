@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<title>GDC Firewall</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Firewall pentru macOS în limba română, pentru utilizatori non-tehnici. Gratuit, open-source, GPL-3.0.">
+<style>
+  :root {
+    --bg: #0b0d10;
+    --bg-elevated: #14171b;
+    --border: #23272d;
+    --text: #e8eaed;
+    --text-dim: #9aa1a9;
+    --amber: #ffb347;
+    --copper: #d98b4a;
+    --green: #3ddc84;
+    --red: #ff6b6b;
+    --yellow: #ffd166;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.55;
+  }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 56px 22px 88px; }
+  header { text-align: center; margin-bottom: 52px; }
+  .shield { width: 72px; height: 72px; margin: 0 auto 18px; display: block; stroke: var(--amber); fill: none; stroke-width: 1.6; }
+  h1 {
+    font-size: 2.3rem; margin: 0 0 10px; letter-spacing: -0.02em;
+    background: linear-gradient(90deg, var(--amber), var(--copper));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .tagline { color: var(--text-dim); font-size: 1.05rem; margin: 0 auto; max-width: 600px; }
+  .badges { display: flex; gap: 9px; justify-content: center; margin-top: 20px; flex-wrap: wrap; }
+  .badge {
+    border: 1px solid var(--border); background: var(--bg-elevated);
+    color: var(--text-dim); font-size: 0.78rem; padding: 5px 12px; border-radius: 999px;
+  }
+  .badge.free { color: var(--amber); border-color: #4a3a1f; }
+
+  h2 { font-size: 1.25rem; margin: 56px 0 18px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 680px) { .grid { grid-template-columns: 1fr; } }
+  .feature {
+    background: var(--bg-elevated); border: 1px solid var(--border);
+    border-radius: 14px; padding: 18px 20px;
+  }
+  .feature h3 { margin: 0 0 6px; font-size: 0.98rem; display: flex; align-items: center; gap: 9px; }
+  .feature p { margin: 0; color: var(--text-dim); font-size: 0.89rem; }
+  .icon { width: 17px; height: 17px; stroke: var(--copper); fill: none; stroke-width: 1.7; flex: none; }
+
+  .semafor { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 4px; }
+  .lvl { flex: 1 1 200px; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 14px; padding: 16px 18px; }
+  .lvl .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 8px; }
+  .lvl.g .dot { background: var(--green); box-shadow: 0 0 9px var(--green); }
+  .lvl.y .dot { background: var(--yellow); box-shadow: 0 0 9px var(--yellow); }
+  .lvl.r .dot { background: var(--red); box-shadow: 0 0 9px var(--red); }
+  .lvl strong { font-size: 0.93rem; }
+  .lvl p { margin: 7px 0 0; color: var(--text-dim); font-size: 0.86rem; }
+
+  .dl-card {
+    background: var(--bg-elevated); border: 1px solid var(--border);
+    border-radius: 16px; padding: 26px; text-align: center; margin-top: 8px;
+  }
+  .dl-card .ver { color: var(--text-dim); font-size: 0.84rem; margin: 4px 0 18px; }
+  .btn {
+    display: inline-block; padding: 12px 30px;
+    background: linear-gradient(90deg, var(--amber), var(--copper));
+    color: #17110a; font-weight: 650; text-decoration: none;
+    border-radius: 10px; font-size: 0.95rem;
+  }
+  .note { color: var(--text-dim); font-size: 0.82rem; margin-top: 14px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--text-dim); font-weight: 600; font-size: 0.8rem; }
+  .wrapx { overflow-x: auto; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 14px; }
+
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 0.82rem; text-align: center; }
+  footer a { color: var(--copper); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <svg class="shield" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 2.5 4.5 5.8v6c0 4.6 3.1 8.5 7.5 9.7 4.4-1.2 7.5-5.1 7.5-9.7v-6z"/>
+      <path d="M12 2.5v19"/>
+    </svg>
+    <h1>GDC Firewall</h1>
+    <p class="tagline">Firewall pentru macOS, în română, scris pentru oameni care nu sunt tehnici. Îți spune cine vrea pe internet și de ce — nu îți aruncă în față un nume de proces și o adresă IP.</p>
+    <div class="badges">
+      <span class="badge free">Gratuit</span>
+      <span class="badge">macOS 13+</span>
+      <span class="badge">Apple Silicon</span>
+      <span class="badge">Open-source · GPL-3.0</span>
+    </div>
+  </header>
+
+  <h2>Semaforul</h2>
+  <div class="semafor">
+    <div class="lvl g"><strong><span class="dot"></span>Verde — Sigur</strong><p>Semnat oficial de Apple. Recomandarea afișată: <em>Aprobă (Recomandat)</em>.</p></div>
+    <div class="lvl y"><strong><span class="dot"></span>Galben — Cunoscut</strong><p>Dezvoltator identificat, dar nu face parte din macOS. Recomandarea: <em>Verifică aplicația</em>.</p></div>
+    <div class="lvl r"><strong><span class="dot"></span>Roșu — Neidentificat</strong><p>Nu se știe cine a scris programul. Recomandarea: <em>Blochează accesul</em>.</p></div>
+  </div>
+
+  <h2>Ce face</h2>
+  <div class="grid">
+    <div class="feature">
+      <h3><svg class="icon" viewBox="0 0 24 24"><path d="M12 3 4 6.5v5.2c0 4.3 3.4 8.3 8 9.3 4.6-1 8-5 8-9.3V6.5z"/></svg>Alerte pe înțelesul tuturor</h3>
+      <p>„Serviciul Apple iCloud vrea să se conecteze” în loc de „cloudd wants to connect”. Detaliile tehnice rămân, dar ascunse sub un rând pe care îl deschizi doar dacă vrei.</p>
+    </div>
+    <div class="feature">
+      <h3><svg class="icon" viewBox="0 0 24 24"><path d="M5 12h14M12 5v14"/></svg>Mod Silențios</h3>
+      <p>Aprobă automat doar componentele semnate oficial de Apple, ca să nu fii întrerupt de zeci de ori în prima oră. Tot ce nu e Apple te întreabă în continuare.</p>
+    </div>
+    <div class="feature">
+      <h3><svg class="icon" viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><path d="M3.5 9.5h17"/></svg>Panou de reguli</h3>
+      <p>Aplicații Verificate, Servicii Sistem, Reguli Blocate — fiecare cu pictograma ei, numele în română și un comutator. Fără fișiere de configurare.</p>
+    </div>
+    <div class="feature">
+      <h3><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c4 4.6 4 11.4 0 17-4-5.6-4-12.4 0-17z"/></svg>Filtrare & AdBlock</h3>
+      <p>Trei nivele pe liste StevenBlack: Minim (malware, phishing, telemetrie), Mediu (+ reclame și urmărire), Maxim (+ pornografie și pariuri). Local, în memorie.</p>
+    </div>
+  </div>
+
+  <h2>Nivelele de filtrare</h2>
+  <div class="wrapx">
+    <table>
+      <tr><th>Nivel</th><th>Ce blochează</th><th>Pentru cine</th></tr>
+      <tr><td><strong>Minim</strong><br><span style="color:var(--text-dim)">recomandat</span></td><td>Domenii confirmate de malware, phishing și telemetrie agresivă.</td><td>Toată lumea. Nu strică nimic din ce folosești zilnic.</td></tr>
+      <tr><td><strong>Mediu</strong></td><td>Tot de mai sus, plus reclamele comune și scripturile de urmărire.</td><td>Cine vrea navigare mai curată și mai rapidă.</td></tr>
+      <tr><td><strong>Maxim</strong></td><td>Tot de mai sus, plus conținut pentru adulți și site-uri de pariuri.</td><td>Calculatoare folosite de copii sau în familie.</td></tr>
+    </table>
+  </div>
+
+  <h2>Descarcă</h2>
+  <div class="dl-card">
+    <strong>GDC Firewall pentru macOS</strong>
+    <p class="ver">versiunea 0.1.0 · Apple Silicon și Intel · macOS 13 sau mai nou</p>
+    <a class="btn" href="https://github.com/gordasgdc/gdc-firewall/releases/latest/download/GDCFirewall.pkg">Descarcă pachetul</a>
+    <p class="note">Pachet semnat și notarizat de Apple. La prima pornire, macOS îți cere să aprobi extensia de rețea din Setări de sistem — e pasul care face firewall-ul să funcționeze.</p>
+  </div>
+
+  <h2>Susține proiectul</h2>
+  <p style="color:var(--text-dim);font-size:0.92rem;max-width:640px">
+    Aplicația e gratuită și rămâne gratuită. Dacă îți e de folos, o donație de
+    23 € acoperă timpul de întreținere și taxele de dezvoltator Apple.
+  </p>
+
+  <footer>
+    © 2026 Cristi Gordaș / GDC · Distribuit sub licența GPL-3.0<br>
+    Motor de filtrare: <a href="https://github.com/objective-see/LuLu">LuLu</a> © Objective-See ·
+    Liste de domenii: <a href="https://github.com/StevenBlack/hosts">StevenBlack/hosts</a><br>
+    <a href="https://github.com/gordasgdc/gdc-firewall">Sursa pe GitHub</a>
+  </footer>
+
+</div>
+</body>
+</html>
