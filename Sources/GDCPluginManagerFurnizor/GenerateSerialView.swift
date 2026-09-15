@@ -92,6 +92,11 @@ struct GenerateSerialView: View {
     @State private var priceText = ""
     @State private var licensePlatform: LicenseCore.LicensePlatform = .any
 
+    /// Focalizarea pe campul de ID, ca butonul "Client nou" sa lase cursorul
+    /// direct acolo — altfel Cristi trebuie sa dea si un click inainte de a
+    /// lipi urmatorul ID.
+    @FocusState private var machineIDFocused: Bool
+
     @State private var showConfirm = false
     @State private var generatedCode: String?
     @State private var justCopied = false
@@ -187,7 +192,15 @@ struct GenerateSerialView: View {
                         TextField("ID calculator (opțional — lipit de la client)", text: $machineID)
                             .textFieldStyle(.roundedBorder)
                             .font(.system(.body, design: .monospaced))
+                            .focused($machineIDFocused)
                             .onChange(of: machineID) {
+                                // Codul generat apartine ID-ului de dinainte.
+                                // Lasat pe ecran in timp ce tastezi altul, e
+                                // exact genul de confuzie care duce la
+                                // trimiterea serialului gresit unui client.
+                                generatedCode = nil
+                                justCopied = false
+
                                 // Autocompletare după ID de mașină (tracking + istoric
                                 // vânzări — vezi ClientDirectory.swift). Nu suprascrie
                                 // dacă numele e deja completat manual de Cristi — doar
@@ -260,11 +273,15 @@ struct GenerateSerialView: View {
                             Text(generatedCode)
                                 .font(.system(.body, design: .monospaced))
                                 .textSelection(.enabled)
-                            Button(justCopied ? "Copiat." : "Copiază") {
-                                let pb = NSPasteboard.general
-                                pb.clearContents()
-                                pb.setString(generatedCode, forType: .string)
-                                justCopied = true
+                            HStack(spacing: 10) {
+                                Button(justCopied ? "Copiat." : "Copiază") {
+                                    let pb = NSPasteboard.general
+                                    pb.clearContents()
+                                    pb.setString(generatedCode, forType: .string)
+                                    justCopied = true
+                                }
+                                Button("Client nou") { startNewClient() }
+                                    .help("Golește ID-ul și codul, gata pentru următorul client")
                             }
                         }
                         .padding(8)
@@ -280,6 +297,25 @@ struct GenerateSerialView: View {
             loadItems()
             await clientDirectory.loadIfNeeded()
         }
+    }
+
+    /// Pregătește formularul pentru următorul client.
+    ///
+    /// Golește DOAR ce ține de persoana curentă — ID, nume, email, cod
+    /// generat. Aplicația selectată, durata și prețul rămân: la procesarea
+    /// unui lot de clienți pentru același produs, acelea sunt identice, iar
+    /// resetarea lor ar însemna reintroducerea acelorași valori de fiecare
+    /// dată.
+    private func startNewClient() {
+        machineID = ""
+        customerName = ""
+        email = ""
+        generatedCode = nil
+        justCopied = false
+        errorMessage = nil
+        autofilledFrom = nil
+        nameSuggestions = []
+        machineIDFocused = true
     }
 
     /// Completează nume+email (și, opțional, ID mașină) dintr-o potrivire
