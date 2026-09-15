@@ -1,7 +1,7 @@
 {
   "_comment_legacy": "Campurile de la radacina exista DOAR pentru clientii <= 1.27, care decodeaza 'version' si 'download_url' ca OBLIGATORII de aici. Fara ele, decodarea lor arunca si update checker-ul lor esueaza tacut, raportand 'sunteti pe cea mai noua versiune' la infinit. Clientii >= 1.28 citesc sectiunile mac/windows de mai jos si ignora acest bloc. A NU SE STERGE.",
   "version": "1.37.0",
-  "release_date": "2026-09-14",
+  "release_date": "2026-09-15",
   "changes": "Aplicația raportează automat erorile neașteptate, ca să poată fi reparate. Nu se trimit date personale — detalii în politica de confidențialitate.",
   "download_url": {
     "mac": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Mac.zip",
@@ -10,9 +10,9 @@
   "mandatory": false,
   "min_version": "1.0.0",
   "mac": {
-    "version": "1.37.0",
-    "release_date": "2026-09-14",
-    "changes": "Aplicația raportează automat erorile neașteptate, ca să poată fi reparate. Nu se trimit date personale — detalii în politica de confidențialitate.",
+    "version": "1.37.1",
+    "release_date": "2026-09-15",
+    "changes": "Butonul Deschide din „Aplicațiile Mele” pornește acum întotdeauna aplicația din folderul Aplicații, nu o copie veche de pe alt disc.",
     "download_url": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Mac.zip",
     "mandatory": false,
     "min_version": "1.0.0"
