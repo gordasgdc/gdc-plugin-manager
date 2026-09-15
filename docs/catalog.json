@@ -133,6 +133,29 @@
     {
       "access" : {
         "group" : "gdc",
+        "kind" : "free",
+        "tags" : [
+          "Utilitare",
+          "Securitate"
+        ]
+      },
+      "coverImage" : "covers/GDC Firewall.png?v=09789091",
+      "description" : {
+        "en" : "A macOS firewall in plain language, built for non-technical users. Traffic-light alerts, smart approval of Apple services and three levels of domain filtering. Free, open source.",
+        "es" : "Cortafuegos para macOS en lenguaje sencillo, para usuarios no técnicos. Alertas tipo semáforo, aprobación inteligente de servicios de Apple y tres niveles de filtrado de dominios. Gratuito y de código abierto.",
+        "ro" : "Firewall pentru macOS, în română, pentru utilizatori non-tehnici. Alerte cu semafor, aprobare inteligentă a serviciilor Apple și filtrare de domenii pe trei nivele. Gratuit, sursă publică."
+      },
+      "downloadURL" : "https://gordas.dev/gdc-firewall/GDCFirewall-macOS.zip",
+      "id" : "gdc-firewall",
+      "name" : "GDC Firewall",
+      "supportedOS" : "macOS",
+      "updateURL" : "https://gordas.dev/gdc-firewall/update.json",
+      "url" : "https://gordas.dev/gdc-firewall/",
+      "version" : "2.0.0"
+    },
+    {
+      "access" : {
+        "group" : "gdc",
         "kind" : "trial",
         "tags" : [
 
@@ -787,5 +810,5 @@
       "youtubeURL" : "https://www.youtube.com/watch?v=dnkUIGXIzIM"
     }
   ],
-  "updatedAt" : "2026-09-14"
+  "updatedAt" : "2026-09-15T21:36:37Z"
 }
