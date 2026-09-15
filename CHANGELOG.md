@@ -1,5 +1,18 @@
 # Changelog — GDC Plugin Manager
 
+## v1.45.0 Furnizor (2026-09-15) — Client nou, fără să ieși din meniu
+
+### Added
+- **Buton „Client nou"** lângă „Copiază", la generarea serialelor: golește
+  ID-ul de mașină, numele, emailul și codul generat, și pune cursorul direct
+  în câmpul de ID, gata de lipit. Aplicația, durata și prețul rămân alese —
+  la un lot de clienți pentru același produs sunt oricum identice.
+
+### Fixed
+- **Codul generat anterior rămânea pe ecran** cât timp introduceai alt ID de
+  mașină. Acum dispare la prima tastă, ca să nu ajungă serialul greșit la
+  clientul greșit.
+
 ## v1.37.1 Client (2026-09-15) — Deschiderea aplicațiilor instalate
 
 ### Fixed
