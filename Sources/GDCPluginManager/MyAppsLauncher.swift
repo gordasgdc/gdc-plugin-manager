@@ -214,8 +214,30 @@ final class MyAppsStore: NSObject, ObservableObject {
         }
     }
 
+
+    /// Copia din `/Applications`, daca exista mai multe instalari ale aceleiasi
+    /// aplicatii.
+    ///
+    /// BUG REAL (2026-09-15, raportat: "the application GDC Vault.app can't be
+    /// opened"): `urlForApplication(withBundleIdentifier:)` intoarce UN
+    /// singur rezultat, ales de LaunchServices — care poate fi o copie veche
+    /// de pe un disc extern sau dintr-un backup. Cand acel disc e deconectat,
+    /// deschiderea esueaza, desi aplicatia e instalata cuminte in
+    /// /Applications. Alegem explicit copia din /Applications si cadem pe
+    /// comportamentul vechi doar daca nu exista niciuna acolo.
+    private static func resolveAppURL(bundleIdentifier: String) -> URL? {
+        let candidates = NSWorkspace.shared.urlsForApplications(withBundleIdentifier: bundleIdentifier)
+        if let inApplications = candidates.first(where: { $0.path.hasPrefix("/Applications/") }) {
+            return inApplications
+        }
+        // Un volum deconectat lasa in urma o cale care nu mai exista pe disc.
+        if let reachable = candidates.first(where: { FileManager.default.fileExists(atPath: $0.path) }) {
+            return reachable
+        }
+        return NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundleIdentifier)
+    }
     private func refresh(_ app: MyAppEntry) {
-        guard let appURL = NSWorkspace.shared.urlForApplication(withBundleIdentifier: app.bundleIdentifier) else {
+        guard let appURL = Self.resolveAppURL(bundleIdentifier: app.bundleIdentifier) else {
             statuses[app.id] = Status(isInstalled: false)
             return
         }
@@ -294,7 +316,7 @@ final class MyAppsStore: NSObject, ObservableObject {
     }
 
     func launch(_ app: MyAppEntry) {
-        guard let appURL = NSWorkspace.shared.urlForApplication(withBundleIdentifier: app.bundleIdentifier) else { return }
+        guard let appURL = Self.resolveAppURL(bundleIdentifier: app.bundleIdentifier) else { return }
         NSWorkspace.shared.open(appURL)
     }
 
@@ -455,4 +477,5 @@ private struct CustomLauncherCard: View {
         .frame(maxWidth: .infinity, minHeight: 100, alignment: .leading)
         .background(RoundedRectangle(cornerRadius: 10).fill(.background.secondary))
     }
+
 }

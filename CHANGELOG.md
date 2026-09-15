@@ -1,5 +1,22 @@
 # Changelog — GDC Plugin Manager
 
+## v1.37.1 Client (2026-09-15) — Deschiderea aplicațiilor instalate
+
+### Fixed
+- **„Aplicațiile Mele" → Deschide** dădea eroarea „the application ... can't be
+  opened" când aceeași aplicație exista și pe un disc extern sau într-un
+  backup. Se deschide acum întotdeauna copia din folderul Aplicații.
+
+## v1.37.0 Client (2026-09-14) — Raportare automată a erorilor
+
+### Added
+- Când aplicația întâmpină o eroare neașteptată, trimite automat un raport
+  tehnic care ajută la reparare: tipul erorii, versiunea, sistemul de operare,
+  limba și tema. **Nu** se trimit adresa IP, numele tău de utilizator,
+  fișierele tale sau conținutul lor — vezi politica de confidențialitate.
+- Raportarea ajută la găsirea defectelor care altfel n-ar fi semnalate
+  niciodată, fiindcă aplicația se închide înainte ca cineva să apuce să scrie.
+
 ## v1.44.0 Furnizor (2026-09-14) — Meniu lateral pliabil
 
 ### Changed
