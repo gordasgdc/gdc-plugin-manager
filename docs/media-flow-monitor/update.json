@@ -1,7 +1,7 @@
 {
-  "version": "1.10.0",
-  "release_date": "2026-09-15",
-  "changes": "v1.10.0: badge de scurtatura prominent cu tastele desenate (⌘⇧M), panoul se deschide la pornire (cu optiunea 'Porneste minimizat'), confirmari de siguranta inainte de Optimizare si Golire cache, tooltips pe toate actiunile, detectare aplicatie de montaj activa cu consumul ei de RAM, avertizari de memorie la 85%/95% si calificativ de sanatate.",
+  "version": "1.10.1",
+  "release_date": "2026-09-19",
+  "changes": "v1.10.1: mutarea \u00een folderul Aplica\u021bii nu mai las\u0103 aplica\u021bia izolat\u0103 de macOS \u2014 nu mai cere mutarea la fiecare pornire \u0219i nu mai duce aplica\u021bia instalat\u0103 la Co\u0219. Windows: f\u0103r\u0103 schimb\u0103ri.",
   "download_url": {
     "mac": "https://github.com/gordasgdc/MediaFlow-Monitor/releases/latest/download/MediaFlowMonitor.pkg",
     "windows": "https://github.com/gordasgdc/MediaFlow-Monitor/releases/latest/download/MediaFlowMonitorSetup-x64.exe"
