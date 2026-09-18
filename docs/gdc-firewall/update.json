@@ -1,8 +1,8 @@
 {
-  "version": "2.3.1",
-  "app_version": "2.3.1",
+  "version": "2.3.2",
+  "app_version": "2.3.2",
   "engine_version_required": "4.5.1",
-  "changes": "Fereastra Reguli nouă cu bară laterală, tabel cu pictograme, meniu contextual și panou de detalii; blocklist StevenBlack pe niveluri aplicat fiecărei conexiuni; import și export de reguli; buton Setări și alegerea limbii la vedere.",
+  "changes": "Actualizările filtrului de rețea se finalizează fără repornirea Mac-ului (o singură parolă la instalarea manuală, niciuna în plus la actualizarea automată). Pornită din Downloads, aplicația se mută singură în folderul Aplicații.",
   "download_url": {
     "mac": "https://gordas.dev/gdc-firewall/GDCFirewall-macOS.zip"
   },
