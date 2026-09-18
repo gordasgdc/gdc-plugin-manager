@@ -136,7 +136,7 @@
     <div class="card dl">
       <strong data-i18n="dlName"></strong>
       <p class="dim"><span data-i18n="dlVersion"></span> <span id="version">—</span> · <span data-i18n="dlReq"></span></p>
-      <a class="btn" href="GDCFirewall-macOS.zip"><svg aria-hidden="true"><use href="#icon-download"/></svg><span data-i18n="dlButton"></span></a>
+      <a class="btn" id="download" href="GDCFirewall-macOS-2.3.3.zip"><svg aria-hidden="true"><use href="#icon-download"/></svg><span data-i18n="dlButton"></span></a>
       <p class="note" data-i18n-html="dlNote"></p>
     </div>
   </section>
@@ -277,7 +277,13 @@ apply(pick());
 // Versiunea arătată la descărcare e cea SERVITĂ (update.json), nu una scrisă de mână.
 fetch("update.json", { cache: "no-store" })
   .then(r => r.json())
-  .then(j => { document.getElementById("version").textContent = j.app_version || j.version || "—"; })
+  .then(j => {
+    document.getElementById("version").textContent = j.app_version || j.version || "—";
+    // Arhiva cu versiunea în nume, din aceeași sursă ca actualizarea automată:
+    // o pagină rămasă în cache duce tot la ultima versiune.
+    const url = j.download_url && (j.download_url.mac || j.download_url);
+    if (typeof url === "string" && /GDCFirewall-macOS-[0-9.]+\.zip$/.test(url)) document.getElementById("download").href = url;
+  })
   .catch(() => {});
 </script>
 </body>
