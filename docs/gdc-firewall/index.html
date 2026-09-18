@@ -4,160 +4,285 @@
 <meta charset="UTF-8">
 <title>GDC Firewall</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Firewall pentru macOS în limba română, pentru utilizatori non-tehnici. Gratuit, open-source, GPL-3.0.">
+<meta name="description" content="Firewall pentru macOS pe înțelesul tuturor. Gratuit, open-source, GPL-3.0. Română, English, Español.">
 <style>
   :root {
-    --bg: #0b0d10;
-    --bg-elevated: #14171b;
-    --border: #23272d;
-    --text: #e8eaed;
-    --text-dim: #9aa1a9;
-    --amber: #ffb347;
-    --copper: #d98b4a;
-    --green: #3ddc84;
-    --red: #ff6b6b;
-    --yellow: #ffd166;
+    --bg: #14161A; --bg-elevated: #1A1D22; --border: #2A2E35;
+    --text: #EDEFF2; --text-dim: #9AA1A9;
+    --amber: #FFB347; --copper: #D98B4A;
+    --green: #3DDC84; --red: #FF6B6B; --yellow: #FFD166;
   }
   * { box-sizing: border-box; }
-  body {
-    margin: 0; background: var(--bg); color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    line-height: 1.55;
-  }
-  .wrap { max-width: 920px; margin: 0 auto; padding: 56px 22px 88px; }
-  header { text-align: center; margin-bottom: 52px; }
-  .shield { width: 72px; height: 72px; margin: 0 auto 18px; display: block; stroke: var(--amber); fill: none; stroke-width: 1.6; }
-  h1 {
-    font-size: 2.3rem; margin: 0 0 10px; letter-spacing: -0.02em;
+  body { margin: 0; background: var(--bg); color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; line-height: 1.55; }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 28px 16px 60px; }
+  .topbar { display: flex; justify-content: flex-end; }
+  .lang { display: inline-flex; border: 1px solid var(--border); border-radius: 999px; overflow: hidden; }
+  .lang button { background: transparent; color: var(--text-dim); border: 0; padding: 6px 12px;
+    font: 600 0.78rem/1 inherit; cursor: pointer; }
+  .lang button[aria-pressed="true"] { background: var(--copper); color: #17110a; }
+  header { text-align: center; margin: 18px 0 40px; }
+  .shield { width: 64px; height: 64px; color: var(--amber); display: block; margin: 0 auto 14px; }
+  h1 { font-size: 2.2rem; margin: 0 0 10px; letter-spacing: -0.02em;
     background: linear-gradient(90deg, var(--amber), var(--copper));
-    -webkit-background-clip: text; background-clip: text; color: transparent;
-  }
-  .tagline { color: var(--text-dim); font-size: 1.05rem; margin: 0 auto; max-width: 600px; }
-  .badges { display: flex; gap: 9px; justify-content: center; margin-top: 20px; flex-wrap: wrap; }
-  .badge {
-    border: 1px solid var(--border); background: var(--bg-elevated);
-    color: var(--text-dim); font-size: 0.78rem; padding: 5px 12px; border-radius: 999px;
-  }
-  .badge.free { color: var(--amber); border-color: #4a3a1f; }
-
-  h2 { font-size: 1.25rem; margin: 56px 0 18px; }
-  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-  @media (max-width: 680px) { .grid { grid-template-columns: 1fr; } }
-  .feature {
-    background: var(--bg-elevated); border: 1px solid var(--border);
-    border-radius: 14px; padding: 18px 20px;
-  }
-  .feature h3 { margin: 0 0 6px; font-size: 0.98rem; display: flex; align-items: center; gap: 9px; }
-  .feature p { margin: 0; color: var(--text-dim); font-size: 0.89rem; }
-  .icon { width: 17px; height: 17px; stroke: var(--copper); fill: none; stroke-width: 1.7; flex: none; }
-
-  .semafor { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 4px; }
-  .lvl { flex: 1 1 200px; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 14px; padding: 16px 18px; }
-  .lvl .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 8px; }
-  .lvl.g .dot { background: var(--green); box-shadow: 0 0 9px var(--green); }
-  .lvl.y .dot { background: var(--yellow); box-shadow: 0 0 9px var(--yellow); }
-  .lvl.r .dot { background: var(--red); box-shadow: 0 0 9px var(--red); }
-  .lvl strong { font-size: 0.93rem; }
-  .lvl p { margin: 7px 0 0; color: var(--text-dim); font-size: 0.86rem; }
-
-  .dl-card {
-    background: var(--bg-elevated); border: 1px solid var(--border);
-    border-radius: 16px; padding: 26px; text-align: center; margin-top: 8px;
-  }
-  .dl-card .ver { color: var(--text-dim); font-size: 0.84rem; margin: 4px 0 18px; }
-  .btn {
-    display: inline-block; padding: 12px 30px;
-    background: linear-gradient(90deg, var(--amber), var(--copper));
-    color: #17110a; font-weight: 650; text-decoration: none;
-    border-radius: 10px; font-size: 0.95rem;
-  }
-  .note { color: var(--text-dim); font-size: 0.82rem; margin-top: 14px; }
-
-  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
-  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .tagline { color: var(--text-dim); font-size: 1.04rem; margin: 0 auto; max-width: 640px; }
+  .badges { display: flex; gap: 8px; justify-content: center; margin-top: 18px; flex-wrap: wrap; }
+  .badge { border: 1px solid var(--border); background: var(--bg-elevated); color: var(--text-dim);
+    font-size: 0.78rem; padding: 5px 12px; border-radius: 999px; }
+  .badge.accent { color: var(--amber); border-color: #4a3a1f; }
+  section { padding: 30px 0; }
+  h2 { font-size: 1.25rem; margin: 0 0 16px; }
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  @media (max-width: 700px) { .grid { grid-template-columns: 1fr; } h1 { font-size: 1.9rem; } }
+  .card { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 14px; padding: 18px 20px; }
+  .card h3 { margin: 0 0 6px; font-size: 0.98rem; display: flex; align-items: center; gap: 9px; }
+  .card p { margin: 0; color: var(--text-dim); font-size: 0.9rem; }
+  .icon { width: 18px; height: 18px; color: var(--copper); flex: none; }
+  .semafor { display: flex; gap: 12px; flex-wrap: wrap; }
+  .lvl { flex: 1 1 220px; }
+  .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 8px; }
+  .g .dot { background: var(--green); } .y .dot { background: var(--yellow); } .r .dot { background: var(--red); }
+  .table { overflow-x: auto; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 14px; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:last-child td { border-bottom: 0; }
   th { color: var(--text-dim); font-weight: 600; font-size: 0.8rem; }
-  .wrapx { overflow-x: auto; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 14px; }
-
-  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 0.82rem; text-align: center; }
+  .dim { color: var(--text-dim); font-size: 0.88rem; }
+  .dl { text-align: center; padding: 26px 20px; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px; margin-top: 6px;
+    background: linear-gradient(90deg, var(--amber), var(--copper)); color: #17110a;
+    font-weight: 650; text-decoration: none; border-radius: 10px; }
+  .btn svg { width: 18px; height: 18px; }
+  .note { color: var(--text-dim); font-size: 0.83rem; margin: 14px auto 0; max-width: 620px; }
+  footer { margin-top: 40px; padding-top: 22px; border-top: 1px solid var(--border);
+    color: var(--text-dim); font-size: 0.82rem; text-align: center; }
   footer a { color: var(--copper); }
+  footer p { margin: 6px 0; }
 </style>
 </head>
 <body>
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="icon-shield" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5 4.5 5.8v6c0 4.6 3.1 8.5 7.5 9.7 4.4-1.2 7.5-5.1 7.5-9.7v-6z"/><path d="M12 2.5v19"/></g></symbol>
+  <symbol id="icon-bell" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20a2 2 0 0 0 4 0"/></g></symbol>
+  <symbol id="icon-list" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><path d="M9 4.5v15M12 9h5M12 13h5"/></g></symbol>
+  <symbol id="icon-globe" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c4 4.6 4 11.4 0 17-4-5.6-4-12.4 0-17z"/></g></symbol>
+  <symbol id="icon-swap" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h13l-3-3M20 16H7l3 3"/></g></symbol>
+  <symbol id="icon-zap" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M13 3 5 13.5h6L10 21l8-10.5h-6z"/></symbol>
+  <symbol id="icon-lang" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h9M8.5 3v2M6 5c1 3.5 3.5 6 6.5 7.5M11 5c-1 3.5-3.5 6.5-7 8"/><path d="M13 21l4-9 4 9M14.5 18h5"/></g></symbol>
+  <symbol id="icon-download" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7.5 10.5 12 15l4.5-4.5M5 19.5h14"/></g></symbol>
+</svg>
+
 <div class="wrap">
+  <div class="topbar">
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-lang="ro">RO</button>
+      <button type="button" data-lang="en">EN</button>
+      <button type="button" data-lang="es">ES</button>
+    </div>
+  </div>
 
   <header>
-    <svg class="shield" viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M12 2.5 4.5 5.8v6c0 4.6 3.1 8.5 7.5 9.7 4.4-1.2 7.5-5.1 7.5-9.7v-6z"/>
-      <path d="M12 2.5v19"/>
-    </svg>
+    <svg class="shield" aria-hidden="true"><use href="#icon-shield"/></svg>
     <h1>GDC Firewall</h1>
-    <p class="tagline">Firewall pentru macOS, în română, scris pentru oameni care nu sunt tehnici. Îți spune cine vrea pe internet și de ce — nu îți aruncă în față un nume de proces și o adresă IP.</p>
+    <p class="tagline" data-i18n="tagline"></p>
     <div class="badges">
-      <span class="badge free">Gratuit</span>
+      <span class="badge accent" data-i18n="badgeFree"></span>
       <span class="badge">macOS 13+</span>
-      <span class="badge">Apple Silicon</span>
+      <span class="badge" data-i18n="badgeChips"></span>
       <span class="badge">Open-source · GPL-3.0</span>
+      <span class="badge">RO · EN · ES</span>
     </div>
   </header>
 
-  <h2>Semaforul</h2>
-  <div class="semafor">
-    <div class="lvl g"><strong><span class="dot"></span>Verde — Sigur</strong><p>Semnat oficial de Apple. Recomandarea afișată: <em>Aprobă (Recomandat)</em>.</p></div>
-    <div class="lvl y"><strong><span class="dot"></span>Galben — Cunoscut</strong><p>Dezvoltator identificat, dar nu face parte din macOS. Recomandarea: <em>Verifică aplicația</em>.</p></div>
-    <div class="lvl r"><strong><span class="dot"></span>Roșu — Neidentificat</strong><p>Nu se știe cine a scris programul. Recomandarea: <em>Blochează accesul</em>.</p></div>
-  </div>
-
-  <h2>Ce face</h2>
-  <div class="grid">
-    <div class="feature">
-      <h3><svg class="icon" viewBox="0 0 24 24"><path d="M12 3 4 6.5v5.2c0 4.3 3.4 8.3 8 9.3 4.6-1 8-5 8-9.3V6.5z"/></svg>Alerte pe înțelesul tuturor</h3>
-      <p>„Serviciul Apple iCloud vrea să se conecteze” în loc de „cloudd wants to connect”. Detaliile tehnice rămân, dar ascunse sub un rând pe care îl deschizi doar dacă vrei.</p>
+  <section>
+    <h2 data-i18n="lightsTitle"></h2>
+    <div class="semafor">
+      <div class="card lvl g"><strong><span class="dot"></span><span data-i18n="greenTitle"></span></strong><p data-i18n-html="greenText"></p></div>
+      <div class="card lvl y"><strong><span class="dot"></span><span data-i18n="yellowTitle"></span></strong><p data-i18n-html="yellowText"></p></div>
+      <div class="card lvl r"><strong><span class="dot"></span><span data-i18n="redTitle"></span></strong><p data-i18n-html="redText"></p></div>
     </div>
-    <div class="feature">
-      <h3><svg class="icon" viewBox="0 0 24 24"><path d="M5 12h14M12 5v14"/></svg>Mod Silențios</h3>
-      <p>Aprobă automat doar componentele semnate oficial de Apple, ca să nu fii întrerupt de zeci de ori în prima oră. Tot ce nu e Apple te întreabă în continuare.</p>
-    </div>
-    <div class="feature">
-      <h3><svg class="icon" viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><path d="M3.5 9.5h17"/></svg>Panou de reguli</h3>
-      <p>Aplicații Verificate, Servicii Sistem, Reguli Blocate — fiecare cu pictograma ei, numele în română și un comutator. Fără fișiere de configurare.</p>
-    </div>
-    <div class="feature">
-      <h3><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c4 4.6 4 11.4 0 17-4-5.6-4-12.4 0-17z"/></svg>Filtrare & AdBlock</h3>
-      <p>Trei nivele pe liste StevenBlack: Minim (malware, phishing, telemetrie), Mediu (+ reclame și urmărire), Maxim (+ pornografie și pariuri). Local, în memorie.</p>
-    </div>
-  </div>
+  </section>
 
-  <h2>Nivelele de filtrare</h2>
-  <div class="wrapx">
-    <table>
-      <tr><th>Nivel</th><th>Ce blochează</th><th>Pentru cine</th></tr>
-      <tr><td><strong>Minim</strong><br><span style="color:var(--text-dim)">recomandat</span></td><td>Domenii confirmate de malware, phishing și telemetrie agresivă.</td><td>Toată lumea. Nu strică nimic din ce folosești zilnic.</td></tr>
-      <tr><td><strong>Mediu</strong></td><td>Tot de mai sus, plus reclamele comune și scripturile de urmărire.</td><td>Cine vrea navigare mai curată și mai rapidă.</td></tr>
-      <tr><td><strong>Maxim</strong></td><td>Tot de mai sus, plus conținut pentru adulți și site-uri de pariuri.</td><td>Calculatoare folosite de copii sau în familie.</td></tr>
-    </table>
-  </div>
+  <section>
+    <h2 data-i18n="newTitle"></h2>
+    <div class="grid">
+      <div class="card"><h3><svg class="icon" aria-hidden="true"><use href="#icon-list"/></svg><span data-i18n="fRulesT"></span></h3><p data-i18n="fRules"></p></div>
+      <div class="card"><h3><svg class="icon" aria-hidden="true"><use href="#icon-globe"/></svg><span data-i18n="fBlockT"></span></h3><p data-i18n="fBlock"></p></div>
+      <div class="card"><h3><svg class="icon" aria-hidden="true"><use href="#icon-swap"/></svg><span data-i18n="fImportT"></span></h3><p data-i18n="fImport"></p></div>
+      <div class="card"><h3><svg class="icon" aria-hidden="true"><use href="#icon-bell"/></svg><span data-i18n="fAlertsT"></span></h3><p data-i18n="fAlerts"></p></div>
+      <div class="card"><h3><svg class="icon" aria-hidden="true"><use href="#icon-zap"/></svg><span data-i18n="fSilentT"></span></h3><p data-i18n="fSilent"></p></div>
+      <div class="card"><h3><svg class="icon" aria-hidden="true"><use href="#icon-lang"/></svg><span data-i18n="fLangT"></span></h3><p data-i18n="fLang"></p></div>
+    </div>
+  </section>
 
-  <h2>Descarcă</h2>
-  <div class="dl-card">
-    <strong>GDC Firewall pentru macOS</strong>
-    <p class="ver">versiunea 2.0.1 · Apple Silicon și Intel · macOS 13 sau mai nou</p>
-    <a class="btn" href="GDCFirewall-macOS.zip">Descarcă arhiva</a>
-    <p class="note">Arhiva conține aplicația, dezinstalatorul și ghidul de utilizare (RO/EN/ES). Mută <strong>GDC Firewall.app</strong> în folderul Aplicații și pornește-o. La prima lansare, macOS îți cere să aprobi extensia de rețea din Setări de sistem — fără pasul acela firewall-ul pornește, dar nu filtrează nimic. Ghidul din arhivă îl explică pas cu pas.</p>
-  </div>
+  <section>
+    <h2 data-i18n="tiersTitle"></h2>
+    <div class="table">
+      <table>
+        <tr><th data-i18n="thLevel"></th><th data-i18n="thBlocks"></th></tr>
+        <tr><td><strong>Unified</strong><br><span class="dim" data-i18n="tBaseNote"></span></td><td data-i18n="tBase"></td></tr>
+        <tr><td><strong data-i18n="tFakeT"></strong></td><td data-i18n="tFake"></td></tr>
+        <tr><td><strong data-i18n="tGambT"></strong></td><td data-i18n="tGamb"></td></tr>
+        <tr><td><strong data-i18n="tPornT"></strong></td><td data-i18n="tPorn"></td></tr>
+        <tr><td><strong data-i18n="tSocialT"></strong></td><td data-i18n="tSocial"></td></tr>
+      </table>
+    </div>
+    <p class="note" data-i18n="tiersNote"></p>
+  </section>
 
-  <h2>Susține proiectul</h2>
-  <p style="color:var(--text-dim);font-size:0.92rem;max-width:640px">
-    Aplicația e gratuită și rămâne gratuită. Dacă îți e de folos, o donație de
-    23 € acoperă timpul de întreținere și taxele de dezvoltator Apple.
-  </p>
+  <section>
+    <h2 data-i18n="dlTitle"></h2>
+    <div class="card dl">
+      <strong data-i18n="dlName"></strong>
+      <p class="dim"><span data-i18n="dlVersion"></span> <span id="version">—</span> · <span data-i18n="dlReq"></span></p>
+      <a class="btn" href="GDCFirewall-macOS.zip"><svg aria-hidden="true"><use href="#icon-download"/></svg><span data-i18n="dlButton"></span></a>
+      <p class="note" data-i18n-html="dlNote"></p>
+      <p class="note" data-i18n="dlSoon"></p>
+    </div>
+  </section>
+
+  <section>
+    <h2 data-i18n="supportTitle"></h2>
+    <p class="dim" data-i18n="supportText"></p>
+  </section>
 
   <footer>
-    © 2026 Cristi Gordaș / GDC · Distribuit sub licența GPL-3.0<br>
-    Motor de filtrare: <a href="https://github.com/objective-see/LuLu">LuLu</a> © Objective-See ·
-    Liste de domenii: <a href="https://github.com/StevenBlack/hosts">StevenBlack/hosts</a><br>
-    <a href="https://github.com/gordasgdc/gdc-firewall">Sursa pe GitHub</a>
+    <p>© 2026 Cristi Gordaș / GDC · <span data-i18n="license"></span></p>
+    <p><span data-i18n="engine"></span> <a href="https://github.com/objective-see/LuLu">LuLu</a> © Objective-See ·
+       <span data-i18n="lists"></span> <a href="https://github.com/StevenBlack/hosts">StevenBlack/hosts</a> ·
+       <a href="https://github.com/gordasgdc/gdc-firewall" data-i18n="source"></a></p>
+    <p><a href="https://gordas.dev/termeni" data-i18n="terms"></a> ·
+       <a href="https://gordas.dev/confidentialitate" data-i18n="privacy"></a> ·
+       <a href="https://gordas.dev/cookie" data-i18n="cookies"></a></p>
+    <p data-i18n="status"></p>
   </footer>
-
 </div>
+
+<script>
+const T = {
+  ro: {
+    title: "GDC Firewall — firewall pentru macOS, pe înțelesul tuturor",
+    tagline: "Firewall pentru macOS, scris pentru oameni care nu sunt tehnici. Îți spune cine vrea pe internet și de ce — pe înțeles, în română, engleză sau spaniolă.",
+    badgeFree: "Gratuit", badgeChips: "Apple Silicon și Intel",
+    lightsTitle: "Semaforul",
+    greenTitle: "Verde — Sigur", greenText: "Semnat oficial de Apple. Recomandarea afișată: <em>Aprobă (Recomandat)</em>.",
+    yellowTitle: "Galben — Cunoscut", yellowText: "Dezvoltator identificat, dar nu face parte din macOS. Recomandarea: <em>Verifică aplicația</em>.",
+    redTitle: "Roșu — Neidentificat", redText: "Nu se știe cine a scris programul. Recomandarea: <em>Blochează accesul</em>.",
+    newTitle: "Ce aduce versiunea 2.3.0",
+    fRulesT: "Fereastra Reguli", fRules: "Bară laterală cu reguli, grupuri (iCloud, macOS, aplicații Apple și terțe), sugestii și mentenanță; tabel cu pictogramele aplicațiilor; panou de detalii cu semnătura, calea și originea fiecărei reguli; clic dreapta pentru editare, duplicare, dezactivare sau export.",
+    fBlockT: "Blocklist StevenBlack pe niveluri", fBlock: "Baza Unified (reclame, malware, urmărire) plus niveluri opționale, îmbinate automat într-o singură listă și aplicate fiecărei conexiuni — inclusiv aplicațiilor deja permise.",
+    fImportT: "Import din Little Snitch și LuLu", fImport: "La prima pornire găsește alte firewall-uri, le preia regulile create de tine și îți arată cum le oprești. Importă și din fișier (.json, .lsrules, .plist) și exportă în format .lsrules.",
+    fAlertsT: "Alerte pe înțelesul tuturor", fAlerts: "„Serviciul Apple iCloud vrea să se conecteze” în loc de „cloudd wants to connect”. Detaliile tehnice rămân, dar pe un rând pe care îl deschizi doar dacă vrei.",
+    fSilentT: "Mod Silențios", fSilent: "Aprobă automat doar componentele semnate oficial de Apple, ca să nu fii întrerupt de zeci de ori. Tot ce nu e Apple te întreabă, de fiecare dată.",
+    fLangT: "Trei limbi", fLang: "Interfața, alertele și ghidul PDF în română, engleză și spaniolă. Limba urmează macOS sau se alege din Setări → General → Limbă.",
+    tiersTitle: "Nivelurile blocklist-ului", thLevel: "Nivel", thBlocks: "Ce blochează",
+    tBaseNote: "baza, mereu inclusă", tBase: "Reclame, malware, phishing și urmărire.",
+    tFakeT: "+Știri false", tFake: "Site-uri cunoscute pentru știri false.",
+    tGambT: "+Jocuri de noroc", tGamb: "Site-uri de pariuri și jocuri de noroc.",
+    tPornT: "+Pornografie", tPorn: "Conținut pentru adulți — potrivit pentru un Mac folosit de copii.",
+    tSocialT: "+Rețele sociale", tSocial: "Facebook, Instagram, TikTok, X și altele.",
+    tiersNote: "Poți adăuga și liste proprii. Excepțiile tale au mereu prioritate. Listele se descarcă din proiectul public StevenBlack/hosts și rămân pe Mac-ul tău.",
+    dlTitle: "Descarcă", dlName: "GDC Firewall pentru macOS", dlVersion: "Versiunea disponibilă:", dlReq: "macOS 13 sau mai nou",
+    dlButton: "Descarcă arhiva",
+    dlNote: "Arhiva conține aplicația, dezinstalatorul și ghidul de utilizare (RO/EN/ES). La prima pornire aplicația se mută singură în <strong>Aplicații</strong>.",
+    dlSoon: "Versiunea 2.3.0 descrisă mai sus e în testare și va fi disponibilă aici după verificarea de securitate Apple.",
+    supportTitle: "Susține proiectul",
+    supportText: "Aplicația e gratuită și rămâne gratuită. Dacă îți e de folos, o donație de 23 € acoperă timpul de întreținere și taxele de dezvoltator Apple. Donația e opțională și nu deblochează nimic.",
+    license: "Distribuit sub licența GPL-3.0", engine: "Motor de filtrare:", lists: "Liste de domenii:", source: "Sursa pe GitHub",
+    terms: "Termeni și Condiții", privacy: "Politica de Confidențialitate", cookies: "Cookie-uri",
+    status: "gordas.dev este o platformă administrată de dezvoltatori independenți. Aplicațiile și resursele sunt furnizate ca atare (AS IS), iar susținerea proiectului se bazează pe contribuții opționale de sprijin și donații."
+  },
+  en: {
+    title: "GDC Firewall — a macOS firewall anyone can understand",
+    tagline: "A firewall for macOS, written for people who aren't technical. It tells you who wants to go online and why — in plain words, in Romanian, English or Spanish.",
+    badgeFree: "Free", badgeChips: "Apple Silicon and Intel",
+    lightsTitle: "The traffic light",
+    greenTitle: "Green — Safe", greenText: "Officially signed by Apple. The recommendation shown: <em>Allow (Recommended)</em>.",
+    yellowTitle: "Yellow — Known", yellowText: "An identified developer, but not part of macOS. The recommendation: <em>Check the app</em>.",
+    redTitle: "Red — Unidentified", redText: "Nobody knows who wrote the program. The recommendation: <em>Block access</em>.",
+    newTitle: "What's new in version 2.3.0",
+    fRulesT: "The Rules window", fRules: "A sidebar with rules, groups (iCloud, macOS, Apple and third-party apps), suggestions and maintenance; a table with app icons; a details panel with each rule's signature, path and origin; right-click to edit, duplicate, disable or export.",
+    fBlockT: "Tiered StevenBlack blocklist", fBlock: "The Unified base (ads, malware, tracking) plus optional levels, merged automatically into one list and applied to every connection — including apps you have already allowed.",
+    fImportT: "Import from Little Snitch and LuLu", fImport: "On first launch it finds other firewalls, brings over the rules you created and shows you how to turn them off. It also imports from a file (.json, .lsrules, .plist) and exports to .lsrules.",
+    fAlertsT: "Alerts anyone can understand", fAlerts: "“Apple iCloud service wants to connect” instead of “cloudd wants to connect”. The technical details are still there, on a line you open only if you want to.",
+    fSilentT: "Silent Mode", fSilent: "Automatically allows only components officially signed by Apple, so you aren't interrupted dozens of times. Anything not from Apple still asks you, every time.",
+    fLangT: "Three languages", fLang: "The interface, alerts and PDF guide in Romanian, English and Spanish. The language follows macOS or can be chosen in Settings → General → Language.",
+    tiersTitle: "Blocklist levels", thLevel: "Level", thBlocks: "What it blocks",
+    tBaseNote: "the base, always included", tBase: "Ads, malware, phishing and tracking.",
+    tFakeT: "+Fake news", tFake: "Sites known for fake news.",
+    tGambT: "+Gambling", tGamb: "Betting and gambling sites.",
+    tPornT: "+Porn", tPorn: "Adult content — suitable for a Mac used by children.",
+    tSocialT: "+Social media", tSocial: "Facebook, Instagram, TikTok, X and others.",
+    tiersNote: "You can add lists of your own too. Your exceptions always win. The lists are downloaded from the public StevenBlack/hosts project and stay on your Mac.",
+    dlTitle: "Download", dlName: "GDC Firewall for macOS", dlVersion: "Available version:", dlReq: "macOS 13 or later",
+    dlButton: "Download the archive",
+    dlNote: "The archive contains the app, the uninstaller and the user guide (RO/EN/ES). On first launch the app moves itself to <strong>Applications</strong>.",
+    dlSoon: "Version 2.3.0 described above is being tested and will be available here after Apple's security check.",
+    supportTitle: "Support the project",
+    supportText: "The app is free and stays free. If you find it useful, a €23 donation covers maintenance time and Apple developer fees. The donation is optional and unlocks nothing.",
+    license: "Distributed under the GPL-3.0 license", engine: "Filtering engine:", lists: "Domain lists:", source: "Source on GitHub",
+    terms: "Terms and Conditions", privacy: "Privacy Policy", cookies: "Cookies",
+    status: "gordas.dev is a platform run by independent developers. The apps and resources are provided as is (AS IS), and the project is sustained by optional support contributions and donations."
+  },
+  es: {
+    title: "GDC Firewall — un firewall para macOS que cualquiera entiende",
+    tagline: "Un firewall para macOS, escrito para personas no técnicas. Te dice quién quiere salir a internet y por qué — en palabras sencillas, en rumano, inglés o español.",
+    badgeFree: "Gratis", badgeChips: "Apple Silicon e Intel",
+    lightsTitle: "El semáforo",
+    greenTitle: "Verde — Seguro", greenText: "Firmado oficialmente por Apple. La recomendación mostrada: <em>Aprobar (Recomendado)</em>.",
+    yellowTitle: "Amarillo — Conocido", yellowText: "Un desarrollador identificado, pero no forma parte de macOS. La recomendación: <em>Revisa la app</em>.",
+    redTitle: "Rojo — No identificado", redText: "No se sabe quién escribió el programa. La recomendación: <em>Bloquear el acceso</em>.",
+    newTitle: "Novedades de la versión 2.3.0",
+    fRulesT: "La ventana Reglas", fRules: "Barra lateral con reglas, grupos (iCloud, macOS, apps de Apple y de terceros), sugerencias y mantenimiento; tabla con los iconos de las apps; panel de detalles con la firma, la ruta y el origen de cada regla; clic derecho para editar, duplicar, desactivar o exportar.",
+    fBlockT: "Lista de bloqueo StevenBlack por niveles", fBlock: "La base Unified (anuncios, malware, rastreo) más niveles opcionales, combinados automáticamente en una sola lista y aplicados a cada conexión, incluidas las apps ya permitidas.",
+    fImportT: "Importar desde Little Snitch y LuLu", fImport: "En el primer inicio encuentra otros firewalls, trae las reglas que creaste y te muestra cómo desactivarlos. También importa desde un archivo (.json, .lsrules, .plist) y exporta a .lsrules.",
+    fAlertsT: "Alertas que cualquiera entiende", fAlerts: "«El servicio iCloud de Apple quiere conectarse» en lugar de «cloudd wants to connect». Los detalles técnicos siguen ahí, en una línea que abres solo si quieres.",
+    fSilentT: "Modo silencioso", fSilent: "Aprueba automáticamente solo los componentes firmados oficialmente por Apple, para que no te interrumpa decenas de veces. Todo lo que no sea de Apple te sigue preguntando, siempre.",
+    fLangT: "Tres idiomas", fLang: "La interfaz, las alertas y la guía PDF en rumano, inglés y español. El idioma sigue a macOS o se elige en Ajustes → General → Idioma.",
+    tiersTitle: "Niveles de la lista de bloqueo", thLevel: "Nivel", thBlocks: "Qué bloquea",
+    tBaseNote: "la base, siempre incluida", tBase: "Anuncios, malware, phishing y rastreo.",
+    tFakeT: "+Noticias falsas", tFake: "Sitios conocidos por difundir noticias falsas.",
+    tGambT: "+Juegos de azar", tGamb: "Sitios de apuestas y juegos de azar.",
+    tPornT: "+Pornografía", tPorn: "Contenido para adultos — indicado para un Mac que usan niños.",
+    tSocialT: "+Redes sociales", tSocial: "Facebook, Instagram, TikTok, X y otras.",
+    tiersNote: "También puedes añadir tus propias listas. Tus excepciones siempre tienen prioridad. Las listas se descargan del proyecto público StevenBlack/hosts y se quedan en tu Mac.",
+    dlTitle: "Descargar", dlName: "GDC Firewall para macOS", dlVersion: "Versión disponible:", dlReq: "macOS 13 o posterior",
+    dlButton: "Descargar el archivo",
+    dlNote: "El archivo contiene la app, el desinstalador y la guía de uso (RO/EN/ES). En el primer inicio la app se mueve sola a <strong>Aplicaciones</strong>.",
+    dlSoon: "La versión 2.3.0 descrita arriba está en pruebas y estará disponible aquí tras la verificación de seguridad de Apple.",
+    supportTitle: "Apoya el proyecto",
+    supportText: "La app es gratuita y seguirá siéndolo. Si te resulta útil, una donación de 23 € cubre el tiempo de mantenimiento y las cuotas de desarrollador de Apple. La donación es opcional y no desbloquea nada.",
+    license: "Distribuido bajo la licencia GPL-3.0", engine: "Motor de filtrado:", lists: "Listas de dominios:", source: "Código en GitHub",
+    terms: "Términos y Condiciones", privacy: "Política de Privacidad", cookies: "Cookies",
+    status: "gordas.dev es una plataforma gestionada por desarrolladores independientes. Las apps y los recursos se ofrecen tal cual (AS IS), y el proyecto se sostiene con contribuciones de apoyo opcionales y donaciones."
+  }
+};
+
+function pick() {
+  try { const saved = localStorage.getItem("gdcfw-lang"); if (T[saved]) return saved; } catch (e) {}
+  const nav = (navigator.language || "ro").slice(0, 2).toLowerCase();
+  return T[nav] ? nav : "en";
+}
+
+function apply(lang) {
+  const t = T[lang];
+  document.documentElement.lang = lang;
+  document.title = t.title;
+  document.querySelectorAll("[data-i18n]").forEach(el => { el.textContent = t[el.dataset.i18n] || ""; });
+  document.querySelectorAll("[data-i18n-html]").forEach(el => { el.innerHTML = t[el.dataset.i18nHtml] || ""; });
+  document.querySelectorAll(".lang button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.lang === lang)));
+  try { localStorage.setItem("gdcfw-lang", lang); } catch (e) {}
+}
+
+document.querySelectorAll(".lang button").forEach(b => b.addEventListener("click", () => apply(b.dataset.lang)));
+apply(pick());
+
+// Versiunea arătată la descărcare e cea SERVITĂ (update.json), nu una scrisă de mână.
+fetch("update.json", { cache: "no-store" })
+  .then(r => r.json())
+  .then(j => { document.getElementById("version").textContent = j.app_version || j.version || "—"; })
+  .catch(() => {});
+</script>
 </body>
 </html>
