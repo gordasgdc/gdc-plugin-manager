@@ -1,7 +1,7 @@
 {
-  "version": "2.14.2",
-  "release_date": "2026-09-11",
-  "changes": "Semnare digitală a aplicației Windows; raport DIT cu metadate video și thumbnail-uri.",
+  "version": "2.15.1",
+  "release_date": "2026-09-19",
+  "changes": "Mac: mutarea în folderul Aplicații nu mai lasă aplicația izolată de macOS — nu mai cere mutarea la fiecare pornire și nu mai duce aplicația instalată la Coș. Windows: fără schimbări.",
   "download_url": {
     "windows": "https://github.com/gordasgdc/datamover/releases/latest/download/DataMover-Windows.zip",
     "mac": "https://github.com/gordasgdc/datamover/releases/latest/download/DataMover-Mac.zip",
