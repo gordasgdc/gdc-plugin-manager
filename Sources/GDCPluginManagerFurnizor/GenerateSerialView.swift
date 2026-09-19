@@ -56,6 +56,9 @@ let gdcStandaloneProducts: [StandaloneProduct] = [
     // Studio Pro" (nume neutru, pregatit pentru lansarea viitoare pe
     // Windows) - productID ramane neschimbat, doar numele afisat.
     StandaloneProduct(id: "mac-master-control-pro", name: "Master Control Studio Pro"),
+    // Adaugat 2026-09-19 — verificat in LicenseManager.swift (GDC LUT Lab,
+    // App/Sources/Licensing/LicenseManager.swift): productID = "gdc-lut-lab".
+    StandaloneProduct(id: "gdc-lut-lab", name: "GDC LUT Lab"),
 ]
 
 struct GenerateSerialView: View {
