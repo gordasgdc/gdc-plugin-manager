@@ -1,9 +1,9 @@
 {
-  "version": "1.2.0",
-  "app_version": "1.2.0",
-  "changes": "Valori de pornire pentru controale (expunere, balans de alb, RGB, saturație, contrast, roll-off) în DCTL și OFX. „Meniuri active”: Selectează tot / Deselectează tot și pe fiecare grup.",
+  "version": "1.3.0",
+  "app_version": "1.3.0",
+  "changes": "Stilurile păstrează structura folderelor: grupuri (Film, Process) și categorii (Kodak, Fuji…), fiecare grup cu On/Off, categorie, stil și Mix. Intrare pe categorii în OFX. Stiluri de orice mărime, fără pierdere de calitate.",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-lut-lab/GDCStyleLab-1.2.0-transition.dmg"
+    "mac": "https://gordas.dev/gdc-lut-lab/GDCStyleLab-1.3.0-transition.dmg"
   },
   "mandatory": false
 }
