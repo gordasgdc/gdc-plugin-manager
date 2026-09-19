@@ -1,9 +1,9 @@
 {
-  "version": "1.0.0",
-  "app_version": "1.0.0",
-  "changes": "GDC STYLE Lab (numele nou al aplicației). Pluginuri OFX cu activare pe Machine ID: butonul „Activare…” din DaVinci Resolve, conținut criptat. Stiluri cu spații fixe, selector STYLE, câmp Product ID pentru serialele din GDC Plugin Manager. Reparat selectorul Input Colour Space.",
+  "version": "1.0.1",
+  "app_version": "1.0.1",
+  "changes": "Input Colour Space: IDT-urile apar acum în ambele variante, „- Linear” și „- Intermediate”, clar marcate. Poți adăuga IDT-uri noi în oricare din cele două formate.",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-style-lab/GDCStyleLab-1.0.0.dmg"
+    "mac": "https://gordas.dev/gdc-style-lab/GDCStyleLab-1.0.1.dmg"
   },
   "mandatory": false
 }
