@@ -1,9 +1,9 @@
 {
-  "version": "1.1.0",
-  "app_version": "1.1.0",
-  "changes": "„Meniuri active”: alegi ce IDT-uri și ce spații apar în DCTL și OFX. Spațiile de culoare convenționale sunt din nou disponibile la intrare și la ieșire, alături de IDT-urile Linear și Intermediate.",
+  "version": "1.2.0",
+  "app_version": "1.2.0",
+  "changes": "Valori de pornire pentru controale (expunere, balans de alb, RGB, saturație, contrast, roll-off) în DCTL și OFX. „Meniuri active”: Selectează tot / Deselectează tot și pe fiecare grup.",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-lut-lab/GDCStyleLab-1.1.0-transition.dmg"
+    "mac": "https://gordas.dev/gdc-lut-lab/GDCStyleLab-1.2.0-transition.dmg"
   },
   "mandatory": false
 }
