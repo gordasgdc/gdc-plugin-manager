@@ -108,20 +108,20 @@
           "Developer"
         ]
       },
-      "coverImage" : "covers/GDC LUT Lab.png?v=4990453c",
+      "coverImage" : "covers/GDC STYLE Lab.png?v=4990453c",
       "description" : {
-        "en" : ".cube LUTs to DCTL for DaVinci Resolve, with tetrahedral interpolation, color spaces and cinematic controls.",
-        "es" : "LUT .cube a DCTL para DaVinci Resolve, con interpolación tetraédrica, espacios de color y controles cinematográficos.",
-        "ro" : "LUT-uri .cube în DCTL pentru DaVinci Resolve, cu interpolare tetraedrică, spații de culoare și controale cinematografice."
+        "en" : "Color styles and a Universal IDT for DaVinci Resolve, as DCTL or OFX plugins with per-Mac activation and professional Scene-Linear controls.",
+        "es" : "Estilos de color y Universal IDT para DaVinci Resolve, como DCTL o plugins OFX con activación por Mac y controles profesionales Scene-Linear.",
+        "ro" : "Stiluri de culoare și Universal IDT pentru DaVinci Resolve, ca DCTL sau plugin OFX, cu activare pe Mac și controale profesionale Scene-Linear."
       },
-      "downloadURL" : "https://gordas.dev/gdc-lut-lab/GDCLUTLab-0.4.1.dmg",
+      "downloadURL" : "https://gordas.dev/gdc-style-lab/GDCStyleLab-1.0.0.dmg",
       "id" : "gdc-lut-lab",
-      "name" : "GDC LUT Lab",
+      "name" : "GDC STYLE Lab",
       "pricingProductID" : "gdc-lut-lab",
       "supportedOS" : "macOS",
-      "updateURL" : "https://gordas.dev/gdc-lut-lab/update.json",
-      "url" : "https://gordas.dev/gdc-lut-lab/",
-      "version" : "0.4.1"
+      "updateURL" : "https://gordas.dev/gdc-style-lab/update.json",
+      "url" : "https://gordas.dev/gdc-style-lab/",
+      "version" : "1.0.0"
     },
     {
       "access" : {

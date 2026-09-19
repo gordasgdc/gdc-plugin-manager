@@ -58,7 +58,7 @@ let gdcStandaloneProducts: [StandaloneProduct] = [
     StandaloneProduct(id: "mac-master-control-pro", name: "Master Control Studio Pro"),
     // Adaugat 2026-09-19 — verificat in LicenseManager.swift (GDC LUT Lab,
     // App/Sources/Licensing/LicenseManager.swift): productID = "gdc-lut-lab".
-    StandaloneProduct(id: "gdc-lut-lab", name: "GDC LUT Lab"),
+    StandaloneProduct(id: "gdc-lut-lab", name: "GDC STYLE Lab"),
 ]
 
 struct GenerateSerialView: View {
@@ -67,6 +67,10 @@ struct GenerateSerialView: View {
     // Plugin) pot fi acum plătite la fel ca produsele din catalog.
     @State private var downloadResources: [DownloadableResource] = []
     @State private var selectedID = ""
+    /// Pachete OFX exportate din GDC STYLE Lab: fiecare are propriul Product ID
+    /// (ales la export), deci nu poate fi într-o listă fixă — se scrie aici.
+    @State private var customProductID = ""
+    private static let customTag = "__product_id__"
     @State private var customerName = ""
     @State private var email = ""
     @State private var machineID = ""
@@ -134,6 +138,9 @@ struct GenerateSerialView: View {
                             Text(app.name).tag(app.id)
                         }
                     }
+                    Section("Pachete OFX (GDC STYLE Lab)") {
+                        Text("Product ID personalizat…").tag(Self.customTag)
+                    }
                 }
                 .onChange(of: selectedID) {
                     // Doar produsele din catalog au un preț cunoscut dinainte —
@@ -148,6 +155,10 @@ struct GenerateSerialView: View {
                     } else if gdcStandaloneProducts.contains(where: { $0.id == selectedID }) {
                         priceText = ""
                     }
+                }
+                if selectedID == Self.customTag {
+                    TextField("Product ID (exact ca la exportul OFX, ex. gdc-style-kodak)", text: $customProductID)
+                        .textFieldStyle(.roundedBorder)
                 }
 
                 GroupBox {
@@ -331,14 +342,20 @@ struct GenerateSerialView: View {
         autofilledFrom = record
     }
 
+    /// ID-ul pentru care se generează serialul (cel personalizat, pentru pachetele OFX).
+    private var effectiveProductID: String {
+        selectedID == Self.customTag ? customProductID.trimmingCharacters(in: .whitespacesAndNewlines) : selectedID
+    }
+
     private var selectedItemName: String {
+        if selectedID == Self.customTag { return effectiveProductID }
         if let item = items.first(where: { $0.id == selectedID }) { return item.name }
         if let app = gdcStandaloneProducts.first(where: { $0.id == selectedID }) { return app.name }
         return selectedID
     }
 
     private var isFormValid: Bool {
-        !selectedID.isEmpty
+        !effectiveProductID.isEmpty
             && !customerName.trimmingCharacters(in: .whitespaces).isEmpty
             && (durationUnit == .lifetime || Int(durationValue) != nil)
             && Double(priceText) != nil
@@ -381,14 +398,14 @@ struct GenerateSerialView: View {
         do {
             let key = try VendorKeyStore.loadPrivateKeyBase64()
             let code = try LicenseGenerator.generate(
-                privateKeyBase64: key, productID: selectedID, expiresAt: expiresAt,
+                privateKeyBase64: key, productID: effectiveProductID, expiresAt: expiresAt,
                 machineIDBase32: trimmedMachineID.isEmpty ? nil : trimmedMachineID,
                 platform: licensePlatform
             )
             generatedCode = code
 
             try? SalesLog.append(
-                productID: selectedID, productName: selectedItemName, customer: customerName,
+                productID: effectiveProductID, productName: selectedItemName, customer: customerName,
                 email: email, priceEUR: price, expiresDisplay: expiresDisplay,
                 machineID: trimmedMachineID, serial: code
             )
