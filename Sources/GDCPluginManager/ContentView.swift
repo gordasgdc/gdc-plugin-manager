@@ -2267,6 +2267,7 @@ private struct AppsGrid: View {
 
 private struct AppCard: View {
     let app: AppLink
+    @ObservedObject private var downloader = AppDirectDownload.shared
 
     /// Apps aren't a `PluginType` case, so they get their own fixed tint
     /// here instead of `PluginType.tintColor` — matches the blue Cristi
@@ -2336,6 +2337,14 @@ private struct AppCard: View {
             }
             AccessTagsRow(tags: app.resolvedAccess.tags)
             Spacer(minLength: 0)
+            if let raw = app.downloadURL, let file = URL(string: raw) {
+                let busy = downloader.active.contains(app.id)
+                Button(busy ? L.t("apps.downloading") : L.t("apps.download")) { downloader.start(appID: app.id, url: file) }
+                    .disabled(busy)
+                if let reason = downloader.failed[app.id] {
+                    Text(L.t("apps.downloadFailed")).font(.caption).foregroundStyle(.secondary).help(reason)
+                }
+            }
             if let url = URL(string: app.url) {
                 Button(L.t("apps.open")) { NSWorkspace.shared.open(url) }
             }

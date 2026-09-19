@@ -837,8 +837,12 @@ public struct AppLink: Codable, Identifiable, Hashable {
     /// Mac/Windows. `nil` = necunoscut, apare la orice filtru (fail-open,
     /// nu ascundem un card din lipsa de date).
     public let supportedOS: SupportedOS?
+    /// Descărcare DIRECTĂ a binarului (.dmg/.pkg/.zip, găzduit pe gordas.dev),
+    /// din aplicație, fără pagină web sau repo la mijloc. Opțional: clienții
+    /// fără suport și aplicațiile fără el folosesc în continuare `url`.
+    public let downloadURL: String?
 
-    public init(id: String, name: String, url: String, youtubeURL: String? = nil, coverImage: String? = nil, scheduling: Scheduling? = nil, socialLinks: SocialLinks? = nil, pricingProductID: String? = nil, access: CatalogAccess? = nil, supportedOS: SupportedOS? = nil) {
+    public init(id: String, name: String, url: String, youtubeURL: String? = nil, coverImage: String? = nil, scheduling: Scheduling? = nil, socialLinks: SocialLinks? = nil, pricingProductID: String? = nil, access: CatalogAccess? = nil, supportedOS: SupportedOS? = nil, downloadURL: String? = nil) {
         self.youtubeURL = youtubeURL
         self.id = id
         self.name = name
@@ -849,6 +853,7 @@ public struct AppLink: Codable, Identifiable, Hashable {
         self.pricingProductID = pricingProductID
         self.access = access
         self.supportedOS = supportedOS
+        self.downloadURL = downloadURL
     }
 
     public var coverImageURL: URL? { CatalogAssets.imageURL(for: coverImage) }

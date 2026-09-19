@@ -42,6 +42,14 @@
         }
       ]
     },
+    "gdc-lut-lab" : {
+      "basePrice" : 23,
+      "currency" : "EUR",
+      "name" : "GDC LUT Lab",
+      "promoSchedule" : [
+
+      ]
+    },
     "gdc-production-manager" : {
       "basePrice" : 25,
       "currency" : "EUR",

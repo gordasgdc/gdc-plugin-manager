@@ -1,0 +1,9 @@
+{
+  "version": "0.3.1",
+  "app_version": "0.3.1",
+  "changes": "Prima versiune publică: conversie LUT în DCTL cu interpolare tetraedrică, IDT/ODT Builder cu controale cinematografice, licență GDC.",
+  "download_url": {
+    "mac": "https://gordas.dev/gdc-lut-lab/GDCLUTLab-0.3.1.dmg"
+  },
+  "mandatory": false
+}

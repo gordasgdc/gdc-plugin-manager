@@ -129,6 +129,6 @@ struct AccessEditorSection: View {
 enum AccessTagSuggestions {
     static let plugins = ["Emulare Film", "Utility", "Conversion", "Color Space"]
     static let audioVFX = ["SFX", "Overlays", "Transitions", "Ambient"]
-    static let apps = ["Utilitare", "Film / Emulare Film", "Audio", "VFX"]
+    static let apps = ["Utilitare", "Developer", "Film / Emulare Film", "Audio", "VFX"]
     static let learning = ["Începător", "Avansat", "Workflow", "Color"]
 }

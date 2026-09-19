@@ -258,6 +258,9 @@ enum L {
 
         "apps.empty": [.ro: "Nicio aplicație listată momentan.", .en: "No apps listed right now.", .es: "Ninguna aplicación listada por ahora."],
         "apps.open": [.ro: "Deschide", .en: "Open", .es: "Abrir"],
+        "apps.download": [.ro: "Descarcă", .en: "Download", .es: "Descargar"],
+        "apps.downloading": [.ro: "Se descarcă…", .en: "Downloading…", .es: "Descargando…"],
+        "apps.downloadFailed": [.ro: "Descărcarea a eșuat", .en: "Download failed", .es: "La descarga falló"],
         "apps.badge": [.ro: "Aplicație", .en: "App", .es: "Aplicación"],
         // Sistem universal de acces/grupare/etichete (2026-09-11) —
         // cheile vin din AccessKind/CatalogGroup.localizationKey, folosite

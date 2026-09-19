@@ -1120,3 +1120,26 @@ Păstrate verbatim. Regula generală la care se referă fiecare e în
 **Regula 21:**
 
 **Status acest repo (2026-08-28, verificat partial): DE VERIFICAT LA URMATOAREA MODIFICARE, nu urgent acum.** Auditat la cererea lui Cristi — `ImageProcessor.swift` proceseaza thumbnail-uri (probabil imagini mici), iar catalogul de LUT/DCTL/PowerGrade presupune upload/download de fisiere care NU au fost confirmate ca raman mereu mici. Nu s-a gasit cod de streaming manual (nici bun, nici problematic) de citire/scriere in bucati pentru aceste fisiere - daca vreun asset din catalog ajunge vreodata la zeci de MB+ (ex. un LUT 3D foarte mare sau un pachet ZIP), aplica Regula 21 (buffer fix, streaming) dupa modelul DataMover.
+
+## Etapa 2026-09-19 (client v1.38.0 nepublicat, Furnizor v1.46.0) — descărcare directă + GDC LUT Lab
+
+- **`AppLink.downloadURL`** (opțional, decodare sintetizată → clienții vechi îl
+  ignoră): cardul aplicației arată „Descarcă” (`AppDirectDownload.swift`:
+  URLSession → Descărcări, numele versionat de pe server, apoi `NSWorkspace.open`),
+  „Deschide” rămâne pentru `url`. Furnizorul îl are în formularul de publicare și
+  îl PĂSTREAZĂ la editare — `CatalogEditor` rescrie catalogul prin model, deci
+  orice câmp absent din `AppLink` se pierde la următoarea publicare din Furnizor.
+  **Capcană existentă, nerezolvată aici**: `description`, `updateURL`, `version`
+  din intrările gdc-firewall și gdc-lut-lab NU sunt în `AppLink` → dispar la
+  prima republicare a oricărei aplicații din Furnizor.
+- **Categoria „Developer”**: etichetele (`access.tags`) sunt text liber, iar filtrul
+  clientului le calculează din produse (`CatalogFacets.tags`) → apare singură cu
+  primul produs etichetat; adăugată și în `AccessTagSuggestions.apps`.
+- **GDC LUT Lab** în catalog: fără `access.kind` (altfel insigna „PLĂTIT”, Regula 3),
+  donația de 23 € prin `pricing.json` (`gdc-lut-lab`), DMG pe
+  `gordas.dev/gdc-lut-lab/` (sincronizat de `gdc-lut-lab/scripts/sync-site.sh`).
+- `catalog.json`/`pricing.json` editate direct au păstrat EXACT formatul
+  `JSONEncoder` (`"cheie" : valoare`, liste goale pe 3 rânduri) — verificat prin
+  reserializarea HEAD identic, ca diff-ul să conțină doar intrarea nouă.
+  Decodarea validată cu modelul real (pachet izolat cu `GDCPluginManagerCore`).
+- TODO paritate Windows (Regula 31): `downloadURL` în clientul Windows.

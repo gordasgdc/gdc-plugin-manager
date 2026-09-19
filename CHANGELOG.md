@@ -1,5 +1,24 @@
 # Changelog — GDC Plugin Manager
 
+## v1.38.0 client + v1.46.0 Furnizor (2026-09-19) — Descărcare directă a aplicațiilor, categoria Developer
+
+### Added
+- **Client — „Descarcă” pe cardul aplicației**: când aplicația are o descărcare
+  directă în catalog (`downloadURL`, găzduită pe gordas.dev), binarul (.dmg/.pkg/
+  .zip) ajunge în Descărcări și se deschide — fără browser și fără pagină de repo.
+  Aplicațiile fără descărcare directă păstrează butonul „Deschide”.
+- **Furnizor — câmp „Descărcare directă”** la publicarea aplicațiilor (păstrat la
+  editare), și eticheta „Developer” în sugestiile de categorii.
+- **Catalog**: GDC LUT Lab, în categoria Developer, cu descărcare directă a
+  DMG-ului notarizat și donație de referință 23 € (`pricing.json`).
+
+### Notă
+- Clientul 1.38.0 e construit local, NEPUBLICAT: `docs/update.json` rămâne la
+  1.37.1 până la release (Regula 35). Clienții 1.37.1 văd LUT Lab în catalog cu
+  butonul „Deschide” (pagina gordas.dev/gdc-lut-lab, cu descărcarea DMG-ului).
+- TODO paritate Windows (Regula 31): `downloadURL` nu e folosit încă de clientul
+  Windows; LUT Lab e doar macOS.
+
 ## v1.45.0 Furnizor (2026-09-15) — Client nou, fără să ieși din meniu
 
 ### Added

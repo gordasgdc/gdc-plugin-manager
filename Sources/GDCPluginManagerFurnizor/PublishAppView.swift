@@ -21,6 +21,7 @@ struct PublishAppView: View {
     /// cardul din „Aplicații” arată automat preț/ofertă/countdown, la fel
     /// ca la LUT/DCTL/PowerGrade. Gol = cardul rămâne neschimbat.
     @State private var pricingProductID = ""
+    @State private var downloadURL = ""
     // Acces/grup/etichete — editor COMUN, refolosit in toate panourile
     // Publish*View (2026-09-11). Vezi AccessEditorSection.swift.
     @State private var accessForm = AccessFormState()
@@ -48,6 +49,7 @@ struct PublishAppView: View {
                             .disabled(editingID != nil)
                         TextField("Nume aplicație", text: $name).textFieldStyle(.roundedBorder)
                         TextField("Link (https://…)", text: $url).textFieldStyle(.roundedBorder)
+                        TextField("Descărcare directă (opțional, .dmg/.pkg/.zip pe gordas.dev)", text: $downloadURL).textFieldStyle(.roundedBorder)
                         TextField("Link tutorial YouTube (opțional, nelistat)", text: $youtubeURL).textFieldStyle(.roundedBorder)
                         AutocompleteTextField(placeholder: "ID din Pricing Manager (opțional, ex. cgconvertor)", text: $pricingProductID, existingValues: knownPricingIDs)
                         Text("Dacă se potrivește cu un produs din „Prețuri & Oferte”, cardul arată automat preț/ofertă/countdown la clienți.")
@@ -180,6 +182,7 @@ struct PublishAppView: View {
         coverSelection = app.coverImage.map { .existing($0) } ?? .none
         scheduling = app.scheduling
         pricingProductID = app.pricingProductID ?? ""
+        downloadURL = app.downloadURL ?? ""
         accessForm = AccessFormState(app.access)
         supportedOS = app.supportedOS
         socialForm = SocialLinksFormState(app.socialLinks)
@@ -196,6 +199,7 @@ struct PublishAppView: View {
         coverSelection = .none
         scheduling = nil
         pricingProductID = ""
+        downloadURL = ""
         accessForm.reset()
         supportedOS = nil
         socialForm.reset()
@@ -228,7 +232,8 @@ struct PublishAppView: View {
                                socialLinks: socialForm.model,
                                pricingProductID: trimmedPricingID.isEmpty ? nil : trimmedPricingID,
                                access: accessForm.model,
-                               supportedOS: supportedOS)
+                               supportedOS: supportedOS,
+                               downloadURL: downloadURL.trimmingCharacters(in: .whitespaces).isEmpty ? nil : downloadURL.trimmingCharacters(in: .whitespaces))
             try CatalogEditor.upsertApp(app)
             try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Aplicatie: \(app.name)", paths: ["docs/catalog.json", "docs/covers"])
             successMessage = "„\(app.name)” e publicată — apare la clienți la următorul refresh de catalog."
