@@ -1,9 +1,9 @@
 {
-  "version": "0.4.0",
-  "app_version": "0.4.0",
+  "version": "0.4.1",
+  "app_version": "0.4.1",
   "changes": "Universal IDT profesional (DCTL și OFX): formule IDT exacte, gamă opțională, balans de alb Kelvin, saturație, roll-off pentru highlights și umbre. Pachete OFX pentru DaVinci Resolve (LUT, colecții, film emulation, IDT). Buton „Nou”, nume de ieșire pentru fiecare fișier, actualizări automate.",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-lut-lab/GDCLUTLab-0.4.0.dmg"
+    "mac": "https://gordas.dev/gdc-lut-lab/GDCLUTLab-0.4.1.dmg"
   },
   "mandatory": false
 }

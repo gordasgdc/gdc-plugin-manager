@@ -114,14 +114,14 @@
         "es" : "LUT .cube a DCTL para DaVinci Resolve, con interpolación tetraédrica, espacios de color y controles cinematográficos.",
         "ro" : "LUT-uri .cube în DCTL pentru DaVinci Resolve, cu interpolare tetraedrică, spații de culoare și controale cinematografice."
       },
-      "downloadURL" : "https://gordas.dev/gdc-lut-lab/GDCLUTLab-0.4.0.dmg",
+      "downloadURL" : "https://gordas.dev/gdc-lut-lab/GDCLUTLab-0.4.1.dmg",
       "id" : "gdc-lut-lab",
       "name" : "GDC LUT Lab",
       "pricingProductID" : "gdc-lut-lab",
       "supportedOS" : "macOS",
       "updateURL" : "https://gordas.dev/gdc-lut-lab/update.json",
       "url" : "https://gordas.dev/gdc-lut-lab/",
-      "version" : "0.4.0"
+      "version" : "0.4.1"
     },
     {
       "access" : {
