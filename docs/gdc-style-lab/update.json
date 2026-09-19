@@ -1,9 +1,9 @@
 {
-  "version": "1.0.1",
-  "app_version": "1.0.1",
-  "changes": "Input Colour Space: IDT-urile apar acum în ambele variante, „- Linear” și „- Intermediate”, clar marcate. Poți adăuga IDT-uri noi în oricare din cele două formate.",
+  "version": "1.1.0",
+  "app_version": "1.1.0",
+  "changes": "„Meniuri active”: alegi ce IDT-uri și ce spații apar în DCTL și OFX. Spațiile de culoare convenționale sunt din nou disponibile la intrare și la ieșire, alături de IDT-urile Linear și Intermediate.",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-style-lab/GDCStyleLab-1.0.1.dmg"
+    "mac": "https://gordas.dev/gdc-style-lab/GDCStyleLab-1.1.0.dmg"
   },
   "mandatory": false
 }
