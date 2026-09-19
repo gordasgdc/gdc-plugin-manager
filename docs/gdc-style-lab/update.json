@@ -1,9 +1,9 @@
 {
-  "version": "1.3.0",
-  "app_version": "1.3.0",
-  "changes": "Stilurile păstrează structura folderelor: grupuri (Film, Process) și categorii (Kodak, Fuji…), fiecare grup cu On/Off, categorie, stil și Mix. Intrare pe categorii în OFX. Stiluri de orice mărime, fără pierdere de calitate.",
+  "version": "1.4.0",
+  "app_version": "1.4.0",
+  "changes": "Pluginurile OFX exportate funcționează acum și în DaVinci Resolve pe Windows: un singur pachet pentru macOS și Windows, cu randare pe placa video prin CUDA (NVIDIA) sau OpenCL (AMD, Intel), aceeași precizie ca DCTL-ul. Activarea pe Windows folosește același serial din GDC Plugin Manager, generat pentru Machine ID-ul PC-ului.",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-style-lab/GDCStyleLab-1.3.0.dmg"
+    "mac": "https://gordas.dev/gdc-style-lab/GDCStyleLab-1.4.0.dmg"
   },
   "mandatory": false
 }

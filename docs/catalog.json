@@ -114,14 +114,14 @@
         "es" : "Estilos de color y Universal IDT para DaVinci Resolve, como DCTL o plugins OFX con activación por Mac y controles profesionales Scene-Linear.",
         "ro" : "Stiluri de culoare și Universal IDT pentru DaVinci Resolve, ca DCTL sau plugin OFX, cu activare pe Mac și controale profesionale Scene-Linear."
       },
-      "downloadURL" : "https://gordas.dev/gdc-style-lab/GDCStyleLab-1.3.0.dmg",
+      "downloadURL" : "https://gordas.dev/gdc-style-lab/GDCStyleLab-1.4.0.dmg",
       "id" : "gdc-lut-lab",
       "name" : "GDC STYLE Lab",
       "pricingProductID" : "gdc-lut-lab",
       "supportedOS" : "macOS",
       "updateURL" : "https://gordas.dev/gdc-style-lab/update.json",
       "url" : "https://gordas.dev/gdc-style-lab/",
-      "version" : "1.3.0"
+      "version" : "1.4.0"
     },
     {
       "access" : {
