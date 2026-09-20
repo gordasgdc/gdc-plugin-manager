@@ -1,9 +1,9 @@
 {
-  "version": "1.5.0",
-  "app_version": "1.5.0",
-  "changes": "Instrumente noi de colorist în DCTL și OFX: printer lights pe R/G/B, ASC CDL complet (cu buton de copiere în clipboard), roți log pentru umbre / medii / înalte cu praguri reglabile, și saturație profesională — model care păstrează luminanța, substractivă (ca pelicula) sau vibrance, cu protecția tonurilor de piele și saturație separată în umbre și în înalte. Valorile de pornire se aleg în aplicație. Pachetele exportate cu versiuni mai vechi trebuie reexportate ca să aibă controalele noi. În plus, intrarea „Scene Linear” apare acum în fiecare categorie de intrare, pentru lanțurile cu două noduri (cameră → linear, apoi linear → ACES).",
+  "version": "1.6.0",
+  "app_version": "1.6.0",
+  "changes": "Secundare noi în DCTL și OFX: cei 6 vectori de nuanță (roșu, galben, verde, cyan, albastru, magenta) cu deplasare de nuanță, saturație și luminanță pe fiecare; qualifier după nuanță, saturație și luminanță, cu moliciune și invert; și moduri de vizualizare — mască, clipping, fals color și înainte/după. Pachetele exportate cu versiuni mai vechi trebuie reexportate.",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-style-lab/GDCStyleLab-1.5.0.dmg"
+    "mac": "https://gordas.dev/gdc-style-lab/GDCStyleLab-1.6.0.dmg"
   },
   "mandatory": false
 }
