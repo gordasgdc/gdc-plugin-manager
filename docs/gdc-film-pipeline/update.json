@@ -1,0 +1,10 @@
+{
+  "version": "1.0.0",
+  "app_version": "1.0.0",
+  "changes": "Primul release: 86 de stocuri de film ca modele hibride (curbe, matrice, reziduu 3D), cu Trim de expunere, contrast, densitate și saturație.",
+  "download_url": {
+    "mac": "https://gordas.dev/gdc-film-pipeline/GDCFilmPipeline-1.0.0.pkg",
+    "windows": "https://gordas.dev/gdc-film-pipeline/GDCFilmPipeline-1.0.0-Windows.zip"
+  },
+  "mandatory": false
+}
