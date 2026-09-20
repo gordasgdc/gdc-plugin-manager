@@ -1,9 +1,9 @@
 {
-  "version": "1.4.0",
-  "app_version": "1.4.0",
-  "changes": "Pluginurile OFX exportate funcționează acum și în DaVinci Resolve pe Windows: un singur pachet pentru macOS și Windows, cu randare pe placa video prin CUDA (NVIDIA) sau OpenCL (AMD, Intel), aceeași precizie ca DCTL-ul. Activarea pe Windows folosește același serial din GDC Plugin Manager, generat pentru Machine ID-ul PC-ului.",
+  "version": "1.4.1",
+  "app_version": "1.4.1",
+  "changes": "Reparat: în pluginurile OFX exportate cu 1.4.0 lipseau din Inspector controalele de expunere și balans de alb (Exposure, White Balance, Gain R/G/B, Saturation). Reexportă pachetele făcute cu 1.4.0. Nou: după fiecare export, aplicația verifică pachetul scris și arată ce controale conține.",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-style-lab/GDCStyleLab-1.4.0.dmg"
+    "mac": "https://gordas.dev/gdc-style-lab/GDCStyleLab-1.4.1.dmg"
   },
   "mandatory": false
 }
