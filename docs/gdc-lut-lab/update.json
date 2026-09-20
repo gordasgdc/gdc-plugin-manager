@@ -1,9 +1,9 @@
 {
-  "version": "1.4.1",
-  "app_version": "1.4.1",
-  "changes": "Reparat: în pluginurile OFX exportate cu 1.4.0 lipseau din Inspector controalele de expunere și balans de alb (Exposure, White Balance, Gain R/G/B, Saturation). Reexportă pachetele făcute cu 1.4.0. Nou: după fiecare export, aplicația verifică pachetul scris și arată ce controale conține.",
+  "version": "1.5.0",
+  "app_version": "1.5.0",
+  "changes": "Instrumente noi de colorist în DCTL și OFX: printer lights pe R/G/B, ASC CDL complet (cu buton de copiere în clipboard), roți log pentru umbre / medii / înalte cu praguri reglabile, și saturație profesională — model care păstrează luminanța, substractivă (ca pelicula) sau vibrance, cu protecția tonurilor de piele și saturație separată în umbre și în înalte. Valorile de pornire se aleg în aplicație. Pachetele exportate cu versiuni mai vechi trebuie reexportate ca să aibă controalele noi. În plus, intrarea „Scene Linear” apare acum în fiecare categorie de intrare, pentru lanțurile cu două noduri (cameră → linear, apoi linear → ACES).",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-lut-lab/GDCStyleLab-1.4.1-transition.dmg"
+    "mac": "https://gordas.dev/gdc-lut-lab/GDCStyleLab-1.5.0-transition.dmg"
   },
   "mandatory": false
 }
