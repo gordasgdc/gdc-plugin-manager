@@ -1,9 +1,9 @@
 {
-  "version": "1.15.0",
-  "app_version": "1.15.0",
-  "changes": "GDC Film Pipeline (emulare de film în 4 straturi în cascadă: proces chimic, stoc de film, contrast, culoare) se instalează acum direct din aplicație, în tabul Film Pipeline, și se activează cu aceeași licență GDC STYLE Lab: filigranul Demo dispare singur după activare. Pachetele exportate cu versiuni mai vechi trebuie reexportate.",
+  "version": "1.16.0",
+  "app_version": "1.16.0",
+  "changes": "Tabul Film Pipeline are acum panoul complet de export (Full sau Demo), un manager de foldere cu LUT-uri din care se pot regenera modelele de film direct în aplicație, spațiul intern al modelului blocat în Inspector și două bife noi, Bypass Input IDT și Bypass Output ODT. Pachetele exportate cu versiuni mai vechi trebuie reexportate.",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-lut-lab/GDCStyleLab-1.15.0-transition.dmg"
+    "mac": "https://gordas.dev/gdc-lut-lab/GDCStyleLab-1.16.0-transition.dmg"
   },
   "mandatory": false
 }
