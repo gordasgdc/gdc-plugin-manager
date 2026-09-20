@@ -1,9 +1,9 @@
 {
-  "version": "1.11.0",
-  "app_version": "1.11.0",
-  "changes": "Halation și Bloom disponibile și pe Windows (CUDA/OpenCL), iar pe Mac modulul rulează mai rapid și folosește cu aproape jumătate mai puțină memorie video la 4K. Rezultatul imaginii rămâne identic. Pachetele exportate cu versiuni mai vechi trebuie reexportate.",
+  "version": "1.12.0",
+  "app_version": "1.12.0",
+  "changes": "Selector nou Processing Quality (Auto / Preview / Production): la redarea în timeline plugin-ul folosește automat modul rapid (Halation/Bloom în precizie redusă și rezoluție redusă, grain simplificat), iar la randare și export modul de calitate maximă. Pe Windows, Halation și Bloom folosesc aceleași două moduri. Pachetele exportate cu versiuni mai vechi trebuie reexportate.",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-style-lab/GDCStyleLab-1.11.0.dmg"
+    "mac": "https://gordas.dev/gdc-style-lab/GDCStyleLab-1.12.0.dmg"
   },
   "mandatory": false
 }
