@@ -1,10 +1,10 @@
 {
-  "version": "1.0.0",
-  "app_version": "1.0.0",
-  "changes": "Primul release: 86 de stocuri de film ca modele hibride (curbe, matrice, reziduu 3D), cu Trim de expunere, contrast, densitate și saturație.",
+  "version": "1.1.0",
+  "app_version": "1.1.0",
+  "changes": "4 straturi în cascadă, în ordinea fizică a procesului: Chemical Process, Film Stock, Contrast Response și Color & Skin Tuning, fiecare cu meniul lui de preseturi și Mix independent. Straturile se pot combina (de exemplu Bleach Bypass 30% + Kodak 5229 100% + High Contrast 40%).",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-film-pipeline/GDCFilmPipeline-1.0.0.pkg",
-    "windows": "https://gordas.dev/gdc-film-pipeline/GDCFilmPipeline-1.0.0-Windows.zip"
+    "mac": "https://gordas.dev/gdc-film-pipeline/GDCFilmPipeline-1.1.0.pkg",
+    "windows": "https://gordas.dev/gdc-film-pipeline/GDCFilmPipeline-1.1.0-Windows.zip"
   },
   "mandatory": false
 }
