@@ -379,6 +379,12 @@ enum L {
         // Pop-up modal (ContentView.swift), separat de bannerul de mai sus.
         // Explica raspicat ca nu e self-update — vezi cererea din 2026-08-24.
         "menu.checkForUpdates": [.ro: "Caută actualizări", .en: "Check for updates", .es: "Buscar actualizaciones"],
+        "uninstall.button": [.ro: "Dezinstalează complet aplicația…", .en: "Uninstall the app completely…", .es: "Desinstalar la aplicación por completo…"],
+        "uninstall.title": [.ro: "Dezinstalezi GDC Plugin Manager?", .en: "Uninstall GDC Plugin Manager?", .es: "¿Desinstalar GDC Plugin Manager?"],
+        "uninstall.body": [.ro: "Se șterg setările, cache-ul și jurnalele, iar aplicația este mutată la Coș. Resursele deja instalate în DaVinci Resolve rămân neatinse.", .en: "Settings, cache and logs are deleted and the app is moved to the Trash. Resources already installed in DaVinci Resolve are left untouched.", .es: "Se eliminan los ajustes, la caché y los registros, y la app se mueve a la Papelera. Los recursos ya instalados en DaVinci Resolve no se tocan."],
+        "uninstall.confirm": [.ro: "Dezinstalează", .en: "Uninstall", .es: "Desinstalar"],
+        "uninstall.cancel": [.ro: "Anulează", .en: "Cancel", .es: "Cancelar"],
+        "uninstall.trashFailed": [.ro: "Nu am putut muta aplicația la Coș. Mut-o manual din Aplicații.", .en: "Couldn't move the app to the Trash. Move it manually from Applications.", .es: "No se pudo mover la app a la Papelera. Muévela manualmente desde Aplicaciones."],
         "update.popup.title": [.ro: "Actualizare disponibilă", .en: "Update available", .es: "Actualización disponible"],
         "update.popup.message": [.ro: "Este disponibilă o nouă versiune! Apeși Actualizează acum și se instalează automat — o să-ți ceară parola de administrator.", .en: "A new version is available! Click Update now and it installs automatically — you'll be asked for your admin password.", .es: "¡Hay una nueva versión disponible! Pulsa Actualizar ahora y se instala automáticamente — se te pedirá tu contraseña de administrador."],
         "update.popup.later": [.ro: "Mai târziu", .en: "Later", .es: "Más tarde"],

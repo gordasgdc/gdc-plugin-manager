@@ -1,5 +1,14 @@
 # Changelog — GDC Plugin Manager
 
+## v1.39.0 (2026-09-20) — Carduri glass, buton de actualizare, dezinstalare din aplicație
+
+### Added
+- **Buton „Caută actualizări”** în bara laterală, lângă versiune; se aprinde verde când există o versiune nouă și pornește direct actualizarea.
+- **„Dezinstalează complet aplicația…”** (Licență): șterge setările, cache-ul și jurnalele și mută aplicația la Coș.
+
+### Changed
+- Toate cardurile au același stil sticlă; cardurile de produs au înălțime fixă, cu butoanele aliniate.
+
 ## v1.38.0 client + v1.46.0 Furnizor (2026-09-19) — Descărcare directă a aplicațiilor, categoria Developer
 
 ### Added

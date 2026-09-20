@@ -36,6 +36,8 @@ struct LicensePane: View {
                 }
 
                 machineIDCard
+                Button(L.t("uninstall.button"), role: .destructive) { AppUninstaller.confirmAndUninstall() }
+                    .controlSize(.small)
                 activationCard
                 buyCard
 

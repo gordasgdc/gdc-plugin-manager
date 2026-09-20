@@ -1258,6 +1258,7 @@ private struct PluginCard: View {
                 } label: {
                     Label(L.t("install.contact.support"), systemImage: "message.fill")
                         .font(.caption2)
+                        .lineLimit(1)
                 }
                 .buttonStyle(.bordered)
                 .tint(.green)

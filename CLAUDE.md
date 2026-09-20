@@ -1159,3 +1159,8 @@ Păstrate verbatim. Regula generală la care se referă fiecare e în
 - `SidebarUpdateButton` (`ContentView.swift`, lângă `vX.Y.Z` în sidebar): iconiță „Caută actualizări” (spinner cât verifică, trimite `gdcCheckForUpdatesRequested`); când `UpdateChecker.availableUpdate` există devine ecuson verde „Actualizare disponibilă vX” care cheamă direct `SelfUpdater.downloadAndInstall`.
 - `GlassCard.swift`: `.glassCardBackground()` (ultraThinMaterial, 12pt, bordură albă 0.2, umbră) aplicat pe TOATE cardurile (Course/MyApp/CustomLauncher/Community + celelalte 12 din `ContentView`). Doar `PluginCard` are înălțime fixă (340); celelalte păstrează înălțimile lor.
 - Mesajele de stare/eroare din `PluginCard`: `lineLimit(1)` + `.help` cu textul complet. NEvalidat vizual; versiune nebumpată.
+
+### Jurnal 2026-09-20 (3) — v1.39.0: dezinstalare in-app
+- `AppUninstaller.swift` (buton „Dezinstalează complet aplicația…” în panoul Licență): dialog nativ → șterge `Application Support/GDCPluginManager` (+ „GDC Plugin Manager”), Caches, Preferences, Saved State, Logs, HTTPStorages, WebKit (bundle ID real `com.gordasgdc.pluginmanager`) → `NSWorkspace.recycle` pe aplicație → ieșire. Jurnal în `DiagnosticLog`. Nu atinge resursele instalate în Resolve. Keychain neșters. `Dezinstalare_*.command` rămâne în repo, nedistribuit (Regula 45).
+- `PluginCard`: butonul de suport are `lineLimit(1)`.
+- Versiune 1.39.0 în Info.plist + CHANGELOG. `docs/update.json` NEmodificat intenționat (Regula 35): rămâne la 1.38.0 până la publicarea release-ului cu DMG; altfel clienții ar primi un update fără fișier. NEvalidat: dezinstalarea reală (nerulată, ar șterge aplicația).
