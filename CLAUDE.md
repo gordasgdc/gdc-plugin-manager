@@ -1143,3 +1143,9 @@ Păstrate verbatim. Regula generală la care se referă fiecare e în
   reserializarea HEAD identic, ca diff-ul să conțină doar intrarea nouă.
   Decodarea validată cu modelul real (pachet izolat cu `GDCPluginManagerCore`).
 - TODO paritate Windows (Regula 31): `downloadURL` în clientul Windows.
+- **Secțiunea DEVELOPER** (`SidebarSection.developer(DeveloperShelf)`): rafturile
+  sunt mapate prin etichete — aplicații cu „Developer” → „Aplicații & Utilitare”
+  (excluse din „Aplicații” din Ecosistem), resurse descărcabile/scripturi/PDF cu
+  eticheta „Scripturi & Automation” sau „SDK & Resurse Dev” → raftul respectiv.
+  Pentru a publica acolo, Furnizorul pune eticheta exactă. TODO paritate Windows.
+- **2026-09-20 — DMG notarizat (Regula 45).** `build_installer.sh` produce `dist/GDCPluginManager-<v>.dmg` (pkg + ghid; semnat Developer ID, notarizat, stapled; `GDCPluginManager.dmg` stabil) prin modul nou `dmg` din `codesigning/sign-and-notarize.sh` (commit 6d24795). `GDCPluginManager-Mac.zip` rămâne DOAR canal pentru Self-Updater-ul instalărilor vechi (`update.json` `mac.download_url`, neschimbat). Butonul din `docs/index.html` încă duce la zip-ul de pe release — de mutat pe DMG odată cu release-ul 1.38.0. `swift build` verde pe arborele curent (secțiunea DEVELOPER inclusă).

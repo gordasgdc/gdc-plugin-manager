@@ -3,12 +3,17 @@
 ## v1.38.0 client + v1.46.0 Furnizor (2026-09-19) — Descărcare directă a aplicațiilor, categoria Developer
 
 ### Added
+- **Distribuție DMG notarizat**: descărcarea de pe pagină e acum `GDCPluginManager-Mac.dmg` (pkg + ghid, semnat Developer ID, notarizat, stapled). Arhiva `.zip` rămâne publicată doar pentru actualizarea automată a versiunilor vechi.
 - **Client — „Descarcă” pe cardul aplicației**: când aplicația are o descărcare
   directă în catalog (`downloadURL`, găzduită pe gordas.dev), binarul (.dmg/.pkg/
   .zip) ajunge în Descărcări și se deschide — fără browser și fără pagină de repo.
   Aplicațiile fără descărcare directă păstrează butonul „Deschide”.
 - **Furnizor — câmp „Descărcare directă”** la publicarea aplicațiilor (păstrat la
   editare), și eticheta „Developer” în sugestiile de categorii.
+- **Client — secțiunea DEVELOPER** în bara laterală (după Ecosistem GDC), cu
+  „Aplicații & Utilitare”, „Scripturi & Automation” și „SDK & Resurse Dev”.
+  Maparea se face prin etichetele din catalog: GDC LUT Lab (eticheta Developer)
+  apare la „Aplicații & Utilitare”, nu și în lista generală de aplicații.
 - **Catalog**: GDC LUT Lab, în categoria Developer, cu descărcare directă a
   DMG-ului notarizat și donație de referință 23 € (`pricing.json`).
 

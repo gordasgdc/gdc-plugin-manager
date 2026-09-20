@@ -21,6 +21,36 @@ enum SidebarSection: Hashable {
     case license
     case help
     case community
+    case developer(DeveloperShelf)
+}
+
+/// Secțiunea DEVELOPER (2026-09-19). Maparea e prin etichete din catalog
+/// (`access.tags`), editabile din Furnizor — nicio listă fixă de produse:
+/// aplicațiile cu eticheta „Developer” ajung la „Aplicații & Utilitare”
+/// (și ies din lista generală a Ecosistemului), resursele descărcabile cu
+/// eticheta raftului lor ajung la „Scripturi & Automation” / „SDK & Resurse Dev”.
+enum DeveloperShelf: String, Hashable, CaseIterable {
+    case apps, scripts, sdk
+
+    static let appsTag = "Developer"
+
+    var tag: String {
+        switch self {
+        case .apps: return Self.appsTag
+        case .scripts: return "Scripturi & Automation"
+        case .sdk: return "SDK & Resurse Dev"
+        }
+    }
+
+    var titleKey: String { "sidebar.developer.\(rawValue)" }
+
+    var symbol: String {
+        switch self {
+        case .apps: return "hammer"
+        case .scripts: return "terminal"
+        case .sdk: return "shippingbox"
+        }
+    }
 }
 
 /// Filigran sezonier — Etapa 6 (2026-08-29). O imagine MARE (nu o
@@ -232,6 +262,8 @@ struct ContentView: View {
             expandEcosystem = true
         case .license, .help:
             expandAccount = true
+        case .developer:
+            expandDeveloper = true
         }
     }
 
@@ -246,6 +278,7 @@ struct ContentView: View {
     @AppStorage("sidebar.expanded.community") private var expandCommunity = false
     @AppStorage("sidebar.expanded.ecosystem") private var expandEcosystem = false
     @AppStorage("sidebar.expanded.account") private var expandAccount = false
+    @AppStorage("sidebar.expanded.developer") private var expandDeveloper = false
     @State private var showOnboarding = false
     @State private var missingDependencies: [SystemDependency] = []
     @State private var allDependencies: [SystemDependency] = []
@@ -328,7 +361,19 @@ struct ContentView: View {
         case .serviceCenters:
             ServiceCentersGrid(centers: catalog.serviceCenters.filter { $0.scheduling?.isActiveNow ?? true })
         case .apps:
-            AppsGrid(apps: catalog.apps.filter { $0.scheduling?.isActiveNow ?? true })
+            AppsGrid(apps: catalog.apps.filter {
+                ($0.scheduling?.isActiveNow ?? true) && !$0.resolvedAccess.tags.contains(DeveloperShelf.appsTag)
+            })
+        case .developer(let shelf):
+            switch shelf {
+            case .apps:
+                AppsGrid(apps: catalog.apps.filter {
+                    ($0.scheduling?.isActiveNow ?? true) && $0.resolvedAccess.tags.contains(DeveloperShelf.appsTag)
+                })
+            case .scripts, .sdk:
+                DownloadResourceGrid(resources: (catalog.downloadableResources + catalog.scriptResources + catalog.pdfResources)
+                    .filter { ($0.scheduling?.isActiveNow ?? true) && $0.resolvedAccess.tags.contains(shelf.tag) })
+            }
         case .myApps:
             MyAppsGrid()
         case .audio:
@@ -447,6 +492,16 @@ struct ContentView: View {
                         .tag(SidebarSection.myApps)
                 } header: {
                     Text(L.t("sidebar.section.ecosystem"))
+                }
+
+                // Grup 4b: DEVELOPER — unelte pentru dezvoltatori (GDC LUT Lab etc.).
+                Section(isExpanded: $expandDeveloper) {
+                    ForEach(DeveloperShelf.allCases, id: \.self) { shelf in
+                        Label(L.t(shelf.titleKey), systemImage: shelf.symbol)
+                            .tag(SidebarSection.developer(shelf))
+                    }
+                } header: {
+                    Text(L.t("sidebar.section.developer"))
                 }
 
                 // Grup 5: contul tău — licență + ajutor, mereu ultimul.

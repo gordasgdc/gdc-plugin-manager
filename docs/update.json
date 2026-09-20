@@ -10,12 +10,13 @@
   "mandatory": false,
   "min_version": "1.0.0",
   "mac": {
-    "version": "1.37.1",
-    "release_date": "2026-09-15",
-    "changes": "Butonul Deschide din „Aplicațiile Mele” pornește acum întotdeauna aplicația din folderul Aplicații, nu o copie veche de pe alt disc.",
+    "version": "1.38.0",
+    "release_date": "2026-09-20",
+    "changes": "Secțiune nouă „Developer” în bara laterală, cu aplicații, scripturi și resurse pentru dezvoltatori. Aplicațiile cu descărcare directă se pot descărca dintr-un clic. Instalare din imagine DMG notarizată de Apple.",
     "download_url": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Mac.zip",
     "mandatory": false,
-    "min_version": "1.0.0"
+    "min_version": "1.0.0",
+    "download_url_dmg": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Mac.dmg"
   },
   "windows": {
     "version": "1.37.0",
