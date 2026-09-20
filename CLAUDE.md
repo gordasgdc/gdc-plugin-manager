@@ -1165,3 +1165,7 @@ Păstrate verbatim. Regula generală la care se referă fiecare e în
 - `PluginCard`: butonul de suport are `lineLimit(1)`.
 - Versiune 1.39.0 în Info.plist + CHANGELOG. `docs/update.json` NEmodificat intenționat (Regula 35): rămâne la 1.38.0 până la publicarea release-ului cu DMG; altfel clienții ar primi un update fără fișier. NEvalidat: dezinstalarea reală (nerulată, ar șterge aplicația).
 - **LIVE 2026-09-20**: v1.39.0 publicat (DMG semnat+notarizat+stapled, `.pkg` semnat Installer+notarizat, zip legacy; linkuri latest 200). Notă: staple-ul DMG a eșuat la prima încercare (ticket încă nepropagat) — reluat după ~30 s. Build-ul fără `APPLE_SIGN_IDENTITY_INSTALLER` produce pkg nesemnat, respins de notarizare.
+
+### Jurnal 2026-09-20 (4) — v1.39.0 PUBLICATĂ (Mac)
+- Release GitHub `v1.39.0`: DMG + `.pkg` notarizate/stapled, copii stabile `GDCPluginManager-Mac.dmg` / `.pkg` / `-Mac.zip` (canal updater vechi). `spctl` pe DMG descărcat: accepted (Notarized Developer ID). `docs/update.json` mac=1.39.0, `verify-update-flow.sh` TOTUL OK. Windows rămâne 1.37.0 (neatins, intenționat).
+- Capcană: `build_installer.sh` cere `APPLE_SIGN_IDENTITY_APP`/`_INSTALLER` exportate; stapling-ul `.pkg` poate pica („Record not found”) imediat după notarizare — reîncearcă `stapler staple` după ~30 s, apoi refă zip/DMG manual. Dezinstalarea in-app reală rămâne NEVALIDATĂ (ar șterge aplicația).
