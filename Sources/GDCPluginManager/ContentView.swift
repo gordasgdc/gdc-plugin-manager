@@ -532,9 +532,12 @@ struct ContentView: View {
             Divider()
             VStack(spacing: 6) {
                 ProfileSidebarBlock()
-                Text("v\(appVersion)")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                HStack(spacing: 6) {
+                    Text("v\(appVersion)")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    SidebarUpdateButton()
+                }
             }
             .frame(maxWidth: .infinity, alignment: .center)
             .padding(.vertical, 8)
@@ -1094,6 +1097,47 @@ func MapButton(mapsURL: URL?) -> some View {
 /// termen, sau expirat) - `Group` gol nu ocupă spațiu în layout.
 /// Se auto-actualizează la 60s - suficient pentru "live" fără cost UI de
 /// a reface un `Text` in fiecare card la fiecare secundă.
+/// Buton vizibil în sidebar, lângă versiune: „Caută actualizări” când nu e
+/// nimic nou, ecuson verde „Actualizare disponibilă vX” când există — la
+/// apăsare pornește direct Self-Updater-ul (fără meniul din bara de sus).
+private struct SidebarUpdateButton: View {
+    @ObservedObject private var updateChecker = UpdateChecker.shared
+    @State private var isChecking = false
+
+    var body: some View {
+        if let info = updateChecker.availableUpdate, !info.download_url.isEmpty {
+            Button {
+                Task { await SelfUpdater.downloadAndInstall(info: info) }
+            } label: {
+                Label("\(L.t("update.popup.title")) v\(info.version)", systemImage: "arrow.down.circle.fill")
+                    .font(.system(size: 10, weight: .bold, design: .rounded))
+                    .lineLimit(1)
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 8).padding(.vertical, 3)
+                    .background(Capsule().fill(Color.green))
+            }
+            .buttonStyle(.plain)
+            .help(L.t("update.popup.now"))
+        } else {
+            Button {
+                isChecking = true
+                NotificationCenter.default.post(name: .gdcCheckForUpdatesRequested, object: nil)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) { isChecking = false }
+            } label: {
+                if isChecking {
+                    ProgressView().controlSize(.mini)
+                } else {
+                    Image(systemName: "arrow.triangle.2.circlepath")
+                        .font(.system(size: 11, weight: .semibold))
+                }
+            }
+            .buttonStyle(.plain)
+            .foregroundStyle(.secondary)
+            .help(L.t("menu.checkForUpdates"))
+        }
+    }
+}
+
 private struct CountdownBadge: View {
     let scheduling: Scheduling?
     @State private var text: String?
@@ -1195,9 +1239,11 @@ private struct PluginCard: View {
 
             if let errorMessage {
                 Text(errorMessage).font(.caption2).foregroundStyle(.red)
+                    .lineLimit(1).help(errorMessage)
             }
             if let statusMessage {
                 Text(statusMessage).font(.caption2).foregroundStyle(.blue)
+                    .lineLimit(1).help(statusMessage)
                 if let first = installedPaths.first {
                     Button(L.t("install.revealInFinder")) {
                         NSWorkspace.shared.activateFileViewerSelecting([first])
@@ -1514,7 +1560,7 @@ private struct CourseCard: View {
         }
         .padding(12)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(RoundedRectangle(cornerRadius: 10).fill(.background.secondary))
+        .glassCardBackground()
     }
 
     private var accessTypeKey: String { "courses.access.\(course.accessType.rawValue)" }
@@ -1674,7 +1720,7 @@ private struct TutorialCard: View {
             CollapsibleDescription(text: tutorial.description)
         }
         .padding(12)
-        .background(RoundedRectangle(cornerRadius: 10).fill(.background.secondary))
+        .glassCardBackground()
     }
 }
 
@@ -1811,7 +1857,7 @@ private struct EducationalResourceCard: View {
         }
         .padding(12)
         .frame(maxWidth: .infinity, minHeight: 200, alignment: .leading)
-        .background(RoundedRectangle(cornerRadius: 10).fill(.background.secondary))
+        .glassCardBackground()
     }
 }
 
@@ -1905,7 +1951,7 @@ private struct EventCard: View {
         }
         .padding(12)
         .frame(maxWidth: .infinity, minHeight: 220, alignment: .leading)
-        .background(RoundedRectangle(cornerRadius: 10).fill(.background.secondary))
+        .glassCardBackground()
     }
 }
 
@@ -2016,7 +2062,7 @@ private struct BundleCard: View {
         }
         .padding(12)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(RoundedRectangle(cornerRadius: 10).fill(.background.secondary))
+        .glassCardBackground()
         .overlay(alignment: .topTrailing) {
             if let urlString = bundle.youtubeURL, let url = URL(string: urlString) {
                 Button { NSWorkspace.shared.open(url) } label: {
@@ -2106,7 +2152,7 @@ private struct PartnerOfferCard: View {
         }
         .padding(12)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(RoundedRectangle(cornerRadius: 10).fill(.background.secondary))
+        .glassCardBackground()
         .overlay(alignment: .topLeading) {
             if let urlString = offer.youtubeURL, let url = URL(string: urlString) {
                 Button { NSWorkspace.shared.open(url) } label: {
@@ -2187,7 +2233,7 @@ private struct PartnerStoreCard: View {
         }
         .padding(12)
         .frame(maxWidth: .infinity, minHeight: 180, alignment: .leading)
-        .background(RoundedRectangle(cornerRadius: 10).fill(.background.secondary))
+        .glassCardBackground()
     }
 }
 
@@ -2273,7 +2319,7 @@ private struct ServiceCenterCard: View {
         }
         .padding(12)
         .frame(maxWidth: .infinity, minHeight: 170, alignment: .leading)
-        .background(RoundedRectangle(cornerRadius: 10).fill(.background.secondary))
+        .glassCardBackground()
     }
 }
 
@@ -2409,7 +2455,7 @@ private struct AppCard: View {
         }
         .padding(12)
         .frame(maxWidth: .infinity, minHeight: 96, alignment: .leading)
-        .background(RoundedRectangle(cornerRadius: 10).fill(.background.secondary))
+        .glassCardBackground()
         .overlay(alignment: .topTrailing) { infoButton }
     }
 
@@ -2524,7 +2570,7 @@ private struct DownloadResourceCard: View {
         }
         .padding(12)
         .frame(maxWidth: .infinity, minHeight: 96, alignment: .leading)
-        .background(RoundedRectangle(cornerRadius: 10).fill(.background.secondary))
+        .glassCardBackground()
         .overlay(alignment: .topLeading) { infoButton }
     }
 
@@ -2710,7 +2756,7 @@ private struct AudioCard: View {
         }
         .padding(12)
         .frame(maxWidth: .infinity, minHeight: 96, alignment: .leading)
-        .background(RoundedRectangle(cornerRadius: 10).fill(.background.secondary))
+        .glassCardBackground()
         .overlay(alignment: .topTrailing) { infoButton }
     }
 

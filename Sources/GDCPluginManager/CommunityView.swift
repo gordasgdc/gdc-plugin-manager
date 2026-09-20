@@ -87,7 +87,7 @@ struct CommunityChannelCard: View {
         }
         .padding(16)
         .frame(minHeight: 172, alignment: .topLeading)
-        .background(RoundedRectangle(cornerRadius: 10).fill(Color.secondary.opacity(0.08)))
+        .glassCardBackground()
     }
 
     /// Iconița de brand, cu retragere în trepte: SVG-ul brandului dacă cheia

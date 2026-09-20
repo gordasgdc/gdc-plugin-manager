@@ -441,7 +441,7 @@ private struct MyAppCard: View {
         }
         .padding(12)
         .frame(maxWidth: .infinity, minHeight: 100, alignment: .leading)
-        .background(RoundedRectangle(cornerRadius: 10).fill(.background.secondary))
+        .glassCardBackground()
         .opacity(status.isInstalled ? 1 : 0.55)
     }
 }
@@ -475,7 +475,7 @@ private struct CustomLauncherCard: View {
         }
         .padding(12)
         .frame(maxWidth: .infinity, minHeight: 100, alignment: .leading)
-        .background(RoundedRectangle(cornerRadius: 10).fill(.background.secondary))
+        .glassCardBackground()
     }
 
 }

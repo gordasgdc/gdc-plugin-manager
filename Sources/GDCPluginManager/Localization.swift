@@ -378,6 +378,7 @@ enum L {
         "update.dismiss": [.ro: "Închide", .en: "Dismiss", .es: "Cerrar"],
         // Pop-up modal (ContentView.swift), separat de bannerul de mai sus.
         // Explica raspicat ca nu e self-update — vezi cererea din 2026-08-24.
+        "menu.checkForUpdates": [.ro: "Caută actualizări", .en: "Check for updates", .es: "Buscar actualizaciones"],
         "update.popup.title": [.ro: "Actualizare disponibilă", .en: "Update available", .es: "Actualización disponible"],
         "update.popup.message": [.ro: "Este disponibilă o nouă versiune! Apeși Actualizează acum și se instalează automat — o să-ți ceară parola de administrator.", .en: "A new version is available! Click Update now and it installs automatically — you'll be asked for your admin password.", .es: "¡Hay una nueva versión disponible! Pulsa Actualizar ahora y se instala automáticamente — se te pedirá tu contraseña de administrador."],
         "update.popup.later": [.ro: "Mai târziu", .en: "Later", .es: "Más tarde"],

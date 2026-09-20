@@ -1154,3 +1154,8 @@ Păstrate verbatim. Regula generală la care se referă fiecare e în
 - `PluginCard` (`ContentView.swift`): înălțime fixă `cardHeight` (340), cover 128pt `.clipped()`, titlu `lineLimit(1)`, descriere `lineLimit(2)` (completă la `.help`), `Spacer` intern → butonul de acțiune (Instalează/Deschide/Elimină) pe aceeași linie în tot rândul. Fundal `.ultraThinMaterial`, colț 12pt, bordură albă 0.2, umbră difuză.
 - `priceBadges`: ecusoane GRATUIT/TRIAL/LICENȚĂ/PROMO + sumă, uniform în colțul dreapta-sus al copertei; `CountdownBadge` stânga-sus; fonturi rounded.
 - Pierdut intenționat: `CollapsibleDescription` nu mai e folosit în card. NU aplicat încă: `CourseCard`, `MyAppCard`, `CommunityChannelCard`. Versiune NEbumpată (nelivrat); nevalidat vizual (fără screenshot).
+
+### Jurnal 2026-09-20 (2) — buton de actualizare + stil glass pe toate cardurile
+- `SidebarUpdateButton` (`ContentView.swift`, lângă `vX.Y.Z` în sidebar): iconiță „Caută actualizări” (spinner cât verifică, trimite `gdcCheckForUpdatesRequested`); când `UpdateChecker.availableUpdate` există devine ecuson verde „Actualizare disponibilă vX” care cheamă direct `SelfUpdater.downloadAndInstall`.
+- `GlassCard.swift`: `.glassCardBackground()` (ultraThinMaterial, 12pt, bordură albă 0.2, umbră) aplicat pe TOATE cardurile (Course/MyApp/CustomLauncher/Community + celelalte 12 din `ContentView`). Doar `PluginCard` are înălțime fixă (340); celelalte păstrează înălțimile lor.
+- Mesajele de stare/eroare din `PluginCard`: `lineLimit(1)` + `.help` cu textul complet. NEvalidat vizual; versiune nebumpată.
