@@ -1149,3 +1149,8 @@ Păstrate verbatim. Regula generală la care se referă fiecare e în
   eticheta „Scripturi & Automation” sau „SDK & Resurse Dev” → raftul respectiv.
   Pentru a publica acolo, Furnizorul pune eticheta exactă. TODO paritate Windows.
 - **2026-09-20 — DMG notarizat (Regula 45).** `build_installer.sh` produce `dist/GDCPluginManager-<v>.dmg` (pkg + ghid; semnat Developer ID, notarizat, stapled; `GDCPluginManager.dmg` stabil) prin modul nou `dmg` din `codesigning/sign-and-notarize.sh` (commit 6d24795). `GDCPluginManager-Mac.zip` rămâne DOAR canal pentru Self-Updater-ul instalărilor vechi (`update.json` `mac.download_url`, neschimbat). Butonul din `docs/index.html` încă duce la zip-ul de pe release — de mutat pe DMG odată cu release-ul 1.38.0. `swift build` verde pe arborele curent (secțiunea DEVELOPER inclusă).
+
+### Jurnal 2026-09-20 — Redesign carduri catalog (glass + grilă uniformă)
+- `PluginCard` (`ContentView.swift`): înălțime fixă `cardHeight` (340), cover 128pt `.clipped()`, titlu `lineLimit(1)`, descriere `lineLimit(2)` (completă la `.help`), `Spacer` intern → butonul de acțiune (Instalează/Deschide/Elimină) pe aceeași linie în tot rândul. Fundal `.ultraThinMaterial`, colț 12pt, bordură albă 0.2, umbră difuză.
+- `priceBadges`: ecusoane GRATUIT/TRIAL/LICENȚĂ/PROMO + sumă, uniform în colțul dreapta-sus al copertei; `CountdownBadge` stânga-sus; fonturi rounded.
+- Pierdut intenționat: `CollapsibleDescription` nu mai e folosit în card. NU aplicat încă: `CourseCard`, `MyAppCard`, `CommunityChannelCard`. Versiune NEbumpată (nelivrat); nevalidat vizual (fără screenshot).

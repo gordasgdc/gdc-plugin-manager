@@ -1116,7 +1116,7 @@ private struct BadgePill: View {
 
     var body: some View {
         Text(text.uppercased())
-            .font(.system(size: 10, weight: .bold))
+            .font(.system(size: 10, weight: .bold, design: .rounded))
             .foregroundStyle(.white)
             .padding(.horizontal, 8)
             .padding(.vertical, 3)
@@ -1171,62 +1171,26 @@ private struct PluginCard: View {
                 height: 128,
                 lightboxTitle: item.name
             )
-            HStack(alignment: .top) {
-                Spacer()
-                // Stacked vertically (info button above the price/status
-                // badge, not on top of it) — an absolute corner overlay
-                // here used to land right on top of the badge.
-                VStack(alignment: .trailing, spacing: 6) {
-                    infoButton
-                    if item.isFree && item.isTrial {
-                        BadgePill(text: L.t("card.trial"), color: .blue)
-                    } else if item.isFree {
-                        BadgePill(text: L.t("card.free"), color: .green)
-                    } else {
-                        VStack(alignment: .trailing, spacing: 3) {
-                            // Etapa 4 extinsă (2026-08-29): sumă de
-                            // susținere promoțională temporară (ex. Black
-                            // Friday) — rămâne donație (Regula 3), suma
-                            // veche apare tăiată, niciodată cuvântul
-                            // "reducere"/"discount". Badge distinct de
-                            // "-X% OFF" (acela e EXCLUSIV pentru
-                            // `PartnerOffer`, branduri terțe).
-                            if item.isPromoActive {
-                                Text(item.priceDisplay)
-                                    .font(.caption)
-                                    .strikethrough()
-                                    .foregroundStyle(.tertiary)
-                            }
-                            Text(item.effectivePriceEUR.formatted(.currency(code: "EUR")))
-                                .font(.subheadline.weight(.semibold))
-                                .foregroundStyle(.secondary)
-                            if item.isPromoActive {
-                                BadgePill(text: L.t("card.promo"), color: .red)
-                            } else {
-                                // Badge "LICENȚĂ" — inlocuieste vechea eticheta
-                                // "donație" (2026-08-24, cerere explicita: fara
-                                // ton de "reclama agresiva", comunicare
-                                // transparenta). Mesajul complet de incredere
-                                // apare la hover (.help), cardul ramane compact.
-                                BadgePill(text: L.t("card.paid"), color: .orange)
-                                    .help(L.t("card.trustMessage"))
-                            }
-                        }
-                    }
-                }
+            .frame(height: 128)
+            .clipped()
+            .overlay(alignment: .topTrailing) { priceBadges.padding(6) }
+            .overlay(alignment: .topLeading) { CountdownBadge(scheduling: item.scheduling).padding(6) }
+            Text(item.name)
+                .font(.system(.headline, design: .rounded))
+                .lineLimit(1)
+            Text(item.description)
+                .font(.system(.caption, design: .rounded))
+                .foregroundStyle(.secondary)
+                .lineLimit(2)
+                .frame(maxWidth: .infinity, minHeight: 30, alignment: .topLeading)
+                .help(item.description)
+            HStack(spacing: 6) {
+                Text("\(L.t("card.version")) \(item.version)")
+                    .font(.system(.caption2, design: .rounded))
+                    .foregroundStyle(.tertiary)
+                Spacer(minLength: 0)
+                infoButton
             }
-            Text(item.name).font(.headline)
-            CountdownBadge(scheduling: item.scheduling)
-            CollapsibleDescription(text: item.description)
-            Text("\(L.t("card.version")) \(item.version)")
-                .font(.caption2)
-                .foregroundStyle(.tertiary)
-
-            // Etapa 2 (2026-08-29) — linkuri opționale (Achiziție/Demo) +
-            // rețele sociale, toate 100% opționale: rândul nu apare deloc
-            // dacă produsul nu are niciunul completat. Iconițe SF Symbols
-            // vectoriale (nu logo-uri de brand — Apple nu le permite ca
-            // simboluri third-party), simplu și consistent, nu emoji.
             extraLinksRow
 
             if let errorMessage {
@@ -1253,15 +1217,53 @@ private struct PluginCard: View {
                 .tint(.green)
             }
 
+            Spacer(minLength: 0)
             actionButton
+                .frame(height: 28)
         }
         .padding(12)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(RoundedRectangle(cornerRadius: 10).fill(.background.secondary))
+        .frame(maxWidth: .infinity, minHeight: cardHeight, maxHeight: cardHeight, alignment: .topLeading)
+        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
+        .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color.white.opacity(0.2), lineWidth: 1))
+        .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: 4)
         .alert(resolveWarningTitle, isPresented: $showResolveWarning) {
             Button(L.t("resolve.running.ok")) {}
         } message: {
             Text(resolveWarningBody)
+        }
+    }
+
+    /// Înălțime fixă pentru TOATE cardurile din grilă: butonul de jos cade
+    /// pe aceeași linie indiferent de descriere/preț/mesaje.
+    private let cardHeight: CGFloat = 340
+
+    /// Ecusoane uniforme, colț dreapta-sus al imaginii: stare (GRATUIT /
+    /// TRIAL / LICENȚĂ / PROMO) + suma de susținere, dacă e cazul.
+    @ViewBuilder
+    private var priceBadges: some View {
+        VStack(alignment: .trailing, spacing: 4) {
+            if item.isFree && item.isTrial {
+                BadgePill(text: L.t("card.trial"), color: .blue)
+            } else if item.isFree {
+                BadgePill(text: L.t("card.free"), color: .green)
+            } else {
+                if item.isPromoActive {
+                    BadgePill(text: L.t("card.promo"), color: .red)
+                } else {
+                    BadgePill(text: L.t("card.paid"), color: .orange)
+                        .help(L.t("card.trustMessage"))
+                }
+                HStack(spacing: 4) {
+                    if item.isPromoActive {
+                        Text(item.priceDisplay).strikethrough().foregroundStyle(.secondary)
+                    }
+                    Text(item.effectivePriceEUR.formatted(.currency(code: "EUR")))
+                        .fontWeight(.semibold)
+                }
+                .font(.system(size: 10, design: .rounded))
+                .padding(.horizontal, 6).padding(.vertical, 2)
+                .background(.ultraThinMaterial, in: Capsule())
+            }
         }
     }
 
