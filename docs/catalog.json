@@ -109,7 +109,7 @@
         ]
       },
       "coverImage" : "covers/GDC STYLE Lab.png?v=4990453c",
-      "downloadURL" : "https://gordas.dev/gdc-style-lab/GDCStyleLab-1.7.0.dmg",
+      "downloadURL" : "https://gordas.dev/gdc-style-lab/GDCStyleLab-1.15.0.dmg",
       "id" : "gdc-lut-lab",
       "name" : "GDC STYLE Lab",
       "pricingProductID" : "gdc-lut-lab",
@@ -260,21 +260,6 @@
       "name" : "spektrafilm",
       "url" : "https://spektrafilm.114c.de/#download",
       "youtubeURL" : "https://spektrafilm.114c.de/technical/"
-    },
-    {
-      "access" : {
-        "group" : "gdc",
-        "note" : "Donație · licență legată de Mac (Machine ID)",
-        "referencePriceEUR" : 23,
-        "tags" : [
-          "Developer"
-        ]
-      },
-      "downloadURL" : "https://gordas.dev/gdc-film-pipeline/GDCFilmPipeline.pkg",
-      "id" : "gdc-film-pipeline",
-      "name" : "GDC Film Pipeline",
-      "supportedOS" : "macOS",
-      "url" : "https://gordas.dev/gdc-film-pipeline/"
     }
   ],
   "audioTracks" : [
