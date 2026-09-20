@@ -10,13 +10,13 @@
   "mandatory": false,
   "min_version": "1.0.0",
   "mac": {
-    "version": "1.38.0",
+    "version": "1.39.0",
     "release_date": "2026-09-20",
-    "changes": "Secțiune nouă „Developer” în bara laterală, cu aplicații, scripturi și resurse pentru dezvoltatori. Aplicațiile cu descărcare directă se pot descărca dintr-un clic. Instalare din imagine DMG notarizată de Apple.",
+    "changes": "Buton „Dezinstalează complet aplicația…” în secțiunea Licență, carduri cu aspect glass și buton de actualizare în bara laterală.",
     "download_url": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Mac.zip",
     "mandatory": false,
     "min_version": "1.0.0",
-    "download_url_dmg": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Mac.dmg"
+    "download_url_dmg": "https://github.com/gordasgdc/gdc-plugin-manager/releases/download/v1.39.0/GDCPluginManager-1.39.0.dmg"
   },
   "windows": {
     "version": "1.37.0",
