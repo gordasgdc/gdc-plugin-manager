@@ -109,19 +109,12 @@
         ]
       },
       "coverImage" : "covers/GDC STYLE Lab.png?v=4990453c",
-      "description" : {
-        "en" : "Color styles and a Universal IDT for DaVinci Resolve, as DCTL or OFX plugins with per-Mac activation and professional Scene-Linear controls.",
-        "es" : "Estilos de color y Universal IDT para DaVinci Resolve, como DCTL o plugins OFX con activación por Mac y controles profesionales Scene-Linear.",
-        "ro" : "Stiluri de culoare și Universal IDT pentru DaVinci Resolve, ca DCTL sau plugin OFX, cu activare pe Mac și controale profesionale Scene-Linear."
-      },
       "downloadURL" : "https://gordas.dev/gdc-style-lab/GDCStyleLab-1.7.0.dmg",
       "id" : "gdc-lut-lab",
       "name" : "GDC STYLE Lab",
       "pricingProductID" : "gdc-lut-lab",
       "supportedOS" : "macOS",
-      "updateURL" : "https://gordas.dev/gdc-style-lab/update.json",
-      "url" : "https://gordas.dev/gdc-style-lab/",
-      "version" : "1.7.0"
+      "url" : "https://gordas.dev/gdc-style-lab/"
     },
     {
       "access" : {
@@ -164,18 +157,11 @@
         ]
       },
       "coverImage" : "covers/GDC Firewall.png?v=09789091",
-      "description" : {
-        "en" : "A macOS firewall in plain language, built for non-technical users. Traffic-light alerts, smart approval of Apple services and three levels of domain filtering. Free, open source.",
-        "es" : "Cortafuegos para macOS en lenguaje sencillo, para usuarios no técnicos. Alertas tipo semáforo, aprobación inteligente de servicios de Apple y tres niveles de filtrado de dominios. Gratuito y de código abierto.",
-        "ro" : "Firewall pentru macOS, în română, pentru utilizatori non-tehnici. Alerte cu semafor, aprobare inteligentă a serviciilor Apple și filtrare de domenii pe trei nivele. Gratuit, sursă publică."
-      },
       "downloadURL" : "https://gordas.dev/gdc-firewall/GDCFirewall-macOS.zip",
       "id" : "gdc-firewall",
       "name" : "GDC Firewall",
       "supportedOS" : "macOS",
-      "updateURL" : "https://gordas.dev/gdc-firewall/update.json",
-      "url" : "https://gordas.dev/gdc-firewall/",
-      "version" : "2.0.0"
+      "url" : "https://gordas.dev/gdc-firewall/"
     },
     {
       "access" : {
@@ -279,6 +265,9 @@
   "audioTracks" : [
 
   ],
+  "communityChannels" : [
+
+  ],
   "courses" : [
 
   ],
@@ -342,6 +331,61 @@
 
   ],
   "items" : [
+    {
+      "bundleFolderName" : "GDC Pro Universal IDT Demo.ofx.bundle",
+      "description" : "GDC Pro Universal IDT Demo.ofx",
+      "files" : [
+        {
+          "path" : "GDC Pro Universal IDT Demo ofx/1.0.0/Contents/Info.plist",
+          "repo" : "files",
+          "sha256" : "168c338ffe7b6747ca0e197b81af86e27e6070c75888d9bb93f21551430cb5a9"
+        },
+        {
+          "path" : "GDC Pro Universal IDT Demo ofx/1.0.0/Contents/MacOS/GDC Pro Universal IDT Demo.ofx",
+          "repo" : "files",
+          "sha256" : "22d2838748ce3bd05a35d418a63121de51fcc9d9d383d8e60d4413216016da40"
+        },
+        {
+          "path" : "GDC Pro Universal IDT Demo ofx/1.0.0/Contents/Resources/gdc-cuda.bin",
+          "repo" : "files",
+          "sha256" : "5f966e4ab94f73b5c7ed6a2286067e51ba57a8dd48889d69ff889df61dc8dcb7"
+        },
+        {
+          "path" : "GDC Pro Universal IDT Demo ofx/1.0.0/Contents/Resources/gdc-opencl.bin",
+          "repo" : "files",
+          "sha256" : "de6c9647a411621dee1d357b129a6391cde56b0e8af59dec5763e657d9686ca0"
+        },
+        {
+          "path" : "GDC Pro Universal IDT Demo ofx/1.0.0/Contents/Resources/gdc.bin",
+          "repo" : "files",
+          "sha256" : "893a2d1553ee2d865c444f89e251152dd5841840276c7ff624265ce079c46ea6"
+        },
+        {
+          "path" : "GDC Pro Universal IDT Demo ofx/1.0.0/Contents/Resources/gdc.dat",
+          "repo" : "files",
+          "sha256" : "c270d4eb8128c28785035b0ee6e82794b8739830abbd0f745329d7b886eb641f"
+        },
+        {
+          "path" : "GDC Pro Universal IDT Demo ofx/1.0.0/Contents/Win64/GDC Pro Universal IDT Demo.ofx",
+          "repo" : "files",
+          "sha256" : "6d5215b0166efdd00040108910b068d79ac6c424227202900b9acfd397849e62"
+        },
+        {
+          "path" : "GDC Pro Universal IDT Demo ofx/1.0.0/Contents/_CodeSignature/CodeResources",
+          "repo" : "files",
+          "sha256" : "8e5921eef8b767812aaacf2b0bc26d2d190f5084852a6c4469215686e0221214"
+        }
+      ],
+      "iconSymbol" : "camera.filters",
+      "id" : "GDC Pro Universal IDT Demo ofx",
+      "isFree" : true,
+      "isTrial" : false,
+      "name" : "GDC Pro Universal IDT Demo ofx",
+      "priceEUR" : 0,
+      "supportedOS" : "crossPlatform",
+      "type" : "ofx",
+      "version" : "1.0.0"
+    },
     {
       "description" : "Flux de lucru profesional Intermediate la cel mai inalt nivel in industrie",
       "files" : [
@@ -834,5 +878,5 @@
       "youtubeURL" : "https://www.youtube.com/watch?v=dnkUIGXIzIM"
     }
   ],
-  "updatedAt" : "2026-09-19T03:03:23Z"
+  "updatedAt" : "2026-09-20"
 }
