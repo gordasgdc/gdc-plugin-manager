@@ -1,10 +1,11 @@
 {
-  "version": "2.3.3",
-  "app_version": "2.3.3",
+  "version": "2.3.4",
+  "app_version": "2.3.4",
   "engine_version_required": "4.5.1",
   "changes": "Mutarea automată în folderul Aplicații funcționează și pentru arhivele descărcate din browser; dezinstalatorul scoate complet filtrul de rețea, oriunde s-ar afla aplicația; arhiva de pe site poartă versiunea în nume.",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-firewall/GDCFirewall-macOS-2.3.3.zip"
+    "mac": "https://gordas.dev/gdc-firewall/GDCFirewall-macOS-2.3.4.zip",
+    "mac_dmg": "https://gordas.dev/gdc-firewall/GDCFirewall-macOS-2.3.4.dmg"
   },
   "mandatory": false
 }
