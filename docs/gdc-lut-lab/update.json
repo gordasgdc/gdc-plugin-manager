@@ -1,9 +1,9 @@
 {
-  "version": "1.14.0",
-  "app_version": "1.14.0",
-  "changes": "Grain mai rapid în modul Preview (redare în timeline), fără schimbări în modul Production. Redarea la 4K cu Halation, Bloom, Print și Grain active e mai fluidă. Pachetele exportate cu versiuni mai vechi trebuie reexportate.",
+  "version": "1.15.0",
+  "app_version": "1.15.0",
+  "changes": "GDC Film Pipeline (emulare de film în 4 straturi în cascadă: proces chimic, stoc de film, contrast, culoare) se instalează acum direct din aplicație, în tabul Film Pipeline, și se activează cu aceeași licență GDC STYLE Lab: filigranul Demo dispare singur după activare. Pachetele exportate cu versiuni mai vechi trebuie reexportate.",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-lut-lab/GDCStyleLab-1.14.0-transition.dmg"
+    "mac": "https://gordas.dev/gdc-lut-lab/GDCStyleLab-1.15.0-transition.dmg"
   },
   "mandatory": false
 }
