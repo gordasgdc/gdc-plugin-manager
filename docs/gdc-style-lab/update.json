@@ -1,9 +1,9 @@
 {
-  "version": "1.16.0",
-  "app_version": "1.16.0",
-  "changes": "Tabul Film Pipeline are acum panoul complet de export (Full sau Demo), un manager de foldere cu LUT-uri din care se pot regenera modelele de film direct în aplicație, spațiul intern al modelului blocat în Inspector și două bife noi, Bypass Input IDT și Bypass Output ODT. Pachetele exportate cu versiuni mai vechi trebuie reexportate.",
+  "version": "1.17.0",
+  "app_version": "1.17.0",
+  "changes": "Film Pipeline: semnalul trece bit-exact între noduri când intrarea sau ieșirea e spațiul de lucru (ACEScct/AP1), valorile super-albe și negative HDR nu mai sunt tăiate (modelul continuă liniar în afara intervalului), iar valorile NaN/Inf sunt înlocuite cu 0. Un lanț de noduri dă exact același rezultat ca un singur nod. Pachetele exportate cu versiuni mai vechi trebuie reexportate.",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-style-lab/GDCStyleLab-1.16.0.dmg"
+    "mac": "https://gordas.dev/gdc-style-lab/GDCStyleLab-1.17.0.dmg"
   },
   "mandatory": false
 }
