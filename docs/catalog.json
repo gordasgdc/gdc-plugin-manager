@@ -336,44 +336,44 @@
       "description" : "GDC Pro Universal IDT Demo.ofx",
       "files" : [
         {
-          "path" : "GDC Pro Universal IDT Demo ofx/3.0.0/Contents/Info.plist",
+          "path" : "GDC Pro Universal IDT Demo ofx/4.0.0/Contents/Info.plist",
           "repo" : "files",
           "sha256" : "168c338ffe7b6747ca0e197b81af86e27e6070c75888d9bb93f21551430cb5a9"
         },
         {
-          "path" : "GDC Pro Universal IDT Demo ofx/3.0.0/Contents/MacOS/GDC Pro Universal IDT Demo.ofx",
+          "path" : "GDC Pro Universal IDT Demo ofx/4.0.0/Contents/MacOS/GDC Pro Universal IDT Demo.ofx",
           "repo" : "files",
-          "sha256" : "75d4080b5462d21b0cd373e10003d9bf74a6c8f51fc75ac63169fdeead7f3fd3"
+          "sha256" : "f330eca5f2860ebfda9d3916636aff9fad40657137798b3328df1e769dc5b699"
         },
         {
-          "path" : "GDC Pro Universal IDT Demo ofx/3.0.0/Contents/Resources/gdc-cuda.bin",
+          "path" : "GDC Pro Universal IDT Demo ofx/4.0.0/Contents/Resources/gdc-cuda.bin",
           "repo" : "files",
-          "sha256" : "2747401d7259f689e04f6c05d34770a00cb4d1d292b1981670fcbd012007b256"
+          "sha256" : "9dfca6ea61475add7b67227af5e7d830dfbbcec6a4b7775eb73c635353d2fca9"
         },
         {
-          "path" : "GDC Pro Universal IDT Demo ofx/3.0.0/Contents/Resources/gdc-opencl.bin",
+          "path" : "GDC Pro Universal IDT Demo ofx/4.0.0/Contents/Resources/gdc-opencl.bin",
           "repo" : "files",
-          "sha256" : "3fe4377223f06e1a17c1aab24c23d9d30d8e2891fe9a82ab57a56da9af71357e"
+          "sha256" : "e20d0aa38e2bb267b88cfcfe00f2d47b71703541505dc4afc5c42547f3008cb8"
         },
         {
-          "path" : "GDC Pro Universal IDT Demo ofx/3.0.0/Contents/Resources/gdc.bin",
+          "path" : "GDC Pro Universal IDT Demo ofx/4.0.0/Contents/Resources/gdc.bin",
           "repo" : "files",
-          "sha256" : "823f0a0ad35885b16bdeb0672395d15fc037938a2b1faedc844ed99f7801accc"
+          "sha256" : "77c44acca01b4909f07270474effd422a67dec145a548970f76812b5cad124b5"
         },
         {
-          "path" : "GDC Pro Universal IDT Demo ofx/3.0.0/Contents/Resources/gdc.dat",
+          "path" : "GDC Pro Universal IDT Demo ofx/4.0.0/Contents/Resources/gdc.dat",
           "repo" : "files",
-          "sha256" : "492b2d2fbaaa38a1fde931157218f168484af954d05df2b6217a0199480140cc"
+          "sha256" : "aebb1a6822284c4998dbf554912e8ed8d018c5f6d987de913a5eb1970ed4868d"
         },
         {
-          "path" : "GDC Pro Universal IDT Demo ofx/3.0.0/Contents/Win64/GDC Pro Universal IDT Demo.ofx",
+          "path" : "GDC Pro Universal IDT Demo ofx/4.0.0/Contents/Win64/GDC Pro Universal IDT Demo.ofx",
           "repo" : "files",
-          "sha256" : "274dc6d6c1127504db456965e94978933a8acc631f82f656ea342c5e1947e3c4"
+          "sha256" : "9b8782860592663335a11847ad0317df1aaef3409db7160fd761c218577c0f27"
         },
         {
-          "path" : "GDC Pro Universal IDT Demo ofx/3.0.0/Contents/_CodeSignature/CodeResources",
+          "path" : "GDC Pro Universal IDT Demo ofx/4.0.0/Contents/_CodeSignature/CodeResources",
           "repo" : "files",
-          "sha256" : "4ab2e2b021de0a9cfb2b0a16779857c0750dac3885304f8ba2c8b28e51191c3f"
+          "sha256" : "1b8d8b7a846486aeffe948d01d80e030883e7ccdd7a00e69ef9a796ae4204538"
         }
       ],
       "iconSymbol" : "camera.filters",
@@ -384,7 +384,7 @@
       "priceEUR" : 0,
       "supportedOS" : "crossPlatform",
       "type" : "ofx",
-      "version" : "3.0.0"
+      "version" : "4.0.0"
     },
     {
       "description" : "Flux de lucru profesional Intermediate la cel mai inalt nivel in industrie",
