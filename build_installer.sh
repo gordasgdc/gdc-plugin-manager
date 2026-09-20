@@ -114,6 +114,22 @@ cp "Sources/GDCPluginManager/Resources/Ghid-GDCPluginManager-ro.pdf" "$ZIP_STAGE
 ( cd "$ZIP_STAGE" && zip -q -r -y "../GDCPluginManager-Mac.zip" . )
 rm -rf "$ZIP_STAGE"
 
+# [2026-09-20] Regula 45: distributia catre client e DMG-ul notarizat (pkg + ghid),
+# fara .command. Zip-ul de mai sus ramane DOAR canal pentru Self-Updater-ul
+# clientilor vechi (stiu doar arhiva .zip cu .pkg inauntru), niciodata legat
+# de pagina de descarcare.
+echo "==> Building GDCPluginManager-$VERSION.dmg (pkg + ghid)…"
+DMG_STAGE="$DIST_DIR/dmg_stage"
+DMG="$DIST_DIR/GDCPluginManager-$VERSION.dmg"
+rm -rf "$DMG_STAGE" "$DMG"
+mkdir -p "$DMG_STAGE"
+cp "$FINAL_PKG" "$DMG_STAGE/GDCPluginManager-$VERSION.pkg"
+cp "Sources/GDCPluginManager/Resources/Ghid-GDCPluginManager-ro.pdf" "$DMG_STAGE/Ghid-de-Utilizare.pdf" 2>/dev/null || true
+hdiutil create -volname "GDC Plugin Manager $VERSION" -srcfolder "$DMG_STAGE" -fs HFS+ -format UDZO -ov "$DMG" >/dev/null
+rm -rf "$DMG_STAGE"
+./codesigning/sign-and-notarize.sh dmg "$DMG"
+cp "$DMG" "$DIST_DIR/GDCPluginManager.dmg"
+
 # [2026-09-12] Garda finala: un pachet NESEMNAT nu trebuie sa poata fi
 # incarcat din greseala pe un release. Mesajul "sar peste semnare" apare la
 # mijlocul unui log lung si e usor de ratat — asta esueaza la final, unde se
@@ -137,5 +153,5 @@ if ! pkgutil --check-signature "$FINAL_PKG" 2>/dev/null | grep -q "Status: signe
 fi
 
 echo "==> Done: $FINAL_PKG"
-echo "==> Also: $DIST_DIR/GDCPluginManager.pkg, $DIST_DIR/Dezinstalare_GDCPluginManager.command, $DIST_DIR/GDCPluginManager-Mac.zip"
+echo "==> Also: $DMG (+ GDCPluginManager.dmg stabil), $DIST_DIR/GDCPluginManager-Mac.zip (doar updater vechi)"
 echo "    Upload GDCPluginManager-Mac.zip to the GitHub release (that's what the website links to)."
