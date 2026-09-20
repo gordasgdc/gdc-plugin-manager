@@ -1,9 +1,9 @@
 {
-  "version": "1.10.0",
-  "app_version": "1.10.0",
-  "changes": "Inspector reorganizat în ordinea lanțului de procesare, cu module pliabile și bife Enable pentru Halation/Bloom, Print film și Grain (oprit = imagine identică, valorile rămân). Halation și Bloom urmează acum expunerea și balansul de alb. Pachetele exportate cu versiuni mai vechi trebuie reexportate.",
+  "version": "1.11.0",
+  "app_version": "1.11.0",
+  "changes": "Halation și Bloom disponibile și pe Windows (CUDA/OpenCL), iar pe Mac modulul rulează mai rapid și folosește cu aproape jumătate mai puțină memorie video la 4K. Rezultatul imaginii rămâne identic. Pachetele exportate cu versiuni mai vechi trebuie reexportate.",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-style-lab/GDCStyleLab-1.10.0.dmg"
+    "mac": "https://gordas.dev/gdc-style-lab/GDCStyleLab-1.11.0.dmg"
   },
   "mandatory": false
 }
