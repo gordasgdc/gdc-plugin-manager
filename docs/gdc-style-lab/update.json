@@ -1,9 +1,9 @@
 {
-  "version": "1.7.0",
-  "app_version": "1.7.0",
-  "changes": "Instrumente noi: amestec de canale 3×3 cu păstrarea luminanței, înaltele duse spre alb fără viraj de nuanță și compresie de gamă cu prag reglabil. În plus, randarea cu toate controalele active e de circa 2,6 ori mai rapidă. Pachetele exportate cu versiuni mai vechi trebuie reexportate.",
+  "version": "1.8.0",
+  "app_version": "1.8.0",
+  "changes": "Modul nou Halation și Bloom: strălucirea înaltelor și halou roșu de film, calculate în Scene Linear, cu control de prag, rază, tentă roșie și amestec (plugin OFX pe macOS). Cu amestecurile la zero, imaginea rămâne identică cu cea de dinainte. Pachetele exportate cu versiuni mai vechi trebuie reexportate.",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-style-lab/GDCStyleLab-1.7.0.dmg"
+    "mac": "https://gordas.dev/gdc-style-lab/GDCStyleLab-1.8.0.dmg"
   },
   "mandatory": false
 }
