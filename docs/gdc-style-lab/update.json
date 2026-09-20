@@ -1,9 +1,9 @@
 {
-  "version": "1.8.0",
-  "app_version": "1.8.0",
-  "changes": "Modul nou Halation și Bloom: strălucirea înaltelor și halou roșu de film, calculate în Scene Linear, cu control de prag, rază, tentă roșie și amestec (plugin OFX pe macOS). Cu amestecurile la zero, imaginea rămâne identică cu cea de dinainte. Pachetele exportate cu versiuni mai vechi trebuie reexportate.",
+  "version": "1.9.0",
+  "app_version": "1.9.0",
+  "changes": "Module noi: Print film (Kodak 2383 / Fuji 3513, cu toe, shoulder și diafonie de coloranți) și Grain corelat pe straturi, dependent de expunere, animat pe cadru. Merg pe Mac și Windows; cu Amount/Mix la zero imaginea rămâne identică. Pachetele exportate cu versiuni mai vechi trebuie reexportate.",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-style-lab/GDCStyleLab-1.8.0.dmg"
+    "mac": "https://gordas.dev/gdc-style-lab/GDCStyleLab-1.9.0.dmg"
   },
   "mandatory": false
 }
