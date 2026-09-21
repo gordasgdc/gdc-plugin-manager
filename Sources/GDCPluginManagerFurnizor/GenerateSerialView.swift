@@ -106,6 +106,8 @@ struct GenerateSerialView: View {
 
     @State private var showConfirm = false
     @State private var generatedCode: String?
+    /// Pentru cine s-a generat codul afișat (formularul se golește imediat după generare, deci numele clientului nu mai e în câmpuri).
+    @State private var generatedFor = ""
     @State private var justCopied = false
     @State private var errorMessage: String?
 
@@ -284,6 +286,9 @@ struct GenerateSerialView: View {
                 if let generatedCode {
                     GroupBox {
                         VStack(alignment: .leading, spacing: 10) {
+                            if !generatedFor.isEmpty {
+                                Text("Cod generat pentru \(generatedFor)").font(.caption).foregroundStyle(.secondary)
+                            }
                             Text(generatedCode)
                                 .font(.system(.body, design: .monospaced))
                                 .textSelection(.enabled)
@@ -294,8 +299,8 @@ struct GenerateSerialView: View {
                                     pb.setString(generatedCode, forType: .string)
                                     justCopied = true
                                 }
-                                Button("Client nou") { startNewClient() }
-                                    .help("Golește ID-ul și codul, gata pentru următorul client")
+                                Button("Închide codul") { self.generatedCode = nil; generatedFor = ""; justCopied = false }
+                                    .help("Ascunde codul afișat (formularul e deja gol pentru următorul client)")
                             }
                         }
                         .padding(8)
@@ -321,12 +326,19 @@ struct GenerateSerialView: View {
     /// resetarea lor ar însemna reintroducerea acelorași valori de fiecare
     /// dată.
     private func startNewClient() {
+        clearClientFields()
+        generatedCode = nil
+        generatedFor = ""
+        justCopied = false
+        errorMessage = nil
+    }
+
+    /// Golește câmpurile clientului curent (ID mașină, nume, email, sugestii), păstrând produsul, durata și prețul.
+    /// Se apelează automat după o generare reușită: codul rămâne afișat, formularul e gata pentru următorul client, fără ieșit din pagină.
+    private func clearClientFields() {
         machineID = ""
         customerName = ""
         email = ""
-        generatedCode = nil
-        justCopied = false
-        errorMessage = nil
         autofilledFrom = nil
         nameSuggestions = []
         machineIDFocused = true
@@ -403,12 +415,14 @@ struct GenerateSerialView: View {
                 platform: licensePlatform
             )
             generatedCode = code
+            generatedFor = customerName.trimmingCharacters(in: .whitespaces)
 
             try? SalesLog.append(
                 productID: effectiveProductID, productName: selectedItemName, customer: customerName,
                 email: email, priceEUR: price, expiresDisplay: expiresDisplay,
                 machineID: trimmedMachineID, serial: code
             )
+            clearClientFields()   // reset automat al formularului după generare reușită (cerut de Cristi 2026-09-21)
         } catch {
             errorMessage = error.localizedDescription
         }

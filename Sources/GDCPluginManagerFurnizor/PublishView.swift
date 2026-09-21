@@ -30,6 +30,12 @@ struct PublishView: View {
     @State private var description = ""
     @State private var type: PluginType = .dctl
     @State private var version = "1.0.0"
+    /// Versiunea deja publicată a produsului editat (nil la un produs nou): afișată lângă câmp, iar noua versiune se sugerează automat (+1 la patch).
+    @State private var previousVersion: String?
+    @State private var inbox: [StyleLabSubmission] = []
+    /// Trimiterea din STYLE Lab aplicată în formular (se scoate din căsuță după publicare).
+    @State private var appliedSubmissionID: String?
+    @State private var skipClear = false
     @State private var priceText = "0"
     @State private var promoPriceText = ""
     @State private var accessMode: AccessMode = .paid
@@ -70,6 +76,18 @@ struct PublishView: View {
             VStack(alignment: .leading, spacing: 18) {
                 Text("Publică produs").font(.title2).fontWeight(.semibold)
 
+                if !inbox.isEmpty {
+                    Menu {
+                        ForEach(inbox) { sub in
+                            Button("\(sub.name) — v\(sub.version) (\(sub.id))") { applySubmission(sub) }
+                        }
+                    } label: {
+                        Label("Din STYLE Lab (\(inbox.count))", systemImage: "tray.and.arrow.down")
+                    }
+                    .frame(maxWidth: 360, alignment: .leading)
+                    .help("Pachete OFX validate și trimise de GDC STYLE Lab: completează singure ID-ul, numele, versiunea și fișierele")
+                }
+
                 Picker("", selection: $isUpdate) {
                     Text("Produs nou").tag(false)
                     Text("Actualizare versiune existentă").tag(true)
@@ -78,7 +96,8 @@ struct PublishView: View {
                 .frame(maxWidth: 360)
                 .onChange(of: isUpdate) {
                     loadExistingIfNeeded()
-                    if !isUpdate { clearForm() }
+                    if !isUpdate && !skipClear { clearForm() }
+                    skipClear = false
                 }
 
                 if isUpdate {
@@ -142,6 +161,18 @@ struct PublishView: View {
                         }
 
                         TextField("Versiune", text: $version).textFieldStyle(.roundedBorder)
+                        if let previousVersion {
+                            HStack(spacing: 6) {
+                                Text("Publicată acum: v\(previousVersion)").foregroundStyle(.secondary)
+                                Image(systemName: "arrow.right").foregroundStyle(.secondary)
+                                Text("nouă: v\(version.trimmingCharacters(in: .whitespaces))")
+                                    .foregroundStyle(version.trimmingCharacters(in: .whitespaces) == previousVersion && pickedURL != nil ? .red : .primary)
+                                if version.trimmingCharacters(in: .whitespaces) == previousVersion && pickedURL != nil {
+                                    Text("— la fișiere noi versiunea trebuie schimbată").foregroundStyle(.red)
+                                }
+                            }
+                            .font(.caption)
+                        }
 
                         Picker("Acces", selection: $accessMode) {
                             ForEach(AccessMode.allCases) { mode in
@@ -270,6 +301,7 @@ struct PublishView: View {
         !id.trimmingCharacters(in: .whitespaces).isEmpty
             && !name.trimmingCharacters(in: .whitespaces).isEmpty
             && !version.trimmingCharacters(in: .whitespaces).isEmpty
+            && !(pickedURL != nil && previousVersion != nil && version.trimmingCharacters(in: .whitespaces) == previousVersion)   // fișiere noi sub aceeași versiune = clienții n-ar primi actualizarea (Regula 14)
             && (accessMode != .paid || Double(priceText) != nil)
             && (pickedURL != nil || (isUpdate && !existingFiles.isEmpty))
             && (type != .ofx || pickedURL == nil || isDirectory(pickedURL!))
@@ -280,6 +312,7 @@ struct PublishView: View {
         if id.trimmingCharacters(in: .whitespaces).isEmpty { missing.append("ID") }
         if name.trimmingCharacters(in: .whitespaces).isEmpty { missing.append("Nume") }
         if version.trimmingCharacters(in: .whitespaces).isEmpty { missing.append("Versiune") }
+        if pickedURL != nil, let pv = previousVersion, version.trimmingCharacters(in: .whitespaces) == pv { missing.append("Versiune diferită de cea publicată (v\(pv))") }
         if accessMode == .paid && Double(priceText) == nil { missing.append("Preț (număr valid)") }
         if pickedURL == nil && !(isUpdate && !existingFiles.isEmpty) { missing.append("Fișier sau folder") }
         if type == .ofx, let url = pickedURL, !isDirectory(url) {
@@ -339,7 +372,41 @@ struct PublishView: View {
         return results.sorted { $0.1 < $1.1 }
     }
 
+    /// „1.2.3” → „1.2.4”; „2” → „2.0.1”; nenumeric → aceeași valoare cu „.1” (ex. „beta” → „beta.1”).
+    static func nextVersion(after v: String) -> String {
+        let parts = v.trimmingCharacters(in: .whitespaces).split(separator: ".").map(String.init)
+        guard !parts.isEmpty, parts.allSatisfy({ Int($0) != nil }) else { return v + ".1" }
+        var nums = parts.compactMap(Int.init)
+        while nums.count < 3 { nums.append(0) }
+        nums[nums.count - 1] += 1
+        return nums.map(String.init).joined(separator: ".")
+    }
+
+    /// Completează formularul din trimiterea STYLE Lab: produs existent (același cod intern) → actualizare cu versiunea nouă; altfel produs nou.
+    private func applySubmission(_ sub: StyleLabSubmission) {
+        loadExistingIfNeeded()
+        if existingItems.contains(where: { $0.id == sub.id }) {
+            isUpdate = true
+            id = sub.id
+            fillFromExisting()
+            version = sub.version
+        } else {
+            skipClear = isUpdate
+            isUpdate = false
+            clearForm()
+            id = sub.id
+            name = sub.name
+            description = sub.description
+            type = .ofx
+            version = sub.version
+            previousVersion = nil
+        }
+        pickedURL = URL(fileURLWithPath: sub.bundlePath)
+        appliedSubmissionID = sub.id
+    }
+
     private func loadExistingIfNeeded() {
+        inbox = StyleLabInbox.pending()
         guard let catalog = try? CatalogEditor.load() else { return }
         existingItems = (catalog.items + catalog.scriptItems).sorted { $0.name < $1.name }
     }
@@ -349,6 +416,8 @@ struct PublishView: View {
         name = item.name
         description = item.description
         type = item.type
+        previousVersion = item.version
+        version = Self.nextVersion(after: item.version)   // sugestie: +1 la patch (editabilă); cea publicată rămâne vizibilă lângă câmp
         accessMode = item.isTrial ? .trial : (item.isFree ? .free : .paid)
         priceText = String(item.priceEUR)
         iconSymbol = item.iconSymbol ?? ""
@@ -478,8 +547,13 @@ struct PublishView: View {
             let fileWord = pluginFiles.count > 1 ? "\(pluginFiles.count) fișiere" : "1 fișier"
             let publishedName = name
             successMessage = "„\(publishedName)” e publicat (\(fileWord)) — apare la clienți la următorul refresh de catalog."
+            if let sid = appliedSubmissionID { StyleLabInbox.remove(id: sid); appliedSubmissionID = nil; inbox = StyleLabInbox.pending() }
             if isUpdate {
                 loadExistingIfNeeded()
+                // Următoarea actualizare pornește deja de la versiunea următoare, cu cea publicată acum vizibilă lângă câmp (nu rămâne aceeași versiune).
+                previousVersion = version
+                version = Self.nextVersion(after: version)
+                pickedURL = nil
             } else {
                 // [2026-08-29, fix real, raportat de Cristi] Formularul
                 // rămânea complet populat după publicare — trebuia să
@@ -562,6 +636,7 @@ struct PublishView: View {
         description = ""
         type = .dctl
         version = "1.0.0"
+        previousVersion = nil
         priceText = "0"
         accessMode = .paid
         iconSymbol = "wand.and.stars"

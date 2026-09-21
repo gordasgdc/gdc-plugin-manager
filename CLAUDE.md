@@ -1169,3 +1169,8 @@ Păstrate verbatim. Regula generală la care se referă fiecare e în
 ### Jurnal 2026-09-20 (4) — v1.39.0 PUBLICATĂ (Mac)
 - Release GitHub `v1.39.0`: DMG + `.pkg` notarizate/stapled, copii stabile `GDCPluginManager-Mac.dmg` / `.pkg` / `-Mac.zip` (canal updater vechi). `spctl` pe DMG descărcat: accepted (Notarized Developer ID). `docs/update.json` mac=1.39.0, `verify-update-flow.sh` TOTUL OK. Windows rămâne 1.37.0 (neatins, intenționat).
 - Capcană: `build_installer.sh` cere `APPLE_SIGN_IDENTITY_APP`/`_INSTALLER` exportate; stapling-ul `.pkg` poate pica („Record not found”) imediat după notarizare — reîncearcă `stapler staple` după ~30 s, apoi refă zip/DMG manual. Dezinstalarea in-app reală rămâne NEVALIDATĂ (ar șterge aplicația).
+
+### Jurnal 2026-09-21 — Furnizor v1.48.0
+- `GenerateSerialView`: `clearClientFields()` automat după generare reușită (codul rămâne cu `generatedFor`); `PublishView`: `previousVersion` + `nextVersion(after:)` (sugestie +1 patch, blocare aceeași versiune la fișiere noi, versiune următoare după publicare);
+  `StyleLabInbox.swift`: citește `~/Library/Application Support/GDC/PluginInbox/*.json` scris de GDC STYLE Lab (`PluginSubmission`), meniul „Din STYLE Lab” completează formularul; NEverificat cu o publicare reală.
+

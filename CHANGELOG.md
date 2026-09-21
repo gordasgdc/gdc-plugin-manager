@@ -1,5 +1,14 @@
 # Changelog — GDC Plugin Manager
 
+## v1.48.0 Furnizor (2026-09-21) — Reset după licențiere, versiune sugerată la actualizare, import din STYLE Lab
+
+### Fixed
+- **Generează serial**: după generarea reușită a unei licențe, câmpurile clientului (ID mașină, nume, email) se golesc automat; codul rămâne afișat cu „Cod generat pentru …” și butonul „Închide codul”. Produsul, durata și prețul rămân pentru lotul următor.
+- **Publică produs / Actualizare**: versiunea nouă se sugerează automat (+1 la patch) și cea publicată acum e vizibilă lângă câmp („Publicată acum: vX → nouă: vY”); fișiere noi sub aceeași versiune sunt blocate. După o actualizare publicată, formularul pornește deja de la versiunea următoare (nu mai rămâne aceeași versiune).
+
+### Added
+- **„Din STYLE Lab”** (Publică produs): pachetele OFX validate și trimise din GDC STYLE Lab (cod intern oficial, nume, versiune, fișiere) completează singure formularul; se scot din căsuță după publicare.
+
 ## v1.39.0 (2026-09-20) — Carduri glass, buton de actualizare, dezinstalare din aplicație
 
 ### Added
