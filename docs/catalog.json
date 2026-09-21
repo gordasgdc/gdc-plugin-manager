@@ -1867,6 +1867,72 @@
       "version" : "1.38.1"
     },
     {
+      "bundleFolderName" : "GDC 300 Contrast.ofx.bundle",
+      "coverImage" : "covers/gdc-style-300-contrast.png?v=c010cc02",
+      "description" : "GDC STYLE Lab module 300 — GDC 300 Contrast (own licence)",
+      "files" : [
+        {
+          "path" : "gdc-style-300-contrast/1.41.0/Contents/Info.plist",
+          "repo" : "files",
+          "sha256" : "424c387cbd670526f7856c4f02727e93810f4f94570d87f735610b1bfaedc924"
+        },
+        {
+          "path" : "gdc-style-300-contrast/1.41.0/Contents/MacOS/GDC 300 Contrast.ofx",
+          "repo" : "files",
+          "sha256" : "7de3a6f5488e8463e4c055bce3e0556f650827ce0cf1ed8e43e5e10fe12ffbf8"
+        },
+        {
+          "path" : "gdc-style-300-contrast/1.41.0/Contents/Resources/dev.gordas.style.idt.842cc17f99cd8825.png",
+          "repo" : "files",
+          "sha256" : "3fa6bde1204ad5a6e96c93ba82a73ca83cc0cc7d869a4e184921978a32de09ba"
+        },
+        {
+          "path" : "gdc-style-300-contrast/1.41.0/Contents/Resources/dev.gordas.style.idt.842cc17f99cd8825.svg",
+          "repo" : "files",
+          "sha256" : "9b78dad938fcc9e56e772194c598561eea504c9c4922956379cbd59fdb00252d"
+        },
+        {
+          "path" : "gdc-style-300-contrast/1.41.0/Contents/Resources/gdc-cuda.bin",
+          "repo" : "files",
+          "sha256" : "6afb86f93b027dec4193dec5549c29e7f2b40366feb99ddf3057fd3ff0b15d14"
+        },
+        {
+          "path" : "gdc-style-300-contrast/1.41.0/Contents/Resources/gdc-opencl.bin",
+          "repo" : "files",
+          "sha256" : "2eb3fb929899b0ca3c7e55d971cca0a5a8d4e48413bf088f90a1deb417d25a92"
+        },
+        {
+          "path" : "gdc-style-300-contrast/1.41.0/Contents/Resources/gdc.bin",
+          "repo" : "files",
+          "sha256" : "5fd338888568a7c6403a630810abf3cc98294d0f07e249f505e26e02b0cf822b"
+        },
+        {
+          "path" : "gdc-style-300-contrast/1.41.0/Contents/Resources/gdc.dat",
+          "repo" : "files",
+          "sha256" : "590d011150869bd11cc60633c489dd0f34a48c0886e87cf8f0cb8a949aa07999"
+        },
+        {
+          "path" : "gdc-style-300-contrast/1.41.0/Contents/Win64/GDC 300 Contrast.ofx",
+          "repo" : "files",
+          "sha256" : "e1705ffe74a235642bfe7f62c47cc0db21f8928a99f2326a4442be79cb3730cd"
+        },
+        {
+          "path" : "gdc-style-300-contrast/1.41.0/Contents/_CodeSignature/CodeResources",
+          "repo" : "files",
+          "sha256" : "580002fcdfbbbc84024b1d7a47b16ce2cc347df0443bb3310e601885ecb89a04"
+        }
+      ],
+      "iconSymbol" : "camera.filters",
+      "id" : "gdc-style-300-contrast",
+      "isFree" : true,
+      "isTrial" : false,
+      "name" : "GDC 300 Contrast",
+      "priceEUR" : 0,
+      "supportedOS" : "crossPlatform",
+      "type" : "ofx",
+      "version" : "1.41.0"
+    },
+    {
       "bundleFolderName" : "GDC 300 Contrast Demo.ofx.bundle",
       "coverImage" : "covers/gdc-style-300-contrast-demo.png?v=c010cc02",
       "description" : "Demo version (discreet watermark) — GDC 300 Contrast",
@@ -2328,5 +2394,5 @@
       "youtubeURL" : "https://www.youtube.com/watch?v=dnkUIGXIzIM"
     }
   ],
-  "updatedAt" : "2026-09-21"
+  "updatedAt" : "2026-09-22"
 }
