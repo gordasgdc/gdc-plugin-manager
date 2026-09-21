@@ -1,5 +1,10 @@
 # Changelog — GDC Plugin Manager
 
+## v1.39.3 Client (2026-09-21) — Instalarea OFX nu mai îngheață aplicația
+
+### Fixed
+- **Aplicația nu se mai blochează câteva secunde la instalarea pluginurilor OFX.** Curățarea intrării din fișierul de cache al Resolve rulează acum în fundal, nu pe firul interfeței.
+
 ## v1.39.2 Client (2026-09-21) — OFX: Resolve vede din nou pachetele reinstalate
 
 ### Fixed
