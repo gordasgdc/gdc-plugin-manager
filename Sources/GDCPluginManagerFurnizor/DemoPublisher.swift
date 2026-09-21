@@ -67,7 +67,8 @@ enum DemoPublisher {
                     for (u, rel) in picked {
                         let data = try Data(contentsOf: u)
                         let sha = SHA256.hash(data: data).compactMap { String(format: "%02x", $0) }.joined()
-                        let path = "\(s.id)/\(version)/\(s.bundleFolderName)/\(rel)"
+                        // Ca la publicarea manuală: calea e relativă la RĂDĂCINA pachetului (installer-ul creează singur folderul `bundleFolderName`); a-l repeta aici imbrica pachetul.
+                        let path = "\(s.id)/\(version)/\(rel)"
                         let dest = checkout.appendingPathComponent(path)
                         try FileManager.default.createDirectory(at: dest.deletingLastPathComponent(), withIntermediateDirectories: true)
                         try? FileManager.default.removeItem(at: dest)

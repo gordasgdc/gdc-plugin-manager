@@ -1,5 +1,15 @@
 # Changelog — GDC Plugin Manager
 
+## v1.39.1 Client + v1.49.1 Furnizor (2026-09-21) — OFX: instalare corectă, fără cale afișată
+
+### Fixed
+- **Pachetele OFX publicate în bloc din STYLE Lab se instalau imbricate** (`X.ofx.bundle/X.ofx.bundle/Contents`), deci DaVinci Resolve nu le vedea. Furnizorul publica calea cu numele pachetului repetat; acum e relativă la rădăcina pachetului, ca la publicarea manuală. Cele 19 demo-uri au fost republicate ca 1.38.1.
+- Clientul verifică după instalare că `Contents/Info.plist` e chiar sub folderul `.ofx.bundle`; un pachet greșit se șterge și instalarea raportează eroare, în loc să rămână stricat pe disc.
+- **Pentru OFX clientul nu mai arată folderul de instalare și nici „Arată în Finder”** — doar „Instalat”.
+
+### Note
+- TODO paritate Windows: clientul Windows (`GDCPluginManagerWin`) de verificat pentru afișarea căii/„Show in Explorer” la OFX.
+
 ## v1.49.0 Furnizor (2026-09-21) — Publicare directă a pachetelor Demo din STYLE Lab
 
 ### Added

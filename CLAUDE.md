@@ -1174,3 +1174,5 @@ Păstrate verbatim. Regula generală la care se referă fiecare e în
 - `GenerateSerialView`: `clearClientFields()` automat după generare reușită (codul rămâne cu `generatedFor`); `PublishView`: `previousVersion` + `nextVersion(after:)` (sugestie +1 patch, blocare aceeași versiune la fișiere noi, versiune următoare după publicare);
   `StyleLabInbox.swift`: citește `~/Library/Application Support/GDC/PluginInbox/*.json` scris de GDC STYLE Lab (`PluginSubmission`), meniul „Din STYLE Lab” completează formularul; NEverificat cu o publicare reală.
 
+
+- **2026-09-21 — Client 1.39.1 / Furnizor 1.49.1 (calea de transfer OFX).** Bug: `DemoPublisher` scria `<id>/<ver>/<bundleFolderName>/<rel>`, dar installer-ul creează singur `bundleFolderName` → pachet imbricat, invizibil în Resolve. Reparat (cale relativă la rădăcina pachetului), gardă `Contents/Info.plist` în `InstallManager`, fără cale/Finder pentru OFX în `ContentView`. Cele 19 demo-uri republicate 1.38.1; 1.38.0 șterse din repo-ul de fișiere.

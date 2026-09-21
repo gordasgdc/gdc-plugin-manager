@@ -1443,8 +1443,11 @@ private struct PluginCard: View {
                     // [2026-09-14] Pana acum o instalare reusita nu spunea
                     // NIMIC. Acum arata unde a ajuns efectiv fisierul, verificat
                     // pe disc, si ofera un buton care il deschide in Finder.
-                    installedPaths = paths
-                    if let first = paths.first {
+                    // OFX: clientul nu vede folderul și nu are „Arată în Finder” (cerință explicită) — doar „Instalat”.
+                    installedPaths = item.type == .ofx ? [] : paths
+                    if item.type == .ofx {
+                        statusMessage = L.t("install.doneShort")
+                    } else if let first = paths.first {
                         let folder = first.deletingLastPathComponent().path
                             .replacingOccurrences(of: NSHomeDirectory(), with: "~")
                         statusMessage = String(format: L.t("install.done"), folder)
