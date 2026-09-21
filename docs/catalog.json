@@ -332,6 +332,1671 @@
   ],
   "items" : [
     {
+      "bundleFolderName" : "GDC 10 Input Transform Demo.ofx.bundle",
+      "coverImage" : "covers/gdc-style-10-input-transform-demo.png?v=4e108491",
+      "description" : "Demo version (discreet watermark) — GDC 10 Input Transform",
+      "files" : [
+        {
+          "path" : "gdc-style-10-input-transform-demo/1.38.0/GDC 10 Input Transform Demo.ofx.bundle/Contents/Info.plist",
+          "repo" : "files",
+          "sha256" : "e6cc3a929bf978f06d71149416c4f6c2edbc7b79de416ac837886062df36847a"
+        },
+        {
+          "path" : "gdc-style-10-input-transform-demo/1.38.0/GDC 10 Input Transform Demo.ofx.bundle/Contents/MacOS/GDC 10 Input Transform Demo.ofx",
+          "repo" : "files",
+          "sha256" : "9bd843e90faf1714addac6edb97ba03938d0280192d21d4e1f961adb1a96adcd"
+        },
+        {
+          "path" : "gdc-style-10-input-transform-demo/1.38.0/GDC 10 Input Transform Demo.ofx.bundle/Contents/Resources/dev.gordas.style.idt.7fbd6e633e76d8d4.png",
+          "repo" : "files",
+          "sha256" : "44e377f3e473a9d282b414ad14580a09bdf5dd14a9fc8a566e8ac39840731239"
+        },
+        {
+          "path" : "gdc-style-10-input-transform-demo/1.38.0/GDC 10 Input Transform Demo.ofx.bundle/Contents/Resources/dev.gordas.style.idt.7fbd6e633e76d8d4.svg",
+          "repo" : "files",
+          "sha256" : "c6905e48226e7fd3e0afec12797a6b8b333726dc5e78d43e4f6a96ae79fce911"
+        },
+        {
+          "path" : "gdc-style-10-input-transform-demo/1.38.0/GDC 10 Input Transform Demo.ofx.bundle/Contents/Resources/gdc-cuda.bin",
+          "repo" : "files",
+          "sha256" : "3eef0cd7ea047772ea709b6ec67d493243baa73aa67313a6a88513635106a57d"
+        },
+        {
+          "path" : "gdc-style-10-input-transform-demo/1.38.0/GDC 10 Input Transform Demo.ofx.bundle/Contents/Resources/gdc-opencl.bin",
+          "repo" : "files",
+          "sha256" : "e3f325e87cc1713247476929ac2977ceefcbc0c7825e431ec39ad7e417276d7b"
+        },
+        {
+          "path" : "gdc-style-10-input-transform-demo/1.38.0/GDC 10 Input Transform Demo.ofx.bundle/Contents/Resources/gdc.bin",
+          "repo" : "files",
+          "sha256" : "c3d8ee90cf70d6eeece3904532a2e042f9e7b9dd02d63e727958209fc3d6dd9a"
+        },
+        {
+          "path" : "gdc-style-10-input-transform-demo/1.38.0/GDC 10 Input Transform Demo.ofx.bundle/Contents/Resources/gdc.dat",
+          "repo" : "files",
+          "sha256" : "407f8e8d4e4165cab20dcbe0e2f5f932c12f9e15fbcde0044751928a39adf83a"
+        },
+        {
+          "path" : "gdc-style-10-input-transform-demo/1.38.0/GDC 10 Input Transform Demo.ofx.bundle/Contents/Win64/GDC 10 Input Transform Demo.ofx",
+          "repo" : "files",
+          "sha256" : "b2daaadf301523a112f6fbda6a335c2f06f1ae270727c9bfdaa8ba8e9e6322e7"
+        },
+        {
+          "path" : "gdc-style-10-input-transform-demo/1.38.0/GDC 10 Input Transform Demo.ofx.bundle/Contents/_CodeSignature/CodeResources",
+          "repo" : "files",
+          "sha256" : "37451694ecb6af14b29acb0b67b48de7bd4e0e9609a3eeda60714cb288fc136d"
+        }
+      ],
+      "id" : "gdc-style-10-input-transform-demo",
+      "isFree" : true,
+      "isTrial" : false,
+      "name" : "GDC 10 Input Transform Demo",
+      "priceEUR" : 0,
+      "supportedOS" : "macOS",
+      "type" : "ofx",
+      "version" : "1.38.0"
+    },
+    {
+      "bundleFolderName" : "GDC 110 Exposure and Black Demo.ofx.bundle",
+      "coverImage" : "covers/gdc-style-110-exposure-demo.png?v=4d79f8b0",
+      "description" : "Demo version (discreet watermark) — GDC 110 Exposure and Black",
+      "files" : [
+        {
+          "path" : "gdc-style-110-exposure-demo/1.38.0/GDC 110 Exposure and Black Demo.ofx.bundle/Contents/Info.plist",
+          "repo" : "files",
+          "sha256" : "f735bbe81de89b12971a763c7e856dbf71b3aa2741da1b568d1fddbdd62e30ab"
+        },
+        {
+          "path" : "gdc-style-110-exposure-demo/1.38.0/GDC 110 Exposure and Black Demo.ofx.bundle/Contents/MacOS/GDC 110 Exposure and Black Demo.ofx",
+          "repo" : "files",
+          "sha256" : "42dc69dd88208996d81028f4e1d0233013fa7a687ced1f1ff63fd207f3ed2101"
+        },
+        {
+          "path" : "gdc-style-110-exposure-demo/1.38.0/GDC 110 Exposure and Black Demo.ofx.bundle/Contents/Resources/dev.gordas.style.idt.ebcf158b05415ea0.png",
+          "repo" : "files",
+          "sha256" : "62a757a70c678b21dd1237930e33d1a4925370680c32ecd9570994388a6c1a45"
+        },
+        {
+          "path" : "gdc-style-110-exposure-demo/1.38.0/GDC 110 Exposure and Black Demo.ofx.bundle/Contents/Resources/dev.gordas.style.idt.ebcf158b05415ea0.svg",
+          "repo" : "files",
+          "sha256" : "f6e9ba5520d115343c735d57b186d2aeaeb649c8f8ceaa7fbbd39d15a6b9ccc4"
+        },
+        {
+          "path" : "gdc-style-110-exposure-demo/1.38.0/GDC 110 Exposure and Black Demo.ofx.bundle/Contents/Resources/gdc-cuda.bin",
+          "repo" : "files",
+          "sha256" : "8eea264e5e9d780b88782d2188ee9e9278fba3ec14bdaa125da77fd59db857c4"
+        },
+        {
+          "path" : "gdc-style-110-exposure-demo/1.38.0/GDC 110 Exposure and Black Demo.ofx.bundle/Contents/Resources/gdc-opencl.bin",
+          "repo" : "files",
+          "sha256" : "fe6c7a824b78c7a0bc35153a247ea9732ac3d1ffc61ba79fec9d7b5db877acd6"
+        },
+        {
+          "path" : "gdc-style-110-exposure-demo/1.38.0/GDC 110 Exposure and Black Demo.ofx.bundle/Contents/Resources/gdc.bin",
+          "repo" : "files",
+          "sha256" : "78c58b86aa62e35235d1103ed0323adb3d250536d4dda75a56b30aba84b8bfc1"
+        },
+        {
+          "path" : "gdc-style-110-exposure-demo/1.38.0/GDC 110 Exposure and Black Demo.ofx.bundle/Contents/Resources/gdc.dat",
+          "repo" : "files",
+          "sha256" : "27ddccf07d79a0cd114ec76d5f6f1872f30cbad2d60a1d9b05caca7e28a788fc"
+        },
+        {
+          "path" : "gdc-style-110-exposure-demo/1.38.0/GDC 110 Exposure and Black Demo.ofx.bundle/Contents/Win64/GDC 110 Exposure and Black Demo.ofx",
+          "repo" : "files",
+          "sha256" : "b2daaadf301523a112f6fbda6a335c2f06f1ae270727c9bfdaa8ba8e9e6322e7"
+        },
+        {
+          "path" : "gdc-style-110-exposure-demo/1.38.0/GDC 110 Exposure and Black Demo.ofx.bundle/Contents/_CodeSignature/CodeResources",
+          "repo" : "files",
+          "sha256" : "47d6a5d41a5eb9f768018248bd20026be349a8ff48b28d28ae4c6826f409a0a9"
+        }
+      ],
+      "id" : "gdc-style-110-exposure-demo",
+      "isFree" : true,
+      "isTrial" : false,
+      "name" : "GDC 110 Exposure and Black Demo",
+      "priceEUR" : 0,
+      "supportedOS" : "macOS",
+      "type" : "ofx",
+      "version" : "1.38.0"
+    },
+    {
+      "bundleFolderName" : "GDC 120 White Balance and Printer Lights Demo.ofx.bundle",
+      "coverImage" : "covers/gdc-style-120-white-balance-demo.png?v=68f120b7",
+      "description" : "Demo version (discreet watermark) — GDC 120 White Balance and Printer Lights",
+      "files" : [
+        {
+          "path" : "gdc-style-120-white-balance-demo/1.38.0/GDC 120 White Balance and Printer Lights Demo.ofx.bundle/Contents/Info.plist",
+          "repo" : "files",
+          "sha256" : "9b7613a418355d4ec3e83ad2da53e05b0125a6a19419e68e170464c22488d2e2"
+        },
+        {
+          "path" : "gdc-style-120-white-balance-demo/1.38.0/GDC 120 White Balance and Printer Lights Demo.ofx.bundle/Contents/MacOS/GDC 120 White Balance and Printer Lights Demo.ofx",
+          "repo" : "files",
+          "sha256" : "6189d50c86f5d03bd971540c1dc271544b0e3337d246887be1ad424140d65c0d"
+        },
+        {
+          "path" : "gdc-style-120-white-balance-demo/1.38.0/GDC 120 White Balance and Printer Lights Demo.ofx.bundle/Contents/Resources/dev.gordas.style.idt.4b744f30b6c9250f.png",
+          "repo" : "files",
+          "sha256" : "69c63a36c853f71c0f1a6fde3b6bc61750ed015e34dd8e43020b45f4dde9f4d6"
+        },
+        {
+          "path" : "gdc-style-120-white-balance-demo/1.38.0/GDC 120 White Balance and Printer Lights Demo.ofx.bundle/Contents/Resources/dev.gordas.style.idt.4b744f30b6c9250f.svg",
+          "repo" : "files",
+          "sha256" : "83acb61d7a6ae088dcbe9c0dfa263797d2cdd7db12cf94474fd78e722fca5b36"
+        },
+        {
+          "path" : "gdc-style-120-white-balance-demo/1.38.0/GDC 120 White Balance and Printer Lights Demo.ofx.bundle/Contents/Resources/gdc-cuda.bin",
+          "repo" : "files",
+          "sha256" : "c65fe5ab940dc5ec97d06ae664a11acb7f3f52954cfd5d29d65e1841899f3826"
+        },
+        {
+          "path" : "gdc-style-120-white-balance-demo/1.38.0/GDC 120 White Balance and Printer Lights Demo.ofx.bundle/Contents/Resources/gdc-opencl.bin",
+          "repo" : "files",
+          "sha256" : "4f24467adadfcf5c2cbb7116747ee419d91de266abfbb466841790497fff9eff"
+        },
+        {
+          "path" : "gdc-style-120-white-balance-demo/1.38.0/GDC 120 White Balance and Printer Lights Demo.ofx.bundle/Contents/Resources/gdc.bin",
+          "repo" : "files",
+          "sha256" : "4b259a19b1c49a82491df181e2d7f5d11344be9a3405385657579ec72fd4d7c1"
+        },
+        {
+          "path" : "gdc-style-120-white-balance-demo/1.38.0/GDC 120 White Balance and Printer Lights Demo.ofx.bundle/Contents/Resources/gdc.dat",
+          "repo" : "files",
+          "sha256" : "8d945b1eea2dc13de1b3c6c7e1be87094157cf6c3d7e941a82e31af9e60ed863"
+        },
+        {
+          "path" : "gdc-style-120-white-balance-demo/1.38.0/GDC 120 White Balance and Printer Lights Demo.ofx.bundle/Contents/Win64/GDC 120 White Balance and Printer Lights Demo.ofx",
+          "repo" : "files",
+          "sha256" : "b2daaadf301523a112f6fbda6a335c2f06f1ae270727c9bfdaa8ba8e9e6322e7"
+        },
+        {
+          "path" : "gdc-style-120-white-balance-demo/1.38.0/GDC 120 White Balance and Printer Lights Demo.ofx.bundle/Contents/_CodeSignature/CodeResources",
+          "repo" : "files",
+          "sha256" : "f27c0005bb523da789b1dfeb1341f322ce52375f5f7a94a34507677558c364ea"
+        }
+      ],
+      "id" : "gdc-style-120-white-balance-demo",
+      "isFree" : true,
+      "isTrial" : false,
+      "name" : "GDC 120 White Balance and Printer Lights Demo",
+      "priceEUR" : 0,
+      "supportedOS" : "macOS",
+      "type" : "ofx",
+      "version" : "1.38.0"
+    },
+    {
+      "bundleFolderName" : "GDC 130 Halation and Bloom Demo.ofx.bundle",
+      "coverImage" : "covers/gdc-style-130-halation-bloom-demo.png?v=5d8514c9",
+      "description" : "Demo version (discreet watermark) — GDC 130 Halation and Bloom",
+      "files" : [
+        {
+          "path" : "gdc-style-130-halation-bloom-demo/1.38.0/GDC 130 Halation and Bloom Demo.ofx.bundle/Contents/Info.plist",
+          "repo" : "files",
+          "sha256" : "1eb4588c0b401ac56f330fc7539e85fab2a1d2adf1dcf1a872fce0110adfb563"
+        },
+        {
+          "path" : "gdc-style-130-halation-bloom-demo/1.38.0/GDC 130 Halation and Bloom Demo.ofx.bundle/Contents/MacOS/GDC 130 Halation and Bloom Demo.ofx",
+          "repo" : "files",
+          "sha256" : "3a3712a4ecd3fd29cad7b78f61af0bd84117e2fa6657beccf9c18f41cc85960c"
+        },
+        {
+          "path" : "gdc-style-130-halation-bloom-demo/1.38.0/GDC 130 Halation and Bloom Demo.ofx.bundle/Contents/Resources/dev.gordas.style.idt.7c073cd37992a87d.png",
+          "repo" : "files",
+          "sha256" : "652df7322e7dfd87586d8ef5fe17b212fa2b1231686fd7ca46b9e58cb88ce544"
+        },
+        {
+          "path" : "gdc-style-130-halation-bloom-demo/1.38.0/GDC 130 Halation and Bloom Demo.ofx.bundle/Contents/Resources/dev.gordas.style.idt.7c073cd37992a87d.svg",
+          "repo" : "files",
+          "sha256" : "f8ef105d2611256003731f96d094d835b8b3d5307e733841991a78665ae318bd"
+        },
+        {
+          "path" : "gdc-style-130-halation-bloom-demo/1.38.0/GDC 130 Halation and Bloom Demo.ofx.bundle/Contents/Resources/gdc-cuda.bin",
+          "repo" : "files",
+          "sha256" : "98b53acc828e2c29dc4930e476c3c732c62a536fc24931eb670153fb9ccfbe9e"
+        },
+        {
+          "path" : "gdc-style-130-halation-bloom-demo/1.38.0/GDC 130 Halation and Bloom Demo.ofx.bundle/Contents/Resources/gdc-opencl.bin",
+          "repo" : "files",
+          "sha256" : "2d0a1cdbe2053fdfe50bdb3ea551f50d601bcdfd916a0a758bdcb5da3a8240b7"
+        },
+        {
+          "path" : "gdc-style-130-halation-bloom-demo/1.38.0/GDC 130 Halation and Bloom Demo.ofx.bundle/Contents/Resources/gdc.bin",
+          "repo" : "files",
+          "sha256" : "c629d88142cafb9f0c88cbe96b0fd26d81e0709fdfb44b748de15a331539ab12"
+        },
+        {
+          "path" : "gdc-style-130-halation-bloom-demo/1.38.0/GDC 130 Halation and Bloom Demo.ofx.bundle/Contents/Resources/gdc.dat",
+          "repo" : "files",
+          "sha256" : "efd91e2ae03e1eae2f45bede7eef3e6f084f542f0ecafd1f9265c9c9d82336d1"
+        },
+        {
+          "path" : "gdc-style-130-halation-bloom-demo/1.38.0/GDC 130 Halation and Bloom Demo.ofx.bundle/Contents/Win64/GDC 130 Halation and Bloom Demo.ofx",
+          "repo" : "files",
+          "sha256" : "b2daaadf301523a112f6fbda6a335c2f06f1ae270727c9bfdaa8ba8e9e6322e7"
+        },
+        {
+          "path" : "gdc-style-130-halation-bloom-demo/1.38.0/GDC 130 Halation and Bloom Demo.ofx.bundle/Contents/_CodeSignature/CodeResources",
+          "repo" : "files",
+          "sha256" : "3ea2f0c4330077878271b2f51e32e52cd4e003eadcd9a295b70c35e40a3efb41"
+        }
+      ],
+      "id" : "gdc-style-130-halation-bloom-demo",
+      "isFree" : true,
+      "isTrial" : false,
+      "name" : "GDC 130 Halation and Bloom Demo",
+      "priceEUR" : 0,
+      "supportedOS" : "macOS",
+      "type" : "ofx",
+      "version" : "1.38.0"
+    },
+    {
+      "bundleFolderName" : "GDC 135 Diffusion Mist Demo.ofx.bundle",
+      "coverImage" : "covers/gdc-style-135-diffusion-demo.png?v=aca61988",
+      "description" : "Demo version (discreet watermark) — GDC 135 Diffusion Mist",
+      "files" : [
+        {
+          "path" : "gdc-style-135-diffusion-demo/1.38.0/GDC 135 Diffusion Mist Demo.ofx.bundle/Contents/Info.plist",
+          "repo" : "files",
+          "sha256" : "be538e2b79d7a00d1306945b4da329e3562719ebc7a3b9cc5b0e70a81cc06285"
+        },
+        {
+          "path" : "gdc-style-135-diffusion-demo/1.38.0/GDC 135 Diffusion Mist Demo.ofx.bundle/Contents/MacOS/GDC 135 Diffusion Mist Demo.ofx",
+          "repo" : "files",
+          "sha256" : "aa67e810625c3360c34f5fbcf989231248dde2bc39c822fa08c45256a3fd8caa"
+        },
+        {
+          "path" : "gdc-style-135-diffusion-demo/1.38.0/GDC 135 Diffusion Mist Demo.ofx.bundle/Contents/Resources/dev.gordas.style.idt.3f6dd74a448a1e90.png",
+          "repo" : "files",
+          "sha256" : "a85a89ccf5aeaea132e672e610054cf067e87e51280b88a07b99d52152bb2651"
+        },
+        {
+          "path" : "gdc-style-135-diffusion-demo/1.38.0/GDC 135 Diffusion Mist Demo.ofx.bundle/Contents/Resources/dev.gordas.style.idt.3f6dd74a448a1e90.svg",
+          "repo" : "files",
+          "sha256" : "2f33eb078aa986077e4fa4aab00afccc6ed7e5baeab7386f7f51fc099d7a60f6"
+        },
+        {
+          "path" : "gdc-style-135-diffusion-demo/1.38.0/GDC 135 Diffusion Mist Demo.ofx.bundle/Contents/Resources/gdc-cuda.bin",
+          "repo" : "files",
+          "sha256" : "b4aa9f976086f0d997a7290f13a007383cda63be4f1feb8de1d7733d01416870"
+        },
+        {
+          "path" : "gdc-style-135-diffusion-demo/1.38.0/GDC 135 Diffusion Mist Demo.ofx.bundle/Contents/Resources/gdc-opencl.bin",
+          "repo" : "files",
+          "sha256" : "23ddc2af722e61d107d745884bb45282b3f0492b7f6947d0d96db740f9aa2bf8"
+        },
+        {
+          "path" : "gdc-style-135-diffusion-demo/1.38.0/GDC 135 Diffusion Mist Demo.ofx.bundle/Contents/Resources/gdc.bin",
+          "repo" : "files",
+          "sha256" : "7e084526f0c758a7c3410285ab8d4e45476cdbbf243068e69d283e00ac829858"
+        },
+        {
+          "path" : "gdc-style-135-diffusion-demo/1.38.0/GDC 135 Diffusion Mist Demo.ofx.bundle/Contents/Resources/gdc.dat",
+          "repo" : "files",
+          "sha256" : "36f0d972293990640be27e5a4e6dc825289e3b6cc73492a00a49b123b192f1d2"
+        },
+        {
+          "path" : "gdc-style-135-diffusion-demo/1.38.0/GDC 135 Diffusion Mist Demo.ofx.bundle/Contents/Win64/GDC 135 Diffusion Mist Demo.ofx",
+          "repo" : "files",
+          "sha256" : "b2daaadf301523a112f6fbda6a335c2f06f1ae270727c9bfdaa8ba8e9e6322e7"
+        },
+        {
+          "path" : "gdc-style-135-diffusion-demo/1.38.0/GDC 135 Diffusion Mist Demo.ofx.bundle/Contents/_CodeSignature/CodeResources",
+          "repo" : "files",
+          "sha256" : "2d965176073972a86aef31f8dae25dd7af9da660c5102b21b71874b7fb2f8a75"
+        }
+      ],
+      "id" : "gdc-style-135-diffusion-demo",
+      "isFree" : true,
+      "isTrial" : false,
+      "name" : "GDC 135 Diffusion Mist Demo",
+      "priceEUR" : 0,
+      "supportedOS" : "macOS",
+      "type" : "ofx",
+      "version" : "1.38.0"
+    },
+    {
+      "bundleFolderName" : "GDC 140 Channel Mixer Demo.ofx.bundle",
+      "coverImage" : "covers/gdc-style-140-channel-mixer-demo.png?v=670465f5",
+      "description" : "Demo version (discreet watermark) — GDC 140 Channel Mixer",
+      "files" : [
+        {
+          "path" : "gdc-style-140-channel-mixer-demo/1.38.0/GDC 140 Channel Mixer Demo.ofx.bundle/Contents/Info.plist",
+          "repo" : "files",
+          "sha256" : "c5c2d162eb61f81efae8b862eb218f5dfe3df860dd7abde4c1902e831f464782"
+        },
+        {
+          "path" : "gdc-style-140-channel-mixer-demo/1.38.0/GDC 140 Channel Mixer Demo.ofx.bundle/Contents/MacOS/GDC 140 Channel Mixer Demo.ofx",
+          "repo" : "files",
+          "sha256" : "650aba87f80af9d7a98ace4e832c222e7af33e3d87effd3284e25df36b3c62b0"
+        },
+        {
+          "path" : "gdc-style-140-channel-mixer-demo/1.38.0/GDC 140 Channel Mixer Demo.ofx.bundle/Contents/Resources/dev.gordas.style.idt.693e8b3eea5f9b46.png",
+          "repo" : "files",
+          "sha256" : "18874aa1a8b40ad7bca23ecbfba6cbe7bf9d3cdcdebf1ecb85239fa0af7c032f"
+        },
+        {
+          "path" : "gdc-style-140-channel-mixer-demo/1.38.0/GDC 140 Channel Mixer Demo.ofx.bundle/Contents/Resources/dev.gordas.style.idt.693e8b3eea5f9b46.svg",
+          "repo" : "files",
+          "sha256" : "f4d03aa2901b8cdae16697823ab7e9b59d6bda238b5f90bd0d94c332f79cff35"
+        },
+        {
+          "path" : "gdc-style-140-channel-mixer-demo/1.38.0/GDC 140 Channel Mixer Demo.ofx.bundle/Contents/Resources/gdc-cuda.bin",
+          "repo" : "files",
+          "sha256" : "2336781ecdbaeb5824918f950753cb385ec6cc24cdcc613255b6bb7498043d3b"
+        },
+        {
+          "path" : "gdc-style-140-channel-mixer-demo/1.38.0/GDC 140 Channel Mixer Demo.ofx.bundle/Contents/Resources/gdc-opencl.bin",
+          "repo" : "files",
+          "sha256" : "88489db255d10893233fe274762b26e0f774558d0e15de4f51063fc01e689533"
+        },
+        {
+          "path" : "gdc-style-140-channel-mixer-demo/1.38.0/GDC 140 Channel Mixer Demo.ofx.bundle/Contents/Resources/gdc.bin",
+          "repo" : "files",
+          "sha256" : "304bf701714887eeac98fa19451064795dcb5246a02efa1b518d66a5ade1b53c"
+        },
+        {
+          "path" : "gdc-style-140-channel-mixer-demo/1.38.0/GDC 140 Channel Mixer Demo.ofx.bundle/Contents/Resources/gdc.dat",
+          "repo" : "files",
+          "sha256" : "dfa8bfc088ff9b14717dbf1445d4ee0bb0ab8721212da66295312a9358babdc2"
+        },
+        {
+          "path" : "gdc-style-140-channel-mixer-demo/1.38.0/GDC 140 Channel Mixer Demo.ofx.bundle/Contents/Win64/GDC 140 Channel Mixer Demo.ofx",
+          "repo" : "files",
+          "sha256" : "b2daaadf301523a112f6fbda6a335c2f06f1ae270727c9bfdaa8ba8e9e6322e7"
+        },
+        {
+          "path" : "gdc-style-140-channel-mixer-demo/1.38.0/GDC 140 Channel Mixer Demo.ofx.bundle/Contents/_CodeSignature/CodeResources",
+          "repo" : "files",
+          "sha256" : "629db5e20528f7d55c3e6454813dd6d6a3e8e314e03542de26dbdd9df5828a7e"
+        }
+      ],
+      "id" : "gdc-style-140-channel-mixer-demo",
+      "isFree" : true,
+      "isTrial" : false,
+      "name" : "GDC 140 Channel Mixer Demo",
+      "priceEUR" : 0,
+      "supportedOS" : "macOS",
+      "type" : "ofx",
+      "version" : "1.38.0"
+    },
+    {
+      "bundleFolderName" : "GDC 200 Linear to Log Demo.ofx.bundle",
+      "coverImage" : "covers/gdc-style-200-space-convert-demo.png?v=161b5439",
+      "description" : "Demo version (discreet watermark) — GDC 200 Linear to Log",
+      "files" : [
+        {
+          "path" : "gdc-style-200-space-convert-demo/1.38.0/GDC 200 Linear to Log Demo.ofx.bundle/Contents/Info.plist",
+          "repo" : "files",
+          "sha256" : "7536924986dba506f07f0612df15e8be9f1e6d8e97ed491c0709da44d5d183e4"
+        },
+        {
+          "path" : "gdc-style-200-space-convert-demo/1.38.0/GDC 200 Linear to Log Demo.ofx.bundle/Contents/MacOS/GDC 200 Linear to Log Demo.ofx",
+          "repo" : "files",
+          "sha256" : "d6a3a2df753d5d95f495296f6aca6c8a5587d2ae5d239d1a7ba7e1d533b2dd71"
+        },
+        {
+          "path" : "gdc-style-200-space-convert-demo/1.38.0/GDC 200 Linear to Log Demo.ofx.bundle/Contents/Resources/dev.gordas.style.idt.601f678aff8d7cc1.png",
+          "repo" : "files",
+          "sha256" : "aed6ff5c4a3576db3baaaa227ac51822ac8ee648cedb9a36942a0cd78967cae4"
+        },
+        {
+          "path" : "gdc-style-200-space-convert-demo/1.38.0/GDC 200 Linear to Log Demo.ofx.bundle/Contents/Resources/dev.gordas.style.idt.601f678aff8d7cc1.svg",
+          "repo" : "files",
+          "sha256" : "2983242814bf8273fd9390e1e035fa2d8727d1fe27e4ccf9bfe6cc8a6a41279b"
+        },
+        {
+          "path" : "gdc-style-200-space-convert-demo/1.38.0/GDC 200 Linear to Log Demo.ofx.bundle/Contents/Resources/gdc-cuda.bin",
+          "repo" : "files",
+          "sha256" : "aea6b8476bc7dbfe2a367cde0e49108101155abb09a1faec7263dbe45304fd72"
+        },
+        {
+          "path" : "gdc-style-200-space-convert-demo/1.38.0/GDC 200 Linear to Log Demo.ofx.bundle/Contents/Resources/gdc-opencl.bin",
+          "repo" : "files",
+          "sha256" : "e054a62a6ddee65384ca830087731539ce1ec6af39af7f1fc9dab899e0d4d020"
+        },
+        {
+          "path" : "gdc-style-200-space-convert-demo/1.38.0/GDC 200 Linear to Log Demo.ofx.bundle/Contents/Resources/gdc.bin",
+          "repo" : "files",
+          "sha256" : "da427cd88f4fc6181af3e70ebf40ea36727d35ce6335085bec4e2127db77b859"
+        },
+        {
+          "path" : "gdc-style-200-space-convert-demo/1.38.0/GDC 200 Linear to Log Demo.ofx.bundle/Contents/Resources/gdc.dat",
+          "repo" : "files",
+          "sha256" : "90d890d94294a0c6c0eefe11746ad485cb98f27d1471fb83075264c14b1cf4d9"
+        },
+        {
+          "path" : "gdc-style-200-space-convert-demo/1.38.0/GDC 200 Linear to Log Demo.ofx.bundle/Contents/Win64/GDC 200 Linear to Log Demo.ofx",
+          "repo" : "files",
+          "sha256" : "b2daaadf301523a112f6fbda6a335c2f06f1ae270727c9bfdaa8ba8e9e6322e7"
+        },
+        {
+          "path" : "gdc-style-200-space-convert-demo/1.38.0/GDC 200 Linear to Log Demo.ofx.bundle/Contents/_CodeSignature/CodeResources",
+          "repo" : "files",
+          "sha256" : "71e4edef99d3ecdbfc1e2c6a6e564b6591a7acd10fa5c12ddf27384af0448d2c"
+        }
+      ],
+      "id" : "gdc-style-200-space-convert-demo",
+      "isFree" : true,
+      "isTrial" : false,
+      "name" : "GDC 200 Linear to Log Demo",
+      "priceEUR" : 0,
+      "supportedOS" : "macOS",
+      "type" : "ofx",
+      "version" : "1.38.0"
+    },
+    {
+      "bundleFolderName" : "GDC 210 Saturation Demo.ofx.bundle",
+      "coverImage" : "covers/gdc-style-210-saturation-demo.png?v=e68282df",
+      "description" : "Demo version (discreet watermark) — GDC 210 Saturation",
+      "files" : [
+        {
+          "path" : "gdc-style-210-saturation-demo/1.38.0/GDC 210 Saturation Demo.ofx.bundle/Contents/Info.plist",
+          "repo" : "files",
+          "sha256" : "d61184216d2968a8b72ef5e1e435319f1cce1ae6d381da34ada95cc5897dc113"
+        },
+        {
+          "path" : "gdc-style-210-saturation-demo/1.38.0/GDC 210 Saturation Demo.ofx.bundle/Contents/MacOS/GDC 210 Saturation Demo.ofx",
+          "repo" : "files",
+          "sha256" : "6a4669a9574fe71a77d777cd572c938008140d7dbd1c2431c264b04fb03137a4"
+        },
+        {
+          "path" : "gdc-style-210-saturation-demo/1.38.0/GDC 210 Saturation Demo.ofx.bundle/Contents/Resources/dev.gordas.style.idt.ca5f5a4610d46374.png",
+          "repo" : "files",
+          "sha256" : "3d3297b0bf67fda8751b15047df3fa3b5330e1b8273222e723e28a665f4d2f22"
+        },
+        {
+          "path" : "gdc-style-210-saturation-demo/1.38.0/GDC 210 Saturation Demo.ofx.bundle/Contents/Resources/dev.gordas.style.idt.ca5f5a4610d46374.svg",
+          "repo" : "files",
+          "sha256" : "6f9e85972ed862808b07566f2c92c53e6e22a7a6405b645bd1cf0ca1db3ee966"
+        },
+        {
+          "path" : "gdc-style-210-saturation-demo/1.38.0/GDC 210 Saturation Demo.ofx.bundle/Contents/Resources/gdc-cuda.bin",
+          "repo" : "files",
+          "sha256" : "6b6f6bf267c842b96c9f917580730d83a2c244a4163bf87aa6fbc49730e6ea9e"
+        },
+        {
+          "path" : "gdc-style-210-saturation-demo/1.38.0/GDC 210 Saturation Demo.ofx.bundle/Contents/Resources/gdc-opencl.bin",
+          "repo" : "files",
+          "sha256" : "cef771bc953ca297cb687ead893513eb381d11794f6be8f9cd2a9bb3fc6491b6"
+        },
+        {
+          "path" : "gdc-style-210-saturation-demo/1.38.0/GDC 210 Saturation Demo.ofx.bundle/Contents/Resources/gdc.bin",
+          "repo" : "files",
+          "sha256" : "c9070fdab8cca87a6fff136e35757ee38d324d6d0b13dbb939442db0a74c81b0"
+        },
+        {
+          "path" : "gdc-style-210-saturation-demo/1.38.0/GDC 210 Saturation Demo.ofx.bundle/Contents/Resources/gdc.dat",
+          "repo" : "files",
+          "sha256" : "1d51e7016e2cca09bbb0ea405af35e617972efb6e041b7a22d45b97379cc975f"
+        },
+        {
+          "path" : "gdc-style-210-saturation-demo/1.38.0/GDC 210 Saturation Demo.ofx.bundle/Contents/Win64/GDC 210 Saturation Demo.ofx",
+          "repo" : "files",
+          "sha256" : "b2daaadf301523a112f6fbda6a335c2f06f1ae270727c9bfdaa8ba8e9e6322e7"
+        },
+        {
+          "path" : "gdc-style-210-saturation-demo/1.38.0/GDC 210 Saturation Demo.ofx.bundle/Contents/_CodeSignature/CodeResources",
+          "repo" : "files",
+          "sha256" : "4689894b20617056c855265612263a7331e70627a5b988261b01b6a2763ee688"
+        }
+      ],
+      "id" : "gdc-style-210-saturation-demo",
+      "isFree" : true,
+      "isTrial" : false,
+      "name" : "GDC 210 Saturation Demo",
+      "priceEUR" : 0,
+      "supportedOS" : "macOS",
+      "type" : "ofx",
+      "version" : "1.38.0"
+    },
+    {
+      "bundleFolderName" : "GDC 215 Hue and HSV Demo.ofx.bundle",
+      "coverImage" : "covers/gdc-style-215-hue-hsv-demo.png?v=a6bc2d42",
+      "description" : "Demo version (discreet watermark) — GDC 215 Hue and HSV",
+      "files" : [
+        {
+          "path" : "gdc-style-215-hue-hsv-demo/1.38.0/GDC 215 Hue and HSV Demo.ofx.bundle/Contents/Info.plist",
+          "repo" : "files",
+          "sha256" : "e90b9f787eaf64fb355c1b01e09b38b5b21ef5af652348d015aa6c610789a8b8"
+        },
+        {
+          "path" : "gdc-style-215-hue-hsv-demo/1.38.0/GDC 215 Hue and HSV Demo.ofx.bundle/Contents/MacOS/GDC 215 Hue and HSV Demo.ofx",
+          "repo" : "files",
+          "sha256" : "0e686d7a562b06046995b3c32edb44bd238c12f01d57ea37e9dc89171a131778"
+        },
+        {
+          "path" : "gdc-style-215-hue-hsv-demo/1.38.0/GDC 215 Hue and HSV Demo.ofx.bundle/Contents/Resources/dev.gordas.style.idt.fbb5faa091bfe919.png",
+          "repo" : "files",
+          "sha256" : "cd019e0bc4c7b4fe18968ff97704fc58972b2ea4f6769c280dcc5aec75c3aee8"
+        },
+        {
+          "path" : "gdc-style-215-hue-hsv-demo/1.38.0/GDC 215 Hue and HSV Demo.ofx.bundle/Contents/Resources/dev.gordas.style.idt.fbb5faa091bfe919.svg",
+          "repo" : "files",
+          "sha256" : "dbe35abed1f8163760b177b517ef4910df1be6d0a1a6311be520c8e0fc4a3441"
+        },
+        {
+          "path" : "gdc-style-215-hue-hsv-demo/1.38.0/GDC 215 Hue and HSV Demo.ofx.bundle/Contents/Resources/gdc-cuda.bin",
+          "repo" : "files",
+          "sha256" : "19d8e77456b3e3741eaf7156a189e7a0d3f81207225e04768924ee476b7c0b46"
+        },
+        {
+          "path" : "gdc-style-215-hue-hsv-demo/1.38.0/GDC 215 Hue and HSV Demo.ofx.bundle/Contents/Resources/gdc-opencl.bin",
+          "repo" : "files",
+          "sha256" : "ead8e1e434b2831309022ac6ebf683b0ae30d35a1433d17941362194687e15a6"
+        },
+        {
+          "path" : "gdc-style-215-hue-hsv-demo/1.38.0/GDC 215 Hue and HSV Demo.ofx.bundle/Contents/Resources/gdc.bin",
+          "repo" : "files",
+          "sha256" : "84f67171c8ac50c8b75aaa9931c5914faf2cc7c1efe05c4e4272748dfa6924f9"
+        },
+        {
+          "path" : "gdc-style-215-hue-hsv-demo/1.38.0/GDC 215 Hue and HSV Demo.ofx.bundle/Contents/Resources/gdc.dat",
+          "repo" : "files",
+          "sha256" : "0579977c1e09ef9989d7fe1d133b6273897905dd0c728ffaa8d1ca703f96d4b8"
+        },
+        {
+          "path" : "gdc-style-215-hue-hsv-demo/1.38.0/GDC 215 Hue and HSV Demo.ofx.bundle/Contents/Win64/GDC 215 Hue and HSV Demo.ofx",
+          "repo" : "files",
+          "sha256" : "b2daaadf301523a112f6fbda6a335c2f06f1ae270727c9bfdaa8ba8e9e6322e7"
+        },
+        {
+          "path" : "gdc-style-215-hue-hsv-demo/1.38.0/GDC 215 Hue and HSV Demo.ofx.bundle/Contents/_CodeSignature/CodeResources",
+          "repo" : "files",
+          "sha256" : "df31787af4a496c4aaf639e00ab693fecffc6efa4e9cfe715d60ce58f860b3ba"
+        }
+      ],
+      "id" : "gdc-style-215-hue-hsv-demo",
+      "isFree" : true,
+      "isTrial" : false,
+      "name" : "GDC 215 Hue and HSV Demo",
+      "priceEUR" : 0,
+      "supportedOS" : "macOS",
+      "type" : "ofx",
+      "version" : "1.38.0"
+    },
+    {
+      "bundleFolderName" : "GDC 220 Tone Lift Gamma Gain Demo.ofx.bundle",
+      "coverImage" : "covers/gdc-style-220-tone-demo.png?v=09f73445",
+      "description" : "Demo version (discreet watermark) — GDC 220 Tone Lift Gamma Gain",
+      "files" : [
+        {
+          "path" : "gdc-style-220-tone-demo/1.38.0/GDC 220 Tone Lift Gamma Gain Demo.ofx.bundle/Contents/Info.plist",
+          "repo" : "files",
+          "sha256" : "97b4b0c3ca1bb5ff0c8a90fb714d8ea22884885be8b64b6ece66e587abe2af89"
+        },
+        {
+          "path" : "gdc-style-220-tone-demo/1.38.0/GDC 220 Tone Lift Gamma Gain Demo.ofx.bundle/Contents/MacOS/GDC 220 Tone Lift Gamma Gain Demo.ofx",
+          "repo" : "files",
+          "sha256" : "859dda27708e379330d204f4cc0e374a4e113c0232af9d73b7a6980b744e02aa"
+        },
+        {
+          "path" : "gdc-style-220-tone-demo/1.38.0/GDC 220 Tone Lift Gamma Gain Demo.ofx.bundle/Contents/Resources/dev.gordas.style.idt.b70c61ab0f31c75e.png",
+          "repo" : "files",
+          "sha256" : "b4cded4e2dd9aa29839cff6f72d88d199ed2f80f13e98561c1f61ffe22bdbb26"
+        },
+        {
+          "path" : "gdc-style-220-tone-demo/1.38.0/GDC 220 Tone Lift Gamma Gain Demo.ofx.bundle/Contents/Resources/dev.gordas.style.idt.b70c61ab0f31c75e.svg",
+          "repo" : "files",
+          "sha256" : "d03dd6e322239104ac5c02590db29ede5ef3b3dfedbc6fed1dfff23137085539"
+        },
+        {
+          "path" : "gdc-style-220-tone-demo/1.38.0/GDC 220 Tone Lift Gamma Gain Demo.ofx.bundle/Contents/Resources/gdc-cuda.bin",
+          "repo" : "files",
+          "sha256" : "ba64663567f3406f7b8d1d220fc5f48a1a609fc9ebbac97b3dedaaa1758a687e"
+        },
+        {
+          "path" : "gdc-style-220-tone-demo/1.38.0/GDC 220 Tone Lift Gamma Gain Demo.ofx.bundle/Contents/Resources/gdc-opencl.bin",
+          "repo" : "files",
+          "sha256" : "c238d3733987bac91c2a6e7759dcab3b13452f2378c3d97380dd1a1897fe9264"
+        },
+        {
+          "path" : "gdc-style-220-tone-demo/1.38.0/GDC 220 Tone Lift Gamma Gain Demo.ofx.bundle/Contents/Resources/gdc.bin",
+          "repo" : "files",
+          "sha256" : "3a96188a92d2292ae5f403d51f8d683886cc37338d280a22faa776be5ce4dba2"
+        },
+        {
+          "path" : "gdc-style-220-tone-demo/1.38.0/GDC 220 Tone Lift Gamma Gain Demo.ofx.bundle/Contents/Resources/gdc.dat",
+          "repo" : "files",
+          "sha256" : "57befae12de5a01f1bb92057bcdbff874a7832429753897793e8b3b45b4b14e8"
+        },
+        {
+          "path" : "gdc-style-220-tone-demo/1.38.0/GDC 220 Tone Lift Gamma Gain Demo.ofx.bundle/Contents/Win64/GDC 220 Tone Lift Gamma Gain Demo.ofx",
+          "repo" : "files",
+          "sha256" : "b2daaadf301523a112f6fbda6a335c2f06f1ae270727c9bfdaa8ba8e9e6322e7"
+        },
+        {
+          "path" : "gdc-style-220-tone-demo/1.38.0/GDC 220 Tone Lift Gamma Gain Demo.ofx.bundle/Contents/_CodeSignature/CodeResources",
+          "repo" : "files",
+          "sha256" : "15a136a18178d45a737875ab852c4ad74247465d150ad6df0d8343523c0ba459"
+        }
+      ],
+      "id" : "gdc-style-220-tone-demo",
+      "isFree" : true,
+      "isTrial" : false,
+      "name" : "GDC 220 Tone Lift Gamma Gain Demo",
+      "priceEUR" : 0,
+      "supportedOS" : "macOS",
+      "type" : "ofx",
+      "version" : "1.38.0"
+    },
+    {
+      "bundleFolderName" : "GDC 230 Hue Vectors Demo.ofx.bundle",
+      "coverImage" : "covers/gdc-style-230-hue-vectors-demo.png?v=ee6981eb",
+      "description" : "Demo version (discreet watermark) — GDC 230 Hue Vectors",
+      "files" : [
+        {
+          "path" : "gdc-style-230-hue-vectors-demo/1.38.0/GDC 230 Hue Vectors Demo.ofx.bundle/Contents/Info.plist",
+          "repo" : "files",
+          "sha256" : "cf75b97cd6c3e4f65cf2e1c34e88058e34ad60e75cb400ade964546b21328b91"
+        },
+        {
+          "path" : "gdc-style-230-hue-vectors-demo/1.38.0/GDC 230 Hue Vectors Demo.ofx.bundle/Contents/MacOS/GDC 230 Hue Vectors Demo.ofx",
+          "repo" : "files",
+          "sha256" : "9ffc5c29ef84324c5bbfc712ac32c3aadc14c3c9ec12f25079611d2f16829abb"
+        },
+        {
+          "path" : "gdc-style-230-hue-vectors-demo/1.38.0/GDC 230 Hue Vectors Demo.ofx.bundle/Contents/Resources/dev.gordas.style.idt.4402cc67f6c66e0c.png",
+          "repo" : "files",
+          "sha256" : "c3fc9867e9f6cc60c49d8568b2baaacab008184f60c89fc45f06de95347a2ee8"
+        },
+        {
+          "path" : "gdc-style-230-hue-vectors-demo/1.38.0/GDC 230 Hue Vectors Demo.ofx.bundle/Contents/Resources/dev.gordas.style.idt.4402cc67f6c66e0c.svg",
+          "repo" : "files",
+          "sha256" : "0034c5f807581aa4b7f59cc0316e377845af283f72a25b504da4fd0000c38929"
+        },
+        {
+          "path" : "gdc-style-230-hue-vectors-demo/1.38.0/GDC 230 Hue Vectors Demo.ofx.bundle/Contents/Resources/gdc-cuda.bin",
+          "repo" : "files",
+          "sha256" : "a08fbde074b56ca88e1ddd54ae38d510e86557f28d3bb00e7c3b0e8115d23c4a"
+        },
+        {
+          "path" : "gdc-style-230-hue-vectors-demo/1.38.0/GDC 230 Hue Vectors Demo.ofx.bundle/Contents/Resources/gdc-opencl.bin",
+          "repo" : "files",
+          "sha256" : "45fb48ad52bdb06e72af47ed8d779a44ee645faa0f4317f9be3652f4e0ce9065"
+        },
+        {
+          "path" : "gdc-style-230-hue-vectors-demo/1.38.0/GDC 230 Hue Vectors Demo.ofx.bundle/Contents/Resources/gdc.bin",
+          "repo" : "files",
+          "sha256" : "cd7d95172e3e1f90de13fd68dfc61a7d8981091be9e0b856d74edd55fde4bc68"
+        },
+        {
+          "path" : "gdc-style-230-hue-vectors-demo/1.38.0/GDC 230 Hue Vectors Demo.ofx.bundle/Contents/Resources/gdc.dat",
+          "repo" : "files",
+          "sha256" : "ade64292d354a981e2a7e5ed13fbebab31fc22f6a1ce01668d8c241dfcedba62"
+        },
+        {
+          "path" : "gdc-style-230-hue-vectors-demo/1.38.0/GDC 230 Hue Vectors Demo.ofx.bundle/Contents/Win64/GDC 230 Hue Vectors Demo.ofx",
+          "repo" : "files",
+          "sha256" : "b2daaadf301523a112f6fbda6a335c2f06f1ae270727c9bfdaa8ba8e9e6322e7"
+        },
+        {
+          "path" : "gdc-style-230-hue-vectors-demo/1.38.0/GDC 230 Hue Vectors Demo.ofx.bundle/Contents/_CodeSignature/CodeResources",
+          "repo" : "files",
+          "sha256" : "623cc644fe878d8c605671856418fe5da70667910f39b4db993a02cdac383abe"
+        }
+      ],
+      "id" : "gdc-style-230-hue-vectors-demo",
+      "isFree" : true,
+      "isTrial" : false,
+      "name" : "GDC 230 Hue Vectors Demo",
+      "priceEUR" : 0,
+      "supportedOS" : "macOS",
+      "type" : "ofx",
+      "version" : "1.38.0"
+    },
+    {
+      "bundleFolderName" : "GDC 240 Qualifier Demo.ofx.bundle",
+      "coverImage" : "covers/gdc-style-240-qualifier-demo.png?v=6255876b",
+      "description" : "Demo version (discreet watermark) — GDC 240 Qualifier",
+      "files" : [
+        {
+          "path" : "gdc-style-240-qualifier-demo/1.38.0/GDC 240 Qualifier Demo.ofx.bundle/Contents/Info.plist",
+          "repo" : "files",
+          "sha256" : "56c1a6442b0e47d2e15254b1ef396d7750e8ab455405733c2875c09711187df7"
+        },
+        {
+          "path" : "gdc-style-240-qualifier-demo/1.38.0/GDC 240 Qualifier Demo.ofx.bundle/Contents/MacOS/GDC 240 Qualifier Demo.ofx",
+          "repo" : "files",
+          "sha256" : "e3cd168f6a00ff7846e3dcf4001db2ca118b1c4747b3f6593cb71d76c856bcc9"
+        },
+        {
+          "path" : "gdc-style-240-qualifier-demo/1.38.0/GDC 240 Qualifier Demo.ofx.bundle/Contents/Resources/dev.gordas.style.idt.bc355ecafd1e3129.png",
+          "repo" : "files",
+          "sha256" : "d33d8f1cd1d9870e5d8421b52a55263ebef8db4269db07fceb71c9ae7e3bf926"
+        },
+        {
+          "path" : "gdc-style-240-qualifier-demo/1.38.0/GDC 240 Qualifier Demo.ofx.bundle/Contents/Resources/dev.gordas.style.idt.bc355ecafd1e3129.svg",
+          "repo" : "files",
+          "sha256" : "29d46117a690b14aa61b1db577c6942d8289269ecc732ecbc9b9526489ca9c29"
+        },
+        {
+          "path" : "gdc-style-240-qualifier-demo/1.38.0/GDC 240 Qualifier Demo.ofx.bundle/Contents/Resources/gdc-cuda.bin",
+          "repo" : "files",
+          "sha256" : "b8886d94289104b1f3b4970438e25eefaddaebd7de8615feb9c1386f4965c895"
+        },
+        {
+          "path" : "gdc-style-240-qualifier-demo/1.38.0/GDC 240 Qualifier Demo.ofx.bundle/Contents/Resources/gdc-opencl.bin",
+          "repo" : "files",
+          "sha256" : "0ec863653dbad8507c5b3a1863bdfb1c5c79f13a4baf436c55e0f42214ddc964"
+        },
+        {
+          "path" : "gdc-style-240-qualifier-demo/1.38.0/GDC 240 Qualifier Demo.ofx.bundle/Contents/Resources/gdc.bin",
+          "repo" : "files",
+          "sha256" : "4776010a27699ce1b25924a3994d5132d6291358bbacd9de660ddd92866935de"
+        },
+        {
+          "path" : "gdc-style-240-qualifier-demo/1.38.0/GDC 240 Qualifier Demo.ofx.bundle/Contents/Resources/gdc.dat",
+          "repo" : "files",
+          "sha256" : "7de0356f321dad3e2a2ed9d46b9b92861b9063b311750cc78172aadf130768ae"
+        },
+        {
+          "path" : "gdc-style-240-qualifier-demo/1.38.0/GDC 240 Qualifier Demo.ofx.bundle/Contents/Win64/GDC 240 Qualifier Demo.ofx",
+          "repo" : "files",
+          "sha256" : "b2daaadf301523a112f6fbda6a335c2f06f1ae270727c9bfdaa8ba8e9e6322e7"
+        },
+        {
+          "path" : "gdc-style-240-qualifier-demo/1.38.0/GDC 240 Qualifier Demo.ofx.bundle/Contents/_CodeSignature/CodeResources",
+          "repo" : "files",
+          "sha256" : "25d92124f7fc8a0d9472e8a11ea1f85e100898c04c8913e092217c86149d7e94"
+        }
+      ],
+      "id" : "gdc-style-240-qualifier-demo",
+      "isFree" : true,
+      "isTrial" : false,
+      "name" : "GDC 240 Qualifier Demo",
+      "priceEUR" : 0,
+      "supportedOS" : "macOS",
+      "type" : "ofx",
+      "version" : "1.38.0"
+    },
+    {
+      "bundleFolderName" : "GDC 245 Luminance Matte Demo.ofx.bundle",
+      "coverImage" : "covers/gdc-style-245-luminance-matte-demo.png?v=a2172c54",
+      "description" : "Demo version (discreet watermark) — GDC 245 Luminance Matte",
+      "files" : [
+        {
+          "path" : "gdc-style-245-luminance-matte-demo/1.38.0/GDC 245 Luminance Matte Demo.ofx.bundle/Contents/Info.plist",
+          "repo" : "files",
+          "sha256" : "c02c02e06772d6d90486e5079d1dceabbc1c870a0f406d047a3f9f20eb6251c1"
+        },
+        {
+          "path" : "gdc-style-245-luminance-matte-demo/1.38.0/GDC 245 Luminance Matte Demo.ofx.bundle/Contents/MacOS/GDC 245 Luminance Matte Demo.ofx",
+          "repo" : "files",
+          "sha256" : "7ef4121d13185c52f04fba951bb134cfc18fcdfe7e3bb156cbd230c64f80284f"
+        },
+        {
+          "path" : "gdc-style-245-luminance-matte-demo/1.38.0/GDC 245 Luminance Matte Demo.ofx.bundle/Contents/Resources/dev.gordas.style.idt.ce3f2a980b3d53cd.png",
+          "repo" : "files",
+          "sha256" : "1fb4d396bc7b73e3b1f5666050d82684c0b291d047dba57618143dd5ff7d9d68"
+        },
+        {
+          "path" : "gdc-style-245-luminance-matte-demo/1.38.0/GDC 245 Luminance Matte Demo.ofx.bundle/Contents/Resources/dev.gordas.style.idt.ce3f2a980b3d53cd.svg",
+          "repo" : "files",
+          "sha256" : "9665b97b8d64b5e60697e2ad4c0c1575a9b31e0b5e4dcbc10168ea70b272d562"
+        },
+        {
+          "path" : "gdc-style-245-luminance-matte-demo/1.38.0/GDC 245 Luminance Matte Demo.ofx.bundle/Contents/Resources/gdc-cuda.bin",
+          "repo" : "files",
+          "sha256" : "2106299694d33023961762d44ce2e0c9963121de8cd2532404274fe94a42a813"
+        },
+        {
+          "path" : "gdc-style-245-luminance-matte-demo/1.38.0/GDC 245 Luminance Matte Demo.ofx.bundle/Contents/Resources/gdc-opencl.bin",
+          "repo" : "files",
+          "sha256" : "4b3e05dba849aa94064a5aeebfa769a102e4478ca49d2026d1d76cfd1dd87f09"
+        },
+        {
+          "path" : "gdc-style-245-luminance-matte-demo/1.38.0/GDC 245 Luminance Matte Demo.ofx.bundle/Contents/Resources/gdc.bin",
+          "repo" : "files",
+          "sha256" : "13216a4e3d2a3e769377a697ccdce57a9d19e1d556db180a11852df2fa0b2adf"
+        },
+        {
+          "path" : "gdc-style-245-luminance-matte-demo/1.38.0/GDC 245 Luminance Matte Demo.ofx.bundle/Contents/Resources/gdc.dat",
+          "repo" : "files",
+          "sha256" : "71b25a4521d93f82f6217db9a4612112118a1135e90e64a4548cb05a83467710"
+        },
+        {
+          "path" : "gdc-style-245-luminance-matte-demo/1.38.0/GDC 245 Luminance Matte Demo.ofx.bundle/Contents/Win64/GDC 245 Luminance Matte Demo.ofx",
+          "repo" : "files",
+          "sha256" : "b2daaadf301523a112f6fbda6a335c2f06f1ae270727c9bfdaa8ba8e9e6322e7"
+        },
+        {
+          "path" : "gdc-style-245-luminance-matte-demo/1.38.0/GDC 245 Luminance Matte Demo.ofx.bundle/Contents/_CodeSignature/CodeResources",
+          "repo" : "files",
+          "sha256" : "0ac119daa8aa38145cd9d5cde85c0efacdc5ef40c4ec153e0ef118cd5678e50d"
+        }
+      ],
+      "id" : "gdc-style-245-luminance-matte-demo",
+      "isFree" : true,
+      "isTrial" : false,
+      "name" : "GDC 245 Luminance Matte Demo",
+      "priceEUR" : 0,
+      "supportedOS" : "macOS",
+      "type" : "ofx",
+      "version" : "1.38.0"
+    },
+    {
+      "bundleFolderName" : "GDC 250 Highlights and Gamut Demo.ofx.bundle",
+      "coverImage" : "covers/gdc-style-250-highlights-gamut-demo.png?v=150e13d4",
+      "description" : "Demo version (discreet watermark) — GDC 250 Highlights and Gamut",
+      "files" : [
+        {
+          "path" : "gdc-style-250-highlights-gamut-demo/1.38.0/GDC 250 Highlights and Gamut Demo.ofx.bundle/Contents/Info.plist",
+          "repo" : "files",
+          "sha256" : "eb35b7a05becb10db284e60c867eede3ff0ad4c12dd74425e42c0227d4025a87"
+        },
+        {
+          "path" : "gdc-style-250-highlights-gamut-demo/1.38.0/GDC 250 Highlights and Gamut Demo.ofx.bundle/Contents/MacOS/GDC 250 Highlights and Gamut Demo.ofx",
+          "repo" : "files",
+          "sha256" : "7364fd9da1b7a2a30191c042a1afb3df7b913394d80a0405febd6089a4cbee39"
+        },
+        {
+          "path" : "gdc-style-250-highlights-gamut-demo/1.38.0/GDC 250 Highlights and Gamut Demo.ofx.bundle/Contents/Resources/dev.gordas.style.idt.babf58ff9a3bdc8a.png",
+          "repo" : "files",
+          "sha256" : "05898380705449a22723b508e98a218084918122129befb0baf7797ecdff854b"
+        },
+        {
+          "path" : "gdc-style-250-highlights-gamut-demo/1.38.0/GDC 250 Highlights and Gamut Demo.ofx.bundle/Contents/Resources/dev.gordas.style.idt.babf58ff9a3bdc8a.svg",
+          "repo" : "files",
+          "sha256" : "790fdc0b09ed6e05454939b6e149e1ea0c85e9184ce7243a0b7c0bf818297b9a"
+        },
+        {
+          "path" : "gdc-style-250-highlights-gamut-demo/1.38.0/GDC 250 Highlights and Gamut Demo.ofx.bundle/Contents/Resources/gdc-cuda.bin",
+          "repo" : "files",
+          "sha256" : "5dabc7a0850033a0fcb9c928978fc6d2efab52e373d0d469828bfc5f7169c4be"
+        },
+        {
+          "path" : "gdc-style-250-highlights-gamut-demo/1.38.0/GDC 250 Highlights and Gamut Demo.ofx.bundle/Contents/Resources/gdc-opencl.bin",
+          "repo" : "files",
+          "sha256" : "4a301c6a05ad381e9bff203effe106680bf8832d1d90045cbe3c9b37a09c3d8f"
+        },
+        {
+          "path" : "gdc-style-250-highlights-gamut-demo/1.38.0/GDC 250 Highlights and Gamut Demo.ofx.bundle/Contents/Resources/gdc.bin",
+          "repo" : "files",
+          "sha256" : "1c7eb94b042131585927258bb757e77474fb5f971806b86f1b73bc14dfe9c712"
+        },
+        {
+          "path" : "gdc-style-250-highlights-gamut-demo/1.38.0/GDC 250 Highlights and Gamut Demo.ofx.bundle/Contents/Resources/gdc.dat",
+          "repo" : "files",
+          "sha256" : "acc9b6c5109c243999795538a52e2d7edcd1afef0c2f47b476096b19f5d0d5e8"
+        },
+        {
+          "path" : "gdc-style-250-highlights-gamut-demo/1.38.0/GDC 250 Highlights and Gamut Demo.ofx.bundle/Contents/Win64/GDC 250 Highlights and Gamut Demo.ofx",
+          "repo" : "files",
+          "sha256" : "b2daaadf301523a112f6fbda6a335c2f06f1ae270727c9bfdaa8ba8e9e6322e7"
+        },
+        {
+          "path" : "gdc-style-250-highlights-gamut-demo/1.38.0/GDC 250 Highlights and Gamut Demo.ofx.bundle/Contents/_CodeSignature/CodeResources",
+          "repo" : "files",
+          "sha256" : "1f2f663746e008a6af577daa9393c35d17bb9ae53ea65ee2ea14613507feac56"
+        }
+      ],
+      "id" : "gdc-style-250-highlights-gamut-demo",
+      "isFree" : true,
+      "isTrial" : false,
+      "name" : "GDC 250 Highlights and Gamut Demo",
+      "priceEUR" : 0,
+      "supportedOS" : "macOS",
+      "type" : "ofx",
+      "version" : "1.38.0"
+    },
+    {
+      "bundleFolderName" : "GDC 270 Film Pipeline Demo.ofx.bundle",
+      "coverImage" : "covers/gdc-style-m02-film-demo.png?v=ceb8e99b",
+      "description" : "Demo version (discreet watermark) — GDC 270 Film Pipeline",
+      "files" : [
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Info.plist",
+          "repo" : "files",
+          "sha256" : "496dfff6b5f1c48a5648e4b76a3e11358191e230ac30559062e09c2d82176c8d"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/MacOS/GDC 270 Film Pipeline Demo.ofx",
+          "repo" : "files",
+          "sha256" : "1d31858b10837206e513dd23b2adee7dc5fbf865edd048f6ddb9b098c8753363"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00000.gdcstyle",
+          "repo" : "files",
+          "sha256" : "33d91732e78ab541facd50d7a3ed47e2c5e92f5a732f0d130e5917aa270208ed"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00001.gdcstyle",
+          "repo" : "files",
+          "sha256" : "af94c8cee261df8487c8d785dd6a3830fd5e85d3ad6089c0d8f24c6f562b277c"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00002.gdcstyle",
+          "repo" : "files",
+          "sha256" : "6f033867c395bc1529ef23fb1e9f5636ac7d33a5e0656f4a44040a4522cab4eb"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00003.gdcstyle",
+          "repo" : "files",
+          "sha256" : "d113bb57383617fba37e21ebf8a92347321629ff3fc56840d18b197cf9d5d1de"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00004.gdcstyle",
+          "repo" : "files",
+          "sha256" : "83f21645820d0950c9061a8654be3f9eda9f823d331987dc86a31d1f896f48a5"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00005.gdcstyle",
+          "repo" : "files",
+          "sha256" : "4a1e62d3702d5ac192628de54401048bf0c1f7edb1c18ca43f2f15b1213e6ad6"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00006.gdcstyle",
+          "repo" : "files",
+          "sha256" : "124eeccc529448e3051913ee982b3bfdd1558410f0217606c2180c93191e4c46"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00007.gdcstyle",
+          "repo" : "files",
+          "sha256" : "cdd20f803d6670c722bdaff63545b8ab60f0a109073cef732a62e049aab8df28"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00008.gdcstyle",
+          "repo" : "files",
+          "sha256" : "52ec44f1b0e2799c929471302099ecf1cc98fa386018c39018b858ec0129ed0c"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00009.gdcstyle",
+          "repo" : "files",
+          "sha256" : "22e66afc29ac3f8dd6f557fb68411be3bad6b571f2181c2f7758ad771b38ff3c"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00010.gdcstyle",
+          "repo" : "files",
+          "sha256" : "9446707a34792c0f5b288be1725ad57e9bbc169bb57c2419906cfbc5fb1b148c"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00011.gdcstyle",
+          "repo" : "files",
+          "sha256" : "b87c28567fbe452597269ad7618a8dc3009e3afd61e753eccba46f6ec5648ed2"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00012.gdcstyle",
+          "repo" : "files",
+          "sha256" : "6316798ddfe57da6605242f214996b6ed0f6d3b66b707cc02063de44ab241205"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00013.gdcstyle",
+          "repo" : "files",
+          "sha256" : "a9d7d5331bc07dba50008c638eb0b5bf282f2129820afdabeda8d3202a6df74a"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00014.gdcstyle",
+          "repo" : "files",
+          "sha256" : "9c41771c44366b7484e33478bb3d3adb1b47a563815e636db2126fb59738d6ff"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00015.gdcstyle",
+          "repo" : "files",
+          "sha256" : "6de5e4ae5804b3a548d9f5978ddea58f2b2d8c80b522d4852a47ad42fd5ed769"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00016.gdcstyle",
+          "repo" : "files",
+          "sha256" : "050ea32c9c6eeffb4ffbeef7f4a1b205cfe75e1b0526f45b5b098c749bb77283"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00017.gdcstyle",
+          "repo" : "files",
+          "sha256" : "749427b05d9d4b48986a77d6ff4d0a9b19040d1089c8cc3171631116d5f6bf0b"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00018.gdcstyle",
+          "repo" : "files",
+          "sha256" : "94223da91408c45a169b0c7704b80bcb11a80fb116a9a3a180c1b7789a5c9a6c"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00019.gdcstyle",
+          "repo" : "files",
+          "sha256" : "4f8bb728ae13385a79e41ee6c75d3a84f7462c3f37b1a3d91e18e20a1c4578bc"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00020.gdcstyle",
+          "repo" : "files",
+          "sha256" : "1b66142995d91c0b673eee822c5f8769169fdfc43c5db647b7786fd3312c078e"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00021.gdcstyle",
+          "repo" : "files",
+          "sha256" : "320131eba425e4a82090fc75543d3be127149c443065081336a694085064554f"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00022.gdcstyle",
+          "repo" : "files",
+          "sha256" : "686e028942d9301dac30cf8835e23f04f0ae0bea5e5163e9813c9a6247178450"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00023.gdcstyle",
+          "repo" : "files",
+          "sha256" : "1a03364aec9549d37313a0b63c35a91b15dcfc6d407c2bfc28ed154d2d2345c3"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00024.gdcstyle",
+          "repo" : "files",
+          "sha256" : "bc7d2d0ed6fe51c13ff7e67b06d2fe5039baafd49cdbc256769e6342ae706359"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00025.gdcstyle",
+          "repo" : "files",
+          "sha256" : "1a8ec79b2d515fbd316322c863815c7015e87b563a2aea1c756d418b77fe584c"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00026.gdcstyle",
+          "repo" : "files",
+          "sha256" : "62480ecc07c2159e25951baf8715a887ce465276a5082a7ba2ee5784c6d4226e"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00027.gdcstyle",
+          "repo" : "files",
+          "sha256" : "0b97d431d6f10e8254bfc8a28e98ec5ec8af377c4067c615516e6c025fc354ce"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00028.gdcstyle",
+          "repo" : "files",
+          "sha256" : "0c451e01f03489645306a11eb2a2f225f948ff5eb2b94a997cf4475e2e222e89"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00029.gdcstyle",
+          "repo" : "files",
+          "sha256" : "a3c4f448e7c9cd7f36a3502c64779118445caf5d6623bddce5f2abc3f117927d"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00030.gdcstyle",
+          "repo" : "files",
+          "sha256" : "a91c7b5a678bf7582d271f3dbba9002d4e2814c14f60bb7f2976709ebcdb8eb1"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00031.gdcstyle",
+          "repo" : "files",
+          "sha256" : "cea4d54a9673f6c62d2e8ca6f055df88e42dec8dd42f19bed886fdd46c8f1ecc"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00032.gdcstyle",
+          "repo" : "files",
+          "sha256" : "bd6f7676e012ec68ebd76e12a17447fd1751d02c8eafd87e483edbf633296c2d"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00033.gdcstyle",
+          "repo" : "files",
+          "sha256" : "a9746628d43b9d5d5c887562ff87448462901643b671d8780ee9a0db8613de8d"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00034.gdcstyle",
+          "repo" : "files",
+          "sha256" : "f1a4d7ac12e683f6c730766a114cbcb45522e6caa10a4dcc45e7d6470b37330c"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00035.gdcstyle",
+          "repo" : "files",
+          "sha256" : "803d553ccf1e8a861e36319bb1fcdfbef16450a0d29dd742b70641901538a479"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00036.gdcstyle",
+          "repo" : "files",
+          "sha256" : "69f8f997b6945266df9b6a5d577b93bdff51a8dccf97ecd01b4386fdc6c18e89"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00037.gdcstyle",
+          "repo" : "files",
+          "sha256" : "73c8bc14617dcd2bbb35cae6c966044a9ea5816ad68950cc5a9ac3b80adac90e"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00038.gdcstyle",
+          "repo" : "files",
+          "sha256" : "a5684e9b32fb0df0e8b9b361a52bb678fdedb351101cd24bc755cd4a1c57d17e"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00039.gdcstyle",
+          "repo" : "files",
+          "sha256" : "b0bad7580b9fd4b4551cc72f2391ef8e2d7e8fb6ddef3888e2f02e1a11e304db"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00040.gdcstyle",
+          "repo" : "files",
+          "sha256" : "d80d087e22572eb67ee80c22eb163434a69dd82b314cc470c781f5eacfb0aeda"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00041.gdcstyle",
+          "repo" : "files",
+          "sha256" : "08f70bc76fe3ed855a7077407415c3043ab05c283fc0edb8c9d24a43a2448432"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00042.gdcstyle",
+          "repo" : "files",
+          "sha256" : "1ca39315b7c15835db10fd9ac2d02ba83181f672caa99000c2f2b89974fd576b"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00043.gdcstyle",
+          "repo" : "files",
+          "sha256" : "80f12d08559461963700a8347f11b48fc5c7728742c8409959e7c51319c72b17"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00044.gdcstyle",
+          "repo" : "files",
+          "sha256" : "3086bc0fc7d494a4df507ee79d904e61ea8c5625bca6fb7c237a83bbf624f4e7"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00045.gdcstyle",
+          "repo" : "files",
+          "sha256" : "8cf1cd892be62a2429f5c41010a452bb2d332c0704c4a0058525d8d794a3c9cc"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00046.gdcstyle",
+          "repo" : "files",
+          "sha256" : "0dda24768a2a519c5281ccb99e29d43ceaf756b3eb81846b6994f324915b9c2d"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00047.gdcstyle",
+          "repo" : "files",
+          "sha256" : "7ec5d59263525cc2bf87c7f373cb8c523bd8c3b011ad52f4b44c1c3d0c2131f6"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00048.gdcstyle",
+          "repo" : "files",
+          "sha256" : "562bf280385767c03fffaabf42044fb3e35458e87a9c7ecd43a0cdc1e120f057"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00049.gdcstyle",
+          "repo" : "files",
+          "sha256" : "fca5a18be251bccbbb8b44d111336706470dbe6ca4bbb2430483a7807c2d171c"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00050.gdcstyle",
+          "repo" : "files",
+          "sha256" : "455cba831a635ee405a7dde9a2469b33788d2f3d0b1cd837360addfec7fecdb4"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00051.gdcstyle",
+          "repo" : "files",
+          "sha256" : "9fe4f17a38f42d8fa1dd06b6581d620ed9d69dad327d8545501c2af918cbec1c"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00052.gdcstyle",
+          "repo" : "files",
+          "sha256" : "54ec14bcde83fcb7e0001e6178c6d35c79c8c01c863b0a0b6e1dfcbe8e35f929"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00053.gdcstyle",
+          "repo" : "files",
+          "sha256" : "07a29db55ea0e93a0784b27fec7d60d03cee350b068dac6031c5f5e4b41d5ee0"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00054.gdcstyle",
+          "repo" : "files",
+          "sha256" : "180426d235bd17164ee139da8d06d78ff8796722b9835adc46771b85be8bfe76"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00055.gdcstyle",
+          "repo" : "files",
+          "sha256" : "dce8030ca390f0110453ded5a37127467f7aad95b87ea8334297fd0f710c5e90"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00056.gdcstyle",
+          "repo" : "files",
+          "sha256" : "3b493fa7e857b6b81edfc540c735d7d7c12f1374c5f4cc4d371b1ec73f7fb35b"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00057.gdcstyle",
+          "repo" : "files",
+          "sha256" : "19ce985fb81c025337f696501b0a96233f1bf8d57d00495f0d35abd5edb40bf7"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00058.gdcstyle",
+          "repo" : "files",
+          "sha256" : "c4b90e98050685722e4c7c0266a113c070fd4218257ebc8df067cfbebbb55d93"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00059.gdcstyle",
+          "repo" : "files",
+          "sha256" : "0900108f610b274934e0853bfcaea4d083f3defec7ffc4d3d977d209a2cf8522"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00060.gdcstyle",
+          "repo" : "files",
+          "sha256" : "4a969595a38f208865f93239a5e7af6aef314e796e133d9abeeb9e73e21315a2"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00061.gdcstyle",
+          "repo" : "files",
+          "sha256" : "27eda50692ccd7e89703ca1b3d92122fd6f8625f9e9413d34325c6b86c3fe5f9"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00062.gdcstyle",
+          "repo" : "files",
+          "sha256" : "8a48f535d3960671e4de7d2cdd41ff4282503c2a6bb16343fc2c72d84d7c8941"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00063.gdcstyle",
+          "repo" : "files",
+          "sha256" : "53e6e265a8df4807a702c08f4201b5469b2f5b1dc4a3cf1d040f23644aa7b12a"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00064.gdcstyle",
+          "repo" : "files",
+          "sha256" : "11860698ba8df01476c902e710522332e995f4c1ac46504ac8b9dad3dba9d402"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00065.gdcstyle",
+          "repo" : "files",
+          "sha256" : "156545b0258183713fee9e320d76adee20bf6abeea36bce2c71e1eca6639c079"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00066.gdcstyle",
+          "repo" : "files",
+          "sha256" : "baea82273a260352d8b21fe9d13b50969839f558eaf16756240eabe34897fb74"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00067.gdcstyle",
+          "repo" : "files",
+          "sha256" : "bbc252b08858049ce5d9336cd5caf09d562377fba39fd7c5bce3ffccfcb9839f"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00068.gdcstyle",
+          "repo" : "files",
+          "sha256" : "c7ce97b37ed560900767e495ca4bf710b5fa45b6ac56a4109b55f51dd1be28bd"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00069.gdcstyle",
+          "repo" : "files",
+          "sha256" : "84899a0520d459d8e94037f2b6cbb32a5f1897695eb65c4429901ceb70548fc8"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00070.gdcstyle",
+          "repo" : "files",
+          "sha256" : "6261e1b8c4a8c254be03f2013504d57454ae4944b244fbfb5608cb2a646d4457"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00071.gdcstyle",
+          "repo" : "files",
+          "sha256" : "7dbbdab2a92a520ce1703e0c5921b915364ca629fe54cecd5ded7efb6720d1dc"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00072.gdcstyle",
+          "repo" : "files",
+          "sha256" : "9f01d3f4f9c8cfb6312590e628f86bc70f9e0cc7b62c45fb41c735e1486f6628"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00073.gdcstyle",
+          "repo" : "files",
+          "sha256" : "e445e06594df544e68c0e4f74b85c3e60e420f645fa77c3230f5d6c37de2bef0"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00074.gdcstyle",
+          "repo" : "files",
+          "sha256" : "e247ef82f6c9bb4a24b784f09533419dc30c9266b01159f8dd6750cf8cc41099"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00075.gdcstyle",
+          "repo" : "files",
+          "sha256" : "9d86b472d747448373ac1527928b98b716223ec3232f34d73e3d3bbfab548e5f"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00076.gdcstyle",
+          "repo" : "files",
+          "sha256" : "64f14b1e89b40c037e35af6f11d5bba7ac008b7a62fb780e47d16d319d08033c"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00077.gdcstyle",
+          "repo" : "files",
+          "sha256" : "a5abbd9894a10690a556554fbfce31b401230beac66a6d3998d9fc4f3026cad3"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00078.gdcstyle",
+          "repo" : "files",
+          "sha256" : "4b0a4b4d83620d5d127c0089fe84d29137702988d05250296cd44839f2875759"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00079.gdcstyle",
+          "repo" : "files",
+          "sha256" : "d991a5207bb23c94ba2bd6586d1bdb77477f4f41374d470f93f13374507a270c"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00080.gdcstyle",
+          "repo" : "files",
+          "sha256" : "d92a1bcd71d736275cb6a278eb695a0553d49d4d7019d06af16bc4cf42f57a42"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00081.gdcstyle",
+          "repo" : "files",
+          "sha256" : "f210e5b9ffac069a5b0d9d5e2f13b1199e0f400402c92ad9a5abe497d4e9d08b"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00082.gdcstyle",
+          "repo" : "files",
+          "sha256" : "e52971d6343b2c080a0b9029b5ceca0b3a39eb212510fbe571a47c635bce7e34"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00083.gdcstyle",
+          "repo" : "files",
+          "sha256" : "865fd1b18df9226a5a540797fbcb05a1016fc83125f0641f4e862915800a9014"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00084.gdcstyle",
+          "repo" : "files",
+          "sha256" : "ae3ea7a428e0d693586b777bba650bd24af57b85ca7621d964a0c67704183909"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/Styles/00085.gdcstyle",
+          "repo" : "files",
+          "sha256" : "13c4d5e5dc97ab49feb21c66374d573c26d5b81cecaa55fc59e10a87f1b78bbf"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/dev.gordas.style.filmpipeline.2fabf4e0da224955.png",
+          "repo" : "files",
+          "sha256" : "5ab008ab647fd82175fd05f33c5cfb9385637ba52d4ebf6facea14222425e5f8"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/dev.gordas.style.filmpipeline.2fabf4e0da224955.svg",
+          "repo" : "files",
+          "sha256" : "8f6c0f527ae5d3d806504ea2c1ff3e53ddaecba3e165ae9368d9a918d9dd8443"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/gdc-cuda.bin",
+          "repo" : "files",
+          "sha256" : "7b8b28747f6b1f171018ca507bde684e0b9bf3371e66d582b087c2b383056e20"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/gdc-opencl.bin",
+          "repo" : "files",
+          "sha256" : "27a4ffd9176a2f45f9018231964f2f924f7dbcb252000f8f0586457e0766db48"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/gdc.bin",
+          "repo" : "files",
+          "sha256" : "5f926fb03fb2d2799636856ba2603f9a0794038403bd236cb25e876a89b5f8ab"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Resources/gdc.dat",
+          "repo" : "files",
+          "sha256" : "9e69b95c56d61f379312ac64e121c1db4ae65c3abea1db1566538e14ed7f1dbd"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/Win64/GDC 270 Film Pipeline Demo.ofx",
+          "repo" : "files",
+          "sha256" : "b2daaadf301523a112f6fbda6a335c2f06f1ae270727c9bfdaa8ba8e9e6322e7"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.38.0/GDC 270 Film Pipeline Demo.ofx.bundle/Contents/_CodeSignature/CodeResources",
+          "repo" : "files",
+          "sha256" : "d650be9f1a51943def0d4e00bf968ba600f40e35bb844162fa8e49008537678b"
+        }
+      ],
+      "id" : "gdc-style-m02-film-demo",
+      "isFree" : true,
+      "isTrial" : false,
+      "name" : "GDC 270 Film Pipeline Demo",
+      "priceEUR" : 0,
+      "supportedOS" : "macOS",
+      "type" : "ofx",
+      "version" : "1.38.0"
+    },
+    {
+      "bundleFolderName" : "GDC 280 Print Film Demo.ofx.bundle",
+      "coverImage" : "covers/gdc-style-280-print-film-demo.png?v=f27e8f8e",
+      "description" : "Demo version (discreet watermark) — GDC 280 Print Film",
+      "files" : [
+        {
+          "path" : "gdc-style-280-print-film-demo/1.38.0/GDC 280 Print Film Demo.ofx.bundle/Contents/Info.plist",
+          "repo" : "files",
+          "sha256" : "b69d457d9b982d5bdd52d134203f1e12d85de25333b26d92e599c93b202551b5"
+        },
+        {
+          "path" : "gdc-style-280-print-film-demo/1.38.0/GDC 280 Print Film Demo.ofx.bundle/Contents/MacOS/GDC 280 Print Film Demo.ofx",
+          "repo" : "files",
+          "sha256" : "1e24e16b663be83ab5f8e73a5fccac8cde1f55e8d98008a7176fcbf93a37cc45"
+        },
+        {
+          "path" : "gdc-style-280-print-film-demo/1.38.0/GDC 280 Print Film Demo.ofx.bundle/Contents/Resources/dev.gordas.style.idt.de58f6005d12eaf8.png",
+          "repo" : "files",
+          "sha256" : "27ca1a4d08132547d816dd0a5759490f9005dc4f823d1cfad46d7c1e9948bc2b"
+        },
+        {
+          "path" : "gdc-style-280-print-film-demo/1.38.0/GDC 280 Print Film Demo.ofx.bundle/Contents/Resources/dev.gordas.style.idt.de58f6005d12eaf8.svg",
+          "repo" : "files",
+          "sha256" : "e528a73f02d7947171dfcad12982bd0e2c2e552d188417fc91975df5b9873ddc"
+        },
+        {
+          "path" : "gdc-style-280-print-film-demo/1.38.0/GDC 280 Print Film Demo.ofx.bundle/Contents/Resources/gdc-cuda.bin",
+          "repo" : "files",
+          "sha256" : "69e8deb05019ffad37ef57e5303510272debc894b79938a677cde2c011b78ed2"
+        },
+        {
+          "path" : "gdc-style-280-print-film-demo/1.38.0/GDC 280 Print Film Demo.ofx.bundle/Contents/Resources/gdc-opencl.bin",
+          "repo" : "files",
+          "sha256" : "504c8c9913299bf351e10d92fb167d7b3ed3a72ded989845b01e508811584abe"
+        },
+        {
+          "path" : "gdc-style-280-print-film-demo/1.38.0/GDC 280 Print Film Demo.ofx.bundle/Contents/Resources/gdc.bin",
+          "repo" : "files",
+          "sha256" : "c752965429126d13e2f0e94cbddaa5d47a35a6d2387019c2f0cdc3d786ed093b"
+        },
+        {
+          "path" : "gdc-style-280-print-film-demo/1.38.0/GDC 280 Print Film Demo.ofx.bundle/Contents/Resources/gdc.dat",
+          "repo" : "files",
+          "sha256" : "dc2bc47d4f90f944eb389f49e248bef7498d02dbe5de29f01058eca55b711ca3"
+        },
+        {
+          "path" : "gdc-style-280-print-film-demo/1.38.0/GDC 280 Print Film Demo.ofx.bundle/Contents/Win64/GDC 280 Print Film Demo.ofx",
+          "repo" : "files",
+          "sha256" : "b2daaadf301523a112f6fbda6a335c2f06f1ae270727c9bfdaa8ba8e9e6322e7"
+        },
+        {
+          "path" : "gdc-style-280-print-film-demo/1.38.0/GDC 280 Print Film Demo.ofx.bundle/Contents/_CodeSignature/CodeResources",
+          "repo" : "files",
+          "sha256" : "cc8495ac2e07f113d37c0cc4fefb26232d8a36f9351451d5761846b9ec7b9d76"
+        }
+      ],
+      "id" : "gdc-style-280-print-film-demo",
+      "isFree" : true,
+      "isTrial" : false,
+      "name" : "GDC 280 Print Film Demo",
+      "priceEUR" : 0,
+      "supportedOS" : "macOS",
+      "type" : "ofx",
+      "version" : "1.38.0"
+    },
+    {
+      "bundleFolderName" : "GDC 290 Film Grain Demo.ofx.bundle",
+      "coverImage" : "covers/gdc-style-290-film-grain-demo.png?v=fef83a34",
+      "description" : "Demo version (discreet watermark) — GDC 290 Film Grain",
+      "files" : [
+        {
+          "path" : "gdc-style-290-film-grain-demo/1.38.0/GDC 290 Film Grain Demo.ofx.bundle/Contents/Info.plist",
+          "repo" : "files",
+          "sha256" : "8f39a42ad01e15f461d219bdd8f0f54b8b5ac2244f9cf19619e9b1f68f22a8ce"
+        },
+        {
+          "path" : "gdc-style-290-film-grain-demo/1.38.0/GDC 290 Film Grain Demo.ofx.bundle/Contents/MacOS/GDC 290 Film Grain Demo.ofx",
+          "repo" : "files",
+          "sha256" : "dbf211a284878fc907af3f6cabd38d9f1d327ffcd718091c1f91d13066304130"
+        },
+        {
+          "path" : "gdc-style-290-film-grain-demo/1.38.0/GDC 290 Film Grain Demo.ofx.bundle/Contents/Resources/dev.gordas.style.idt.0fd43880faacc23d.png",
+          "repo" : "files",
+          "sha256" : "387fb2dd5503dd5b8e3781eabbbab407305e80160a427e1524dd791944010804"
+        },
+        {
+          "path" : "gdc-style-290-film-grain-demo/1.38.0/GDC 290 Film Grain Demo.ofx.bundle/Contents/Resources/dev.gordas.style.idt.0fd43880faacc23d.svg",
+          "repo" : "files",
+          "sha256" : "980942b77b2a4b8150af02263fdb39fb02f3b38b38edeab8bd1f79e106700f8f"
+        },
+        {
+          "path" : "gdc-style-290-film-grain-demo/1.38.0/GDC 290 Film Grain Demo.ofx.bundle/Contents/Resources/gdc-cuda.bin",
+          "repo" : "files",
+          "sha256" : "b0742e9cfd6bba4c09449f341b0c14a824a6d975decd012240cea72f97dfe8d8"
+        },
+        {
+          "path" : "gdc-style-290-film-grain-demo/1.38.0/GDC 290 Film Grain Demo.ofx.bundle/Contents/Resources/gdc-opencl.bin",
+          "repo" : "files",
+          "sha256" : "a9bcd3824b4cd410a0a216ecde54312e90bf46987ccedcacdc0b31c5c04056e4"
+        },
+        {
+          "path" : "gdc-style-290-film-grain-demo/1.38.0/GDC 290 Film Grain Demo.ofx.bundle/Contents/Resources/gdc.bin",
+          "repo" : "files",
+          "sha256" : "4127a3be8d6f2cce87d08e5f5078161c1e329a5682ff306a854543424db6c54c"
+        },
+        {
+          "path" : "gdc-style-290-film-grain-demo/1.38.0/GDC 290 Film Grain Demo.ofx.bundle/Contents/Resources/gdc.dat",
+          "repo" : "files",
+          "sha256" : "deeb546df34b2fa71454b9bf3969aa269589215b2dc7cb736700c6c01e227b12"
+        },
+        {
+          "path" : "gdc-style-290-film-grain-demo/1.38.0/GDC 290 Film Grain Demo.ofx.bundle/Contents/Win64/GDC 290 Film Grain Demo.ofx",
+          "repo" : "files",
+          "sha256" : "b2daaadf301523a112f6fbda6a335c2f06f1ae270727c9bfdaa8ba8e9e6322e7"
+        },
+        {
+          "path" : "gdc-style-290-film-grain-demo/1.38.0/GDC 290 Film Grain Demo.ofx.bundle/Contents/_CodeSignature/CodeResources",
+          "repo" : "files",
+          "sha256" : "2ebf5c251de1e63e011afbf3e897a2560bb31dc323ad710ee5804ab488e8f4f5"
+        }
+      ],
+      "id" : "gdc-style-290-film-grain-demo",
+      "isFree" : true,
+      "isTrial" : false,
+      "name" : "GDC 290 Film Grain Demo",
+      "priceEUR" : 0,
+      "supportedOS" : "macOS",
+      "type" : "ofx",
+      "version" : "1.38.0"
+    },
+    {
+      "bundleFolderName" : "GDC 300 Contrast Demo.ofx.bundle",
+      "coverImage" : "covers/gdc-style-300-contrast-demo.png?v=c010cc02",
+      "description" : "Demo version (discreet watermark) — GDC 300 Contrast",
+      "files" : [
+        {
+          "path" : "gdc-style-300-contrast-demo/1.38.0/GDC 300 Contrast Demo.ofx.bundle/Contents/Info.plist",
+          "repo" : "files",
+          "sha256" : "2bc11bd1c94acedd3742ff76b9e42ed0e223705234b524ffcab744cf9ecce1aa"
+        },
+        {
+          "path" : "gdc-style-300-contrast-demo/1.38.0/GDC 300 Contrast Demo.ofx.bundle/Contents/MacOS/GDC 300 Contrast Demo.ofx",
+          "repo" : "files",
+          "sha256" : "1ce3555f053a342c7f519110bfb314306cddfa43c4b8e2c720fde9011851db90"
+        },
+        {
+          "path" : "gdc-style-300-contrast-demo/1.38.0/GDC 300 Contrast Demo.ofx.bundle/Contents/Resources/dev.gordas.style.idt.0f4d6a0083726cf8.png",
+          "repo" : "files",
+          "sha256" : "3fa6bde1204ad5a6e96c93ba82a73ca83cc0cc7d869a4e184921978a32de09ba"
+        },
+        {
+          "path" : "gdc-style-300-contrast-demo/1.38.0/GDC 300 Contrast Demo.ofx.bundle/Contents/Resources/dev.gordas.style.idt.0f4d6a0083726cf8.svg",
+          "repo" : "files",
+          "sha256" : "9b78dad938fcc9e56e772194c598561eea504c9c4922956379cbd59fdb00252d"
+        },
+        {
+          "path" : "gdc-style-300-contrast-demo/1.38.0/GDC 300 Contrast Demo.ofx.bundle/Contents/Resources/gdc-cuda.bin",
+          "repo" : "files",
+          "sha256" : "17a519d1b1b1a80ee7ed3634b0d05d1ecf3ddfac5d1839c18389a4ffb8e95210"
+        },
+        {
+          "path" : "gdc-style-300-contrast-demo/1.38.0/GDC 300 Contrast Demo.ofx.bundle/Contents/Resources/gdc-opencl.bin",
+          "repo" : "files",
+          "sha256" : "a0fb2faf20822f136ce49554f84a21eca8744e98266db00cc2b6dc9ebf98f603"
+        },
+        {
+          "path" : "gdc-style-300-contrast-demo/1.38.0/GDC 300 Contrast Demo.ofx.bundle/Contents/Resources/gdc.bin",
+          "repo" : "files",
+          "sha256" : "2f07985e72174b70042e01cc8293ed5a811a85a4771db50d8515530da36b019c"
+        },
+        {
+          "path" : "gdc-style-300-contrast-demo/1.38.0/GDC 300 Contrast Demo.ofx.bundle/Contents/Resources/gdc.dat",
+          "repo" : "files",
+          "sha256" : "ebef04d1ad539b716ab480b139634d84d073f553630ebd705cf4fff6116fa2ee"
+        },
+        {
+          "path" : "gdc-style-300-contrast-demo/1.38.0/GDC 300 Contrast Demo.ofx.bundle/Contents/Win64/GDC 300 Contrast Demo.ofx",
+          "repo" : "files",
+          "sha256" : "b2daaadf301523a112f6fbda6a335c2f06f1ae270727c9bfdaa8ba8e9e6322e7"
+        },
+        {
+          "path" : "gdc-style-300-contrast-demo/1.38.0/GDC 300 Contrast Demo.ofx.bundle/Contents/_CodeSignature/CodeResources",
+          "repo" : "files",
+          "sha256" : "6c9c79e54b7fbb3967415c664e313f210fc3be6c544e317914880c58c89d76d4"
+        }
+      ],
+      "id" : "gdc-style-300-contrast-demo",
+      "isFree" : true,
+      "isTrial" : false,
+      "name" : "GDC 300 Contrast Demo",
+      "priceEUR" : 0,
+      "supportedOS" : "macOS",
+      "type" : "ofx",
+      "version" : "1.38.0"
+    },
+    {
+      "bundleFolderName" : "GDC 900 Output Transform Demo.ofx.bundle",
+      "coverImage" : "covers/gdc-style-900-output-transform-demo.png?v=99e29aba",
+      "description" : "Demo version (discreet watermark) — GDC 900 Output Transform",
+      "files" : [
+        {
+          "path" : "gdc-style-900-output-transform-demo/1.38.0/GDC 900 Output Transform Demo.ofx.bundle/Contents/Info.plist",
+          "repo" : "files",
+          "sha256" : "74c69afcbcf2cfe60a70b06c48cc5925e68fbf291d94f9595f7d29fc5c1d6a7b"
+        },
+        {
+          "path" : "gdc-style-900-output-transform-demo/1.38.0/GDC 900 Output Transform Demo.ofx.bundle/Contents/MacOS/GDC 900 Output Transform Demo.ofx",
+          "repo" : "files",
+          "sha256" : "5b8ad6624bb6e72ceff1602c59478b479de4a748dedd1cabd86fb10147a88b5d"
+        },
+        {
+          "path" : "gdc-style-900-output-transform-demo/1.38.0/GDC 900 Output Transform Demo.ofx.bundle/Contents/Resources/dev.gordas.style.idt.e3be9148e304ba79.png",
+          "repo" : "files",
+          "sha256" : "8ab4bffc918a181389a07147aaf21131733ca920c0022a28b45baab5568c51f9"
+        },
+        {
+          "path" : "gdc-style-900-output-transform-demo/1.38.0/GDC 900 Output Transform Demo.ofx.bundle/Contents/Resources/dev.gordas.style.idt.e3be9148e304ba79.svg",
+          "repo" : "files",
+          "sha256" : "77e776dd941876296c800625dbbe5f693259ca01d9eaf06c706ecbc945793928"
+        },
+        {
+          "path" : "gdc-style-900-output-transform-demo/1.38.0/GDC 900 Output Transform Demo.ofx.bundle/Contents/Resources/gdc-cuda.bin",
+          "repo" : "files",
+          "sha256" : "427f6eeccd5a044673e4d288b82e7ec2830fac7aff3d4e05b5e8fc7490f671c2"
+        },
+        {
+          "path" : "gdc-style-900-output-transform-demo/1.38.0/GDC 900 Output Transform Demo.ofx.bundle/Contents/Resources/gdc-opencl.bin",
+          "repo" : "files",
+          "sha256" : "4dbdadc13119ddc93239a6a6b69f4660b5931a1a0f54de6fa2f9cf0b9ad625ba"
+        },
+        {
+          "path" : "gdc-style-900-output-transform-demo/1.38.0/GDC 900 Output Transform Demo.ofx.bundle/Contents/Resources/gdc.bin",
+          "repo" : "files",
+          "sha256" : "13ac448b7a5402e9ca7dea71017694b1868cc36e2e5d0f4ef33a08c9e8b2e59b"
+        },
+        {
+          "path" : "gdc-style-900-output-transform-demo/1.38.0/GDC 900 Output Transform Demo.ofx.bundle/Contents/Resources/gdc.dat",
+          "repo" : "files",
+          "sha256" : "82b49c15f7ee72c2c099ed488fd7807a88566385da74fcd09af2ee82781c4a54"
+        },
+        {
+          "path" : "gdc-style-900-output-transform-demo/1.38.0/GDC 900 Output Transform Demo.ofx.bundle/Contents/Win64/GDC 900 Output Transform Demo.ofx",
+          "repo" : "files",
+          "sha256" : "b2daaadf301523a112f6fbda6a335c2f06f1ae270727c9bfdaa8ba8e9e6322e7"
+        },
+        {
+          "path" : "gdc-style-900-output-transform-demo/1.38.0/GDC 900 Output Transform Demo.ofx.bundle/Contents/_CodeSignature/CodeResources",
+          "repo" : "files",
+          "sha256" : "ef37fcddc901fbf8a3661f98940fc8477504540192fb070816f4fed5b6c3f44a"
+        }
+      ],
+      "id" : "gdc-style-900-output-transform-demo",
+      "isFree" : true,
+      "isTrial" : false,
+      "name" : "GDC 900 Output Transform Demo",
+      "priceEUR" : 0,
+      "supportedOS" : "macOS",
+      "type" : "ofx",
+      "version" : "1.38.0"
+    },
+    {
       "description" : "Transformare directa din profilul camerei in Rec709",
       "files" : [
         {
