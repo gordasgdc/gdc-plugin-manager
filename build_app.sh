@@ -13,6 +13,20 @@ fi
 
 swift build -c release --product GDCPluginManager
 
+# Simbolele de depanare pentru Sentry: fara dSYM, stivele din rapoarte apar ca "?".
+# Optional: se incarca doar daca exista sentry-cli + SENTRY_AUTH_TOKEN/SENTRY_ORG/SENTRY_PROJECT
+# in mediu (tokenul nu trece prin repo/conversatie); altfel se sare cu un mesaj, build-ul nu pica.
+DSYM_OUT="dist/dSYM"
+rm -rf "$DSYM_OUT"; mkdir -p "$DSYM_OUT"
+dsymutil .build/release/GDCPluginManager -o "$DSYM_OUT/GDCPluginManager.dSYM" 2>/dev/null \
+    && echo "==> dSYM generat: $DSYM_OUT/GDCPluginManager.dSYM" || echo "AVERTISMENT: dsymutil a esuat."
+if command -v sentry-cli >/dev/null && [ -n "${SENTRY_AUTH_TOKEN:-}" ] && [ -n "${SENTRY_ORG:-}" ] && [ -n "${SENTRY_PROJECT:-}" ]; then
+    sentry-cli debug-files upload --org "$SENTRY_ORG" --project "$SENTRY_PROJECT" "$DSYM_OUT" \
+        && echo "==> dSYM incarcat in Sentry" || echo "AVERTISMENT: incarcarea dSYM in Sentry a esuat (build-ul continua)."
+else
+    echo "==> dSYM neincarcat in Sentry (lipseste sentry-cli sau SENTRY_AUTH_TOKEN/SENTRY_ORG/SENTRY_PROJECT)."
+fi
+
 BUILD_OUT="/tmp/GDCPluginManager.app.build-$$"
 rm -rf "$BUILD_OUT"
 mkdir -p "$BUILD_OUT/Contents/MacOS"
