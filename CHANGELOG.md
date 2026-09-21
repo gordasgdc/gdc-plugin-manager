@@ -1,5 +1,11 @@
 # Changelog — GDC Plugin Manager
 
+## v1.49.0 Furnizor (2026-09-21) — Publicare directă a pachetelor Demo din STYLE Lab
+
+### Added
+- Mod fără fereastră `--publish-demo-inbox`, pornit de GDC STYLE Lab: publică direct pachetele Demo din căsuța de intrare (`autoPublish`), fără formular. Fișierele se copiază în repo-ul privat, produsul `<cod>-demo` se înregistrează gratuit în catalog, iar ambele repo-uri se împing o singură dată pentru tot lotul.
+- Produs existent → metadatele (copertă, acces, linkuri) rămân, fișierele se înlocuiesc, iar versiunea se actualizează automat (cea din STYLE Lab dacă e mai nouă, altfel patch+1 peste cea publicată). Rezultatul se scrie în `PluginInbox/publish-result.json`.
+
 ## v1.48.1 Furnizor (2026-09-21) — Copertă din STYLE Lab
 
 ### Added

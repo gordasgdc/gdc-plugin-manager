@@ -15,6 +15,9 @@ struct StyleLabSubmission: Codable, Identifiable, Equatable {
     var createdAt: String
     var licensing: String
     var coverFile: String?
+    /// Pachet Demo (id = `<cod>-demo`): publicat gratuit. `autoPublish` = STYLE Lab cere publicarea directă (fără formular), vezi DemoPublisher.
+    var demo: Bool?
+    var autoPublish: Bool?
 }
 
 enum StyleLabInbox {

@@ -3,6 +3,14 @@ import GDCPluginManagerCore
 
 @main
 struct GDCPluginManagerFurnizorApp: App {
+    /// Mod fără fereastră, cerut de GDC STYLE Lab: publică direct pachetele Demo din căsuța de intrare, scrie rezultatul și iese.
+    init() {
+        if CommandLine.arguments.contains("--publish-demo-inbox") {
+            DemoPublisher.run()
+            exit(0)
+        }
+    }
+
     var body: some Scene {
         WindowGroup {
             FurnizorContentView()
