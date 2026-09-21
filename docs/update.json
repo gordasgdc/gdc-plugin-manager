@@ -10,13 +10,13 @@
   "mandatory": false,
   "min_version": "1.0.0",
   "mac": {
-    "version": "1.39.0",
-    "release_date": "2026-09-20",
-    "changes": "Buton „Dezinstalează complet aplicația…” în secțiunea Licență, carduri cu aspect glass și buton de actualizare în bara laterală.",
+    "version": "1.39.1",
+    "release_date": "2026-09-21",
+    "changes": "Instalarea pluginurilor OFX este mai fiabilă, fără afișarea folderului de instalare, iar catalogul se actualizează singur când o descărcare eșuează.",
     "download_url": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Mac.zip",
     "mandatory": false,
     "min_version": "1.0.0",
-    "download_url_dmg": "https://github.com/gordasgdc/gdc-plugin-manager/releases/download/v1.39.0/GDCPluginManager-1.39.0.dmg"
+    "download_url_dmg": "https://github.com/gordasgdc/gdc-plugin-manager/releases/download/v1.39.1/GDCPluginManager-1.39.1.dmg"
   },
   "windows": {
     "version": "1.37.0",
