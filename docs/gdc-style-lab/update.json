@@ -1,9 +1,9 @@
 {
-  "version": "1.36.0",
-  "app_version": "1.36.0",
+  "version": "1.36.1",
+  "app_version": "1.36.1",
   "changes": "Robustețe: starea GPU e verificată și în timpul randării în DaVinci Resolve, nicio excepție internă nu mai poate închide aplicația gazdă, iar descrierea pluginului Film Pipeline nu mai citește în afara unei liste. Testat la 8K (1000 de cadre fără scurgeri de memorie) și pe dimensiuni neobișnuite. Pachetele exportate cu versiuni mai vechi trebuie reexportate.",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-style-lab/GDCStyleLab-1.36.0.dmg"
+    "mac": "https://gordas.dev/gdc-style-lab/GDCStyleLab-1.36.1.dmg"
   },
   "mandatory": false
 }
