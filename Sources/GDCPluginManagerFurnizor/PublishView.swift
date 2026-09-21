@@ -403,6 +403,14 @@ struct PublishView: View {
         }
         pickedURL = URL(fileURLWithPath: sub.bundlePath)
         appliedSubmissionID = sub.id
+        // Coperta cardului (iconița liniară din STYLE Lab): doar dacă produsul nu are deja una; se copiază în temporar (se mută la publicare).
+        if let cover = sub.coverFile, FileManager.default.fileExists(atPath: cover) {
+            if case .existing = coverSelection {} else {
+                let tmp = FileManager.default.temporaryDirectory.appendingPathComponent("stylelab-cover-\(sub.id).png")
+                try? FileManager.default.removeItem(at: tmp)
+                if (try? FileManager.default.copyItem(at: URL(fileURLWithPath: cover), to: tmp)) != nil { coverSelection = .local(processed: tmp, savings: "din STYLE Lab") }
+            }
+        }
     }
 
     private func loadExistingIfNeeded() {

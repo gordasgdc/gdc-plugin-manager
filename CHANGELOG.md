@@ -1,5 +1,10 @@
 # Changelog — GDC Plugin Manager
 
+## v1.48.1 Furnizor (2026-09-21) — Copertă din STYLE Lab
+
+### Added
+- **„Din STYLE Lab”** aduce și coperta cardului (iconița liniară a modulului, pe fundal închis) pentru produse fără copertă; se publică odată cu produsul.
+
 ## v1.48.0 Furnizor (2026-09-21) — Reset după licențiere, versiune sugerată la actualizare, import din STYLE Lab
 
 ### Fixed

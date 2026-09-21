@@ -14,6 +14,7 @@ struct StyleLabSubmission: Codable, Identifiable, Equatable {
     var source: String
     var createdAt: String
     var licensing: String
+    var coverFile: String?
 }
 
 enum StyleLabInbox {
@@ -33,5 +34,6 @@ enum StyleLabInbox {
     /// După publicare, trimiterea se scoate din căsuță.
     static func remove(id: String) {
         try? FileManager.default.removeItem(at: folder.appendingPathComponent(id + ".json"))
+        try? FileManager.default.removeItem(at: folder.appendingPathComponent(id + ".png"))
     }
 }
