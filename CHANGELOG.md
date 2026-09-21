@@ -1,5 +1,13 @@
 # Changelog — GDC Plugin Manager
 
+## v1.39.2 Client (2026-09-21) — OFX: Resolve vede din nou pachetele reinstalate
+
+### Fixed
+- **Pluginuri OFX „failed” în DaVinci Resolve după o instalare/reinstalare.** Resolve reține într-un fișier propriu (`OFXPluginCacheV2.xml`) că un pachet a eșuat și nu îl mai încearcă, nici după ce fișierele sunt corecte — în Video Plugins apare „failed”, în nod „lipsă”. La fiecare instalare OFX clientul șterge acum intrarea pachetului din acel fișier (doar cât Resolve e închis; altfel notează în jurnal), ca Resolve să-l scaneze din nou la pornire.
+
+### Note
+- TODO paritate Windows: clientul Windows nu are încă echivalentul (locația cache-ului Resolve pe Windows de verificat).
+
 ## v1.39.1 Client + v1.49.1 Furnizor (2026-09-21) — OFX: instalare corectă, fără cale afișată
 
 ### Fixed

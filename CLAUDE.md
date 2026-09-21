@@ -1176,3 +1176,5 @@ Păstrate verbatim. Regula generală la care se referă fiecare e în
 
 
 - **2026-09-21 — Client 1.39.1 / Furnizor 1.49.1 (calea de transfer OFX).** Bug: `DemoPublisher` scria `<id>/<ver>/<bundleFolderName>/<rel>`, dar installer-ul creează singur `bundleFolderName` → pachet imbricat, invizibil în Resolve. Reparat (cale relativă la rădăcina pachetului), gardă `Contents/Info.plist` în `InstallManager`, fără cale/Finder pentru OFX în `ContentView`. Cele 19 demo-uri republicate 1.38.1; 1.38.0 șterse din repo-ul de fișiere.
+
+- **2026-09-21 — Client 1.39.2 (OFX „failed” în Resolve).** Verificat pe Resolve real: `OFXPluginCacheV2.xml` avea `status="2"` (mtime/size 0) pentru cele 19 pachete instalate întâi imbricat; Resolve nu le mai reîncerca (log: doar Universal IDT „OFX: loading”). Ștergerea intrărilor cu Resolve închis + repornire → 43/43 status 0, 20 „OFX: loading dev.gordas…”. Permisiuni/semnătură/dlopen OK (bundle ad-hoc valid). Fix permanent: `ResolveOFXCache.forget` la instalarea OFX. Nu e problemă de permisiuni sau transmisie.

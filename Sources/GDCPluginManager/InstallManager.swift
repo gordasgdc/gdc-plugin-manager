@@ -197,6 +197,7 @@ final class InstallManager: ObservableObject {
             // descarcati prin API), deci in practica xattr e de multe ori
             // un no-op — dar il rulam oricum, defensiv, e ieftin.
             try fixOFXBundlePermissions(at: destinationDir)
+            ResolveOFXCache.forget(bundlePath: destinationDir.path)
             // Pachet OFX valid = Contents/Info.plist chiar sub folderul .ofx.bundle (altfel Resolve nu-l vede). Un pachet imbricat/greșit se șterge, nu rămâne stricat pe disc.
             if !FileManager.default.fileExists(atPath: destinationDir.appendingPathComponent("Contents/Info.plist").path) {
                 try? FileManager.default.removeItem(at: destinationDir)
