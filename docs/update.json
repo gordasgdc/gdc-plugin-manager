@@ -10,13 +10,13 @@
   "mandatory": false,
   "min_version": "1.0.0",
   "mac": {
-    "version": "1.39.2",
+    "version": "1.39.3",
     "release_date": "2026-09-21",
-    "changes": "Pluginurile OFX reinstalate nu mai apar „failed” în DaVinci Resolve, iar instalarea lor e verificată.",
+    "changes": "Instalarea pluginurilor OFX nu mai blochează aplicația câteva secunde.",
     "download_url": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Mac.zip",
     "mandatory": false,
     "min_version": "1.0.0",
-    "download_url_dmg": "https://github.com/gordasgdc/gdc-plugin-manager/releases/download/v1.39.2/GDCPluginManager-1.39.2.dmg"
+    "download_url_dmg": "https://github.com/gordasgdc/gdc-plugin-manager/releases/download/v1.39.3/GDCPluginManager-1.39.3.dmg"
   },
   "windows": {
     "version": "1.37.0",
