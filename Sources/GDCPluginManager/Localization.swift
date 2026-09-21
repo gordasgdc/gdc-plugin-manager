@@ -203,6 +203,7 @@ enum L {
         "download.empty": [.ro: "Nicio resursă publicată în această categorie", .en: "No resources published in this category", .es: "Ningún recurso publicado en esta categoría"],
         "sidebar.section.resolveInstall": [.ro: "INSTALARE DAVINCI RESOLVE", .en: "DAVINCI RESOLVE INSTALL", .es: "INSTALACIÓN DAVINCI RESOLVE"],
         "install.done": [.ro: "Instalat în %@", .en: "Installed in %@", .es: "Instalado en %@"],
+        "install.catalogRefreshed": [.ro: "Catalogul era vechi și s-a actualizat. Apasă din nou Instalează.", .en: "The catalog was out of date and has been refreshed. Press Install again.", .es: "El catálogo estaba desactualizado y se ha actualizado. Pulsa Instalar de nuevo."],
         "install.doneShort": [.ro: "Instalat", .en: "Installed", .es: "Instalado"],
         "install.revealInFinder": [.ro: "Arată în Finder", .en: "Show in Finder", .es: "Mostrar en Finder"],
         "sidebar.download.script": [.ro: "Scripturi (download)", .en: "Scripts (download)", .es: "Scripts (descarga)"],

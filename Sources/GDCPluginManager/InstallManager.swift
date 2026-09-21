@@ -114,6 +114,7 @@ final class InstallManager: ObservableObject {
 
     @discardableResult
     func install(_ item: PluginItem) async throws -> InstallOutcome {
+        DiagnosticLog.write("Install", "start \(item.id) v\(item.version) (\(item.files.count) fișiere)")
         let destinationDir = destinationDirectory(for: item)
         var tempURLs: [URL] = []
         defer { for url in tempURLs { try? FileManager.default.removeItem(at: url) } }
@@ -346,11 +347,13 @@ final class InstallManager: ObservableObject {
         request.setValue("2022-11-28", forHTTPHeaderField: "X-GitHub-Api-Version")
 
         let (data, response) = try await URLSession.shared.data(for: request)
-        guard let http = response as? HTTPURLResponse else { throw InstallError.downloadFailed }
+        guard let http = response as? HTTPURLResponse else { DiagnosticLog.write("Install", "fără răspuns HTTP pentru \(path)"); throw InstallError.downloadFailed }
         if http.statusCode == 401 || http.statusCode == 403 {
+            DiagnosticLog.write("Install", "HTTP \(http.statusCode) (autentificare) pentru \(repo.owner)/\(repo.name):\(path)")
             throw InstallError.authenticationFailed
         }
         guard (200...299).contains(http.statusCode) else {
+            DiagnosticLog.write("Install", "HTTP \(http.statusCode) pentru \(repo.owner)/\(repo.name):\(path) — cauză probabilă: catalog vechi în cache (fișierul nu mai există) sau cale greșită")
             throw InstallError.downloadFailed
         }
         return data

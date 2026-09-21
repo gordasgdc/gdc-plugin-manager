@@ -1434,6 +1434,7 @@ private struct PluginCard: View {
             do {
                 let outcome = try await installs.install(item)
                 AnalyticsClient.logDownload(productID: item.id, productName: item.name)
+                DiagnosticLog.write("Install", "ok \(item.id) v\(item.version)")
                 switch outcome {
                 case .installedToGallery(let albumName):
                     statusMessage = String(format: L.t("powergrade.imported"), albumName)
@@ -1461,7 +1462,13 @@ private struct PluginCard: View {
                 // mai jos în card (showPaidResourceSupportError).
                 errorMessage = L.t("install.paidresource.error")
                 showPaidResourceSupportError = true
+            } catch InstallError.downloadFailed {
+                // Fișierul nu mai există la calea din catalogul local (catalog vechi în cache, produs republicat) → reîmprospătăm catalogul; utilizatorul reîncearcă.
+                DiagnosticLog.write("Install", "eroare \(item.id): descărcare eșuată — reîmprospătez catalogul")
+                await CatalogService.shared.refresh()
+                errorMessage = L.t("install.catalogRefreshed")
             } catch {
+                DiagnosticLog.write("Install", "eroare \(item.id): \(error.localizedDescription)")
                 errorMessage = error.localizedDescription
             }
             isBusy = false

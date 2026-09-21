@@ -7,6 +7,9 @@
 - Clientul verifică după instalare că `Contents/Info.plist` e chiar sub folderul `.ofx.bundle`; un pachet greșit se șterge și instalarea raportează eroare, în loc să rămână stricat pe disc.
 - **Pentru OFX clientul nu mai arată folderul de instalare și nici „Arată în Finder”** — doar „Instalat”.
 
+- **„Download failed” la instalare**: cauza era catalogul vechi din cache (1.38.0, cu fișiere șterse între timp). Acum, la o descărcare eșuată clientul reîmprospătează singur catalogul și cere să reapeși „Instalează”.
+- **Jurnal permanent** (Regula 39): `~/Library/Logs/GDCPluginManager.log` (rotire 5 MB) — pornire instalare, HTTP status pe fiecare fișier, erori, succes. Monitorizare: `tail -f ~/Library/Logs/GDCPluginManager.log`.
+
 ### Note
 - TODO paritate Windows: clientul Windows (`GDCPluginManagerWin`) de verificat pentru afișarea căii/„Show in Explorer” la OFX.
 
