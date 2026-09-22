@@ -1,5 +1,10 @@
 # Changelog — GDC Plugin Manager
 
+## v1.50.2 Furnizor (2026-09-22) — Licențiere în masă cu durată în ore
+
+### Added
+- **Licențierea în masă acceptă acum durata în Ore**, la fel ca generarea și prelungirea; expirarea apare cu ora.
+
 ## v1.50.1 Furnizor (2026-09-22) — Prelungire de licență cu durată în ore
 
 ### Added
