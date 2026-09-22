@@ -1022,6 +1022,71 @@
       "version" : "1.43.1"
     },
     {
+      "bundleFolderName" : "GDC Fuse 210-250 Log Demo.ofx.bundle",
+      "description" : "",
+      "files" : [
+        {
+          "path" : "GDC Fuse 210-250 Log Demo.ofx/1.0.0/Contents/Info.plist",
+          "repo" : "files",
+          "sha256" : "f7372f38f5976d652fdbd8c7bc81df3b79f501d9a9bd42d3349b29307429e51f"
+        },
+        {
+          "path" : "GDC Fuse 210-250 Log Demo.ofx/1.0.0/Contents/MacOS/GDC Fuse 210-250 Log Demo.ofx",
+          "repo" : "files",
+          "sha256" : "f08893b052d0e2c3f4f49989e744250a97c367613d3a0360d2877752d2d7017f"
+        },
+        {
+          "path" : "GDC Fuse 210-250 Log Demo.ofx/1.0.0/Contents/Resources/dev.gordas.style.idt.b48002732c497333.png",
+          "repo" : "files",
+          "sha256" : "3d3297b0bf67fda8751b15047df3fa3b5330e1b8273222e723e28a665f4d2f22"
+        },
+        {
+          "path" : "GDC Fuse 210-250 Log Demo.ofx/1.0.0/Contents/Resources/dev.gordas.style.idt.b48002732c497333.svg",
+          "repo" : "files",
+          "sha256" : "6f9e85972ed862808b07566f2c92c53e6e22a7a6405b645bd1cf0ca1db3ee966"
+        },
+        {
+          "path" : "GDC Fuse 210-250 Log Demo.ofx/1.0.0/Contents/Resources/gdc-cuda.bin",
+          "repo" : "files",
+          "sha256" : "07345e2c2ab12b912fd30934dbf0502429420521c3769a82a5fe8d0f800f967d"
+        },
+        {
+          "path" : "GDC Fuse 210-250 Log Demo.ofx/1.0.0/Contents/Resources/gdc-opencl.bin",
+          "repo" : "files",
+          "sha256" : "11264332736761035f0970e390280c30ed9d161626053f15516526553ba51b1e"
+        },
+        {
+          "path" : "GDC Fuse 210-250 Log Demo.ofx/1.0.0/Contents/Resources/gdc.bin",
+          "repo" : "files",
+          "sha256" : "1fc00dc953d5634bd9d4074bf16aab3fc98cebd36546d5fb2c1c2b5b12509cdd"
+        },
+        {
+          "path" : "GDC Fuse 210-250 Log Demo.ofx/1.0.0/Contents/Resources/gdc.dat",
+          "repo" : "files",
+          "sha256" : "f23d0b80c4560cecdd3e7e4bcb570bc290f0c2e4fe2b7c0c6a83858a0d857735"
+        },
+        {
+          "path" : "GDC Fuse 210-250 Log Demo.ofx/1.0.0/Contents/Win64/GDC Fuse 210-250 Log Demo.ofx",
+          "repo" : "files",
+          "sha256" : "c15a35d1c58209082928dd0d609fb44efa54705382285e14a2d189bc76a16dc8"
+        },
+        {
+          "path" : "GDC Fuse 210-250 Log Demo.ofx/1.0.0/Contents/_CodeSignature/CodeResources",
+          "repo" : "files",
+          "sha256" : "4106e6c446bbc255a89dbf1f9e3e83715585c93067f1f13393e4d3f4253d0e64"
+        }
+      ],
+      "iconSymbol" : "camera.filters",
+      "id" : "GDC Fuse 210-250 Log Demo.ofx",
+      "isFree" : false,
+      "isTrial" : false,
+      "name" : "GDC Fuse 210-250 Log Demo.ofx",
+      "priceEUR" : 0,
+      "supportedOS" : "crossPlatform",
+      "type" : "ofx",
+      "version" : "1.0.0"
+    },
+    {
       "bundleFolderName" : "GDC Fuse 280-300 Log Demo.ofx.bundle",
       "description" : "",
       "files" : [
