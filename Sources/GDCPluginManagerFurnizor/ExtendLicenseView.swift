@@ -17,13 +17,14 @@ struct ExtendLicenseView: View {
     var onCancel: () -> Void
 
     private enum DurationUnit: String, CaseIterable, Identifiable {
-        case days = "Zile", months = "Luni", years = "Ani", lifetime = "Pe viață (Lifetime)"
+        case hours = "Ore", days = "Zile", months = "Luni", years = "Ani", lifetime = "Pe viață (lifetime)"
         var id: String { rawValue }
-        var dayMultiplier: Int {
+        var secondsMultiplier: Int {
             switch self {
-            case .days: return 1
-            case .months: return 30
-            case .years: return 365
+            case .hours: return 3600
+            case .days: return 86400
+            case .months: return 2592000
+            case .years: return 31536000
             case .lifetime: return 0
             }
         }
@@ -107,10 +108,10 @@ struct ExtendLicenseView: View {
                 errorMessage = "Cantitatea trebuie să fie un număr pozitiv."
                 return
             }
-            let totalDays = quantity * durationUnit.dayMultiplier
-            expiresAt = Int64(Date().timeIntervalSince1970) + Int64(totalDays) * 86400
+            let totalSeconds = quantity * durationUnit.secondsMultiplier
+            expiresAt = Int64(Date().timeIntervalSince1970) + Int64(totalSeconds)
             let formatter = DateFormatter()
-            formatter.dateFormat = "yyyy-MM-dd"
+            formatter.dateFormat = "yyyy-MM-dd HH:mm"
             expiresDisplay = formatter.string(from: Date(timeIntervalSince1970: TimeInterval(expiresAt)))
         }
 
