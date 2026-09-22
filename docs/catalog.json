@@ -1022,6 +1022,71 @@
       "version" : "1.43.1"
     },
     {
+      "bundleFolderName" : "GDC Fuse 110-140 Linear Demo.ofx.bundle",
+      "description" : "",
+      "files" : [
+        {
+          "path" : "GDC Fuse 110-140 Linear Demo/1.0.0/Contents/Info.plist",
+          "repo" : "files",
+          "sha256" : "430bce5594aff91a97f4c00afa5d16da8c7263e41766fc358b00606e558c15fa"
+        },
+        {
+          "path" : "GDC Fuse 110-140 Linear Demo/1.0.0/Contents/MacOS/GDC Fuse 110-140 Linear Demo.ofx",
+          "repo" : "files",
+          "sha256" : "354d257ff18f3042f92016a1bef5bb3ce9cd39fa2aaaa26ff5db036edd68b1d2"
+        },
+        {
+          "path" : "GDC Fuse 110-140 Linear Demo/1.0.0/Contents/Resources/dev.gordas.style.idt.24c12ae7b4cf3b05.png",
+          "repo" : "files",
+          "sha256" : "62a757a70c678b21dd1237930e33d1a4925370680c32ecd9570994388a6c1a45"
+        },
+        {
+          "path" : "GDC Fuse 110-140 Linear Demo/1.0.0/Contents/Resources/dev.gordas.style.idt.24c12ae7b4cf3b05.svg",
+          "repo" : "files",
+          "sha256" : "f6e9ba5520d115343c735d57b186d2aeaeb649c8f8ceaa7fbbd39d15a6b9ccc4"
+        },
+        {
+          "path" : "GDC Fuse 110-140 Linear Demo/1.0.0/Contents/Resources/gdc-cuda.bin",
+          "repo" : "files",
+          "sha256" : "c6af7d552b80d1d22c97459207deadca0b9db1bb03d80f690afe513ce3730b6b"
+        },
+        {
+          "path" : "GDC Fuse 110-140 Linear Demo/1.0.0/Contents/Resources/gdc-opencl.bin",
+          "repo" : "files",
+          "sha256" : "b1b4707cb4e374b1c81e4cca4c7226bb20a60af2f34d6e17de834ceb234f14c2"
+        },
+        {
+          "path" : "GDC Fuse 110-140 Linear Demo/1.0.0/Contents/Resources/gdc.bin",
+          "repo" : "files",
+          "sha256" : "b76563b3d33ee6d5c73dac6422879be95d6b3c17ed6fb9883398ea9c09b5eb88"
+        },
+        {
+          "path" : "GDC Fuse 110-140 Linear Demo/1.0.0/Contents/Resources/gdc.dat",
+          "repo" : "files",
+          "sha256" : "dc3f6743c52f229138ec6c75d5bc11ace4504afb9ccbe490c6cf8a0b95dc7194"
+        },
+        {
+          "path" : "GDC Fuse 110-140 Linear Demo/1.0.0/Contents/Win64/GDC Fuse 110-140 Linear Demo.ofx",
+          "repo" : "files",
+          "sha256" : "c15a35d1c58209082928dd0d609fb44efa54705382285e14a2d189bc76a16dc8"
+        },
+        {
+          "path" : "GDC Fuse 110-140 Linear Demo/1.0.0/Contents/_CodeSignature/CodeResources",
+          "repo" : "files",
+          "sha256" : "c82293f8800a7239da85a45a721a949897bf643b87fdf11bb7dbf12f38f7d444"
+        }
+      ],
+      "iconSymbol" : "camera.filters",
+      "id" : "GDC Fuse 110-140 Linear Demo",
+      "isFree" : true,
+      "isTrial" : true,
+      "name" : "GDC Fuse 110-140 Linear Demo",
+      "priceEUR" : 0,
+      "supportedOS" : "crossPlatform",
+      "type" : "ofx",
+      "version" : "1.0.0"
+    },
+    {
       "bundleFolderName" : "GDC Fuse 210-250 Log Demo.ofx.bundle",
       "description" : "",
       "files" : [
