@@ -1,5 +1,10 @@
 # Changelog — GDC Plugin Manager
 
+## v1.50.0 Furnizor (2026-09-22) — Licențe cu durată în ore
+
+### Added
+- **Generare de licențe pe ore.** Durata poate fi acum în Ore, pe lângă Zile / Luni / Ani / Pe viață. Expirarea se calculează exact în secunde și apare cu ora în fereastra de generare. Utilă pentru chei scurte de test.
+
 ## v1.39.3 Client (2026-09-21) — Instalarea OFX nu mai îngheață aplicația
 
 ### Fixed
