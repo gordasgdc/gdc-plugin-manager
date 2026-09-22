@@ -1242,501 +1242,6 @@
       "version" : "1.43.0"
     },
     {
-      "bundleFolderName" : "GDC 270 Film Pipeline Demo.ofx.bundle",
-      "coverImage" : "covers/gdc-style-m02-film-demo.png?v=ceb8e99b",
-      "description" : "Demo version (discreet watermark) — GDC 270 Film Pipeline",
-      "files" : [
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Info.plist",
-          "repo" : "files",
-          "sha256" : "9958b10b6c85627ad400db55d3bd4441ec8dcab63201e569e21d989e7c0d8e0e"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/MacOS/GDC 270 Film Pipeline Demo.ofx",
-          "repo" : "files",
-          "sha256" : "7820116213bee245a18da7b27be7a03d7460aad5ed4592b5a7623a480e8c4daa"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00000.gdcstyle",
-          "repo" : "files",
-          "sha256" : "623b89cb174e43e780b89cb7d5c77e48f6df48e70183978beafa7643bb275185"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00001.gdcstyle",
-          "repo" : "files",
-          "sha256" : "7283f74383d5316b261fb0869d060f07aebacdeddfe474a9124eb0ee91d8d398"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00002.gdcstyle",
-          "repo" : "files",
-          "sha256" : "a206658b05a1617f01215e2e9b416debf805fc0449d5b8bffe38bcc9921c1f19"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00003.gdcstyle",
-          "repo" : "files",
-          "sha256" : "62a7014fd50d59f8befcf786e8db99cf58c554f9b37cf3380ad409bcc1db38f5"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00004.gdcstyle",
-          "repo" : "files",
-          "sha256" : "fa2a5c8a40d836f7c205e5d482b9cdbc8a414270d5380dfe6d5ab65b4c5e8986"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00005.gdcstyle",
-          "repo" : "files",
-          "sha256" : "94ef297ee5a4f0fab335141e1745bd9ba87d20ad5d542fcc34db6fcd4282ca1d"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00006.gdcstyle",
-          "repo" : "files",
-          "sha256" : "4c17b17da1067df0ba81fe2eaa59679c94da7c1a00fd56ebfef8ca86c35ccdb1"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00007.gdcstyle",
-          "repo" : "files",
-          "sha256" : "58960cf5588e4e08150ff0af428c82262b38bce19bf624972264005b9a01684e"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00008.gdcstyle",
-          "repo" : "files",
-          "sha256" : "ceedc33192b2f2d3d2b68e462651bce6af860cd1fb82da81070db25bf9481f8e"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00009.gdcstyle",
-          "repo" : "files",
-          "sha256" : "bb725edac5081d4ae8f9809c8e44a0b8d30db6cbac0b740e85cd95722d00bb1f"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00010.gdcstyle",
-          "repo" : "files",
-          "sha256" : "51cdf27aad3f0d16bcdfd3a97e77bf8662606fdc7ef104699703269f7c18ceb8"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00011.gdcstyle",
-          "repo" : "files",
-          "sha256" : "a976247e61a843bafb92b0564c626d33b1249fc7c8ed76e25377b5cd0c929676"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00012.gdcstyle",
-          "repo" : "files",
-          "sha256" : "a05b684001544e02f33de7a08c65be260428c25cc2f0a4f69573ed2797e87bb8"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00013.gdcstyle",
-          "repo" : "files",
-          "sha256" : "fccc855d707fc7c3c7970251ef2c0fe0a8c7dff81a0e7a9ea94b1bab58789aa4"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00014.gdcstyle",
-          "repo" : "files",
-          "sha256" : "acc520a28eaa044b10aecb50b12e580068aaeace44bdaeb97b99c6c3dbcf1037"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00015.gdcstyle",
-          "repo" : "files",
-          "sha256" : "87d279d9c59b46db73fdb6b9c8ec50fe5c802707cb034282b06c7fd9f5aae1cd"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00016.gdcstyle",
-          "repo" : "files",
-          "sha256" : "80b202f763783e501c8f38feab0a04acf34dd29587bfaa83364777b222848018"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00017.gdcstyle",
-          "repo" : "files",
-          "sha256" : "c0cd3e2588f92f9b3d425ecf4c815fee598f9f02ca5e343be48acbbfd9bb9c02"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00018.gdcstyle",
-          "repo" : "files",
-          "sha256" : "e0247a042e3ccdea488a4a857e4cfb6d7206bbff888a2da62250f1301bf0e7f5"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00019.gdcstyle",
-          "repo" : "files",
-          "sha256" : "6dfdc6544330d55aff874876afc901ffbccde0902fa7073737045663c86b2152"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00020.gdcstyle",
-          "repo" : "files",
-          "sha256" : "a4f3c119ab0f4ee06aa58fe801962977b780670cb5b17cb8d6ba53a01ba5e9e2"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00021.gdcstyle",
-          "repo" : "files",
-          "sha256" : "de58066d5df117b35dbe532327b1b338a3cb22d4808dc09c44b295d955e720b4"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00022.gdcstyle",
-          "repo" : "files",
-          "sha256" : "0f52495fc51ae092dc03822ca1f03d606e2e85cdb0ddc4f7a58fefc3927434ea"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00023.gdcstyle",
-          "repo" : "files",
-          "sha256" : "a22742fa08dd776171f29f7ebe580b498010260b0389cb8fafe9c7151043af40"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00024.gdcstyle",
-          "repo" : "files",
-          "sha256" : "8e8cd828edef8ae0d45cae24d8cf8b312d38de27110c3145611bb14f29eb49ff"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00025.gdcstyle",
-          "repo" : "files",
-          "sha256" : "dfc5c4c71af10e84732162ca86ab15d8e4c61065a3ce19015558fd5c83776501"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00026.gdcstyle",
-          "repo" : "files",
-          "sha256" : "13cbb7b2021c447ae1f2ad9751e94748abce793c32d8616acdec166a531a0279"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00027.gdcstyle",
-          "repo" : "files",
-          "sha256" : "75adf1c07f2cc5b6e940bd4c232321ee4d8ce9d35e37f80895504b2637d0834e"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00028.gdcstyle",
-          "repo" : "files",
-          "sha256" : "43fd96f2381a891592d40113dc576f0de18cb4062e4b0879361075cd87c51a37"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00029.gdcstyle",
-          "repo" : "files",
-          "sha256" : "c8c86b473d9bc3d9ffae4d0850f8091ee4d51618db9c6c683e010e297cb2ae07"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00030.gdcstyle",
-          "repo" : "files",
-          "sha256" : "55132c9a884c8f0b247e2440dba6f88ccf4b4491568d3939efc668a966aae5da"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00031.gdcstyle",
-          "repo" : "files",
-          "sha256" : "55fcf34a4cd40ac76b9aa328f856f4e6b47ef8742f9addadc5d88f899bf2cbb9"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00032.gdcstyle",
-          "repo" : "files",
-          "sha256" : "209f65326d228bbc756cf3cd681e6cd535c530fbf338cdec32e5e4d7880bba45"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00033.gdcstyle",
-          "repo" : "files",
-          "sha256" : "a81ca8e2ebeb79616dfc0b77564c30baacddfa04c765afc8e27c4f663a8423a8"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00034.gdcstyle",
-          "repo" : "files",
-          "sha256" : "156a89dea4661ac89b6b77108de21439bcf99551ee5e3a0b540ab91e3f42c8a5"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00035.gdcstyle",
-          "repo" : "files",
-          "sha256" : "5bd5ee319c6b379c665ef37280299ac5826f5daa1bc91e44e359962c979588a2"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00036.gdcstyle",
-          "repo" : "files",
-          "sha256" : "b017b934a12e69da637b178c4b080afa795f6e1354ab72205dacf03d299019b9"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00037.gdcstyle",
-          "repo" : "files",
-          "sha256" : "4e62f56e4f56f12799fd4a0945b12797390e9e35f39c576e98b1865ac975bee7"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00038.gdcstyle",
-          "repo" : "files",
-          "sha256" : "5861baa82553e99a6f2da59784f235d5eea545255456a67626f34ec2904cb0c9"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00039.gdcstyle",
-          "repo" : "files",
-          "sha256" : "7a72a8ea3693a22f47b8831066130f4542c902bd02c60f383afe4321926b300c"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00040.gdcstyle",
-          "repo" : "files",
-          "sha256" : "ed33982c980079e7734c77b502e915d63c4d16e1b329a5c29fd7e64e8f215000"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00041.gdcstyle",
-          "repo" : "files",
-          "sha256" : "134cc19c43aefc5927b06d1dd4cb77ee687f7f8bc35610760e296de4dfb03738"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00042.gdcstyle",
-          "repo" : "files",
-          "sha256" : "3dd1a9a81c1493fc6c1be9edbe7fa59f989a14c5c3286df33a16b3dd6a38d06e"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00043.gdcstyle",
-          "repo" : "files",
-          "sha256" : "57d7e48443410926f02c21c5c34f5b3027e35a401b5aa0fbe925e2b14e2a533d"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00044.gdcstyle",
-          "repo" : "files",
-          "sha256" : "046893585cfdebcb9a84732cb231b9c3ce3fbadb49bf5a245bb22f5500d3f456"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00045.gdcstyle",
-          "repo" : "files",
-          "sha256" : "c29a5cfeb62caab7a5e4d0283145c7841163de2166f92882d8990f81a54e6fba"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00046.gdcstyle",
-          "repo" : "files",
-          "sha256" : "1d6582e4844ec453993c1f43e27ddf2747b14e77fdd1db8bada93c811924e875"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00047.gdcstyle",
-          "repo" : "files",
-          "sha256" : "4ef1bf666ef2a14ad20fd105f8a5a44d6242f1f5f26c2810ca391c857d450038"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00048.gdcstyle",
-          "repo" : "files",
-          "sha256" : "58b868897347e9c5f1135c2850dc2ff7c95d983cf739da1d3963c107ca00b21f"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00049.gdcstyle",
-          "repo" : "files",
-          "sha256" : "098f46ecffb9bb66045c2cc1bd713bb0671f99c52a622fd6047ea5205c2f6be5"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00050.gdcstyle",
-          "repo" : "files",
-          "sha256" : "5eec2563c412c307180370451d2c6b174d0560616e8170c9d17a89eda69eaf7d"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00051.gdcstyle",
-          "repo" : "files",
-          "sha256" : "e83a123335755837a1f79e0735d9c91d0990df806c0dc1ce7d52b30ee3d63f91"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00052.gdcstyle",
-          "repo" : "files",
-          "sha256" : "c47800b07c412d787bb2dc85553c7b4e07c17a33610523d8073028ddb5073ff4"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00053.gdcstyle",
-          "repo" : "files",
-          "sha256" : "95a2f70a792dfddba20ff6ad772e7628a1ca7cef6abefeb00422bb6f02084ec6"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00054.gdcstyle",
-          "repo" : "files",
-          "sha256" : "fdfc4a27dbfe0fb01b93045d540be017bb23136cf0134ae02cdb86ed69bda272"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00055.gdcstyle",
-          "repo" : "files",
-          "sha256" : "1477fd2129d427106bafbcf5ccfd96acb5119328f766952298d68039598d2ce6"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00056.gdcstyle",
-          "repo" : "files",
-          "sha256" : "1080cd9ec7c7926011d87406150ea74115da8c3caec6aef532571d4baaee177a"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00057.gdcstyle",
-          "repo" : "files",
-          "sha256" : "9cd8a8a91b25d681e1e668f7ddf83e3b237dc74cdee14b2de0cc3886f6b51c18"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00058.gdcstyle",
-          "repo" : "files",
-          "sha256" : "232793b280a63f9a0d5646c8521e99bf6589eca48a94ad05926461cd1c5196fc"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00059.gdcstyle",
-          "repo" : "files",
-          "sha256" : "e132906f913e963edb75a357c4c88415cdf4f28dc829db6830b3cd4374d5eb97"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00060.gdcstyle",
-          "repo" : "files",
-          "sha256" : "e9d982b1ea2fd44f5092ff62097096985f6f9d641a962775a972d2339fbbcdfc"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00061.gdcstyle",
-          "repo" : "files",
-          "sha256" : "bb79fcb1ea283a02690debfb1a93353a4af96ddccd1f94369317338534c3c215"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00062.gdcstyle",
-          "repo" : "files",
-          "sha256" : "03e09900dcf5feee8982d03e5c66b7c9e6094fb1da07c31949df7fb6ac2e8919"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00063.gdcstyle",
-          "repo" : "files",
-          "sha256" : "071faa21b03c901377285a4985ca7d1fa6d07a3cf6ca2147a89ef0ccd7a5de90"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00064.gdcstyle",
-          "repo" : "files",
-          "sha256" : "df5cd25bb5bbe2b53c9f55c3847daf638ddfe99d18f9856747e423ea0921ae4b"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00065.gdcstyle",
-          "repo" : "files",
-          "sha256" : "5eb954f73a4873b03a5630702bc0810032e92520f921a753cfdf422c835425fd"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00066.gdcstyle",
-          "repo" : "files",
-          "sha256" : "98d998b4e94b825a2ff4c3698eb9bb4f510c5595b344a9540132d55729b589f2"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00067.gdcstyle",
-          "repo" : "files",
-          "sha256" : "4582a39e3f2a6abebc31851e4b87260967eae160e1ac06f82ba3b048fe97e266"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00068.gdcstyle",
-          "repo" : "files",
-          "sha256" : "8594ccfe6e7922416a10db3913713567eabd33db93934e9c83522217da769374"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00069.gdcstyle",
-          "repo" : "files",
-          "sha256" : "4214d09eec4ab3cf66066342a62ac78dce501f0d3ff1ccd75b0c61749b82b835"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00070.gdcstyle",
-          "repo" : "files",
-          "sha256" : "837cad51a9dc21aa40efdee76ebd68e14693f1784424c68b2bfd4336803d1088"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00071.gdcstyle",
-          "repo" : "files",
-          "sha256" : "19f80fcd883b17c32b082debfcdb3e2359616e6e6612a8df491c9aeaee43e378"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00072.gdcstyle",
-          "repo" : "files",
-          "sha256" : "f12fae36f3da382aa51da1b884c48cf6b3c682bf2c108b19370cd7c235e8e503"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00073.gdcstyle",
-          "repo" : "files",
-          "sha256" : "6e2dfbfbe4d64b5a2e33f701e821d161e0c88643e3a80427f444ea2e5de4555a"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00074.gdcstyle",
-          "repo" : "files",
-          "sha256" : "eb16ec55cb01a08d06315aadd9b5fe930a4c37adc9e50d50a1afbcd28b8031f8"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00075.gdcstyle",
-          "repo" : "files",
-          "sha256" : "70801dd876fefbfb3e07753e5b66675bd12c367ca0d0294a7e101568687b55e1"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00076.gdcstyle",
-          "repo" : "files",
-          "sha256" : "b89b3325d02fe94c7133410f5c32534ae43e5f4d39b8400cea44a50b70ec9e42"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00077.gdcstyle",
-          "repo" : "files",
-          "sha256" : "0a6d671ebc01e3a9fd353a1008e6a99d2db5f5bb4cdd34772e0b598932eab746"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00078.gdcstyle",
-          "repo" : "files",
-          "sha256" : "18547a0acdd5f3368e0b9144898b36d60735e985353b530066e4f07c44e92cf8"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00079.gdcstyle",
-          "repo" : "files",
-          "sha256" : "21322f8a5e748a7507ec174d0a5018d5dd87a87b864453974f243604cbbd7759"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00080.gdcstyle",
-          "repo" : "files",
-          "sha256" : "5d06a8c518a956923c171fafd579722d29bdd72507110585af7c19a1ba1211a3"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00081.gdcstyle",
-          "repo" : "files",
-          "sha256" : "23722ccf449ad62de887735498c7aab98bf1e603cf877209b2f3cda005c04730"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00082.gdcstyle",
-          "repo" : "files",
-          "sha256" : "c2df988e4da1994b29c4855ce920fb37367b341e407271b009491bc6fe7ca30e"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00083.gdcstyle",
-          "repo" : "files",
-          "sha256" : "ff4793a5c5eeefc39e9e782ab1a9e228961fc7bb351bb69d0b1e64742c1b0dda"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00084.gdcstyle",
-          "repo" : "files",
-          "sha256" : "c06f4b87ea390575dcfc151596f31ec921b23941a4583ece540347ea7a5b116c"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/Styles/00085.gdcstyle",
-          "repo" : "files",
-          "sha256" : "c682aa1c36c2fdc49b940f59b7ad82ba6c764c336daa3ee2ab54ed222c0bc58e"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/dev.gordas.style.filmpipeline.2fabf4e0da224955.png",
-          "repo" : "files",
-          "sha256" : "5ab008ab647fd82175fd05f33c5cfb9385637ba52d4ebf6facea14222425e5f8"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/dev.gordas.style.filmpipeline.2fabf4e0da224955.svg",
-          "repo" : "files",
-          "sha256" : "8f6c0f527ae5d3d806504ea2c1ff3e53ddaecba3e165ae9368d9a918d9dd8443"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/gdc-cuda.bin",
-          "repo" : "files",
-          "sha256" : "7a9912be3513f74b01da5d566b2f8db709dd6093519b2e89635f18ef71cbd4ff"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/gdc-opencl.bin",
-          "repo" : "files",
-          "sha256" : "2329f12ab51a3651593613d7899fbeb019f574b2ae09fbb2a1bae5a87af949ee"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/gdc.bin",
-          "repo" : "files",
-          "sha256" : "5b0f0582f3554b5420d550fc665643b56ce9b2cc458f572b11b8c5eaaadbb5f1"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Resources/gdc.dat",
-          "repo" : "files",
-          "sha256" : "c0d284032a36225776107edec7189a73d459d899b0117cdcd0c1dcc3cbf9576c"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/Win64/GDC 270 Film Pipeline Demo.ofx",
-          "repo" : "files",
-          "sha256" : "c15a35d1c58209082928dd0d609fb44efa54705382285e14a2d189bc76a16dc8"
-        },
-        {
-          "path" : "gdc-style-m02-film-demo/1.43.0/Contents/_CodeSignature/CodeResources",
-          "repo" : "files",
-          "sha256" : "e713316b6f36e343677ad830dcf88b6ff558ec6d2a819d43563a7f43abd51597"
-        }
-      ],
-      "id" : "gdc-style-m02-film-demo",
-      "isFree" : true,
-      "isTrial" : false,
-      "name" : "GDC 270 Film Pipeline Demo",
-      "priceEUR" : 0,
-      "supportedOS" : "macOS",
-      "type" : "ofx",
-      "version" : "1.43.0"
-    },
-    {
       "bundleFolderName" : "GDC 280 Print Film Demo.ofx.bundle",
       "coverImage" : "covers/gdc-style-280-print-film-demo.png?v=f27e8f8e",
       "description" : "Demo version (discreet watermark) — GDC 280 Print Film",
@@ -1995,6 +1500,501 @@
       "supportedOS" : "macOS",
       "type" : "ofx",
       "version" : "1.43.0"
+    },
+    {
+      "bundleFolderName" : "GDC Film Pipeline Demo.ofx.bundle",
+      "coverImage" : "covers/gdc-style-m02-film-demo.png?v=ceb8e99b",
+      "description" : "Demo version (discreet watermark) — GDC Film Pipeline",
+      "files" : [
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Info.plist",
+          "repo" : "files",
+          "sha256" : "af2e05dad4083ecea78c692d3b60f73c62fb32c8320305ec8baf75e5f9965da9"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/MacOS/GDC Film Pipeline Demo.ofx",
+          "repo" : "files",
+          "sha256" : "d8d059cedcad752eaf163e729385131b905e76e22d146b6f27efb2186a5ae705"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00000.gdcstyle",
+          "repo" : "files",
+          "sha256" : "6648b876f49466679fa29f3b35d9d66e5f978cb12d0e8b9d99469f4e0d570657"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00001.gdcstyle",
+          "repo" : "files",
+          "sha256" : "c250a30b97210afc3bb39f0d3625d2cbe692676e93109b7ad67607771f680871"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00002.gdcstyle",
+          "repo" : "files",
+          "sha256" : "0ccb7b0f61e14ff1e0aa6e4efa0ebecf5c8478e374e2a78b7705b5f59abcf69a"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00003.gdcstyle",
+          "repo" : "files",
+          "sha256" : "ae925588c50d4903bd87236a9d994b6f7602ed1814415bf21f050fa911b5752c"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00004.gdcstyle",
+          "repo" : "files",
+          "sha256" : "b789ee37e96d624c92d7f9c2d2548fca9b09016d2159d5f424f68304aa814d9a"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00005.gdcstyle",
+          "repo" : "files",
+          "sha256" : "c52bec4926b8287d3049de1304c25556b2b8e912ca478f2f916b6b550cdf6ebe"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00006.gdcstyle",
+          "repo" : "files",
+          "sha256" : "1676f6a680a96dd11e055246d0c131d6b7b097784ac5caee308348713cdd1ef7"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00007.gdcstyle",
+          "repo" : "files",
+          "sha256" : "7511bfa7080ba5632f350f434096e16ddee891e39b44a0a310bf7dbb67b15a18"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00008.gdcstyle",
+          "repo" : "files",
+          "sha256" : "e25317e1f137da3800b0d1ae255a50a7ecf34ac3b4f9513428f03493420a5b44"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00009.gdcstyle",
+          "repo" : "files",
+          "sha256" : "461001f41ac465aae246d08894113d6c0e5242c9fc47e5cff6a608063bd320f5"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00010.gdcstyle",
+          "repo" : "files",
+          "sha256" : "3b4489bc138d1d8106b3a2e9996fa3aaadf4ee3c6bbf4c845cd21370b9400bbe"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00011.gdcstyle",
+          "repo" : "files",
+          "sha256" : "addb6e795bd254d8611fba000de530886507886b0f3e2543e396f283af9dd9e7"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00012.gdcstyle",
+          "repo" : "files",
+          "sha256" : "c438c92b524543aa2c14c31511345c1b1397c708fbef82f0c0326a566693edc0"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00013.gdcstyle",
+          "repo" : "files",
+          "sha256" : "6d634bf0f6064fc3a70d89be9c9f870ab19982aefaa4087760dd0a3cfbe1d7e4"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00014.gdcstyle",
+          "repo" : "files",
+          "sha256" : "06090d6dec0655b16777968fcf323bec1819009e085a0b2d06bcfcd3a766cfb2"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00015.gdcstyle",
+          "repo" : "files",
+          "sha256" : "3a9391c3ac7216c5ec21f90a6797cc5e88a3b780db06fc91642636aaa472179c"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00016.gdcstyle",
+          "repo" : "files",
+          "sha256" : "35a8671cda83298a802c4e35f872973ea8c1c4c3dbf08f5a4c2209f36dcdb51e"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00017.gdcstyle",
+          "repo" : "files",
+          "sha256" : "51bfd35591faf2c06c7e1500e64f81e011f0187435456c8769a7b1da5d09cc1b"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00018.gdcstyle",
+          "repo" : "files",
+          "sha256" : "aaea799d75d93020fc9dc4b628e41d7e60a968738542fd64382f63baa2e1a1f3"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00019.gdcstyle",
+          "repo" : "files",
+          "sha256" : "48a15b1e46542e057fc5b4e42f04e0745533fe383d4a6013a8daa91d39737579"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00020.gdcstyle",
+          "repo" : "files",
+          "sha256" : "7d19ad1bdf7dc1a5363708270a131d0dacaaa50967a8f992af98a6773eb649d6"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00021.gdcstyle",
+          "repo" : "files",
+          "sha256" : "78522452f14ce00c1e579e45bd0cfbd01dbcee473f5b7a455122d66b47d834c3"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00022.gdcstyle",
+          "repo" : "files",
+          "sha256" : "2b8d7c2e66426948009fae86fbbe18360cfac36cce7881e98726fd1b29b3e4dc"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00023.gdcstyle",
+          "repo" : "files",
+          "sha256" : "a0aa48e7a5943614470b69718e99adfa59a5cd62667231d39c4a2155e3e8b92d"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00024.gdcstyle",
+          "repo" : "files",
+          "sha256" : "399ace6c3d40bcf50177368c0e3050d88a555e7131486301087e499d16521f8b"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00025.gdcstyle",
+          "repo" : "files",
+          "sha256" : "fba28fc7008efc5db5429de94615708e6d379cd27c3576a0d3673a5b9873c07d"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00026.gdcstyle",
+          "repo" : "files",
+          "sha256" : "c83e6d1d7818591fe66ae2c6f0c33c9cea50b9d6521f2e1c2e291cc62b08c885"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00027.gdcstyle",
+          "repo" : "files",
+          "sha256" : "0dfd9bb119a2e168293e7eda1cd0f04fccfbfdd893a2b23fb4c4539c26f044fa"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00028.gdcstyle",
+          "repo" : "files",
+          "sha256" : "e2bd5cbf9b1e03b4c4512b4d153462ccf4b351b37315ed6d6b1acbb314545582"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00029.gdcstyle",
+          "repo" : "files",
+          "sha256" : "0f7f0bf44bf5906f12bded03b7748853a749db3dfdb96a0f6517e604dded9c13"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00030.gdcstyle",
+          "repo" : "files",
+          "sha256" : "8d16990a4cdf058209f6f2e490bc4aa0a1761f46132b502d8c73cd73ac0c9e25"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00031.gdcstyle",
+          "repo" : "files",
+          "sha256" : "fa05a4a0c279bae7c5230d2af2105d810551c6b0be39c4f308be714f84b3fb92"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00032.gdcstyle",
+          "repo" : "files",
+          "sha256" : "2d7e7f879fdf453c861ee24b270af78c40a5cdfe741fad06d6a31c0d3f422cdf"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00033.gdcstyle",
+          "repo" : "files",
+          "sha256" : "4d49da8b16dca324103f8524a91a21513fe9956787c5462bc2fa116e735d6e86"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00034.gdcstyle",
+          "repo" : "files",
+          "sha256" : "46f2eeb439ee6dae29359b3bd61549a51fc2e46e8b4017d52d5db8da7ddccab0"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00035.gdcstyle",
+          "repo" : "files",
+          "sha256" : "48fb4632de9e2a499b21902d3ea497f1440128fac17d1290e1a46308f322cdc0"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00036.gdcstyle",
+          "repo" : "files",
+          "sha256" : "61eaa4a62eb0b4cf43d5264372a26ada80aba6f91adfd819043e420a083ba35c"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00037.gdcstyle",
+          "repo" : "files",
+          "sha256" : "586526b58c9d409601f9c8a74e52c330642872bb37065d8585c17e0a296ed7d0"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00038.gdcstyle",
+          "repo" : "files",
+          "sha256" : "95f14dcdf52a373b895ccd4ae32bfb75553188c303f7ab290828aecbaf66203e"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00039.gdcstyle",
+          "repo" : "files",
+          "sha256" : "938c75ef99dea1d0e9ee66e04cd46226d60b97bb66ac3d404d685108415545cd"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00040.gdcstyle",
+          "repo" : "files",
+          "sha256" : "5cbfdd3c7d458d54f4bcbaef2c8a8adb525abfff1e6c25af72b51513f789578a"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00041.gdcstyle",
+          "repo" : "files",
+          "sha256" : "d5d3291846d137ca1a6520b0617833845b47d441fe203addbb830f7611131b8a"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00042.gdcstyle",
+          "repo" : "files",
+          "sha256" : "e586943f415046706447144cb3d6075f29e96db179f14b020847b6c42cfc973b"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00043.gdcstyle",
+          "repo" : "files",
+          "sha256" : "f8a9fc2ce54f9373492ea60a030c940fd037892dc808b9e1bcc218ed78511cbe"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00044.gdcstyle",
+          "repo" : "files",
+          "sha256" : "1a1a6e14e65dd3536d7deb6ce8c31053f6ebc0703a572b53a694eb553db34084"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00045.gdcstyle",
+          "repo" : "files",
+          "sha256" : "bea1f421fbffd1479cb9ca77c1ebbef1dc39a7a9cafecd7db9d5cf841d560ec0"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00046.gdcstyle",
+          "repo" : "files",
+          "sha256" : "5cf406848f14f0ab3b9e2547b4b0833e2c9ee78c3bbee0183659bb3eba429d74"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00047.gdcstyle",
+          "repo" : "files",
+          "sha256" : "c93670fa2834ffb099fe67cedbd32be643583def0232036325264e91c980f376"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00048.gdcstyle",
+          "repo" : "files",
+          "sha256" : "87bb85a6d511fe83719eaf42b16537efb8567d97c0bb2e731c0dd7932091b742"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00049.gdcstyle",
+          "repo" : "files",
+          "sha256" : "f1f27db133c92e02cbc4a68014de3cc1034ccad2e205333bd68612e18d528d76"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00050.gdcstyle",
+          "repo" : "files",
+          "sha256" : "b0bc6def68468f2cedb5f38832c4938ece4de24e006dd5d5dd83f9702c33add1"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00051.gdcstyle",
+          "repo" : "files",
+          "sha256" : "be0e4e1a22eb44079cfae098af0f981ac812c21957a0b0f0820be7c6bbfebf9c"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00052.gdcstyle",
+          "repo" : "files",
+          "sha256" : "d82998d55c1630517ebecc0aebf688a17dd76d855fd7078acee336c7c515e680"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00053.gdcstyle",
+          "repo" : "files",
+          "sha256" : "8d319a61a237083e84089423163dee3e0b1b5c5ceb24711c51365c58f67ab162"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00054.gdcstyle",
+          "repo" : "files",
+          "sha256" : "b6653f5654b416560bc51d57af6d9ddc9540fc91832d71da8bdb19e13079a1ad"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00055.gdcstyle",
+          "repo" : "files",
+          "sha256" : "2c4e3a5c7d309b2a0e4fa80ef5233d5c65f49007395f1009ccbbb2bde41ac5a3"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00056.gdcstyle",
+          "repo" : "files",
+          "sha256" : "2c841b52caa552314973a0a3f6eaf2df9d2973e9637478ee490195c44e225260"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00057.gdcstyle",
+          "repo" : "files",
+          "sha256" : "87efacecf207de19e861a2ccf1212b2987ae4e800b0e925beb3fcb357893c1ad"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00058.gdcstyle",
+          "repo" : "files",
+          "sha256" : "8c4c3b26ae46d748ba4b5a7566f400eaf33054008ead90ac33814ab940cbe358"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00059.gdcstyle",
+          "repo" : "files",
+          "sha256" : "80fc60f15412d654602385947f0ebc4e9ccab29037149a8453e9216864b95216"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00060.gdcstyle",
+          "repo" : "files",
+          "sha256" : "e1466526501b434d68806613e0f5307bfbc4beeefabe6890ec663eeafcd33743"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00061.gdcstyle",
+          "repo" : "files",
+          "sha256" : "87780670c6e99a2107f5fadf6e4816f1690cb1c709e7cc8dcd640f68e67c988e"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00062.gdcstyle",
+          "repo" : "files",
+          "sha256" : "941254e8021e2b5276eeea87e11273ae4ad249d2e9bf45ff6a80135438a12c70"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00063.gdcstyle",
+          "repo" : "files",
+          "sha256" : "464ad650797e0bd1d9890f24c69bc34f4934ecf23f7e5c2a781a2672758d7354"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00064.gdcstyle",
+          "repo" : "files",
+          "sha256" : "724f2eecc7c4d5d70951156f1cc3c4534674d0cb95f72ecbff269335f4213d90"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00065.gdcstyle",
+          "repo" : "files",
+          "sha256" : "217238697abdcebcfc1525cc12d000056eb0df57a1c24628ce9b60894b7bbe53"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00066.gdcstyle",
+          "repo" : "files",
+          "sha256" : "75db74f36cfcb529d6410e61a06e2c6c89039b6fa99722d49e87ce15a98ead0b"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00067.gdcstyle",
+          "repo" : "files",
+          "sha256" : "74e3db22099e2217e4eb77e0a76d796f1a597d8c5edd088475109dbf36d06a57"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00068.gdcstyle",
+          "repo" : "files",
+          "sha256" : "228598a634a60045b16ecba99b873c678076917435f8f9944d68b6d10ddc6fc5"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00069.gdcstyle",
+          "repo" : "files",
+          "sha256" : "13424986310bbe56582548aa7d8a279247f92365bddfef9565088a534dad8603"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00070.gdcstyle",
+          "repo" : "files",
+          "sha256" : "a063b6ef659e5fb19ed7314979b45d8b834fc110e00556bdfb725ed35e63ec91"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00071.gdcstyle",
+          "repo" : "files",
+          "sha256" : "029051fd6c9959807c62e0cc52f4f3d2e63ac61f38cbbb8992f5a50c713d748e"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00072.gdcstyle",
+          "repo" : "files",
+          "sha256" : "ad5e442f3ac9e0139c3fea99b744dc748383d4e8256e2c956dd457ef0bb3bd2d"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00073.gdcstyle",
+          "repo" : "files",
+          "sha256" : "f0395cc217d9b1d06dd123afe89c2d78849d526cee4424bd9ec68486a7974cb9"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00074.gdcstyle",
+          "repo" : "files",
+          "sha256" : "2cefaca61606ae9a7b0b3728b2b22f118c8b914c711b1d39b47b8f248799edfb"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00075.gdcstyle",
+          "repo" : "files",
+          "sha256" : "b91cf3588011d1036e47ec099f6971da43cf4c86533700ca28826aa49552b594"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00076.gdcstyle",
+          "repo" : "files",
+          "sha256" : "b6fd3377989f97892421ee92a26b9d8c0f7944c47ab7099ca1ba06746733b031"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00077.gdcstyle",
+          "repo" : "files",
+          "sha256" : "434913b844dc8411adab64840c408307006149f845ad5a5b0a28aa0f3b85030a"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00078.gdcstyle",
+          "repo" : "files",
+          "sha256" : "dd0a1081c130f39c2296cafc5f4c2bf6cd26680d5ff368b3befb977ef83a875c"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00079.gdcstyle",
+          "repo" : "files",
+          "sha256" : "4cc1976fd06bb99b67fe335aeccd142ac35f0de93512735f97d0ebc8cc88b676"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00080.gdcstyle",
+          "repo" : "files",
+          "sha256" : "d48aea2abd2ddb463ba8eaca92d02e9295068c846ed4b52b4d2bdbb9503dd0cb"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00081.gdcstyle",
+          "repo" : "files",
+          "sha256" : "d662606d088b8182440bdf90d62fc63a59c5049920912cfc0032ef5e8f11d1e2"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00082.gdcstyle",
+          "repo" : "files",
+          "sha256" : "c27efbe3bfe2136570881625a193b7e063de6f4c97aaf7532c10775776d67cac"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00083.gdcstyle",
+          "repo" : "files",
+          "sha256" : "1690608ab7d257ccdc6f43b460eafe88fc32692e313a2c010302621a9e0a3849"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00084.gdcstyle",
+          "repo" : "files",
+          "sha256" : "757b73ded34ab4c2b2d4c8ada3525f505e6490e41d3173d27515f088f6f2ea10"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/Styles/00085.gdcstyle",
+          "repo" : "files",
+          "sha256" : "e205ce03c4f686a97510062a7b6a693c6e7701a6760e411c4902d71cf868c7bc"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/dev.gordas.style.filmpipeline.3917df4f2116d092.png",
+          "repo" : "files",
+          "sha256" : "469e7801fde1ec61df66383bcc2098d300c595ff986fdc6553cf275503eab26b"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/dev.gordas.style.filmpipeline.3917df4f2116d092.svg",
+          "repo" : "files",
+          "sha256" : "beb2747efdf5baaedaf5bf117f59c8bebf48099d433843d0d6fe244e46730153"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/gdc-cuda.bin",
+          "repo" : "files",
+          "sha256" : "d200f32866afc9460c6c32a36e9dc80041be33eca6c1e615f0d24ac44e4614fc"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/gdc-opencl.bin",
+          "repo" : "files",
+          "sha256" : "47c5dad2d631ea8622214e56211d97467b416445678046fce5cf8a7dee01b75e"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/gdc.bin",
+          "repo" : "files",
+          "sha256" : "8f93b33e14fa54b7b92e41a9f03f633e2ac683e0c912639e580bc18ae79bfca0"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Resources/gdc.dat",
+          "repo" : "files",
+          "sha256" : "0936a851eeecb0a3e6d500c568b1614be2e0503a06b730274356e75e385b92ca"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/Win64/GDC Film Pipeline Demo.ofx",
+          "repo" : "files",
+          "sha256" : "c15a35d1c58209082928dd0d609fb44efa54705382285e14a2d189bc76a16dc8"
+        },
+        {
+          "path" : "gdc-style-m02-film-demo/1.43.1/Contents/_CodeSignature/CodeResources",
+          "repo" : "files",
+          "sha256" : "2a73a8a478e6c2642bab1204b65f8e93b6ae8c9097be81e9f1a972474c091982"
+        }
+      ],
+      "id" : "gdc-style-m02-film-demo",
+      "isFree" : true,
+      "isTrial" : false,
+      "name" : "GDC Film Pipeline Demo",
+      "priceEUR" : 0,
+      "supportedOS" : "macOS",
+      "type" : "ofx",
+      "version" : "1.43.1"
     },
     {
       "bundleFolderName" : "GDC Pro Universal IDT Demo.ofx.bundle",
