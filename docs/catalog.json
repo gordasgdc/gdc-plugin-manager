@@ -2002,54 +2002,54 @@
       "description" : "Demo version (discreet watermark) — GDC Pro Universal IDT",
       "files" : [
         {
-          "path" : "gdc-style-gdc-pro-universal-idt-demo/1.38.2/Contents/Info.plist",
+          "path" : "gdc-style-gdc-pro-universal-idt-demo/1.43.0/Contents/Info.plist",
           "repo" : "files",
-          "sha256" : "9ea7e83bc5671a7684099662d6466c8cef62c29f758d92ca875d6b4bc6051de2"
+          "sha256" : "9ebd2808f82cfc63f9a24117befa2543adc3f7bca626747c4145cbb9cabf085a"
         },
         {
-          "path" : "gdc-style-gdc-pro-universal-idt-demo/1.38.2/Contents/MacOS/GDC Pro Universal IDT Demo.ofx",
+          "path" : "gdc-style-gdc-pro-universal-idt-demo/1.43.0/Contents/MacOS/GDC Pro Universal IDT Demo.ofx",
           "repo" : "files",
-          "sha256" : "9084986d68ddaf4d772e1a182f14f5367345eced0de777c562599c6560a688f1"
+          "sha256" : "f88b036fd3aa306f8790d4e42bb95f7e69595fb96a4221809f1d8be9f6c07846"
         },
         {
-          "path" : "gdc-style-gdc-pro-universal-idt-demo/1.38.2/Contents/Resources/dev.gordas.style.idt.444322681c390eae.png",
+          "path" : "gdc-style-gdc-pro-universal-idt-demo/1.43.0/Contents/Resources/dev.gordas.style.idt.444322681c390eae.png",
           "repo" : "files",
           "sha256" : "fabfe01e322c16e0e0577b56aeeb2c19c5b1977b2cdeba5d5275c0700d22d60b"
         },
         {
-          "path" : "gdc-style-gdc-pro-universal-idt-demo/1.38.2/Contents/Resources/dev.gordas.style.idt.444322681c390eae.svg",
+          "path" : "gdc-style-gdc-pro-universal-idt-demo/1.43.0/Contents/Resources/dev.gordas.style.idt.444322681c390eae.svg",
           "repo" : "files",
           "sha256" : "9cdd8a9ec891dd3c7579f477484957b228eac09c347b191b2762b233fc25bcc1"
         },
         {
-          "path" : "gdc-style-gdc-pro-universal-idt-demo/1.38.2/Contents/Resources/gdc-cuda.bin",
+          "path" : "gdc-style-gdc-pro-universal-idt-demo/1.43.0/Contents/Resources/gdc-cuda.bin",
           "repo" : "files",
-          "sha256" : "ece5a46dd8b27385c74a6b959fda00195263a54d970d448f15971cf6f96f36a5"
+          "sha256" : "9f31e728d93835a4a60b9899f3a8a5db4533ad9473a17adfc2bbd8ef4b391a81"
         },
         {
-          "path" : "gdc-style-gdc-pro-universal-idt-demo/1.38.2/Contents/Resources/gdc-opencl.bin",
+          "path" : "gdc-style-gdc-pro-universal-idt-demo/1.43.0/Contents/Resources/gdc-opencl.bin",
           "repo" : "files",
-          "sha256" : "d2b1cb29ecb91aaea5fc5e86dfb5a0f856244c3a190e381657af4edd4e0d4cb7"
+          "sha256" : "080489c1dbc3c1edbab6bb55933e43c199aeeb59fa0137e35ef4508b23d8ffe6"
         },
         {
-          "path" : "gdc-style-gdc-pro-universal-idt-demo/1.38.2/Contents/Resources/gdc.bin",
+          "path" : "gdc-style-gdc-pro-universal-idt-demo/1.43.0/Contents/Resources/gdc.bin",
           "repo" : "files",
-          "sha256" : "b73fa31de538a207c9adbd7e90cdcf89be0c6491b2a7c5e490852ae17ee40406"
+          "sha256" : "bd7113af8e167ccd0ee0adf5d516cf4f4bc3d468e7eff25ad5ba1098aa2e9f06"
         },
         {
-          "path" : "gdc-style-gdc-pro-universal-idt-demo/1.38.2/Contents/Resources/gdc.dat",
+          "path" : "gdc-style-gdc-pro-universal-idt-demo/1.43.0/Contents/Resources/gdc.dat",
           "repo" : "files",
-          "sha256" : "dc0a99d4a85e4207c02ca014cc0194f23f9fb85094244d5255978bf66a1367c8"
+          "sha256" : "7f6ee67943445f8437a9f01a0d6a0e23587352b6d44e8991e8711d8f7359b106"
         },
         {
-          "path" : "gdc-style-gdc-pro-universal-idt-demo/1.38.2/Contents/Win64/GDC Pro Universal IDT Demo.ofx",
+          "path" : "gdc-style-gdc-pro-universal-idt-demo/1.43.0/Contents/Win64/GDC Pro Universal IDT Demo.ofx",
           "repo" : "files",
-          "sha256" : "b2daaadf301523a112f6fbda6a335c2f06f1ae270727c9bfdaa8ba8e9e6322e7"
+          "sha256" : "b2f79cd37822cc39c99afece8cf447e3f2b57e79b6df585a5ef0bb1f6cfb1821"
         },
         {
-          "path" : "gdc-style-gdc-pro-universal-idt-demo/1.38.2/Contents/_CodeSignature/CodeResources",
+          "path" : "gdc-style-gdc-pro-universal-idt-demo/1.43.0/Contents/_CodeSignature/CodeResources",
           "repo" : "files",
-          "sha256" : "99ccd92e8efe1facaacb794084422a8e73088f6e4151455f5f74d47391480043"
+          "sha256" : "ee779a16ec09756c06c07e27106c9487c4e3f6d211aa9d718b334322e5012b21"
         }
       ],
       "id" : "gdc-style-gdc-pro-universal-idt-demo",
@@ -2059,7 +2059,7 @@
       "priceEUR" : 0,
       "supportedOS" : "macOS",
       "type" : "ofx",
-      "version" : "1.38.2"
+      "version" : "1.43.0"
     },
     {
       "description" : "Transformare directa din profilul camerei in Rec709",
