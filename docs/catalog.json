@@ -962,54 +962,54 @@
       "description" : "Demo version (discreet watermark) — GDC 900 Output Transform",
       "files" : [
         {
-          "path" : "gdc-style-900-output-transform-demo/1.43.0/Contents/Info.plist",
+          "path" : "gdc-style-900-output-transform-demo/1.43.1/Contents/Info.plist",
           "repo" : "files",
           "sha256" : "76dbf510ef50b616f3ede2e177f7cff3b4980d637e99b5329ba6b7fa89a92668"
         },
         {
-          "path" : "gdc-style-900-output-transform-demo/1.43.0/Contents/MacOS/GDC 900 Output Transform Demo.ofx",
+          "path" : "gdc-style-900-output-transform-demo/1.43.1/Contents/MacOS/GDC 900 Output Transform Demo.ofx",
           "repo" : "files",
-          "sha256" : "fcaa97b9f6cba05a482957a1a54ed2528302a0d520ff4e2cd0c648e51b7b871b"
+          "sha256" : "1c0963c14fcb347aac701bc74e1fa3cc4f4925103454ce071c457032fdcddd9e"
         },
         {
-          "path" : "gdc-style-900-output-transform-demo/1.43.0/Contents/Resources/dev.gordas.style.idt.e3be9148e304ba79.png",
+          "path" : "gdc-style-900-output-transform-demo/1.43.1/Contents/Resources/dev.gordas.style.idt.e3be9148e304ba79.png",
           "repo" : "files",
           "sha256" : "8ab4bffc918a181389a07147aaf21131733ca920c0022a28b45baab5568c51f9"
         },
         {
-          "path" : "gdc-style-900-output-transform-demo/1.43.0/Contents/Resources/dev.gordas.style.idt.e3be9148e304ba79.svg",
+          "path" : "gdc-style-900-output-transform-demo/1.43.1/Contents/Resources/dev.gordas.style.idt.e3be9148e304ba79.svg",
           "repo" : "files",
           "sha256" : "77e776dd941876296c800625dbbe5f693259ca01d9eaf06c706ecbc945793928"
         },
         {
-          "path" : "gdc-style-900-output-transform-demo/1.43.0/Contents/Resources/gdc-cuda.bin",
+          "path" : "gdc-style-900-output-transform-demo/1.43.1/Contents/Resources/gdc-cuda.bin",
           "repo" : "files",
-          "sha256" : "bb6fe817e7c33bab21a37490a0259b73c08d98f994ea13d452f488b5d27fed5f"
+          "sha256" : "ac8484a375cbc5ea4d594b76631b5eae193c0c75f962b913723462c9b5f1e0db"
         },
         {
-          "path" : "gdc-style-900-output-transform-demo/1.43.0/Contents/Resources/gdc-opencl.bin",
+          "path" : "gdc-style-900-output-transform-demo/1.43.1/Contents/Resources/gdc-opencl.bin",
           "repo" : "files",
-          "sha256" : "f5110c9ffa3c32a8461ccd9374ed7db86d33f5d7c9f318a1f80f7e8476d4aefb"
+          "sha256" : "abf3621ce96957dd42591a58547333e3fa18fbb6ab9e92f67a6fc5cd888488ab"
         },
         {
-          "path" : "gdc-style-900-output-transform-demo/1.43.0/Contents/Resources/gdc.bin",
+          "path" : "gdc-style-900-output-transform-demo/1.43.1/Contents/Resources/gdc.bin",
           "repo" : "files",
-          "sha256" : "6fe2a4ebbf13fc61ae640ec7e6b3152d326c13a3f1ceae0dcda967c1db28b8f9"
+          "sha256" : "a84543ed2755a0e525ffb475dd9af375e6979b3153fb36ef0a23c4fb055b7886"
         },
         {
-          "path" : "gdc-style-900-output-transform-demo/1.43.0/Contents/Resources/gdc.dat",
+          "path" : "gdc-style-900-output-transform-demo/1.43.1/Contents/Resources/gdc.dat",
           "repo" : "files",
-          "sha256" : "7a73875b4e52ef53e874410f25bdb8530905a3e46065b337d86597652ce966d8"
+          "sha256" : "e03acfe1056d6686665a70d5181cad271b9db991b02b1be3902cf5da042c9af8"
         },
         {
-          "path" : "gdc-style-900-output-transform-demo/1.43.0/Contents/Win64/GDC 900 Output Transform Demo.ofx",
+          "path" : "gdc-style-900-output-transform-demo/1.43.1/Contents/Win64/GDC 900 Output Transform Demo.ofx",
           "repo" : "files",
           "sha256" : "c15a35d1c58209082928dd0d609fb44efa54705382285e14a2d189bc76a16dc8"
         },
         {
-          "path" : "gdc-style-900-output-transform-demo/1.43.0/Contents/_CodeSignature/CodeResources",
+          "path" : "gdc-style-900-output-transform-demo/1.43.1/Contents/_CodeSignature/CodeResources",
           "repo" : "files",
-          "sha256" : "f08e861e252d7bd85c39dc1410f877a24b37f3b4ad3678eeb032e43b971c5aaf"
+          "sha256" : "dd0b3270adc3e005507f9e546a48c1aa46ab4bdbdad61bc28a4392898e227d5e"
         }
       ],
       "id" : "gdc-style-900-output-transform-demo",
@@ -1019,7 +1019,7 @@
       "priceEUR" : 0,
       "supportedOS" : "macOS",
       "type" : "ofx",
-      "version" : "1.43.0"
+      "version" : "1.43.1"
     },
     {
       "description" : "Transformare directa din profilul camerei in Rec709",
