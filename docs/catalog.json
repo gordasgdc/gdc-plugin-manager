@@ -1078,13 +1078,13 @@
       ],
       "iconSymbol" : "camera.filters",
       "id" : "GDC Fuse 210-250 Log Demo.ofx",
-      "isFree" : false,
-      "isTrial" : false,
+      "isFree" : true,
+      "isTrial" : true,
       "name" : "GDC Fuse 210-250 Log Demo.ofx",
       "priceEUR" : 0,
       "supportedOS" : "crossPlatform",
       "type" : "ofx",
-      "version" : "1.0.0"
+      "version" : "1.0.1"
     },
     {
       "bundleFolderName" : "GDC Fuse 280-300 Log Demo.ofx.bundle",
