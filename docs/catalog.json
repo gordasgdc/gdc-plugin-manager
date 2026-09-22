@@ -332,6 +332,201 @@
   ],
   "items" : [
     {
+      "bundleFolderName" : "GDC 10 Input Transform Demo.ofx.bundle",
+      "coverImage" : "covers/gdc-style-10-input-transform-demo.png?v=4e108491",
+      "description" : "Demo version (discreet watermark) — GDC 10 Input Transform",
+      "files" : [
+        {
+          "path" : "gdc-style-10-input-transform-demo/1.43.0/Contents/Info.plist",
+          "repo" : "files",
+          "sha256" : "1c706e4235174750c628845cdc6770ed3a1c77e841c0593ec040dd0054e4e932"
+        },
+        {
+          "path" : "gdc-style-10-input-transform-demo/1.43.0/Contents/MacOS/GDC 10 Input Transform Demo.ofx",
+          "repo" : "files",
+          "sha256" : "27ac289eceba56ec0647ccf7796af25cac6bf788ff4246affc88c7f055bfae2d"
+        },
+        {
+          "path" : "gdc-style-10-input-transform-demo/1.43.0/Contents/Resources/dev.gordas.style.idt.7fbd6e633e76d8d4.png",
+          "repo" : "files",
+          "sha256" : "44e377f3e473a9d282b414ad14580a09bdf5dd14a9fc8a566e8ac39840731239"
+        },
+        {
+          "path" : "gdc-style-10-input-transform-demo/1.43.0/Contents/Resources/dev.gordas.style.idt.7fbd6e633e76d8d4.svg",
+          "repo" : "files",
+          "sha256" : "c6905e48226e7fd3e0afec12797a6b8b333726dc5e78d43e4f6a96ae79fce911"
+        },
+        {
+          "path" : "gdc-style-10-input-transform-demo/1.43.0/Contents/Resources/gdc-cuda.bin",
+          "repo" : "files",
+          "sha256" : "5cc4a1ff558985ee29571e745b40e25a26acf2022f70a2a08ca03e2471fcf65b"
+        },
+        {
+          "path" : "gdc-style-10-input-transform-demo/1.43.0/Contents/Resources/gdc-opencl.bin",
+          "repo" : "files",
+          "sha256" : "cff94b25d90720105c8e8f011768b294bedb86bafcf4514a69168150cc40e846"
+        },
+        {
+          "path" : "gdc-style-10-input-transform-demo/1.43.0/Contents/Resources/gdc.bin",
+          "repo" : "files",
+          "sha256" : "5022df4b254d193ec310b06c6143df42509b1a2aac1c103e0193f731bad258e7"
+        },
+        {
+          "path" : "gdc-style-10-input-transform-demo/1.43.0/Contents/Resources/gdc.dat",
+          "repo" : "files",
+          "sha256" : "815c90513624f3abea1c1008ba48ef70532086eed260d7c93a25443c5c88c962"
+        },
+        {
+          "path" : "gdc-style-10-input-transform-demo/1.43.0/Contents/Win64/GDC 10 Input Transform Demo.ofx",
+          "repo" : "files",
+          "sha256" : "c15a35d1c58209082928dd0d609fb44efa54705382285e14a2d189bc76a16dc8"
+        },
+        {
+          "path" : "gdc-style-10-input-transform-demo/1.43.0/Contents/_CodeSignature/CodeResources",
+          "repo" : "files",
+          "sha256" : "f3f5001575b0d0d7c765774a7658c93ceedeb835d1d8a21bd5d70700b66040b0"
+        }
+      ],
+      "id" : "gdc-style-10-input-transform-demo",
+      "isFree" : true,
+      "isTrial" : false,
+      "name" : "GDC 10 Input Transform Demo",
+      "priceEUR" : 0,
+      "supportedOS" : "macOS",
+      "type" : "ofx",
+      "version" : "1.43.0"
+    },
+    {
+      "bundleFolderName" : "GDC 200 Linear to Log Demo.ofx.bundle",
+      "coverImage" : "covers/gdc-style-200-space-convert-demo.png?v=161b5439",
+      "description" : "Demo version (discreet watermark) — GDC 200 Linear to Log",
+      "files" : [
+        {
+          "path" : "gdc-style-200-space-convert-demo/1.43.0/Contents/Info.plist",
+          "repo" : "files",
+          "sha256" : "b687938dcfdfcd6049dabe57182cb5787c7719281ca71daad44a273db39edffe"
+        },
+        {
+          "path" : "gdc-style-200-space-convert-demo/1.43.0/Contents/MacOS/GDC 200 Linear to Log Demo.ofx",
+          "repo" : "files",
+          "sha256" : "c7730704467b2467a43b0b67447e06109650a52690d9e4008f263c2bf9bbd6d5"
+        },
+        {
+          "path" : "gdc-style-200-space-convert-demo/1.43.0/Contents/Resources/dev.gordas.style.idt.601f678aff8d7cc1.png",
+          "repo" : "files",
+          "sha256" : "aed6ff5c4a3576db3baaaa227ac51822ac8ee648cedb9a36942a0cd78967cae4"
+        },
+        {
+          "path" : "gdc-style-200-space-convert-demo/1.43.0/Contents/Resources/dev.gordas.style.idt.601f678aff8d7cc1.svg",
+          "repo" : "files",
+          "sha256" : "2983242814bf8273fd9390e1e035fa2d8727d1fe27e4ccf9bfe6cc8a6a41279b"
+        },
+        {
+          "path" : "gdc-style-200-space-convert-demo/1.43.0/Contents/Resources/gdc-cuda.bin",
+          "repo" : "files",
+          "sha256" : "f7b62e8f6fa4f1db0d6ed93f7737b0f1b5c46afb66c8debda4acea5bd1f2b688"
+        },
+        {
+          "path" : "gdc-style-200-space-convert-demo/1.43.0/Contents/Resources/gdc-opencl.bin",
+          "repo" : "files",
+          "sha256" : "699131b3081dee1dce6648cb500b7907288a1fb32267c3c6d9881faac6ec2fc8"
+        },
+        {
+          "path" : "gdc-style-200-space-convert-demo/1.43.0/Contents/Resources/gdc.bin",
+          "repo" : "files",
+          "sha256" : "766dc7136f8c2cb55d894343de42632d6d3a976941e9ac3b65e0ab9597dd66da"
+        },
+        {
+          "path" : "gdc-style-200-space-convert-demo/1.43.0/Contents/Resources/gdc.dat",
+          "repo" : "files",
+          "sha256" : "2eb339696248b1aa32ebd4c41fc0fcaecea1ef3e8d1bbaf6d35b2501bbddd24c"
+        },
+        {
+          "path" : "gdc-style-200-space-convert-demo/1.43.0/Contents/Win64/GDC 200 Linear to Log Demo.ofx",
+          "repo" : "files",
+          "sha256" : "c15a35d1c58209082928dd0d609fb44efa54705382285e14a2d189bc76a16dc8"
+        },
+        {
+          "path" : "gdc-style-200-space-convert-demo/1.43.0/Contents/_CodeSignature/CodeResources",
+          "repo" : "files",
+          "sha256" : "df24bf8c555175a0c296a5f520a2d9f154f0e015a559872a9dbcdb6f5f28bed3"
+        }
+      ],
+      "id" : "gdc-style-200-space-convert-demo",
+      "isFree" : true,
+      "isTrial" : false,
+      "name" : "GDC 200 Linear to Log Demo",
+      "priceEUR" : 0,
+      "supportedOS" : "macOS",
+      "type" : "ofx",
+      "version" : "1.43.0"
+    },
+    {
+      "bundleFolderName" : "GDC 900 Output Transform Demo.ofx.bundle",
+      "coverImage" : "covers/gdc-style-900-output-transform-demo.png?v=99e29aba",
+      "description" : "Demo version (discreet watermark) — GDC 900 Output Transform",
+      "files" : [
+        {
+          "path" : "gdc-style-900-output-transform-demo/1.43.0/Contents/Info.plist",
+          "repo" : "files",
+          "sha256" : "76dbf510ef50b616f3ede2e177f7cff3b4980d637e99b5329ba6b7fa89a92668"
+        },
+        {
+          "path" : "gdc-style-900-output-transform-demo/1.43.0/Contents/MacOS/GDC 900 Output Transform Demo.ofx",
+          "repo" : "files",
+          "sha256" : "fcaa97b9f6cba05a482957a1a54ed2528302a0d520ff4e2cd0c648e51b7b871b"
+        },
+        {
+          "path" : "gdc-style-900-output-transform-demo/1.43.0/Contents/Resources/dev.gordas.style.idt.e3be9148e304ba79.png",
+          "repo" : "files",
+          "sha256" : "8ab4bffc918a181389a07147aaf21131733ca920c0022a28b45baab5568c51f9"
+        },
+        {
+          "path" : "gdc-style-900-output-transform-demo/1.43.0/Contents/Resources/dev.gordas.style.idt.e3be9148e304ba79.svg",
+          "repo" : "files",
+          "sha256" : "77e776dd941876296c800625dbbe5f693259ca01d9eaf06c706ecbc945793928"
+        },
+        {
+          "path" : "gdc-style-900-output-transform-demo/1.43.0/Contents/Resources/gdc-cuda.bin",
+          "repo" : "files",
+          "sha256" : "bb6fe817e7c33bab21a37490a0259b73c08d98f994ea13d452f488b5d27fed5f"
+        },
+        {
+          "path" : "gdc-style-900-output-transform-demo/1.43.0/Contents/Resources/gdc-opencl.bin",
+          "repo" : "files",
+          "sha256" : "f5110c9ffa3c32a8461ccd9374ed7db86d33f5d7c9f318a1f80f7e8476d4aefb"
+        },
+        {
+          "path" : "gdc-style-900-output-transform-demo/1.43.0/Contents/Resources/gdc.bin",
+          "repo" : "files",
+          "sha256" : "6fe2a4ebbf13fc61ae640ec7e6b3152d326c13a3f1ceae0dcda967c1db28b8f9"
+        },
+        {
+          "path" : "gdc-style-900-output-transform-demo/1.43.0/Contents/Resources/gdc.dat",
+          "repo" : "files",
+          "sha256" : "7a73875b4e52ef53e874410f25bdb8530905a3e46065b337d86597652ce966d8"
+        },
+        {
+          "path" : "gdc-style-900-output-transform-demo/1.43.0/Contents/Win64/GDC 900 Output Transform Demo.ofx",
+          "repo" : "files",
+          "sha256" : "c15a35d1c58209082928dd0d609fb44efa54705382285e14a2d189bc76a16dc8"
+        },
+        {
+          "path" : "gdc-style-900-output-transform-demo/1.43.0/Contents/_CodeSignature/CodeResources",
+          "repo" : "files",
+          "sha256" : "f08e861e252d7bd85c39dc1410f877a24b37f3b4ad3678eeb032e43b971c5aaf"
+        }
+      ],
+      "id" : "gdc-style-900-output-transform-demo",
+      "isFree" : true,
+      "isTrial" : false,
+      "name" : "GDC 900 Output Transform Demo",
+      "priceEUR" : 0,
+      "supportedOS" : "macOS",
+      "type" : "ofx",
+      "version" : "1.43.0"
+    },
+    {
       "description" : "Transformare directa din profilul camerei in Rec709",
       "files" : [
         {
