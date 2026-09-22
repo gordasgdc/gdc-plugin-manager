@@ -1022,6 +1022,71 @@
       "version" : "1.43.1"
     },
     {
+      "bundleFolderName" : "GDC Fuse 280-300 Log Demo.ofx.bundle",
+      "description" : "",
+      "files" : [
+        {
+          "path" : "GDC Fuse 280-300 Log Demo.ofx/1.0.0/Contents/Info.plist",
+          "repo" : "files",
+          "sha256" : "e700aeb728d1f749a25a567769c29d8f610c2231cb2977485ba5fe1d479c9566"
+        },
+        {
+          "path" : "GDC Fuse 280-300 Log Demo.ofx/1.0.0/Contents/MacOS/GDC Fuse 280-300 Log Demo.ofx",
+          "repo" : "files",
+          "sha256" : "b538c603e97d128ef0ce1a16cf5e1b805bc6820fac999c0c30b175d73c6ca659"
+        },
+        {
+          "path" : "GDC Fuse 280-300 Log Demo.ofx/1.0.0/Contents/Resources/dev.gordas.style.idt.d5020b6176808b7c.png",
+          "repo" : "files",
+          "sha256" : "27ca1a4d08132547d816dd0a5759490f9005dc4f823d1cfad46d7c1e9948bc2b"
+        },
+        {
+          "path" : "GDC Fuse 280-300 Log Demo.ofx/1.0.0/Contents/Resources/dev.gordas.style.idt.d5020b6176808b7c.svg",
+          "repo" : "files",
+          "sha256" : "e528a73f02d7947171dfcad12982bd0e2c2e552d188417fc91975df5b9873ddc"
+        },
+        {
+          "path" : "GDC Fuse 280-300 Log Demo.ofx/1.0.0/Contents/Resources/gdc-cuda.bin",
+          "repo" : "files",
+          "sha256" : "54cde3103fb0e5f26432574bdb32977116ddee065630333be255a4bd9ffbd040"
+        },
+        {
+          "path" : "GDC Fuse 280-300 Log Demo.ofx/1.0.0/Contents/Resources/gdc-opencl.bin",
+          "repo" : "files",
+          "sha256" : "facb9f3b5226fbec0b3eb60c65154216c73e1cee8ffa1443f508ba37b9d4b170"
+        },
+        {
+          "path" : "GDC Fuse 280-300 Log Demo.ofx/1.0.0/Contents/Resources/gdc.bin",
+          "repo" : "files",
+          "sha256" : "c8962f926d66e918e27fa81e648018a057594da0a4c45973ebcb29f2148de1a0"
+        },
+        {
+          "path" : "GDC Fuse 280-300 Log Demo.ofx/1.0.0/Contents/Resources/gdc.dat",
+          "repo" : "files",
+          "sha256" : "121b9bff3a0ef9741e5d0e77aa3e9681874fedb677b22a42d7a30230666d1668"
+        },
+        {
+          "path" : "GDC Fuse 280-300 Log Demo.ofx/1.0.0/Contents/Win64/GDC Fuse 280-300 Log Demo.ofx",
+          "repo" : "files",
+          "sha256" : "c15a35d1c58209082928dd0d609fb44efa54705382285e14a2d189bc76a16dc8"
+        },
+        {
+          "path" : "GDC Fuse 280-300 Log Demo.ofx/1.0.0/Contents/_CodeSignature/CodeResources",
+          "repo" : "files",
+          "sha256" : "6db0eed0b0f6e7dcd11f3b31fd80c825cd5c288f0e39f0e8bb4f987cb9206609"
+        }
+      ],
+      "iconSymbol" : "camera.filters",
+      "id" : "GDC Fuse 280-300 Log Demo.ofx",
+      "isFree" : true,
+      "isTrial" : true,
+      "name" : "GDC Fuse 280-300 Log Demo.ofx",
+      "priceEUR" : 0,
+      "supportedOS" : "crossPlatform",
+      "type" : "ofx",
+      "version" : "1.0.0"
+    },
+    {
       "description" : "Transformare directa din profilul camerei in Rec709",
       "files" : [
         {
