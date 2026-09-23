@@ -1,9 +1,9 @@
 {
-  "version": "1.43.0",
-  "app_version": "1.43.0",
-  "changes": "Robustețe: starea GPU e verificată și în timpul randării în DaVinci Resolve, nicio excepție internă nu mai poate închide aplicația gazdă, iar descrierea pluginului Film Pipeline nu mai citește în afara unei liste. Testat la 8K (1000 de cadre fără scurgeri de memorie) și pe dimensiuni neobișnuite. Pachetele exportate cu versiuni mai vechi trebuie reexportate.",
+  "version": "1.44.0",
+  "app_version": "1.44.0",
+  "changes": "Colecțiile de stiluri păstrează acum structura folderelor tale: un folder tras devine un grup, iar subfolderele (inclusiv cele pe mai multe niveluri, ex. 1_Films › Kodak) apar în meniul Categorie din Resolve, în ordinea de pe disc. Film Pipeline citește folderele de resurse cu toate subfolderele și arată împărțirea pe straturi înainte de regenerare. La export poți alege categoria pluginului în Effects Library din Resolve, separat pentru Full și Demo (ex. „GDC” și „GDC Demo”). Nou: Istoric versiuni.",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-lut-lab/GDCStyleLab-1.43.0-transition.dmg"
+    "mac": "https://gordas.dev/gdc-lut-lab/GDCStyleLab-1.44.0-transition.dmg"
   },
   "mandatory": false
 }
