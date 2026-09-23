@@ -1,9 +1,9 @@
 {
-  "version": "1.45.0",
-  "app_version": "1.45.0",
-  "changes": "Film Pipeline urmează acum exact structura folderelor tale: fiecare subfolder devine o categorie în Resolve (fără numărul de ordine, în ordinea lui, ex. „Films / Kodak” … „Pushed”), iar fișierele .cube din el devin stilurile. Straturile pluginului sunt Layer 1–4, fiecare cu tot catalogul, combinabile liber. Pentru folderele adăugate deja, exportul regenerează singur modelele.",
+  "version": "1.46.0",
+  "app_version": "1.46.0",
+  "changes": "Film Pipeline: fiecare folder de nivel 1 al catalogului tău devine acum un strat separat în Resolve, cu bifă de activare, Categorie (subfolderele), STYLE și Mix — de exemplu 12 foldere dau 12 straturi. Nou: pentru fiecare folder alegi în aplicație spațiul în care au fost create LUT-urile (intrare și ieșire, ex. S-Log3 → Rec.709); pluginul convertește automat față de intrarea și ieșirea nodului. Cel mult 4 straturi pot fi active simultan.",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-lut-lab/GDCStyleLab-1.45.0-transition.dmg"
+    "mac": "https://gordas.dev/gdc-lut-lab/GDCStyleLab-1.46.0-transition.dmg"
   },
   "mandatory": false
 }
