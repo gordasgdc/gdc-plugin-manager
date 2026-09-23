@@ -825,6 +825,71 @@
       "supportedOS" : "macOS",
       "type" : "ofx",
       "version" : "1.46.0"
+    },
+    {
+      "bundleFolderName" : "GDC Pro Universal IDT Demo.ofx.bundle",
+      "coverImage" : "covers/gdc-style-gdc-pro-universal-idt-demo.png?v=2ccc0087",
+      "description" : "Demo version (discreet watermark) — GDC Pro Universal IDT",
+      "files" : [
+        {
+          "path" : "gdc-style-gdc-pro-universal-idt-demo/1.46.0/Contents/Info.plist",
+          "repo" : "files",
+          "sha256" : "7a4a4bee92e4cbb115200769fb7aea25a5bedd2d77cfcc4bca6db916b9b7ef9b"
+        },
+        {
+          "path" : "gdc-style-gdc-pro-universal-idt-demo/1.46.0/Contents/MacOS/GDC Pro Universal IDT Demo.ofx",
+          "repo" : "files",
+          "sha256" : "2a840a95e41db5cf9e2cabced5c706364948053e50203aca4ac7da03e9102e6b"
+        },
+        {
+          "path" : "gdc-style-gdc-pro-universal-idt-demo/1.46.0/Contents/Resources/dev.gordas.style.idt.444322681c390eae.png",
+          "repo" : "files",
+          "sha256" : "fabfe01e322c16e0e0577b56aeeb2c19c5b1977b2cdeba5d5275c0700d22d60b"
+        },
+        {
+          "path" : "gdc-style-gdc-pro-universal-idt-demo/1.46.0/Contents/Resources/dev.gordas.style.idt.444322681c390eae.svg",
+          "repo" : "files",
+          "sha256" : "9cdd8a9ec891dd3c7579f477484957b228eac09c347b191b2762b233fc25bcc1"
+        },
+        {
+          "path" : "gdc-style-gdc-pro-universal-idt-demo/1.46.0/Contents/Resources/gdc-cuda.bin",
+          "repo" : "files",
+          "sha256" : "5c06a1c6e6c6912a2f80b69f6194600e49d1c2d4b9dc0756907c6a6c1f298150"
+        },
+        {
+          "path" : "gdc-style-gdc-pro-universal-idt-demo/1.46.0/Contents/Resources/gdc-opencl.bin",
+          "repo" : "files",
+          "sha256" : "a97b2c891a532ee631dd78813db3555c8cc20e626ee9f8166283760a14d2a8dc"
+        },
+        {
+          "path" : "gdc-style-gdc-pro-universal-idt-demo/1.46.0/Contents/Resources/gdc.bin",
+          "repo" : "files",
+          "sha256" : "b1671c2c69f761d85b0539df181bb2ee0fe6f5b44fca33bdbe52c6d3422fc40f"
+        },
+        {
+          "path" : "gdc-style-gdc-pro-universal-idt-demo/1.46.0/Contents/Resources/gdc.dat",
+          "repo" : "files",
+          "sha256" : "b25c6999c0b2bc85a5d13246f5fc4676a6bf5c5e9d95bc415b5078b3561eb2ca"
+        },
+        {
+          "path" : "gdc-style-gdc-pro-universal-idt-demo/1.46.0/Contents/Win64/GDC Pro Universal IDT Demo.ofx",
+          "repo" : "files",
+          "sha256" : "68117e2978d820db9454301662b9635c507f8f7c5d3904a97a59bf20d5a66e44"
+        },
+        {
+          "path" : "gdc-style-gdc-pro-universal-idt-demo/1.46.0/Contents/_CodeSignature/CodeResources",
+          "repo" : "files",
+          "sha256" : "9f2576aaabb4f490b156a76a7340e67258c9bfbc2deeb1ca77ff3952b30478d4"
+        }
+      ],
+      "id" : "gdc-style-gdc-pro-universal-idt-demo",
+      "isFree" : true,
+      "isTrial" : false,
+      "name" : "GDC Pro Universal IDT Demo",
+      "priceEUR" : 0,
+      "supportedOS" : "macOS",
+      "type" : "ofx",
+      "version" : "1.46.0"
     }
   ],
   "partnerOffers" : [
