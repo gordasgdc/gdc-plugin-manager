@@ -66,11 +66,14 @@ struct GenerateSerialView: View {
     // Etapa 2 extinsă (2026-08-29) — Resursele Download (LUT/SFX/VFX/
     // Plugin) pot fi acum plătite la fel ca produsele din catalog.
     @State private var downloadResources: [DownloadableResource] = []
-    @State private var selectedID = ""
+    /// Produsele bifate: un serial per produs, pentru același client/ID de mașină, într-o singură generare.
+    @State private var selectedIDs: Set<String> = []
+    /// Product ID-urile scrise manual (pachete OFX GDC STYLE Lab), memorate + cele găsite în istoricul de vânzări.
+    @AppStorage("GDCFurnizor.customProductIDs") private var customIDsStore = ""
+    @State private var productFilter = ""
     /// Pachete OFX exportate din GDC STYLE Lab: fiecare are propriul Product ID
     /// (ales la export), deci nu poate fi într-o listă fixă — se scrie aici.
     @State private var customProductID = ""
-    private static let customTag = "__product_id__"
     @State private var customerName = ""
     @State private var email = ""
     @State private var machineID = ""
@@ -107,10 +110,13 @@ struct GenerateSerialView: View {
     @FocusState private var machineIDFocused: Bool
 
     @State private var showConfirm = false
-    @State private var generatedCode: String?
-    /// Pentru cine s-a generat codul afișat (formularul se golește imediat după generare, deci numele clientului nu mai e în câmpuri).
-    @State private var generatedFor = ""
-    @State private var justCopied = false
+    /// Licențele generate în sesiunea curentă: rămân în tabel până la „Reset”.
+    struct GeneratedLicense: Identifiable {
+        let id = UUID()
+        let productID, productName, customer, machineID, expires, code: String
+    }
+    @State private var generated: [GeneratedLicense] = []
+    @State private var copiedID: UUID?
     @State private var errorMessage: String?
 
     // MARK: - Autocompletare client (cerut explicit 2026-08-24)
@@ -125,46 +131,7 @@ struct GenerateSerialView: View {
             VStack(alignment: .leading, spacing: 16) {
                 Text("Generează serial").font(.title2).fontWeight(.semibold)
 
-                Picker("Produs", selection: $selectedID) {
-                    Text("Alege…").tag("")
-                    Section("Din catalog (LUT / DCTL / PowerGrade)") {
-                        ForEach(items) { item in
-                            Text("\(item.name) — \(item.priceDisplay)").tag(item.id)
-                        }
-                    }
-                    Section("Resurse Download (LUT/SFX/VFX/Plugin)") {
-                        ForEach(downloadResources) { resource in
-                            Text("\(resource.name) — \(resource.priceDisplay)").tag(resource.id)
-                        }
-                    }
-                    Section("Aplicații standalone") {
-                        ForEach(gdcStandaloneProducts) { app in
-                            Text(app.name).tag(app.id)
-                        }
-                    }
-                    Section("Pachete OFX (GDC STYLE Lab)") {
-                        Text("Product ID personalizat…").tag(Self.customTag)
-                    }
-                }
-                .onChange(of: selectedID) {
-                    // Doar produsele din catalog au un preț cunoscut dinainte —
-                    // aplicațiile standalone au prețuri variabile per vânzare
-                    // (vezi memoria de proces: DataMover ~gratuit prin extindere
-                    // de trial, CursorPro 9€, etc.), deci prețul rămâne gol,
-                    // completat manual la fiecare generare.
-                    if let item = items.first(where: { $0.id == selectedID }) {
-                        priceText = String(item.priceEUR)
-                    } else if let resource = downloadResources.first(where: { $0.id == selectedID }) {
-                        priceText = String(resource.priceEUR)
-                    } else if gdcStandaloneProducts.contains(where: { $0.id == selectedID }) {
-                        priceText = ""
-                    }
-                }
-                if selectedID == Self.customTag {
-                    TextField("Product ID (exact ca la exportul OFX, ex. gdc-style-kodak)", text: $customProductID)
-                        .textFieldStyle(.roundedBorder)
-                }
-
+                productPicker
                 GroupBox {
                     VStack(alignment: .leading, spacing: 10) {
                         VStack(alignment: .leading, spacing: 4) {
@@ -212,13 +179,7 @@ struct GenerateSerialView: View {
                             .font(.system(.body, design: .monospaced))
                             .focused($machineIDFocused)
                             .onChange(of: machineID) {
-                                // Codul generat apartine ID-ului de dinainte.
-                                // Lasat pe ecran in timp ce tastezi altul, e
-                                // exact genul de confuzie care duce la
-                                // trimiterea serialului gresit unui client.
-                                generatedCode = nil
-                                justCopied = false
-
+                                // Codurile generate rămân în tabel, cu ID-ul lor pe fiecare rând.
                                 // Autocompletare după ID de mașină (tracking + istoric
                                 // vânzări — vezi ClientDirectory.swift). Nu suprascrie
                                 // dacă numele e deja completat manual de Cristi — doar
@@ -275,44 +236,24 @@ struct GenerateSerialView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 8))
                 }
 
-                Button("Generează…") { showConfirm = true }
-                    .disabled(!isFormValid)
-                    .confirmationDialog(
-                        "Generezi un cod pentru \(selectedItemName) — \(customerName)?",
-                        isPresented: $showConfirm, titleVisibility: .visible
-                    ) {
-                        Button("Generează") { generate() }
-                        Button("Anulează", role: .cancel) {}
-                    }
-
-                if let generatedCode {
-                    GroupBox {
-                        VStack(alignment: .leading, spacing: 10) {
-                            if !generatedFor.isEmpty {
-                                Text("Cod generat pentru \(generatedFor)").font(.caption).foregroundStyle(.secondary)
-                            }
-                            Text(generatedCode)
-                                .font(.system(.body, design: .monospaced))
-                                .textSelection(.enabled)
-                            HStack(spacing: 10) {
-                                Button(justCopied ? "Copiat." : "Copiază") {
-                                    let pb = NSPasteboard.general
-                                    pb.clearContents()
-                                    pb.setString(generatedCode, forType: .string)
-                                    justCopied = true
-                                }
-                                Button("Închide codul") { self.generatedCode = nil; generatedFor = ""; justCopied = false }
-                                    .help("Ascunde codul afișat (formularul e deja gol pentru următorul client)")
-                            }
+                HStack {
+                    Button(selectedIDs.count > 1 ? "Generează \(selectedIDs.count) licențe…" : "Generează…") { showConfirm = true }
+                        .disabled(!isFormValid)
+                        .confirmationDialog(
+                            "Generezi \(selectedIDs.count == 1 ? "un cod" : "\(selectedIDs.count) coduri") pentru \(customerName) — \(selectedNames)?",
+                            isPresented: $showConfirm, titleVisibility: .visible
+                        ) {
+                            Button("Generează") { generate() }
+                            Button("Anulează", role: .cancel) {}
                         }
-                        .padding(8)
-                    }
+                    Button("Reset / Curăță câmpurile") { resetForm() }
+                        .help("Golește produsele bifate, clientul, durata, prețul și tabelul de licențe generate")
                 }
-
+                if !generated.isEmpty { generatedTable }
                 Spacer(minLength: 0)
             }
             .padding(24)
-            .frame(maxWidth: 640, alignment: .leading)
+            .frame(maxWidth: 820, alignment: .leading)
         }
         .task {
             loadItems()
@@ -320,29 +261,24 @@ struct GenerateSerialView: View {
         }
     }
 
-    /// Pregătește formularul pentru următorul client.
-    ///
-    /// Golește DOAR ce ține de persoana curentă — ID, nume, email, cod
-    /// generat. Aplicația selectată, durata și prețul rămân: la procesarea
-    /// unui lot de clienți pentru același produs, acelea sunt identice, iar
-    /// resetarea lor ar însemna reintroducerea acelorași valori de fiecare
-    /// dată.
-    private func startNewClient() {
-        clearClientFields()
-        generatedCode = nil
-        generatedFor = ""
-        justCopied = false
-        errorMessage = nil
-    }
-
-    /// Golește câmpurile clientului curent (ID mașină, nume, email, sugestii), păstrând produsul, durata și prețul.
-    /// Se apelează automat după o generare reușită: codul rămâne afișat, formularul e gata pentru următorul client, fără ieșit din pagină.
-    private func clearClientFields() {
+    /// Reset complet: produse, client, durată, preț, notă și tabelul de licențe generate.
+    private func resetForm() {
+        selectedIDs = []
+        productFilter = ""
+        customProductID = ""
         machineID = ""
         customerName = ""
         email = ""
         autofilledFrom = nil
         nameSuggestions = []
+        durationUnit = .lifetime
+        durationValue = "1"
+        priceText = ""
+        validUntilVersionNote = ""
+        licensePlatform = .any
+        generated = []
+        copiedID = nil
+        errorMessage = nil
         machineIDFocused = true
     }
 
@@ -356,20 +292,142 @@ struct GenerateSerialView: View {
         autofilledFrom = record
     }
 
-    /// ID-ul pentru care se generează serialul (cel personalizat, pentru pachetele OFX).
-    private var effectiveProductID: String {
-        selectedID == Self.customTag ? customProductID.trimmingCharacters(in: .whitespacesAndNewlines) : selectedID
+    /// Product ID-urile personalizate: memorate la generare + cele din istoricul de vânzări care nu sunt în alte liste.
+    private var customIDs: [String] {
+        let known = Set(items.map(\.id) + downloadResources.map(\.id) + gdcStandaloneProducts.map(\.id))
+        var ids = customIDsStore.split(separator: "\n").map(String.init)
+        for e in SalesLog.readAll() where e.productID.hasPrefix("gdc-style-") && !ids.contains(e.productID) { ids.append(e.productID) }
+        return ids.filter { !$0.isEmpty && !known.contains($0) }.sorted()
     }
 
-    private var selectedItemName: String {
-        if selectedID == Self.customTag { return effectiveProductID }
-        if let item = items.first(where: { $0.id == selectedID }) { return item.name }
-        if let app = gdcStandaloneProducts.first(where: { $0.id == selectedID }) { return app.name }
-        return selectedID
+    private func rememberCustomID(_ id: String) {
+        var ids = customIDsStore.split(separator: "\n").map(String.init)
+        guard !id.isEmpty, !ids.contains(id) else { return }
+        ids.append(id)
+        customIDsStore = ids.joined(separator: "\n")
+    }
+
+    private func name(of id: String) -> String {
+        if let item = items.first(where: { $0.id == id }) { return item.name }
+        if let r = downloadResources.first(where: { $0.id == id }) { return r.name }
+        if let app = gdcStandaloneProducts.first(where: { $0.id == id }) { return app.name }
+        return id
+    }
+
+    private var selectedNames: String { selectedIDs.sorted().map(name(of:)).joined(separator: ", ") }
+
+    private func matches(_ text: String) -> Bool {
+        productFilter.isEmpty || text.localizedCaseInsensitiveContains(productFilter)
+    }
+
+    /// Bifa unui produs; la un singur produs din catalog cu preț cunoscut, prețul se completează singur.
+    private func toggle(_ id: String) -> Binding<Bool> {
+        Binding(get: { selectedIDs.contains(id) }, set: { on in
+            if on { selectedIDs.insert(id) } else { selectedIDs.remove(id) }
+            if selectedIDs.count == 1, let only = selectedIDs.first {
+                if let item = items.first(where: { $0.id == only }) { priceText = String(item.priceEUR) }
+                else if let r = downloadResources.first(where: { $0.id == only }) { priceText = String(r.priceEUR) }
+            }
+        })
+    }
+
+    private struct ProductRow: Identifiable { let id: String; let label: String }
+
+    @ViewBuilder private func productSection(_ title: String, _ rows: [ProductRow]) -> some View {
+        let visible = rows.filter { matches($0.label) || matches($0.id) }
+        if !visible.isEmpty {
+            Text(title).font(.caption).foregroundStyle(.secondary).padding(.top, 4)
+            ForEach(visible) { row in
+                Toggle(isOn: toggle(row.id)) {
+                    HStack {
+                        Text(row.label)
+                        if row.label != row.id { Text(row.id).font(.system(.caption2, design: .monospaced)).foregroundStyle(.tertiary) }
+                    }
+                }
+            }
+        }
+    }
+
+    /// Selecție multiplă: bife pe secțiuni, filtru de căutare, Product ID nou (memorat pentru data viitoare).
+    private var productPicker: some View {
+        GroupBox {
+            VStack(alignment: .leading, spacing: 4) {
+                HStack {
+                    Text("Produse").fontWeight(.semibold)
+                    Text(selectedIDs.isEmpty ? "niciunul bifat" : "\(selectedIDs.count) bifate").font(.caption).foregroundStyle(.secondary)
+                    Spacer()
+                    TextField("Caută produs…", text: $productFilter).textFieldStyle(.roundedBorder).frame(width: 220)
+                }
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 2) {
+                        productSection("Aplicații standalone", gdcStandaloneProducts.map { ProductRow(id: $0.id, label: $0.name) })
+                        productSection("Pachete OFX (GDC STYLE Lab) — Product ID-uri memorate", customIDs.map { ProductRow(id: $0, label: $0) })
+                        productSection("Din catalog (LUT / DCTL / PowerGrade)", items.map { ProductRow(id: $0.id, label: "\($0.name) — \($0.priceDisplay)") })
+                        productSection("Resurse Download (LUT/SFX/VFX/Plugin)", downloadResources.map { ProductRow(id: $0.id, label: "\($0.name) — \($0.priceDisplay)") })
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .frame(height: 220)
+                HStack {
+                    TextField("Product ID nou (exact ca la exportul OFX, ex. gdc-style-kodak)", text: $customProductID)
+                        .textFieldStyle(.roundedBorder)
+                        .onSubmit(addCustomID)
+                    Button("Adaugă și bifează", action: addCustomID)
+                        .disabled(customProductID.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                }
+            }
+            .padding(8)
+        }
+    }
+
+    private func addCustomID() {
+        let id = customProductID.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !id.isEmpty else { return }
+        rememberCustomID(id)
+        selectedIDs.insert(id)
+        customProductID = ""
+    }
+
+    private func copy(_ text: String) {
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(text, forType: .string)
+    }
+
+    /// Tabelul licențelor generate în sesiune, cu copiere rapidă per rând (ca în Clienți).
+    private var generatedTable: some View {
+        GroupBox {
+            VStack(alignment: .leading, spacing: 6) {
+                HStack {
+                    Text("Licențe generate (\(generated.count))").fontWeight(.semibold)
+                    Spacer()
+                    Button("Copiază toate") {
+                        copy(generated.map { "\($0.productName): \($0.code)" }.joined(separator: "\n"))
+                    }
+                }
+                Grid(alignment: .leading, horizontalSpacing: 12, verticalSpacing: 6) {
+                    GridRow {
+                        Text("Produs"); Text("Client"); Text("ID mașină"); Text("Expiră"); Text("Cod"); Text("")
+                    }
+                    .font(.caption).foregroundStyle(.secondary)
+                    Divider()
+                    ForEach(generated) { g in
+                        GridRow {
+                            Text(g.productName).lineLimit(1)
+                            Text(g.customer).lineLimit(1)
+                            Text(g.machineID.isEmpty ? "—" : g.machineID).font(.system(.caption, design: .monospaced))
+                            Text(g.expires).font(.caption).lineLimit(1)
+                            Text(g.code).font(.system(.caption, design: .monospaced)).lineLimit(1).truncationMode(.middle).textSelection(.enabled)
+                            Button(copiedID == g.id ? "Copiat." : "Copiază cod") { copy(g.code); copiedID = g.id }
+                        }
+                    }
+                }
+            }
+            .padding(8)
+        }
     }
 
     private var isFormValid: Bool {
-        !effectiveProductID.isEmpty
+        !selectedIDs.isEmpty
             && !customerName.trimmingCharacters(in: .whitespaces).isEmpty
             && (durationUnit == .lifetime || Int(durationValue) != nil)
             && Double(priceText) != nil
@@ -385,9 +443,7 @@ struct GenerateSerialView: View {
 
     private func generate() {
         errorMessage = nil
-        generatedCode = nil
-        justCopied = false
-
+        copiedID = nil
         guard let price = Double(priceText) else { return }
         let expiresAt: Int64
         var expiresDisplay: String
@@ -406,25 +462,27 @@ struct GenerateSerialView: View {
         if !trimmedVersionNote.isEmpty {
             expiresDisplay += " (valabil manual până la versiunea \(trimmedVersionNote) — aplicat prin revocare)"
         }
-
         let trimmedMachineID = machineID.trimmingCharacters(in: .whitespacesAndNewlines)
-
+        let customer = customerName.trimmingCharacters(in: .whitespaces)
+        let known = Set(items.map(\.id) + downloadResources.map(\.id) + gdcStandaloneProducts.map(\.id))
         do {
             let key = try VendorKeyStore.loadPrivateKeyBase64()
-            let code = try LicenseGenerator.generate(
-                privateKeyBase64: key, productID: effectiveProductID, expiresAt: expiresAt,
-                machineIDBase32: trimmedMachineID.isEmpty ? nil : trimmedMachineID,
-                platform: licensePlatform
-            )
-            generatedCode = code
-            generatedFor = customerName.trimmingCharacters(in: .whitespaces)
-
-            try? SalesLog.append(
-                productID: effectiveProductID, productName: selectedItemName, customer: customerName,
-                email: email, priceEUR: price, expiresDisplay: expiresDisplay,
-                machineID: trimmedMachineID, serial: code
-            )
-            clearClientFields()   // reset automat al formularului după generare reușită (cerut de Cristi 2026-09-21)
+            // Un serial per produs bifat, același client / ID de mașină / durată; fiecare intră în SalesLog.
+            for productID in selectedIDs.sorted(by: { name(of: $0) > name(of: $1) }) {
+                let code = try LicenseGenerator.generate(
+                    privateKeyBase64: key, productID: productID, expiresAt: expiresAt,
+                    machineIDBase32: trimmedMachineID.isEmpty ? nil : trimmedMachineID,
+                    platform: licensePlatform
+                )
+                try? SalesLog.append(
+                    productID: productID, productName: name(of: productID), customer: customer,
+                    email: email, priceEUR: price, expiresDisplay: expiresDisplay,
+                    machineID: trimmedMachineID, serial: code
+                )
+                if !known.contains(productID) { rememberCustomID(productID) }
+                generated.insert(GeneratedLicense(productID: productID, productName: name(of: productID), customer: customer,
+                                                  machineID: trimmedMachineID, expires: expiresDisplay, code: code), at: 0)
+            }
         } catch {
             errorMessage = error.localizedDescription
         }

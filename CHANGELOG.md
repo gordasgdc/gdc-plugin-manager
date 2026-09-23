@@ -1,5 +1,12 @@
 # Changelog — GDC Plugin Manager
 
+## v1.51.0 Furnizor (2026-09-23) — Generare serial: mai multe produse odată
+
+- Selecție multiplă de produse (bife, căutare) pentru același client / ID de mașină: câte o licență per produs, într-o singură generare.
+- Tabel „Licențe generate” în aceeași fereastră, cu „Copiază cod” pe fiecare rând și „Copiază toate”; rezultatul nu mai dispare.
+- Buton „Reset / Curăță câmpurile”.
+- Product ID-urile scrise manual (pachete OFX GDC STYLE Lab) se memorează și apar în listă la generările următoare (plus cele `gdc-style-*` din istoricul de vânzări).
+
 ## v1.50.2 Furnizor (2026-09-22) — Licențiere în masă cu durată în ore
 
 ### Added
