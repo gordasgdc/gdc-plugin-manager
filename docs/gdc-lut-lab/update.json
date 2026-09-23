@@ -1,9 +1,9 @@
 {
-  "version": "1.44.1",
-  "app_version": "1.44.1",
-  "changes": "Film Pipeline: categoriile din Resolve urmează acum folderele tale, fără prefixul numeric și în ordinea lui (ex. 1_Films › Kodak devine „Films / Kodak”, 12_Pushed devine „Pushed”). Exportul regenerează singur modelele când folderele adăugate s-au schimbat. Intrarea și ieșirea implicite ale nodului se aleg direct în aplicație, cu conversie automată spre spațiul modelului. În STYLE, numerele de ordine ale folderelor nu mai apar în meniuri.",
+  "version": "1.45.0",
+  "app_version": "1.45.0",
+  "changes": "Film Pipeline urmează acum exact structura folderelor tale: fiecare subfolder devine o categorie în Resolve (fără numărul de ordine, în ordinea lui, ex. „Films / Kodak” … „Pushed”), iar fișierele .cube din el devin stilurile. Straturile pluginului sunt Layer 1–4, fiecare cu tot catalogul, combinabile liber. Pentru folderele adăugate deja, exportul regenerează singur modelele.",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-lut-lab/GDCStyleLab-1.44.1-transition.dmg"
+    "mac": "https://gordas.dev/gdc-lut-lab/GDCStyleLab-1.45.0-transition.dmg"
   },
   "mandatory": false
 }
