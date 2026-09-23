@@ -686,9 +686,15 @@ struct PublishView: View {
             }
 
             log("Public catalogul (commit + push, repo public)…")
+            // Copertele produselor din lot sunt ștergeri intenționate: garda anti-ștergere (max. 2) le ignoră doar pe ele.
+            let coverPaths = Set(items.flatMap { item -> [String] in
+                var names = [item.coverImage].compactMap { $0 }.map { "docs/" + $0 }
+                for ext in ["png", "jpg", "jpeg", "webp", "heic"] { names.append("docs/\(CatalogAssets.coversFolderName)/\(item.id).\(ext)") }
+                return names
+            })
             try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo,
                                      message: items.count == 1 ? "Sterg din catalog: \(items[0].name)" : "Sterg din catalog: \(items.count) produse",
-                                     paths: ["docs/catalog.json", "docs/covers"])
+                                     paths: ["docs/catalog.json", "docs/covers"], expectedDeletions: coverPaths)
 
             successMessage = items.count == 1
                 ? "„\(items[0].name)” a fost șters complet — dispare la următorul refresh de catalog."

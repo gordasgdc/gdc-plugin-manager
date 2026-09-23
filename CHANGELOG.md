@@ -1,5 +1,9 @@
 # Changelog — GDC Plugin Manager
 
+## v1.52.1 Furnizor (2026-09-23) — Fix ștergere multiplă
+
+- Ștergerea mai multor produse cu coperte era oprită de garda anti-ștergere (max. 2 coperte per publicare). Copertele produselor din lot se declară acum ca ștergeri așteptate; garda rămâne activă pentru orice alt fișier dispărut.
+
 ## v1.52.0 Furnizor (2026-09-23) — Ștergere multiplă de produse
 
 - „Publică produs” → Actualizare: listă „Ștergere multiplă” cu bife per produs, „Selectează tot” / „Deselectează tot” și „Șterge bifate (N)”, cu confirmare care arată produsele alese; un singur commit + push per repo pentru tot lotul (aceleași reguli ca ștergerea individuală: fișierele folosite de o resursă descărcabilă rămân).

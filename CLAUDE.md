@@ -1180,3 +1180,16 @@ Păstrate verbatim. Regula generală la care se referă fiecare e în
 - **2026-09-21 — Client 1.39.2 (OFX „failed” în Resolve).** Verificat pe Resolve real: `OFXPluginCacheV2.xml` avea `status="2"` (mtime/size 0) pentru cele 19 pachete instalate întâi imbricat; Resolve nu le mai reîncerca (log: doar Universal IDT „OFX: loading”). Ștergerea intrărilor cu Resolve închis + repornire → 43/43 status 0, 20 „OFX: loading dev.gordas…”. Permisiuni/semnătură/dlopen OK (bundle ad-hoc valid). Fix permanent: `ResolveOFXCache.forget` la instalarea OFX. Nu e problemă de permisiuni sau transmisie.
 
 - **2026-09-23 — Furnizor v1.51.0.** `GenerateSerialView`: `selectedIDs` (multi, bife + filtru) → un serial per produs, toate în `SalesLog`; tabel `generated` (rămâne până la Reset; cauza „rezultat ascuns” era `onChange(machineID)` care golea codul după `clearClientFields`, eliminat); ID-uri personalizate în `@AppStorage GDCFurnizor.customProductIDs` + `gdc-style-*` din SalesLog. NEverificat în UI real.
+
+### Handoff — fișierul de stare (Regula 50, `~/Developer/CLAUDE.md`)
+
+- Fișierul de stare al acestui proiect: `PROJECT_STATE.md` (rădăcina repo-ului). La orice sesiune nouă se citește
+  ÎNTÂI el, apoi doar fragmentele strict necesare; se actualizează la milestone-uri și obligatoriu la final.
+  Dacă lipsește, se creează la prima sesiune care atinge proiectul. Repo PUBLIC: fișierul e intern, listat în `.gitignore` (doar local, Regula 29).
+- Restructurarea/ștergerea lui și orice modificare a acestui `CLAUDE.md`: doar cu diff-ul arătat și acordul lui Cristi.
+
+- **2026-09-23 — Furnizor 1.51.0 → 1.52.1.** 1.51.0: `GenerateSerialView` multi-produs + tabel + reset + Product ID-uri
+  memorate. 1.52.0: ștergere multiplă în `PublishView` (`deleteProducts(_:)`). 1.52.1: garda
+  `GitOps.guardAgainstUnexpectedDeletions` (max. 2) oprea lotul (4 coperte) DUPĂ ce repo-ul privat fusese deja împins;
+  `commitAndPush(expectedDeletions:)` exclude doar copertele lotului. Starea rămasă la primul eșec (7 produse scoase din
+  `catalog.json` + 4 coperte) a fost verificată (doar acele 7 id-uri + `updatedAt`) și publicată manual.

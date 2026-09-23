@@ -90,7 +90,9 @@ enum GitOps {
     /// (`docs/catalog.json` + `docs/covers`) instead. If a new kind of
     /// asset needs staging here, add its path explicitly — don't revert to
     /// `nil`/`-A` for this repo.
-    static func commitAndPush(at directory: URL, message: String, paths: [String]? = nil) throws {
+    /// `expectedDeletions`: fișiere a căror dispariție e cerută explicit de această publicare (ex. copertele unui lot
+    /// de produse șterse) — nu se numără la garda anti-ștergere; orice altă ștergere rămâne limitată la 2.
+    static func commitAndPush(at directory: URL, message: String, paths: [String]? = nil, expectedDeletions: Set<String> = []) throws {
         // `git add <path>` throws (exit 128, "pathspec did not match any
         // files") if the path doesn't exist yet — e.g. `docs/covers/` before
         // the first cover image is ever published. Filter to paths that
@@ -127,7 +129,7 @@ enum GitOps {
         // orice număr mai mare de ștergeri neașteptate oprește publicarea
         // ÎNAINTE de orice `git add`, ca nimic să nu ajungă stage-uit.
         if paths != nil {
-            try guardAgainstUnexpectedDeletions(at: directory, candidatePaths: existingPaths)
+            try guardAgainstUnexpectedDeletions(at: directory, candidatePaths: existingPaths, expected: expectedDeletions)
         }
 
         try run(["add"] + addArgs, at: directory)
@@ -166,7 +168,7 @@ enum GitOps {
     /// nu atinge niciodată mai mult de atât într-un singur pas.
     private static let maxExpectedDeletions = 2
 
-    private static func guardAgainstUnexpectedDeletions(at directory: URL, candidatePaths: [String]) throws {
+    private static func guardAgainstUnexpectedDeletions(at directory: URL, candidatePaths: [String], expected: Set<String> = []) throws {
         guard !candidatePaths.isEmpty else { return }
         let status = try run(["status", "--porcelain"] + candidatePaths, at: directory)
         let deletedLines = status
@@ -176,6 +178,7 @@ enum GitOps {
                 let index = line.index(line.startIndex, offsetBy: 1)
                 return line.first == "D" || line[index] == "D"
             }
+            .filter { !expected.contains(String($0.dropFirst(3))) }
         guard deletedLines.count > maxExpectedDeletions else { return }
         let names = deletedLines.map { String($0.dropFirst(3)) }.joined(separator: "\n")
         throw GitError(
