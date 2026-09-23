@@ -70,6 +70,9 @@ struct PublishView: View {
     @State private var errorMessage: String?
     @State private var successMessage: String?
     @State private var showDeleteConfirm = false
+    /// Ștergere multiplă: produsele bifate în lista de mai jos.
+    @State private var batchSelection: Set<String> = []
+    @State private var showBatchDeleteConfirm = false
 
     var body: some View {
         ScrollView {
@@ -118,12 +121,14 @@ struct PublishView: View {
                             "Ștergi definitiv „\(name)”?",
                             isPresented: $showDeleteConfirm, titleVisibility: .visible
                         ) {
-                            Button("Șterge definitiv", role: .destructive) { Task { await deleteProduct() } }
+                            Button("Șterge definitiv", role: .destructive) { Task { await deleteProducts([id]) } }
                             Button("Anulează", role: .cancel) {}
                         } message: {
                             Text("Fișierele sunt eliminate din repo-ul privat și produsul dispare din catalog la clienți. Nu poate fi anulat.")
                         }
                     }
+
+                    batchDeleteBox
                 }
 
                 GroupBox {
@@ -583,17 +588,62 @@ struct PublishView: View {
     /// Deletes its whole folder (every version) from the private files
     /// repo AND its entry from the public catalog, so it's gone both as
     /// a downloadable file and as a storefront listing.
-    private func deleteProduct() async {
+    /// Listă cu bife pentru ștergerea mai multor produse deodată (un singur pull/commit/push per repo).
+    private var batchDeleteBox: some View {
+        GroupBox {
+            VStack(alignment: .leading, spacing: 6) {
+                HStack {
+                    Text("Ștergere multiplă").fontWeight(.semibold)
+                    Text("\(batchSelection.count) bifate din \(existingItems.count)").font(.caption).foregroundStyle(.secondary)
+                    Spacer()
+                    Button(batchSelection.count == existingItems.count && !existingItems.isEmpty ? "Deselectează tot" : "Selectează tot") {
+                        batchSelection = batchSelection.count == existingItems.count ? [] : Set(existingItems.map(\.id))
+                    }
+                    .disabled(existingItems.isEmpty || isBusy)
+                    Button("Șterge bifate (\(batchSelection.count))", role: .destructive) { showBatchDeleteConfirm = true }
+                        .disabled(batchSelection.isEmpty || isBusy)
+                        .confirmationDialog("Ștergi definitiv \(batchSelection.count) produse?", isPresented: $showBatchDeleteConfirm, titleVisibility: .visible) {
+                            Button("Șterge definitiv \(batchSelection.count) produse", role: .destructive) {
+                                let ids = Array(batchSelection)
+                                Task { await deleteProducts(ids) }
+                            }
+                            Button("Anulează", role: .cancel) {}
+                        } message: {
+                            Text(existingItems.filter { batchSelection.contains($0.id) }.map(\.name).sorted().joined(separator: ", ")
+                                 + "\n\nFișierele sunt eliminate din repo-ul privat și produsele dispar din catalog la clienți. Nu poate fi anulat.")
+                        }
+                }
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 2) {
+                        ForEach(existingItems) { item in
+                            Toggle(isOn: Binding(get: { batchSelection.contains(item.id) },
+                                                 set: { if $0 { batchSelection.insert(item.id) } else { batchSelection.remove(item.id) } })) {
+                                HStack {
+                                    Text(item.name)
+                                    Text(item.id).font(.system(.caption2, design: .monospaced)).foregroundStyle(.tertiary)
+                                }
+                            }
+                        }
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .frame(maxHeight: 220)
+            }
+            .padding(8)
+        }
+    }
+
+    /// Șterge unul sau mai multe produse: fișierele din repo-ul privat (doar dacă nu le folosește o resursă),
+    /// coperta și intrarea din catalog; un singur commit + push per repo pentru tot lotul.
+    private func deleteProducts(_ ids: [String]) async {
         errorMessage = nil
         successMessage = nil
         statusLines = []
         isBusy = true
         defer { isBusy = false }
 
-        guard let item = existingItems.first(where: { $0.id == id }) else { return }
-        let deletedName = item.name
-        let deletedID = item.id
-        let deletedCover = item.coverImage
+        let items = existingItems.filter { ids.contains($0.id) }
+        guard !items.isEmpty else { return }
 
         do {
             log("Actualizez repo-ul privat (pull)…")
@@ -604,32 +654,46 @@ struct PublishView: View {
             // fisiere (acelasi pachet oferit si pentru Premiere/Final Cut) —
             // stergerea lor ar lasa acea resursa cu descarcari moarte.
             let catalogNow = try CatalogEditor.load()
-            let usedBy = CatalogEditor.resourcesUsingProductFiles(id: deletedID, in: catalogNow)
-            if usedBy.isEmpty {
-                let productFolder = RepoCheckoutPaths.privateFilesRepo.appendingPathComponent(deletedID)
-                if FileManager.default.fileExists(atPath: productFolder.path) {
-                    try FileManager.default.removeItem(at: productFolder)
-                    log("Șters folderul \(deletedID)/ (toate versiunile)")
+            var removedFolders = 0
+            for item in items {
+                let usedBy = CatalogEditor.resourcesUsingProductFiles(id: item.id, in: catalogNow)
+                if usedBy.isEmpty {
+                    let productFolder = RepoCheckoutPaths.privateFilesRepo.appendingPathComponent(item.id)
+                    if FileManager.default.fileExists(atPath: productFolder.path) {
+                        try FileManager.default.removeItem(at: productFolder)
+                        removedFolders += 1
+                        log("Șters folderul \(item.id)/ (toate versiunile)")
+                    }
+                } else {
+                    let nume = usedBy.map(\.name).joined(separator: ", ")
+                    log("\(item.name): fișierele RĂMÂN pe server (folosite de \(nume)); produsul dispare doar din secțiunea DaVinci Resolve.")
                 }
+            }
+            if removedFolders > 0 {
                 log("Trimit ștergerea (commit + push, repo privat)…")
-                try GitOps.commitAndPush(at: RepoCheckoutPaths.privateFilesRepo, message: "Sterg \(deletedID)")
-            } else {
-                let nume = usedBy.map(\.name).joined(separator: ", ")
-                log("Fișierele RĂMÂN pe server: sunt folosite de \(nume). Produsul dispare doar din secțiunea DaVinci Resolve.")
+                try GitOps.commitAndPush(at: RepoCheckoutPaths.privateFilesRepo,
+                                         message: items.count == 1 ? "Sterg \(items[0].id)" : "Sterg \(items.count) produse")
             }
 
             log("Actualizez catalogul (pull, repo public)…")
             try GitOps.pull(at: RepoCheckoutPaths.publicCatalogRepo)
-            // Ștergem și coperta, altfel ar rămâne orfană în repo pentru
-            // totdeauna (nimic n-o mai referă după ce iese din catalog).
-            try CoverImageStore.commit(.none, id: deletedID, previous: deletedCover)
-            try CatalogEditor.remove(id: deletedID)
-            log("Eliminat din catalog local")
+            for item in items {
+                // Ștergem și coperta, altfel ar rămâne orfană în repo pentru
+                // totdeauna (nimic n-o mai referă după ce iese din catalog).
+                try CoverImageStore.commit(.none, id: item.id, previous: item.coverImage)
+                try CatalogEditor.remove(id: item.id)
+                log("Eliminat din catalog local: \(item.name)")
+            }
 
             log("Public catalogul (commit + push, repo public)…")
-            try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Sterg din catalog: \(deletedName)", paths: ["docs/catalog.json", "docs/covers"])
+            try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo,
+                                     message: items.count == 1 ? "Sterg din catalog: \(items[0].name)" : "Sterg din catalog: \(items.count) produse",
+                                     paths: ["docs/catalog.json", "docs/covers"])
 
-            successMessage = "„\(deletedName)” a fost șters complet — dispare la următorul refresh de catalog."
+            successMessage = items.count == 1
+                ? "„\(items[0].name)” a fost șters complet — dispare la următorul refresh de catalog."
+                : "\(items.count) produse au fost șterse complet — dispar la următorul refresh de catalog."
+            batchSelection.subtract(ids)
             clearForm()
             loadExistingIfNeeded()
         } catch {

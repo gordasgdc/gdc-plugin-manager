@@ -1,5 +1,9 @@
 # Changelog — GDC Plugin Manager
 
+## v1.52.0 Furnizor (2026-09-23) — Ștergere multiplă de produse
+
+- „Publică produs” → Actualizare: listă „Ștergere multiplă” cu bife per produs, „Selectează tot” / „Deselectează tot” și „Șterge bifate (N)”, cu confirmare care arată produsele alese; un singur commit + push per repo pentru tot lotul (aceleași reguli ca ștergerea individuală: fișierele folosite de o resursă descărcabilă rămân).
+
 ## v1.51.0 Furnizor (2026-09-23) — Generare serial: mai multe produse odată
 
 - Selecție multiplă de produse (bife, căutare) pentru același client / ID de mașină: câte o licență per produs, într-o singură generare.
