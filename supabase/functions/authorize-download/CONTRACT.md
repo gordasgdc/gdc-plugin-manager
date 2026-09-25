@@ -56,7 +56,7 @@ Supabase Edge Function. Autorizează descărcarea UNUI fișier de produs. Nu în
 | Garanție | GitHub (URL temporar) | Funcția |
 |---|---|---|
 | Acces la un singur fișier | DA (verificat empiric: alt fișier → 404) | alege fișierul |
-| Expirare | DA, durată nedocumentată public, nemăsurată | `useWithinSeconds` informativ |
+| Expirare | DA — măsurat 2026-09-25: expiră după ~5 min (HTTP 404 la minutul 5–6, pas de 1 min); controlată de GitHub, poate varia | `useWithinSeconds` = 60 (recomandare conservatoare); clientul cere o singură reautorizare la 403/404 |
 | Cine are drept | NU | licență, revocare, platformă, produs |
 | Replay / partajare | NU — URL-ul e un bearer până expiră | risc rezidual acceptat: fereastră scurtă, un fișier; audit per emitere |
 | Revocare după emitere | NU | revocarea blochează doar emiterile următoare |
