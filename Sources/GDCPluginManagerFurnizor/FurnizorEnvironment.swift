@@ -69,8 +69,9 @@ enum FurnizorEnvironment: String {
             productionConfirmationPending = false
             recordSession(.staging)
         case .production:
-            productionConfirmationPending = lastSessionEnvironment() == .staging
-            if !productionConfirmationPending { recordSession(.production) }
+            // Doar o sesiune anterioară CITITĂ și VALIDĂ de „production” deblochează direct scrierile.
+            // Staging, fișier lipsă, corupt sau ilizibil → blocat până la confirmarea explicită.
+            productionConfirmationPending = lastSessionEnvironment() != .production
         }
     }
 

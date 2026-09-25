@@ -29,11 +29,30 @@ final class ProductionConfirmationTests: XCTestCase {
 
     private let prodRepo = "gordasgdc/gdc-plugin-manager"
 
-    func testFirstLaunchWithoutHistoryIsProductionUnlocked() {
+    func testMissingCorruptOrUnreadableSessionFileBlocksUntilConfirmed() throws {
+        let file = FurnizorEnvironment.sessionFileOverride!
+        // lipsă
         launch(.production)
+        XCTAssertTrue(FurnizorEnvironment.productionConfirmationPending, "fișier lipsă → blocat")
+        XCTAssertThrowsError(try FurnizorEnvironment.assertRepoWritable(prodRepo))
+        // corupt
+        try Data("{nu e json".utf8).write(to: file)
+        FurnizorEnvironment.resetSessionStateForTests(); launch(.production)
+        XCTAssertTrue(FurnizorEnvironment.productionConfirmationPending, "fișier corupt → blocat")
+        try Data(#"{"environment":"altceva"}"#.utf8).write(to: file)
+        FurnizorEnvironment.resetSessionStateForTests(); launch(.production)
+        XCTAssertTrue(FurnizorEnvironment.productionConfirmationPending, "valoare necunoscută → blocat")
+        // ilizibil (fișier valid „production”, dar fără drept de citire)
+        try Data(#"{"environment":"production"}"#.utf8).write(to: file)
+        try FileManager.default.setAttributes([.posixPermissions: 0o000], ofItemAtPath: file.path)
+        defer { try? FileManager.default.setAttributes([.posixPermissions: 0o644], ofItemAtPath: file.path) }
+        FurnizorEnvironment.resetSessionStateForTests(); launch(.production)
+        XCTAssertTrue(FurnizorEnvironment.productionConfirmationPending, "fișier ilizibil → blocat")
+        try FileManager.default.setAttributes([.posixPermissions: 0o644], ofItemAtPath: file.path)
+        // valid „production” → deblocat direct
+        FurnizorEnvironment.resetSessionStateForTests(); launch(.production)
         XCTAssertFalse(FurnizorEnvironment.productionConfirmationPending)
         XCTAssertNoThrow(try FurnizorEnvironment.assertRepoWritable(prodRepo))
-        XCTAssertEqual(FurnizorEnvironment.lastSessionEnvironment(), .production)
     }
 
     func testNormalRestartAfterStagingBlocksEveryWrite() throws {
