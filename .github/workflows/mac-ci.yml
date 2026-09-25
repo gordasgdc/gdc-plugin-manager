@@ -45,6 +45,11 @@ jobs:
       - name: CATALOG — validare structurală (fără repo-urile private)
         run: python3 scripts/validate_catalog.py
 
+      # Cheile/limbile lipsă blochează. Încălcările Regulii 3 sunt avertismente
+      # până la corectarea textelor (engineering/LOCALIZATION_STRATEGY.md §1).
+      - name: LOCALIZATION — chei RO/EN/ES
+        run: python3 scripts/check_localization.py --forbidden-as-warning
+
       - name: PACKAGE SMOKE — binarul Release al clientului
         run: |
           swift build -c release --product GDCPluginManager
