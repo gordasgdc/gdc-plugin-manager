@@ -36,28 +36,94 @@ enum GitOps {
         return combined
     }
 
+    // MARK: - D2 (2026-09-25): publicare DOAR pe `main`, din checkout-uri dedicate
+
+    /// Ramura pe care ajunge ORICE publicare. Nu se deduce din checkout.
+    static let publishBranch = "main"
+
+    /// Ce repo trebuie să fie un checkout de publicare și ce poate conține nepublicat.
+    /// `allowedDirtyPrefixes == nil` = orice fișier (repo-urile private, care conțin doar produse).
+    struct PublishTarget: Equatable {
+        let repoSlug: String                 // ex. "gordasgdc/gdc-plugin-manager"
+        let allowedDirtyPrefixes: [String]?  // ex. ["docs/"] pentru catalogul public
+    }
+
+    struct PublishGuardError: Error, LocalizedError {
+        let message: String
+        var errorDescription: String? { message }
+    }
+
+    /// "https://github.com/a/b.git", "git@github.com:a/b", "/tmp/x/a/b.git" → "a/b" (litere mici).
+    static func repoSlug(fromRemoteURL url: String) -> String? {
+        var u = url.trimmingCharacters(in: .whitespacesAndNewlines)
+        while u.hasSuffix("/") { u.removeLast() }
+        if u.hasSuffix(".git") { u.removeLast(4) }
+        let parts = u.split(whereSeparator: { $0 == "/" || $0 == ":" }).map(String.init)
+        guard parts.count >= 2 else { return nil }
+        return "\(parts[parts.count - 2])/\(parts[parts.count - 1])".lowercased()
+    }
+
+    /// Verificările de dinaintea ORICĂREI operații git de publicare. Nu modifică nimic.
+    static func verifyPublishCheckout(at directory: URL, target explicitTarget: PublishTarget? = nil) throws {
+        let path = directory.path
+        guard let target = explicitTarget ?? RepoCheckoutPaths.publishTarget(for: directory) else {
+            throw PublishGuardError(message: "Publicare oprită: \(path) nu e un checkout de publicare cunoscut. Nimic nu s-a modificat.")
+        }
+        guard FileManager.default.fileExists(atPath: directory.appendingPathComponent(".git").path) else {
+            throw PublishGuardError(message: RepoCheckoutPaths.missingCheckoutMessage(path: path, repoSlug: target.repoSlug))
+        }
+        let remote = (try? run(["remote", "get-url", "origin"], at: directory)) ?? ""
+        guard repoSlug(fromRemoteURL: remote) == target.repoSlug.lowercased() else {
+            throw PublishGuardError(message: "Publicare oprită: checkout-ul \(path) indică spre alt repo (\(remote.trimmingCharacters(in: .whitespacesAndNewlines))), nu spre \(target.repoSlug). Nimic nu s-a modificat.")
+        }
+        for marker in ["MERGE_HEAD", "CHERRY_PICK_HEAD", "REVERT_HEAD", "rebase-merge", "rebase-apply"] {
+            let rel = try run(["rev-parse", "--git-path", marker], at: directory).trimmingCharacters(in: .whitespacesAndNewlines)
+            let url = rel.hasPrefix("/") ? URL(fileURLWithPath: rel) : directory.appendingPathComponent(rel)
+            if FileManager.default.fileExists(atPath: url.path) {
+                throw PublishGuardError(message: "Publicare oprită: în \(path) e în curs o operație git neterminată (\(marker)). Termin-o sau anuleaz-o în Terminal, apoi reîncearcă. Nimic nu s-a modificat.")
+            }
+        }
+        let branch = (try? run(["symbolic-ref", "--quiet", "--short", "HEAD"], at: directory))?
+            .trimmingCharacters(in: .whitespacesAndNewlines) ?? "(detașat)"
+        guard branch == publishBranch else {
+            throw PublishGuardError(message: "Publicare oprită: checkout-ul \(path) e pe ramura „\(branch)”, nu pe „\(publishBranch)”. Publicarea merge doar pe \(publishBranch). Nimic nu s-a modificat.")
+        }
+        if let allowed = target.allowedDirtyPrefixes {
+            let status = try run(["status", "--porcelain", "--untracked-files=all"], at: directory)
+            let foreign = status.split(separator: "\n").map { line -> String in
+                var p = String(line.dropFirst(3))
+                if let arrow = p.range(of: " -> ") { p = String(p[arrow.upperBound...]) }
+                return p.trimmingCharacters(in: CharacterSet(charactersIn: "\""))
+            }.filter { p in !allowed.contains { p.hasPrefix($0) } }
+            guard foreign.isEmpty else {
+                throw PublishGuardError(message: "Publicare oprită: checkout-ul \(path) conține modificări care nu țin de publicare:\n\(foreign.prefix(10).joined(separator: "\n"))\nNu le includ și nu le șterg. Mută-le sau anulează-le, apoi reîncearcă.")
+            }
+        }
+    }
+
     /// `-u` nu doar impinge, ci si SCRIE configuratia de tracking lipsa —
     /// asa ca un checkout care a pornit fara ea se repara singur la prima
     /// publicare reusita, nu ramane defect pana cand cineva ruleaza manual
     /// `git branch --set-upstream-to`.
-    static func push(at directory: URL) throws {
-        let branch = try currentBranch(at: directory)
-        try run(["push", "-u", "origin", branch], at: directory)
+    /// D2: DOAR `main`, explicit, fără force. Un push respins (cineva a publicat între timp) oprește
+    /// publicarea; commit-ul local rămâne, nu se pierde nimic.
+    static func push(at directory: URL, target: PublishTarget? = nil) throws {
+        try verifyPublishCheckout(at: directory, target: target)
+        do {
+            try run(["push", "-u", "origin", "\(publishBranch):\(publishBranch)"], at: directory)
+        } catch let error as GitError {
+            throw PublishGuardError(message: "Publicare oprită la push: serverul a respins \(publishBranch) (probabil o publicare mai nouă, de pe alt Mac). Commit-ul local e păstrat în \(directory.path); nu s-a forțat nimic.\n\(error.output)")
+        }
     }
 
-    /// Ramura curenta a checkout-ului. Necesara fiindca `git pull`/`git push`
-    /// fara argumente depind de configuratia de "tracking" a ramurii locale —
-    /// care poate lipsi cu totul.
+    /// Ramura curenta a checkout-ului (doar informativ; publicarea NU o mai folosește — vezi `publishBranch`).
     ///
     /// BUG REAL (2026-09-14, raportat din Furnizor la publicarea unui produs):
     /// `gdc-plugin-manager-files` avea `main` FARA upstream configurat, iar
     /// `git pull --ff-only` esua cu "There is no tracking information for the
-    /// current branch" — publicarea se oprea inainte sa inceapa. Nu era o
-    /// problema de retea sau de autentificare, ci de configuratie locala a
-    /// unui checkout, care poate aparea la orice clona facuta altfel (ex.
-    /// `git init` + `git remote add` in loc de `git clone`) sau pe o masina
-    /// noua. De aceea remote-ul si ramura se dau acum EXPLICIT: comanda merge
-    /// indiferent de ce e configurat local.
+    /// current branch" — publicarea se oprea inainte sa inceapa. De aceea
+    /// remote-ul si ramura se dau EXPLICIT: comanda merge indiferent de ce e
+    /// configurat local.
     static func currentBranch(at directory: URL) throws -> String {
         let name = try run(["rev-parse", "--abbrev-ref", "HEAD"], at: directory)
             .trimmingCharacters(in: .whitespacesAndNewlines)
@@ -66,9 +132,16 @@ enum GitOps {
 
     /// Pulls latest before editing, so the vendor app never works from a
     /// stale local checkout (e.g. after publishing from another Mac).
-    static func pull(at directory: URL) throws {
-        let branch = try currentBranch(at: directory)
-        try run(["pull", "--ff-only", "origin", branch], at: directory)
+    /// D2: verificările de mai sus, apoi `fetch` + DOAR fast-forward pe `origin/main`.
+    /// Istorie divergentă = oprire, fără merge/rebase automat și fără pierderi.
+    static func pull(at directory: URL, target: PublishTarget? = nil) throws {
+        try verifyPublishCheckout(at: directory, target: target)
+        try run(["fetch", "origin", publishBranch], at: directory)
+        do {
+            try run(["merge", "--ff-only", "origin/\(publishBranch)"], at: directory)
+        } catch let error as GitError {
+            throw PublishGuardError(message: "Publicare oprită: \(directory.path) și serverul au istorii diferite pe \(publishBranch) (conflict de sincronizare). Nu am combinat și nu am șters nimic. Rezolvă în Terminal (ex. `git -C \"\(directory.path)\" pull --rebase origin \(publishBranch)`), apoi reîncearcă.\n\(error.output)")
+        }
     }
 
     /// Stages, commits, and pushes — stops (throws) at the first failing
@@ -92,7 +165,8 @@ enum GitOps {
     /// `nil`/`-A` for this repo.
     /// `expectedDeletions`: fișiere a căror dispariție e cerută explicit de această publicare (ex. copertele unui lot
     /// de produse șterse) — nu se numără la garda anti-ștergere; orice altă ștergere rămâne limitată la 2.
-    static func commitAndPush(at directory: URL, message: String, paths: [String]? = nil, expectedDeletions: Set<String> = []) throws {
+    static func commitAndPush(at directory: URL, message: String, paths: [String]? = nil, expectedDeletions: Set<String> = [], target: PublishTarget? = nil) throws {
+        try verifyPublishCheckout(at: directory, target: target)
         // `git add <path>` throws (exit 128, "pathspec did not match any
         // files") if the path doesn't exist yet — e.g. `docs/covers/` before
         // the first cover image is ever published. Filter to paths that
@@ -105,7 +179,7 @@ enum GitOps {
         guard paths == nil || !existingPaths.isEmpty else {
             // Every candidate path was missing — nothing to stage, and an
             // empty `git add` with no args would (dangerously) mean `-A`.
-            try push(at: directory)
+            try push(at: directory, target: target)
             return
         }
         // GUARD REAL (2026-09-04): `git add docs/covers` (mai jos) prinde
@@ -158,7 +232,7 @@ enum GitOps {
         if !status.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             try run(["commit", "-m", message], at: directory)
         }
-        try push(at: directory)
+        try push(at: directory, target: target)
     }
 
     /// Peste câte fișiere dispărute (nu atinse de publicarea curentă) e

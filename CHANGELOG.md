@@ -14,6 +14,10 @@
 - Mesaje noi RO/EN/ES: licență respinsă, prea multe descărcări.
 - Importul PowerGrade transmite căile în siguranță, indiferent de caracterele din nume.
 
+## v1.52.2 Furnizor (nelansat, pregătit 2026-09-25) — Publicare sigură
+- Catalogul se publică dintr-un checkout dedicat (`~/Developer/_gdc-publish/gdc-plugin-manager`, doar `docs/`), nu din repo-ul de dezvoltare.
+- Orice publicare (catalog și repo-urile private) verifică înainte: repo-ul corect, ramura `main`, nicio operație git în curs, nicio modificare străină; sincronizarea e doar fast-forward, push-ul doar pe `main`, fără force. La orice abatere publicarea se oprește cu un mesaj clar și nu se pierde nimic.
+
 ## v1.52.1 Furnizor (2026-09-23) — Fix ștergere multiplă
 
 - Ștergerea mai multor produse cu coperte era oprită de garda anti-ștergere (max. 2 coperte per publicare). Copertele produselor din lot se declară acum ca ștergeri așteptate; garda rămâne activă pentru orice alt fișier dispărut.

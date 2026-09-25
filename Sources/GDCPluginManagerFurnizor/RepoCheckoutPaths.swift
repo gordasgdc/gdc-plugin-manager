@@ -44,11 +44,46 @@ enum RepoCheckoutPaths {
         FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Developer")
     }
 
-    /// gordasgdc/gdc-plugin-manager (public) — only docs/catalog.json is
-    /// touched here, never the app source.
-    static let publicCatalogRepo = FileManager.default.homeDirectoryForCurrentUser
-        .appendingPathComponent("Developer")
-        .appendingPathComponent("gdc-plugin-manager-catalog-vendor")
+    /// gordasgdc/gdc-plugin-manager (public) — only docs/ is touched here, never the app source.
+    ///
+    /// D2 (2026-09-25): checkout DEDICAT publicării, nu repo-ul de dezvoltare. Înainte era
+    /// `~/Developer/gdc-plugin-manager-catalog-vendor`, iar publicarea mergea pe ramura lui activă
+    /// (ex. o ramură de release) și putea atinge fișiere în lucru. Clonă parțială, doar `docs/`
+    /// (sparse), pe `main` — vezi `missingCheckoutMessage` pentru crearea ei.
+    static let publicCatalogRepo = developerDir
+        .appendingPathComponent("_gdc-publish")
+        .appendingPathComponent("gdc-plugin-manager")
+
+    static let publicCatalogSlug = "gordasgdc/gdc-plugin-manager"
+
+    /// Repo-ul așteptat al unui checkout de publicare + ce poate conține nepublicat.
+    /// `nil` = nu e un checkout de publicare → orice operație git de publicare e refuzată.
+    static func publishTarget(for directory: URL) -> GitOps.PublishTarget? {
+        let path = directory.standardizedFileURL.path
+        if path == publicCatalogRepo.standardizedFileURL.path {
+            return .init(repoSlug: publicCatalogSlug, allowedDirtyPrefixes: ["docs/"])
+        }
+        for (key, url) in resourceRepoCheckouts where url.standardizedFileURL.path == path {
+            return .init(repoSlug: "gordasgdc/gdc-plugin-manager-\(key)", allowedDirtyPrefixes: nil)
+        }
+        return nil
+    }
+
+    static func missingCheckoutMessage(path: String, repoSlug: String) -> String {
+        if repoSlug == publicCatalogSlug {
+            return """
+            Checkout-ul de publicare a catalogului lipsește (\(path)).
+            Creează-l o singură dată (clonă parțială, doar docs/, pe main):
+                git clone --filter=blob:none --sparse --branch main https://github.com/\(repoSlug).git "\(path)"
+                git -C "\(path)" sparse-checkout set docs
+            """
+        }
+        return """
+        Checkout-ul de publicare \(repoSlug) lipsește (\(path)).
+        Clonează-l o singură dată:
+            gh repo clone \(repoSlug) "\(path)"
+        """
+    }
 
     static var catalogJSONURL: URL {
         publicCatalogRepo.appendingPathComponent("docs").appendingPathComponent("catalog.json")

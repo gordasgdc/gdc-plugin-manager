@@ -140,6 +140,7 @@ enum ImageLibraryScanner {
         // filtrează căile inexistente înainte de `git add`, iar o cale
         // ȘTEARSĂ nu mai există — ștergerea n-ar fi ajuns niciodată în index,
         // iar commit-ul ar fi fost gol sau ar fi măturat alte modificări.
+        try GitOps.verifyPublishCheckout(at: repo)   // D2: repo corect, main, fără modificări străine
         try GitOps.run(["rm", "--", relativePath], at: repo)
         try GitOps.run(["commit", "-m", "Sterge coperta nefolosita \(image.filename)", "--", relativePath], at: repo)
         try GitOps.push(at: repo)

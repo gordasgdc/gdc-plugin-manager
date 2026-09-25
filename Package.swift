@@ -67,6 +67,11 @@ let package = Package(
             name: "GDCPluginManagerCoreTests",
             dependencies: ["GDCPluginManagerCore"],
             path: "Tests/GDCPluginManagerCoreTests"
+        ),
+        .testTarget(
+            name: "GDCPluginManagerFurnizorTests",
+            dependencies: ["GDCPluginManagerFurnizor"],
+            path: "Tests/GDCPluginManagerFurnizorTests"
         )
     ]
 )
