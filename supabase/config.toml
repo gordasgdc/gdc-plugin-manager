@@ -1,0 +1,6 @@
+# Configurație minimă pentru Supabase CLI (deploy de funcții). Nu conține secrete.
+project_id = "gdc-plugin-manager"
+
+[functions.authorize-download]
+# Gateway-ul cere un JWT valid; clienții trimit cheia publică anon (Authorization: Bearer <anon>).
+verify_jwt = true
