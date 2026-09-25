@@ -39,12 +39,17 @@ echo "==> Building component package…"
 # ale aplicatiei cu acelasi bundle ID pe disc. NU contine niciun hack de
 # Gatekeeper/quarantine - pachetul e semnat + notarizat + stapled mai jos,
 # deci Gatekeeper il accepta nativ (vezi CLAUDE.md, 2026-08-25).
+# preinstall primeste versiunea pachetului (refuza retrogradarea fara sa atinga aplicatia).
+SCRIPTS_DIR="$DIST_DIR/scripts"
+rm -rf "$SCRIPTS_DIR"; cp -R installer/scripts "$SCRIPTS_DIR"
+sed -i '' "s/__PKG_VERSION__/$VERSION/" "$SCRIPTS_DIR/preinstall"
+grep -q "__PKG_VERSION__" "$SCRIPTS_DIR/preinstall" && { echo "EROARE: versiunea nu a fost scrisa in preinstall" >&2; exit 1; }
 pkgbuild \
     --root "$PAYLOAD_ROOT" \
     --identifier "$PKG_ID" \
     --version "$VERSION" \
     --install-location "/" \
-    --scripts "installer/scripts" \
+    --scripts "$SCRIPTS_DIR" \
     "$COMPONENT_PKG"
 
 echo "==> Writing distribution definition…"
