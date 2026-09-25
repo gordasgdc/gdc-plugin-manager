@@ -50,3 +50,42 @@ Până la decizie, nimic nu se traduce.
 RO/EN/ES e cerință de paritate (clientul Windows e public). Recomandat în Faza 6: aceleași chei ca pe Mac,
 selector de limbă în Setări, verificare automată în CI-ul Windows. **REQUIRES PHYSICAL WINDOWS VALIDATION**
 pentru lungimea textelor în layout-ul WPF (CI nu poate randa UI-ul).
+
+## 5. Regula 3 — cele 8 texte (22 potriviri), clasificate
+
+Clase: A funcțional · B comercial/cumpărare · C donație/susținere · D licențiere · E marketing · F excepție acceptabilă.
+Nimic nu e aplicat. Textele candidate sunt propuneri; decizia e a proprietarului produsului (REQUIRES PRODUCT DECISION pentru toate).
+
+| Cheie | Ecran | Clasă | CURRENT (RO) | PROBLEM | CANDIDATE WORDING (RO) | RATIONALE |
+|---|---|---|---|---|---|---|
+| `card.trustMessage` | tooltip card produs + card resursă | E | „…Licență Lifetime la preț promoțional de lansare.” | „preț” | „…Licență Lifetime, cu donație promoțională de lansare.” | păstrează mesajul promo, fără „preț” |
+| `bundles.buy` | buton card pachet | B | „Cumpără pachetul” | „cumpără” pe butonul principal | „Donează pentru pachet” | aliniat cu butonul „Donează” de pe produse |
+| `license.status.none.body` | Licență, fără licență | B | „…răsfoiește catalogul și cumpără doar ce vrei să folosești.” | „cumpără” | „…răsfoiește catalogul și susține doar produsele pe care le folosești.” | „susține” = modelul de donație |
+| `license.machineID.body` (EN/ES) | Licență, ID mașină | D | EN „…when you buy the license…”; ES „…comprar…” (RO e corect) | „buy/comprar” | EN „…when you request your license…”; ES „…al solicitar tu licencia…” | RO folosește deja formularea neutră |
+| `license.buy.price` | Licență, explicație sumă | C | „Prețul de pe fiecare card e o donație…” | „preț” | „Suma de pe fiecare card e o donație…” | identic cu formularea din `help.buy.body` |
+| `help.buy.body` | Ajutor | C/F | „…o donație… — nu un preț de vânzare, nu un abonament.” | negație care conține „preț de vânzare” | „…o donație unică, nu un abonament.” | negația e corectă ca sens, dar Regula 3 interzice cuvintele; fraza rămâne clară fără ele |
+| `help.community.body` | Ajutor | E | „…„Pachete” (produse GDC combinate la un preț total avantajos).” | „preț” | „…„Pachete” (produse GDC combinate, cu o donație totală avantajoasă).” | consecvent cu pachetele |
+| `help.machine.body` (EN/ES) | Ajutor | D | EN „…when buying…”; ES „…comprar…” | „buying/comprar” | EN „…when requesting your code…”; ES „…al solicitar tu código…” | idem `license.machineID.body` |
+
+Ecranele afectate: grilă produse (tooltip), grilă pachete (buton), `LicensePane`, `HelpView`.
+După decizie: textele se schimbă în `Localization.swift`, `check_localization.py` rulează strict (fără `--forbidden-as-warning`),
+versiune PATCH nouă (Regula 14).
+
+## 6. Furnizor — opțiunile detaliate
+
+Arhitectura comună tuturor opțiunilor: `F.t("cheie")` + tabel (același tipar ca `L.t`), verificat de o variantă a
+`check_localization.py`. Adăugarea unei limbi = o coloană în tabel, fără schimbări de UI. Clientul public și Furnizorul
+împart tokenii de design, NU textele sau fluxurile: terminologia admin („serial”, „revocare”, „publicare”) nu apare în client.
+
+| Criteriu | A — RO | B — RO+EN | C — RO+EN+ES |
+|---|---|---|---|
+| Utilizatori | un operator (vânzătorul) | + colaboratori non-RO | + furnizori terți vorbitori de ES |
+| Suprafață de traducere | 0 (doar extragere ~270 texte) | ~270 texte + fiecare ecran nou | ~540 texte + fiecare ecran nou |
+| Cost de întreținere | minim | fiecare ecran nou cere EN | fiecare ecran nou cere EN+ES |
+| QA | o limbă | layout verificat în 2 limbi | 3 limbi |
+| Documentație / capturi | ghidurile PDF actuale (RO) | ghiduri EN | ghiduri EN+ES |
+| Release | fără impact | selector de limbă în Preferințe | idem |
+| Extensibilitate | completă (arhitectura e aceeași) | completă | completă |
+| Consistență terminologică | glosar RO | glosar RO↔EN obligatoriu | glosar trilingv obligatoriu |
+
+Recomandare neschimbată: A + extragerea textelor; B/C se adaugă ulterior fără rescriere.

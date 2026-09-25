@@ -1,7 +1,8 @@
 # Matricea de testare — GDC Plugin Manager
 
-Actualizat 2026-09-25 (Faza 2). Stări: **AUTO** = test automat în CI · **LOCAL** = automat, rulat doar local ·
-**MANUAL** = verificare manuală documentată · **NONE** = netestat · **HW** = cere hardware fizic.
+Actualizat 2026-09-25 (Security Foundation). Stări: **AUTO** = AUTOMATED în CI · **LOCAL** = automat, rulat doar local ·
+**MANUAL** · **NONE** = netestat · **BLOCKED** · **N/A** = nu se aplică · **HW** = cere hardware fizic.
+Niciun rând nu înseamnă PASS dacă testul nu a fost rulat; rezultatele rulărilor sunt în secțiunea de la final.
 
 | Domeniu | Mac | Windows | Ce acoperă / ce lipsește |
 |---|---|---|---|
@@ -14,10 +15,14 @@ Actualizat 2026-09-25 (Faza 2). Stări: **AUTO** = test automat în CI · **LOCA
 | DOWNLOAD | NONE | NONE | descărcare autentificată din repo-ul privat, verificare SHA-256 la client |
 | INSTALLATION | NONE (MANUAL la release) | NONE — **HW** | scriere în folderele Resolve, permisiuni, dezinstalare |
 | UPDATE — manifest | AUTO (7 teste) | — (același `update.json`) | secțiuni mac/windows, bloc legacy ≤1.27.1, minimul la rădăcină, comparația de versiuni, Info.plist ≤ publicat |
-| UPDATE — self-updater | NONE (MANUAL, Regula 20) | NONE — **HW** | descărcare + prompt admin / wizard Inno + relansare |
+| UPDATE — verificare pachet (S2) | AUTO (10 teste) + LOCAL (pachet semnat real din `dist/`, sărit în CI) | N/A (Windows: Authenticode în CI la build) | semnătură validă/Team ID corect → acceptat; alt Team ID, nesemnat, certificat non-Installer, non-distribuție, corupt, înlocuit după verificare, SHA-256 diferit → instalare BLOCATĂ; versiune cu injecție → respinsă; scriptul root rulat real prin osascript (fără elevare) |
+| UPDATE — self-updater complet | MANUAL (prompt admin + `installer` real + relansare, Regula 20) — NErulat pentru noul flux | NONE — **HW** | pasul privilegiat nu poate fi automatizat fără parolă |
 | UI STATE | NONE | NONE — **HW** | stările cardului nu au încă model (vezi UI_ARCHITECTURE.md §3) |
 | ERROR HANDLING | parțial (decodare) | NONE | mesaje pentru client vs log tehnic |
-| SECURITY | AUTO parțial (semnătură licență, căi nesigure, https în catalog) | parțial (secret CI recreat) | lipsă: scanare de secrete în CI |
+| SECURITY — licență/catalog | AUTO (semnătură Ed25519, căi nesigure, https în catalog) | parțial (smoke) | |
+| SECURITY — actualizare (T2–T5) | AUTO (vezi S2) | N/A | |
+| SECURITY — autorizare artefacte | BLOCKED (în lucru) | BLOCKED | |
+| SECURITY — secret scanning | NONE | NONE | propus: gitleaks în ambele CI |
 | macOS BUILD | AUTO (`swift build`, toate țintele) | — | |
 | macOS PACKAGE | AUTO smoke (binar Release Mach-O) | — | `.app`/`.pkg`/semnare/notarizare: doar local (`build_app.sh`) |
 | WINDOWS BUILD / PACKAGE | — | AUTO (publish win-x64, Inno Setup, semnare dacă există secretul) | lipsă: `dotnet test`, verificarea semnăturii după semnare |
@@ -40,3 +45,11 @@ Actualizat 2026-09-25 (Faza 2). Stări: **AUTO** = test automat în CI · **LOCA
 2. `CatalogService`: răspuns 404/5xx/JSON invalid → stare de eroare, nu catalog gol tăcut.
 3. Verificarea SHA-256 la instalare (`InstallManager`) cu fixture-uri locale izolate (niciodată căi de producție).
 4. Windows: proiect `GDCPluginManager.Core.Tests` + `dotnet test` în CI (licență, catalog, update).
+
+## Rulări (2026-09-25)
+| Verificare | Rezultat | Unde |
+|---|---|---|
+| `swift test` (45 teste, inclusiv pachetul semnat real) | PASS local | `.build/logs/s2-tests.log` |
+| Mac CI pe `d85c80e` | PASS | GitHub Actions „Mac CI” |
+| Mac CI pentru S2 | vezi PROJECT_STATE.md după push | |
+| Instalare reală prin noul SelfUpdater | NErulat (MANUAL) | |

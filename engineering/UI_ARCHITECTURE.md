@@ -95,3 +95,27 @@ PAUSED cere suport de reluare în `InstallManager` (azi descărcarea nu e reluab
 
 Validare per pas: `swift build`, `swift test`, `scripts/check_localization.py`, pornirea aplicației,
 secțiunea atinsă verificată în RO/EN/ES și Light/Dark. „Compilează” nu e validare de UI.
+
+## 5. Modelul de stări UI (aliniat cu DESIGN_SYSTEM.md)
+
+| Stare | Vizual | Acțiuni active | Acțiuni dezactivate | Progres | Feedback eroare | Recuperare | Accesibilitate | Log (`DiagnosticLog`) |
+|---|---|---|---|---|---|---|---|---|
+| NORMAL | card complet | Instalează / Donează | — | — | — | — | etichetă buton = acțiune + produs | — |
+| LOADING (ecran) | schelet de carduri | — | toate | nedeterminat | — | — | anunț „Se încarcă catalogul” | început/sfârșit fetch |
+| EMPTY | StateView + explicație | Reîmprospătează / schimbă filtrul | — | — | — | filtre | text, nu doar iconiță | — |
+| OFFLINE | banner + catalog din cache | acțiuni locale (Elimină) | Instalează, Actualizează | — | „Fără conexiune” | Reîncearcă | banner anunțat | eroarea de rețea |
+| LICENSE REQUIRED | insignă „Donație” | Donează, Activează licența | Instalează | — | — | pagina Licență | — | — |
+| LICENSE INVALID | insignă de avertizare | Activează din nou | Instalează, Actualizează | — | motivul (expirat/alt Mac/revocat) | pagina Licență | motivul în text | motivul (fără serial) |
+| DOWNLOAD AVAILABLE | = NORMAL pentru produs gratuit/licențiat | Instalează | — | — | — | — | — | — |
+| DOWNLOADING | bară de progres pe card | Anulează | celelalte | % sau nedeterminat | — | — | valoare progres expusă | început, octeți, rezultat |
+| PAUSED | progres înghețat | Reia, Anulează | Instalează | % păstrat | — | Reia | — | pauză/reluare (necesită suport nou în InstallManager) |
+| INSTALLING | spinner | — | toate | nedeterminat | — | — | „Se instalează” | pas + cale țintă |
+| INSTALLED | insignă „Instalat v…” | Elimină (secundar) | Instalează | — | — | — | — | versiune instalată |
+| UPDATE AVAILABLE | insignă „v1 → v2” | Actualizează, Elimină | — | — | — | — | ambele versiuni în text | — |
+| UPDATING | ca DOWNLOADING+INSTALLING | Anulează (doar la descărcare) | celelalte | % | — | — | — | idem |
+| SUCCESS | confirmare scurtă, apoi INSTALLED | — | — | — | — | — | anunț VoiceOver | rezultat |
+| FAILED | mesaj pe card | Reîncearcă | — | — | motiv pe înțelesul clientului | Reîncearcă / Deschide ajutorul | mesajul e focusabil | eroarea tehnică completă |
+| CATALOG ERROR | StateView de eroare | Reîncearcă | toate cardurile | — | „Catalogul nu a putut fi citit” | Reîncearcă | — | HTTP/decodare |
+
+Tranziții: NORMAL→DOWNLOADING→INSTALLING→SUCCESS→INSTALLED; INSTALLED→UPDATE AVAILABLE→UPDATING→SUCCESS;
+orice pas activ → FAILED (→ Reîncearcă revine la pasul eșuat). OFFLINE și CATALOG ERROR sunt stări de ecran, nu de card.
