@@ -19,6 +19,7 @@
 - Publicare: fișiere → verificarea existenței și a SHA-256 pe server → catalog. Ștergere: catalog (confirmat pe server) → doar fișierele pe care nu le mai referă niciun produs, versiune sau resursă.
 - Operațiile întrerupte rămân în „Publicări incomplete”, cu „Reia” (continuă de la pasul neconfirmat) și „Curăță orfanii” (cu confirmare, doar fișiere nereferite). Un push respins nu mai blochează reluarea.
 - Se aplică publicării și ștergerii produselor, resurselor descărcabile și demo-urilor din STYLE Lab.
+- „Reia” se oprește fără să scrie nimic dacă produsul vizat s-a schimbat pe server între timp (versiune nouă sau aceeași versiune modificată); decizia rămâne manuală.
 
 ## v1.52.2 Furnizor (nelansat, pregătit 2026-09-25) — Publicare sigură
 - Catalogul se publică dintr-un checkout dedicat (`~/Developer/_gdc-publish/gdc-plugin-manager`, doar `docs/`), nu din repo-ul de dezvoltare.

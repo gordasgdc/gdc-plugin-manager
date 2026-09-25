@@ -59,6 +59,33 @@ enum PublishTransaction {
         let expectedDeletions: [String]
         var completed: [Step] = []
         var lastError: String?
+        /// Amprenta intrărilor de catalog de pe server la ÎNCEPUTUL operației (id → SHA-256 al intrării,
+        /// sau "absent"). La „Reia”, o diferență înseamnă o modificare ulterioară → oprire, nu suprascriere.
+        var serverBaseline: [String: String] = [:]
+
+        enum CodingKeys: String, CodingKey {
+            case id, kind, createdAt, label, files, deleteFolders, catalog, catalogMessage, catalogPaths,
+                 expectedDeletions, completed, lastError, serverBaseline
+        }
+        init(id: UUID, kind: Kind, createdAt: Date, label: String, files: [FileRef], deleteFolders: [FolderRef],
+             catalog: CatalogOperation, catalogMessage: String, catalogPaths: [String], expectedDeletions: [String]) {
+            self.id = id; self.kind = kind; self.createdAt = createdAt; self.label = label; self.files = files
+            self.deleteFolders = deleteFolders; self.catalog = catalog; self.catalogMessage = catalogMessage
+            self.catalogPaths = catalogPaths; self.expectedDeletions = expectedDeletions
+        }
+        init(from decoder: Decoder) throws {
+            let c = try decoder.container(keyedBy: CodingKeys.self)
+            id = try c.decode(UUID.self, forKey: .id); kind = try c.decode(Kind.self, forKey: .kind)
+            createdAt = try c.decode(Date.self, forKey: .createdAt); label = try c.decode(String.self, forKey: .label)
+            files = try c.decode([FileRef].self, forKey: .files); deleteFolders = try c.decode([FolderRef].self, forKey: .deleteFolders)
+            catalog = try c.decode(CatalogOperation.self, forKey: .catalog)
+            catalogMessage = try c.decode(String.self, forKey: .catalogMessage)
+            catalogPaths = try c.decode([String].self, forKey: .catalogPaths)
+            expectedDeletions = try c.decode([String].self, forKey: .expectedDeletions)
+            completed = try c.decodeIfPresent([Step].self, forKey: .completed) ?? []
+            lastError = try c.decodeIfPresent(String.self, forKey: .lastError)
+            serverBaseline = try c.decodeIfPresent([String: String].self, forKey: .serverBaseline) ?? [:]
+        }
 
         var repoKeys: [String] { Array(Set(files.map(\.repoKey) + deleteFolders.map(\.repoKey))).sorted() }
         func has(_ step: Step) -> Bool { completed.contains(step) }
@@ -95,8 +122,9 @@ enum PublishTransaction {
     /// Se apelează DUPĂ `preflight` (și după scrierea copertei, dacă există).
     static func publish(label: String, sources: [(URL, FileRef)], files: [FileRef], catalog: CatalogOperation,
                         catalogMessage: String, catalogPaths: [String], log: (String) -> Void = { _ in }) throws {
-        let record = Record(id: UUID(), kind: .publish, createdAt: Date(), label: label, files: files, deleteFolders: [],
+        var record = Record(id: UUID(), kind: .publish, createdAt: Date(), label: label, files: files, deleteFolders: [],
                             catalog: catalog, catalogMessage: catalogMessage, catalogPaths: catalogPaths, expectedDeletions: [])
+        record.serverBaseline = try catalogFingerprints(ids: catalog.ids, ref: "HEAD")
         try PublishJournal.save(record)
         try execute(record, sources: sources, log: log)
     }
@@ -105,9 +133,10 @@ enum PublishTransaction {
 
     static func delete(label: String, folders: [FolderRef], catalog: CatalogOperation, catalogMessage: String,
                        catalogPaths: [String], expectedDeletions: [String], log: (String) -> Void = { _ in }) throws {
-        let record = Record(id: UUID(), kind: .delete, createdAt: Date(), label: label, files: [], deleteFolders: folders,
+        var record = Record(id: UUID(), kind: .delete, createdAt: Date(), label: label, files: [], deleteFolders: folders,
                             catalog: catalog, catalogMessage: catalogMessage, catalogPaths: catalogPaths,
                             expectedDeletions: expectedDeletions)
+        record.serverBaseline = try catalogFingerprints(ids: catalog.ids, ref: "HEAD")
         try PublishJournal.save(record)
         try execute(record, sources: [], log: log)
     }
@@ -115,9 +144,33 @@ enum PublishTransaction {
     // MARK: - 4. Reia / Curăță orfanii
 
     /// Reverifică și resincronizează toate checkout-urile, apoi continuă de la primul pas neconfirmat.
-    static func resume(_ record: Record, log: (String) -> Void = { _ in }) throws {
+    static func resume(_ stale: Record, log: (String) -> Void = { _ in }) throws {
+        // Starea curentă din jurnal: dacă operația nu mai e acolo, e deja încheiată → nimic de făcut.
+        guard let record = PublishJournal.load(id: stale.id) else { log("Operația era deja încheiată."); return }
         try preflight(repoKeys: record.repoKeys)
+        try checkNoConcurrentChange(record)
         try execute(record, sources: [], log: log)
+    }
+
+    /// Înainte ca reluarea să scrie în catalog: intrările vizate trebuie să fie EXACT ca la începutul
+    /// operației. Altfel cineva a publicat/modificat între timp (versiune nouă sau aceeași versiune
+    /// schimbată) → oprire, fără nicio scriere; decizia rămâne manuală.
+    static func checkNoConcurrentChange(_ record: Record) throws {
+        let current = try catalogFingerprints(ids: record.catalog.ids, ref: "origin/\(GitOps.publishBranch)")
+        let changed: [String]
+        if !record.has(.catalogPushed) {
+            changed = record.catalog.ids.filter { record.serverBaseline[$0] != nil && current[$0] != record.serverBaseline[$0] }
+        } else if record.kind == .delete {
+            changed = record.catalog.ids.filter { current[$0] != absent }   // produsul a reapărut după ștergere
+        } else {
+            changed = []
+        }
+        guard changed.isEmpty else {
+            let versions = try serverVersions(ids: changed)
+            let detail = changed.map { id in versions[id].map { "\(id) (acum \($0) pe server)" } ?? id }.joined(separator: ", ")
+            throw GitOps.PublishGuardError(message: "Reluare oprită: \(detail) s-a modificat pe server după întreruperea operației „\(record.label)”. "
+                + "Nu suprascriu modificările ulterioare și nu am scris nimic. Verifică manual catalogul, apoi publică din nou sau șterge operația din listă.")
+        }
     }
 
     /// Doar pentru o publicare al cărei catalog NU a ajuns pe server: șterge fișierele ei pe care
@@ -291,6 +344,40 @@ enum PublishTransaction {
         }
     }
 
+    static let absent = "absent"
+
+    /// Obiectul de catalog pentru fiecare id (orice colecție), la `ref`:
+    /// "HEAD" = baza pe care s-a sincronizat operația (preflight); "origin/main" = serverul acum (după fetch).
+    private static func catalogEntries(ids: [String], ref: String) throws -> [String: [String: Any]] {
+        let dir = RepoCheckoutPaths.publicCatalogRepo
+        if ref.hasPrefix("origin/") { try GitOps.fetch(at: dir) }
+        let text = try GitOps.run(["show", "\(ref):docs/catalog.json"], at: dir)
+        guard let root = try JSONSerialization.jsonObject(with: Data(text.utf8)) as? [String: Any] else { return [:] }
+        var found: [String: [String: Any]] = [:]
+        for case let array as [[String: Any]] in root.values {
+            for obj in array { if let id = obj["id"] as? String, ids.contains(id) { found[id] = obj } }
+        }
+        return found
+    }
+
+    static func catalogFingerprints(ids: [String], ref: String) throws -> [String: String] {
+        let entries = try catalogEntries(ids: ids, ref: ref)
+        var result: [String: String] = [:]
+        for id in ids {
+            if let obj = entries[id] {
+                let data = try JSONSerialization.data(withJSONObject: obj, options: [.sortedKeys])
+                result[id] = SHA256.hash(data: data).map { String(format: "%02x", $0) }.joined()
+            } else {
+                result[id] = absent
+            }
+        }
+        return result
+    }
+
+    private static func serverVersions(ids: [String]) throws -> [String: String] {
+        try catalogEntries(ids: ids, ref: "origin/\(GitOps.publishBranch)").compactMapValues { $0["version"] as? String }
+    }
+
     // MARK: - Catalogul de pe server
 
     struct RepoPath: Hashable { let repo: String; let path: String }
@@ -364,6 +451,10 @@ enum PublishJournal {
     static func remove(id: UUID) throws {
         let u = url(for: id)
         if FileManager.default.fileExists(atPath: u.path) { try FileManager.default.removeItem(at: u) }
+    }
+
+    static func load(id: UUID) -> PublishTransaction.Record? {
+        try? JSONDecoder().decode(PublishTransaction.Record.self, from: Data(contentsOf: url(for: id)))
     }
 
     static func pending() -> [PublishTransaction.Record] {

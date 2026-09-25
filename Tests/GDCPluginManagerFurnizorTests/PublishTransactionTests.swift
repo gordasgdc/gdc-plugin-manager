@@ -239,6 +239,63 @@ final class PublishTransactionTests: XCTestCase {
         XCTAssertEqual(try head(filesServer), heads.1)
     }
 
+    /// „Alt Mac” modifică docs/catalog.json (transformare pe JSON) și publică.
+    private func concurrentCatalogEdit(_ transform: (inout [String: Any]) throws -> Void) throws {
+        let other = root.appendingPathComponent("other-\(UUID().uuidString)")
+        try git("clone", "--branch", "main", catalogServer.path, other.path, at: root)
+        let url = other.appendingPathComponent("docs/catalog.json")
+        var cat = try JSONSerialization.jsonObject(with: Data(contentsOf: url)) as! [String: Any]
+        try transform(&cat)
+        try JSONSerialization.data(withJSONObject: cat, options: [.prettyPrinted, .sortedKeys]).write(to: url)
+        try git("commit", "-am", "modificare concurentă a catalogului", at: other)
+        try git("push", "origin", "main", at: other)
+    }
+
+    private func serverItem(_ id: String) throws -> [String: Any]? {
+        let text = try git("show", "main:docs/catalog.json", at: catalogServer)
+        let cat = try JSONSerialization.jsonObject(with: Data(text.utf8)) as! [String: Any]
+        return (cat["items"] as? [[String: Any]])?.first { $0["id"] as? String == id }
+    }
+
+    func testResumeStopsWhenANewerVersionWasPublishedMeanwhile() throws {
+        try PublishTransaction.preflight(repoKeys: ["files"])
+        // Între preflight și push-ul nostru, alt Mac publică prod-b 2.0.0 → push-ul nostru (1.0.0) e respins.
+        let newer = try itemJSON(id: "prod-b", version: "2.0.0", files: [("prod-a/1.0.0/x.cube", sha("LUT x"))])
+        try concurrentCatalogEdit { $0["items"] = ($0["items"] as! [[String: Any]]) + [newer] }
+        XCTAssertThrowsError(try publishProduct(try newProductSource("LUT b")))
+        let record = try XCTUnwrap(PublishJournal.pending().first)
+        let heads = (try head(catalogServer), try head(filesServer))
+
+        XCTAssertThrowsError(try PublishTransaction.resume(record)) { error in
+            XCTAssertTrue(error.localizedDescription.contains("Reluare oprită"), error.localizedDescription)
+            XCTAssertTrue(error.localizedDescription.contains("2.0.0"), "mesajul arată versiunea de pe server")
+        }
+        XCTAssertEqual(try serverItem("prod-b")?["version"] as? String, "2.0.0", "versiunea nouă NU e suprascrisă")
+        XCTAssertEqual(try head(catalogServer), heads.0, "nicio scriere în catalog")
+        XCTAssertEqual(try head(filesServer), heads.1)
+        XCTAssertEqual(PublishJournal.pending().count, 1, "operația rămâne pentru decizie manuală")
+    }
+
+    func testResumeStopsWhenTheSameVersionWasChangedConcurrently() throws {
+        // Actualizare de metadate pentru prod-a 1.0.0 (aceleași fișiere).
+        try PublishTransaction.preflight(repoKeys: ["files"])
+        let ref = PublishTransaction.FileRef(repoKey: "files", path: "prod-a/1.0.0/x.cube", sha256: sha("LUT x"))
+        var mine = try itemJSON(id: "prod-a", version: "1.0.0", files: [(ref.path, ref.sha256)])
+        mine["name"] = "Numele meu"
+        let item = try JSONDecoder().decode(PluginItem.self, from: JSONSerialization.data(withJSONObject: mine))
+        try concurrentCatalogEdit { cat in
+            cat["items"] = (cat["items"] as! [[String: Any]]).map { var o = $0; if o["id"] as? String == "prod-a" { o["name"] = "Numele altcuiva" }; return o }
+        }
+        XCTAssertThrowsError(try PublishTransaction.publish(label: "prod-a 1.0.0", sources: [], files: [ref], catalog: .upsertItems([item]),
+                                                            catalogMessage: "Catalog: prod-a", catalogPaths: ["docs/catalog.json"]))
+        let record = try XCTUnwrap(PublishJournal.pending().first)
+        XCTAssertEqual(record.completed, [.filesPushed, .filesVerified])
+
+        XCTAssertThrowsError(try PublishTransaction.resume(record)) { XCTAssertTrue($0.localizedDescription.contains("prod-a")) }
+        XCTAssertEqual(try serverItem("prod-a")?["name"] as? String, "Numele altcuiva", "modificarea concurentă rămâne")
+        XCTAssertEqual(try serverItem("prod-a")?["version"] as? String, "1.0.0")
+    }
+
     func testJournalHoldsNoSecrets() throws {
         try PublishTransaction.preflight(repoKeys: ["files"])
         try concurrentPush(to: catalogServer, path: "docs/alt.txt", text: "x")
