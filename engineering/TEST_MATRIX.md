@@ -21,7 +21,11 @@ Niciun rând nu înseamnă PASS dacă testul nu a fost rulat; rezultatele rulăr
 | ERROR HANDLING | parțial (decodare) | NONE | mesaje pentru client vs log tehnic |
 | SECURITY — licență/catalog | AUTO (semnătură Ed25519, căi nesigure, https în catalog) | parțial (smoke) | |
 | SECURITY — actualizare (T2–T5) | AUTO (vezi S2) | N/A | |
-| SECURITY — autorizare artefacte | BLOCKED (în lucru) | BLOCKED | |
+| SECURITY — autorizare artefacte (server) | AUTO: 26 teste Deno (`authorize-download`), job CI | N/A | valid/gratuit/legacy; serial lipsă/invalid/altă cheie/alt produs/alt calculator/expirat/revocat; platformă; produs/fișier/repo în afara allowlist; fișier lipsă; rate limit; cereri malformate; vector Swift↔TS |
+| SECURITY — autorizare artefacte (client) | AUTO: 8 teste (`DownloadAuthorizerTests`) | AUTO: 10 teste (`tests/GDCPluginManager.Core.Tests`, ramura `s1-authorize-download`) | fără serial la gratuit; mapare erori; URL expirat → o reautorizare; SHA-256 greșit; autorizare pentru alt fișier / http respinsă fără descărcare |
+| SECURITY — credential absent din client | AUTO: `scripts/check_client_secrets.sh` în CI (binar Release) + LOCAL pe build-ul real | AUTO: scanare ASCII+UTF-16 a `publish\` în CI | control pozitiv verificat (Furnizor, fișier UTF-16) |
+| SECURITY — autorizare end-to-end (funcție deployată) | BLOCKED: deploy Supabase | BLOCKED | după deploy: gratuit → 200, plătit fără serial → 403, cale străină → 403 |
+| SECURITY — căi privilegiate | vezi `PRIVILEGED_PATHS.md` | de inventariat | |
 | SECURITY — secret scanning | NONE | NONE | propus: gitleaks în ambele CI |
 | macOS BUILD | AUTO (`swift build`, toate țintele) | — | |
 | macOS PACKAGE | AUTO smoke (binar Release Mach-O) | — | `.app`/`.pkg`/semnare/notarizare: doar local (`build_app.sh`) |
@@ -51,5 +55,8 @@ Niciun rând nu înseamnă PASS dacă testul nu a fost rulat; rezultatele rulăr
 |---|---|---|
 | `swift test` (45 teste, inclusiv pachetul semnat real) | PASS local | `.build/logs/s2-tests.log` |
 | Mac CI pe `d85c80e` | PASS | GitHub Actions „Mac CI” |
-| Mac CI pentru S2 | vezi PROJECT_STATE.md după push | |
+| Mac CI pentru S2 (`28253ef`) | PASS | GitHub Actions |
+| Deno `authorize-download` (26) | PASS local + job CI | `.build/logs/authorize-download-tests.log` |
+| `swift test` (53) | PASS local | `.build/logs/s1-client-tests.log` |
+| Teste Core Windows (10) | PASS local (.NET 10, RollForward) | ramura `s1-authorize-download` |
 | Instalare reală prin noul SelfUpdater | NErulat (MANUAL) | |
