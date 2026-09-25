@@ -14,6 +14,12 @@
 - Mesaje noi RO/EN/ES: licență respinsă, prea multe descărcări.
 - Importul PowerGrade transmite căile în siguranță, indiferent de caracterele din nume.
 
+## v1.52.4 Furnizor (nelansat, pregătit 2026-09-26) — Mediu de test (staging)
+- Mod staging activat doar explicit la pornire (`GDC_FURNIZOR_ENV=staging`), cu banner roșu permanent „MEDIU DE TEST — STAGING”; o valoare necunoscută NU înseamnă producție.
+- În staging: checkout-uri (`~/Developer/_gdc-publish-staging/`) și jurnal separate; se scrie doar în repo-urile `gordasgdc/*-staging`; revocările Supabase, secretele și registrul de vânzări sunt blocate.
+- În producție: orice scriere într-un repo `*-staging` e refuzată.
+- Identitatea repo-urilor se verifică pe adresele reale de fetch ȘI push (și host-ul github.com), nu pe numele folderului — la publicare, ștergere, reluare și curățarea orfanilor.
+
 ## v1.52.3 Furnizor (nelansat, pregătit 2026-09-26) — Publicare fără stări parțiale periculoase
 - Înainte de prima scriere, toate repo-urile implicate (catalog + repo-urile de fișiere) sunt verificate și sincronizate.
 - Publicare: fișiere → verificarea existenței și a SHA-256 pe server → catalog. Ștergere: catalog (confirmat pe server) → doar fișierele pe care nu le mai referă niciun produs, versiune sau resursă.

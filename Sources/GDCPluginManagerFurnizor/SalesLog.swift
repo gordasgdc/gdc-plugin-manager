@@ -50,6 +50,7 @@ enum SalesLog {
 
     static func append(productID: String, productName: String, customer: String, email: String,
                         priceEUR: Double, expiresDisplay: String, machineID: String, serial: String) throws {
+        try FurnizorEnvironment.assertProductionWriteAllowed("Înregistrarea în registrul de vânzări")
         let entry = Entry(
             dateUTC: ISO8601DateFormatter().string(from: Date()), productID: productID, productName: productName,
             customer: customer, email: email, priceEUR: priceEUR, expiresDisplay: expiresDisplay,
@@ -99,6 +100,7 @@ enum SalesLog {
     /// exactly like GDC License Manager's own "Șterge acest cod" history
     /// row deletion.
     static func delete(serial: String) throws {
+        try FurnizorEnvironment.assertProductionWriteAllowed("Ștergerea din registrul de vânzări")
         let remaining = readAll().filter { $0.serial != serial }.reversed() // back to chronological order
         var content = columns.joined(separator: ",") + "\n"
         for entry in remaining {
@@ -113,6 +115,7 @@ enum SalesLog {
     /// serial itself keeps validating however it was signed, unaffected
     /// by anything in this file.
     static func update(serial: String, with updated: Entry) throws {
+        try FurnizorEnvironment.assertProductionWriteAllowed("Modificarea registrului de vânzări")
         let all = readAll().reversed() // chronological order, oldest first
         var content = columns.joined(separator: ",") + "\n"
         for entry in all {

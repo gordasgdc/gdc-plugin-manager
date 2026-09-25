@@ -13,7 +13,18 @@ struct GDCPluginManagerFurnizorApp: App {
 
     var body: some Scene {
         WindowGroup {
-            FurnizorContentView()
+            VStack(spacing: 0) {
+                // 1.52.4: banner permanent în staging (frate în VStack, nu suprapus — Regula 24).
+                if FurnizorEnvironment.active == .staging {
+                    Text("MEDIU DE TEST — STAGING · publicările merg DOAR în repo-urile *-staging; Supabase, secretele și registrul de vânzări sunt blocate")
+                        .font(.callout.weight(.bold))
+                        .foregroundStyle(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 6)
+                        .background(Color.red)
+                }
+                FurnizorContentView()
+            }
                 .frame(minWidth: 720, minHeight: 560)
                 // Tema salvată se aplică din primul cadru — vezi
                 // AppTheme.swift (Core) și comentariul din Client.

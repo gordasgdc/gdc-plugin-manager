@@ -12,18 +12,30 @@ import Foundation
 enum RepoCheckoutPaths {
     /// gordasgdc/gdc-plugin-manager-files (private) — where the actual
     /// product files (.dctl/.cube/.fuse) live, at <id>/<version>/<file>.
-    static var privateFilesRepo: URL { developerDir.appendingPathComponent("gdc-plugin-manager-files") }
+    static var privateFilesRepo: URL {
+        isStaging ? stagingDir.appendingPathComponent("gdc-plugin-manager-files\(suffix)")
+                  : developerDir.appendingPathComponent("gdc-plugin-manager-files")
+    }
+
+    // MARK: 1.52.4 — mediul staging: checkout-uri separate, repo-uri `*-staging`
+    private static var isStaging: Bool { FurnizorEnvironment.active == .staging }
+    private static var suffix: String { isStaging ? FurnizorEnvironment.stagingSuffix : "" }
+    /// ~/Developer/_gdc-publish-staging — complet separat de checkout-urile de producție.
+    static var stagingDir: URL { developerDir.appendingPathComponent("_gdc-publish-staging") }
 
     /// [2026-09-14] Arhitectura multi-repo: fiecare tip de resursa are repo-ul
     /// lui privat, ca sa nu atingem limitele de dimensiune ale unuia singur.
     /// Cheia e ACEEASI cu cea din catalog (`PluginFile.repo`) si cu cea din
     /// `PrivateCatalogAuth.repos` — o singura sursa de adevar pentru nume.
-    static var resourceRepoCheckouts: [String: URL] { [
-        "files":   privateFilesRepo,
-        "pdfs":    developerDir.appendingPathComponent("gdc-plugin-manager-pdfs"),
-        "scripts": developerDir.appendingPathComponent("gdc-plugin-manager-scripts"),
-        "resources": developerDir.appendingPathComponent("gdc-plugin-manager-resources"),
-    ] }
+    static var resourceRepoCheckouts: [String: URL] {
+        let base = isStaging ? stagingDir : developerDir
+        return [
+            "files":   privateFilesRepo,
+            "pdfs":    base.appendingPathComponent("gdc-plugin-manager-pdfs\(suffix)"),
+            "scripts": base.appendingPathComponent("gdc-plugin-manager-scripts\(suffix)"),
+            "resources": base.appendingPathComponent("gdc-plugin-manager-resources\(suffix)"),
+        ]
+    }
 
     /// Checkout-ul local pentru o cheie de repo. Arunca explicit daca clona
     /// lipseste — altfel Furnizor ar crea un folder gol si ar face push intr-un
@@ -52,11 +64,12 @@ enum RepoCheckoutPaths {
     /// `~/Developer/gdc-plugin-manager-catalog-vendor`, iar publicarea mergea pe ramura lui activă
     /// (ex. o ramură de release) și putea atinge fișiere în lucru. Clonă parțială, doar `docs/`
     /// (sparse), pe `main` — vezi `missingCheckoutMessage` pentru crearea ei.
-    static var publicCatalogRepo: URL { developerDir
-        .appendingPathComponent("_gdc-publish")
-        .appendingPathComponent("gdc-plugin-manager") }
+    static var publicCatalogRepo: URL {
+        isStaging ? stagingDir.appendingPathComponent("gdc-plugin-manager\(suffix)")
+                  : developerDir.appendingPathComponent("_gdc-publish").appendingPathComponent("gdc-plugin-manager")
+    }
 
-    static let publicCatalogSlug = "gordasgdc/gdc-plugin-manager"
+    static var publicCatalogSlug: String { "gordasgdc/gdc-plugin-manager\(suffix)" }
 
     /// Repo-ul așteptat al unui checkout de publicare + ce poate conține nepublicat.
     /// `nil` = nu e un checkout de publicare → orice operație git de publicare e refuzată.
@@ -66,7 +79,7 @@ enum RepoCheckoutPaths {
             return .init(repoSlug: publicCatalogSlug, allowedDirtyPrefixes: ["docs/"])
         }
         for (key, url) in resourceRepoCheckouts where url.standardizedFileURL.path == path {
-            return .init(repoSlug: "gordasgdc/gdc-plugin-manager-\(key)", allowedDirtyPrefixes: nil)
+            return .init(repoSlug: "gordasgdc/gdc-plugin-manager-\(key)\(suffix)", allowedDirtyPrefixes: nil)
         }
         return nil
     }

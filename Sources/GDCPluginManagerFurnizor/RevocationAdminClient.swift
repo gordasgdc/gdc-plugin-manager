@@ -56,6 +56,7 @@ enum RevocationAdminClient {
         table: String, method: String, query: String,
         body: [String: Any]? = nil, prefer: String? = nil
     ) async throws -> [T] {
+        if method != "GET" { try FurnizorEnvironment.assertProductionWriteAllowed("Modificarea revocărilor în Supabase") }
         guard SupabaseAdminConfig.serviceRoleKey != "PASTE_SERVICE_ROLE_KEY_HERE" else {
             throw RevocationAdminError.requestFailed("Cheia service_role nu a fost completată în SupabaseAdminConfig.swift.")
         }

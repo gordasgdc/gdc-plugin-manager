@@ -435,9 +435,16 @@ enum PublishTransaction {
 /// Jurnal local al operațiilor de publicare neterminate. Un fișier JSON per operație; conține doar
 /// metadate de catalog și căi de fișiere — niciun token sau secret.
 enum PublishJournal {
-    static var directory: URL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
-        .appendingPathComponent("GDC License Manager", isDirectory: true)
-        .appendingPathComponent("publish-journal", isDirectory: true)
+    /// Jurnal separat per mediu: `publish-journal` (producție) / `publish-journal-staging`.
+    static var directoryOverride: URL?
+    static var directory: URL {
+        get {
+            directoryOverride ?? FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+                .appendingPathComponent("GDC License Manager", isDirectory: true)
+                .appendingPathComponent(FurnizorEnvironment.active == .staging ? "publish-journal-staging" : "publish-journal", isDirectory: true)
+        }
+        set { directoryOverride = newValue }
+    }
 
     private static func url(for id: UUID) -> URL { directory.appendingPathComponent("\(id.uuidString).json") }
 

@@ -64,6 +64,15 @@ enum GitOps {
         return "\(parts[parts.count - 2])/\(parts[parts.count - 1])".lowercased()
     }
 
+    /// "https://github.com/a/b.git" → "github.com"; "git@github.com:a/b" → "github.com"; cale locală → nil.
+    static func remoteHost(_ url: String) -> String? {
+        if url.contains("://") { return URL(string: url)?.host?.lowercased() }
+        if let at = url.firstIndex(of: "@"), let colon = url[at...].firstIndex(of: ":") {
+            return String(url[url.index(after: at)..<colon]).lowercased()
+        }
+        return nil
+    }
+
     /// Verificările de dinaintea ORICĂREI operații git de publicare. Nu modifică nimic.
     static func verifyPublishCheckout(at directory: URL, target explicitTarget: PublishTarget? = nil) throws {
         let path = directory.path
@@ -73,9 +82,19 @@ enum GitOps {
         guard FileManager.default.fileExists(atPath: directory.appendingPathComponent(".git").path) else {
             throw PublishGuardError(message: RepoCheckoutPaths.missingCheckoutMessage(path: path, repoSlug: target.repoSlug))
         }
-        let remote = (try? run(["remote", "get-url", "origin"], at: directory)) ?? ""
-        guard repoSlug(fromRemoteURL: remote) == target.repoSlug.lowercased() else {
-            throw PublishGuardError(message: "Publicare oprită: checkout-ul \(path) indică spre alt repo (\(remote.trimmingCharacters(in: .whitespacesAndNewlines))), nu spre \(target.repoSlug). Nimic nu s-a modificat.")
+        // 1.52.4: mediul activ decide ce repo-uri pot primi scrieri (staging ↔ producție, niciodată amestecat).
+        try FurnizorEnvironment.assertRepoWritable(target.repoSlug)
+        // Identitatea se verifică pe adresele REALE (fetch ȘI push), nu pe numele folderului.
+        let realApp = explicitTarget == nil && RepoCheckoutPaths.testRoot == nil
+        for (label, args) in [("fetch", ["remote", "get-url", "origin"]), ("push", ["remote", "get-url", "--push", "origin"])] {
+            let remote = ((try? run(args, at: directory)) ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+            guard let slug = repoSlug(fromRemoteURL: remote), slug == target.repoSlug.lowercased() else {
+                throw PublishGuardError(message: "Publicare oprită: adresa de \(label) a checkout-ului \(path) indică spre alt repo (\(remote)), nu spre \(target.repoSlug). Nimic nu s-a modificat.")
+            }
+            try FurnizorEnvironment.assertRepoWritable(slug)
+            if realApp, remoteHost(remote) != "github.com" {
+                throw PublishGuardError(message: "Publicare oprită: adresa de \(label) a checkout-ului \(path) nu e pe github.com (\(remote)). Nimic nu s-a modificat.")
+            }
         }
         for marker in ["MERGE_HEAD", "CHERRY_PICK_HEAD", "REVERT_HEAD", "rebase-merge", "rebase-apply"] {
             let rel = try run(["rev-parse", "--git-path", marker], at: directory).trimmingCharacters(in: .whitespacesAndNewlines)

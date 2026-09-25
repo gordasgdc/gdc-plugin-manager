@@ -62,6 +62,7 @@ enum SecretWriter {
     /// făcut unul (pentru ca UI-ul să poată spune unde e, nu doar că există).
     @discardableResult
     static func write(_ newValue: String, to location: SecretLocation) throws -> URL? {
+        try FurnizorEnvironment.assertProductionWriteAllowed("Scrierea unui secret")
         switch location {
         case .sourceFile(let path, let pattern):
             return try writeSourceFile(newValue, path: path, pattern: pattern)
