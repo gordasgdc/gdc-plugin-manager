@@ -10,13 +10,14 @@
   "mandatory": false,
   "min_version": "1.0.0",
   "mac": {
-    "version": "1.39.3",
-    "release_date": "2026-09-21",
-    "changes": "Instalarea pluginurilor OFX nu mai blochează aplicația câteva secunde.",
+    "version": "1.39.4",
+    "release_date": "2026-09-25",
+    "changes": "Descărcările produselor sunt autorizate și verificate mai sigur. Actualizările aplicației verifică semnătura și integritatea pachetului înainte de instalare.",
     "download_url": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Mac.zip",
     "mandatory": false,
     "min_version": "1.0.0",
-    "download_url_dmg": "https://github.com/gordasgdc/gdc-plugin-manager/releases/download/v1.39.3/GDCPluginManager-1.39.3.dmg"
+    "download_url_dmg": "https://github.com/gordasgdc/gdc-plugin-manager/releases/download/v1.39.4/GDCPluginManager-1.39.4.dmg",
+    "sha256": "ef518293c96268aa1f854d51f4e7feece0e7b17a97c7ae0e7359a1166c1d6f06"
   },
   "windows": {
     "version": "1.37.0",
