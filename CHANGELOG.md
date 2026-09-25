@@ -1,6 +1,7 @@
 # Changelog — GDC Plugin Manager
 
 ## v1.39.4 (nelansat, pregătit 2026-09-25) — Descărcări autorizate, actualizare sigură
+- Instalatorul nu mai instalează o versiune mai veche peste una mai nouă și, în acest caz, lasă aplicația existentă neatinsă.
 
 - Teste automate pentru licențiere, catalog și `update.json` (`swift test`, 35 de teste).
 - `scripts/validate_catalog.py`: validarea catalogului înainte de publicare (structură, SHA-256, fișiere, republicări).
