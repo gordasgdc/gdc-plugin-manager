@@ -153,7 +153,7 @@ enum ClientNotesStore {
     }
 
     static func setNote(_ text: String, for key: String) {
-        guard FurnizorEnvironment.active == .production else { return }   // 1.52.4: notele reale despre clienți nu se modifică în staging
+        guard FurnizorEnvironment.productionWritesUnlocked else { return }   // 1.52.4/1.52.5: notele reale despre clienți nu se modifică în staging
         var all = loadAll()
         let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
         if trimmed.isEmpty {

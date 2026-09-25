@@ -5,6 +5,9 @@ import GDCPluginManagerCore
 struct GDCPluginManagerFurnizorApp: App {
     /// Mod fără fereastră, cerut de GDC STYLE Lab: publică direct pachetele Demo din căsuța de intrare, scrie rezultatul și iese.
     init() {
+        // 1.52.5: înaintea oricărei operații (inclusiv modul fără fereastră): producția după staging
+        // pornește cu scrierile blocate până la confirmarea explicită.
+        FurnizorEnvironment.bootstrapSession()
         if CommandLine.arguments.contains("--publish-demo-inbox") {
             DemoPublisher.run()
             exit(0)
@@ -15,14 +18,7 @@ struct GDCPluginManagerFurnizorApp: App {
         WindowGroup {
             VStack(spacing: 0) {
                 // 1.52.4: banner permanent în staging (frate în VStack, nu suprapus — Regula 24).
-                if FurnizorEnvironment.active == .staging {
-                    Text("MEDIU DE TEST — STAGING · publicările merg DOAR în repo-urile *-staging; Supabase, secretele și registrul de vânzări sunt blocate")
-                        .font(.callout.weight(.bold))
-                        .foregroundStyle(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 6)
-                        .background(Color.red)
-                }
+                EnvironmentBanner()
                 FurnizorContentView()
             }
                 .frame(minWidth: 720, minHeight: 560)

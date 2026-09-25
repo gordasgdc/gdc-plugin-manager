@@ -53,7 +53,7 @@ enum LicenseActionLog {
     }
 
     static func record(machineID: String, productID: String, productName: String, action: LicenseAction, detail: String) {
-        guard FurnizorEnvironment.active == .production else { return }   // 1.52.4: jurnalul real de licențe nu se atinge în staging
+        guard FurnizorEnvironment.productionWritesUnlocked else { return }   // 1.52.4/1.52.5: jurnalul real de licențe nu se atinge în staging
         var all = readAll()
         let formatter = ISO8601DateFormatter()
         all.append(LicenseActionRecord(

@@ -55,4 +55,5 @@ if [ "$ACTUAL" != "$ENV_NAME" ]; then
 fi
 echo "✓ Furnizor (PID $PID) rulează în: $ACTUAL"
 [ "$ACTUAL" = staging ] && echo "  Verifică vizual: bannerul roșu „MEDIU DE TEST — STAGING” trebuie să fie vizibil sus."
+[ "$ACTUAL" = production ] && echo "  Verifică vizual: sus, indicatorul verde „PRODUCȚIE” (sau bannerul portocaliu de confirmare, dacă ultima sesiune a fost staging)."
 exit 0

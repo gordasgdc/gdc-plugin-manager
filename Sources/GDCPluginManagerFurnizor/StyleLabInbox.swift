@@ -36,7 +36,7 @@ enum StyleLabInbox {
 
     /// După publicare, trimiterea se scoate din căsuță.
     static func remove(id: String) {
-        guard FurnizorEnvironment.active == .production else { return }   // căsuța STYLE Lab e comună cu producția
+        guard FurnizorEnvironment.productionWritesUnlocked else { return }   // căsuța STYLE Lab e comună cu producția
         try? FileManager.default.removeItem(at: folder.appendingPathComponent(id + ".json"))
         try? FileManager.default.removeItem(at: folder.appendingPathComponent(id + ".png"))
     }

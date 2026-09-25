@@ -14,6 +14,11 @@
 - Mesaje noi RO/EN/ES: licență respinsă, prea multe descărcări.
 - Importul PowerGrade transmite căile în siguranță, indiferent de caracterele din nume.
 
+## v1.52.5 Furnizor (nelansat, pregătit 2026-09-26) — Siguranța mediilor
+- Indicator permanent „PRODUCȚIE” (verde) în modul normal; bannerul roșu STAGING rămâne în mediul de test.
+- O pornire normală (producție) după o sesiune STAGING blochează TOATE scrierile (git, Supabase, secrete, registre, note) până la confirmarea explicită „Continuă în PRODUCȚIE”; „Anulează” lasă aplicația fără scrieri, și după o nouă repornire.
+- Ultimul mediu se ține în `last-environment.json` (doar mediul și data).
+
 ## v1.52.4 Furnizor (nelansat, pregătit 2026-09-26) — Mediu de test (staging)
 - Mod staging activat doar explicit la pornire (`GDC_FURNIZOR_ENV=staging`), cu banner roșu permanent „MEDIU DE TEST — STAGING”; o valoare necunoscută NU înseamnă producție.
 - În staging: checkout-uri (`~/Developer/_gdc-publish-staging/`) și jurnal separate; se scrie doar în repo-urile `gordasgdc/*-staging`; revocările Supabase, secretele și registrul de vânzări sunt blocate.
