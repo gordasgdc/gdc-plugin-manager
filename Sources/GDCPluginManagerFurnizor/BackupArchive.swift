@@ -413,6 +413,7 @@ enum BackupArchive {
     static func restore(archive: URL,
                         password: String,
                         progress: @escaping (String, Double) -> Void) throws -> [String] {
+        try FurnizorEnvironment.assertProductionWriteAllowed("Restaurarea unei copii de siguranță")   // ar suprascrie datele reale
         let fm = FileManager.default
         guard let input = FileHandle(forReadingAtPath: archive.path) else {
             throw BackupError.notAnArchive

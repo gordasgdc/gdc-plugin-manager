@@ -19,6 +19,8 @@
 - În staging: checkout-uri (`~/Developer/_gdc-publish-staging/`) și jurnal separate; se scrie doar în repo-urile `gordasgdc/*-staging`; revocările Supabase, secretele și registrul de vânzări sunt blocate.
 - În producție: orice scriere într-un repo `*-staging` e refuzată.
 - Identitatea repo-urilor se verifică pe adresele reale de fetch ȘI push (și host-ul github.com), nu pe numele folderului — la publicare, ștergere, reluare și curățarea orfanilor.
+- În staging sunt blocate și: generarea serialelor, jurnalul de licențe, notele despre clienți, restaurarea copiilor de siguranță și golirea căsuței STYLE Lab (date comune cu producția).
+- `scripts/furnizor-env.sh staging|production`: închide grațios instanța pornită, pornește în mediul cerut și verifică mediul real al procesului.
 
 ## v1.52.3 Furnizor (nelansat, pregătit 2026-09-26) — Publicare fără stări parțiale periculoase
 - Înainte de prima scriere, toate repo-urile implicate (catalog + repo-urile de fișiere) sunt verificate și sincronizate.

@@ -136,7 +136,7 @@ enum ClientProfileBuilder {
 /// sau ID de mașină/nume dacă email lipsește) — același tipar de stocare ca
 /// `SalesLog`/`VendorKeyStore` (Application Support, sub "GDC License Manager").
 enum ClientNotesStore {
-    private static var fileURL: URL {
+    static var fileURL: URL {
         FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
             .appendingPathComponent("GDC License Manager", isDirectory: true)
             .appendingPathComponent("client_notes.json")
@@ -153,6 +153,7 @@ enum ClientNotesStore {
     }
 
     static func setNote(_ text: String, for key: String) {
+        guard FurnizorEnvironment.active == .production else { return }   // 1.52.4: notele reale despre clienți nu se modifică în staging
         var all = loadAll()
         let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
         if trimmed.isEmpty {

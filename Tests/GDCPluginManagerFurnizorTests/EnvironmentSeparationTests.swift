@@ -115,6 +115,19 @@ final class EnvironmentSeparationTests: XCTestCase {
             XCTFail("revocarea trebuia blocată")
         } catch { XCTAssertTrue(error is FurnizorEnvironment.WriteRefused, "\(error)") }
         XCTAssertThrowsError(try FurnizorEnvironment.assertProductionWriteAllowed("x"))
+        XCTAssertThrowsError(try LicenseGenerator.generate(privateKeyBase64: "AAAA", productID: "x")) {
+            XCTAssertTrue($0 is FurnizorEnvironment.WriteRefused, "serialele nu se emit în staging")
+        }
+        XCTAssertThrowsError(try BackupArchive.restore(archive: URL(fileURLWithPath: "/nonexistent"), password: "x", progress: { _, _ in })) {
+            XCTAssertTrue($0 is FurnizorEnvironment.WriteRefused)
+        }
+        // Notele și jurnalul de licențe: fișierele reale nu se ating (nicio scriere în staging).
+        let notes = ClientNotesStore.fileURL, log = LicenseActionLog.fileURL
+        let before = (try? Data(contentsOf: notes), try? Data(contentsOf: log))
+        ClientNotesStore.setNote("TEST STAGING", for: "test-staging-key")
+        LicenseActionLog.record(machineID: "AAAAAAAAAA", productID: "x", productName: "x", action: .extended, detail: "test staging")
+        XCTAssertEqual(try? Data(contentsOf: notes), before.0)
+        XCTAssertEqual(try? Data(contentsOf: log), before.1)
     }
 
     // MARK: - git: publicare corectă în staging

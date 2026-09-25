@@ -36,6 +36,8 @@ enum LicenseGenerator {
     static func generate(privateKeyBase64: String, productID: String,
                           expiresAt: Int64 = 0, machineIDBase32: String? = nil,
                           platform: LicenseCore.LicensePlatform = .any) throws -> String {
+        // 1.52.4: în staging nu se emit seriale reale (cheia privată e cea de producție).
+        try FurnizorEnvironment.assertProductionWriteAllowed("Generarea serialelor")
         guard let keyData = Data(base64Encoded: privateKeyBase64),
               let privateKey = try? Curve25519.Signing.PrivateKey(rawRepresentation: keyData) else {
             throw GenerationError.invalidPrivateKey
