@@ -153,7 +153,7 @@ enum BackupArchive {
             Component(id: "github_token",
                       label: "Tokenul GitHub de publicare",
                       detail: "Fișier sursă exclus din git — un clone pe alt Mac NU îl aduce.",
-                      source: vendorSourceRoot.appendingPathComponent("Sources/GDCPluginManagerCore/PrivateCatalogAuth.swift"),
+                      source: vendorSourceRoot.appendingPathComponent("Sources/GDCPluginManagerFurnizor/PrivateCatalogAuth.swift"),
                       isDirectory: false, isCritical: true, isOptional: false),
             Component(id: "supabase_key",
                       label: "Cheia de administrare Supabase",
@@ -528,7 +528,7 @@ enum BackupArchive {
         case "customers_legacy": return licenseDir.appendingPathComponent("customers.csv")
         case "products_legacy":  return licenseDir.appendingPathComponent("products.txt")
         case "pending_covers": return furnizorDir.appendingPathComponent("pending-covers", isDirectory: true)
-        case "github_token":   return vendorSourceRoot.appendingPathComponent("Sources/GDCPluginManagerCore/PrivateCatalogAuth.swift")
+        case "github_token":   return vendorSourceRoot.appendingPathComponent("Sources/GDCPluginManagerFurnizor/PrivateCatalogAuth.swift")
         case "supabase_key":   return vendorSourceRoot.appendingPathComponent("Sources/GDCPluginManagerFurnizor/SupabaseAdminConfig.swift")
         case "catalog_docs":   return vendorSourceRoot.appendingPathComponent("docs", isDirectory: true)
         case "product_files":  return RepoCheckoutPaths.privateFilesRepo

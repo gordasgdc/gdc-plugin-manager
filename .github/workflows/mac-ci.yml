@@ -30,7 +30,7 @@ jobs:
       # (valori placeholder). Nicio valoare reală nu intră în CI.
       - name: Șabloane pentru fișierele de configurare locale
         run: |
-          cp Sources/GDCPluginManagerCore/PrivateCatalogAuth.swift.example Sources/GDCPluginManagerCore/PrivateCatalogAuth.swift
+          cp Sources/GDCPluginManagerFurnizor/PrivateCatalogAuth.swift.example Sources/GDCPluginManagerFurnizor/PrivateCatalogAuth.swift
           cp Sources/GDCPluginManagerFurnizor/SupabaseAdminConfig.swift.example Sources/GDCPluginManagerFurnizor/SupabaseAdminConfig.swift
 
       - name: Rezolvarea dependențelor
@@ -58,6 +58,11 @@ jobs:
           file "$bin" | grep -q "Mach-O 64-bit executable"
           python3 -c "import json; json.load(open('docs/update.json'))"
           echo "PACKAGE SMOKE: binar Mach-O Release construit; .app/.pkg/semnare NEVALIDATE în CI."
+
+      # S1: clientul nu conține credentiale (regresie). În CI fișierele de
+      # configurare sunt șabloane; local, scriptul se rulează pe build-ul real.
+      - name: SECURITY — fără credentiale în binarul clientului
+        run: scripts/check_client_secrets.sh "$(swift build -c release --show-bin-path)/GDCPluginManager"
 
   # S1: logica funcției Supabase `authorize-download` (fără rețea, fără secrete).
   authorize-download:

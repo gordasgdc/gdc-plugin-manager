@@ -65,8 +65,8 @@ Requires macOS 14+ and Swift 5.9+ (Xcode Command Line Tools).
 ```bash
 git clone https://github.com/gordasgdc/gdc-plugin-manager.git
 cd gdc-plugin-manager
-cp Sources/GDCPluginManager/PrivateCatalogAuth.swift.example Sources/GDCPluginManager/PrivateCatalogAuth.swift
-# edit PrivateCatalogAuth.swift and paste in a real token to build the client target
+cp Sources/GDCPluginManagerFurnizor/PrivateCatalogAuth.swift.example Sources/GDCPluginManagerFurnizor/PrivateCatalogAuth.swift
+# edit PrivateCatalogAuth.swift and paste in a real token — only the vendor app (Furnizor) uses it; the client has no storage credential
 ./build_app.sh
 ```
 

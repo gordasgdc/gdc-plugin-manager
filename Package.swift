@@ -20,8 +20,7 @@ let package = Package(
         // out of the client binary entirely (see GDCPluginManagerFurnizor).
         .target(
             name: "GDCPluginManagerCore",
-            path: "Sources/GDCPluginManagerCore",
-            exclude: ["PrivateCatalogAuth.swift.example"]
+            path: "Sources/GDCPluginManagerCore"
         ),
         // The distributed client app - what customers download and run.
         .executableTarget(
@@ -43,7 +42,9 @@ let package = Package(
             name: "GDCPluginManagerFurnizor",
             dependencies: ["GDCPluginManagerCore"],
             path: "Sources/GDCPluginManagerFurnizor",
-            exclude: ["SupabaseAdminConfig.swift.example"],
+            // PrivateCatalogAuth (credential GitHub) trăiește DOAR aici, în Furnizor
+            // (local, nedistribuit). Clientul descarcă prin authorize-download (S1).
+            exclude: ["SupabaseAdminConfig.swift.example", "PrivateCatalogAuth.swift.example"],
             resources: [
                 // [2026-08-29] Preseturile sezoniere predefinite au trecut de
                 // la SVG inline la PNG randat, bundle-uit - vezi

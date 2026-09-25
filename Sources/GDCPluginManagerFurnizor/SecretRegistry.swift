@@ -200,7 +200,7 @@ extension SecretRegistry {
                 name: "PAT GitHub (catalog privat)",
                 purpose: "Singura cale prin care clientul descarcă fișierele produselor din cele 4 repo-uri private.",
                 impact: "Toți clienții instalați primesc eroare de autentificare la orice descărcare. Nu se repară din catalog — cere build + release nou pe Mac ȘI pe Windows.",
-                location: .sourceFile(path: "Sources/GDCPluginManagerCore/PrivateCatalogAuth.swift",
+                location: .sourceFile(path: "Sources/GDCPluginManagerFurnizor/PrivateCatalogAuth.swift",
                                       pattern: #"public static let token = "([^"]+)""#),
                 expiry: .githubTokenHeader,
                 renewURL: "https://github.com/settings/personal-access-tokens",
