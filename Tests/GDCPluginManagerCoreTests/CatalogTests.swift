@@ -22,8 +22,12 @@ final class CatalogTests: XCTestCase {
     }
 
     func testRealCatalogDecodes() throws {
+        // Un catalog fără produse e o stare validă (ex. toate demo-urile retrase);
+        // contractul e că decodează și că nu e complet gol.
         let catalog = try JSONDecoder().decode(Catalog.self, from: try realCatalogData())
-        XCTAssertFalse(catalog.items.isEmpty, "catalogul publicat nu are niciun produs")
+        let total = catalog.items.count + catalog.scriptItems.count + catalog.apps.count
+            + catalog.downloadableResources.count + catalog.pdfResources.count
+        XCTAssertGreaterThan(total, 0, "catalogul publicat e complet gol")
     }
 
     func testRealCatalogHasNoUnknownTypesOrDuplicateIDs() throws {
