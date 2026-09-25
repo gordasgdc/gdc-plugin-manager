@@ -59,6 +59,8 @@ enum L {
         "community.action.video": [.ro: "Deschide canalul", .en: "Open channel", .es: "Abrir el canal"],
         "community.action.docs": [.ro: "Deschide ghidul", .en: "Open guide", .es: "Abrir la guía"],
         "community.action.feedback": [.ro: "Raportează o problemă", .en: "Report an issue", .es: "Reportar un problema"],
+        "install.error.licenseRejected": [.ro: "Licența pentru acest produs nu a fost acceptată (invalidă, expirată, revocată sau pentru alt calculator). Verifică pagina Licență.", .en: "The license for this product was not accepted (invalid, expired, revoked or for another computer). Check the License page.", .es: "La licencia de este producto no fue aceptada (no válida, caducada, revocada o de otro equipo). Revisa la página Licencia."],
+        "install.error.rateLimited": [.ro: "Prea multe descărcări într-un timp scurt. Încearcă din nou peste câteva minute.", .en: "Too many downloads in a short time. Try again in a few minutes.", .es: "Demasiadas descargas en poco tiempo. Inténtalo de nuevo en unos minutos."],
         "community.empty.title": [.ro: "Niciun canal încă", .en: "No channels yet", .es: "Aún no hay canales"],
         "community.empty.subtitle": [
             .ro: "Grupurile și canalele de suport apar aici imediat ce sunt publicate.",

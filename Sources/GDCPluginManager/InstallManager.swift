@@ -27,6 +27,10 @@ enum RemoveOutcome: Equatable {
 enum InstallError: Error, LocalizedError {
     case downloadFailed
     case authenticationFailed
+    /// S1: serverul de autorizare a respins licența (invalidă, revocată, altă platformă).
+    case licenseRejected
+    /// S1: prea multe cereri de autorizare într-un interval scurt.
+    case tooManyRequests
     case checksumMismatch
     /// [2026-09-14] Fișierul a fost scris, dar verificarea de după instalare
     /// nu confirmă că a ajuns întreg la destinație.
@@ -43,7 +47,9 @@ enum InstallError: Error, LocalizedError {
     var errorDescription: String? {
         switch self {
         case .downloadFailed: return "Download failed."
-        case .authenticationFailed: return "Couldn't authenticate with the file server — contact support, the access token may need renewing."
+        case .authenticationFailed: return "Couldn't authenticate with the file server — contact support."
+        case .licenseRejected: return L.t("install.error.licenseRejected")
+        case .tooManyRequests: return L.t("install.error.rateLimited")
         case .checksumMismatch: return "Downloaded file doesn't match the expected checksum."
         case .verificationFailed(let path, let reason):
             return "Instalarea nu s-a confirmat: \(reason).\nCale: \(path)"
@@ -122,7 +128,7 @@ final class InstallManager: ObservableObject {
         // Verify every file's checksum BEFORE writing anything, so a bad
         // file in a pack doesn't leave a half-installed folder behind.
         for file in item.files {
-            let data = try await fetchPrivateFileData(path: file.path, repoKey: file.repo)
+            let data = try await fetchAuthorizedFileData(productID: item.id, file: file)
             let actualSHA = SHA256.hash(data: data).compactMap { String(format: "%02x", $0) }.joined()
             guard actualSHA.lowercased() == file.sha256.lowercased() else {
                 throw InstallError.checksumMismatch
@@ -300,7 +306,7 @@ final class InstallManager: ObservableObject {
 
         var written: [URL] = []
         for file in toDownload {
-            let data = try await fetchPrivateFileData(path: file.path, repoKey: file.repo ?? resource.fileRepo)
+            let data = try await fetchAuthorizedFileData(productID: resource.id, file: file)
             // Verificarea de integritate nu e opțională doar pentru că fișierul
             // e „doar un PDF": un fișier trunchiat se deschide și arată gol, iar
             // userul ar da vina pe conținut, nu pe descărcare.
@@ -328,38 +334,27 @@ final class InstallManager: ObservableObject {
         return toDownload.count > 1 ? root : (written.first ?? root)
     }
 
-    // MARK: - Authenticated fetch from the private files repo
+    // MARK: - Authorized fetch (S1, 2026-09-25)
 
-    /// Fetches one file's raw bytes from the private gdc-plugin-manager-files
-    /// repo via GitHub's Contents API, using the embedded read-only token
-    /// (see PrivateCatalogAuth.swift). `catalog.json` itself is NOT fetched
-    /// this way — only the actual product files, which never sit at a
-    /// plain public URL.
-    private func fetchPrivateFileData(path: String, repoKey: String? = nil) async throws -> Data {
-        // [2026-09-14] Repo-ul se alege dupa cheia din catalog — vezi
-        // PrivateCatalogAuth.repos. Fara cheie (tot ce e publicat de dinainte)
-        // se foloseste repo-ul principal, exact ca pana acum.
-        let repo = PrivateCatalogAuth.repo(for: repoKey)
-        guard let encodedPath = path.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed),
-              let url = URL(string: "https://api.github.com/repos/\(repo.owner)/\(repo.name)/contents/\(encodedPath)") else {
-            throw InstallError.downloadFailed
+    /// Aduce octeții unui fișier de produs prin `authorize-download`: clientul
+    /// nu mai deține niciun credential pentru repo-urile private. Serialul
+    /// (dacă există) e reverificat pe server; SHA-256 se verifică și aici, și
+    /// de apelant (două controale distincte de autorizare și de integritate).
+    private func fetchAuthorizedFileData(productID: String, file: PluginFile) async throws -> Data {
+        let authorizer = DownloadAuthorizer(clientVersion: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String)
+        let serial = await MainActor.run { LicenseManager.shared.serial(for: productID) }
+        do {
+            return try await authorizer.fetch(productID: productID, path: file.path,
+                                              expectedSHA256: file.sha256, serial: serial)
+        } catch let failure as DownloadAuthorizer.Failure {
+            DiagnosticLog.write("Install", "autorizare/descărcare eșuată pentru \(productID):\(file.path) — \(failure)")
+            switch failure {
+            case .invalidLicense, .revokedLicense, .unauthorizedPlatform: throw InstallError.licenseRejected
+            case .rateLimited: throw InstallError.tooManyRequests
+            case .checksumMismatch: throw InstallError.checksumMismatch
+            default: throw InstallError.downloadFailed
+            }
         }
-        var request = URLRequest(url: url)
-        request.setValue("Bearer \(repo.token)", forHTTPHeaderField: "Authorization")
-        request.setValue("application/vnd.github.raw+json", forHTTPHeaderField: "Accept")
-        request.setValue("2022-11-28", forHTTPHeaderField: "X-GitHub-Api-Version")
-
-        let (data, response) = try await URLSession.shared.data(for: request)
-        guard let http = response as? HTTPURLResponse else { DiagnosticLog.write("Install", "fără răspuns HTTP pentru \(path)"); throw InstallError.downloadFailed }
-        if http.statusCode == 401 || http.statusCode == 403 {
-            DiagnosticLog.write("Install", "HTTP \(http.statusCode) (autentificare) pentru \(repo.owner)/\(repo.name):\(path)")
-            throw InstallError.authenticationFailed
-        }
-        guard (200...299).contains(http.statusCode) else {
-            DiagnosticLog.write("Install", "HTTP \(http.statusCode) pentru \(repo.owner)/\(repo.name):\(path) — cauză probabilă: catalog vechi în cache (fișierul nu mai există) sau cale greșită")
-            throw InstallError.downloadFailed
-        }
-        return data
     }
 
     /// Calea unui fisier RELATIVA LA RADACINA PRODUSULUI (nu doar numele

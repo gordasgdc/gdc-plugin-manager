@@ -36,6 +36,12 @@ final class LicenseManager: ObservableObject {
     /// free items need no license at all; everything else needs its own.
     /// No app-wide trial: the app is free, only paid products need
     /// unlocking, and free ones are just... free.
+    /// Serialul salvat pentru un produs — trimis la `authorize-download`
+    /// (S1), care îl reverifică pe server. `nil` pentru produse neactivate.
+    func serial(for productID: String) -> String? {
+        loadStore()?[productID]
+    }
+
     func isUnlocked(for item: PluginItem) -> Bool {
         item.isFree || (licensedProducts[item.id] != nil && !RevocationCheck.shared.isRevoked(item.id))
     }
