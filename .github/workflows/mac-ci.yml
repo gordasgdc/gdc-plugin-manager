@@ -45,6 +45,9 @@ jobs:
       - name: CATALOG — validare structurală (fără repo-urile private)
         run: python3 scripts/validate_catalog.py
 
+      - name: INSTALLER — preinstall refuză retrogradarea fără să atingă aplicația
+        run: scripts/test_preinstall.sh
+
       # Cheile/limbile lipsă blochează. Încălcările Regulii 3 sunt avertismente
       # până la corectarea textelor (engineering/LOCALIZATION_STRATEGY.md §1).
       - name: LOCALIZATION — chei RO/EN/ES

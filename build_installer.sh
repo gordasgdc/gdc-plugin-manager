@@ -21,12 +21,23 @@ PAYLOAD_ROOT="$DIST_DIR/payload"
 COMPONENT_PKG="$DIST_DIR/GDCPluginManager-component.pkg"
 FINAL_PKG="$DIST_DIR/GDCPluginManager-$VERSION.pkg"
 
-echo "==> Building app…"
-./build_app.sh
+# GDCPM_APP_SOURCE=<cale .app>: reface DOAR pachetele din aplicatia deja semnata si
+# validata (fara build_app.sh, fara atingerea /Applications); semnatura ei se pastreaza.
+APP_SOURCE="${GDCPM_APP_SOURCE:-}"
+if [ -n "$APP_SOURCE" ]; then
+    APP_SOURCE="$(cd "$(dirname "$APP_SOURCE")" && pwd)/$(basename "$APP_SOURCE")"
+    SRC_VERSION=$(/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" "$APP_SOURCE/Contents/Info.plist")
+    [ "$SRC_VERSION" = "$VERSION" ] || { echo "EROARE: $APP_SOURCE are $SRC_VERSION, Info.plist cere $VERSION" >&2; exit 1; }
+    codesign --verify --deep --strict "$APP_SOURCE" || { echo "EROARE: semnatura aplicatiei sursa e invalida" >&2; exit 1; }
+    echo "==> Aplicatia NU se reconstruieste: $APP_SOURCE ($SRC_VERSION, semnatura pastrata)"
+else
+    echo "==> Building app…"
+    ./build_app.sh
+fi
 
 rm -rf "$DIST_DIR"
 mkdir -p "$PAYLOAD_ROOT/Applications"
-cp -R "/Applications/$APP_NAME" "$PAYLOAD_ROOT/Applications/$APP_NAME"
+ditto "${APP_SOURCE:-/Applications/$APP_NAME}" "$PAYLOAD_ROOT/Applications/$APP_NAME"
 
 echo "==> Building component package…"
 # --install-location "/" (NOT "/Applications") because $PAYLOAD_ROOT already
@@ -39,12 +50,17 @@ echo "==> Building component package…"
 # ale aplicatiei cu acelasi bundle ID pe disc. NU contine niciun hack de
 # Gatekeeper/quarantine - pachetul e semnat + notarizat + stapled mai jos,
 # deci Gatekeeper il accepta nativ (vezi CLAUDE.md, 2026-08-25).
+# preinstall primeste versiunea pachetului (refuza retrogradarea fara sa atinga aplicatia).
+SCRIPTS_DIR="$DIST_DIR/scripts"
+rm -rf "$SCRIPTS_DIR"; cp -R installer/scripts "$SCRIPTS_DIR"
+sed -i '' "s/__PKG_VERSION__/$VERSION/" "$SCRIPTS_DIR/preinstall"
+grep -q "__PKG_VERSION__" "$SCRIPTS_DIR/preinstall" && { echo "EROARE: versiunea nu a fost scrisa in preinstall" >&2; exit 1; }
 pkgbuild \
     --root "$PAYLOAD_ROOT" \
     --identifier "$PKG_ID" \
     --version "$VERSION" \
     --install-location "/" \
-    --scripts "installer/scripts" \
+    --scripts "$SCRIPTS_DIR" \
     "$COMPONENT_PKG"
 
 echo "==> Writing distribution definition…"

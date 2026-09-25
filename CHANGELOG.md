@@ -1,14 +1,18 @@
 # Changelog — GDC Plugin Manager
 
-## Nelansat (2026-09-25) — Fundație: teste, validator de catalog, CI Mac
+## v1.39.4 (nelansat, pregătit 2026-09-25) — Descărcări autorizate, actualizare sigură
+- Instalatorul nu mai instalează o versiune mai veche peste una mai nouă și, în acest caz, lasă aplicația existentă neatinsă.
 
 - Teste automate pentru licențiere, catalog și `update.json` (`swift test`, 35 de teste).
 - `scripts/validate_catalog.py`: validarea catalogului înainte de publicare (structură, SHA-256, fișiere, republicări).
 - CI Mac (`.github/workflows/mac-ci.yml`): build, teste, validarea catalogului, binar Release.
-- Client: tipurile `update.json` mutate în Core, comportament neschimbat. Fără versiune nouă: intră în următorul release.
+- Client: tipurile `update.json` mutate în Core, comportament neschimbat.
 - Actualizarea automată verifică semnătura pachetului (Developer ID Installer, Team ID GDC) și suma de control înainte de instalare; instalarea e blocată la orice nepotrivire. Versiunea din manifest e validată strict.
 - Instalarea pluginurilor OFX transmite comanda privilegiată fără concatenare de text.
 - Câmp opțional `sha256` în `update.json` (verificat dacă e prezent).
+- Fișierele produselor se descarcă printr-o autorizare per fișier; aplicația nu mai conține niciun credential de stocare.
+- Mesaje noi RO/EN/ES: licență respinsă, prea multe descărcări.
+- Importul PowerGrade transmite căile în siguranță, indiferent de caracterele din nume.
 
 ## v1.52.1 Furnizor (2026-09-23) — Fix ștergere multiplă
 

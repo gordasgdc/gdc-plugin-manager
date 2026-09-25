@@ -10,11 +10,35 @@
 
 set -e
 
+# Versiunea pachetului, scrisa de build_installer.sh la build (sed).
+NEW_VERSION="__PKG_VERSION__"
+APP="${3%/}/Applications/GDCPluginManager.app"
+
+# a < b ? (numeric, pe componente X.Y.Z)
+version_lt() {
+    local IFS=.; local -a a=($1) b=($2); local i
+    for i in 0 1 2; do
+        [ "${a[i]:-0}" -lt "${b[i]:-0}" ] && return 0
+        [ "${a[i]:-0}" -gt "${b[i]:-0}" ] && return 1
+    done
+    return 1
+}
+
+# Verificarea se face INAINTE de orice modificare: o versiune mai veche nu
+# se instaleaza peste una mai noua, iar aplicatia existenta ramane intacta.
+if [ -d "$APP" ]; then
+    INSTALLED="$(/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" "$APP/Contents/Info.plist" 2>/dev/null || true)"
+    if [[ "$INSTALLED" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] && version_lt "$NEW_VERSION" "$INSTALLED"; then
+        echo "GDC Plugin Manager $INSTALLED este deja instalat; pachetul $NEW_VERSION e mai vechi. Instalare oprita, nimic modificat." >&2
+        exit 1
+    fi
+fi
+
 pkill -x "GDCPluginManager" 2>/dev/null || true
 sleep 1
 
-if [ -d "/Applications/GDCPluginManager.app" ]; then
-    rm -rf "/Applications/GDCPluginManager.app"
+if [ -d "$APP" ]; then
+    rm -rf "$APP"
 fi
 
 exit 0
