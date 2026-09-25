@@ -58,3 +58,17 @@ jobs:
           file "$bin" | grep -q "Mach-O 64-bit executable"
           python3 -c "import json; json.load(open('docs/update.json'))"
           echo "PACKAGE SMOKE: binar Mach-O Release construit; .app/.pkg/semnare NEVALIDATE în CI."
+
+  # S1: logica funcției Supabase `authorize-download` (fără rețea, fără secrete).
+  authorize-download:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: TYPECHECK — authorize-download
+        run: deno check supabase/functions/authorize-download/index.ts
+      - name: TESTS — authorize-download
+        run: deno test --allow-read supabase/functions/authorize-download/
