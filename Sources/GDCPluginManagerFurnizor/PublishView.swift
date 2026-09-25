@@ -67,6 +67,7 @@ struct PublishView: View {
     @State private var scriptFolder: ScriptFolder = .default
     @State private var isBusy = false
     @State private var statusLines: [String] = []
+    @State private var pendingPublishes: [PublishTransaction.Record] = PublishJournal.pending()
     @State private var errorMessage: String?
     @State private var successMessage: String?
     @State private var showDeleteConfirm = false
@@ -78,6 +79,11 @@ struct PublishView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 18) {
                 Text("Publică produs").font(.title2).fontWeight(.semibold)
+
+                IncompletePublishesSection(records: $pendingPublishes, isBusy: $isBusy, log: { log($0) }) { ok, err in
+                    successMessage = ok; errorMessage = err
+                    loadExistingIfNeeded()
+                }
 
                 if !inbox.isEmpty {
                     Menu {
@@ -477,56 +483,40 @@ struct PublishView: View {
         }()
 
         do {
+            // D2b: fișierele se pregătesc local (SHA-256), TOATE repo-urile implicate trec prin preflight
+            // înainte de prima scriere, apoi PublishTransaction: fișiere → verificare pe server → catalog.
             var pluginFiles: [PluginFile]
+            var sources: [(URL, PublishTransaction.FileRef)] = []
             if let pickedURL {
-                // New files picked (new product, or replacing an
-                // existing product's files) — copy + push to the
-                // private repo as before.
                 let picked = try collectFiles(under: pickedURL)
                 guard !picked.isEmpty else {
                     errorMessage = "Folderul ales nu conține niciun fișier."
                     return
                 }
-
                 // Repo-ul de destinatie depinde de tipul produsului
                 // (arhitectura multi-repo) — scripturile au repo-ul lor.
                 let repoKey = type == .scripts ? "scripts" : "files"
-                let checkout = try RepoCheckoutPaths.resourceCheckout(for: repoKey)
-                log("Actualizez repo-ul privat „\(repoKey)” (pull)…")
-                try GitOps.pull(at: checkout)
-
-                pluginFiles = []
                 for (localURL, relativePath) in picked {
-                    let data = try Data(contentsOf: localURL)
-                    let sha = SHA256.hash(data: data).compactMap { String(format: "%02x", $0) }.joined()
-
-                    let repoRelativePath = "\(trimmedID)/\(version)/\(relativePath)"
-                    let destURL = checkout.appendingPathComponent(repoRelativePath)
-                    try FileManager.default.createDirectory(at: destURL.deletingLastPathComponent(), withIntermediateDirectories: true)
-                    if FileManager.default.fileExists(atPath: destURL.path) {
-                        try FileManager.default.removeItem(at: destURL)
-                    }
-                    try FileManager.default.copyItem(at: localURL, to: destURL)
-                    pluginFiles.append(PluginFile(path: repoRelativePath, sha256: sha, repo: repoKey))
-                    log("Fișier copiat în \(repoRelativePath)")
+                    let ref = PublishTransaction.FileRef(repoKey: repoKey, path: "\(trimmedID)/\(version)/\(relativePath)",
+                                                         sha256: try PublishTransaction.sha256(of: localURL))
+                    sources.append((localURL, ref))
                 }
-
-                log("Trimit fișierele (commit + push, repo privat)…")
-                try GitOps.commitAndPush(at: checkout, message: "\(trimmedID) \(version)")
+                pluginFiles = sources.map { PluginFile(path: $0.1.path, sha256: $0.1.sha256, repo: $0.1.repoKey) }
             } else {
-                // Metadata-only update (e.g. just the YouTube link) — no
-                // new files, so the private files repo isn't touched at all.
+                // Metadata-only update (e.g. just the YouTube link) — fișierele existente se reverifică pe server.
                 pluginFiles = existingFiles
                 log("Fără fișiere noi — păstrez cele \(existingFiles.count) existente.")
             }
+            let fileRefs = pluginFiles.map {
+                PublishTransaction.FileRef(repoKey: $0.repo ?? PrivateCatalogAuth.defaultRepoKey, path: $0.path, sha256: $0.sha256)
+            }
 
-            log("Actualizez catalogul (pull, repo public)…")
-            try GitOps.pull(at: RepoCheckoutPaths.publicCatalogRepo)
+            log("Verific și sincronizez toate repo-urile implicate (preflight)…")
+            try PublishTransaction.preflight(repoKeys: fileRefs.map(\.repoKey))
 
-            // Coperta se scrie în docs/covers/ ÎNAINTE de commit-ul de mai
-            // jos, altfel catalogul ar referi o imagine încă nepublicată
-            // (404 la clienți până la următorul push) — vezi WARNING în
-            // CoverImageStore.
+            // Coperta se scrie în docs/covers/ ÎNAINTE de commit-ul catalogului, altfel
+            // catalogul ar referi o imagine încă nepublicată (404 la clienți până la
+            // următorul push) — vezi WARNING în CoverImageStore.
             let previousCover = existingItems.first { $0.id == trimmedID }?.coverImage
             let coverImage = try CoverImageStore.commit(coverSelection, id: trimmedID, previous: previousCover)
             if coverImage != nil { log("Imagine de prezentare pregătită") }
@@ -551,11 +541,11 @@ struct PublishView: View {
                 scheduling: scheduling,
                 promoPriceEUR: Double(promoPriceText.trimmingCharacters(in: .whitespaces))
             , access: accessForm.model)
-            try CatalogEditor.upsert(item)
-            log("Catalog actualizat local")
 
-            log("Public catalogul (commit + push, repo public)…")
-            try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Catalog: \(name) \(version)", paths: ["docs/catalog.json", "docs/covers"])
+            try PublishTransaction.publish(label: "\(trimmedID) \(version)", sources: sources, files: fileRefs,
+                                           catalog: .upsertItems([item]), catalogMessage: "Catalog: \(name) \(version)",
+                                           catalogPaths: ["docs/catalog.json", "docs/covers"], log: { log($0) })
+            pendingPublishes = PublishJournal.pending()
 
             let fileWord = pluginFiles.count > 1 ? "\(pluginFiles.count) fișiere" : "1 fișier"
             let publishedName = name
@@ -581,6 +571,7 @@ struct PublishView: View {
         } catch {
             errorMessage = error.localizedDescription
             log("EROARE: \(error.localizedDescription)")
+            pendingPublishes = PublishJournal.pending()
         }
     }
 
@@ -646,55 +637,29 @@ struct PublishView: View {
         guard !items.isEmpty else { return }
 
         do {
-            log("Actualizez repo-ul privat (pull)…")
-            try GitOps.pull(at: RepoCheckoutPaths.privateFilesRepo)
-
-            // [2026-09-14] Fisierele se sterg DOAR daca nu le mai foloseste
-            // nimeni. O resursa descarcabila poate fi legata de exact aceste
-            // fisiere (acelasi pachet oferit si pentru Premiere/Final Cut) —
-            // stergerea lor ar lasa acea resursa cu descarcari moarte.
-            let catalogNow = try CatalogEditor.load()
-            var removedFolders = 0
-            for item in items {
-                let usedBy = CatalogEditor.resourcesUsingProductFiles(id: item.id, in: catalogNow)
-                if usedBy.isEmpty {
-                    let productFolder = RepoCheckoutPaths.privateFilesRepo.appendingPathComponent(item.id)
-                    if FileManager.default.fileExists(atPath: productFolder.path) {
-                        try FileManager.default.removeItem(at: productFolder)
-                        removedFolders += 1
-                        log("Șters folderul \(item.id)/ (toate versiunile)")
-                    }
-                } else {
-                    let nume = usedBy.map(\.name).joined(separator: ", ")
-                    log("\(item.name): fișierele RĂMÂN pe server (folosite de \(nume)); produsul dispare doar din secțiunea DaVinci Resolve.")
-                }
+            // D2b: catalogul întâi (confirmat pe server), apoi DOAR fișierele pe care nu le mai referă
+            // nimic din catalog (alt produs, altă versiune, o resursă descărcabilă legată de ele).
+            let folders = items.flatMap { item -> [PublishTransaction.FolderRef] in
+                let repos = Set(item.files.map { $0.repo ?? PrivateCatalogAuth.defaultRepoKey })
+                return (repos.isEmpty ? [PrivateCatalogAuth.defaultRepoKey] : Array(repos)).sorted()
+                    .map { PublishTransaction.FolderRef(repoKey: $0, folder: "\(item.id)/") }
             }
-            if removedFolders > 0 {
-                log("Trimit ștergerea (commit + push, repo privat)…")
-                try GitOps.commitAndPush(at: RepoCheckoutPaths.privateFilesRepo,
-                                         message: items.count == 1 ? "Sterg \(items[0].id)" : "Sterg \(items.count) produse")
-            }
+            log("Verific și sincronizez toate repo-urile implicate (preflight)…")
+            try PublishTransaction.preflight(repoKeys: folders.map(\.repoKey))
 
-            log("Actualizez catalogul (pull, repo public)…")
-            try GitOps.pull(at: RepoCheckoutPaths.publicCatalogRepo)
-            for item in items {
-                // Ștergem și coperta, altfel ar rămâne orfană în repo pentru
-                // totdeauna (nimic n-o mai referă după ce iese din catalog).
-                try CoverImageStore.commit(.none, id: item.id, previous: item.coverImage)
-                try CatalogEditor.remove(id: item.id)
-                log("Eliminat din catalog local: \(item.name)")
-            }
-
-            log("Public catalogul (commit + push, repo public)…")
             // Copertele produselor din lot sunt ștergeri intenționate: garda anti-ștergere (max. 2) le ignoră doar pe ele.
             let coverPaths = Set(items.flatMap { item -> [String] in
                 var names = [item.coverImage].compactMap { $0 }.map { "docs/" + $0 }
                 for ext in ["png", "jpg", "jpeg", "webp", "heic"] { names.append("docs/\(CatalogAssets.coversFolderName)/\(item.id).\(ext)") }
                 return names
             })
-            try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo,
-                                     message: items.count == 1 ? "Sterg din catalog: \(items[0].name)" : "Sterg din catalog: \(items.count) produse",
-                                     paths: ["docs/catalog.json", "docs/covers"], expectedDeletions: coverPaths)
+            try PublishTransaction.delete(
+                label: items.count == 1 ? "Sterg \(items[0].id)" : "Sterg \(items.count) produse",
+                folders: folders,
+                catalog: .removeItems(ids: items.map(\.id), covers: Dictionary(uniqueKeysWithValues: items.map { ($0.id, $0.coverImage) })),
+                catalogMessage: items.count == 1 ? "Sterg din catalog: \(items[0].name)" : "Sterg din catalog: \(items.count) produse",
+                catalogPaths: ["docs/catalog.json", "docs/covers"], expectedDeletions: Array(coverPaths), log: { log($0) })
+            pendingPublishes = PublishJournal.pending()
 
             successMessage = items.count == 1
                 ? "„\(items[0].name)” a fost șters complet — dispare la următorul refresh de catalog."
@@ -705,6 +670,7 @@ struct PublishView: View {
         } catch {
             errorMessage = error.localizedDescription
             log("EROARE: \(error.localizedDescription)")
+            pendingPublishes = PublishJournal.pending()
         }
     }
 

@@ -14,6 +14,12 @@
 - Mesaje noi RO/EN/ES: licență respinsă, prea multe descărcări.
 - Importul PowerGrade transmite căile în siguranță, indiferent de caracterele din nume.
 
+## v1.52.3 Furnizor (nelansat, pregătit 2026-09-26) — Publicare fără stări parțiale periculoase
+- Înainte de prima scriere, toate repo-urile implicate (catalog + repo-urile de fișiere) sunt verificate și sincronizate.
+- Publicare: fișiere → verificarea existenței și a SHA-256 pe server → catalog. Ștergere: catalog (confirmat pe server) → doar fișierele pe care nu le mai referă niciun produs, versiune sau resursă.
+- Operațiile întrerupte rămân în „Publicări incomplete”, cu „Reia” (continuă de la pasul neconfirmat) și „Curăță orfanii” (cu confirmare, doar fișiere nereferite). Un push respins nu mai blochează reluarea.
+- Se aplică publicării și ștergerii produselor, resurselor descărcabile și demo-urilor din STYLE Lab.
+
 ## v1.52.2 Furnizor (nelansat, pregătit 2026-09-25) — Publicare sigură
 - Catalogul se publică dintr-un checkout dedicat (`~/Developer/_gdc-publish/gdc-plugin-manager`, doar `docs/`), nu din repo-ul de dezvoltare.
 - Orice publicare (catalog și repo-urile private) verifică înainte: repo-ul corect, ramura `main`, nicio operație git în curs, nicio modificare străină; sincronizarea e doar fast-forward, push-ul doar pe `main`, fără force. La orice abatere publicarea se oprește cu un mesaj clar și nu se pierde nimic.

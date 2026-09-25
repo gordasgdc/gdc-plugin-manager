@@ -12,20 +12,18 @@ import Foundation
 enum RepoCheckoutPaths {
     /// gordasgdc/gdc-plugin-manager-files (private) — where the actual
     /// product files (.dctl/.cube/.fuse) live, at <id>/<version>/<file>.
-    static let privateFilesRepo = FileManager.default.homeDirectoryForCurrentUser
-        .appendingPathComponent("Developer")
-        .appendingPathComponent("gdc-plugin-manager-files")
+    static var privateFilesRepo: URL { developerDir.appendingPathComponent("gdc-plugin-manager-files") }
 
     /// [2026-09-14] Arhitectura multi-repo: fiecare tip de resursa are repo-ul
     /// lui privat, ca sa nu atingem limitele de dimensiune ale unuia singur.
     /// Cheia e ACEEASI cu cea din catalog (`PluginFile.repo`) si cu cea din
     /// `PrivateCatalogAuth.repos` — o singura sursa de adevar pentru nume.
-    static let resourceRepoCheckouts: [String: URL] = [
+    static var resourceRepoCheckouts: [String: URL] { [
         "files":   privateFilesRepo,
         "pdfs":    developerDir.appendingPathComponent("gdc-plugin-manager-pdfs"),
         "scripts": developerDir.appendingPathComponent("gdc-plugin-manager-scripts"),
         "resources": developerDir.appendingPathComponent("gdc-plugin-manager-resources"),
-    ]
+    ] }
 
     /// Checkout-ul local pentru o cheie de repo. Arunca explicit daca clona
     /// lipseste — altfel Furnizor ar crea un folder gol si ar face push intr-un
@@ -40,8 +38,12 @@ enum RepoCheckoutPaths {
         return url
     }
 
+    /// DOAR pentru teste: redirecționează toate checkout-urile sub o rădăcină temporară
+    /// (aceeași structură ca ~/Developer). `nil` în aplicație.
+    static var testRoot: URL?
+
     private static var developerDir: URL {
-        FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Developer")
+        testRoot ?? FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Developer")
     }
 
     /// gordasgdc/gdc-plugin-manager (public) — only docs/ is touched here, never the app source.
@@ -50,9 +52,9 @@ enum RepoCheckoutPaths {
     /// `~/Developer/gdc-plugin-manager-catalog-vendor`, iar publicarea mergea pe ramura lui activă
     /// (ex. o ramură de release) și putea atinge fișiere în lucru. Clonă parțială, doar `docs/`
     /// (sparse), pe `main` — vezi `missingCheckoutMessage` pentru crearea ei.
-    static let publicCatalogRepo = developerDir
+    static var publicCatalogRepo: URL { developerDir
         .appendingPathComponent("_gdc-publish")
-        .appendingPathComponent("gdc-plugin-manager")
+        .appendingPathComponent("gdc-plugin-manager") }
 
     static let publicCatalogSlug = "gordasgdc/gdc-plugin-manager"
 

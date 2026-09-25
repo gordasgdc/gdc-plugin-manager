@@ -1,4 +1,5 @@
 import Foundation
+import CryptoKit
 
 /// Shells out to the Mac's own `git`, reusing whatever credential helper
 /// already lets `gh`/`git push` work in Terminal (confirmed working,
@@ -114,6 +115,46 @@ enum GitOps {
         } catch let error as GitError {
             throw PublishGuardError(message: "Publicare oprită la push: serverul a respins \(publishBranch) (probabil o publicare mai nouă, de pe alt Mac). Commit-ul local e păstrat în \(directory.path); nu s-a forțat nimic.\n\(error.output)")
         }
+    }
+
+    /// SHA-256 al unui fișier așa cum e pe server (`origin/main`), citit în bucăți (Regula 21).
+    /// `nil` = fișierul nu există acolo. Presupune un `fetch` recent (îl face `pull`/`push`).
+    static func serverSHA256(at directory: URL, path: String) throws -> String? {
+        let ref = "origin/\(publishBranch):\(path)"
+        guard (try? run(["cat-file", "-e", ref], at: directory)) != nil else { return nil }
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: "/usr/bin/git")
+        process.arguments = ["cat-file", "blob", ref]
+        process.currentDirectoryURL = directory
+        let out = Pipe()
+        process.standardOutput = out
+        process.standardError = FileHandle.nullDevice
+        try process.run()
+        var hasher = SHA256()
+        let handle = out.fileHandleForReading
+        while true {
+            let chunk = autoreleasepool { handle.readData(ofLength: 1 << 20) }
+            if chunk.isEmpty { break }
+            hasher.update(data: chunk)
+        }
+        process.waitUntilExit()
+        guard process.terminationStatus == 0 else { throw GitError(command: "cat-file blob \(ref)", output: "") }
+        return hasher.finalize().map { String(format: "%02x", $0) }.joined()
+    }
+
+    /// Fișierele urmărite pe server sub un folder (ex. „<id>/”).
+    static func serverFiles(at directory: URL, under folder: String) throws -> [String] {
+        try run(["ls-tree", "-r", "--name-only", "origin/\(publishBranch)", "--", folder], at: directory)
+            .split(separator: "\n").map(String.init).filter { !$0.isEmpty }
+    }
+
+    /// Conținutul unui fișier text de pe server (ex. docs/catalog.json).
+    static func serverText(at directory: URL, path: String) throws -> String {
+        try run(["show", "origin/\(publishBranch):\(path)"], at: directory)
+    }
+
+    static func fetch(at directory: URL) throws {
+        try run(["fetch", "origin", publishBranch], at: directory)
     }
 
     /// Ramura curenta a checkout-ului (doar informativ; publicarea NU o mai folosește — vezi `publishBranch`).

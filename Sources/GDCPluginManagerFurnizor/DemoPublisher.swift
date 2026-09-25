@@ -51,11 +51,13 @@ enum DemoPublisher {
         }
         guard !subs.isEmpty else { return finish() }
         do {
-            let checkout = try RepoCheckoutPaths.resourceCheckout(for: "files")
-            try GitOps.pull(at: checkout)
-            try GitOps.pull(at: RepoCheckoutPaths.publicCatalogRepo)
-            var catalog = try CatalogEditor.load()
+            // D2b: preflight pe AMBELE repo-uri înainte de orice scriere; apoi PublishTransaction
+            // (fișiere → verificare pe server → catalog), cu jurnal pentru reluare.
+            try PublishTransaction.preflight(repoKeys: ["files"])
+            let catalog = try CatalogEditor.load()
             var published: [(StyleLabSubmission, Result)] = []
+            var sources: [(URL, PublishTransaction.FileRef)] = []
+            var items: [PluginItem] = []
             for s in subs {
                 let existing = (catalog.items + catalog.scriptItems).first { $0.id == s.id }
                 let version = targetVersion(submitted: s.version, published: existing?.version)
@@ -64,16 +66,12 @@ enum DemoPublisher {
                     let picked = files(under: URL(fileURLWithPath: s.bundlePath))
                     guard !picked.isEmpty else { throw NSError(domain: "Demo", code: 2, userInfo: [NSLocalizedDescriptionKey: "Pachetul e gol sau lipsește"]) }
                     var pf: [PluginFile] = []
+                    var subSources: [(URL, PublishTransaction.FileRef)] = []
                     for (u, rel) in picked {
-                        let data = try Data(contentsOf: u)
-                        let sha = SHA256.hash(data: data).compactMap { String(format: "%02x", $0) }.joined()
                         // Ca la publicarea manuală: calea e relativă la RĂDĂCINA pachetului (installer-ul creează singur folderul `bundleFolderName`); a-l repeta aici imbrica pachetul.
-                        let path = "\(s.id)/\(version)/\(rel)"
-                        let dest = checkout.appendingPathComponent(path)
-                        try FileManager.default.createDirectory(at: dest.deletingLastPathComponent(), withIntermediateDirectories: true)
-                        try? FileManager.default.removeItem(at: dest)
-                        try FileManager.default.copyItem(at: u, to: dest)
-                        pf.append(PluginFile(path: path, sha256: sha, repo: "files"))
+                        let ref = PublishTransaction.FileRef(repoKey: "files", path: "\(s.id)/\(version)/\(rel)", sha256: try PublishTransaction.sha256(of: u))
+                        subSources.append((u, ref))
+                        pf.append(PluginFile(path: ref.path, sha256: ref.sha256, repo: "files"))
                     }
                     var cover = existing?.coverImage
                     if cover == nil, let c = s.coverFile, FileManager.default.fileExists(atPath: c) {
@@ -89,8 +87,8 @@ enum DemoPublisher {
                         bundleFolderName: s.bundleFolderName, coverImage: cover, supportedOS: existing?.supportedOS ?? .macOS,
                         purchaseURL: existing?.purchaseURL, demoURL: existing?.demoURL, socialLinks: existing?.socialLinks,
                         scheduling: existing?.scheduling, promoPriceEUR: nil, access: existing?.access)
-                    try CatalogEditor.upsert(item)
-                    catalog = try CatalogEditor.load()
+                    items.append(item)
+                    sources += subSources
                     let r = Result(id: s.id, name: s.name, version: version, status: existing == nil ? "new" : "updated",
                                    message: existing == nil ? "înregistrat ca demo public" : "actualizat \(existing!.version) → \(version)")
                     published.append((s, r))
@@ -100,8 +98,9 @@ enum DemoPublisher {
             }
             if !published.isEmpty {
                 let label = published.map { "\($0.0.id) \($0.1.version)" }.joined(separator: ", ")
-                try GitOps.commitAndPush(at: checkout, message: "Demo: \(label)")
-                try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Catalog: demo \(label)", paths: ["docs/catalog.json", "docs/covers"])
+                try PublishTransaction.publish(label: "Demo: \(label)", sources: sources, files: sources.map(\.1),
+                                               catalog: .upsertItems(items), catalogMessage: "Catalog: demo \(label)",
+                                               catalogPaths: ["docs/catalog.json", "docs/covers"])
                 for (s, r) in published { StyleLabInbox.remove(id: s.id); results.append(r) }
             }
         } catch {

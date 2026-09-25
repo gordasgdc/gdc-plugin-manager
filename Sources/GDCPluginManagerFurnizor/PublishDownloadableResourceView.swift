@@ -508,6 +508,7 @@ struct PublishDownloadableResourceView: View {
             var fileRepoKey = existingFileRepo
             var resourceFiles = existingFiles
             var sourceID: String? = nil
+            var sources: [(URL, PublishTransaction.FileRef)] = []
             if fileSource == .upload, !pickedURLs.isEmpty {
                 let picked = try collectPicked()
                 guard !picked.isEmpty else {
@@ -519,23 +520,13 @@ struct PublishDownloadableResourceView: View {
                 // PDF-uri. Acum destinatia se alege dupa categorie.
                 let repoKey = targetRepoKey
                 fileRepoKey = repoKey
-                let checkout = try RepoCheckoutPaths.resourceCheckout(for: repoKey)
-                try GitOps.pull(at: checkout)
-
                 var uploaded: [PluginFile] = []
                 for (localURL, relativePath) in picked {
-                    let data = try Data(contentsOf: localURL)
-                    let sha = SHA256.hash(data: data).compactMap { String(format: "%02x", $0) }.joined()
-                    let repoRelativePath = "\(resourceID)/\(relativePath)"
-                    let destURL = checkout.appendingPathComponent(repoRelativePath)
-                    try FileManager.default.createDirectory(at: destURL.deletingLastPathComponent(), withIntermediateDirectories: true)
-                    if FileManager.default.fileExists(atPath: destURL.path) {
-                        try FileManager.default.removeItem(at: destURL)
-                    }
-                    try FileManager.default.copyItem(at: localURL, to: destURL)
-                    uploaded.append(PluginFile(path: repoRelativePath, sha256: sha, repo: repoKey))
+                    let ref = PublishTransaction.FileRef(repoKey: repoKey, path: "\(resourceID)/\(relativePath)",
+                                                         sha256: try PublishTransaction.sha256(of: localURL))
+                    sources.append((localURL, ref))
+                    uploaded.append(PluginFile(path: ref.path, sha256: ref.sha256, repo: repoKey))
                 }
-                try GitOps.commitAndPush(at: checkout, message: "\(resourceID): \(uploaded.count) fișier(e)")
                 resourceFiles = uploaded
                 sourceID = nil
                 // Forma veche (un singur fisier) ramane completata cand chiar
@@ -567,7 +558,11 @@ struct PublishDownloadableResourceView: View {
                 sourceID = nil
             }
 
-            try GitOps.pull(at: RepoCheckoutPaths.publicCatalogRepo)
+            // D2b: toate repo-urile implicate (catalog + fișierele referite) verificate înainte de prima scriere.
+            let fileRefs = resourceFiles.map {
+                PublishTransaction.FileRef(repoKey: $0.repo ?? PrivateCatalogAuth.defaultRepoKey, path: $0.path, sha256: $0.sha256)
+            }
+            try PublishTransaction.preflight(repoKeys: fileRefs.map(\.repoKey))
 
             let previousCover = existingResources.first { $0.id == resourceID }?.coverImage
             let coverImage = try CoverImageStore.commit(coverSelection, id: resourceID, previous: previousCover)
@@ -586,8 +581,10 @@ struct PublishDownloadableResourceView: View {
                 filePath: filePath, fileSHA256: fileSHA, fileRepo: fileRepoKey, files: resourceFiles,
                 pdfKind: category == .pdf ? pdfKind : nil,
                 sourceProductID: sourceID)
-            try CatalogEditor.upsertDownloadableResource(resource)
-            try GitOps.commitAndPush(at: RepoCheckoutPaths.publicCatalogRepo, message: "Resursă download: \(resource.name)", paths: ["docs/catalog.json", "docs/covers"])
+            try PublishTransaction.publish(label: "Resursă \(resourceID)", sources: sources, files: fileRefs,
+                                           catalog: .upsertDownloadableResource(resource),
+                                           catalogMessage: "Resursă download: \(resource.name)",
+                                           catalogPaths: ["docs/catalog.json", "docs/covers"])
             successMessage = "„\(resource.name)” e publicat — apare la clienți la următorul refresh de catalog."
             clearForm()
             loadExisting()
