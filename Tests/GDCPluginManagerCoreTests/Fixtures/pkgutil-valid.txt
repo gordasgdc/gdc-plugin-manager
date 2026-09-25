@@ -1,0 +1,14 @@
+Package "GDCPluginManager-1.39.3.pkg":
+   Status: signed by a developer certificate issued by Apple for distribution
+   Notarization: trusted by the Apple notary service
+   Signed with a trusted timestamp on: 2026-09-21 22:00:25 +0000
+   Certificate Chain:
+    1. Developer ID Installer: GDC Test Fixture (8AR6XP8MG7)
+       Expires: 2031-08-26 00:58:05 +0000
+       ------------------------------------------------------------------------
+    2. Developer ID Certification Authority
+       Expires: 2031-09-17 00:00:00 +0000
+       ------------------------------------------------------------------------
+    3. Apple Root CA
+       Expires: 2035-02-09 21:40:36 +0000
+

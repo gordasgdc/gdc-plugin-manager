@@ -6,6 +6,9 @@
 - `scripts/validate_catalog.py`: validarea catalogului înainte de publicare (structură, SHA-256, fișiere, republicări).
 - CI Mac (`.github/workflows/mac-ci.yml`): build, teste, validarea catalogului, binar Release.
 - Client: tipurile `update.json` mutate în Core, comportament neschimbat. Fără versiune nouă: intră în următorul release.
+- Actualizarea automată verifică semnătura pachetului (Developer ID Installer, Team ID GDC) și suma de control înainte de instalare; instalarea e blocată la orice nepotrivire. Versiunea din manifest e validată strict.
+- Instalarea pluginurilor OFX transmite comanda privilegiată fără concatenare de text.
+- Câmp opțional `sha256` în `update.json` (verificat dacă e prezent).
 
 ## v1.52.1 Furnizor (2026-09-23) — Fix ștergere multiplă
 

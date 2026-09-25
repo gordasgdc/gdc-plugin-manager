@@ -12,6 +12,9 @@ public struct UpdateInfo: Decodable {
     public let download_url: String
     public let mandatory: Bool?
     public let min_version: String?
+    /// Opțional (2026-09-25): SHA-256 al arhivei de la `download_url`. Dacă e
+    /// prezent, SelfUpdater refuză o arhivă diferită. Absența lui nu rupe nimic.
+    public let sha256: String?
 }
 
 /// Secțiunile per platformă (clienți >= 1.27.2). Blocul de la rădăcină

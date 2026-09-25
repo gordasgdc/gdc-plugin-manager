@@ -468,10 +468,11 @@ final class InstallManager: ObservableObject {
     }
 
     private func runElevated(_ shellScript: String) throws {
-        let appleScript = "do shell script \"\(shellScript.replacingOccurrences(of: "\"", with: "\\\""))\" with administrator privileges"
+        // Scriptul trece ca argv (quoted form), nu lipit într-un literal
+        // AppleScript: un `\` în cale nu mai poate închide șirul (S2, 2026-09-25).
         let process = Process()
         process.executableURL = URL(fileURLWithPath: "/usr/bin/osascript")
-        process.arguments = ["-e", appleScript]
+        process.arguments = UpdatePackageVerifier.osascriptArguments(script: shellScript)
         let stderrPipe = Pipe()
         process.standardError = stderrPipe
         try process.run()

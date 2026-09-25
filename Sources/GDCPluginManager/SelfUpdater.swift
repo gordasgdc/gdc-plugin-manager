@@ -73,6 +73,13 @@ enum SelfUpdater {
             return
         }
 
+        // S2: versiunea ajunge în nume de fișiere — doar cifre și puncte.
+        do { try UpdatePackageVerifier.validateVersion(info.version) } catch {
+            DiagnosticLog.write("SelfUpdater", "Versiune respinsă: \(error)")
+            presentFailure(error)
+            return
+        }
+
         let progress = UpdateProgressWindow(version: info.version)
         progress.show()
 
@@ -84,6 +91,13 @@ enum SelfUpdater {
             progress.setStatus(L.t("update.downloading"))
             let zipPath = tempDir.appendingPathComponent("GDCPluginManager-Mac.zip")
             try await download(from: zipURL, to: zipPath)
+
+            if let expected = info.sha256?.lowercased(), !expected.isEmpty {
+                guard try UpdatePackageVerifier.sha256(of: zipPath) == expected else {
+                    DiagnosticLog.write("SelfUpdater", "SHA-256 al arhivei diferă de update.json — oprit.")
+                    throw UpdatePackageVerifier.VerifyError.checksumMismatch
+                }
+            }
 
             progress.setStatus(L.t("update.extracting"))
             let extractDir = tempDir.appendingPathComponent("extracted", isDirectory: true)
@@ -99,8 +113,13 @@ enum SelfUpdater {
             let versionedPkg = tempDir.appendingPathComponent("GDCPluginManager-\(info.version).pkg")
             try FileManager.default.moveItem(at: extractedPkg, to: versionedPkg)
 
+            // S2, poarta 1: semnătură Developer ID Installer + Team ID GDC.
+            // Poarta 2 (în scriptul root) reverifică exact copia instalată.
+            let (_, verifiedSHA) = try UpdatePackageVerifier.verify(pkg: versionedPkg)
+            DiagnosticLog.write("SelfUpdater", "Pachet verificat (Team ID \(UpdatePackageVerifier.trustedTeamID)).")
+
             progress.setStatus(L.t("update.installing"))
-            try runInstaller(pkgPath: versionedPkg, tempDir: tempDir)
+            try runInstaller(pkgPath: versionedPkg, tempDir: tempDir, verifiedSHA256: verifiedSHA)
 
             // Scriptul de instalare (pornit mai sus, ruleaza independent sub
             // osascript) se ocupa de tot ce urmeaza: instalare + relansare.
@@ -160,7 +179,9 @@ enum SelfUpdater {
     /// .pdf, toate la radacina, fara subfoldere).
     private static func findPkg(in directory: URL) -> URL? {
         let contents = (try? FileManager.default.contentsOfDirectory(at: directory, includingPropertiesForKeys: nil)) ?? []
-        return contents.first { $0.pathExtension.lowercased() == "pkg" }
+        let pkgs = contents.filter { $0.pathExtension.lowercased() == "pkg" }
+        // Exact un pachet: o arhivă cu mai multe e ambiguă, deci respinsă.
+        return pkgs.count == 1 ? pkgs[0] : nil
     }
 
     // MARK: - Instalare
@@ -168,41 +189,27 @@ enum SelfUpdater {
     /// Port 1:1 al `runInstaller` din DataMover — vezi WARNING de acolo
     /// despre `installer -pkg ... -target /` care nu poate fi verificat
     /// automat, doar pana la "scriptul e scris si pornit corect".
-    private static func runInstaller(pkgPath: URL, tempDir: URL) throws {
+    private static func runInstaller(pkgPath: URL, tempDir: URL, verifiedSHA256: String) throws {
         let logPath = tempDir.appendingPathComponent("gdcpm_update.log")
-        let scriptPath = tempDir.appendingPathComponent("gdcpm_update.sh")
-
-        let scriptContent = """
-        #!/bin/bash
-        exec > "\(logPath.path)" 2>&1
-        sleep 2
-        echo "Instalez actualizarea..."
-        installer -pkg "\(pkgPath.path)" -target /
-        status=$?
-        if [ $status -ne 0 ]; then
-            echo "Instalarea a esuat (cod $status)."
-            exit $status
-        fi
-        echo "Pornesc aplicatia actualizata..."
-        open "/Applications/GDCPluginManager.app"
-        rm -rf "\(tempDir.path)"
-        """
+        // S2, poarta 2: scriptul root copiază pachetul într-un folder propriu,
+        // reverifică SHA-256 + semnătura + Team ID pe copie și abia apoi
+        // rulează `installer`. Scriptul e transmis ca ARGUMENT lui osascript
+        // (nu ca fișier în folderul utilizatorului, care ar putea fi înlocuit).
+        let script: String
         do {
-            try scriptContent.write(to: scriptPath, atomically: true, encoding: .utf8)
-            try FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: scriptPath.path)
+            script = try UpdatePackageVerifier.rootInstallScript(
+                pkg: pkgPath, expectedSHA256: verifiedSHA256,
+                relaunchApp: "/Applications/GDCPluginManager.app", logFile: logPath)
         } catch {
-            throw UpdateError.installScriptFailed(error.localizedDescription)
+            throw UpdateError.installScriptFailed("\(error)")
         }
 
         // Acelasi pattern de elevare ca in InstallManager.swift (OFX):
         // `osascript ... with administrator privileges` deschide promptul
         // NATIV macOS de parola, fara Terminal si fara `sudo` interactiv.
-        let escapedPath = scriptPath.path.replacingOccurrences(of: "\"", with: "\\\"")
-        let appleScript = "do shell script \"\(escapedPath)\" with administrator privileges"
-
         let process = Process()
         process.executableURL = URL(fileURLWithPath: "/usr/bin/osascript")
-        process.arguments = ["-e", appleScript]
+        process.arguments = UpdatePackageVerifier.osascriptArguments(script: script)
         do {
             try process.run()
         } catch {
