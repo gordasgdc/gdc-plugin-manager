@@ -87,7 +87,7 @@ enum PowerGradeImporter {
             return .stagedOnly(folder: stagingFolder)
         }
 
-        let drxPathsLiteral = drxPaths.map { "r\"\($0)\"" }.joined(separator: ", ")
+        let drxPathsLiteral = drxPaths.map { pyString($0) }.joined(separator: ", ")
         let script = """
         import sys
         sys.path.append(r"\(scriptModulesPath)")
@@ -209,8 +209,13 @@ enum PowerGradeImporter {
     /// escaped) — every value passed this way is our own data (album
     /// name derived from the product name), never anything from the
     /// downloaded product file.
-    private static func pyString(_ value: String) -> String {
-        "'" + value.replacingOccurrences(of: "\\", with: "\\\\").replacingOccurrences(of: "'", with: "\\'") + "'"
+    /// Literal Python sigur pentru orice text (ghilimele, `\\`, rânduri noi, Unicode):
+    /// un șir JSON e și un șir Python valid. Căile și numele vin din catalog,
+    /// deci nu se lipesc niciodată brut în script (2026-09-25).
+    static func pyString(_ value: String) -> String {
+        guard let data = try? JSONSerialization.data(withJSONObject: value, options: [.fragmentsAllowed, .withoutEscapingSlashes]),
+              let literal = String(data: data, encoding: .utf8) else { return "''" }
+        return literal
     }
 
     /// Runs one embedded script with a hard timeout — the Resolve
