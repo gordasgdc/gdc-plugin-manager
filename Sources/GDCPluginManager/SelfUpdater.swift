@@ -1,4 +1,5 @@
 import AppKit
+import GDCPluginManagerCore
 
 /// Descarca si instaleaza automat un update de APLICATIE, fara sa mai
 /// treaca prin browser/pagina de GitHub.

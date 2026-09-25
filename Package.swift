@@ -59,6 +59,13 @@ let package = Package(
                 .copy("Resources/Ghid-Furnizor-Licente.pdf"),
                 .copy("Resources/Ghid-Furnizor-Backup.pdf"),
             ]
+        ),
+        // Contractele Core (licență, catalog, update.json). Citesc
+        // docs/catalog.json și docs/update.json reale din repo.
+        .testTarget(
+            name: "GDCPluginManagerCoreTests",
+            dependencies: ["GDCPluginManagerCore"],
+            path: "Tests/GDCPluginManagerCoreTests"
         )
     ]
 )

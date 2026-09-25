@@ -1,0 +1,55 @@
+# CI Mac minimal (Faza 2, 2026-09-25): build + teste Core + validarea catalogului.
+# Nu semnează, nu notarizează, nu publică nimic — release-ul rămâne local
+# (build_app.sh / build_installer.sh). Stări raportate separat:
+#   BUILD PASSED / TESTS PASSED / CATALOG VALIDATED / PACKAGE SMOKE (binar Release).
+# INSTALLATION și RUNTIME NU sunt validate aici.
+name: Mac CI
+
+on:
+  push:
+    branches: [main]
+    paths-ignore: ["docs/covers/**", "**.md"]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: mac-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-test:
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Versiunea toolchain-ului
+        run: swift --version
+
+      # Fișierele cu secrete sunt gitignored; CI compilează cu șabloanele
+      # (valori placeholder). Nicio valoare reală nu intră în CI.
+      - name: Șabloane pentru fișierele de configurare locale
+        run: |
+          cp Sources/GDCPluginManagerCore/PrivateCatalogAuth.swift.example Sources/GDCPluginManagerCore/PrivateCatalogAuth.swift
+          cp Sources/GDCPluginManagerFurnizor/SupabaseAdminConfig.swift.example Sources/GDCPluginManagerFurnizor/SupabaseAdminConfig.swift
+
+      - name: Rezolvarea dependențelor
+        run: swift package resolve
+
+      - name: BUILD — toate țintele (client, Furnizor, Core)
+        run: swift build
+
+      - name: TESTS — contractele Core (licență, catalog, update.json)
+        run: swift test
+
+      - name: CATALOG — validare structurală (fără repo-urile private)
+        run: python3 scripts/validate_catalog.py
+
+      - name: PACKAGE SMOKE — binarul Release al clientului
+        run: |
+          swift build -c release --product GDCPluginManager
+          bin="$(swift build -c release --show-bin-path)/GDCPluginManager"
+          file "$bin"
+          file "$bin" | grep -q "Mach-O 64-bit executable"
+          python3 -c "import json; json.load(open('docs/update.json'))"
+          echo "PACKAGE SMOKE: binar Mach-O Release construit; .app/.pkg/semnare NEVALIDATE în CI."

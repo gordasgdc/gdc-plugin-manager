@@ -1,14 +1,7 @@
 import Foundation
 import GDCPluginManagerCore
 
-struct UpdateInfo: Decodable {
-    let version: String
-    let release_date: String?
-    let changes: String?
-    let download_url: String
-    let mandatory: Bool?
-    let min_version: String?
-}
+// UpdateInfo / UpdateManifest / AppVersion: în Core (AppUpdateManifest.swift), testabile.
 
 /// [2026-09-03] `update.json` a trecut de la un singur camp `version`
 /// comun ambelor platforme la doua sectiuni separate (`mac`/`windows`) —
@@ -17,10 +10,7 @@ struct UpdateInfo: Decodable {
 /// numerele sincronizate — un release Mac inutil de fiecare data cand doar
 /// Windows se schimba, si invers. Fiecare platforma isi are acum propriul
 /// numar de versiune, complet independent.
-private struct UpdateManifest: Decodable {
-    let mac: UpdateInfo?
-    let windows: UpdateInfo?
-}
+// (UpdateManifest: vezi GDCPluginManagerCore/AppUpdateManifest.swift)
 
 /// Verifica docs/update.json (acelasi pattern de JSON static ca in
 /// gdc-production-manager) pentru o versiune de APLICATIE mai noua decat
@@ -192,16 +182,7 @@ final class UpdateChecker: ObservableObject {
         checkFailed = false
     }
 
-    /// Simple dot-separated integer version comparison (1.2.0 > 1.10.0
-    /// is compared numerically per segment, not lexicographically).
     private static func isNewer(_ a: String, than b: String) -> Bool {
-        let partsA = a.split(separator: ".").map { Int($0) ?? 0 }
-        let partsB = b.split(separator: ".").map { Int($0) ?? 0 }
-        for i in 0..<max(partsA.count, partsB.count) {
-            let x = i < partsA.count ? partsA[i] : 0
-            let y = i < partsB.count ? partsB[i] : 0
-            if x != y { return x > y }
-        }
-        return false
+        AppVersion.isNewer(a, than: b)
     }
 }

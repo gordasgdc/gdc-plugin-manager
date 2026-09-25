@@ -40,3 +40,8 @@ dist-furnizor/
 
 # Stare de lucru internă (Regula 50), doar local
 PROJECT_STATE.md
+
+# Documente interne de lucru (Regula 29/50), doar local
+GDC_ECOSYSTEM_AUDIT.md
+HANDOFF.md
+EXECUTION_PLAN.md

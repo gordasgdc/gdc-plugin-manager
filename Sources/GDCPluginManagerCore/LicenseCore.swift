@@ -99,6 +99,15 @@ public enum LicenseCore {
     /// deci comportamentul lui ramane identic dinainte de aceasta schimbare
     /// — nicio licenta existenta nu poate fi blocata retroactiv.
     public static func validate(serial: String, expectedProductID: String, hwidAvailable: Bool = true) -> Result<Payload, ValidationError> {
+        validate(serial: serial, expectedProductID: expectedProductID, hwidAvailable: hwidAvailable,
+                 publicKeyBase64: publicKeyBase64, machineHash: { MachineID.hashBytes }, now: Date())
+    }
+
+    /// Aceeași validare, cu dependențele injectabile — doar pentru teste
+    /// (cheie de test generată în test, hash de mașină și ceas controlate).
+    /// Producția trece mereu prin funcția publică de mai sus.
+    static func validate(serial: String, expectedProductID: String, hwidAvailable: Bool,
+                         publicKeyBase64: String, machineHash: () -> [UInt8], now: Date) -> Result<Payload, ValidationError> {
         guard let packed = base32Decode(serial) else {
             return .failure(.malformedCode)
         }
@@ -146,12 +155,12 @@ public enum LicenseCore {
             guard hwidAvailable else {
                 return .failure(.hwidUnavailable(payload))
             }
-            guard storedMachineHash == MachineID.hashBytes else {
+            guard storedMachineHash == machineHash() else {
                 return .failure(.wrongMachine(payload))
             }
         }
 
-        if expiresAt != 0 && expiresAt < Int64(Date().timeIntervalSince1970) {
+        if expiresAt != 0 && expiresAt < Int64(now.timeIntervalSince1970) {
             return .failure(.expired(expiresAt, payload))
         }
         return .success(payload)

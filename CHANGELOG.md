@@ -1,5 +1,12 @@
 # Changelog — GDC Plugin Manager
 
+## Nelansat (2026-09-25) — Fundație: teste, validator de catalog, CI Mac
+
+- Teste automate pentru licențiere, catalog și `update.json` (`swift test`, 35 de teste).
+- `scripts/validate_catalog.py`: validarea catalogului înainte de publicare (structură, SHA-256, fișiere, republicări).
+- CI Mac (`.github/workflows/mac-ci.yml`): build, teste, validarea catalogului, binar Release.
+- Client: tipurile `update.json` mutate în Core, comportament neschimbat. Fără versiune nouă: intră în următorul release.
+
 ## v1.52.1 Furnizor (2026-09-23) — Fix ștergere multiplă
 
 - Ștergerea mai multor produse cu coperte era oprită de garda anti-ștergere (max. 2 coperte per publicare). Copertele produselor din lot se declară acum ca ștergeri așteptate; garda rămâne activă pentru orice alt fișier dispărut.
