@@ -1,7 +1,7 @@
 {
-  "version": "2.15.1",
-  "release_date": "2026-09-19",
-  "changes": "Mac: mutarea în folderul Aplicații nu mai lasă aplicația izolată de macOS — nu mai cere mutarea la fiecare pornire și nu mai duce aplicația instalată la Coș. Windows: fără schimbări.",
+  "version": "2.16.0",
+  "release_date": "2026-09-26",
+  "changes": "Interfață profesională nouă pe macOS și Windows, transfer și reluare byte-safe, diagnostic local exportabil și corecții de fiabilitate pentru exFAT și transferurile Windows.",
   "download_url": {
     "windows": "https://github.com/gordasgdc/datamover/releases/latest/download/DataMover-Windows.zip",
     "mac": "https://github.com/gordasgdc/datamover/releases/latest/download/DataMover.pkg",
