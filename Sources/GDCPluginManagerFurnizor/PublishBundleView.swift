@@ -38,7 +38,26 @@ struct PublishBundleView: View {
     @State private var successMessage: String?
     @State private var pendingDelete: ProductBundle?
 
+    /// Selecția din tabelul spațiului de lucru (Faza 5). `nil` = formular gol („+ Nou”).
+    /// Editorul rămâne cel existent: aceleași câmpuri, aceeași publicare.
+    @Binding var workspaceSelection: String?
+
+    init(workspaceSelection: Binding<String?> = .constant(nil)) {
+        _workspaceSelection = workspaceSelection
+    }
+
     var body: some View {
+        editorBody
+            .onChange(of: workspaceSelection) { _, id in applyWorkspaceSelection(id) }
+            .onAppear { if workspaceSelection != nil { applyWorkspaceSelection(workspaceSelection) } }
+    }
+
+    private func applyWorkspaceSelection(_ id: String?) {
+        guard let id else { clearForm(); return }
+        if let entry = existingBundles.first(where: { $0.id == id }) { load(entry) }
+    }
+
+    private var editorBody: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 18) {
                 Text("Pachete / Bundle-uri").font(.title2).fontWeight(.semibold)
@@ -230,6 +249,7 @@ struct PublishBundleView: View {
     }
 
     private func loadExisting() {
+        defer { NotificationCenter.default.post(name: .furnizorCatalogChanged, object: nil) }
         if let catalog = try? CatalogEditor.load() {
             existingBundles = catalog.productBundles.sorted { $0.name < $1.name }
             catalogItems = catalog.items.sorted { $0.name < $1.name }

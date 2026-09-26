@@ -21,10 +21,15 @@ struct GDCPluginManagerFurnizorApp: App {
                 EnvironmentBanner()
                 FurnizorContentView()
             }
-                .frame(minWidth: 720, minHeight: 560)
+                .frame(minWidth: 1040, minHeight: 600)  // Faza 5: bară laterală + tabel + inspector rămân lizibile
                 // Tema salvată se aplică din primul cadru — vezi
                 // AppTheme.swift (Core) și comentariul din Client.
-                .onAppear { ThemeManager.shared.applyNow() }
+                .onAppear {
+                    ThemeManager.shared.applyNow()
+                    #if DEBUG
+                    FurnizorDebugWindowSizer.apply()
+                    #endif
+                }
         }
         .windowStyle(.titleBar)
         .commands {
@@ -47,3 +52,17 @@ struct GDCPluginManagerFurnizorApp: App {
         }
     }
 }
+
+#if DEBUG
+/// `-GDCWindowSize 1040x600` redimensionează fereastra reală (capturi de verificare, fără instalare).
+enum FurnizorDebugWindowSizer {
+    static func apply() {
+        guard let raw = UserDefaults.standard.string(forKey: "GDCWindowSize") else { return }
+        let p = raw.split(separator: "x").compactMap { Double($0) }
+        guard p.count == 2 else { return }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+            NSApp.windows.first(where: { $0.isVisible && $0.canBecomeMain })?.setContentSize(NSSize(width: p[0], height: p[1]))
+        }
+    }
+}
+#endif

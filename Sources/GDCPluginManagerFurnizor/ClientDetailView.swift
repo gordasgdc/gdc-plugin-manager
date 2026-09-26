@@ -11,6 +11,8 @@ import GDCPluginManagerCore
 struct ClientDetailView: View {
     let profile: ClientProfile
     var onClose: () -> Void
+    /// Faza 5: afișat în inspectorul lateral al tabelului de clienți (lățime flexibilă), nu ca foaie.
+    var embedded = false
 
     @State private var notes: String = ""
     @State private var justCopied: String?
@@ -38,7 +40,8 @@ struct ClientDetailView: View {
                 .padding(20)
             }
         }
-        .frame(width: 620, height: 620)
+        .frame(minWidth: embedded ? 380 : 620, idealWidth: 620, maxWidth: embedded ? .infinity : 620,
+               minHeight: embedded ? nil : 620, maxHeight: embedded ? .infinity : 620)
         .sheet(item: $extendingPurchase) { purchase in
             ExtendLicenseView(purchase: purchase) { detail in
                 LicenseActionLog.record(machineID: purchase.machineID, productID: purchase.productID,

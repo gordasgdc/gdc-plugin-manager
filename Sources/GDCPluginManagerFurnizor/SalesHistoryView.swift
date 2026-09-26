@@ -243,9 +243,12 @@ struct SalesHistoryView: View {
         } message: {
             Text("Elimină doar rândul din jurnal — codul rămâne activ dacă a fost deja folosit de client.")
         }
-        .sheet(item: $selectedProfile) { profile in
-            ClientDetailView(profile: profile) {
-                selectedProfile = nil
+        // Faza 5 (V1): detaliile clientului în inspectorul lateral, lângă tabel — nu mai acoperă lista.
+        .inspector(isPresented: Binding(get: { selectedProfile != nil }, set: { if !$0 { selectedProfile = nil } })) {
+            if let profile = selectedProfile {
+                ClientDetailView(profile: profile, onClose: { selectedProfile = nil }, embedded: true)
+                    .id(profile.id)
+                    .inspectorColumnWidth(min: 400, ideal: 560, max: 820)
             }
         }
         .sheet(item: $editingEntry) { entry in

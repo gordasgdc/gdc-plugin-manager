@@ -31,7 +31,26 @@ struct PublishCommunityChannelView: View {
                                    "telegram", "instagram", "tiktok", "linkedin",
                                    "github", "web"]
 
+    /// Selecția din tabelul spațiului de lucru (Faza 5). `nil` = formular gol („+ Nou”).
+    /// Editorul rămâne cel existent: aceleași câmpuri, aceeași publicare.
+    @Binding var workspaceSelection: String?
+
+    init(workspaceSelection: Binding<String?> = .constant(nil)) {
+        _workspaceSelection = workspaceSelection
+    }
+
     var body: some View {
+        editorBody
+            .onChange(of: workspaceSelection) { _, id in applyWorkspaceSelection(id) }
+            .onAppear { if workspaceSelection != nil { applyWorkspaceSelection(workspaceSelection) } }
+    }
+
+    private func applyWorkspaceSelection(_ id: String?) {
+        guard let id else { clearForm(); return }
+        if let entry = channels.first(where: { $0.id == id }) { startEditing(entry) }
+    }
+
+    private var editorBody: some View {
         HSplitView {
             form.frame(minWidth: 420)
             list.frame(minWidth: 280)
@@ -191,6 +210,7 @@ struct PublishCommunityChannelView: View {
     // MARK: Acțiuni
 
     private func load() {
+        defer { NotificationCenter.default.post(name: .furnizorCatalogChanged, object: nil) }
         channels = (try? CatalogEditor.load().communityChannels) ?? []
     }
 

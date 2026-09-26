@@ -29,7 +29,23 @@ enum FurnizorSection: Hashable {
 }
 
 struct FurnizorContentView: View {
-    @State private var selection: FurnizorSection? = .publish
+    @State private var selection: FurnizorSection? = Self.initialSection
+
+    /// DEBUG: `-FurnizorStartSection salesHistory` deschide direct o rubrică (capturi de verificare).
+    private static var initialSection: FurnizorSection {
+        #if DEBUG
+        switch UserDefaults.standard.string(forKey: "FurnizorStartSection") {
+        case "salesHistory": return .salesHistory
+        case "courses": return .courses
+        case "downloadResources": return .downloadResources
+        case "secrets": return .secrets
+        case "pricing": return .pricing
+        default: return .publish
+        }
+        #else
+        return .publish
+        #endif
+    }
 
     // Secțiuni pliabile, la fel ca în client (2026-09-14). @AppStorage, nu
     // @State: preferința trebuie să supraviețuiască repornirii.
@@ -39,6 +55,7 @@ struct FurnizorContentView: View {
     // rubrica pe care ești.
     @AppStorage("furnizor.sidebar.catalog") private var expandCatalog = true
     @AppStorage("furnizor.sidebar.sales") private var expandSales = false
+    @AppStorage("furnizor.sidebar.pricing") private var expandPricing = false
     @AppStorage("furnizor.sidebar.clientUI") private var expandClientUI = false
     @AppStorage("furnizor.sidebar.maintenance") private var expandMaintenance = false
 
@@ -52,9 +69,11 @@ struct FurnizorContentView: View {
              .partnerStores, .serviceCenters, .apps, .audio, .downloadResources,
              .partnerOffers, .bundles, .communityChannels:
             expandCatalog = true
-        case .generateSerial, .revocations, .salesHistory, .analytics, .pricing:
+        case .generateSerial, .revocations, .salesHistory, .analytics:
             expandSales = true
-        case .launchBanner, .seasonalBackground, .imageLibrary:
+        case .pricing, .launchBanner:
+            expandPricing = true
+        case .seasonalBackground, .imageLibrary:
             expandClientUI = true
         case .backup, .secrets, .repoStorage:
             expandMaintenance = true
@@ -69,36 +88,43 @@ struct FurnizorContentView: View {
                 // bani si licente in altul, aspectul clientului in al treilea,
                 // iar uneltele de intretinere la urma — ele se deschid rar,
                 // dar cand se deschid conteaza sa fie toate la un loc.
+                // Faza 5 (V1 aprobat 2026-09-26): 5 domenii. În Catalog, fiecare tip de conținut
+                // deschide același spațiu de lucru (tabel + editor în inspector).
                 Section(isExpanded: $expandCatalog) {
-                    Label("Publică produs", systemImage: "arrow.up.doc").tag(FurnizorSection.publish)
-                    Label("Cursuri", systemImage: "graduationcap").tag(FurnizorSection.courses)
-                    Label("Materiale", systemImage: "book").tag(FurnizorSection.educationalResources)
-                    Label("Tutoriale", systemImage: "play.rectangle").tag(FurnizorSection.tutorials)
-                    Label("Evenimente", systemImage: "calendar").tag(FurnizorSection.events)
-                    Label("Magazine partenere", systemImage: "storefront").tag(FurnizorSection.partnerStores)
-                    Label("Service & Reparații", systemImage: "wrench.and.screwdriver").tag(FurnizorSection.serviceCenters)
-                    Label("Aplicații", systemImage: "square.grid.2x2").tag(FurnizorSection.apps)
-                    Label("Audio", systemImage: "waveform").tag(FurnizorSection.audio)
-                    Label("Resurse Download (LUT/SFX/VFX/Plugin)", systemImage: "arrow.down.circle").tag(FurnizorSection.downloadResources)
-                    Label("Oferte Parteneri", systemImage: "tag").tag(FurnizorSection.partnerOffers)
-                    Label("Pachete / Bundle-uri", systemImage: "shippingbox").tag(FurnizorSection.bundles)
-                    Label("Comunitate", systemImage: "person.2.wave.2").tag(FurnizorSection.communityChannels)
+                    Label(CatalogContentType.products.title, systemImage: CatalogContentType.products.symbol).tag(FurnizorSection.publish)
+                    Label(CatalogContentType.downloads.title, systemImage: CatalogContentType.downloads.symbol).tag(FurnizorSection.downloadResources)
+                    Label(CatalogContentType.courses.title, systemImage: CatalogContentType.courses.symbol).tag(FurnizorSection.courses)
+                    Label(CatalogContentType.educational.title, systemImage: CatalogContentType.educational.symbol).tag(FurnizorSection.educationalResources)
+                    Label(CatalogContentType.tutorials.title, systemImage: CatalogContentType.tutorials.symbol).tag(FurnizorSection.tutorials)
+                    Label(CatalogContentType.events.title, systemImage: CatalogContentType.events.symbol).tag(FurnizorSection.events)
+                    Label(CatalogContentType.apps.title, systemImage: CatalogContentType.apps.symbol).tag(FurnizorSection.apps)
+                    Label(CatalogContentType.audio.title, systemImage: CatalogContentType.audio.symbol).tag(FurnizorSection.audio)
+                    Label(CatalogContentType.partnerOffers.title, systemImage: CatalogContentType.partnerOffers.symbol).tag(FurnizorSection.partnerOffers)
+                    Label(CatalogContentType.bundles.title, systemImage: CatalogContentType.bundles.symbol).tag(FurnizorSection.bundles)
+                    Label(CatalogContentType.partnerStores.title, systemImage: CatalogContentType.partnerStores.symbol).tag(FurnizorSection.partnerStores)
+                    Label(CatalogContentType.serviceCenters.title, systemImage: CatalogContentType.serviceCenters.symbol).tag(FurnizorSection.serviceCenters)
+                    Label(CatalogContentType.community.title, systemImage: CatalogContentType.community.symbol).tag(FurnizorSection.communityChannels)
                 } header: {
                     Text("CATALOG")
                 }
 
                 Section(isExpanded: $expandSales) {
+                    Label("Clienți", systemImage: "person.2").tag(FurnizorSection.salesHistory)
                     Label("Generează serial", systemImage: "key").tag(FurnizorSection.generateSerial)
                     Label("Revocări licențe", systemImage: "xmark.shield").tag(FurnizorSection.revocations)
-                    Label("Clienți", systemImage: "person.2").tag(FurnizorSection.salesHistory)
                     Label("Statistici", systemImage: "chart.bar").tag(FurnizorSection.analytics)
-                    Label("Prețuri & Oferte", systemImage: "eurosign.circle").tag(FurnizorSection.pricing)
                 } header: {
-                    Text("VÂNZĂRI & LICENȚE")
+                    Text("CLIENȚI & LICENȚE")
+                }
+
+                Section(isExpanded: $expandPricing) {
+                    Label("Prețuri & Oferte", systemImage: "eurosign.circle").tag(FurnizorSection.pricing)
+                    Label("Banner Lansare", systemImage: "megaphone").tag(FurnizorSection.launchBanner)
+                } header: {
+                    Text("PREȚURI & OFERTE")
                 }
 
                 Section(isExpanded: $expandClientUI) {
-                    Label("Banner Lansare", systemImage: "megaphone").tag(FurnizorSection.launchBanner)
                     Label("Interfață Client (Filigran)", systemImage: "photo.on.rectangle.angled").tag(FurnizorSection.seasonalBackground)
                     Label("Banc de imagini", systemImage: "photo.stack").tag(FurnizorSection.imageLibrary)
                 } header: {
@@ -133,7 +159,7 @@ struct FurnizorContentView: View {
             VStack(spacing: 0) {
                 switch selection {
                 case .publish, .none:
-                    PublishView()
+                    CatalogWorkspace(type: .products).id(CatalogContentType.products)
                 case .generateSerial:
                     GenerateSerialView()
                 case .revocations:
@@ -147,29 +173,29 @@ struct FurnizorContentView: View {
                 case .launchBanner:
                     LaunchBannerManagerView()
                 case .courses:
-                    PublishCourseView()
+                    CatalogWorkspace(type: .courses).id(CatalogContentType.courses)
                 case .educationalResources:
-                    PublishEducationalResourceView()
+                    CatalogWorkspace(type: .educational).id(CatalogContentType.educational)
                 case .tutorials:
-                    PublishTutorialView()
+                    CatalogWorkspace(type: .tutorials).id(CatalogContentType.tutorials)
                 case .events:
-                    PublishEventView()
+                    CatalogWorkspace(type: .events).id(CatalogContentType.events)
                 case .partnerStores:
-                    PublishPartnerStoreView()
+                    CatalogWorkspace(type: .partnerStores).id(CatalogContentType.partnerStores)
                 case .serviceCenters:
-                    PublishServiceCenterView()
+                    CatalogWorkspace(type: .serviceCenters).id(CatalogContentType.serviceCenters)
                 case .apps:
-                    PublishAppView()
+                    CatalogWorkspace(type: .apps).id(CatalogContentType.apps)
                 case .audio:
-                    PublishAudioView()
+                    CatalogWorkspace(type: .audio).id(CatalogContentType.audio)
                 case .downloadResources:
-                    PublishDownloadableResourceView()
+                    CatalogWorkspace(type: .downloads).id(CatalogContentType.downloads)
                 case .partnerOffers:
-                    PublishPartnerOfferView()
+                    CatalogWorkspace(type: .partnerOffers).id(CatalogContentType.partnerOffers)
                 case .bundles:
-                    PublishBundleView()
+                    CatalogWorkspace(type: .bundles).id(CatalogContentType.bundles)
                 case .communityChannels:
-                    PublishCommunityChannelView()
+                    CatalogWorkspace(type: .community).id(CatalogContentType.community)
                 case .seasonalBackground:
                     SeasonalBackgroundView()
                 case .backup:

@@ -42,7 +42,26 @@ struct PublishCourseView: View {
     @State private var successMessage: String?
     @State private var pendingDelete: Course?
 
+    /// Selecția din tabelul spațiului de lucru (Faza 5). `nil` = formular gol („+ Nou”).
+    /// Editorul rămâne cel existent: aceleași câmpuri, aceeași publicare.
+    @Binding var workspaceSelection: String?
+
+    init(workspaceSelection: Binding<String?> = .constant(nil)) {
+        _workspaceSelection = workspaceSelection
+    }
+
     var body: some View {
+        editorBody
+            .onChange(of: workspaceSelection) { _, id in applyWorkspaceSelection(id) }
+            .onAppear { if workspaceSelection != nil { applyWorkspaceSelection(workspaceSelection) } }
+    }
+
+    private func applyWorkspaceSelection(_ id: String?) {
+        guard let id else { clearForm(); return }
+        if let entry = existingCourses.first(where: { $0.id == id }) { load(entry) }
+    }
+
+    private var editorBody: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 18) {
                 Text("Cursuri").font(.title2).fontWeight(.semibold)
@@ -226,6 +245,7 @@ struct PublishCourseView: View {
     }
 
     private func loadExisting() {
+        defer { NotificationCenter.default.post(name: .furnizorCatalogChanged, object: nil) }
         if let catalog = try? CatalogEditor.load() {
             existingCourses = catalog.courses.sorted { $0.name < $1.name }
         }

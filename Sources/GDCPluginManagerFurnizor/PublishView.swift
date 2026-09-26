@@ -75,7 +75,30 @@ struct PublishView: View {
     @State private var batchSelection: Set<String> = []
     @State private var showBatchDeleteConfirm = false
 
+    /// Selecția din tabelul spațiului de lucru (Faza 5). `nil` = formular gol („+ Nou”).
+    /// Editorul rămâne cel existent: aceleași câmpuri, aceeași publicare.
+    @Binding var workspaceSelection: String?
+
+    init(workspaceSelection: Binding<String?> = .constant(nil)) {
+        _workspaceSelection = workspaceSelection
+    }
+
     var body: some View {
+        editorBody
+            .onChange(of: workspaceSelection) { _, id in applyWorkspaceSelection(id) }
+            .onAppear { if workspaceSelection != nil { applyWorkspaceSelection(workspaceSelection) } }
+    }
+
+    private func applyWorkspaceSelection(_ id: String?) {
+        guard let id else { isUpdate = false; return }
+        loadExistingIfNeeded()
+        skipClear = true
+        isUpdate = true
+        self.id = id
+        fillFromExisting()
+    }
+
+    private var editorBody: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 18) {
                 Text("Publică produs").font(.title2).fontWeight(.semibold)
@@ -425,6 +448,7 @@ struct PublishView: View {
     }
 
     private func loadExistingIfNeeded() {
+        defer { NotificationCenter.default.post(name: .furnizorCatalogChanged, object: nil) }
         inbox = StyleLabInbox.pending()
         guard let catalog = try? CatalogEditor.load() else { return }
         existingItems = (catalog.items + catalog.scriptItems).sorted { $0.name < $1.name }
