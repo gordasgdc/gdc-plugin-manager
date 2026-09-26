@@ -9,15 +9,18 @@ AUTH=Sources/GDCPluginManagerFurnizor/PrivateCatalogAuth.swift
 WIN=../GDCPluginManagerWin
 
 TOKEN=""
-[ -f "$AUTH" ] && TOKEN=$(sed -nE 's/.*public static let token = "([^"]+)".*/\1/p' "$AUTH" | head -1)
+# Din 2026-09-26 fișierul e mutat în copia de recuperare (în afara git); valoarea se folosește doar pentru comparație.
+BACKUP="$HOME/Developer/Certificates/legacy-github-pat-2026-09-26/PrivateCatalogAuth.swift"
+[ -f "$AUTH" ] || AUTH_SRC="$BACKUP"; AUTH_SRC="${AUTH_SRC:-$AUTH}"
+[ -f "$AUTH_SRC" ] && TOKEN=$(sed -nE 's/.*public static let token = "([^"]+)".*/\1/p' "$AUTH_SRC" | head -1)
 [ "$TOKEN" = "PASTE_TOKEN_HERE" ] && TOKEN=""
 PAT_RE='(github_pat_[A-Za-z0-9_]{30,}|ghp_[A-Za-z0-9]{30,})'
 
 # 1. Surse compilate: nicio referință la PrivateCatalogAuth în afara fișierului exclus.
 refs=$(grep -rlE 'PrivateCatalogAuth\.(token|repos|owner|repo|defaultRepoKey)' Sources Tests 2>/dev/null | grep -v "PrivateCatalogAuth.swift$" || true)
 [ -z "$refs" ] && ok "sursele nu mai folosesc PrivateCatalogAuth" || ko "referințe rămase: $refs"
-grep -q '"PrivateCatalogAuth.swift"' Package.swift && ok "Package.swift exclude PrivateCatalogAuth.swift" || ko "PrivateCatalogAuth.swift nu e exclus în Package.swift"
-git check-ignore -q "$AUTH" && ok "PrivateCatalogAuth.swift rămâne gitignored" || ko "PrivateCatalogAuth.swift NU e ignorat de git"
+[ ! -f "$AUTH" ] && ok "PrivateCatalogAuth.swift nu mai e în Sources (copie de recuperare în afara git)" || ko "PrivateCatalogAuth.swift a reapărut în Sources — ar intra în binar"
+git check-ignore -q "$AUTH" && ok "PrivateCatalogAuth.swift rămâne gitignored (plasă de siguranță)" || ko "PrivateCatalogAuth.swift NU e ignorat de git"
 leak=$(git grep -lE "$PAT_RE" -- . ':!*.md' 2>/dev/null || true)
 [ -z "$leak" ] && ok "niciun PAT în fișierele urmărite de git" || ko "tipar PAT în: $leak"
 
@@ -47,8 +50,8 @@ done
 for app in /Applications/*Furnizor*.app; do
   [ -d "$app" ] || continue
   f="$app/Contents/MacOS/GDCPluginManagerFurnizor"
-  if strings "$f" 2>/dev/null | grep -qE "$PAT_RE"; then echo "! control: $(basename "$app") instalat conține încă tokenul (build vechi; se înlocuiește la instalarea aprobată)"
-  else ok "control: $(basename "$app") instalat fără token"; fi
+  if { [ -n "$TOKEN" ] && LC_ALL=C grep -qaF "$TOKEN" "$f"; } || strings "$f" 2>/dev/null | grep -qE "$PAT_RE"; then echo "! control: $(basename "$app") instalat conține încă tokenul (build vechi; se înlocuiește la instalarea aprobată)"
+  else ok "$(basename "$app") instalat: fără token"; fi
 done
 
 # 4. gh: autentificat + acces la repo-urile de resurse; comportament fără autentificare.

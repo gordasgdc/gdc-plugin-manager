@@ -30,7 +30,6 @@ jobs:
       # (valori placeholder). Nicio valoare reală nu intră în CI.
       - name: Șabloane pentru fișierele de configurare locale
         run: |
-          cp Sources/GDCPluginManagerFurnizor/PrivateCatalogAuth.swift.example Sources/GDCPluginManagerFurnizor/PrivateCatalogAuth.swift
           cp Sources/GDCPluginManagerFurnizor/SupabaseAdminConfig.swift.example Sources/GDCPluginManagerFurnizor/SupabaseAdminConfig.swift
 
       - name: Rezolvarea dependențelor

@@ -14,10 +14,11 @@
 - Mesaje noi RO/EN/ES: licență respinsă, prea multe descărcări.
 - Importul PowerGrade transmite căile în siguranță, indiferent de caracterele din nume.
 
-## v1.52.6 Furnizor (nelansat, pregătit 2026-09-26) — Fără tokenul GitHub vechi
+## v1.52.6 Furnizor (instalat local 2026-09-26, neîmpins) — Fără tokenul GitHub vechi
 - Furnizorul nu mai încorporează tokenul GitHub vechi: numele repo-urilor de resurse stau într-un fișier fără secrete, iar dimensiunea repo-urilor se citește prin autentificarea `gh` de pe Mac (fără `gh` → „necunoscut”).
 - Scos indicatorul/bannerul de expirare a tokenului vechi; „Token-uri & Chei” îl arată ca token vechi, de revocat după migrare (nu se mai reînnoiește). Copia de siguranță nu mai include tokenul.
 - `scripts/verify-no-legacy-token.sh`: gardă pentru surse, build, binare, Windows și `gh`.
+- Șablonul `PrivateCatalogAuth.swift.example` și pasul lui din CI Mac eliminate; fișierul local cu tokenul mutat în copia de recuperare, în afara repo-ului.
 - `scripts/migration-status.sh`: monitorizarea migrării clienților (doar citire; migrat confirmat / probabil vechi / inactiv — ultimele două sunt estimări).
 
 ## v1.52.5 Furnizor (nelansat, pregătit 2026-09-26) — Siguranța mediilor

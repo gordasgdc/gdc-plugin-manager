@@ -43,10 +43,9 @@ let package = Package(
             dependencies: ["GDCPluginManagerCore"],
             path: "Sources/GDCPluginManagerFurnizor",
             // Lot A (2026-09-26): PAT-ul GitHub vechi NU mai intră în niciun binar.
-            // PrivateCatalogAuth.swift (local, gitignored) rămâne pe disc până la
-            // aprobarea ștergerii, dar e exclus din compilare; numele repo-urilor
-            // stau în ResourceRepos.swift. Gardă: scripts/verify-no-legacy-token.sh.
-            exclude: ["SupabaseAdminConfig.swift.example", "PrivateCatalogAuth.swift.example", "PrivateCatalogAuth.swift"],
+            // Lot A (2026-09-26): PAT-ul GitHub vechi nu mai există în Furnizor; numele
+            // repo-urilor stau în ResourceRepos.swift. Gardă: scripts/verify-no-legacy-token.sh.
+            exclude: ["SupabaseAdminConfig.swift.example"],
             resources: [
                 // [2026-08-29] Preseturile sezoniere predefinite au trecut de
                 // la SVG inline la PNG randat, bundle-uit - vezi
