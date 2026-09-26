@@ -1,4 +1,4 @@
-# Release coordonat — Mac 1.40.0 · Furnizor 1.53.0 · Windows 1.38.1 (NEPUBLICAT — cere aprobare)
+# Release coordonat — Mac 1.40.0 · Furnizor 1.53.0 · Windows 1.38.1 — PUBLICAT 2026-09-26
 
 Stare locală: `main` (Mac/Furnizor) și `main` (Windows) integrate, neîmpinse. Gate: `scripts/preflight-all.sh` = OK.
 Manifest candidat: `release/update.candidate.json` (publicul `docs/update.json` rămâne 1.39.4 / 1.37.2 până la pasul 4).
@@ -46,3 +46,15 @@ Testul real de actualizare Windows public → candidat nu se poate face izolat �
   „Apps & Features”, pornire OK, catalog + banner clasic + verificarea de actualizare (nu oferă 1.37.2) funcționale.
 - NETESTAT: detecția + descărcarea din aplicație prin gordas.dev. Redirecționarea cere un certificat TLS fals pentru gordas.dev
   (CA de test în VM) = slăbirea validării → oprit intenționat; se verifică după publicare, pe snapshot.
+
+## Rezultat publicare (2026-09-26)
+- Mac v1.40.0 (latest): pkg/dmg/zip semnate Developer ID, notarizate, stapled; `update.json` mac 1.40.0 (a6a7503), sha256 = arhiva publicată;
+  `verify-update-flow` TOTUL OK; Mac CI verde.
+- Windows v1.38.1 (non-latest, CI semnat, pasul SelfUpdater semnat PASS); CI a scris `update.json` windows 1.38.1, rădăcina 1.38.1 (dcfe33f);
+  niciun câmp eliminat; `releases/latest` = v1.40.0; linkuri 200, sha256 identic.
+- Test real Windows (VM restaurat la 1.37.2): detectare 1.38.1 → descărcare → arhivă + semnătură verificate (sha256 OK) → instalare
+  (butoanele apăsate de Cristi în VM, UAC + wizard) → pornire 1.38.1; „Apps & Features” 1.38.1; banner OK; card demo „Incompatibil”.
+  Stările instalat/actualizare/eroare nu sunt reproductibile cu catalogul actual (un singur produs, doar Mac) — acoperite de teste.
+- Furnizor 1.53.0 instalat local (semnat, fără token). La prima pornire: „Continuă în PRODUCȚIE”.
+- Rămân: Mac P2 (actualizare reală 1.39.4 → 1.40.0 pe un Mac de client — Mac-ul de dezvoltare a primit 1.40.0 din build);
+  revocarea PAT-ului vechi (după migrare). Ramura `ci-test-1.38.1` ștearsă.
