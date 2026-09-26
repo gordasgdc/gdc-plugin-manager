@@ -29,7 +29,7 @@
       ]
     },
     "gdc-datamover" : {
-      "basePrice" : 75,
+      "basePrice" : 124,
       "currency" : "EUR",
       "name" : "DataMover",
       "promoSchedule" : [
