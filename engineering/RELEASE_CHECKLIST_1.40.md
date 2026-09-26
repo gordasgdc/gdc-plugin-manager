@@ -36,3 +36,13 @@ Manifest candidat: `release/update.candidate.json` (publicul `docs/update.json` 
 Testul real de actualizare Windows public → candidat nu se poate face izolat înainte de publicare: clientul 1.37.2 citește doar
 `https://gordas.dev/update.json` și acceptă doar instalatoare semnate de CI. Opțiuni: (a) după pasul 3, în VM (snapshot aprobat);
 (b) înainte: build CI pe o ramură (artefact semnat, fără release) + redirecționare DNS doar în VM — cere aprobare.
+
+## Rezultat test pre-publicare Windows (2026-09-26)
+- CI pe ramura `ci-test-1.38.1` (workflow_dispatch, run 36217905260): semnare + teste OK, pasul de publicare SĂRIT; niciun release,
+  `update.json` public neschimbat (verificat live). Artefact: `~/Downloads/GDC-update-test-1.38.1/GDCPluginManagerSetup-1.38.1-citest.exe`.
+- VM: snapshot nou `inainte-test-update-1.38.1`. În VM: SHA-256 identic, thumbprint GDC corect (rădăcina neimportată = UnknownError,
+  normal), verificatorul de actualizare (cod identic cu 1.37.2 publicat) acceptă instalatorul semnat și respinge copia alterată.
+- Instalare peste 1.37.2 (silențios, ca SYSTEM, după închiderea aplicației — ca SelfUpdater): exit 0, 1.38.1 în Program Files și în
+  „Apps & Features”, pornire OK, catalog + banner clasic + verificarea de actualizare (nu oferă 1.37.2) funcționale.
+- NETESTAT: detecția + descărcarea din aplicație prin gordas.dev. Redirecționarea cere un certificat TLS fals pentru gordas.dev
+  (CA de test în VM) = slăbirea validării → oprit intenționat; se verifică după publicare, pe snapshot.
