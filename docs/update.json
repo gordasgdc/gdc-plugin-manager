@@ -1,11 +1,11 @@
 {
   "_comment_legacy": "Campurile de la radacina exista DOAR pentru clientii <= 1.27, care decodeaza 'version' si 'download_url' ca OBLIGATORII de aici. Fara ele, decodarea lor arunca si update checker-ul lor esueaza tacut, raportand 'sunteti pe cea mai noua versiune' la infinit. Clientii >= 1.28 citesc sectiunile mac/windows de mai jos si ignora acest bloc. A NU SE STERGE.",
-  "version": "1.37.2",
+  "version": "1.38.1",
   "release_date": "2026-09-15",
   "changes": "Aplicația raportează automat erorile neașteptate, ca să poată fi reparate. Nu se trimit date personale — detalii în politica de confidențialitate.",
   "download_url": {
     "mac": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Mac.zip",
-    "windows": "https://github.com/gordasgdc/gdc-plugin-manager/releases/download/v1.37.2/GDCPluginManager-Windows.zip"
+    "windows": "https://github.com/gordasgdc/gdc-plugin-manager/releases/download/v1.38.1/GDCPluginManager-Windows.zip"
   },
   "mandatory": false,
   "min_version": "1.0.0",
@@ -20,12 +20,12 @@
     "sha256": "7478b480c66cda44dd59c8bb11f1f86caaed1e9cc01c41bd65d341ff602b717f"
   },
   "windows": {
-    "version": "1.37.2",
-    "release_date": "2026-09-25",
+    "version": "1.38.1",
+    "release_date": "2026-09-26",
     "changes": "Actualizare Windows, sincronizata cu ultima versiune.",
-    "download_url": "https://github.com/gordasgdc/gdc-plugin-manager/releases/download/v1.37.2/GDCPluginManager-Windows.zip",
+    "download_url": "https://github.com/gordasgdc/gdc-plugin-manager/releases/download/v1.38.1/GDCPluginManager-Windows.zip",
     "mandatory": false,
     "min_version": "1.0.0",
-    "sha256": "da125063200f8123728589e746bdb68510802296243126a209e6a62bf4c3ea34"
+    "sha256": "a39cdf45499800de7c1850fd7f0adaa5bb81423eed80f76183da7096a6bdd1f6"
   }
 }
