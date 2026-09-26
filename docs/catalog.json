@@ -78,7 +78,7 @@
 
         ]
       },
-      "coverImage" : "covers/DataMover.png?v=c6cb52ae",
+      "coverImage" : "covers/DataMover.png?v=95a6c88d",
       "id" : "DataMover",
       "name" : "DataMover",
       "pricingProductID" : "gdc-datamover",
@@ -1055,5 +1055,5 @@
       "youtubeURL" : "https://www.youtube.com/watch?v=dnkUIGXIzIM"
     }
   ],
-  "updatedAt" : "2026-09-26"
+  "updatedAt" : "2026-09-27"
 }
