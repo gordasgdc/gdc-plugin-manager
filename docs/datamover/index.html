@@ -2,1163 +2,722 @@
 <html lang="ro">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <script>
-  // gordasgdc.github.io e domeniul vechi — pagina "oficiala" e acum
-  // gordas.dev. Redirect doar de pe github.io, ca sa nu se bucleze
-  // cand pagina e servita chiar de pe gordas.dev.
+  // Domeniul vechi (gordasgdc.github.io) trimite la pagina oficială, cu query și hash păstrate.
+  // Pe gordas.dev condiția e falsă, deci nu există buclă.
   if (location.hostname === "gordasgdc.github.io") {
     location.replace("https://gordas.dev/datamover/" + location.search + location.hash);
   }
 </script>
-<title>DataMover — Offload verificat pentru echipe video</title>
-<meta name="description" content="Aplicatie Mac si Windows pentru offload de media cu verificare de integritate, copiere simultana catre mai multe destinatii si rapoarte profesionale. De Cristi Gordas.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>DataMover — offload verificat, sursă → copii independente</title>
+<meta name="description" content="DataMover copiază cardurile de filmare simultan pe mai multe discuri, verifică fiecare copie prin checksum și scrie rapoarte PDF, HTML, CSV și MHL. macOS și Windows.">
+<link rel="canonical" href="https://gordas.dev/datamover/">
+<meta name="theme-color" content="#14161A">
+<meta name="color-scheme" content="dark">
+<link rel="icon" type="image/svg+xml" href="img/2.16/icon-a.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="img/2.16/favicon-32.png">
+<link rel="apple-touch-icon" href="img/2.16/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="gordas.dev">
+<meta property="og:url" content="https://gordas.dev/datamover/">
+<meta property="og:title" content="DataMover — offload verificat pentru producția video">
+<meta property="og:description" content="O singură citire a cardului, copii independente pe mai multe discuri, fiecare confirmată prin checksum. macOS și Windows.">
+<meta property="og:image" content="https://gordas.dev/datamover/img/2.16/og-datamover.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Ecranul Rezultat din DataMover pentru macOS: un card copiat și verificat pe două discuri.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="DataMover — offload verificat pentru producția video">
+<meta name="twitter:description" content="O singură citire a cardului, copii independente pe mai multe discuri, fiecare confirmată prin checksum.">
+<meta name="twitter:image" content="https://gordas.dev/datamover/img/2.16/og-datamover.jpg">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "DataMover",
+  "url": "https://gordas.dev/datamover/",
+  "applicationCategory": "MultimediaApplication",
+  "operatingSystem": "macOS 14 or later (Apple Silicon); Windows 11 (x64)",
+  "softwareVersion": "2.16.2",
+  "downloadUrl": "https://github.com/gordasgdc/datamover/releases/latest",
+  "license": "https://github.com/gordasgdc/datamover/blob/main/LICENSE",
+  "image": "https://gordas.dev/datamover/img/2.16/og-datamover.jpg",
+  "author": { "@type": "Person", "name": "Cristi Gordaș", "url": "https://gordas.dev/" }
+}
+</script>
 <style>
   :root {
-    --bg: #0a0d0f;
-    --bg-elevated: #121618;
-    --bg-elevated-2: #191e21;
-    --ink: #e7ece9;
-    --ink-dim: #889290;
-    --ink-faint: #4d5658;
-    --accent-verify: #4fd18b;
-    --accent-copy: #E8963C;
-    --line: #212a2d;
-    --mono: 'IBM Plex Mono', ui-monospace, monospace;
-    --sans: 'Inter', -apple-system, sans-serif;
+    --bg: #14161A;
+    --bg-2: #1A1D22;
+    --panel: #20242A;
+    --panel-2: #262A31;
+    --line: #30353D;
+    --line-2: #3B414B;
+    --ink: #EDEFF2;
+    --ink-2: #B9BFC8;
+    --ink-3: #8E96A1;
+    --amber: #ED9952;
+    --amber-ink: #1B1208;
+    --verify: #4CC878;
+    --warn: #E6B450;
+    --mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Segoe UI", Inter, Roboto, "Helvetica Neue", Arial, sans-serif;
+    --r: 10px;
+    --wrap: 1160px;
   }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--bg);
-    color: var(--ink);
-    font-family: var(--sans);
-    line-height: 1.5;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  a { color: inherit; }
-  ::selection { background: var(--accent-verify); color: #08120d; }
-
-  .wrap { max-width: 940px; margin: 0 auto; padding: 0 28px; }
-
-  /* ── Lang switcher ─────────────────────────────────────────── */
-
-  .lang-switch {
-    position: fixed;
-    top: 22px;
-    right: 22px;
-    display: flex;
-    gap: 4px;
-    background: rgba(18,22,24,0.7);
-    backdrop-filter: blur(8px);
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    padding: 4px;
-    z-index: 50;
-  }
-
-  .lang-btn {
-    font-family: var(--mono);
-    font-size: 12px;
-    background: none;
-    border: none;
-    color: var(--ink-faint);
-    padding: 6px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: color 0.15s ease, background 0.15s ease;
-  }
-
-  .lang-btn:hover { color: var(--ink); }
-
-  .lang-btn.active {
-    color: #08120d;
-    background: var(--accent-verify);
-  }
-
-  /* ── Hero / checksum scan ──────────────────────────────────── */
-
-  .hero {
-    /* Plafon absolut (2026-08-29, raportat de Cristi: "prea mult loc
-       liber" pe monitoare mari) - 78svh pe un ecran 1440p+ tot lasa
-       sute de px goi deasupra/dedesubtul continutului scurt (scanner +
-       titlu + subtitlu), pentru ca svh scaleaza liniar cu inaltimea
-       fizica a ecranului, nu cu inaltimea reala a continutului. min()
-       plafoneaza hero-ul la o inaltime fixa rezonabila, indiferent cat
-       de mare e monitorul - pe ecrane mici/mobil ramane comportamentul
-       vechi (78svh, de obicei mai mic decat plafonul). */
-    min-height: min(78svh, 680px);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 40px 24px;
-    background:
-      radial-gradient(ellipse 900px 500px at 50% 15%, rgba(79,209,139,0.06), transparent 60%),
-      var(--bg);
-    position: relative;
-  }
-
-  .scanner {
-    position: relative;
-    margin-bottom: 30px;
-    padding: 18px 22px;
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    background: var(--bg-elevated);
-    overflow: hidden;
-  }
-
-  .scanner::before {
-    content: '';
-    position: absolute;
-    top: 0; bottom: 0; left: -30%;
-    width: 30%;
-    background: linear-gradient(90deg, transparent, rgba(79,209,139,0.16), transparent);
-    animation: scanline 1.9s ease-in-out 3;
-  }
-
-  @keyframes scanline {
-    to { left: 130%; }
-  }
-
-  /* ── Animatie transfer: Card -> linie neon -> Hard Disk ───────
-     Cerut explicit (2026-08-29): reprezentare vizuala a transferului
-     de date (card video -> destinatie), separata de animatia de
-     verificare (hash-line) de mai jos - cele doua reprezinta cele
-     doua beneficii centrale ale aplicatiei (copiere + verificare). */
-  .transfer-anim {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-bottom: 4px;
-  }
-
-  .tf-icon { flex-shrink: 0; display: block; }
-
-  .tf-line {
-    position: relative;
-    flex: 1;
-    min-width: 90px;
-    height: 3px;
-    border-radius: 2px;
-    background: linear-gradient(90deg, var(--accent-copy), var(--accent-verify));
-    box-shadow: 0 0 10px 0 rgba(232,150,60,0.35), 0 0 10px 0 rgba(79,209,139,0.35);
-  }
-
-  .tf-pulse {
-    position: absolute;
-    top: 50%;
-    width: 7px;
-    height: 7px;
-    margin-top: -3.5px;
-    border-radius: 50%;
-    background: #fff;
-    box-shadow: 0 0 10px 2px rgba(255,255,255,0.85);
-    animation: tfFlow 2.2s linear infinite;
-    opacity: 0;
-  }
-
-  .tf-pulse.p2 { animation-delay: 0.7s; }
-  .tf-pulse.p3 { animation-delay: 1.4s; }
-
-  @keyframes tfFlow {
-    0% { left: 0%; opacity: 0; }
-    8% { opacity: 1; }
-    92% { opacity: 1; }
-    100% { left: 100%; opacity: 0; }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .tf-pulse { animation: none; opacity: 0.9; left: 50%; }
-  }
-
-  .hash-line {
-    font-family: var(--mono);
-    font-size: clamp(13px, 3.4vw, 17px);
-    letter-spacing: 0.02em;
-    color: var(--ink-dim);
-    white-space: nowrap;
-  }
-
-  .verify-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-family: var(--mono);
-    font-size: 11.5px;
-    letter-spacing: 0.08em;
-    color: var(--accent-verify);
-    margin-top: 10px;
-    opacity: 0;
-    transform: translateY(4px);
-    transition: opacity 0.4s ease, transform 0.4s ease;
-  }
-
-  .verify-badge.show { opacity: 1; transform: translateY(0); }
-
-  .hero-eyebrow {
-    font-family: var(--mono);
-    font-size: 12px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--accent-verify);
-    opacity: 0;
-    animation: fadeUp 0.7s ease-out 1.9s forwards;
-  }
-
-  .hero h1 {
-    font-size: clamp(38px, 7vw, 60px);
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    margin: 10px 0 14px;
-    opacity: 0;
-    animation: fadeUp 0.7s ease-out 2.05s forwards;
-  }
-
-  .hero p.sub {
-    color: var(--ink-dim);
-    font-size: 17px;
-    max-width: 500px;
-    margin: 0 auto;
-    opacity: 0;
-    animation: fadeUp 0.7s ease-out 2.2s forwards;
-  }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .hero-actions {
-    display: flex;
-    gap: 12px;
-    margin-top: 30px;
-    flex-wrap: wrap;
-    justify-content: center;
-    opacity: 0;
-    animation: fadeUp 0.7s ease-out 2.35s forwards;
-  }
-
-  .btn {
-    font-family: var(--mono);
-    font-size: 13px;
-    font-weight: 500;
-    padding: 13px 22px;
-    border-radius: 8px;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    border: 1px solid transparent;
-    transition: transform 0.15s ease, border-color 0.15s ease;
-  }
-
-  .btn:hover { transform: translateY(-1px); }
-
-  .btn-primary { background: var(--accent-verify); color: #08120d; }
-  .btn-primary:hover { background: #63dd9c; }
-
-  .btn-ghost { border-color: var(--line); color: var(--ink); }
-  .btn-ghost:hover { border-color: var(--ink-faint); }
-
-  .hero-links {
-    margin-top: 16px;
-    font-family: var(--mono);
-    font-size: 12px;
-    color: var(--ink-faint);
-    opacity: 0;
-    animation: fadeUp 0.7s ease-out 2.45s forwards;
-  }
-  .hero-links a { color: var(--ink-faint); text-decoration: underline; text-underline-offset: 3px; }
-  .hero-links a:hover { color: var(--ink); }
-  .hero-links span { margin: 0 8px; }
-
-  .app-shot {
-    margin: -20px 0 40px;
-    opacity: 0;
-    animation: fadeUp 0.8s ease-out 2.55s forwards;
-  }
-  .app-shot img {
-    display: block;
-    width: 100%;
-    /* [2026-09-03] BUG REAL reparat (raportat de Cristi: capturile sunt
-       "strangulate, stranse, deformate"): tag-urile <img> au atribute
-       width/height (corect, previn saltul de layout la incarcare), dar CSS-ul
-       suprascria DOAR latimea cu 100%. Inaltimea ramanea fixata la valoarea
-       din atribut (1079px), asa ca la orice latime de ecran diferita de cea
-       originala imaginea era intinsa pe verticala si strivita pe orizontala.
-       `height: auto` obliga browserul sa pastreze raportul real al imaginii. */
-    height: auto;
-    border-radius: 12px;
-    border: 1px solid var(--line);
-    box-shadow: 0 40px 100px -30px rgba(0,0,0,0.7), 0 0 0 1px rgba(79,209,139,0.06);
-  }
-
-  .shot-gallery {
-    margin: -20px 0 56px;
-    display: flex;
-    flex-direction: column;
-    gap: 56px;
-    opacity: 0;
-    animation: fadeUp 0.8s ease-out 2.55s forwards;
-  }
-  .shot-gallery figure { margin: 0; }
-  .shot-gallery img {
-    display: block;
-    width: 100%;
-    /* [2026-09-03] BUG REAL reparat (raportat de Cristi: capturile sunt
-       "strangulate, stranse, deformate"): tag-urile <img> au atribute
-       width/height (corect, previn saltul de layout la incarcare), dar CSS-ul
-       suprascria DOAR latimea cu 100%. Inaltimea ramanea fixata la valoarea
-       din atribut (1079px), asa ca la orice latime de ecran diferita de cea
-       originala imaginea era intinsa pe verticala si strivita pe orizontala.
-       `height: auto` obliga browserul sa pastreze raportul real al imaginii. */
-    height: auto;
-    border-radius: 14px;
-    border: 1px solid var(--line);
-    box-shadow: 0 40px 100px -30px rgba(0,0,0,0.7), 0 0 0 1px rgba(79,209,139,0.06);
-  }
-  .shot-gallery figcaption {
-    margin-top: 16px;
-    font-family: var(--mono);
-    font-size: 13px;
-    color: var(--ink-dim);
-    text-align: center;
-  }
-
-  .scroll-cue {
-    position: absolute;
-    bottom: 30px;
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--ink-faint);
-    letter-spacing: 0.1em;
-    opacity: 0;
-    animation: fadeUp 0.7s ease-out 2.5s forwards;
-  }
-
-  /* ── Sections ──────────────────────────────────────────────── */
-
-  section { padding: 60px 0; border-top: 1px solid var(--line); }
-
-  .eyebrow {
-    font-family: var(--mono);
-    font-size: 12px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--accent-verify);
-    margin-bottom: 12px;
-  }
-
-  h2 {
-    font-size: clamp(26px, 4vw, 34px);
-    font-weight: 700;
-    letter-spacing: -0.01em;
-    margin-bottom: 16px;
-  }
-
-  .section-intro {
-    color: var(--ink-dim);
-    max-width: 580px;
-    font-size: 16px;
-    margin-bottom: 48px;
-  }
-
-  /* ── Feature grid ──────────────────────────────────────────── */
-
-  .features {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-  }
-
-  .feature-card {
-    background: var(--bg-elevated);
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 22px;
-  }
-
-  .feature-icon {
-    width: 34px;
-    height: 34px;
-    border-radius: 8px;
-    background: rgba(79,209,139,0.12);
-    color: var(--accent-verify);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 14px;
-  }
-  .feature-icon svg { width: 18px; height: 18px; }
-
-  .feature-card h3 {
-    font-size: 15.5px;
-    font-weight: 600;
-    margin-bottom: 6px;
-  }
-
-  .feature-card p {
-    color: var(--ink-dim);
-    font-size: 13.5px;
-  }
-
-  /* ── Algoritmi chips ───────────────────────────────────────── */
-
-  .chip-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-
-  .chip {
-    font-family: var(--mono);
-    font-size: 13px;
-    padding: 10px 16px;
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    background: var(--bg-elevated);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .chip .dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--accent-copy);
-  }
-
-  /* ── Steps ─────────────────────────────────────────────────── */
-
-  .steps { display: flex; flex-direction: column; }
-
-  .step {
-    display: grid;
-    grid-template-columns: 56px 1fr;
-    gap: 20px;
-    padding: 26px 0;
-    border-bottom: 1px solid var(--line);
-  }
-  .step:last-child { border-bottom: none; }
-
-  .step-num {
-    font-family: var(--mono);
-    font-size: 14px;
-    color: var(--accent-verify);
-    padding-top: 2px;
-  }
-
-  .step h3 { font-size: 16.5px; font-weight: 600; margin-bottom: 6px; }
-  .step p { color: var(--ink-dim); font-size: 14.5px; max-width: 540px; }
-
-  /* ── Cerinte ───────────────────────────────────────────────── */
-
-  .reqs {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-  }
-
-  .req {
-    background: var(--bg-elevated);
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 22px;
-  }
-
-  .req-label {
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--ink-faint);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin-bottom: 8px;
-  }
-
-  .req-value { font-size: 15px; font-weight: 600; }
-
-  /* ── Footer ────────────────────────────────────────────────── */
-
-  footer { padding: 48px 0 36px; border-top: 1px solid var(--line); }
-
-  .credit-row {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    margin-bottom: 34px;
-  }
-
-  .credit-badge {
-    width: 56px;
-    height: 56px;
-    border-radius: 14px;
-    background: var(--bg-elevated);
-    border: 1px solid var(--line);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: var(--mono);
-    font-size: 20px;
-    color: var(--accent-verify);
-  }
-
-  .credit-name { font-weight: 600; font-size: 16px; }
-  .credit-role { color: var(--ink-dim); font-size: 13.5px; margin-top: 2px; }
-
-  .footer-links { display: flex; flex-wrap: wrap; gap: 10px; }
-
-  .footer-links a {
-    font-family: var(--mono);
-    font-size: 13px;
-    padding: 10px 16px;
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    text-decoration: none;
-    color: var(--ink-dim);
-    transition: color 0.15s ease, border-color 0.15s ease;
-  }
-
-  .footer-links a:hover { color: var(--ink); border-color: var(--ink-faint); }
-
-  .footer-fine {
-    margin-top: 40px;
-    font-size: 12.5px;
-    color: var(--ink-faint);
-    font-family: var(--mono);
-  }
-
-  @media (max-width: 720px) {
-    .features { grid-template-columns: 1fr 1fr; }
-    .reqs { grid-template-columns: 1fr; }
-  }
-
-  @media (max-width: 480px) {
-    .features { grid-template-columns: 1fr; }
-    .step { grid-template-columns: 36px 1fr; }
-    .lang-switch { top: 14px; right: 14px; }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .scanner::before, .hero-eyebrow, .hero h1, .hero p.sub, .hero-actions, .scroll-cue, .verify-badge {
-      animation: none !important;
-      transition: none !important;
-      opacity: 1 !important;
-      transform: none !important;
-    }
-  }
-
-  a:focus-visible, button:focus-visible {
-    outline: 2px solid var(--accent-verify);
-    outline-offset: 2px;
-  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.6 var(--sans); overflow-x: hidden; }
+  img, svg { max-width: 100%; height: auto; display: block; }
+  a { color: var(--amber); text-underline-offset: 3px; }
+  a:hover { color: #F6B57D; }
+  :focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; border-radius: 4px; }
+  .wrap { width: 100%; max-width: var(--wrap); margin: 0 auto; padding: 0 16px; }
+  @media (min-width: 768px) { .wrap { padding: 0 28px; } }
+  .skip { position: absolute; left: -9999px; top: 8px; background: var(--amber); color: var(--amber-ink); padding: 8px 14px; border-radius: 6px; font-weight: 600; z-index: 10; }
+  .skip:focus { left: 8px; }
+  code, .mono { font-family: var(--mono); font-size: .92em; }
+  h1, h2, h3 { line-height: 1.2; margin: 0; letter-spacing: -.01em; }
+  h2 { font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2.1rem); }
+  h3 { font-size: 1.05rem; }
+  p { margin: 0; }
+  .eyebrow { font: 600 .74rem/1.2 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); }
+  .lead { color: var(--ink-2); font-size: 1.06rem; max-width: 62ch; }
+
+  /* Header */
+  header.top { border-bottom: 1px solid var(--line); background: rgba(20,22,26,.94); position: sticky; top: 0; z-index: 5; backdrop-filter: saturate(1.2) blur(6px); }
+  .bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 58px; }
+  .brand { display: flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; font-weight: 650; letter-spacing: .01em; }
+  .brand img { width: 30px; height: 30px; }
+  .brand small { font: 500 .72rem var(--mono); color: var(--ink-3); }
+  nav.links { display: none; gap: 20px; }
+  nav.links a { color: var(--ink-2); text-decoration: none; font-size: .92rem; }
+  nav.links a:hover { color: var(--ink); }
+  @media (min-width: 900px) { nav.links { display: flex; } }
+  .lang { display: flex; border: 1px solid var(--line-2); border-radius: 7px; overflow: hidden; }
+  .lang button { background: none; border: 0; color: var(--ink-3); font: 600 .75rem var(--mono); padding: 7px 10px; cursor: pointer; min-width: 38px; min-height: 34px; }
+  .lang button[aria-pressed="true"] { background: var(--panel-2); color: var(--ink); }
+
+  /* Hero */
+  .hero { padding: 48px 0 40px; }
+  @media (min-width: 900px) { .hero { padding: 72px 0 56px; } }
+  .hero-grid { display: grid; gap: 36px; align-items: center; }
+  @media (min-width: 980px) { .hero-grid { grid-template-columns: 1fr 1.05fr; gap: 48px; } }
+  .hero h1 { font-size: clamp(2rem, 1.3rem + 3vw, 3.25rem); font-weight: 720; margin: 14px 0 16px; }
+  .hero h1 span { color: var(--amber); }
+  .dl { display: grid; gap: 12px; margin-top: 28px; }
+  @media (min-width: 560px) { .dl { grid-template-columns: 1fr 1fr; } }
+  .btn { display: flex; flex-direction: column; gap: 4px; padding: 14px 16px; border-radius: var(--r); text-decoration: none; border: 1px solid var(--line-2); background: var(--panel); color: var(--ink); min-height: 64px; }
+  .btn strong { font-size: 1rem; display: flex; align-items: center; gap: 8px; }
+  .btn small { color: var(--ink-3); font-size: .8rem; line-height: 1.4; }
+  .btn.primary { background: var(--amber); border-color: var(--amber); color: var(--amber-ink); }
+  .btn.primary small { color: #4A2E12; }
+  .btn:hover { border-color: var(--ink-3); color: var(--ink); }
+  .btn.primary:hover { background: #F2A866; color: var(--amber-ink); }
+  .btn svg { width: 18px; height: 18px; flex: none; }
+  .meta-row { margin-top: 14px; color: var(--ink-3); font-size: .85rem; display: flex; flex-wrap: wrap; gap: 6px 16px; }
+  .meta-row a { color: var(--ink-2); }
+
+  /* Signal split diagram */
+  .split { background: linear-gradient(180deg, var(--bg-2), #16191D); border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
+  .split svg { width: 100%; }
+  .split figcaption { color: var(--ink-3); font-size: .82rem; margin-top: 10px; }
+  .sig-flow { stroke-dasharray: 10 14; animation: flow 2.4s linear infinite; }
+  @keyframes flow { to { stroke-dashoffset: -48; } }
+  @media (prefers-reduced-motion: reduce) { .sig-flow { animation: none; } html { scroll-behavior: auto; } }
+
+  section { padding: 56px 0; border-top: 1px solid var(--line); }
+  @media (min-width: 900px) { section { padding: 72px 0; } }
+  .sec-head { display: grid; gap: 12px; margin-bottom: 32px; max-width: 760px; }
+
+  /* Flow steps */
+  .steps { display: grid; gap: 0; counter-reset: st; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  @media (min-width: 820px) { .steps { grid-template-columns: repeat(3, 1fr); } }
+  .step { padding: 22px 20px; background: var(--bg-2); position: relative; }
+  .step + .step { border-top: 1px solid var(--line); }
+  @media (min-width: 820px) { .step + .step { border-top: 0; border-left: 1px solid var(--line); } }
+  .step .n { font: 600 .78rem var(--mono); color: var(--amber); }
+  .step h3 { margin: 8px 0 8px; font-size: 1.15rem; }
+  .step p { color: var(--ink-2); font-size: .95rem; }
+
+  /* Platforms */
+  .platform { display: grid; gap: 18px; margin-top: 8px; }
+  .platform + .platform { margin-top: 56px; }
+  .plat-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px; }
+  .plat-head h3 { font-size: 1.35rem; }
+  .plat-head p { color: var(--ink-3); font-size: .9rem; }
+  .shots { display: grid; gap: 14px; }
+  @media (min-width: 900px) { .shots.mac { grid-template-columns: 1.6fr 1fr; } .shots.mac figure:first-child { grid-row: span 2; } }
+  @media (min-width: 900px) { .shots.win { grid-template-columns: 1fr 1fr; } }
+  .shots figure { margin: 0; }
+  .shots img { width: 100%; border: 1px solid var(--line-2); background: var(--panel); }
+  .shots.mac img { border-radius: 12px; }
+  .shots.win img { border-radius: 6px; }
+  .shots figcaption { color: var(--ink-3); font-size: .84rem; margin-top: 8px; }
+
+  /* Proof list */
+  .proofs { display: grid; gap: 0; border-top: 1px solid var(--line); }
+  .proof { display: grid; gap: 6px 28px; padding: 20px 0; border-bottom: 1px solid var(--line); }
+  @media (min-width: 820px) { .proof { grid-template-columns: 260px 1fr; } }
+  .proof h3 { display: flex; gap: 10px; align-items: baseline; }
+  .proof h3 .k { font: 600 .74rem var(--mono); color: var(--ink-3); min-width: 26px; }
+  .proof p { color: var(--ink-2); }
+
+  .report-fig { margin: 28px 0 0; max-width: 620px; }
+  .report-fig img { width: 100%; border: 1px solid var(--line-2); border-radius: 6px; background: #fff; }
+  .report-fig figcaption { color: var(--ink-3); font-size: .84rem; margin-top: 8px; }
+
+  /* Install */
+  .cols { display: grid; gap: 16px; }
+  @media (min-width: 860px) { .cols { grid-template-columns: 1fr 1fr; } }
+  .box { background: var(--bg-2); border: 1px solid var(--line); border-radius: 12px; padding: 22px 20px; }
+  .box h3 { font-size: 1.15rem; margin-bottom: 4px; }
+  .box .sub { color: var(--ink-3); font-size: .85rem; margin-bottom: 14px; }
+  .box ol, .box ul { margin: 0; padding-left: 20px; color: var(--ink-2); }
+  .box li + li { margin-top: 6px; }
+  .req { display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; margin: 16px 0 0; font-size: .9rem; }
+  .req dt { color: var(--ink-3); font-family: var(--mono); font-size: .8rem; padding-top: 2px; }
+  .req dd { margin: 0; color: var(--ink-2); }
+  .note { margin-top: 16px; padding: 12px 14px; border-left: 3px solid var(--warn); background: rgba(230,180,80,.07); color: var(--ink-2); font-size: .9rem; border-radius: 0 8px 8px 0; }
+  .note.ok { border-left-color: var(--verify); background: rgba(76,200,120,.07); }
+
+  /* Trust */
+  .tlist { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+  .tlist li { display: grid; grid-template-columns: 20px 1fr; gap: 10px; color: var(--ink-2); font-size: .95rem; }
+  .tlist svg { width: 18px; height: 18px; margin-top: 3px; }
+  .tick { color: var(--verify); }
+  .open { color: var(--ink-3); }
+
+  /* Guide + CTA */
+  .guides { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+  .chip { display: inline-flex; align-items: center; gap: 8px; padding: 10px 14px; min-height: 44px; border: 1px solid var(--line-2); border-radius: 8px; color: var(--ink); text-decoration: none; background: var(--panel); font-size: .92rem; }
+  .chip:hover { border-color: var(--amber); color: var(--ink); }
+  .chip svg { width: 16px; height: 16px; color: var(--amber); }
+  .cta { text-align: left; }
+  .cta .dl { max-width: 720px; }
+
+  footer { border-top: 1px solid var(--line); padding: 36px 0 44px; color: var(--ink-3); font-size: .86rem; }
+  .flinks { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-bottom: 16px; }
+  .flinks a { color: var(--ink-2); }
+  footer p + p { margin-top: 8px; }
 </style>
 </head>
 <body>
+<svg style="display:none" aria-hidden="true">
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 20h14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7zM14 3v4h4M10 12h5M10 16h5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-open" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-dasharray="3 3"/></symbol>
+</svg>
+<a class="skip" href="#main" data-i18n="skip">Sari la conținut</a>
 
-<div class="lang-switch" role="group" aria-label="Limba paginii">
-  <button class="lang-btn active" data-lang="ro">RO</button>
-  <button class="lang-btn" data-lang="en">EN</button>
-  <button class="lang-btn" data-lang="es">ES</button>
+<header class="top">
+  <div class="wrap bar">
+    <a class="brand" href="#top" aria-label="DataMover">
+      <img src="img/2.16/icon-a.svg" width="30" height="30" alt="">
+      <span>DataMover <small id="ver-badge">2.16.2</small></span>
+    </a>
+    <nav class="links" aria-label="Secțiuni" data-i18n-aria="nav.label">
+      <a href="#flux" data-i18n="nav.flow">Flux</a>
+      <a href="#platforme" data-i18n="nav.platforms">macOS și Windows</a>
+      <a href="#dovezi" data-i18n="nav.proof">Dovezi</a>
+      <a href="#instalare" data-i18n="nav.install">Instalare</a>
+      <a href="#limite" data-i18n="nav.limits">Limite</a>
+    </nav>
+    <div class="lang" role="group" aria-label="Limba" data-i18n-aria="lang.label">
+      <button type="button" data-lang="ro" aria-pressed="true">RO</button>
+      <button type="button" data-lang="en" aria-pressed="false">EN</button>
+      <button type="button" data-lang="es" aria-pressed="false">ES</button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<div class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="eyebrow" data-i18n="hero.eyebrow">Offload pentru producție video · macOS · Windows</p>
+      <h1 data-i18n-html="hero.title">Cardul citit o dată.<br><span>Fiecare copie, verificată.</span></h1>
+      <p class="lead" data-i18n="hero.lead">DataMover copiază materialul de pe card simultan pe mai multe discuri independente. Fiecare fișier primește numele final doar după ce checksum-ul copiei se potrivește cu sursa, iar la final primești rapoarte pentru fiecare destinație.</p>
+      <div class="dl">
+        <a class="btn primary" href="https://github.com/gordasgdc/datamover/releases/latest/download/DataMover.dmg">
+          <strong><svg aria-hidden="true"><use href="#i-download"/></svg><span data-i18n="dl.mac">Descarcă pentru macOS</span></strong>
+          <small data-i18n="dl.mac.note">DMG · Apple Silicon · macOS 14+ · semnat Developer ID și notarizat de Apple</small>
+        </a>
+        <a class="btn" href="https://github.com/gordasgdc/datamover/releases/latest/download/DataMover-WPF-Windows.zip">
+          <strong><svg aria-hidden="true"><use href="#i-download"/></svg><span data-i18n="dl.win">Descarcă pentru Windows</span></strong>
+          <small data-i18n="dl.win.note">ZIP cu installer · Windows 11 x64 · semnătură self-signed: SmartScreen poate avertiza</small>
+        </a>
+      </div>
+      <p class="meta-row"><span><span data-i18n="meta.version">Versiunea</span> <span class="mono" id="ver-text">2.16.2</span></span><span data-i18n="meta.trial">7 zile complet funcțional, fără cont</span><a href="#instalare" data-i18n="meta.how">Cum se instalează</a></p>
+    </div>
+
+    <figure class="split">
+      <svg viewBox="0 0 560 300" role="img" aria-labelledby="split-t">
+        <title id="split-t" data-i18n="split.alt">Schemă: o sursă intră în nodul de verificare și iese în două copii independente, fiecare cu aceeași amprentă checksum.</title>
+        <path d="M118 150 H230" stroke="#3B414B" stroke-width="10" stroke-linecap="round" fill="none"/>
+        <path d="M118 150 H230" class="sig-flow" stroke="#ED9952" stroke-width="10" stroke-linecap="round" fill="none"/>
+        <path d="M262 150 C320 150 322 78 380 78 H414 M262 150 C320 150 322 222 380 222 H414" stroke="#3B414B" stroke-width="10" stroke-linecap="round" fill="none"/>
+        <path d="M262 150 C320 150 322 78 380 78 H414 M262 150 C320 150 322 222 380 222 H414" class="sig-flow" stroke="#ED9952" stroke-width="10" stroke-linecap="round" fill="none"/>
+        <rect x="22" y="104" width="96" height="92" rx="10" fill="#20242A" stroke="#3B414B"/>
+        <g fill="#8E96A1"><rect x="40" y="178" width="6" height="10" rx="1"/><rect x="52" y="178" width="6" height="10" rx="1"/><rect x="64" y="178" width="6" height="10" rx="1"/><rect x="76" y="178" width="6" height="10" rx="1"/><rect x="88" y="178" width="6" height="10" rx="1"/></g>
+        <text x="70" y="136" text-anchor="middle" fill="#EDEFF2" font-family="ui-monospace,Menlo,monospace" font-size="14" font-weight="600">A001</text>
+        <text x="70" y="156" text-anchor="middle" fill="#8E96A1" font-family="ui-monospace,Menlo,monospace" font-size="10" data-i18n="split.card">CARD</text>
+        <circle cx="246" cy="150" r="22" fill="#14161A" stroke="#EDEFF2" stroke-width="3"/>
+        <circle cx="246" cy="150" r="8" fill="#EDEFF2"/>
+        <text x="246" y="200" text-anchor="middle" fill="#B9BFC8" font-family="ui-monospace,Menlo,monospace" font-size="11" data-i18n="split.verify">o citire · xxHash64</text>
+        <g>
+          <rect x="414" y="44" width="124" height="68" rx="10" fill="#20242A" stroke="#3B414B"/>
+          <text x="430" y="70" fill="#EDEFF2" font-family="ui-monospace,Menlo,monospace" font-size="12" font-weight="600" data-i18n="split.copy1">COPIA 1</text>
+          <text x="430" y="92" fill="#8E96A1" font-family="ui-monospace,Menlo,monospace" font-size="10">SHUTTLE-01</text>
+          <rect x="512" y="58" width="5" height="40" rx="2" fill="#4CC878"/><rect x="522" y="58" width="5" height="40" rx="2" fill="#4CC878"/>
+        </g>
+        <g>
+          <rect x="414" y="188" width="124" height="68" rx="10" fill="#20242A" stroke="#3B414B"/>
+          <text x="430" y="214" fill="#EDEFF2" font-family="ui-monospace,Menlo,monospace" font-size="12" font-weight="600" data-i18n="split.copy2">COPIA 2</text>
+          <text x="430" y="236" fill="#8E96A1" font-family="ui-monospace,Menlo,monospace" font-size="10">RAID-02</text>
+          <rect x="512" y="202" width="5" height="40" rx="2" fill="#4CC878"/><rect x="522" y="202" width="5" height="40" rx="2" fill="#4CC878"/>
+        </g>
+        <text x="476" y="150" text-anchor="middle" fill="#4CC878" font-family="ui-monospace,Menlo,monospace" font-size="11" data-i18n="split.match">aceeași amprentă</text>
+      </svg>
+      <figcaption data-i18n="split.caption">Sursă → verificare → copii independente. Amprenta verde apare doar când copia se potrivește cu sursa.</figcaption>
+    </figure>
+  </div>
 </div>
 
-<section class="hero">
-  <div class="scanner" aria-hidden="true">
-    <div class="transfer-anim">
-      <svg class="tf-icon" width="46" height="34" viewBox="0 0 46 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M6 2h20l10 10v18a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z" stroke="var(--accent-copy)" stroke-width="2" stroke-linejoin="round"/>
-        <path d="M26 2v10h10" stroke="var(--accent-copy)" stroke-width="2" stroke-linejoin="round"/>
-        <path d="M11 22v6M17 22v6M23 22v6" stroke="var(--accent-copy)" stroke-width="2" stroke-linecap="round"/>
-      </svg>
-      <div class="tf-line">
-        <span class="tf-pulse p1"></span>
-        <span class="tf-pulse p2"></span>
-        <span class="tf-pulse p3"></span>
-      </div>
-      <svg class="tf-icon" width="46" height="34" viewBox="0 0 46 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="2" y="4" width="42" height="26" rx="4" stroke="var(--accent-verify)" stroke-width="2"/>
-        <circle cx="16" cy="17" r="7" stroke="var(--accent-verify)" stroke-width="2"/>
-        <circle cx="16" cy="17" r="1.6" fill="var(--accent-verify)"/>
-        <rect x="30" y="12" width="9" height="3" rx="1.5" fill="var(--accent-verify)" opacity="0.6"/>
-        <rect x="30" y="18" width="9" height="3" rx="1.5" fill="var(--accent-verify)" opacity="0.6"/>
-      </svg>
+<section id="flux">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow" data-i18n="flow.eyebrow">Fluxul real</p>
+      <h2 data-i18n="flow.title">Trei pași, fără pași ascunși</h2>
     </div>
-    <div class="hash-line" id="hashLine">a3f9c1e0b7d24856f0a1c9e3b6d7f402</div>
-    <div class="verify-badge" id="verifyBadge">&#10003; <span data-i18n="hero.verified">VERIFICAT</span></div>
-  </div>
-
-  <p class="hero-eyebrow" data-i18n="hero.eyebrow">macOS &amp; Windows</p>
-  <h1>DataMover</h1>
-  <p class="sub" data-i18n="hero.sub">Offload verificat pentru echipele de productie video.</p>
-
-  <div class="hero-actions">
-    <a class="btn btn-primary" id="downloadBtnMac" href="https://github.com/gordasgdc/datamover/releases/latest/download/DataMover.dmg" data-i18n="hero.download_mac">Descarca pentru Mac (.dmg)</a>
-    <a class="btn btn-primary" id="downloadBtnWin" href="https://github.com/gordasgdc/datamover/releases/latest/download/DataMover-WPF-Windows.zip" data-i18n="hero.download_win">Descarca pentru Windows (.zip)</a>
-  </div>
-  <p class="hero-links">
-    <a id="guideLink" href="guides/DataMover_Ghid_RO.pdf" target="_blank" rel="noopener" data-i18n="hero.guide">Ghid de utilizare (PDF)</a>
-    <span>&middot;</span>
-    <a href="https://github.com/gordasgdc/datamover" data-i18n="hero.source">Vezi codul sursa</a>
-    <span aria-hidden="true">&middot;</span>
-    <a href="https://github.com/gordasgdc/datamover/releases" data-i18n="footer.releases">Toate versiunile</a>
-  </p>
-
-  <p class="scroll-cue" data-i18n="hero.scroll">DERULEAZA</p>
-</section>
-
-<div class="wrap">
-
-  <div class="shot-gallery">
-    <figure>
-      <img src="img/ui-main-dark.png" alt="Fereastra principala DataMover pe macOS - surse, discuri detectate, destinatii si coada de carduri" loading="lazy" width="1600" height="1340">
-      <figcaption data-i18n="shots.main">Fereastra principala - surse, discuri detectate, destinatii si coada de carduri</figcaption>
-    </figure>
-    <figure>
-      <img src="img/ui-settings-dark.png" alt="Panoul de setari DataMover - verificare xxHash64, MHL, reincercare automata, metadate de productie" loading="lazy" width="1600" height="1340">
-      <figcaption data-i18n="shots.settings">Toate setarile intr-un singur panou - verificare, MHL, productie, sablon de denumire</figcaption>
-    </figure>
-    <figure>
-      <img src="img/ui-settings-light.png" alt="DataMover in tema luminoasa, cu interfata in engleza" loading="lazy" width="1600" height="1340">
-      <figcaption data-i18n="shots.light">Tema luminoasa si interfata in engleza - alegi tema si limba independent de sistem</figcaption>
-    </figure>
-  </div>
-
-  <section id="functii">
-    <p class="eyebrow" data-i18n="features.eyebrow">Ce face</p>
-    <h2 data-i18n="features.title">Fiecare fisier copiat, verificat, raportat.</h2>
-    <p class="section-intro" data-i18n="features.intro">Construit pentru cardurile care nu au voie sa fie sterse pana esti sigur ca datele au ajuns intacte in cel putin doua locuri.</p>
-
-    <div class="features">
-      <div class="feature-card">
-        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M4 16V6a2 2 0 0 1 2-2h10"/></svg></div>
-        <h3 data-i18n="features.copy.title">Copiere simultana</h3>
-        <p data-i18n="features.copy.desc">Catre oricate destinatii deodata — drive-uri externe, NAS sau foldere locale.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg></div>
-        <h3 data-i18n="features.verify.title">Verificare integritate</h3>
-        <p data-i18n="features.verify.desc">MD5, SHA-1, SHA-256, SHA-512, sau comparatie rapida dupa dimensiune.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3"/><path d="M18 3v4h-4M6 21v-4h4"/></svg></div>
-        <h3 data-i18n="features.resume.title">Reluare automata</h3>
-        <p data-i18n="features.resume.desc">Checkpoint la fiecare fisier — daca se intrerupe, continua exact de unde a ramas.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l4 4v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v4h4M9 13h6M9 17h6M9 9h2"/></svg></div>
-        <h3 data-i18n="features.reports.title">Rapoarte profesionale</h3>
-        <p data-i18n="features.reports.desc">Export CSV si PDF, cu status colorat pe fisier si timestamp exact.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 14h18"/><circle cx="7" cy="17" r="1" fill="currentColor" stroke="none"/></svg></div>
-        <h3 data-i18n="features.detect.title">Detectare automata volume</h3>
-        <p data-i18n="features.detect.desc">Recunoaste cardurile introduse fara sa cauti manual prin Finder sau Explorer.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5v14l10-7L5 5z"/><path d="M18 5v14"/></svg></div>
-        <h3 data-i18n="features.skip.title">Sare fisierele identice</h3>
-        <p data-i18n="features.skip.desc">Nu recopiaza ce a mai fost deja copiat corect — economiseste timp pe carduri mari.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4l7 8H5l7-8z"/><rect x="5" y="17" width="14" height="3" rx="0.6"/></svg></div>
-        <h3 data-i18n="features.eject.title">Ejectare automata a cardului</h3>
-        <p data-i18n="features.eject.desc">Cardul se scoate singur la final - dar numai daca transferul a fost complet curat.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/></svg></div>
-        <h3 data-i18n="features.dark.title">Tema intunecata</h3>
-        <p data-i18n="features.dark.desc">Interfata gandita pentru lucru pe platou sau in camera de montaj, seara.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/><path d="M9 11.5l2 2 4-4"/></svg></div>
-        <h3 data-i18n="features.mhl.title">Fisier MHL</h3>
-        <p data-i18n="features.mhl.desc">Certificatul de integritate citit de Silverstack, YoYotta, ShotPut Pro si casele de post.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="13" height="6" rx="1.5"/><rect x="3" y="14" width="13" height="6" rx="1.5"/><path d="M19 7h2M19 17h2"/></svg></div>
-        <h3 data-i18n="features.queue.title">Coada de carduri</h3>
-        <p data-i18n="features.queue.desc">Pui mai multe carduri la rand si se descarca unul dupa altul, nesupravegheat.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h11v10H3z"/><path d="M14 11l7-4v10l-7-4z"/></svg></div>
-        <h3 data-i18n="features.cards.title">Recunoaste cardurile de camera</h3>
-        <p data-i18n="features.cards.desc">RED, ARRI, Sony, Panasonic, Canon, Blackmagic - si te avertizeaza la clipuri incomplete.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 16V8M8 12l4-4 4 4"/></svg></div>
-        <h3 data-i18n="features.update.title">Actualizari automate</h3>
-        <p data-i18n="features.update.desc">Aplicatia se auto-verifica si te anunta cand apare o versiune noua.</p>
-      </div>
-    </div>
-  </section>
-
-  <section id="algoritmi">
-    <p class="eyebrow" data-i18n="algo.eyebrow">Algoritmi de verificare</p>
-    <h2 data-i18n="algo.title">Alegi nivelul de siguranta.</h2>
-    <div class="chip-row">
-      <span class="chip"><span class="dot"></span>xxHash64</span>
-      <span class="chip"><span class="dot"></span>MD5</span>
-      <span class="chip"><span class="dot"></span>SHA-1</span>
-      <span class="chip"><span class="dot"></span>SHA-256</span>
-      <span class="chip"><span class="dot"></span>SHA-512</span>
-      <span class="chip"><span class="dot"></span><span data-i18n="algo.sizeonly">Doar dimensiune</span></span>
-    </div>
-  </section>
-
-  <section id="cum-se-foloseste">
-    <p class="eyebrow" data-i18n="steps.eyebrow">Cum se foloseste</p>
-    <h2 data-i18n="steps.title">De la card la backup verificat.</h2>
-
     <div class="steps">
       <div class="step">
-        <span class="step-num">01</span>
-        <div>
-          <h3 data-i18n="steps.s1.title">Descarca si instaleaza</h3>
-          <p data-i18n="steps.s1.desc">Iei ultima versiune pentru Mac sau Windows de pe pagina de descarcare; pe Mac deschizi .dmg-ul notarizat si rulezi pachetul din el.</p>
-        </div>
+        <p class="n">01</p>
+        <h3 data-i18n="flow.s1.t">Pregătire</h3>
+        <p data-i18n="flow.s1.p">Alegi cardul sau folderul sursă și discurile de destinație. Înainte de pornire, aplicația blochează destinațiile aflate în sursă, aceeași destinație aleasă de două ori și coliziunile de nume. Te avertizează și când o copie ar sta pe același disc cu sursa.</p>
       </div>
       <div class="step">
-        <span class="step-num">02</span>
-        <div>
-          <h3 data-i18n="steps.s2.title">Conectezi cardul sau drive-ul sursa</h3>
-          <p data-i18n="steps.s2.desc">DataMover il detecteaza automat, fara sa umbli manual prin foldere.</p>
-        </div>
+        <p class="n">02</p>
+        <h3 data-i18n="flow.s2.t">Transfer</h3>
+        <p data-i18n="flow.s2.p">Sursa se citește o singură dată și se scrie în paralel pe toate copiile. Fiecare fișier stă sub un nume temporar până după flush și verificarea checksum-ului. Un disc deconectat e raportat doar la destinația lui; celelalte continuă.</p>
       </div>
       <div class="step">
-        <span class="step-num">03</span>
-        <div>
-          <h3 data-i18n="steps.s3.title">Alegi destinatiile</h3>
-          <p data-i18n="steps.s3.desc">Adaugi oricate foldere sau drive-uri de backup dorești — copierea se face simultan pe toate.</p>
-        </div>
-      </div>
-      <div class="step">
-        <span class="step-num">04</span>
-        <div>
-          <h3 data-i18n="steps.s4.title">Alegi algoritmul de verificare</h3>
-          <p data-i18n="steps.s4.desc">SHA-256 e recomandat pentru siguranta maxima; MD5 e mai rapid pe carduri foarte mari.</p>
-        </div>
-      </div>
-      <div class="step">
-        <span class="step-num">05</span>
-        <div>
-          <h3 data-i18n="steps.s5.title">Pornesti offload-ul</h3>
-          <p data-i18n="steps.s5.desc">La final primesti un raport CSV/PDF cu statusul fiecarui fisier si poti ejecta cardul direct din aplicatie.</p>
-        </div>
+        <p class="n">03</p>
+        <h3 data-i18n="flow.s3.t">Rezultat verificat</h3>
+        <p data-i18n="flow.s3.p">Verdictul e unul singur, fără ambiguitate: verificat, verificat cu avertismente, eșec parțial, eșec sau anulat. Pentru fiecare destinație primești rapoarte PDF, HTML, CSV și un fișier MHL.</p>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <section id="activare">
-    <p class="eyebrow" data-i18n="act.eyebrow">Activare</p>
-    <h2 data-i18n="act.title">Donație pentru dezvoltare.</h2>
-    <p style="font-family:var(--mono); font-size:13px; color:var(--accent-verify); margin:4px 0 14px;" data-i18n="act.trial">✓ Probă gratuită de 7 zile, complet funcțională — fără card, fără cont.</p>
-    <p class="req-value" style="margin-bottom:24px;" data-i18n="act.p1">Codul sursă e disponibil pe GitHub sub licență MIT, dar aplicația compilată are nevoie de un cod de activare, legat de calculatorul tău, ca să poată porni. Este o donație, nu un preț de listă — mă ajută să acopăr costurile de dezvoltare (abonamente, unelte de lucru) și să continui să întrețin și îmbunătățesc aplicația.</p>
+<section id="platforme">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow" data-i18n="plat.eyebrow">Două aplicații native</p>
+      <h2 data-i18n="plat.title">Același contract de copiere, interfață proprie fiecărui sistem</h2>
+      <p class="lead" data-i18n="plat.lead">Varianta pentru macOS e scrisă în SwiftUI, iar cea pentru Windows în WPF. Arată diferit, dar respectă aceleași reguli de integritate și produc aceleași tipuri de rapoarte. Capturile provin din aplicații reale, rulate cu date de test.</p>
+    </div>
 
-    <div class="reqs">
-      <div class="req">
-        <p class="req-label" data-i18n="act.step1_label">Pas 1</p>
-        <p class="req-value" data-i18n="act.step1">Deschizi aplicația — vezi un ID de mașină direct în fereastra de activare.</p>
-      </div>
-      <div class="req">
-        <p class="req-label" data-i18n="act.step2_label">Pas 2</p>
-        <p class="req-value" data-i18n="act.step2">Îmi scrii pe WhatsApp (buton mai jos) — îți trimit un link de plată pe Revolut.</p>
-      </div>
-      <div class="req">
-        <p class="req-label" data-i18n="act.step3_label">Pas 3</p>
-        <p class="req-value" data-i18n="act.step3">După plată, îmi trimiți ID-ul de mașină și primești codul personal de activare.</p>
+    <div class="platform">
+      <div class="plat-head"><h3>macOS</h3><p data-i18n="plat.mac.sub">Apple Silicon · macOS 14 sau mai nou</p></div>
+      <div class="shots mac">
+        <figure>
+          <img src="img/2.16/mac-result-dark-ro.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="DataMover pentru macOS, ecranul Rezultat: cardul A001 copiat pe două discuri, fiecare cu 6 fișiere confirmate și rapoarte PDF, HTML, CSV, MHL." data-i18n-alt="alt.mac.result">
+          <figcaption data-i18n="cap.mac.result">Rezultat: fiecare copie confirmată separat, cu rapoartele ei.</figcaption>
+        </figure>
+        <figure>
+          <img src="img/2.16/mac-transfer-dark-ro.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="DataMover pentru macOS în timpul transferului, cu progresul pe fiecare destinație." data-i18n-alt="alt.mac.transfer">
+          <figcaption data-i18n="cap.mac.transfer">Transfer: progres măsurat pe fiecare destinație.</figcaption>
+        </figure>
+        <figure>
+          <img src="img/2.16/mac-prepare-light-ro.webp" width="1600" height="1077" loading="lazy" decoding="async" alt="DataMover pentru macOS în tema luminoasă, ecranul de pregătire cu avertismente înainte de pornire." data-i18n-alt="alt.mac.prepare">
+          <figcaption data-i18n="cap.mac.prepare">Pregătire, temă luminoasă: avertismentele apar înainte de pornire.</figcaption>
+        </figure>
       </div>
     </div>
 
-    <a class="btn btn-primary" id="waBtn" style="margin-top:24px;"
-       href="https://wa.me/34643109970?text=Salut!%20Vreau%20sa%20activez%20DataMover."
-       target="_blank" rel="noopener" data-i18n="act.wa_btn">&#128172; Scrie-mi pe WhatsApp</a>
-  </section>
-
-  <section id="cerinte">
-    <p class="eyebrow" data-i18n="reqs.eyebrow">Cerinte</p>
-    <h2 data-i18n="reqs.title">Ce iti trebuie pe masina.</h2>
-
-    <div class="reqs">
-      <div class="req">
-        <p class="req-label" data-i18n="reqs.os.label">Sistem</p>
-        <p class="req-value" data-i18n="reqs.os.value">macOS &amp; Windows</p>
-      </div>
-      <div class="req">
-        <p class="req-label" data-i18n="reqs.dest.label">Destinatii</p>
-        <p class="req-value" data-i18n="reqs.dest.value">Nelimitate, simultan</p>
-      </div>
-      <div class="req">
-        <p class="req-label" data-i18n="reqs.license.label">Licenta</p>
-        <p class="req-value" data-i18n="reqs.license.value">Cod sursă: MIT &middot; Activare: prin donație</p>
+    <div class="platform">
+      <div class="plat-head"><h3>Windows</h3><p data-i18n="plat.win.sub">Windows 11 · x64 (pe ARM64 rulează prin emulare x64)</p></div>
+      <div class="shots win">
+        <figure>
+          <img src="img/2.16/win-dark-1240-transfer.webp" width="1240" height="528" loading="lazy" decoding="async" alt="DataMover pentru Windows, tema întunecată, transfer în curs cu progresul sursei și al celor două copii." data-i18n-alt="alt.win.transfer">
+          <figcaption data-i18n="cap.win.transfer">Transfer în curs: citire, scriere și copii confirmate, cifre măsurate.</figcaption>
+        </figure>
+        <figure>
+          <img src="img/2.16/win-light-1240-result.webp" width="1240" height="528" loading="lazy" decoding="async" alt="DataMover pentru Windows, tema luminoasă, rezultat verificat: două surse copiate pe două discuri." data-i18n-alt="alt.win.result">
+          <figcaption data-i18n="cap.win.result">Rezultat verificat: două surse, două copii, rapoarte scrise pe fiecare.</figcaption>
+        </figure>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-</div>
+<section id="dovezi">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow" data-i18n="proof.eyebrow">Ce poți verifica singur</p>
+      <h2 data-i18n="proof.title">Dovezi, nu promisiuni</h2>
+      <p class="lead" data-i18n="proof.lead">Fiecare garanție de mai jos lasă o urmă pe disc, pe care o poți deschide și compara.</p>
+    </div>
+    <div class="proofs">
+      <div class="proof"><h3><span class="k">01</span><span data-i18n="p1.t">Checksum pentru fiecare copie</span></h3><p data-i18n="p1.p">Sursa e citită o dată, iar fiecare copie e comparată cu ea (xxHash64 implicit). Un fișier modificat pe card în timpul copierii apare ca neconfirmat.</p></div>
+      <div class="proof"><h3><span class="k">02</span><span data-i18n-html="p2.t">Fișiere temporare <code>.dmpart</code></span></h3><p data-i18n="p2.p">Copia se scrie sub un nume temporar și primește numele final doar după flush și checksum. Un fișier întrerupt nu poate fi confundat cu unul verificat, iar un fișier existent la destinație rămâne neatins dacă noua copie nu se confirmă.</p></div>
+      <div class="proof"><h3><span class="k">03</span><span data-i18n="p3.t">Confirmare finală explicită</span></h3><p data-i18n="p3.p">Rezultatul se dă separat pentru fiecare destinație. Ejectarea automată a cardului se face doar când toate copiile sunt confirmate.</p></div>
+      <div class="proof"><h3><span class="k">04</span><span data-i18n="p4.t">Reluare cu checkpoint</span></h3><p data-i18n="p4.p">La reluare, sursa și copia se recitesc și trebuie să dea checksum-ul salvat la confirmare. Numele, mărimea sau data nu sunt suficiente pentru a sări un fișier.</p></div>
+      <div class="proof"><h3><span class="k">05</span><span data-i18n="p5.t">Rapoarte PDF, HTML, CSV și MHL</span></h3><p data-i18n="p5.p">Pentru fiecare destinație: listă de fișiere, mărimi, checksum sursă și destinație, status. MHL pentru lanțul de custodie din post-producție.</p></div>
+      <div class="proof"><h3><span class="k">06</span><span data-i18n="p6.t">Pachet de diagnostic redactat</span></h3><p data-i18n="p6.p">Aplicația ține un jurnal local rotativ și exportă la cerere o arhivă ZIP. Căile și numele sunt înlocuite cu identificatoare. Nimic nu se trimite automat.</p></div>
+    <figure class="report-fig">
+      <img src="img/2.16/report-pdf-ro.webp" width="900" height="903" loading="lazy" decoding="async" alt="Prima pagină a raportului PDF de livrare: verdictul VERIFICAT, rezumatul, detaliile transferului și lista fișierelor cu checksum și status." data-i18n-alt="alt.report">
+      <figcaption data-i18n="cap.report">Raportul PDF pentru o destinație, generat din date de test: verdictul motorului, rezumatul, trasabilitatea și fiecare fișier cu checksum-ul lui.</figcaption>
+    </figure>
+    </div>
+  </div>
+</section>
+
+<section id="instalare">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow" data-i18n="inst.eyebrow">Instalare și cerințe</p>
+      <h2 data-i18n="inst.title">Instalare pe fiecare platformă</h2>
+    </div>
+    <div class="cols">
+      <div class="box">
+        <h3>macOS</h3>
+        <p class="sub" data-i18n="inst.mac.sub">DMG cu pachet de instalare</p>
+        <ol>
+          <li data-i18n="inst.mac.1">Deschide fișierul DataMover.dmg descărcat.</li>
+          <li data-i18n="inst.mac.2">Dublu-clic pe pachetul .pkg din fereastra deschisă. Installerul pune aplicația direct în folderul Aplicații.</li>
+          <li data-i18n="inst.mac.3">Confirmă cu parola de administrator a Mac-ului, când ți se cere.</li>
+          <li data-i18n="inst.mac.4">Pornește DataMover din Aplicații. Actualizările apar în aplicație.</li>
+        </ol>
+        <dl class="req">
+          <dt data-i18n="req.os">Sistem</dt><dd data-i18n="req.mac.os">macOS 14 sau mai nou, Apple Silicon</dd>
+          <dt data-i18n="req.sign">Semnătură</dt><dd data-i18n="req.mac.sign">Developer ID (Team 8AR6XP8MG7), notarizat de Apple, acceptat de Gatekeeper</dd>
+        </dl>
+        <p class="note ok" data-i18n="inst.mac.note">Pachetul e notarizat de Apple, deci Gatekeeper îl deschide fără pași suplimentari.</p>
+      </div>
+      <div class="box">
+        <h3>Windows</h3>
+        <p class="sub" data-i18n="inst.win.sub">ZIP cu DataMoverSetup.exe</p>
+        <ol>
+          <li data-i18n="inst.win.1">Extrage arhiva DataMover-WPF-Windows.zip.</li>
+          <li data-i18n="inst.win.2">Rulează DataMoverSetup.exe și acceptă acordul de licență.</li>
+          <li data-i18n="inst.win.3">Aplicația se instalează în Program Files, cu scurtătură în meniul Start. Scurtătura pe Desktop e opțională.</li>
+          <li data-i18n="inst.win.4">Dezinstalarea se face din Setări → Aplicații. Șterge și setările, licența locală și jurnalele DataMover.</li>
+        </ol>
+        <dl class="req">
+          <dt data-i18n="req.os">Sistem</dt><dd data-i18n="req.win.os">Windows 11, 64 de biți (x64; pe ARM64 prin emulare)</dd>
+          <dt data-i18n="req.sign">Semnătură</dt><dd data-i18n="req.win.sign">Certificat self-signed, nu certificat comercial Authenticode</dd>
+        </dl>
+        <p class="note" data-i18n-html="inst.win.note">Windows SmartScreen poate afișa „Windows a protejat PC-ul” sau „Editor necunoscut”. Motivul: installerul nu e semnat încă cu un certificat comercial. Dacă ai descărcat fișierul de pe această pagină, apasă <strong>Mai multe informații</strong> → <strong>Rulați oricum</strong>.</p>
+      </div>
+    </div>
+    <div class="box" style="margin-top:16px">
+      <h3 data-i18n="act.title">Probă și activare</h3>
+      <p class="sub" data-i18n="act.sub">Cod sursă pe GitHub, sub licență MIT</p>
+      <ul>
+        <li data-i18n="act.1">7 zile complet funcțional, fără cont și fără card.</li>
+        <li data-i18n="act.2">După perioada de probă, versiunea neactivată copiază cel mult 2 GB per transfer.</li>
+        <li data-i18n-html="act.3">Activarea e legată de ID-ul calculatorului și se obține printr-o donație pentru dezvoltare. Suma curentă apare în aplicație. Scrie-ne pe <a href="https://wa.me/34643109970?text=Salut!%20Vreau%20sa%20activez%20DataMover." rel="noopener" target="_blank">WhatsApp</a>.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="limite">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow" data-i18n="lim.eyebrow">Încredere și limite</p>
+      <h2 data-i18n="lim.title">Ce este testat și ce nu, încă</h2>
+      <p class="lead" data-i18n="lim.lead">DataMover reduce riscul la copiere, dar nu îl elimină. Păstrează cardul neformatat până verifici copiile.</p>
+    </div>
+    <div class="cols">
+      <div class="box">
+        <h3 data-i18n="lim.ok.t">Verificat cu teste automate</h3>
+        <ul class="tlist">
+          <li><svg class="tick" aria-hidden="true"><use href="#i-check"/></svg><span data-i18n="lim.ok.1">Copiere pe două destinații cu checksum identic, pe macOS (APFS, exFAT) și Windows (NTFS)</span></li>
+          <li><svg class="tick" aria-hidden="true"><use href="#i-check"/></svg><span data-i18n="lim.ok.2">Reluare după întrerupere, cu recitire și comparare de checksum</span></li>
+          <li><svg class="tick" aria-hidden="true"><use href="#i-check"/></svg><span data-i18n="lim.ok.3">Disc plin și spațiu insuficient pe macOS; destinație dispărută în timpul copierii</span></li>
+          <li><svg class="tick" aria-hidden="true"><use href="#i-check"/></svg><span data-i18n="lim.ok.4">Coliziuni de nume, symlink/junction, nume Unicode și căi lungi</span></li>
+          <li><svg class="tick" aria-hidden="true"><use href="#i-check"/></svg><span data-i18n="lim.ok.5">Instalare, actualizare, reparare și dezinstalare pe Windows; installer notarizat pe macOS</span></li>
+        </ul>
+      </div>
+      <div class="box">
+        <h3 data-i18n="lim.no.t">Neverificat încă</h3>
+        <ul class="tlist">
+          <li><svg class="open" aria-hidden="true"><use href="#i-open"/></svg><span data-i18n="lim.no.1">Pană de curent sau oprire bruscă reală în timpul copierii</span></li>
+          <li><svg class="open" aria-hidden="true"><use href="#i-open"/></svg><span data-i18n="lim.no.2">Card sau disc scos fizic în timpul transferului</span></li>
+          <li><svg class="open" aria-hidden="true"><use href="#i-open"/></svg><span data-i18n="lim.no.3">Destinații de rețea (SMB) și exFAT pe Windows</span></li>
+          <li><svg class="open" aria-hidden="true"><use href="#i-open"/></svg><span data-i18n="lim.no.4">Disc plin real pe Windows</span></li>
+          <li><svg class="open" aria-hidden="true"><use href="#i-open"/></svg><span data-i18n="lim.no.5">Navigare doar din tastatură și cititor de ecran pe Windows</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="ghid">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow" data-i18n="guide.eyebrow">Documentație</p>
+      <h2 data-i18n="guide.title">Ghid de utilizare</h2>
+      <p class="lead" data-i18n="guide.lead">Ghidul PDF explică instalarea, activarea și fluxul de lucru, pas cu pas. E inclus și în aplicație.</p>
+    </div>
+    <div class="guides">
+      <a class="chip" href="guides/DataMover_Ghid_RO.pdf" hreflang="ro"><svg aria-hidden="true"><use href="#i-doc"/></svg>Ghid · Română (PDF)</a>
+      <a class="chip" href="guides/DataMover_Guide_EN.pdf" hreflang="en"><svg aria-hidden="true"><use href="#i-doc"/></svg>Guide · English (PDF)</a>
+      <a class="chip" href="guides/DataMover_Guia_ES.pdf" hreflang="es"><svg aria-hidden="true"><use href="#i-doc"/></svg>Guía · Español (PDF)</a>
+    </div>
+  </div>
+</section>
+
+<section id="descarca" class="cta">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2 data-i18n="cta.title">Descarcă DataMover</h2>
+      <p class="lead" data-i18n="cta.lead">Încearcă-l pe un card de test înainte de o filmare reală. Arhivele cu versiunile anterioare rămân disponibile pe GitHub.</p>
+    </div>
+    <div class="dl">
+      <a class="btn primary" href="https://github.com/gordasgdc/datamover/releases/latest/download/DataMover.dmg">
+        <strong><svg aria-hidden="true"><use href="#i-download"/></svg><span data-i18n="dl.mac">Descarcă pentru macOS</span></strong>
+        <small data-i18n="dl.mac.note">DMG · Apple Silicon · macOS 14+ · semnat Developer ID și notarizat de Apple</small>
+      </a>
+      <a class="btn" href="https://github.com/gordasgdc/datamover/releases/latest/download/DataMover-WPF-Windows.zip">
+        <strong><svg aria-hidden="true"><use href="#i-download"/></svg><span data-i18n="dl.win">Descarcă pentru Windows</span></strong>
+        <small data-i18n="dl.win.note">ZIP cu installer · Windows 11 x64 · semnătură self-signed: SmartScreen poate avertiza</small>
+      </a>
+    </div>
+    <p class="meta-row"><a href="https://github.com/gordasgdc/datamover/releases" data-i18n="cta.all">Toate versiunile și notele de lansare</a><a href="https://github.com/gordasgdc/datamover" data-i18n="cta.src">Cod sursă (MIT)</a></p>
+  </div>
+</section>
+</main>
 
 <footer>
   <div class="wrap">
-    <div class="credit-row">
-      <div class="credit-badge">GDC</div>
-      <div>
-        <p class="credit-name">Cristi Gordas</p>
-        <p class="credit-role" data-i18n="footer.role">Colorist &amp; video editor &middot; autorul aplicatiei</p>
-      </div>
+    <div class="flinks">
+      <a href="https://gordas.dev/" data-i18n="f.home">gordas.dev</a>
+      <a href="https://wa.me/34643109970?text=Salut!%20Vreau%20sa%20activez%20DataMover." rel="noopener" target="_blank">WhatsApp</a>
+      <a href="https://youtube.com/@cristigordas" rel="noopener" target="_blank">YouTube</a>
+      <a href="termeni.html" data-i18n="f.appterms">Termeni DataMover</a>
+      <a href="https://gordas.dev/termeni" data-i18n="f.terms">Termeni și Condiții</a>
+      <a href="https://gordas.dev/confidentialitate" data-i18n="f.privacy">Confidențialitate (GDPR)</a>
+      <a href="https://gordas.dev/cookie" data-i18n="f.cookie">Cookie-uri</a>
     </div>
-
-    <div class="footer-links">
-      <a href="https://wa.me/34643109970?text=Salut!%20Vreau%20sa%20activez%20DataMover." target="_blank" rel="noopener" data-i18n="footer.whatsapp">WhatsApp</a>
-      <a href="https://web.facebook.com/cristiGDC" target="_blank" rel="noopener">Facebook</a>
-      <a href="https://youtube.com/@cristigordas" target="_blank" rel="noopener">YouTube — @cristigordas</a>
-      <a href="https://github.com/gordasgdc/datamover" target="_blank" rel="noopener" data-i18n="footer.source">Cod sursa pe GitHub</a>
-      <a href="https://github.com/gordasgdc/datamover/releases" target="_blank" rel="noopener" data-i18n="footer.releases">Toate versiunile</a>
-      <a href="termeni.html" data-i18n="footer.terms">Termeni &amp; Confidențialitate</a>
-      <a href="https://gordas.dev/termeni" target="_blank" rel="noopener">Termeni și Condiții (GDC)</a>
-      <a href="https://gordas.dev/confidentialitate" target="_blank" rel="noopener">Confidențialitate (GDPR)</a>
-    </div>
-
-    <p class="footer-fine" data-i18n="footer.fine">DataMover &middot; Licenta MIT &middot; proiect open-source pentru comunitatea video</p>
-    <p class="footer-fine" style="opacity:.75;font-size:.7rem;margin-top:6px;">gordas.dev este o platformă administrată de dezvoltatori independenți. Aplicațiile și resursele sunt furnizate ca atare (AS IS), iar susținerea proiectului se bazează pe contribuții opționale de sprijin și donații.</p>
+    <p data-i18n="f.author">DataMover · creat de Cristi Gordaș, colorist și editor video · licență MIT</p>
+    <p data-i18n="f.legal">gordas.dev este o platformă administrată de dezvoltatori independenți. Aplicațiile și resursele sunt furnizate ca atare (AS IS), iar susținerea proiectului se bazează pe contribuții opționale de sprijin și donații.</p>
   </div>
 </footer>
 
 <script>
-  /* ── Animatie hash de verificare ─────────────────────────────*/
-  const hashEl = document.getElementById('hashLine');
-  const badgeEl = document.getElementById('verifyBadge');
-  const hexChars = '0123456789abcdef';
-  const finalHash = 'a3f9c1e0b7d24856f0a1c9e3b6d7f402';
-  let ticks = 0;
-  const maxTicks = 22;
-
-  const scramble = setInterval(() => {
-    ticks++;
-    if (ticks >= maxTicks) {
-      hashEl.textContent = finalHash;
-      clearInterval(scramble);
-      badgeEl.classList.add('show');
-      return;
-    }
-    let out = '';
-    for (let i = 0; i < finalHash.length; i++) {
-      const revealed = ticks / maxTicks * finalHash.length;
-      out += i < revealed ? finalHash[i] : hexChars[Math.floor(Math.random() * 16)];
-    }
-    hashEl.textContent = out;
-  }, 75);
-
-  /* ── Comutator de limba ──────────────────────────────────────*/
-  const translations = {
-    ro: {
-      'hero.eyebrow': 'macOS &amp; Windows',
-      'hero.verified': 'VERIFICAT',
-      'hero.sub': 'Offload verificat pentru echipele de productie video.',
-      'hero.download': 'Descarca ultima versiune',
-      'hero.guide': 'Ghid de utilizare (PDF)',
-      'hero.download_mac': 'Descarca pentru Mac (.dmg)',
-      'hero.download_win': 'Descarca pentru Windows (.zip)',
-      'hero.source': 'Vezi codul sursa',
-      'hero.scroll': 'DERULEAZA',
-      'features.eyebrow': 'Ce face',
-      'features.title': 'Fiecare fisier copiat, verificat, raportat.',
-      'features.intro': 'Construit pentru cardurile care nu au voie sa fie sterse pana esti sigur ca datele au ajuns intacte in cel putin doua locuri.',
-      'features.copy.title': 'Copiere simultana',
-      'features.copy.desc': 'Catre oricate destinatii deodata — drive-uri externe, NAS sau foldere locale.',
-      'features.verify.title': 'Verificare integritate',
-      'features.verify.desc': 'MD5, SHA-1, SHA-256, SHA-512, sau comparatie rapida dupa dimensiune.',
-      'features.resume.title': 'Reluare automata',
-      'features.resume.desc': 'Checkpoint la fiecare fisier — daca se intrerupe, continua exact de unde a ramas.',
-      'features.reports.title': 'Rapoarte profesionale',
-      'features.reports.desc': 'Export CSV si PDF, cu status colorat pe fisier si timestamp exact.',
-      'features.detect.title': 'Detectare automata volume',
-      'features.detect.desc': 'Recunoaste cardurile introduse fara sa cauti manual prin Finder sau Explorer.',
-      'features.skip.title': 'Sare fisierele identice',
-      'features.skip.desc': 'Nu recopiaza ce a mai fost deja copiat corect — economiseste timp pe carduri mari.',
-      'features.eject.title': 'Ejectare card (Mac)',
-      'features.eject.desc': 'Scoate in siguranta cardul direct din aplicatie dupa un offload verificat.',
-      'features.dark.title': 'Tema intunecata',
-      'features.dark.desc': 'Interfata gandita pentru lucru pe platou sau in camera de montaj, seara.',
-      'features.update.title': 'Actualizari automate',
-      'features.update.desc': 'Aplicatia se auto-verifica si te anunta cand apare o versiune noua.',
-      'algo.eyebrow': 'Algoritmi de verificare',
-      'algo.title': 'Alegi nivelul de siguranta.',
-      'algo.sizeonly': 'Doar dimensiune',
-      'steps.eyebrow': 'Cum se foloseste',
-      'steps.title': 'De la card la backup verificat.',
-      'steps.s1.title': 'Descarca si instaleaza',
-      'steps.s1.desc': 'Iei ultima versiune pentru Mac sau Windows de pe pagina de descarcare; pe Mac deschizi .dmg-ul notarizat si rulezi pachetul din el.',
-      'steps.s2.title': 'Conectezi cardul sau drive-ul sursa',
-      'steps.s2.desc': 'DataMover il detecteaza automat, fara sa umbli manual prin foldere.',
-      'steps.s3.title': 'Alegi destinatiile',
-      'steps.s3.desc': 'Adaugi oricate foldere sau drive-uri de backup dorești — copierea se face simultan pe toate.',
-      'steps.s4.title': 'Alegi algoritmul de verificare',
-      'steps.s4.desc': 'SHA-256 e recomandat pentru siguranta maxima; MD5 e mai rapid pe carduri foarte mari.',
-      'steps.s5.title': 'Pornesti offload-ul',
-      'steps.s5.desc': 'La final primesti un raport CSV/PDF cu statusul fiecarui fisier si poti ejecta cardul direct din aplicatie.',
-      'act.eyebrow': 'Activare',
-      'act.title': 'Donație pentru dezvoltare.',
-      'act.trial': '✓ Probă gratuită de 7 zile, complet funcțională — fără card, fără cont.',
-      'act.p1': 'Codul sursă e disponibil pe GitHub sub licență MIT, dar aplicația compilată are nevoie de un cod de activare, legat de calculatorul tău, ca să poată porni. Este o donație, nu un preț de listă — mă ajută să acopăr costurile de dezvoltare (abonamente, unelte de lucru) și să continui să întrețin și îmbunătățesc aplicația.',
-      'act.step1_label': 'Pas 1',
-      'act.step1': 'Deschizi aplicația — vezi un ID de mașină direct în fereastra de activare.',
-      'act.step2_label': 'Pas 2',
-      'act.step2': 'Îmi scrii pe WhatsApp (buton mai jos) — îți trimit un link de plată pe Revolut.',
-      'act.step3_label': 'Pas 3',
-      'act.step3': 'După plată, îmi trimiți ID-ul de mașină și primești codul personal de activare.',
-      'act.wa_btn': '&#128172; Scrie-mi pe WhatsApp',
-      'footer.whatsapp': 'WhatsApp',
-      'reqs.eyebrow': 'Cerinte',
-      'reqs.title': 'Ce iti trebuie pe masina.',
-      'reqs.os.label': 'Sistem',
-      'reqs.os.value': 'macOS &amp; Windows',
-      'reqs.dest.label': 'Destinatii',
-      'reqs.dest.value': 'Nelimitate, simultan',
-      'reqs.license.value': 'Cod sursă: MIT &middot; Activare: prin donație',
-      'footer.role': 'Colorist &amp; video editor &middot; autorul aplicatiei',
-      'footer.source': 'Cod sursa pe GitHub',
-      'footer.releases': 'Toate versiunile',
-      'footer.terms': 'Termeni &amp; Confidențialitate',
-      'footer.fine': 'DataMover &middot; Licenta MIT &middot; proiect open-source pentru comunitatea video',
-      'shots.main': 'Fereastra principala - surse, discuri detectate, destinatii si coada de carduri',
-      'shots.settings': 'Toate setarile intr-un singur panou - verificare, MHL, productie, sablon de denumire',
-      'shots.light': 'Tema luminoasa si interfata in engleza - alegi tema si limba independent de sistem',
-      'features.cards.desc': 'RED, ARRI, Sony, Panasonic, Canon, Blackmagic - si te avertizeaza la clipuri incomplete.',
-      'features.cards.title': 'Recunoaste cardurile de camera',
-      'features.queue.desc': 'Pui mai multe carduri la rand si se descarca unul dupa altul, nesupravegheat.',
-      'features.queue.title': 'Coada de carduri',
-      'features.mhl.desc': 'Certificatul de integritate citit de Silverstack, YoYotta, ShotPut Pro si casele de post.',
-      'features.mhl.title': 'Fisier MHL',
-    },
+(function () {
+  "use strict";
+  var T = {
     en: {
-      'hero.eyebrow': 'macOS &amp; Windows',
-      'hero.verified': 'VERIFIED',
-      'hero.sub': 'Verified offload for video production teams.',
-      'hero.download': 'Download latest version',
-      'hero.guide': 'User guide (PDF)',
-      'hero.download_mac': 'Download for Mac (.dmg)',
-      'hero.download_win': 'Download for Windows (.zip)',
-      'hero.source': 'View source code',
-      'hero.scroll': 'SCROLL',
-      'features.eyebrow': 'What it does',
-      'features.title': 'Every file copied, verified, reported.',
-      'features.intro': 'Built for cards that can\'t be wiped until you\'re certain the data has landed intact in at least two places.',
-      'features.copy.title': 'Simultaneous copy',
-      'features.copy.desc': 'To any number of destinations at once — external drives, NAS, or local folders.',
-      'features.verify.title': 'Integrity verification',
-      'features.verify.desc': 'xxHash64 (cel mai rapid), MD5, SHA-1, SHA-256, SHA-512 sau comparatie dupa dimensiune.',
-      'features.resume.title': 'Automatic resume',
-      'features.resume.desc': 'Checkpoints on every file — if interrupted, it picks up exactly where it left off.',
-      'features.reports.title': 'Professional reports',
-      'features.reports.desc': 'CSV, PDF si HTML, cu logo-ul si datele productiei tale in antet.',
-      'features.detect.title': 'Automatic volume detection',
-      'features.detect.desc': 'Recognizes inserted cards without you hunting through Finder or Explorer.',
-      'features.skip.title': 'Skips identical files',
-      'features.skip.desc': 'Won\'t recopy what\'s already been copied correctly — saves time on large cards.',
-      'features.eject.title': 'Ejectare automata a cardului',
-      'features.eject.desc': 'Cardul se scoate singur la final - dar numai daca transferul a fost complet curat.',
-      'features.dark.title': 'Dark theme',
-      'features.dark.desc': 'Interface built for working on set or in the edit bay at night.',
-      'features.update.title': 'Automatic updates',
-      'features.update.desc': 'The app checks itself and lets you know when a new version is out.',
-      'algo.eyebrow': 'Verification algorithms',
-      'algo.title': 'Choose your level of certainty.',
-      'algo.sizeonly': 'Size only',
-      'steps.eyebrow': 'How to use it',
-      'steps.title': 'From card to verified backup.',
-      'steps.s1.title': 'Download and install',
-      'steps.s1.desc': 'Grab the latest Mac or Windows build from the download page; on Mac open the notarized .dmg and run the package inside.',
-      'steps.s2.title': 'Connect the source card or drive',
-      'steps.s2.desc': 'DataMover detects it automatically — no manual folder hunting.',
-      'steps.s3.title': 'Choose your destinations',
-      'steps.s3.desc': 'Add as many backup folders or drives as you want — copying happens to all of them at once.',
-      'steps.s4.title': 'Pick a verification algorithm',
-      'steps.s4.desc': 'SHA-256 is recommended for maximum confidence; MD5 is faster on very large cards.',
-      'steps.s5.title': 'Start the offload',
-      'steps.s5.desc': 'You get a CSV/PDF report with each file\'s status, and can eject the card straight from the app.',
-      'act.eyebrow': 'Activation',
-      'act.title': 'Development donation.',
-      'act.trial': '✓ Free 7-day trial, fully functional — no card, no account.',
-      'act.p1': 'The source code is available on GitHub under the MIT license, but the compiled app needs an activation code, tied to your computer, to be able to start. It\'s a donation, not a list price — it helps me cover development costs (subscriptions, tools) and keep maintaining and improving the app.',
-      'act.step1_label': 'Step 1',
-      'act.step1': 'Open the app — you\'ll see a Machine ID right in the activation window.',
-      'act.step2_label': 'Step 2',
-      'act.step2': 'Message me on WhatsApp (button below) — I\'ll send you a Revolut payment link.',
-      'act.step3_label': 'Step 3',
-      'act.step3': 'After payment, send me the Machine ID and get your personal activation code.',
-      'act.wa_btn': '&#128172; Message me on WhatsApp',
-      'footer.whatsapp': 'WhatsApp',
-      'reqs.eyebrow': 'Requirements',
-      'reqs.title': 'What you\'ll need.',
-      'reqs.os.label': 'System',
-      'reqs.os.value': 'macOS &amp; Windows',
-      'reqs.dest.label': 'Destinations',
-      'reqs.dest.value': 'Unlimited, simultaneous',
-      'reqs.license.value': 'Source code: MIT &middot; Activation: by donation',
-      'footer.role': 'Colorist &amp; video editor &middot; app author',
-      'footer.source': 'Source code on GitHub',
-      'footer.releases': 'All releases',
-      'footer.terms': 'Terms &amp; Privacy',
-      'footer.fine': 'DataMover &middot; MIT License &middot; open-source project for the video community',
-      'shots.main': 'Main window - sources, detected disks, destinations and card queue',
-      'shots.settings': 'Every setting in one panel - verification, MHL, production, naming template',
-      'shots.light': 'Light theme and English interface - theme and language are yours to choose',
-      'features.cards.desc': 'RED, ARRI, Sony, Panasonic, Canon, Blackmagic - and warns you about incomplete clips.',
-      'features.cards.title': 'Recognises camera cards',
-      'features.queue.desc': 'Line up several cards and they offload one after another, unattended.',
-      'features.queue.title': 'Card queue',
-      'features.mhl.desc': 'The integrity certificate read by Silverstack, YoYotta, ShotPut Pro and post houses.',
-      'features.mhl.title': 'MHL file',
+      "doc.title": "DataMover — verified offload, source → independent copies",
+      "doc.desc": "DataMover copies camera cards to several drives at once, verifies every copy by checksum and writes PDF, HTML, CSV and MHL reports. macOS and Windows.",
+      "skip": "Skip to content",
+      "nav.label": "Sections", "nav.flow": "Flow", "nav.platforms": "macOS and Windows", "nav.proof": "Proof", "nav.install": "Install", "nav.limits": "Limits",
+      "lang.label": "Language",
+      "hero.eyebrow": "Offload for video production · macOS · Windows",
+      "hero.title": "The card, read once.<br><span>Every copy, verified.</span>",
+      "hero.lead": "DataMover copies footage from the card to several independent drives at the same time. Each file gets its final name only after the copy's checksum matches the source, and at the end you get reports for every destination.",
+      "dl.mac": "Download for macOS", "dl.mac.note": "DMG · Apple Silicon · macOS 14+ · Developer ID signed and notarized by Apple",
+      "dl.win": "Download for Windows", "dl.win.note": "ZIP with installer · Windows 11 x64 · self-signed: SmartScreen may warn",
+      "meta.version": "Version", "meta.trial": "7 days fully functional, no account", "meta.how": "How to install",
+      "split.alt": "Diagram: one source enters the verification node and leaves as two independent copies, each with the same checksum fingerprint.",
+      "split.card": "CARD", "split.verify": "one read · xxHash64", "split.copy1": "COPY 1", "split.copy2": "COPY 2", "split.match": "same fingerprint",
+      "split.caption": "Source → verification → independent copies. The green fingerprint appears only when the copy matches the source.",
+      "flow.eyebrow": "The real flow", "flow.title": "Three steps, nothing hidden",
+      "flow.s1.t": "Prepare", "flow.s1.p": "Choose the source card or folder and the destination drives. Before you start, the app blocks destinations inside the source, the same destination picked twice and name collisions. It also warns you when a copy would sit on the same drive as the source.",
+      "flow.s2.t": "Transfer", "flow.s2.p": "The source is read once and written to every copy in parallel. Each file stays under a temporary name until after the flush and the checksum check. A disconnected drive is reported only for its own destination; the others carry on.",
+      "flow.s3.t": "Verified result", "flow.s3.p": "There is one unambiguous verdict: verified, verified with warnings, partial failure, failure or cancelled. For every destination you get PDF, HTML and CSV reports and an MHL file.",
+      "plat.eyebrow": "Two native apps", "plat.title": "The same copy contract, an interface native to each system",
+      "plat.lead": "The macOS app is written in SwiftUI and the Windows app in WPF. They look different, but follow the same integrity rules and produce the same kinds of reports. The screenshots come from the real apps, run with test data.",
+      "plat.mac.sub": "Apple Silicon · macOS 14 or later", "plat.win.sub": "Windows 11 · x64 (runs on ARM64 through x64 emulation)",
+      "alt.mac.result": "DataMover for macOS, Result screen: card A001 copied to two drives, each with 6 confirmed files and PDF, HTML, CSV and MHL reports.",
+      "alt.mac.transfer": "DataMover for macOS during a transfer, with progress for each destination.",
+      "alt.mac.prepare": "DataMover for macOS in the light theme, the preparation screen with warnings before start.",
+      "alt.win.transfer": "DataMover for Windows, dark theme, transfer in progress with the source and both copies.",
+      "alt.win.result": "DataMover for Windows, light theme, verified result: two sources copied to two drives.",
+      "cap.mac.result": "Result: each copy confirmed on its own, with its own reports.",
+      "cap.mac.transfer": "Transfer: measured progress for each destination.",
+      "cap.mac.prepare": "Preparation, light theme: warnings show up before you start.",
+      "cap.win.transfer": "Transfer in progress: reading, writing and confirmed copies, measured figures.",
+      "cap.win.result": "Verified result: two sources, two copies, reports written to each.",
+      "proof.eyebrow": "What you can check yourself", "proof.title": "Proof, not promises", "proof.lead": "Every guarantee below leaves a trace on disk that you can open and compare.",
+      "p1.t": "A checksum for every copy", "p1.p": "The source is read once and each copy is compared with it (xxHash64 by default). A file that changes on the card during the copy is marked unconfirmed.",
+      "p2.t": "Temporary <code>.dmpart</code> files", "p2.p": "Each copy is written under a temporary name and gets its final name only after the flush and the checksum. An interrupted file can't be mistaken for a verified one, and an existing file at the destination stays untouched if the new copy doesn't verify.",
+      "p3.t": "Explicit final confirmation", "p3.p": "The result is given separately for each destination. The card is ejected automatically only when every copy is confirmed.",
+      "p4.t": "Resume with a checkpoint", "p4.p": "On resume, the source and the copy are read again and must match the checksum saved at confirmation. A name, size or date alone is never enough to skip a file.",
+      "p5.t": "PDF, HTML, CSV and MHL reports", "p5.p": "For every destination: file list, sizes, source and destination checksums, status. MHL for the post-production chain of custody.",
+      "alt.report": "First page of the PDF delivery report: the VERIFIED verdict, the summary, the transfer details and the file list with checksum and status.",
+      "cap.report": "The PDF report for one destination, generated from test data: the engine's verdict, the summary, traceability and every file with its checksum.",
+      "p6.t": "Redacted diagnostic package", "p6.p": "The app keeps a rotating local log and, on request, exports a ZIP archive. Paths and names are replaced with identifiers. Nothing is sent automatically.",
+      "inst.eyebrow": "Install and requirements", "inst.title": "Installing on each platform",
+      "inst.mac.sub": "DMG with an installer package",
+      "inst.mac.1": "Open the downloaded DataMover.dmg.", "inst.mac.2": "Double-click the .pkg package in the window that opens. The installer puts the app straight into Applications.",
+      "inst.mac.3": "Confirm with your Mac's administrator password when asked.", "inst.mac.4": "Launch DataMover from Applications. Updates show up inside the app.",
+      "req.os": "System", "req.sign": "Signature",
+      "req.mac.os": "macOS 14 or later, Apple Silicon", "req.mac.sign": "Developer ID (Team 8AR6XP8MG7), notarized by Apple, accepted by Gatekeeper",
+      "inst.mac.note": "The package is notarized by Apple, so Gatekeeper opens it without extra steps.",
+      "inst.win.sub": "ZIP with DataMoverSetup.exe",
+      "inst.win.1": "Extract DataMover-WPF-Windows.zip.", "inst.win.2": "Run DataMoverSetup.exe and accept the license agreement.",
+      "inst.win.3": "The app is installed in Program Files, with a Start menu shortcut. The Desktop shortcut is optional.",
+      "inst.win.4": "Uninstall from Settings → Apps. This also removes DataMover's settings, local license and logs.",
+      "req.win.os": "Windows 11, 64-bit (x64; ARM64 through emulation)", "req.win.sign": "Self-signed certificate, not a commercial Authenticode certificate",
+      "inst.win.note": "Windows SmartScreen may show “Windows protected your PC” or “Unknown publisher”. The reason: the installer isn't signed with a commercial certificate yet. If you downloaded the file from this page, click <strong>More info</strong> → <strong>Run anyway</strong>.",
+      "act.title": "Trial and activation", "act.sub": "Source code on GitHub, under the MIT license",
+      "act.1": "7 days fully functional, no account, no card.", "act.2": "After the trial, the unactivated version copies at most 2 GB per transfer.",
+      "act.3": "Activation is tied to your computer's ID and comes with a development donation. The current amount is shown in the app. Message us on <a href=\"https://wa.me/34643109970?text=Hi!%20I%20want%20to%20activate%20DataMover.\" rel=\"noopener\" target=\"_blank\">WhatsApp</a>.",
+      "lim.eyebrow": "Trust and limits", "lim.title": "What is tested, and what isn't yet", "lim.lead": "DataMover lowers the risk of copying, it doesn't remove it. Keep the card unformatted until you have checked your copies.",
+      "lim.ok.t": "Verified by automated tests",
+      "lim.ok.1": "Copying to two destinations with identical checksums on macOS (APFS, exFAT) and Windows (NTFS)",
+      "lim.ok.2": "Resuming after an interruption, with re-reading and checksum comparison",
+      "lim.ok.3": "Full disk and insufficient space on macOS; a destination disappearing mid-copy",
+      "lim.ok.4": "Name collisions, symlinks/junctions, Unicode names and long paths",
+      "lim.ok.5": "Install, update, repair and uninstall on Windows; notarized installer on macOS",
+      "lim.no.t": "Not verified yet",
+      "lim.no.1": "A real power cut or hard shutdown during a copy", "lim.no.2": "A card or drive physically removed during a transfer",
+      "lim.no.3": "Network destinations (SMB) and exFAT on Windows", "lim.no.4": "A real full disk on Windows", "lim.no.5": "Keyboard-only navigation and screen readers on Windows",
+      "guide.eyebrow": "Documentation", "guide.title": "User guide", "guide.lead": "The PDF guide walks through installation, activation and the workflow, step by step. It is also included in the app.",
+      "cta.title": "Download DataMover", "cta.lead": "Try it on a test card before a real shoot. Archives of earlier versions stay available on GitHub.",
+      "cta.all": "All versions and release notes", "cta.src": "Source code (MIT)",
+      "f.home": "gordas.dev", "f.appterms": "DataMover terms", "f.terms": "Terms and Conditions", "f.privacy": "Privacy (GDPR)", "f.cookie": "Cookies",
+      "f.author": "DataMover · made by Cristi Gordaș, colorist and video editor · MIT license",
+      "f.legal": "gordas.dev is a platform run by independent developers. The apps and resources are provided as is (AS IS), and the project is supported through optional contributions and donations."
     },
     es: {
-      'hero.eyebrow': 'macOS y Windows',
-      'hero.verified': 'VERIFICADO',
-      'hero.sub': 'Copia de seguridad verificada para equipos de produccion de video.',
-      'hero.download': 'Descargar ultima version',
-      'hero.guide': 'Guía de uso (PDF)',
-      'hero.download_mac': 'Descargar para Mac (.dmg)',
-      'hero.download_win': 'Descargar para Windows (.zip)',
-      'hero.source': 'Ver codigo fuente',
-      'hero.scroll': 'DESPLAZAR',
-      'features.eyebrow': 'Que hace',
-      'features.title': 'Cada archivo copiado, verificado, reportado.',
-      'features.intro': 'Creado para tarjetas que no se pueden borrar hasta que estes seguro de que los datos llegaron intactos a por lo menos dos lugares.',
-      'features.copy.title': 'Copia simultanea',
-      'features.copy.desc': 'A cualquier numero de destinos a la vez — discos externos, NAS o carpetas locales.',
-      'features.verify.title': 'Verificacion de integridad',
-      'features.verify.desc': 'xxHash64 (fastest), MD5, SHA-1, SHA-256, SHA-512 or a quick size comparison.',
-      'features.resume.title': 'Reanudacion automatica',
-      'features.resume.desc': 'Checkpoint en cada archivo — si se interrumpe, continua justo donde quedo.',
-      'features.reports.title': 'Informes profesionales',
-      'features.reports.desc': 'CSV, PDF and HTML, with your logo and production details in the header.',
-      'features.detect.title': 'Deteccion automatica de volumenes',
-      'features.detect.desc': 'Reconoce las tarjetas insertadas sin que tengas que buscarlas manualmente.',
-      'features.skip.title': 'Omite archivos identicos',
-      'features.skip.desc': 'No vuelve a copiar lo que ya se copio correctamente — ahorra tiempo en tarjetas grandes.',
-      'features.eject.title': 'Automatic card eject',
-      'features.eject.desc': 'The card ejects itself when done - but only if the transfer was completely clean.',
-      'features.dark.title': 'Tema oscuro',
-      'features.dark.desc': 'Interfaz pensada para trabajar en set o en la sala de edicion por la noche.',
-      'features.update.title': 'Actualizaciones automaticas',
-      'features.update.desc': 'La app se autoverifica y te avisa cuando hay una version nueva.',
-      'algo.eyebrow': 'Algoritmos de verificacion',
-      'algo.title': 'Elige tu nivel de seguridad.',
-      'algo.sizeonly': 'Solo tamano',
-      'steps.eyebrow': 'Como se usa',
-      'steps.title': 'De la tarjeta a la copia verificada.',
-      'steps.s1.title': 'Descarga e instala',
-      'steps.s1.desc': 'Toma la ultima version para Mac o Windows desde la pagina de descarga; en Mac abre el .dmg notarizado y ejecuta el paquete que contiene.',
-      'steps.s2.title': 'Conecta la tarjeta o disco de origen',
-      'steps.s2.desc': 'DataMover la detecta automaticamente, sin buscar manualmente en carpetas.',
-      'steps.s3.title': 'Elige los destinos',
-      'steps.s3.desc': 'Agrega tantas carpetas o discos de respaldo como quieras — la copia se hace simultaneamente en todos.',
-      'steps.s4.title': 'Elige el algoritmo de verificacion',
-      'steps.s4.desc': 'SHA-256 se recomienda para maxima seguridad; MD5 es mas rapido en tarjetas muy grandes.',
-      'steps.s5.title': 'Inicia la copia',
-      'steps.s5.desc': 'Al final recibes un informe CSV/PDF con el estado de cada archivo y puedes expulsar la tarjeta desde la app.',
-      'act.eyebrow': 'Activación',
-      'act.title': 'Donación para el desarrollo.',
-      'act.trial': '✓ Prueba gratuita de 7 días, totalmente funcional — sin tarjeta, sin cuenta.',
-      'act.p1': 'El código fuente está disponible en GitHub bajo licencia MIT, pero la aplicación compilada necesita un código de activación, vinculado a tu ordenador, para poder iniciarse. Es una donación, no un precio de lista — me ayudan a cubrir los costos de desarrollo (suscripciones, herramientas) y a seguir manteniendo y mejorando la aplicación.',
-      'act.step1_label': 'Paso 1',
-      'act.step1': 'Abres la aplicación — verás un ID de máquina directamente en la ventana de activación.',
-      'act.step2_label': 'Paso 2',
-      'act.step2': 'Me escribes por WhatsApp (botón abajo) — te envío un enlace de pago por Revolut.',
-      'act.step3_label': 'Paso 3',
-      'act.step3': 'Después del pago, me envías el ID de máquina y recibes tu código de activación personal.',
-      'act.wa_btn': '&#128172; Escríbeme por WhatsApp',
-      'footer.whatsapp': 'WhatsApp',
-      'reqs.eyebrow': 'Requisitos',
-      'reqs.title': 'Que necesitas en tu equipo.',
-      'reqs.os.label': 'Sistema',
-      'reqs.os.value': 'macOS y Windows',
-      'reqs.dest.label': 'Destinos',
-      'reqs.dest.value': 'Ilimitados, simultaneos',
-      'reqs.license.value': 'Código fuente: MIT &middot; Activación: por donación',
-      'footer.role': 'Colorista y editor de video &middot; autor de la aplicacion',
-      'footer.source': 'Codigo fuente en GitHub',
-      'footer.releases': 'Todas las versiones',
-      'footer.terms': 'Terminos y Privacidad',
-      'footer.fine': 'DataMover &middot; Licencia MIT &middot; proyecto de codigo abierto para la comunidad de video',
-      'shots.main': 'Ventana principal - origenes, discos detectados, destinos y cola de tarjetas',
-      'shots.settings': 'Todos los ajustes en un solo panel - verificacion, MHL, produccion, plantilla de nombres',
-      'shots.light': 'Tema claro e interfaz en ingles - eliges tema e idioma con independencia del sistema',
-      'features.reports.desc': 'CSV, PDF y HTML, con tu logo y los datos de produccion en la cabecera.',
-      'features.verify.desc': 'xxHash64 (el mas rapido), MD5, SHA-1, SHA-256, SHA-512 o comparacion por tamano.',
-      'features.eject.desc': 'La tarjeta se expulsa sola al terminar, pero solo si la transferencia fue impecable.',
-      'features.eject.title': 'Expulsion automatica de la tarjeta',
-      'features.cards.desc': 'RED, ARRI, Sony, Panasonic, Canon, Blackmagic - y te avisa de clips incompletos.',
-      'features.cards.title': 'Reconoce las tarjetas de camara',
-      'features.queue.desc': 'Pones varias tarjetas en fila y se descargan una tras otra, sin supervision.',
-      'features.queue.title': 'Cola de tarjetas',
-      'features.mhl.desc': 'El certificado de integridad que leen Silverstack, YoYotta, ShotPut Pro y las casas de post.',
-      'features.mhl.title': 'Archivo MHL',
+      "doc.title": "DataMover — offload verificado, origen → copias independientes",
+      "doc.desc": "DataMover copia las tarjetas de cámara a varios discos a la vez, verifica cada copia por checksum y genera informes PDF, HTML, CSV y MHL. macOS y Windows.",
+      "skip": "Saltar al contenido",
+      "nav.label": "Secciones", "nav.flow": "Flujo", "nav.platforms": "macOS y Windows", "nav.proof": "Pruebas", "nav.install": "Instalación", "nav.limits": "Límites",
+      "lang.label": "Idioma",
+      "hero.eyebrow": "Offload para producción de vídeo · macOS · Windows",
+      "hero.title": "La tarjeta, leída una vez.<br><span>Cada copia, verificada.</span>",
+      "hero.lead": "DataMover copia el material de la tarjeta a varios discos independientes al mismo tiempo. Cada archivo recibe su nombre final solo cuando el checksum de la copia coincide con el origen, y al terminar tienes informes para cada destino.",
+      "dl.mac": "Descargar para macOS", "dl.mac.note": "DMG · Apple Silicon · macOS 14+ · firmado con Developer ID y notarizado por Apple",
+      "dl.win": "Descargar para Windows", "dl.win.note": "ZIP con instalador · Windows 11 x64 · firma autofirmada: SmartScreen puede avisar",
+      "meta.version": "Versión", "meta.trial": "7 días totalmente funcional, sin cuenta", "meta.how": "Cómo instalar",
+      "split.alt": "Esquema: un origen entra en el nodo de verificación y sale como dos copias independientes, cada una con la misma huella de checksum.",
+      "split.card": "TARJETA", "split.verify": "una lectura · xxHash64", "split.copy1": "COPIA 1", "split.copy2": "COPIA 2", "split.match": "misma huella",
+      "split.caption": "Origen → verificación → copias independientes. La huella verde aparece solo cuando la copia coincide con el origen.",
+      "flow.eyebrow": "El flujo real", "flow.title": "Tres pasos, nada oculto",
+      "flow.s1.t": "Preparación", "flow.s1.p": "Eliges la tarjeta o carpeta de origen y los discos de destino. Antes de empezar, la aplicación bloquea los destinos dentro del origen, el mismo destino elegido dos veces y las colisiones de nombres. También avisa cuando una copia quedaría en el mismo disco que el origen.",
+      "flow.s2.t": "Transferencia", "flow.s2.p": "El origen se lee una sola vez y se escribe en paralelo en todas las copias. Cada archivo permanece con un nombre temporal hasta después del flush y la comprobación del checksum. Un disco desconectado se informa solo en su destino; los demás continúan.",
+      "flow.s3.t": "Resultado verificado", "flow.s3.p": "El veredicto es uno y sin ambigüedad: verificado, verificado con avisos, fallo parcial, fallo o cancelado. Para cada destino recibes informes PDF, HTML y CSV y un archivo MHL.",
+      "plat.eyebrow": "Dos aplicaciones nativas", "plat.title": "El mismo contrato de copia, una interfaz propia de cada sistema",
+      "plat.lead": "La versión para macOS está escrita en SwiftUI y la de Windows en WPF. Se ven distintas, pero siguen las mismas reglas de integridad y generan los mismos tipos de informes. Las capturas proceden de las aplicaciones reales, ejecutadas con datos de prueba.",
+      "plat.mac.sub": "Apple Silicon · macOS 14 o posterior", "plat.win.sub": "Windows 11 · x64 (en ARM64 funciona mediante emulación x64)",
+      "alt.mac.result": "DataMover para macOS, pantalla Resultado: la tarjeta A001 copiada a dos discos, cada uno con 6 archivos confirmados e informes PDF, HTML, CSV y MHL.",
+      "alt.mac.transfer": "DataMover para macOS durante una transferencia, con el progreso de cada destino.",
+      "alt.mac.prepare": "DataMover para macOS en tema claro, la pantalla de preparación con avisos antes de empezar.",
+      "alt.win.transfer": "DataMover para Windows, tema oscuro, transferencia en curso con el origen y las dos copias.",
+      "alt.win.result": "DataMover para Windows, tema claro, resultado verificado: dos orígenes copiados a dos discos.",
+      "cap.mac.result": "Resultado: cada copia confirmada por separado, con sus informes.",
+      "cap.mac.transfer": "Transferencia: progreso medido en cada destino.",
+      "cap.mac.prepare": "Preparación, tema claro: los avisos aparecen antes de empezar.",
+      "cap.win.transfer": "Transferencia en curso: lectura, escritura y copias confirmadas, cifras medidas.",
+      "cap.win.result": "Resultado verificado: dos orígenes, dos copias, informes escritos en cada una.",
+      "proof.eyebrow": "Lo que puedes comprobar tú mismo", "proof.title": "Pruebas, no promesas", "proof.lead": "Cada garantía de abajo deja un rastro en el disco que puedes abrir y comparar.",
+      "p1.t": "Checksum para cada copia", "p1.p": "El origen se lee una vez y cada copia se compara con él (xxHash64 por defecto). Un archivo que cambia en la tarjeta durante la copia se marca como no confirmado.",
+      "p2.t": "Archivos temporales <code>.dmpart</code>", "p2.p": "Cada copia se escribe con un nombre temporal y recibe su nombre final solo después del flush y el checksum. Un archivo interrumpido no puede confundirse con uno verificado, y un archivo existente en el destino queda intacto si la nueva copia no se confirma.",
+      "p3.t": "Confirmación final explícita", "p3.p": "El resultado se da por separado para cada destino. La tarjeta se expulsa automáticamente solo cuando todas las copias están confirmadas.",
+      "p4.t": "Reanudación con checkpoint", "p4.p": "Al reanudar, el origen y la copia se vuelven a leer y deben coincidir con el checksum guardado al confirmar. El nombre, el tamaño o la fecha nunca bastan para saltar un archivo.",
+      "p5.t": "Informes PDF, HTML, CSV y MHL", "p5.p": "Para cada destino: lista de archivos, tamaños, checksums de origen y destino, estado. MHL para la cadena de custodia de postproducción.",
+      "alt.report": "Primera página del informe PDF de entrega: el veredicto VERIFICADO, el resumen, los detalles de la transferencia y la lista de archivos con checksum y estado.",
+      "cap.report": "El informe PDF de un destino, generado con datos de prueba: el veredicto del motor, el resumen, la trazabilidad y cada archivo con su checksum.",
+      "p6.t": "Paquete de diagnóstico anonimizado", "p6.p": "La aplicación mantiene un registro local rotativo y, cuando lo pides, exporta un archivo ZIP. Las rutas y los nombres se sustituyen por identificadores. No se envía nada automáticamente.",
+      "inst.eyebrow": "Instalación y requisitos", "inst.title": "Instalación en cada plataforma",
+      "inst.mac.sub": "DMG con paquete de instalación",
+      "inst.mac.1": "Abre el archivo DataMover.dmg descargado.", "inst.mac.2": "Haz doble clic en el paquete .pkg de la ventana que se abre. El instalador coloca la aplicación directamente en Aplicaciones.",
+      "inst.mac.3": "Confirma con la contraseña de administrador del Mac cuando se te pida.", "inst.mac.4": "Abre DataMover desde Aplicaciones. Las actualizaciones aparecen dentro de la aplicación.",
+      "req.os": "Sistema", "req.sign": "Firma",
+      "req.mac.os": "macOS 14 o posterior, Apple Silicon", "req.mac.sign": "Developer ID (Team 8AR6XP8MG7), notarizado por Apple, aceptado por Gatekeeper",
+      "inst.mac.note": "El paquete está notarizado por Apple, así que Gatekeeper lo abre sin pasos adicionales.",
+      "inst.win.sub": "ZIP con DataMoverSetup.exe",
+      "inst.win.1": "Extrae el archivo DataMover-WPF-Windows.zip.", "inst.win.2": "Ejecuta DataMoverSetup.exe y acepta el acuerdo de licencia.",
+      "inst.win.3": "La aplicación se instala en Archivos de programa, con acceso directo en el menú Inicio. El acceso directo en el Escritorio es opcional.",
+      "inst.win.4": "Se desinstala desde Configuración → Aplicaciones. También elimina los ajustes, la licencia local y los registros de DataMover.",
+      "req.win.os": "Windows 11, 64 bits (x64; en ARM64 mediante emulación)", "req.win.sign": "Certificado autofirmado, no un certificado Authenticode comercial",
+      "inst.win.note": "Windows SmartScreen puede mostrar “Windows protegió tu PC” o “Editor desconocido”. El motivo: el instalador aún no está firmado con un certificado comercial. Si descargaste el archivo desde esta página, pulsa <strong>Más información</strong> → <strong>Ejecutar de todas formas</strong>.",
+      "act.title": "Prueba y activación", "act.sub": "Código fuente en GitHub, con licencia MIT",
+      "act.1": "7 días totalmente funcional, sin cuenta y sin tarjeta.", "act.2": "Tras la prueba, la versión sin activar copia como máximo 2 GB por transferencia.",
+      "act.3": "La activación está ligada al ID del ordenador y se obtiene con una donación para el desarrollo. El importe actual aparece en la aplicación. Escríbenos por <a href=\"https://wa.me/34643109970?text=Hola!%20Quiero%20activar%20DataMover.\" rel=\"noopener\" target=\"_blank\">WhatsApp</a>.",
+      "lim.eyebrow": "Confianza y límites", "lim.title": "Qué está probado y qué todavía no", "lim.lead": "DataMover reduce el riesgo al copiar, pero no lo elimina. No formatees la tarjeta hasta haber comprobado tus copias.",
+      "lim.ok.t": "Verificado con pruebas automáticas",
+      "lim.ok.1": "Copia a dos destinos con checksum idéntico en macOS (APFS, exFAT) y Windows (NTFS)",
+      "lim.ok.2": "Reanudación tras una interrupción, con relectura y comparación de checksum",
+      "lim.ok.3": "Disco lleno y espacio insuficiente en macOS; un destino que desaparece durante la copia",
+      "lim.ok.4": "Colisiones de nombres, symlinks/junctions, nombres Unicode y rutas largas",
+      "lim.ok.5": "Instalación, actualización, reparación y desinstalación en Windows; instalador notarizado en macOS",
+      "lim.no.t": "Todavía sin verificar",
+      "lim.no.1": "Un corte de corriente o apagado brusco real durante la copia", "lim.no.2": "Una tarjeta o disco extraído físicamente durante la transferencia",
+      "lim.no.3": "Destinos de red (SMB) y exFAT en Windows", "lim.no.4": "Un disco lleno real en Windows", "lim.no.5": "Navegación solo con teclado y lectores de pantalla en Windows",
+      "guide.eyebrow": "Documentación", "guide.title": "Guía de uso", "guide.lead": "La guía en PDF explica la instalación, la activación y el flujo de trabajo, paso a paso. También está incluida en la aplicación.",
+      "cta.title": "Descarga DataMover", "cta.lead": "Pruébalo con una tarjeta de prueba antes de un rodaje real. Las versiones anteriores siguen disponibles en GitHub.",
+      "cta.all": "Todas las versiones y notas de lanzamiento", "cta.src": "Código fuente (MIT)",
+      "f.home": "gordas.dev", "f.appterms": "Términos de DataMover", "f.terms": "Términos y condiciones", "f.privacy": "Privacidad (RGPD)", "f.cookie": "Cookies",
+      "f.author": "DataMover · creado por Cristi Gordaș, colorista y editor de vídeo · licencia MIT",
+      "f.legal": "gordas.dev es una plataforma gestionada por desarrolladores independientes. Las aplicaciones y los recursos se ofrecen tal cual (AS IS), y el proyecto se sostiene con contribuciones opcionales y donaciones."
     }
   };
+  // Textele românești sunt chiar cele din HTML; se colectează o dată, la pornire.
+  var RO = {};
+  var q = function (s) { return Array.prototype.slice.call(document.querySelectorAll(s)); };
+  q("[data-i18n]").forEach(function (el) { RO[el.getAttribute("data-i18n")] = el.textContent; });
+  q("[data-i18n-html]").forEach(function (el) { RO[el.getAttribute("data-i18n-html")] = el.innerHTML; });
+  q("[data-i18n-alt]").forEach(function (el) { RO[el.getAttribute("data-i18n-alt")] = el.getAttribute("alt"); });
+  q("[data-i18n-aria]").forEach(function (el) { RO[el.getAttribute("data-i18n-aria")] = el.getAttribute("aria-label"); });
+  RO["doc.title"] = document.title;
+  var md = document.querySelector('meta[name="description"]');
+  RO["doc.desc"] = md.getAttribute("content");
+  T.ro = RO;
+  window.__DM_I18N = T;
 
-  const WA_PREFILL = {
-    ro: 'Salut! Vreau sa activez DataMover.',
-    en: "Hi! I'd like to activate DataMover.",
-    es: 'Hola! Quiero activar DataMover.',
-  };
-
-  function applyLang(lang) {
-    const dict = translations[lang];
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-      const key = el.getAttribute('data-i18n');
-      if (dict[key]) el.innerHTML = dict[key];
-    });
-    const waText = encodeURIComponent(WA_PREFILL[lang] || WA_PREFILL.ro);
-    document.querySelectorAll('a[href*="wa.me/34643109970"]').forEach(a => {
-      a.href = 'https://wa.me/34643109970?text=' + waText;
-    });
+  function apply(lang) {
+    var d = T[lang] || RO;
+    var g = function (k) { return d[k] != null ? d[k] : RO[k]; };
+    q("[data-i18n]").forEach(function (el) { el.textContent = g(el.getAttribute("data-i18n")); });
+    q("[data-i18n-html]").forEach(function (el) { el.innerHTML = g(el.getAttribute("data-i18n-html")); });
+    q("[data-i18n-alt]").forEach(function (el) { el.setAttribute("alt", g(el.getAttribute("data-i18n-alt"))); });
+    q("[data-i18n-aria]").forEach(function (el) { el.setAttribute("aria-label", g(el.getAttribute("data-i18n-aria"))); });
+    document.title = g("doc.title");
+    md.setAttribute("content", g("doc.desc"));
     document.documentElement.lang = lang;
-    document.querySelectorAll('.lang-btn').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.lang === lang);
-    });
-    localStorage.setItem('dm-lang', lang);
-    // Ghidul PDF trebuie sa urmeze limba aleasa (vezi syncGuideLink).
-    if (window.syncGuideLink) window.syncGuideLink();
+    q(".lang button").forEach(function (b) { b.setAttribute("aria-pressed", String(b.getAttribute("data-lang") === lang)); });
   }
-
-  document.querySelectorAll('.lang-btn').forEach(btn => {
-    btn.addEventListener('click', () => applyLang(btn.dataset.lang));
+  function pick() {
+    var p = new URLSearchParams(location.search).get("lang");
+    if (p && T[p]) return p;
+    try { var s = localStorage.getItem("dm-lang"); if (s && T[s]) return s; } catch (e) {}
+    var n = (navigator.language || "ro").slice(0, 2).toLowerCase();
+    return T[n] ? n : "ro";
+  }
+  q(".lang button").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var l = b.getAttribute("data-lang");
+      apply(l);
+      try { localStorage.setItem("dm-lang", l); } catch (e) {}
+    });
   });
+  var initial = pick();
+  if (initial !== "ro") apply(initial);
 
-  // WARNING: DO NOT HARDCODE A VERSION TAG in these hrefs (ex. ".../v2.4.0/download/") —
-  // ALWAYS use "releases/latest/download/" so this always resolves to the newest
-  // published, non-draft release automatically. See CLAUDE.md "Regula Domeniului & Download".
-  //
-  // [2026-09-03] Ghidul PDF urmeaza limba aleasa in pagina - altfel un
-  // vizitator spaniol ar primi PDF-ul in romana. Rulam si la incarcare, si
-  // la fiecare schimbare de limba (vezi apelul din setLanguage).
-  window.syncGuideLink = function () {
-    const files = { ro: 'DataMover_Ghid_RO.pdf', en: 'DataMover_Guide_EN.pdf', es: 'DataMover_Guia_ES.pdf' };
-    const lang = localStorage.getItem('dm-lang') || 'ro';
-    const link = document.getElementById('guideLink');
-    if (link) link.href = 'guides/' + (files[lang] || files.ro);
-  };
-  window.syncGuideLink();
+  // Versiunea afișată urmează update.json publicat lângă pagină; la eșec rămâne cea din HTML.
+  fetch("update.json", { cache: "no-store" }).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) {
+    if (j && /^\d+\.\d+\.\d+$/.test(j.version)) {
+      document.getElementById("ver-text").textContent = j.version;
+      document.getElementById("ver-badge").textContent = j.version;
+    }
+  }).catch(function () {});
 
-  // [2026-09-03] Cristi a cerut explicit doua butoane SEPARATE si mereu
-  // vizibile (Mac + Windows), nu un singur buton "auto-detectat" cu un
-  // link secundar ascuns — userul alege singur, fara ghicit de platforma.
-  // `href`-urile sunt deja corecte direct in HTML (vezi butoanele
-  // #downloadBtnMac/#downloadBtnWin mai sus) - JS-ul de-aici nu mai are
-  // nimic de rescris, doar traducerea eticheteler ramane prin data-i18n.
-
-  const saved = localStorage.getItem('dm-lang');
-  if (saved && translations[saved]) applyLang(saved);
+  // Kill switch pentru vechiul service worker (PWA retras): îl dezînregistrează dacă mai există.
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.getRegistrations().then(function (rs) { rs.forEach(function (r) { if (r.scope.indexOf("/datamover/") !== -1) r.unregister(); }); }).catch(function () {});
+  }
+})();
 </script>
-
-
 </body>
 </html>
