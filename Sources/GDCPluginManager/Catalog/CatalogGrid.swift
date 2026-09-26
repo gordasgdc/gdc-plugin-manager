@@ -32,13 +32,16 @@ struct CatalogGrid: View {
 
             ScrollView {
                 if catalog.isLoading && items.isEmpty {
-                    ProgressView(L.t("catalog.loading")).padding(GDCTokens.Space.page)
+                    StateView(kind: .loading, message: L.t("catalog.loading"))
                 } else if let error = catalog.loadError, items.isEmpty {
-                    Text(error).foregroundStyle(.secondary).padding(GDCTokens.Space.page)
+                    StateView(kind: .error, title: L.t("state.error.title"), message: error,
+                              actions: [.init(title: L.t("card.retry"), isPrimary: true) { Task { await catalog.refresh() } }])
                 } else if items.isEmpty {
-                    Text(L.t("catalog.empty")).foregroundStyle(.secondary).padding(GDCTokens.Space.page)
+                    StateView(kind: .empty, title: L.t("state.empty.title"), message: L.t("catalog.empty"),
+                              actions: [.init(title: L.t("catalog.refresh")) { Task { await CatalogService.shared.refresh() } }])
                 } else if filteredItems.isEmpty {
-                    Text(L.t("filter.price.empty")).foregroundStyle(.secondary).padding(GDCTokens.Space.page)
+                    StateView(kind: .empty, title: L.t("state.empty.title"), message: L.t("filter.price.empty"), symbol: "line.3.horizontal.decrease.circle",
+                              actions: [.init(title: L.t("state.resetFilters")) { filters.reset() }])
                 } else {
                     LazyVGrid(columns: columns, spacing: GDCTokens.Space.grid) {
                         ForEach(filteredItems) { item in

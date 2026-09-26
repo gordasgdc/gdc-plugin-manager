@@ -14,7 +14,8 @@ struct ServiceCentersGrid: View {
         FilteredCatalogSection(items: centers, options: .content) { centers in
         ScrollView {
             if centers.isEmpty {
-                Text(L.t("servicecenters.empty")).foregroundStyle(.secondary).padding(GDCTokens.Space.page)
+                StateView(kind: .empty, title: L.t("state.empty.title"), message: L.t("servicecenters.empty"),
+                              actions: [.init(title: L.t("catalog.refresh")) { Task { await CatalogService.shared.refresh() } }])
             } else {
                 // Grup pe categorie, fiecare cu propriul grid — nu o singura
                 // grila cu header "spanned" (nu se poate garanta latimea

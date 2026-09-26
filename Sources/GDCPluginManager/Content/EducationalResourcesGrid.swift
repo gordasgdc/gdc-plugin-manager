@@ -17,7 +17,8 @@ struct EducationalResourcesGrid: View {
         FilteredCatalogSection(items: resources, options: .content) { resources in
         ScrollView {
             if resources.isEmpty {
-                Text(L.t("resources.empty")).foregroundStyle(.secondary).padding(GDCTokens.Space.page)
+                StateView(kind: .empty, title: L.t("state.empty.title"), message: L.t("resources.empty"),
+                              actions: [.init(title: L.t("catalog.refresh")) { Task { await CatalogService.shared.refresh() } }])
             } else {
                 LazyVGrid(columns: columns, spacing: GDCTokens.Space.grid) {
                     ForEach(resources) { resource in

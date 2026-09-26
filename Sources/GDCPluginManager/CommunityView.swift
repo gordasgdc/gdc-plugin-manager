@@ -34,19 +34,11 @@ struct CommunityGrid: View {
     /// înainte ca vreun canal să fie publicat, iar o pagină complet albă ar
     /// părea o eroare de încărcare.
     private var emptyState: some View {
-        VStack(spacing: 10) {
-            Image(systemName: "person.2.wave.2")
-                .font(.system(size: 36))
-                .foregroundStyle(.secondary)
-            Text(L.t("community.empty.title")).font(.headline)
-            Text(L.t("community.empty.subtitle"))
-                .font(.callout)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
-                .frame(maxWidth: 360)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        StateView(kind: .empty, title: L.t("community.empty.title"), message: L.t("community.empty.subtitle"),
+                  symbol: "person.2.wave.2")
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
+
 }
 
 struct CommunityChannelCard: View {

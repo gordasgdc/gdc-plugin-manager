@@ -12,6 +12,8 @@ struct ContentView: View {
     @ObservedObject private var languageStore = LanguageStore.shared
 
     @State private var selection: SidebarSection? = .all
+    /// Închiderea bannerului offline ține până la repornire (sau până revine conexiunea).
+    @State private var offlineBannerDismissed = false
 
     /// Deschide secțiunea din care face parte rubrica dată. Nu strânge
     /// niciodată altceva: o secțiune deschisă manual de utilizator rămâne
@@ -247,6 +249,9 @@ struct ContentView: View {
                     UpdateBanner(update: update)
                 } else if updateChecker.checkFailed {
                     CheckFailedBanner()
+                }
+                if catalog.isShowingCachedCatalog && !offlineBannerDismissed {
+                    OfflineBanner { offlineBannerDismissed = true }
                 }
                 // Bară de căutare GLOBALĂ (Etapa 1, extinsă 2026-08-29 —
                 // cerut explicit: "trebuie să cuprindă tot ce există în

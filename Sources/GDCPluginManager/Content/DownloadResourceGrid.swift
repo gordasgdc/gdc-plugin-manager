@@ -30,9 +30,11 @@ struct DownloadResourceGrid: View {
             }
             ScrollView {
                 if resources.isEmpty {
-                    Text(L.t("download.empty")).foregroundStyle(.secondary).padding(GDCTokens.Space.page)
+                    StateView(kind: .empty, title: L.t("state.empty.title"), message: L.t("download.empty"),
+                              actions: [.init(title: L.t("catalog.refresh")) { Task { await CatalogService.shared.refresh() } }])
                 } else if filteredResources.isEmpty {
-                    Text(L.t("filter.price.empty")).foregroundStyle(.secondary).padding(GDCTokens.Space.page)
+                    StateView(kind: .empty, title: L.t("state.empty.title"), message: L.t("filter.price.empty"), symbol: "line.3.horizontal.decrease.circle",
+                              actions: [.init(title: L.t("state.resetFilters")) { filters.reset() }])
                 } else {
                     LazyVGrid(columns: columns, spacing: GDCTokens.Space.grid) {
                         ForEach(filteredResources) { resource in

@@ -103,6 +103,11 @@ enum AccessGroupFilter: Hashable {
             && (tag.isEmpty || access.tags.contains(tag))
     }
 
+    /// Revine la „Toate” pe toate filtrele (acțiunea din starea goală).
+    func reset() {
+        price = .all; os = .all; group = .all; tag = ""
+    }
+
     func filter<T: AccessDescribing>(_ items: [T]) -> [T] {
         items.filter { matches($0.resolvedAccess) }
     }

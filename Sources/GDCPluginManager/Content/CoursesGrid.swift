@@ -17,7 +17,8 @@ struct CoursesGrid: View {
         FilteredCatalogSection(items: courses, options: .content) { courses in
         ScrollView {
             if courses.isEmpty {
-                Text(L.t("courses.empty")).foregroundStyle(.secondary).padding(GDCTokens.Space.page)
+                StateView(kind: .empty, title: L.t("state.empty.title"), message: L.t("courses.empty"),
+                              actions: [.init(title: L.t("catalog.refresh")) { Task { await CatalogService.shared.refresh() } }])
             } else {
                 LazyVGrid(columns: columns, spacing: GDCTokens.Space.grid) {
                     ForEach(courses) { course in

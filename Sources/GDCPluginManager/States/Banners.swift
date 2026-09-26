@@ -10,21 +10,9 @@ struct CheckFailedBanner: View {
     @ObservedObject private var updateChecker = UpdateChecker.shared
 
     var body: some View {
-        HStack(spacing: GDCTokens.Space.m) {
-            Image(systemName: "exclamationmark.triangle.fill").foregroundStyle(GDCTokens.Palette.warning)
-            Text(L.t("update.check.failed"))
-                .font(.caption)
-                .foregroundStyle(.secondary)
-            Spacer()
-            Button(L.t("update.check.openWebsite")) {
-                NSWorkspace.shared.open(URL(string: "https://gordas.dev/")!)
-            }
-            Button(L.t("update.dismiss")) { updateChecker.dismissCheckFailedBanner() }
-                .buttonStyle(.plain)
-                .foregroundStyle(.secondary)
-        }
-        .padding(GDCTokens.Space.m)
-        .background(GDCTokens.Palette.warning.opacity(0.10))
+        Banner(kind: .warning, title: L.t("update.check.failed.title"), message: L.t("update.check.failed"),
+               actions: [.init(title: L.t("update.check.openWebsite")) { NSWorkspace.shared.open(URL(string: "https://gordas.dev/")!) }],
+               dismiss: .init(title: L.t("update.dismiss")) { updateChecker.dismissCheckFailedBanner() })
     }
 }
 
@@ -33,28 +21,12 @@ struct UpdateBanner: View {
     @ObservedObject private var updateChecker = UpdateChecker.shared
 
     var body: some View {
-        HStack(spacing: GDCTokens.Space.m) {
-            Image(systemName: "arrow.down.circle.fill").foregroundStyle(.tint)
-            VStack(alignment: .leading, spacing: GDCTokens.Space.xxs) {
-                Text(L.t("update.title")).font(.subheadline).fontWeight(.semibold)
-                Text("v\(update.version)" + (update.changes.map { " — \($0)" } ?? ""))
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(2)
-            }
-            Spacer()
-            // Nu mai deschide browserul — vezi SelfUpdater.swift.
-            if !update.download_url.isEmpty {
-                Button(L.t("update.download")) {
-                    Task { await SelfUpdater.downloadAndInstall(info: update) }
-                }
-            }
-            Button(L.t("update.dismiss")) { updateChecker.dismiss() }
-                .buttonStyle(.plain)
-                .foregroundStyle(.secondary)
-        }
-        .padding(GDCTokens.Space.m)
-        .background(Color.accentColor.opacity(0.12))
+        Banner(kind: .info, title: L.t("update.title"),
+               message: "v\(update.version)" + (update.changes.map { " — \($0)" } ?? ""),
+               actions: update.download_url.isEmpty ? [] : [.init(title: L.t("update.download"), isPrimary: true) {
+                   Task { await SelfUpdater.downloadAndInstall(info: update) }
+               }],
+               dismiss: .init(title: L.t("update.dismiss")) { updateChecker.dismiss() })
     }
 }
 
@@ -65,23 +37,15 @@ struct DependencyBanner: View {
     let missing: [SystemDependency]
 
     var body: some View {
-        HStack(spacing: GDCTokens.Space.m) {
-            Image(systemName: "exclamationmark.triangle.fill").foregroundStyle(GDCTokens.Palette.warning)
-            VStack(alignment: .leading, spacing: GDCTokens.Space.xxs) {
-                Text(L.t("dependency.missing.title")).font(.subheadline).fontWeight(.semibold)
-                Text(missing.map(\.name).joined(separator: ", "))
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-            Spacer()
-            ForEach(missing) { dep in
-                if let url = dep.downloadURL {
-                    Button(String(format: L.t("dependency.install.button"), dep.name)) { NSWorkspace.shared.open(url) }
-                }
-            }
-        }
-        .padding(GDCTokens.Space.m)
-        .background(GDCTokens.Palette.warning.opacity(0.12))
+        Banner(kind: .warning, title: L.t("dependency.missing.title"),
+               message: missing.map(\.name).joined(separator: ", "),
+               actions: missing.enumerated().compactMap { index, dep in
+                   dep.downloadURL.map { url in
+                       .init(title: String(format: L.t("dependency.install.button"), dep.name), isPrimary: index == 0) {
+                           NSWorkspace.shared.open(url)
+                       }
+                   }
+               })
     }
 }
 
@@ -91,3 +55,16 @@ struct DependencyBanner: View {
 /// (`AccessPriceFilter`/`AccessOSFilter`/`CatalogFilterState`), care
 /// filtreaza pe `ResolvedAccess` — deci regula „ce inseamna gratuit" e
 /// aplicata o singura data, in Core, nu reinterpretata per sectiune.
+
+/// Catalogul afișat e cel din cache: ultima reîmprospătare a eșuat din cauza rețelei.
+/// „Reîncearcă” face exact ce face butonul de reîmprospătare din bara de unelte.
+struct OfflineBanner: View {
+    @ObservedObject private var catalog = CatalogService.shared
+    let onDismiss: () -> Void
+
+    var body: some View {
+        Banner(kind: .offline, title: L.t("offline.banner.title"), message: L.t("offline.banner.body"),
+               actions: [.init(title: L.t("card.retry")) { Task { await catalog.refresh() } }],
+               dismiss: .init(title: L.t("update.dismiss"), perform: onDismiss))
+    }
+}

@@ -14,7 +14,8 @@ struct AudioGrid: View {
         FilteredCatalogSection(items: tracks, options: .content) { tracks in
         ScrollView {
             if tracks.isEmpty {
-                Text(L.t("audio.empty")).foregroundStyle(.secondary).padding(GDCTokens.Space.page)
+                StateView(kind: .empty, title: L.t("state.empty.title"), message: L.t("audio.empty"),
+                              actions: [.init(title: L.t("catalog.refresh")) { Task { await CatalogService.shared.refresh() } }])
             } else {
                 LazyVGrid(columns: columns, spacing: GDCTokens.Space.grid) {
                     ForEach(tracks) { track in

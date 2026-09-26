@@ -22,7 +22,8 @@ struct BundleGrid: View {
         FilteredCatalogSection(items: bundles, options: .content) { bundles in
         ScrollView {
             if bundles.isEmpty {
-                Text(L.t("bundles.empty")).foregroundStyle(.secondary).padding(GDCTokens.Space.page)
+                StateView(kind: .empty, title: L.t("state.empty.title"), message: L.t("bundles.empty"),
+                              actions: [.init(title: L.t("catalog.refresh")) { Task { await CatalogService.shared.refresh() } }])
             } else {
                 LazyVGrid(columns: columns, spacing: GDCTokens.Space.grid) {
                     ForEach(bundles) { bundle in

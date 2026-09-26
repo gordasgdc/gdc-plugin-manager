@@ -24,7 +24,8 @@ struct AppsGrid: View {
             Divider()
             ScrollView {
                 if apps.isEmpty {
-                    Text(L.t("apps.empty")).foregroundStyle(.secondary).padding(GDCTokens.Space.page)
+                    StateView(kind: .empty, title: L.t("state.empty.title"), message: L.t("apps.empty"),
+                              actions: [.init(title: L.t("catalog.refresh")) { Task { await CatalogService.shared.refresh() } }])
                 } else if filtered.isEmpty {
                     Text(L.t("access.filter.none")).foregroundStyle(.secondary).padding(GDCTokens.Space.page)
                 } else {

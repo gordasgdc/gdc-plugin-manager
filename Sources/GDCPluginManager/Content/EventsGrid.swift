@@ -17,7 +17,8 @@ struct EventsGrid: View {
         FilteredCatalogSection(items: events, options: .content) { events in
         ScrollView {
             if events.isEmpty {
-                Text(L.t("events.empty")).foregroundStyle(.secondary).padding(GDCTokens.Space.page)
+                StateView(kind: .empty, title: L.t("state.empty.title"), message: L.t("events.empty"),
+                              actions: [.init(title: L.t("catalog.refresh")) { Task { await CatalogService.shared.refresh() } }])
             } else {
                 LazyVGrid(columns: columns, spacing: GDCTokens.Space.grid) {
                     ForEach(events) { event in
