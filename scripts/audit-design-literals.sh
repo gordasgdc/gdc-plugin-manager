@@ -4,7 +4,7 @@
 set -uo pipefail
 cd "$(dirname "$0")/.."
 BASE=engineering/design-literals-baseline.txt
-RX='\.padding\((\.[a-zA-Z]+, )?[0-9.]+\)|\bspacing: [0-9.]+|cornerRadius: ?[0-9.]+|\.cornerRadius\([0-9.]+\)|\.system\(size: [0-9.]+|Color\((red|white|srgbRed):|\bColor\.(red|orange|green|blue|yellow|purple|pink)\b|\((\.)?(red|orange|green|blue|yellow)\)'
+RX='\.padding\((\.[a-zA-Z]+, )?[0-9.]+\)|\bspacing: ([1-9][0-9.]*|0\.[0-9]+)|cornerRadius: ?[0-9.]+|\.cornerRadius\([0-9.]+\)|\.system\(size: [0-9.]+|Color\((red|white|srgbRed):|\bColor\.(red|orange|green|blue|yellow|purple|pink)\b|\((\.)?(red|orange|green|blue|yellow)\)'
 count() { grep -rhoE "$RX" "Sources/$1" --include='*.swift' 2>/dev/null | grep -v "^//" | wc -l | tr -d ' '; }
 FAIL=0; NEW=""
 for t in GDCPluginManager GDCPluginManagerFurnizor; do

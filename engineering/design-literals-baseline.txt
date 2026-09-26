@@ -1,2 +1,2 @@
-GDCPluginManager 106
-GDCPluginManagerFurnizor 169
+GDCPluginManager 94
+GDCPluginManagerFurnizor 151
