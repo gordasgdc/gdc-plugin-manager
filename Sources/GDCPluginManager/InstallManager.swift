@@ -88,6 +88,11 @@ final class InstallManager: ObservableObject {
         installedVersions[item.id] != nil
     }
 
+    /// Versiunea instalată local (nil = neinstalat).
+    func installedVersion(of item: PluginItem) -> String? {
+        installedVersions[item.id]
+    }
+
     func hasUpdate(_ item: PluginItem) -> Bool {
         guard let installed = installedVersions[item.id] else { return false }
         return installed != item.version

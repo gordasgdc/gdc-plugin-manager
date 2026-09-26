@@ -198,24 +198,34 @@ struct PluginCard: View {
         item.type == .powerGrade ? L.t("resolve.notrunning.body") : L.t("resolve.running.body")
     }
 
+    /// Derivată din managerii existenți (UI_ARCHITECTURE.md §3); cardul doar o afișează.
+    private var actionState: ProductActionState {
+        .derive(isCompatible: item.supportedOS.allows(current: .current),
+                isUnlocked: license.isUnlocked(for: item),
+                isBusy: isBusy,
+                installedVersion: installs.installedVersion(of: item),
+                catalogVersion: item.version)
+    }
+
     @ViewBuilder
     private var actionButton: some View {
-        if !item.supportedOS.allows(current: .current) {
+        switch actionState {
+        case .incompatible:
             Text(L.t("card.incompatibleOS"))
                 .font(.caption)
                 .foregroundStyle(GDCTokens.Palette.error)
-        } else if !license.isUnlocked(for: item) {
+        case .licenseRequired:
             Button(L.t("card.buy")) { NSWorkspace.shared.open(buyURL) }
-        } else if isBusy {
+        case .installing:
             ProgressView().controlSize(.small)
-        } else if installs.hasUpdate(item) {
+        case .updateAvailable:
             HStack {
                 Button(L.t("card.update")) { runGuarded { install() } }
                     .buttonStyle(.borderedProminent)
                     .tint(GDCTokens.Palette.warning)
                 Button(L.t("card.remove"), role: .destructive) { runGuarded { remove() } }
             }
-        } else if installs.isInstalled(item) {
+        case .installed:
             HStack {
                 Label(L.t("card.installed"), systemImage: "checkmark.circle.fill")
                     .font(.caption)
@@ -223,7 +233,7 @@ struct PluginCard: View {
                 Spacer()
                 Button(L.t("card.remove"), role: .destructive) { runGuarded { remove() } }
             }
-        } else {
+        case .notInstalled:
             Button(L.t("card.install")) { runGuarded { install() } }
         }
     }
