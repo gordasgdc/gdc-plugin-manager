@@ -14,6 +14,10 @@
 - Mesaje noi RO/EN/ES: licență respinsă, prea multe descărcări.
 - Importul PowerGrade transmite căile în siguranță, indiferent de caracterele din nume.
 
+## Nelansat — Foundation F3/F4 (ramura foundation-f3-f4)
+- Client: fereastra principală împărțită pe componente; aspectul și comportamentul rămân identice.
+- Client și Furnizor: spațieri, raze și culori de stare trec prin tokenii de design comuni (aceleași valori).
+
 ## v1.52.6 Furnizor (instalat local 2026-09-26, neîmpins) — Fără tokenul GitHub vechi
 - Furnizorul nu mai încorporează tokenul GitHub vechi: numele repo-urilor de resurse stau într-un fișier fără secrete, iar dimensiunea repo-urilor se citește prin autentificarea `gh` de pe Mac (fără `gh` → „necunoscut”).
 - Scos indicatorul/bannerul de expirare a tokenului vechi; „Token-uri & Chei” îl arată ca token vechi, de revocat după migrare (nu se mai reînnoiește). Copia de siguranță nu mai include tokenul.
