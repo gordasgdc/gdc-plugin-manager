@@ -180,7 +180,7 @@ private struct CampaignsEditor: View {
                 Text("\(Int(spec.recommended.width))×\(Int(spec.recommended.height)) (\(Int(spec.aspect)):1)")
                     .font(GDCTokens.Typography.caption).foregroundStyle(GDCTokens.Palette.textTertiary)
                 Spacer()
-                Button("Alege PNG/SVG…") { pick(slot, campaignIndex: i) }.buttonStyle(GDCButtonStyle(role: .secondary))
+                Button("Alege PNG/JPEG/SVG…") { pick(slot, campaignIndex: i) }.buttonStyle(GDCButtonStyle(role: .secondary))
                 if pending[key] != nil || slot.path(in: c) != nil {
                     Button("Scoate") { pending[key] = nil; slotErrors[key] = nil; slot.set(nil, in: &campaigns[i]) }
                         .buttonStyle(GDCButtonStyle(role: .plain))
@@ -295,7 +295,7 @@ private struct CampaignsEditor: View {
 
     private func pick(_ slot: ImageSlot, campaignIndex i: Int) {
         let panel = NSOpenPanel()
-        panel.allowedContentTypes = [.png, .svg]
+        panel.allowedContentTypes = [.png, .jpeg, .svg]
         panel.allowsMultipleSelection = false
         guard panel.runModal() == .OK, let url = panel.url else { return }
         let c = campaigns[i], key = "\(c.id)/\(slot.rawValue)"
