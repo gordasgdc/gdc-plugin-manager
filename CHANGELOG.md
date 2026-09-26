@@ -14,9 +14,10 @@
 - Mesaje noi RO/EN/ES: licență respinsă, prea multe descărcări.
 - Importul PowerGrade transmite căile în siguranță, indiferent de caracterele din nume.
 
-## Nelansat — Foundation F3/F4 (ramura foundation-f3-f4)
+## v1.40.0 Client / v1.53.0 Furnizor (nelansat, integrat în main 2026-09-26) — Foundation F3/F4
 - Client: fereastra principală împărțită pe componente; aspectul și comportamentul rămân identice.
 - Client și Furnizor: spațieri, raze și culori de stare trec prin tokenii de design comuni (aceleași valori).
+- Publicarea NU e făcută: `docs/update.json` rămâne intenționat pe 1.39.4 până la release-ul aprobat (altfel clienții ar fi anunțați de o versiune inexistentă).
 - Client: ecrane noi de încărcare, gol și eroare; bannere cu un singur stil; avertisment clar când catalogul afișat e cel salvat local (fără conexiune).
 - Client: carduri redesenate — imagine mai mare cu finisaj lucios discret, insigne de stare pe imagine, butoane noi; cardul de produs arată clar starea (instalare, actualizare, eroare cu „Reîncearcă”, incompatibil, fără conexiune).
 
