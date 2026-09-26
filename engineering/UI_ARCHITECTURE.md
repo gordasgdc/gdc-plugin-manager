@@ -103,7 +103,9 @@ secțiunea atinsă verificată în RO/EN/ES și Light/Dark. „Compilează” nu
   (toate cardurile de conținut + MyApps; `glassCardBackground` rămas doar la Comunitate, cu aceeași suprafață), `Catalog/ProductCard.swift`
   cu 8 stări (OFFLINE = `CatalogService.isShowingCachedCatalog`, informativ, acțiunea rămâne activă; FAILED = „Reîncearcă”, aceeași operație).
   Galerie DEBUG `Shell/ComponentGallery.swift` (`-GDCComponentGallery YES [-GDCGalleryOffset N] [-GDCGalleryWidth W]`).
-- Rămân (neprototipate, deci neaplicate): `StateView` (loading/empty/error ale ecranelor) și `Banner` unificat.
+- `StateView` (Loading/Empty/Error/Offline) + `Banner` unificat: PROTOTIPATE (canvas, rândul 3), neimplementate — așteaptă aprobarea.
+- Redimensionare pe fereastra reală (DEBUG, fără instalare): `EXTRA_ARGS="-GDCWindowSize 760x500 [-GDCWindowResizeStress YES]"
+  LANGS=ro scripts/ui-snapshots.sh <out>`; verificat 760×500, 1000×680, 1440×900 și resize rapid: fără suprapuneri, fără regresii.
 - Tokeni: `scripts/tokenize_literals.py` (doar valori identice) + gardă `scripts/audit-design-literals.sh` (bază în `design-literals-baseline.txt`).
 - Regresie vizuală: `scripts/ui-snapshots.sh <out> [repo]` (RO/EN/ES × Light/Dark, fără instalare) + comparație pixel cu `main`: EN/ES identice,
   RO diferă doar prin starea activă/inactivă a ferestrei.

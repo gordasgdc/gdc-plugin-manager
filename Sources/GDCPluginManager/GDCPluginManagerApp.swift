@@ -89,7 +89,10 @@ private struct ScaledContentView: View {
 
     @ViewBuilder private var root: some View {
         #if DEBUG
-        if UserDefaults.standard.bool(forKey: "GDCComponentGallery") { ComponentGallery() } else { ContentView() }
+        Group {
+            if UserDefaults.standard.bool(forKey: "GDCComponentGallery") { ComponentGallery() } else { ContentView() }
+        }
+        .onAppear { DebugWindowSizer.applyLaunchArguments() }
         #else
         ContentView()
         #endif
@@ -105,3 +108,30 @@ private struct ScaledContentView: View {
         }
     }
 }
+
+#if DEBUG
+/// Verificarea redimensionării pe fereastra REALĂ (doar build DEBUG, fără instalare):
+/// `-GDCWindowSize 760x500` redimensionează fereastra principală prin NSWindow, ca utilizatorul;
+/// `-GDCWindowResizeStress YES` o redimensionează rapid (min ↔ mare) ~3 s înainte de mărimea finală,
+/// pentru bug-ul de sincronizare de la resize rapid (Regula 24).
+enum DebugWindowSizer {
+    static func applyLaunchArguments() {
+        let defaults = UserDefaults.standard
+        guard let raw = defaults.string(forKey: "GDCWindowSize") else { return }
+        let parts = raw.split(separator: "x").compactMap { Double($0) }
+        guard parts.count == 2 else { return }
+        let target = NSSize(width: parts[0], height: parts[1])
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+            guard let window = NSApp.windows.first(where: { $0.isVisible && $0.canBecomeMain }) else { return }
+            guard defaults.bool(forKey: "GDCWindowResizeStress") else { window.setContentSize(target); return }
+            let sizes = [NSSize(width: 760, height: 500), NSSize(width: 1500, height: 950)]
+            for step in 0..<40 {
+                DispatchQueue.main.asyncAfter(deadline: .now() + Double(step) * 0.07) {
+                    window.setContentSize(sizes[step % 2])
+                }
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 40 * 0.07) { window.setContentSize(target) }
+        }
+    }
+}
+#endif
