@@ -24,7 +24,8 @@ struct ComponentGallery: View {
         guard let base = catalog.items.first,
               let data = try? JSONEncoder().encode(base),
               let dict = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else { return [] }
-        return Self.states.enumerated().compactMap { i, state in
+        let offset = UserDefaults.standard.integer(forKey: "GDCGalleryOffset")
+        return Self.states.enumerated().dropFirst(offset).compactMap { i, state in
             var d = dict
             d["id"] = "gallery-\(i)"
             d["name"] = i % 3 == 1 ? "GDC Film Emulation Complete Pipeline for DaVinci Resolve Studio — Extended Edition" : "GDC Halation \(i + 1)"
@@ -34,6 +35,7 @@ struct ComponentGallery: View {
             d["coverImage"] = Self.covers[i % Self.covers.count] as Any
             d["isFree"] = i % 4 == 0
             d["isTrial"] = i == 4
+            d["priceEUR"] = 23
             guard let json = try? JSONSerialization.data(withJSONObject: d.compactMapValues { $0 is NSNull ? nil : $0 }),
                   let item = try? JSONDecoder().decode(PluginItem.self, from: json) else { return nil }
             return (item, state)

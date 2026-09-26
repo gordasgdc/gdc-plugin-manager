@@ -3,7 +3,7 @@
 # construiește un .app temporar în <out>/, semnat ad-hoc, și îl pornește cu setările date ca
 # argumente (domeniul NSArgumentDomain — preferințele reale ale utilizatorului nu se modifică).
 # Utilizare: scripts/ui-snapshots.sh <out-dir> [repo-dir]    (repo-dir implicit: acest repo)
-# Argumente suplimentare de pornire: EXTRA_ARGS="-GDCComponentGallery YES -GDCGalleryWidth 560" (galeria există doar în DEBUG).
+# Argumente suplimentare de pornire: EXTRA_ARGS="-GDCComponentGallery YES -GDCGalleryWidth 560 -GDCGalleryOffset 3" (galeria există doar în DEBUG).
 set -euo pipefail
 OUT="${1:?director de ieșire}"; REPO="${2:-$(cd "$(dirname "$0")/.." && pwd)}"
 mkdir -p "$OUT"; APP="$OUT/GDCPluginManager-preview.app"

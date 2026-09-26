@@ -17,6 +17,7 @@
 ## Nelansat — Foundation F3/F4 (ramura foundation-f3-f4)
 - Client: fereastra principală împărțită pe componente; aspectul și comportamentul rămân identice.
 - Client și Furnizor: spațieri, raze și culori de stare trec prin tokenii de design comuni (aceleași valori).
+- Client: carduri redesenate — imagine mai mare cu finisaj lucios discret, insigne de stare pe imagine, butoane noi; cardul de produs arată clar starea (instalare, actualizare, eroare cu „Reîncearcă”, incompatibil, fără conexiune).
 
 ## v1.52.6 Furnizor (instalat local 2026-09-26, neîmpins) — Fără tokenul GitHub vechi
 - Furnizorul nu mai încorporează tokenul GitHub vechi: numele repo-urilor de resurse stau într-un fișier fără secrete, iar dimensiunea repo-urilor se citește prin autentificarea `gh` de pe Mac (fără `gh` → „necunoscut”).

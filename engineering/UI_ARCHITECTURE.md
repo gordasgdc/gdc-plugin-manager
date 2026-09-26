@@ -99,7 +99,11 @@ secțiunea atinsă verificată în RO/EN/ES și Light/Dark. „Compilează” nu
 ### Stare (2026-09-26, ramura `foundation-f3-f4`)
 - FĂCUT, comportament identic: pașii 1, 2, 3 (fișiere; textele `DeveloperShelf` încă nelocalizate), 5, 6 (fără stările cu progres), 7
   (`Navigation/SectionRouter.swift`; tipul `ContentView` păstrat în `Shell/ContentView.swift`; singleton-urile = `@ObservedObject`).
-- Pasul 4: perechile Grid/Card mutate în `Content/`, NEtrecute încă pe `ContentCard` — schimbare vizuală, așteaptă prototipul aprobat.
+- Pasul 4 + card A+B (prototip aprobat 2026-09-26): `Components/` StatusBadge, GDCButtonStyle, ProgressRow, ContentCard
+  (toate cardurile de conținut + MyApps; `glassCardBackground` rămas doar la Comunitate, cu aceeași suprafață), `Catalog/ProductCard.swift`
+  cu 8 stări (OFFLINE = `CatalogService.isShowingCachedCatalog`, informativ, acțiunea rămâne activă; FAILED = „Reîncearcă”, aceeași operație).
+  Galerie DEBUG `Shell/ComponentGallery.swift` (`-GDCComponentGallery YES [-GDCGalleryOffset N] [-GDCGalleryWidth W]`).
+- Rămân (neprototipate, deci neaplicate): `StateView` (loading/empty/error ale ecranelor) și `Banner` unificat.
 - Tokeni: `scripts/tokenize_literals.py` (doar valori identice) + gardă `scripts/audit-design-literals.sh` (bază în `design-literals-baseline.txt`).
 - Regresie vizuală: `scripts/ui-snapshots.sh <out> [repo]` (RO/EN/ES × Light/Dark, fără instalare) + comparație pixel cu `main`: EN/ES identice,
   RO diferă doar prin starea activă/inactivă a ferestrei.

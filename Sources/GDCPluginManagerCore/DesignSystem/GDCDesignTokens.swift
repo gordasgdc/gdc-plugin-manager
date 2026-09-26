@@ -87,7 +87,7 @@ public enum GDCTokens {
             })
         }
         /// Începutul gradientului de reflex (sus), care se stinge la 42% din înălțime.
-        public static let glossTop = dynamic(dark: 0.09, light: 0.55)
+        public static let glossTop = dynamic(dark: 0.09, light: 0.28)
         /// Linia de lumină de pe muchia de sus a imaginii și a cardului.
         public static let edge = dynamic(dark: 0.14, light: 0.70)
         public static var gloss: LinearGradient {

@@ -12,6 +12,7 @@ struct StatusBadge: View {
     let kind: Kind
     var text: String?
     var onArtwork = false
+    @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
         HStack(spacing: GDCTokens.Space.xs) {
@@ -19,7 +20,7 @@ struct StatusBadge: View {
             Text(label).lineLimit(1)
         }
         .font(.caption2.weight(.semibold))
-        .foregroundStyle(color)
+        .foregroundStyle(textColor)
         .padding(.horizontal, GDCTokens.Space.s)
         .frame(height: GDCTokens.Size.badgeHeight)
         .background {
@@ -48,6 +49,15 @@ struct StatusBadge: View {
         case .offline: return L.t("card.offline")
         case .custom(let t, _, _): return t
         }
+    }
+
+    /// În Light, culorile de stare de sistem (verde, amber) sunt prea deschise pentru text mic:
+    /// se închid cu 40% spre negru ca să treacă de 4.5:1 (DESIGN_SYSTEM.md, Accesibilitate).
+    private var textColor: Color {
+        // Stările neutre (gri) pe imagine: textul principal, altfel se pierde pe coperți colorate.
+        if onArtwork, kind == .incompatible || kind == .offline { return GDCTokens.Palette.textPrimary }
+        guard colorScheme == .light else { return color }
+        return Color(nsColor: NSColor(color).blended(withFraction: 0.4, of: .black) ?? NSColor(color))
     }
 
     private var color: Color {
