@@ -132,3 +132,17 @@ final class LicenseCoreTests: XCTestCase {
         XCTAssertEqual(LicenseCore.productHash(for: "abc"), [0xDD, 0xAF, 0x35, 0xA1])
     }
 }
+
+/// Vector comun Mac/Windows (Faza 6): serial semnat în C# (BouncyCastle, cheie de TEST cu seed 1…32),
+/// validat aici cu implementarea Swift — dovada că formatul licenței e identic pe ambele platforme.
+final class LicenseCrossPlatformVectorTests: XCTestCase {
+    func testSerialSignedOnWindowsValidatesOnMac() throws {
+        let pub = "ebVWLo/mVPlAeLES6KmLp5AfhTrmlb7X4OORC60ElmQ="
+        let serial = "CQ26R-ZYAAA-AAAAA-AAAAA-SCIJB-EAAAA-AAAAA-AGUZA-MQILW-MHG2I-DH3R5-YPTKF-HBVQU-ELR3W-VZARQ-D35JX-BLNWO-RAOA7-SYTHJ-FLINB-LQHXR-GYRAP-ALEK4-UCINV-F6OZL-O6M2V-DE7KQ-PTAGA"
+        let payload = try LicenseCore.validate(serial: serial, expectedProductID: "gdc-parity-vector", hwidAvailable: true,
+                                               publicKeyBase64: pub, machineHash: { [0, 0, 0, 0, 0, 0] }, now: Date()).get()
+        XCTAssertEqual(payload.platform, .crossPlatform)
+        XCTAssertEqual(payload.expiresAt, 0)
+        XCTAssertFalse(payload.machineLocked)
+    }
+}
