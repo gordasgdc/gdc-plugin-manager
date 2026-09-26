@@ -1,6 +1,6 @@
 # Furnizor — plan de redesign premium (Faza 5)
 
-Stare: PROPUNERE, neimplementată. Prototip: canvas „GDC Furnizor — redesign premium”.
+Stare: V1 APROBAT 2026-09-26; lotul 1 implementat pe ramura `furnizor-faza5` (vezi „Progres”). Prototip: canvas „GDC Furnizor — redesign premium”.
 Bază: DESIGN_SYSTEM.md („Furnizor — aceeași identitate, altă UX”) + UI_ARCHITECTURE.md (straturi, componente din F3/F4).
 
 ## Principii
@@ -35,3 +35,25 @@ Bază: DESIGN_SYSTEM.md („Furnizor — aceeași identitate, altă UX”) + UI_
 ## Riscuri
 - Cele 13 formulare au câmpuri diferite: unificarea se face pe inspector comun cu secțiuni specifice, nu pe un formular unic.
 - Nicio schimbare în PublishTransaction/GitOps/SecretRegistry — doar UI; testele existente (33 Furnizor) rămân poarta.
+
+## Progres (2026-09-26, ramura `furnizor-faza5`, neîmpinsă, neinstalată)
+- FĂCUT: 5 domenii în bara laterală (Prețuri & Oferte separat, cu Banner Lansare); `Workspace/CatalogWorkspace.swift` — pentru
+  toate cele 13 tipuri: `Table` nativ (sortat alfabetic, căutare în bara de unelte, stare Publicat/Programat) + editorul EXISTENT
+  în `.inspector` redimensionabil (420–820). Legătura: `workspaceSelection` în fiecare editor (rând → `load`/`fillFromExisting`,
+  „+ Nou” → `clearForm`); editorii anunță reîncărcarea prin `.furnizorCatalogChanged`. Publicarea/Git/licențierea neatinse.
+- Clienți: `ClientDetailView` în inspector lângă tabel (nu mai e foaie); fereastră minimă 1040×600.
+- Verificare: build + teste; capturi DEBUG `scripts/furnizor-snapshots.sh` (Dark/Light, 1280×800 și 1040×600, rând preselectat).
+  Rularea de previzualizare pornește blocată la scriere (confirmarea PRODUCȚIE după STAGING rămâne neconfirmată).
+- RĂMAS: editorii își păstrează încă propria listă internă (dublură cu tabelul) — de scos tip cu tip; `InspectorPanel`/`ActionBar`
+  comune; foaia „Publică în producție” din prototip peste fluxul existent; Prețuri/Întreținere pe tiparul listă + inspector.
+
+## Modul „Bannere promoționale” (propus; prototip pe canvas, NEimplementat)
+- Moduri: Doar text · Imagine + text · Doar imagine. Texte RO (obligatoriu) / EN / ES. Imagini separate Light/Dark (Dark opțional).
+- PNG și SVG; SVG se rasterizează la publicare în PNG @2x (ImageIO nu randează `<text>` din SVG — vezi preseturile sezoniere),
+  sursa SVG se păstrează. Recomandat 1200×200, < 400 KB.
+- Campanii programate (listă, ca `promoSchedule` din pricing.json): Black Friday, Crăciun etc.; una activă la un moment dat.
+- Previzualizare în editor: lat/îngust (1440/760) și Light/Dark, cu randarea reală a bannerului din client.
+- Compatibilitate `launch-banner.json`: câmpurile vechi (`enabled`, `topText`, `mainText`, `imagePath`, `textOnTop`, `scheduling`)
+  rămân și sunt scrise mereu din campania activă ca rezervă (clienții ≤ 1.40 văd textul RO); câmpuri noi opționale
+  (`mode`, `campaigns[]`, `imageDark`, texte localizate). „Doar imagine” = invizibil pe clienții vechi (isDisplayable cere text).
+- Conținutul actual din producție („PREȚURI SPECIALE…”) NU se modifică în acest lot; încalcă Regula 3 — decizia rămâne la Cristi.
