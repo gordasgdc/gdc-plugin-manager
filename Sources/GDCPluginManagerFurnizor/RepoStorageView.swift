@@ -50,16 +50,45 @@ struct RepoStorageView: View {
     @State private var expandedRepo: String?
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 22) {
-                header
-                if let error = model.loadError { warning(error) }
-                chart
-                ForEach(model.usages) { usage in repoCard(usage) }
-                if !model.duplicates.isEmpty { duplicatesSection }
+        // Faza 5 (V1): antet + grafic + tabelul repo-urilor; detaliile repo-ului ales (sau duplicatele) în inspector.
+        VStack(alignment: .leading, spacing: GDCTokens.Space.l) {
+            header
+            if let error = model.loadError { warning(error) }
+            chart
+            Table(model.usages, selection: $expandedRepo) {
+                TableColumn("Repo") { Text($0.repoName).fontWeight(.medium) }.width(min: 160, ideal: 240)
+                TableColumn("Conținut") { Text(RepoStorageScanner.formatted($0.totalBytes)).font(GDCTokens.Typography.numeric) }
+                    .width(min: 70, ideal: 90)
+                TableColumn("Fișiere") { Text("\($0.fileCount)").font(GDCTokens.Typography.numeric) }.width(min: 50, ideal: 70)
+                TableColumn("GitHub") { u in
+                    Text(u.remoteBytes.map { RepoStorageScanner.formatted($0) } ?? "—").font(GDCTokens.Typography.numeric)
+                        .foregroundStyle(GDCTokens.Palette.textSecondary)
+                }
+                .width(min: 70, ideal: 90)
+                TableColumn("Atenție") { u in
+                    let issues = (u.isCloned ? 0 : 1) + (u.missingFiles.isEmpty ? 0 : 1) + (u.totalBytes > RepoStorageScanner.softRepoLimitBytes ? 1 : 0)
+                    if issues > 0 { StatusPill(text: "\(issues) problemă(e)", color: GDCTokens.Palette.warning) }
+                    else { StatusPill(text: "OK", color: GDCTokens.Palette.success) }
+                }
+                .width(min: 90, ideal: 110)
             }
-            .padding(20)
-            .frame(maxWidth: 860, alignment: .leading)
+        }
+        .padding(GDCTokens.Space.l)
+        .inspector(isPresented: .constant(true)) {
+            ScrollView {
+                VStack(alignment: .leading, spacing: GDCTokens.Space.l) {
+                    if let usage = model.usages.first(where: { $0.key == expandedRepo }) {
+                        repoCard(usage)
+                    } else if !model.duplicates.isEmpty {
+                        duplicatesSection
+                    } else {
+                        Text("Alege un repo din tabel pentru ce e stocat în el.")
+                            .font(GDCTokens.Typography.secondary).foregroundStyle(GDCTokens.Palette.textSecondary)
+                    }
+                }
+                .padding(GDCTokens.Space.l)
+            }
+            .inspectorColumnWidth(min: 380, ideal: 460, max: 760)
         }
         .task { if model.lastScan == nil { await model.scan() } }
     }
@@ -182,11 +211,7 @@ struct RepoStorageView: View {
                     .font(.caption).foregroundStyle(.secondary)
             }
 
-            Button(isOpen ? "Ascunde detaliile" : "Ce e stocat aici") {
-                expandedRepo = isOpen ? nil : usage.key
-            }
-            .buttonStyle(.link)
-
+            // În inspector detaliile sunt mereu deschise (selecția din tabel = repo-ul deschis).
             if isOpen { repoDetail(usage) }
         }
         .padding(GDCTokens.Space.l)

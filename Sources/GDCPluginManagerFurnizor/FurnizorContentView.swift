@@ -41,6 +41,8 @@ struct FurnizorContentView: View {
         case "secrets": return .secrets
         case "pricing": return .pricing
         case "launchBanner": return .launchBanner
+        case "repoStorage": return .repoStorage
+        case "backup": return .backup
         default: return .publish
         }
         #else

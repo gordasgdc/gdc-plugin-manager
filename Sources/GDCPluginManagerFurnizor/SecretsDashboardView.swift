@@ -11,7 +11,7 @@ import GDCPluginManagerCore
 /// numele constantei.
 struct SecretsDashboardView: View {
     @StateObject private var registry = SecretRegistry.shared
-    @State private var expanded: Set<String> = []
+    @State private var selectedSecretID: String?
     @State private var renewing: ManagedSecret?
     @State private var exportedTo: URL?
 
@@ -19,14 +19,50 @@ struct SecretsDashboardView: View {
         VStack(alignment: .leading, spacing: 0) {
             header
             Divider()
-            ScrollView {
-                LazyVStack(spacing: 0) {
-                    ForEach(registry.secrets) { secret in
-                        row(for: secret)
-                        Divider()
+            // Faza 5 (V1): tabel + detaliile secretului selectat în inspector. Valorile nu se afișează niciodată.
+            Table(registry.secrets, selection: $selectedSecretID) {
+                TableColumn("Stare") { secret in statusPill(registry.status(for: secret).severity) }
+                    .width(min: 70, ideal: 90)
+                TableColumn("Secret") { Text($0.name).fontWeight(.medium) }
+                    .width(min: 180, ideal: 260)
+                TableColumn("Situație") { secret in
+                    let status = registry.status(for: secret)
+                    Text(status.headline).foregroundStyle(color(for: status.severity))
+                }
+                .width(min: 140, ideal: 220)
+                TableColumn("Expiră") { secret in
+                    Text(registry.status(for: secret).expiresAt?.formatted(date: .abbreviated, time: .omitted) ?? "—")
+                        .font(GDCTokens.Typography.numeric).foregroundStyle(GDCTokens.Palette.textSecondary)
+                }
+                .width(min: 80, ideal: 110)
+                TableColumn("Oglinzi") { secret in
+                    if registry.status(for: secret).mirrorReport.contains(where: { $0.inSync == false }) {
+                        Label("desincronizat", systemImage: "arrow.triangle.branch").foregroundStyle(GDCTokens.Palette.warning)
+                    } else {
+                        Text("—").foregroundStyle(GDCTokens.Palette.textTertiary)
                     }
                 }
+                .width(min: 90, ideal: 120)
             }
+        }
+        .inspector(isPresented: .constant(true)) {
+            Group {
+                if let secret = registry.secrets.first(where: { $0.id == selectedSecretID }) {
+                    ScrollView {
+                        VStack(alignment: .leading, spacing: GDCTokens.Space.m) {
+                            Text(secret.name).font(GDCTokens.Typography.sectionTitle)
+                            detail(for: secret, status: registry.status(for: secret))
+                        }
+                        .padding(GDCTokens.Space.l)
+                    }
+                } else {
+                    Text("Alege un secret din tabel pentru detalii și pașii de reînnoire.")
+                        .font(GDCTokens.Typography.secondary).foregroundStyle(GDCTokens.Palette.textSecondary)
+                        .multilineTextAlignment(.center).padding(GDCTokens.Space.xl)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                }
+            }
+            .inspectorColumnWidth(min: 380, ideal: 460, max: 720)
         }
         .sheet(item: $renewing) { secret in
             SecretRenewalWizardView(secret: secret)
@@ -103,42 +139,6 @@ struct SecretsDashboardView: View {
     }
 
     // MARK: Un rând
-
-    @ViewBuilder
-    private func row(for secret: ManagedSecret) -> some View {
-        let status = registry.status(for: secret)
-        let isOpen = expanded.contains(secret.id)
-
-        VStack(alignment: .leading, spacing: 0) {
-            Button {
-                if isOpen { expanded.remove(secret.id) } else { expanded.insert(secret.id) }
-            } label: {
-                HStack(spacing: GDCTokens.Space.m) {
-                    statusPill(status.severity)
-                    VStack(alignment: .leading, spacing: 3) {
-                        Text(secret.name).font(.headline)
-                        Text(status.headline)
-                            .font(.subheadline)
-                            .foregroundStyle(color(for: status.severity))
-                    }
-                    Spacer()
-                    if status.mirrorReport.contains(where: { $0.inSync == false }) {
-                        Label("oglindă desincronizată", systemImage: "arrow.triangle.branch")
-                            .font(.caption)
-                            .foregroundStyle(GDCTokens.Palette.warning)
-                    }
-                    Image(systemName: isOpen ? "chevron.down" : "chevron.right")
-                        .font(.caption).foregroundStyle(.secondary)
-                }
-                .padding(.horizontal, 20)
-                .padding(.vertical, GDCTokens.Space.m)
-                .contentShape(Rectangle())
-            }
-            .buttonStyle(.plain)
-
-            if isOpen { detail(for: secret, status: status) }
-        }
-    }
 
     @ViewBuilder
     private func detail(for secret: ManagedSecret, status: SecretStatus) -> some View {

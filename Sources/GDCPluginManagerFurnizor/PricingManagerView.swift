@@ -19,13 +19,14 @@ struct PricingManagerView: View {
     @State private var showAddSheet = false
 
     var body: some View {
-        HSplitView {
-            productList
-                .frame(minWidth: 260, idealWidth: 300)
-            detailPane
-                .frame(minWidth: 420, maxWidth: .infinity, maxHeight: .infinity)
-        }
-        .onAppear(perform: reload)
+        // Faza 5 (V1): tabel central + editorul produsului în inspectorul lateral.
+        productList
+            .inspector(isPresented: .constant(true)) {
+                detailPane
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .inspectorColumnWidth(min: 420, ideal: 480, max: 760)
+            }
+            .onAppear(perform: reload)
     }
 
     private var productList: some View {
@@ -42,32 +43,35 @@ struct PricingManagerView: View {
                 Text(loadError).foregroundStyle(GDCTokens.Palette.error).font(.caption).padding(.horizontal)
             }
 
-            List(selection: $selectedProductID) {
-                ForEach(gdcStandaloneProducts) { product in
-                    let pricing = catalog?.products[product.id]
-                    HStack {
-                        VStack(alignment: .leading, spacing: GDCTokens.Space.xxs) {
-                            Text(product.name).bold()
-                            if let pricing {
-                                if let active = pricing.activePromo {
-                                    Text("🔥 \(formatPrice(active.price, pricing.currency)) — \(active.label)")
-                                        .font(.caption).foregroundStyle(GDCTokens.Palette.warning)
-                                } else if let next = pricing.nextScheduledPromo {
-                                    Text("\(formatPrice(pricing.basePrice, pricing.currency)) · „\(next.label)” programată \(next.startsAt.formatted(date: .abbreviated, time: .omitted))")
-                                        .font(.caption).foregroundStyle(.secondary)
-                                } else {
-                                    Text(formatPrice(pricing.basePrice, pricing.currency))
-                                        .font(.caption).foregroundStyle(.secondary)
-                                }
-                            } else {
-                                Text("Neconfigurat încă în pricing.json").font(.caption).foregroundStyle(GDCTokens.Palette.warning)
-                            }
-                        }
-                        Spacer()
+            Table(gdcStandaloneProducts, selection: $selectedProductID) {
+                TableColumn("Produs") { Text($0.name).fontWeight(.medium) }
+                    .width(min: 160, ideal: 220)
+                TableColumn("Sumă de bază") { product in
+                    if let pricing = catalog?.products[product.id] {
+                        Text(formatPrice(pricing.basePrice, pricing.currency)).font(GDCTokens.Typography.numeric)
+                    } else {
+                        StatusPill(text: "Neconfigurat", color: GDCTokens.Palette.warning)
                     }
-                    .tag(product.id)
-                    .contentShape(Rectangle())
                 }
+                .width(min: 90, ideal: 110)
+                TableColumn("Ofertă activă") { product in
+                    if let pricing = catalog?.products[product.id], let active = pricing.activePromo {
+                        Text("\(formatPrice(active.price, pricing.currency)) — \(active.label)")
+                            .foregroundStyle(GDCTokens.Palette.warning)
+                    } else {
+                        Text("—").foregroundStyle(GDCTokens.Palette.textTertiary)
+                    }
+                }
+                .width(min: 120, ideal: 180)
+                TableColumn("Următoarea") { product in
+                    if let pricing = catalog?.products[product.id], let next = pricing.nextScheduledPromo {
+                        Text("„\(next.label)” din \(next.startsAt.formatted(date: .abbreviated, time: .omitted))")
+                            .foregroundStyle(GDCTokens.Palette.textSecondary)
+                    } else {
+                        Text("—").foregroundStyle(GDCTokens.Palette.textTertiary)
+                    }
+                }
+                .width(min: 120, ideal: 180)
             }
         }
         .onChange(of: selectedProductID) { _, newValue in

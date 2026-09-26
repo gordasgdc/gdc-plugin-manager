@@ -47,8 +47,10 @@ Bază: DESIGN_SYSTEM.md („Furnizor — aceeași identitate, altă UX”) + UI_
 - Lot 2: listele proprii ale editorilor ascunse în spațiul de lucru (`embedded`), ștergerea intrării selectate păstrată cu aceeași
   confirmare; la Produse rămân „Șterge acest produs” și ștergerea multiplă. Foaia „Publică în producție/staging”
   (`Workspace/PublishConfirmation.swift`, `PublishGate` prin environment) peste `publish()` existent — în PRODUCȚIE cere bifa explicită.
-- RĂMAS: `InspectorPanel`/`ActionBar` comune; Prețuri/Întreținere pe tiparul listă + inspector; captura foii în PRODUCȚIE
-  (acolo alerta de siguranță STAGING→PRODUCȚIE are prioritate).
+- Lot 3: Prețuri & Oferte (tabel produse: sumă de bază, ofertă activă, următoarea + editorul existent în inspector), Token-uri & Chei
+  (tabel secrete, detalii/reînnoire în inspector, valorile niciodată afișate), Stocare pe repo-uri (grafic + tabel, detalii/duplicate
+  în inspector), Backup (componente în tabel cu bifă, parolă + export/restaurare în inspector). V1 COMPLET pe toate cele 5 domenii.
+- Rămas opțional: captura foii de publicare în PRODUCȚIE (alerta STAGING→PRODUCȚIE are prioritate pe Mac-ul de dezvoltare).
 
 ## Modul „Bannere promoționale” — IMPLEMENTAT pe ramură (2026-09-26), nepublicat
 - Moduri: Doar text · Imagine + text · Doar imagine. Texte RO (obligatoriu) / EN / ES. Imagini separate Light/Dark (Dark opțional).
@@ -66,7 +68,7 @@ Bază: DESIGN_SYSTEM.md („Furnizor — aceeași identitate, altă UX”) + UI_
   client + previzualizare Furnizor). `campaigns` decodat tolerant — o listă stricată nu ascunde bannerul clasic.
 - Rapoarte: Doar imagine 6:1 (1200×200), opțional lată 12:1 (2400×200) de la 900 pt, afișare `fit` (integral vizibilă),
   înălțime plafonată la 160 pt; Imagine + text 3:1 (600×200), `fill` cu decupare centrală într-un panou de 72 pt; Doar text 56 pt.
-- Furnizor: `BannerImageProcessor` — PNG/SVG, raport ±2%, minim @1x, peste @2x micșorat, PNG fără metadate ≤ 400 KB
+- Furnizor: `BannerImageProcessor` — PNG (transparență reală detectată)/JPEG (fotografii, calitate ≥ 0.72)/SVG, tip verificat din conținut, raport ±2%, minim @1x, peste @2x micșorat, PNG fără metadate ≤ 400 KB
   (dacă @2x depășește, se încearcă @1x); SVG respins la script/foreignObject/entități/DOCTYPE/href extern/url() extern, apoi
   rasterizat local cu NSImage (verificat în teste). `PromoBanner/PromoBannerEditorView.swift`: listă campanii, mod, RO/EN/ES,
   sloturi Light/Dark/lată, program, link, blocarea publicării la suprapuneri sau conținut incomplet, previzualizare 470/760/1150 pt

@@ -34,18 +34,43 @@ struct BackupView: View {
     }
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
-                header
-                Divider()
-                exportSection
-                Divider()
-                restoreSection
+        // Faza 5 (V1): componentele în tabel (bifa = inclusă în backup); explicația, parola și acțiunile în inspector.
+        componentTable
+            .inspector(isPresented: .constant(true)) {
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 20) {
+                        header
+                        Divider()
+                        exportSection
+                        Divider()
+                        restoreSection
+                    }
+                    .padding(GDCTokens.Space.l)
+                }
+                .inspectorColumnWidth(min: 420, ideal: 500, max: 780)
             }
-            .padding(22)
-            .frame(maxWidth: 820, alignment: .leading)
+            .onAppear(perform: reload)
+    }
+
+    private var componentTable: some View {
+        Table(components) {
+            TableColumn("Inclus") { c in
+                Toggle("Include \(c.label)", isOn: Binding(
+                    get: { selected.contains(c.id) },
+                    set: { on in if on { selected.insert(c.id) } else { selected.remove(c.id) } }))
+                .labelsHidden()
+            }
+            .width(50)
+            TableColumn("Componentă") { c in
+                HStack(spacing: GDCTokens.Space.xs) {
+                    Text(c.label).fontWeight(.medium)
+                    if c.isCritical { StatusPill(text: "ESENȚIAL", color: GDCTokens.Palette.error) }
+                    if c.isOptional { StatusPill(text: "mare", color: GDCTokens.Palette.textSecondary) }
+                }
+            }
+            .width(min: 200, ideal: 280)
+            TableColumn("Ce conține") { Text($0.detail).foregroundStyle(GDCTokens.Palette.textSecondary).lineLimit(2) }
         }
-        .onAppear(perform: reload)
     }
 
     private var header: some View {
@@ -88,31 +113,8 @@ struct BackupView: View {
                 Text("Nu am găsit nicio componentă de salvat pe acest Mac.")
                     .foregroundStyle(.secondary)
             } else {
-                ForEach(components) { component in
-                    Toggle(isOn: Binding(
-                        get: { selected.contains(component.id) },
-                        set: { on in
-                            if on { selected.insert(component.id) } else { selected.remove(component.id) }
-                        })) {
-                        VStack(alignment: .leading, spacing: GDCTokens.Space.xxs) {
-                            HStack(spacing: 6) {
-                                Text(component.label)
-                                if component.isCritical {
-                                    Text("ESENȚIAL")
-                                        .font(.caption2).fontWeight(.bold)
-                                        .padding(.horizontal, 5).padding(.vertical, 1)
-                                        .background(GDCTokens.Palette.error.opacity(0.15), in: Capsule())
-                                        .foregroundStyle(GDCTokens.Palette.error)
-                                }
-                                if component.isOptional {
-                                    Text("mare").font(.caption2).foregroundStyle(.secondary)
-                                }
-                            }
-                            Text(component.detail).font(.caption).foregroundStyle(.secondary)
-                                .fixedSize(horizontal: false, vertical: true)
-                        }
-                    }
-                }
+                Text("Componentele incluse se aleg din tabel (\(selected.count) din \(components.count) bifate).")
+                    .font(GDCTokens.Typography.metadata).foregroundStyle(GDCTokens.Palette.textSecondary)
 
                 if criticalMissing {
                     Label("Ai debifat o componentă esențială. Backup-ul va fi incomplet.",
