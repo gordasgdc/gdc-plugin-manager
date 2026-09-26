@@ -15,7 +15,7 @@ struct CatalogGrid: View {
 
     // 240 (de la 220): cardul are acum și copertă, iar descrierea urcă la
     // 5 rânduri — sub 240 textul se rupe urât.
-    private let columns = [GridItem(.adaptive(minimum: 240, maximum: 300), spacing: 14)]
+    private let columns = [GridItem(.adaptive(minimum: 240, maximum: 300), spacing: GDCTokens.Space.grid)]
 
     private var filteredItems: [PluginItem] { filters.filter(items) }
 
@@ -32,20 +32,20 @@ struct CatalogGrid: View {
 
             ScrollView {
                 if catalog.isLoading && items.isEmpty {
-                    ProgressView(L.t("catalog.loading")).padding(40)
+                    ProgressView(L.t("catalog.loading")).padding(GDCTokens.Space.page)
                 } else if let error = catalog.loadError, items.isEmpty {
-                    Text(error).foregroundStyle(.secondary).padding(40)
+                    Text(error).foregroundStyle(.secondary).padding(GDCTokens.Space.page)
                 } else if items.isEmpty {
-                    Text(L.t("catalog.empty")).foregroundStyle(.secondary).padding(40)
+                    Text(L.t("catalog.empty")).foregroundStyle(.secondary).padding(GDCTokens.Space.page)
                 } else if filteredItems.isEmpty {
-                    Text(L.t("filter.price.empty")).foregroundStyle(.secondary).padding(40)
+                    Text(L.t("filter.price.empty")).foregroundStyle(.secondary).padding(GDCTokens.Space.page)
                 } else {
-                    LazyVGrid(columns: columns, spacing: 14) {
+                    LazyVGrid(columns: columns, spacing: GDCTokens.Space.grid) {
                         ForEach(filteredItems) { item in
                             PluginCard(item: item)
                         }
                     }
-                    .padding(16)
+                    .padding(GDCTokens.Space.l)
                 }
             }
         }

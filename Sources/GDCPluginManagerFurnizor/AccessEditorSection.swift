@@ -77,7 +77,7 @@ struct AccessEditorSection: View {
 
     var body: some View {
         GroupBox("Acces, grup & etichete") {
-            VStack(alignment: .leading, spacing: 12) {
+            VStack(alignment: .leading, spacing: GDCTokens.Space.m) {
                 if showsKind {
                     Picker("Tip acces", selection: $state.kind) {
                         Text("Nespecificat").tag(AccessKind?.none)
@@ -118,7 +118,7 @@ struct AccessEditorSection: View {
                     domainSuggestions: tagSuggestions
                 )
             }
-            .padding(8)
+            .padding(GDCTokens.Space.s)
         }
         .task { publishedTags = CatalogTagIndex.loadAllTags() }
     }

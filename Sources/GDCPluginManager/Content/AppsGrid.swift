@@ -9,7 +9,7 @@ struct AppsGrid: View {
     // (CatalogFilterBar.swift) — aceleasi in toate sectiunile.
     @StateObject private var filters = CatalogFilterState()
 
-    private let columns = [GridItem(.adaptive(minimum: 220, maximum: 280), spacing: 14)]
+    private let columns = [GridItem(.adaptive(minimum: 220, maximum: 280), spacing: GDCTokens.Space.grid)]
 
     private var filtered: [AppLink] { filters.filter(apps) }
 
@@ -24,18 +24,18 @@ struct AppsGrid: View {
             Divider()
             ScrollView {
                 if apps.isEmpty {
-                    Text(L.t("apps.empty")).foregroundStyle(.secondary).padding(40)
+                    Text(L.t("apps.empty")).foregroundStyle(.secondary).padding(GDCTokens.Space.page)
                 } else if filtered.isEmpty {
-                    Text(L.t("access.filter.none")).foregroundStyle(.secondary).padding(40)
+                    Text(L.t("access.filter.none")).foregroundStyle(.secondary).padding(GDCTokens.Space.page)
                 } else {
-                    LazyVGrid(columns: columns, spacing: 14) {
+                    LazyVGrid(columns: columns, spacing: GDCTokens.Space.grid) {
                         // Preț dinamic (Regula 27) - un singur fetch pentru
                         // tot grid-ul, nu unul per card.
                         ForEach(filtered) { app in
                             AppCard(app: app)
                         }
                     }
-                    .padding(16)
+                    .padding(GDCTokens.Space.l)
                 }
             }
             // Atasat pe ScrollView (mereu prezent), nu pe LazyVGrid din
@@ -54,7 +54,7 @@ struct AppCard: View {
     /// Apps aren't a `PluginType` case, so they get their own fixed tint
     /// here instead of `PluginType.tintColor` — matches the blue Cristi
     /// asked for, distinct from every plugin category's color.
-    private let tint = Color.blue
+    private let tint = GDCTokens.Palette.info
 
     // Preț dinamic (Regula 27, 2026-08-31) - vezi AppPricingFetcher. Un
     // card fara `pricingProductID` (Clapperboard Digital, GDC Metadata
@@ -71,13 +71,13 @@ struct AppCard: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: GDCTokens.Space.s) {
             HStack(spacing: 6) {
                 Text(L.t("apps.badge"))
                     .font(.system(size: 9, weight: .bold))
                     .tracking(0.5)
                     .foregroundStyle(tint)
-                    .padding(.horizontal, 8)
+                    .padding(.horizontal, GDCTokens.Space.s)
                     .padding(.vertical, 3)
                     .background(Capsule().fill(tint.opacity(0.15)))
                 // Badge de status comun (GRATUIT/TRIAL/EXTERN) — nu apare
@@ -98,10 +98,10 @@ struct AppCard: View {
             Text(app.name).font(.headline)
             if let pricing {
                 if let promo = pricing.activePromo {
-                    HStack(spacing: 4) {
+                    HStack(spacing: GDCTokens.Space.xs) {
                         Text(formattedPrice(promo.price))
                             .font(.system(size: 13, weight: .bold))
-                            .foregroundStyle(.orange)
+                            .foregroundStyle(GDCTokens.Palette.warning)
                         Text(formattedPrice(pricing.basePrice))
                             .font(.caption2).strikethrough().foregroundStyle(.tertiary)
                     }
@@ -132,7 +132,7 @@ struct AppCard: View {
             }
             SocialLinksRow(app.socialLinks)
         }
-        .padding(12)
+        .padding(GDCTokens.Space.m)
         .frame(maxWidth: .infinity, minHeight: 96, alignment: .leading)
         .glassCardBackground()
         .overlay(alignment: .topTrailing) { infoButton }
@@ -149,7 +149,7 @@ struct AppCard: View {
             }
             .buttonStyle(.plain)
             .help(L.t("card.youtubeLink"))
-            .padding(8)
+            .padding(GDCTokens.Space.s)
             .help(L.t("card.tutorial"))
         }
     }

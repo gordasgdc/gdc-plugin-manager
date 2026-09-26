@@ -56,80 +56,80 @@ struct GlobalSearchResults: View {
             + matchedDownloads.count + matchedOffers.count + matchedBundles.count
     }
 
-    private let productColumns = [GridItem(.adaptive(minimum: 240, maximum: 300), spacing: 14)]
-    private let wideColumns = [GridItem(.adaptive(minimum: 260, maximum: 340), spacing: 14)]
+    private let productColumns = [GridItem(.adaptive(minimum: 240, maximum: 300), spacing: GDCTokens.Space.grid)]
+    private let wideColumns = [GridItem(.adaptive(minimum: 260, maximum: 340), spacing: GDCTokens.Space.grid)]
 
     var body: some View {
         ScrollView {
             if totalMatches == 0 {
-                Text(L.t("search.noResults")).foregroundStyle(.secondary).padding(40)
+                Text(L.t("search.noResults")).foregroundStyle(.secondary).padding(GDCTokens.Space.page)
             } else {
                 VStack(alignment: .leading, spacing: 20) {
                     section(title: L.t("sidebar.all"), isEmpty: matchedItems.isEmpty) {
-                        LazyVGrid(columns: productColumns, spacing: 14) {
+                        LazyVGrid(columns: productColumns, spacing: GDCTokens.Space.grid) {
                             ForEach(matchedItems) { PluginCard(item: $0) }
                         }
                     }
                     section(title: L.t("sidebar.apps"), isEmpty: matchedApps.isEmpty) {
-                        LazyVGrid(columns: wideColumns, spacing: 14) {
+                        LazyVGrid(columns: wideColumns, spacing: GDCTokens.Space.grid) {
                             ForEach(matchedApps) { AppCard(app: $0) }
                         }
                     }
                     section(title: L.t("sidebar.audio"), isEmpty: matchedAudio.isEmpty) {
-                        LazyVGrid(columns: wideColumns, spacing: 14) {
+                        LazyVGrid(columns: wideColumns, spacing: GDCTokens.Space.grid) {
                             ForEach(matchedAudio) { AudioCard(track: $0) }
                         }
                     }
                     section(title: L.t("sidebar.courses"), isEmpty: matchedCourses.isEmpty) {
-                        LazyVGrid(columns: wideColumns, spacing: 14) {
+                        LazyVGrid(columns: wideColumns, spacing: GDCTokens.Space.grid) {
                             ForEach(matchedCourses) { CourseCard(course: $0) }
                         }
                     }
                     section(title: L.t("sidebar.educationalResources"), isEmpty: matchedResources.isEmpty) {
-                        LazyVGrid(columns: wideColumns, spacing: 14) {
+                        LazyVGrid(columns: wideColumns, spacing: GDCTokens.Space.grid) {
                             ForEach(matchedResources) { EducationalResourceCard(resource: $0) }
                         }
                     }
                     section(title: L.t("sidebar.tutorials"), isEmpty: matchedTutorials.isEmpty) {
-                        LazyVGrid(columns: wideColumns, spacing: 14) {
+                        LazyVGrid(columns: wideColumns, spacing: GDCTokens.Space.grid) {
                             ForEach(matchedTutorials) { TutorialCard(tutorial: $0) }
                         }
                     }
                     section(title: L.t("sidebar.events"), isEmpty: matchedEvents.isEmpty) {
-                        LazyVGrid(columns: wideColumns, spacing: 14) {
+                        LazyVGrid(columns: wideColumns, spacing: GDCTokens.Space.grid) {
                             ForEach(matchedEvents) { EventCard(event: $0) }
                         }
                     }
                     section(title: L.t("sidebar.partnerOffers"), isEmpty: matchedOffers.isEmpty) {
-                        LazyVGrid(columns: wideColumns, spacing: 14) {
+                        LazyVGrid(columns: wideColumns, spacing: GDCTokens.Space.grid) {
                             ForEach(matchedOffers) { PartnerOfferCard(offer: $0) }
                         }
                     }
                     section(title: L.t("sidebar.bundles"), isEmpty: matchedBundles.isEmpty) {
-                        LazyVGrid(columns: wideColumns, spacing: 14) {
+                        LazyVGrid(columns: wideColumns, spacing: GDCTokens.Space.grid) {
                             ForEach(matchedBundles) { BundleCard(bundle: $0, catalog: catalog) }
                         }
                     }
                     section(title: L.t("sidebar.partnerStores"), isEmpty: matchedStores.isEmpty) {
-                        LazyVGrid(columns: wideColumns, spacing: 14) {
+                        LazyVGrid(columns: wideColumns, spacing: GDCTokens.Space.grid) {
                             ForEach(matchedStores) { PartnerStoreCard(store: $0) }
                         }
                     }
                     section(title: L.t("sidebar.serviceCenters"), isEmpty: matchedCenters.isEmpty) {
-                        LazyVGrid(columns: wideColumns, spacing: 14) {
+                        LazyVGrid(columns: wideColumns, spacing: GDCTokens.Space.grid) {
                             ForEach(matchedCenters) { ServiceCenterCard(center: $0) }
                         }
                     }
                     ForEach(DownloadCategory.allCases) { category in
                         let matches = matchedDownloads.filter { $0.category == category }
                         section(title: L.t("sidebar.download.\(category.rawValue)"), isEmpty: matches.isEmpty) {
-                            LazyVGrid(columns: wideColumns, spacing: 14) {
+                            LazyVGrid(columns: wideColumns, spacing: GDCTokens.Space.grid) {
                                 ForEach(matches) { DownloadResourceCard(resource: $0) }
                             }
                         }
                     }
                 }
-                .padding(16)
+                .padding(GDCTokens.Space.l)
             }
         }
     }
@@ -137,7 +137,7 @@ struct GlobalSearchResults: View {
     @ViewBuilder
     private func section<Content: View>(title: String, isEmpty: Bool, @ViewBuilder content: () -> Content) -> some View {
         if !isEmpty {
-            VStack(alignment: .leading, spacing: 8) {
+            VStack(alignment: .leading, spacing: GDCTokens.Space.s) {
                 Text(title).font(.headline).foregroundStyle(.secondary)
                 content()
             }

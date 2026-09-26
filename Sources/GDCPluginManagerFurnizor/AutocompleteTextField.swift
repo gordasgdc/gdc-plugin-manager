@@ -57,9 +57,9 @@ struct AutocompleteTextField: View {
                     }
                 }
                 .background(Color(nsColor: .windowBackgroundColor))
-                .clipShape(RoundedRectangle(cornerRadius: 6))
-                .overlay(RoundedRectangle(cornerRadius: 6).stroke(Color.secondary.opacity(0.2)))
-                .padding(.top, 2)
+                .clipShape(RoundedRectangle(cornerRadius: GDCTokens.Radius.badge))
+                .overlay(RoundedRectangle(cornerRadius: GDCTokens.Radius.badge).stroke(Color.secondary.opacity(0.2)))
+                .padding(.top, GDCTokens.Space.xxs)
                 .shadow(color: .black.opacity(0.15), radius: 4, y: 2)
             }
         }

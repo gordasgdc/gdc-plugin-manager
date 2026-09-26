@@ -43,7 +43,7 @@ struct PublishAppView: View {
                 Text("Aplicații").font(.title2).fontWeight(.semibold)
 
                 GroupBox {
-                    VStack(alignment: .leading, spacing: 12) {
+                    VStack(alignment: .leading, spacing: GDCTokens.Space.m) {
                         TextField("ID (ex. cursorpro, nu se mai poate schimba)", text: $id)
                             .textFieldStyle(.roundedBorder)
                             .disabled(editingID != nil)
@@ -55,7 +55,7 @@ struct PublishAppView: View {
                         Text("Dacă se potrivește cu un produs din „Prețuri & Oferte”, cardul arată automat preț/ofertă/countdown la clienți.")
                             .font(.caption).foregroundStyle(.secondary)
                     }
-                    .padding(8)
+                    .padding(GDCTokens.Space.s)
                 }
 
                 AccessEditorSection(
@@ -75,7 +75,7 @@ struct PublishAppView: View {
                         Text("Windows").tag(SupportedOS?.some(.windows))
                         Text("Mac + Windows").tag(SupportedOS?.some(.crossPlatform))
                     }
-                    .padding(8)
+                    .padding(GDCTokens.Space.s)
                 }
 
                 CoverImagePicker(preset: .icon, selection: $coverSelection)
@@ -85,14 +85,14 @@ struct PublishAppView: View {
 
                 if let errorMessage {
                     Label(errorMessage, systemImage: "exclamationmark.triangle.fill")
-                        .foregroundStyle(.red)
+                        .foregroundStyle(GDCTokens.Palette.error)
                         .padding(10)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(Color.red.opacity(0.1))
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        .background(GDCTokens.Palette.error.opacity(0.1))
+                        .clipShape(RoundedRectangle(cornerRadius: GDCTokens.Radius.control))
                 }
                 if let successMessage {
-                    Label(successMessage, systemImage: "checkmark.circle.fill").foregroundStyle(.green)
+                    Label(successMessage, systemImage: "checkmark.circle.fill").foregroundStyle(GDCTokens.Palette.success)
                 }
 
                 HStack {
@@ -104,7 +104,7 @@ struct PublishAppView: View {
                     }
                 }
                 if !isFormValid && !isBusy {
-                    Text(validationHint).font(.caption).foregroundStyle(.orange)
+                    Text(validationHint).font(.caption).foregroundStyle(GDCTokens.Palette.warning)
                 }
 
                 if !existingApps.isEmpty {
@@ -120,13 +120,13 @@ struct PublishAppView: View {
                             Button("Editează") { load(app) }
                             Button("Șterge", role: .destructive) { pendingDelete = app }
                         }
-                        .padding(.vertical, 4)
+                        .padding(.vertical, GDCTokens.Space.xs)
                     }
                 }
 
                 Spacer(minLength: 0)
             }
-            .padding(24)
+            .padding(GDCTokens.Space.xl)
             .frame(maxWidth: 640, alignment: .leading)
         }
         .confirmationDialog(

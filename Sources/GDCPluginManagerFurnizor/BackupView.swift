@@ -1,4 +1,5 @@
 import SwiftUI
+import GDCPluginManagerCore
 import AppKit
 
 /// [2026-09-03] Ecranul de Backup & Restaurare — vezi BackupArchive.swift
@@ -48,7 +49,7 @@ struct BackupView: View {
     }
 
     private var header: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: GDCTokens.Space.s) {
             Text("Backup & Restaurare").font(.title2).fontWeight(.semibold)
             Text("Un singur fișier criptat care conține tot ce ține de Furnizor pe acest Mac. "
                  + "Îl duci pe alt Mac, îl imporți, și aplicația pornește exact în starea de aici.")
@@ -59,7 +60,7 @@ struct BackupView: View {
             // la auditul din 2026-09-03 cheia privata exista intr-un singur
             // exemplar, fara Time Machine si fara nicio alta copie.
             HStack(alignment: .top, spacing: 10) {
-                Image(systemName: "exclamationmark.triangle.fill").foregroundStyle(.orange)
+                Image(systemName: "exclamationmark.triangle.fill").foregroundStyle(GDCTokens.Palette.warning)
                 VStack(alignment: .leading, spacing: 3) {
                     Text("De ce contează").fontWeight(.semibold)
                     Text("Cheia privată de semnare există într-un singur exemplar, pe acest Mac. "
@@ -72,15 +73,15 @@ struct BackupView: View {
                         .fixedSize(horizontal: false, vertical: true)
                 }
             }
-            .padding(12)
-            .background(Color.orange.opacity(0.10), in: RoundedRectangle(cornerRadius: 8))
+            .padding(GDCTokens.Space.m)
+            .background(GDCTokens.Palette.warning.opacity(0.10), in: RoundedRectangle(cornerRadius: GDCTokens.Radius.control))
         }
     }
 
     // MARK: - Export
 
     private var exportSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: GDCTokens.Space.m) {
             Text("Generează backup criptat").font(.headline)
 
             if components.isEmpty {
@@ -93,15 +94,15 @@ struct BackupView: View {
                         set: { on in
                             if on { selected.insert(component.id) } else { selected.remove(component.id) }
                         })) {
-                        VStack(alignment: .leading, spacing: 2) {
+                        VStack(alignment: .leading, spacing: GDCTokens.Space.xxs) {
                             HStack(spacing: 6) {
                                 Text(component.label)
                                 if component.isCritical {
                                     Text("ESENȚIAL")
                                         .font(.caption2).fontWeight(.bold)
                                         .padding(.horizontal, 5).padding(.vertical, 1)
-                                        .background(Color.red.opacity(0.15), in: Capsule())
-                                        .foregroundStyle(.red)
+                                        .background(GDCTokens.Palette.error.opacity(0.15), in: Capsule())
+                                        .foregroundStyle(GDCTokens.Palette.error)
                                 }
                                 if component.isOptional {
                                     Text("mare").font(.caption2).foregroundStyle(.secondary)
@@ -116,7 +117,7 @@ struct BackupView: View {
                 if criticalMissing {
                     Label("Ai debifat o componentă esențială. Backup-ul va fi incomplet.",
                           systemImage: "exclamationmark.triangle")
-                        .font(.callout).foregroundStyle(.orange)
+                        .font(.callout).foregroundStyle(GDCTokens.Palette.warning)
                 }
 
                 VStack(alignment: .leading, spacing: 6) {
@@ -128,7 +129,7 @@ struct BackupView: View {
                         .font(.caption).foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
                     if let problem = passwordProblem, !password.isEmpty {
-                        Text(problem).font(.caption).foregroundStyle(.red)
+                        Text(problem).font(.caption).foregroundStyle(GDCTokens.Palette.error)
                     }
                 }
                 .frame(maxWidth: 420)
@@ -146,7 +147,7 @@ struct BackupView: View {
     // MARK: - Restaurare
 
     private var restoreSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: GDCTokens.Space.m) {
             Text("Importă backup / Restaurare").font(.headline)
             Text("Pe un Mac nou: alege fișierul de backup, introdu parola, iar aplicația își recreează "
                  + "singură folderele și își pune fișierele exact unde trebuie.")
@@ -161,7 +162,7 @@ struct BackupView: View {
             .disabled(isWorking)
 
             if let info = restoreInfo, let url = restoreArchive {
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: GDCTokens.Space.xs) {
                     Text(url.lastPathComponent).fontWeight(.medium)
                     Text("Creat: \(info.createdAt.formatted(date: .abbreviated, time: .shortened)) "
                          + "pe „\(info.machineName)\" (Furnizor v\(info.appVersion))")
@@ -171,7 +172,7 @@ struct BackupView: View {
                         .fixedSize(horizontal: false, vertical: true)
                 }
                 .padding(10)
-                .background(Color.secondary.opacity(0.08), in: RoundedRectangle(cornerRadius: 8))
+                .background(Color.secondary.opacity(0.08), in: RoundedRectangle(cornerRadius: GDCTokens.Radius.control))
 
                 SecureField("Parola backup-ului", text: $restorePassword)
                     .frame(maxWidth: 420)
@@ -193,7 +194,7 @@ struct BackupView: View {
             }
 
             if isWorking {
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: GDCTokens.Space.xs) {
                     ProgressView(value: progress).frame(maxWidth: 420)
                     Text(statusText).font(.caption).foregroundStyle(.secondary)
                 }

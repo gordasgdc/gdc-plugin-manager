@@ -34,7 +34,7 @@ struct PublishAudioView: View {
                 Text("Audio").font(.title2).fontWeight(.semibold)
 
                 GroupBox {
-                    VStack(alignment: .leading, spacing: 12) {
+                    VStack(alignment: .leading, spacing: GDCTokens.Space.m) {
                         TextField("ID (ex. ambient-pack-1, nu se mai poate schimba)", text: $id)
                             .textFieldStyle(.roundedBorder)
                             .disabled(editingID != nil)
@@ -46,14 +46,14 @@ struct PublishAudioView: View {
                                 if description.isEmpty {
                                     Text("Informații / descriere (format, metadate, conținut pachet…)")
                                         .foregroundStyle(.secondary)
-                                        .padding(.top, 8).padding(.leading, 5)
+                                        .padding(.top, GDCTokens.Space.s).padding(.leading, 5)
                                         .allowsHitTesting(false)
                                 }
                             }
-                            .overlay(RoundedRectangle(cornerRadius: 6).stroke(.separator))
+                            .overlay(RoundedRectangle(cornerRadius: GDCTokens.Radius.badge).stroke(.separator))
                         TextField("Link tutorial YouTube (opțional, nelistat)", text: $youtubeURL).textFieldStyle(.roundedBorder)
                     }
-                    .padding(8)
+                    .padding(GDCTokens.Space.s)
                 }
 
                 AccessEditorSection(
@@ -75,14 +75,14 @@ struct PublishAudioView: View {
 
                 if let errorMessage {
                     Label(errorMessage, systemImage: "exclamationmark.triangle.fill")
-                        .foregroundStyle(.red)
+                        .foregroundStyle(GDCTokens.Palette.error)
                         .padding(10)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(Color.red.opacity(0.1))
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        .background(GDCTokens.Palette.error.opacity(0.1))
+                        .clipShape(RoundedRectangle(cornerRadius: GDCTokens.Radius.control))
                 }
                 if let successMessage {
-                    Label(successMessage, systemImage: "checkmark.circle.fill").foregroundStyle(.green)
+                    Label(successMessage, systemImage: "checkmark.circle.fill").foregroundStyle(GDCTokens.Palette.success)
                 }
 
                 HStack {
@@ -94,7 +94,7 @@ struct PublishAudioView: View {
                     }
                 }
                 if !isFormValid && !isBusy {
-                    Text(validationHint).font(.caption).foregroundStyle(.orange)
+                    Text(validationHint).font(.caption).foregroundStyle(GDCTokens.Palette.warning)
                 }
 
                 if !existingTracks.isEmpty {
@@ -110,13 +110,13 @@ struct PublishAudioView: View {
                             Button("Editează") { load(track) }
                             Button("Șterge", role: .destructive) { pendingDelete = track }
                         }
-                        .padding(.vertical, 4)
+                        .padding(.vertical, GDCTokens.Space.xs)
                     }
                 }
 
                 Spacer(minLength: 0)
             }
-            .padding(24)
+            .padding(GDCTokens.Space.xl)
             .frame(maxWidth: 640, alignment: .leading)
         }
         .confirmationDialog(

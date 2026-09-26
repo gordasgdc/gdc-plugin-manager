@@ -10,7 +10,7 @@ struct BadgePill: View {
         Text(text.uppercased())
             .font(.system(size: 10, weight: .bold, design: .rounded))
             .foregroundStyle(.white)
-            .padding(.horizontal, 8)
+            .padding(.horizontal, GDCTokens.Space.s)
             .padding(.vertical, 3)
             .background(color)
             .clipShape(Capsule())

@@ -24,7 +24,7 @@ struct DependencyBadge: View {
         Button { showPanel = true } label: {
             HStack(spacing: 6) {
                 Circle()
-                    .fill(isReady ? Color.green : Color.red)
+                    .fill(isReady ? GDCTokens.Palette.success : GDCTokens.Palette.error)
                     .frame(width: 8, height: 8)
                 Text(isReady ? L.t("deps.badge.ready") : L.t("deps.badge.attention"))
                     .font(.caption)
@@ -47,8 +47,8 @@ struct DependencyPanel: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: GDCTokens.Space.l) {
+            VStack(alignment: .leading, spacing: GDCTokens.Space.xs) {
                 Text(L.t("deps.panel.title")).font(.title3).fontWeight(.semibold)
                 Text(L.t("deps.panel.subtitle")).font(.caption).foregroundStyle(.secondary)
             }
@@ -62,7 +62,7 @@ struct DependencyPanel: View {
                 }
             }
             .background(Color(nsColor: .controlBackgroundColor))
-            .clipShape(RoundedRectangle(cornerRadius: 8))
+            .clipShape(RoundedRectangle(cornerRadius: GDCTokens.Radius.control))
 
             HStack {
                 Button(L.t("deps.panel.recheck")) { dependencies = SystemDependencyChecker.checkAll() }
@@ -80,11 +80,11 @@ private struct DependencyRow: View {
     let dep: SystemDependency
 
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: GDCTokens.Space.m) {
             Circle()
-                .fill(dep.isPresent ? Color.green : (dep.isOptional ? Color.orange : Color.red))
+                .fill(dep.isPresent ? GDCTokens.Palette.success : (dep.isOptional ? GDCTokens.Palette.warning : GDCTokens.Palette.error))
                 .frame(width: 9, height: 9)
-            VStack(alignment: .leading, spacing: 2) {
+            VStack(alignment: .leading, spacing: GDCTokens.Space.xxs) {
                 Text(dep.name).font(.subheadline).fontWeight(.medium)
                 Text(dep.detail).font(.caption).foregroundStyle(.secondary)
             }
@@ -97,6 +97,6 @@ private struct DependencyRow: View {
                     .controlSize(.small)
             }
         }
-        .padding(12)
+        .padding(GDCTokens.Space.m)
     }
 }

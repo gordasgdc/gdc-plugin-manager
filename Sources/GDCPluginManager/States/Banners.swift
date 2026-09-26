@@ -10,8 +10,8 @@ struct CheckFailedBanner: View {
     @ObservedObject private var updateChecker = UpdateChecker.shared
 
     var body: some View {
-        HStack(spacing: 12) {
-            Image(systemName: "exclamationmark.triangle.fill").foregroundStyle(.orange)
+        HStack(spacing: GDCTokens.Space.m) {
+            Image(systemName: "exclamationmark.triangle.fill").foregroundStyle(GDCTokens.Palette.warning)
             Text(L.t("update.check.failed"))
                 .font(.caption)
                 .foregroundStyle(.secondary)
@@ -23,8 +23,8 @@ struct CheckFailedBanner: View {
                 .buttonStyle(.plain)
                 .foregroundStyle(.secondary)
         }
-        .padding(12)
-        .background(Color.orange.opacity(0.10))
+        .padding(GDCTokens.Space.m)
+        .background(GDCTokens.Palette.warning.opacity(0.10))
     }
 }
 
@@ -33,9 +33,9 @@ struct UpdateBanner: View {
     @ObservedObject private var updateChecker = UpdateChecker.shared
 
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: GDCTokens.Space.m) {
             Image(systemName: "arrow.down.circle.fill").foregroundStyle(.tint)
-            VStack(alignment: .leading, spacing: 2) {
+            VStack(alignment: .leading, spacing: GDCTokens.Space.xxs) {
                 Text(L.t("update.title")).font(.subheadline).fontWeight(.semibold)
                 Text("v\(update.version)" + (update.changes.map { " — \($0)" } ?? ""))
                     .font(.caption)
@@ -53,7 +53,7 @@ struct UpdateBanner: View {
                 .buttonStyle(.plain)
                 .foregroundStyle(.secondary)
         }
-        .padding(12)
+        .padding(GDCTokens.Space.m)
         .background(Color.accentColor.opacity(0.12))
     }
 }
@@ -65,9 +65,9 @@ struct DependencyBanner: View {
     let missing: [SystemDependency]
 
     var body: some View {
-        HStack(spacing: 12) {
-            Image(systemName: "exclamationmark.triangle.fill").foregroundStyle(.orange)
-            VStack(alignment: .leading, spacing: 2) {
+        HStack(spacing: GDCTokens.Space.m) {
+            Image(systemName: "exclamationmark.triangle.fill").foregroundStyle(GDCTokens.Palette.warning)
+            VStack(alignment: .leading, spacing: GDCTokens.Space.xxs) {
                 Text(L.t("dependency.missing.title")).font(.subheadline).fontWeight(.semibold)
                 Text(missing.map(\.name).joined(separator: ", "))
                     .font(.caption)
@@ -80,8 +80,8 @@ struct DependencyBanner: View {
                 }
             }
         }
-        .padding(12)
-        .background(Color.orange.opacity(0.12))
+        .padding(GDCTokens.Space.m)
+        .background(GDCTokens.Palette.warning.opacity(0.12))
     }
 }
 

@@ -51,10 +51,10 @@ struct SearchBar: View {
                     .buttonStyle(.plain)
                 }
             }
-            .padding(8)
+            .padding(GDCTokens.Space.s)
             .background(Color(nsColor: .textBackgroundColor))
-            .clipShape(RoundedRectangle(cornerRadius: 8))
-            .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.secondary.opacity(0.25)))
+            .clipShape(RoundedRectangle(cornerRadius: GDCTokens.Radius.control))
+            .overlay(RoundedRectangle(cornerRadius: GDCTokens.Radius.control).stroke(Color.secondary.opacity(0.25)))
             .onChange(of: focused) { _, isFocused in
                 showDropdown = isFocused
             }
@@ -82,9 +82,9 @@ struct SearchBar: View {
                     }
                 }
                 .background(Color(nsColor: .windowBackgroundColor))
-                .clipShape(RoundedRectangle(cornerRadius: 8))
-                .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.secondary.opacity(0.2)))
-                .padding(.top, 4)
+                .clipShape(RoundedRectangle(cornerRadius: GDCTokens.Radius.control))
+                .overlay(RoundedRectangle(cornerRadius: GDCTokens.Radius.control).stroke(Color.secondary.opacity(0.2)))
+                .padding(.top, GDCTokens.Space.xs)
                 .shadow(color: .black.opacity(0.15), radius: 6, y: 2)
             }
         }

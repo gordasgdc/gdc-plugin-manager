@@ -8,7 +8,7 @@ struct PartnerStoresGrid: View {
     // Mai lat decât înainte (260→300): cardurile au acum copertă și
     // descrierea se vede întreagă, deci au nevoie de spațiu ca să nu se
     // înghesuie textul pe rânduri de 3 cuvinte.
-    private let columns = [GridItem(.adaptive(minimum: 300, maximum: 400), spacing: 16)]
+    private let columns = [GridItem(.adaptive(minimum: 300, maximum: 400), spacing: GDCTokens.Space.l)]
 
     var body: some View {
         // Bara de filtre comuna (2026-09-11) — shadowing pe `stores`,
@@ -17,14 +17,14 @@ struct PartnerStoresGrid: View {
         FilteredCatalogSection(items: stores, options: .content) { stores in
         ScrollView {
             if stores.isEmpty {
-                Text(L.t("stores.empty")).foregroundStyle(.secondary).padding(40)
+                Text(L.t("stores.empty")).foregroundStyle(.secondary).padding(GDCTokens.Space.page)
             } else {
-                LazyVGrid(columns: columns, spacing: 14) {
+                LazyVGrid(columns: columns, spacing: GDCTokens.Space.grid) {
                     ForEach(stores) { store in
                         PartnerStoreCard(store: store)
                     }
                 }
-                .padding(16)
+                .padding(GDCTokens.Space.l)
             }
         }
         }
@@ -35,7 +35,7 @@ struct PartnerStoreCard: View {
     let store: PartnerStore
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: GDCTokens.Space.s) {
             CoverThumbnail(
                 url: store.coverImageURL,
                 fallbackSymbol: "storefront.fill",
@@ -63,7 +63,7 @@ struct PartnerStoreCard: View {
             }
             SocialLinksRow(store.socialLinks)
         }
-        .padding(12)
+        .padding(GDCTokens.Space.m)
         .frame(maxWidth: .infinity, minHeight: 180, alignment: .leading)
         .glassCardBackground()
     }

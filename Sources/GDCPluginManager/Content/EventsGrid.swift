@@ -8,7 +8,7 @@ struct EventsGrid: View {
     // Mai lat decât înainte (260→300): cardurile au acum copertă și
     // descrierea se vede întreagă, deci au nevoie de spațiu ca să nu se
     // înghesuie textul pe rânduri de 3 cuvinte.
-    private let columns = [GridItem(.adaptive(minimum: 300, maximum: 400), spacing: 16)]
+    private let columns = [GridItem(.adaptive(minimum: 300, maximum: 400), spacing: GDCTokens.Space.l)]
 
     var body: some View {
         // Bara de filtre comuna (2026-09-11) — shadowing pe `events`,
@@ -17,14 +17,14 @@ struct EventsGrid: View {
         FilteredCatalogSection(items: events, options: .content) { events in
         ScrollView {
             if events.isEmpty {
-                Text(L.t("events.empty")).foregroundStyle(.secondary).padding(40)
+                Text(L.t("events.empty")).foregroundStyle(.secondary).padding(GDCTokens.Space.page)
             } else {
-                LazyVGrid(columns: columns, spacing: 14) {
+                LazyVGrid(columns: columns, spacing: GDCTokens.Space.grid) {
                     ForEach(events) { event in
                         EventCard(event: event)
                     }
                 }
-                .padding(16)
+                .padding(GDCTokens.Space.l)
             }
         }
         }
@@ -35,7 +35,7 @@ struct EventCard: View {
     let event: Event
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: GDCTokens.Space.s) {
             // Afișul evenimentului. Mai înalt decât la restul cardurilor:
             // afișul chiar poartă informație (dată, program, invitați), deci
             // merită spațiu — și e cazul în care lightbox-ul contează cel
@@ -77,7 +77,7 @@ struct EventCard: View {
                         Text(priceDisplay)
                             .font(.caption2).fontWeight(.medium)
                             .foregroundStyle(.secondary)
-                            .padding(.horizontal, 6).padding(.vertical, 2)
+                            .padding(.horizontal, 6).padding(.vertical, GDCTokens.Space.xxs)
                             .background(Capsule().fill(.background.tertiary))
                     }
                 }
@@ -90,7 +90,7 @@ struct EventCard: View {
             }
             SocialLinksRow(event.socialLinks)
         }
-        .padding(12)
+        .padding(GDCTokens.Space.m)
         .frame(maxWidth: .infinity, minHeight: 220, alignment: .leading)
         .glassCardBackground()
     }

@@ -45,7 +45,7 @@ struct PublishEventView: View {
                 Text("Evenimente (workshop-uri, cursuri, festivaluri)").font(.title2).fontWeight(.semibold)
 
                 GroupBox {
-                    VStack(alignment: .leading, spacing: 12) {
+                    VStack(alignment: .leading, spacing: GDCTokens.Space.m) {
                         TextField("ID (ex. workshop-color-2026, nu se mai poate schimba)", text: $id)
                             .textFieldStyle(.roundedBorder)
                             .disabled(editingID != nil)
@@ -63,7 +63,7 @@ struct PublishEventView: View {
                         TextField("Link YouTube/Vimeo (opțional)", text: $youtubeURL)
                             .textFieldStyle(.roundedBorder)
                     }
-                    .padding(8)
+                    .padding(GDCTokens.Space.s)
                 }
 
                 AccessEditorSection(
@@ -95,13 +95,13 @@ struct PublishEventView: View {
                 // Multi-Locație (2026-09-05) — locație/dată de mai sus rămân
                 // "principalele"; acestea sunt ocurențe ÎN PLUS, opționale.
                 GroupBox {
-                    VStack(alignment: .leading, spacing: 8) {
+                    VStack(alignment: .leading, spacing: GDCTokens.Space.s) {
                         Text("Locații și perioade suplimentare (opțional)").fontWeight(.medium)
                         Text("Folosește dacă evenimentul rulează și în alte orașe/perioade, eventual cu preț diferit.")
                             .font(.caption).foregroundStyle(.secondary)
                         ForEach(occurrences) { occ in
                             HStack {
-                                VStack(alignment: .leading, spacing: 2) {
+                                VStack(alignment: .leading, spacing: GDCTokens.Space.xxs) {
                                     Text(occ.location.isEmpty ? "(fără locație)" : occ.location)
                                     if !occ.dateDisplay.isEmpty {
                                         Text(occ.dateDisplay).font(.caption).foregroundStyle(.secondary)
@@ -117,7 +117,7 @@ struct PublishEventView: View {
                                     Image(systemName: "minus.circle.fill")
                                 }
                                 .buttonStyle(.plain)
-                                .foregroundStyle(.red)
+                                .foregroundStyle(GDCTokens.Palette.error)
                             }
                         }
                         Button {
@@ -126,7 +126,7 @@ struct PublishEventView: View {
                             Label("Adaugă locație/perioadă", systemImage: "plus.circle")
                         }
                     }
-                    .padding(8)
+                    .padding(GDCTokens.Space.s)
                 }
                 .sheet(isPresented: $showAddOccurrenceSheet) {
                     AddEventOccurrenceSheet(existingLocations: existingEvents.map(\.location)) { new in
@@ -138,14 +138,14 @@ struct PublishEventView: View {
 
                 if let errorMessage {
                     Label(errorMessage, systemImage: "exclamationmark.triangle.fill")
-                        .foregroundStyle(.red)
+                        .foregroundStyle(GDCTokens.Palette.error)
                         .padding(10)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(Color.red.opacity(0.1))
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        .background(GDCTokens.Palette.error.opacity(0.1))
+                        .clipShape(RoundedRectangle(cornerRadius: GDCTokens.Radius.control))
                 }
                 if let successMessage {
-                    Label(successMessage, systemImage: "checkmark.circle.fill").foregroundStyle(.green)
+                    Label(successMessage, systemImage: "checkmark.circle.fill").foregroundStyle(GDCTokens.Palette.success)
                 }
 
                 HStack {
@@ -157,7 +157,7 @@ struct PublishEventView: View {
                     }
                 }
                 if !isFormValid && !isBusy {
-                    Text(validationHint).font(.caption).foregroundStyle(.orange)
+                    Text(validationHint).font(.caption).foregroundStyle(GDCTokens.Palette.warning)
                 }
 
                 if !existingEvents.isEmpty {
@@ -173,13 +173,13 @@ struct PublishEventView: View {
                             Button("Editează") { load(event) }
                             Button("Șterge", role: .destructive) { pendingDelete = event }
                         }
-                        .padding(.vertical, 4)
+                        .padding(.vertical, GDCTokens.Space.xs)
                     }
                 }
 
                 Spacer(minLength: 0)
             }
-            .padding(24)
+            .padding(GDCTokens.Space.xl)
             .frame(maxWidth: 640, alignment: .leading)
         }
         .confirmationDialog(

@@ -37,7 +37,7 @@ struct CoverThumbnail: View {
 
     var body: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 8)
+            RoundedRectangle(cornerRadius: GDCTokens.Radius.control)
                 .fill(tint.opacity(0.10))
 
             if let url {
@@ -68,7 +68,7 @@ struct CoverThumbnail: View {
         }
         .frame(height: height)
         .frame(maxWidth: .infinity)
-        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .clipShape(RoundedRectangle(cornerRadius: GDCTokens.Radius.control))
         .contentShape(Rectangle())
         .onTapGesture {
             guard didLoad, url != nil else { return }
@@ -134,7 +134,7 @@ struct ImageLightbox: View {
                             .gesture(drag)
                             .onTapGesture(count: 2) { toggleZoom() }
                     case .failure:
-                        VStack(spacing: 8) {
+                        VStack(spacing: GDCTokens.Space.s) {
                             Image(systemName: "photo.badge.exclamationmark")
                                 .font(.system(size: 36)).foregroundStyle(.secondary)
                             Text(L.t("cover.failed")).foregroundStyle(.secondary)
@@ -175,8 +175,8 @@ struct ImageLightbox: View {
             .buttonStyle(.plain)
             .keyboardShortcut(.cancelAction)
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 12)
+        .padding(.horizontal, GDCTokens.Space.l)
+        .padding(.vertical, GDCTokens.Space.m)
     }
 
     // MARK: Gesturi

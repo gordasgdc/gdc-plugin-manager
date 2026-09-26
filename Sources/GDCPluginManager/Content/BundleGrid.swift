@@ -13,7 +13,7 @@ struct BundleGrid: View {
     let bundles: [ProductBundle]
     @ObservedObject var catalog: CatalogService
 
-    private let columns = [GridItem(.adaptive(minimum: 300, maximum: 400), spacing: 16)]
+    private let columns = [GridItem(.adaptive(minimum: 300, maximum: 400), spacing: GDCTokens.Space.l)]
 
     var body: some View {
         // Bara de filtre comuna (2026-09-11) — shadowing pe `bundles`,
@@ -22,14 +22,14 @@ struct BundleGrid: View {
         FilteredCatalogSection(items: bundles, options: .content) { bundles in
         ScrollView {
             if bundles.isEmpty {
-                Text(L.t("bundles.empty")).foregroundStyle(.secondary).padding(40)
+                Text(L.t("bundles.empty")).foregroundStyle(.secondary).padding(GDCTokens.Space.page)
             } else {
-                LazyVGrid(columns: columns, spacing: 14) {
+                LazyVGrid(columns: columns, spacing: GDCTokens.Space.grid) {
                     ForEach(bundles) { bundle in
                         BundleCard(bundle: bundle, catalog: catalog)
                     }
                 }
-                .padding(16)
+                .padding(GDCTokens.Space.l)
             }
         }
         }
@@ -73,7 +73,7 @@ struct BundleCard: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: GDCTokens.Space.s) {
             CoverThumbnail(
                 url: bundle.coverImageURL,
                 fallbackSymbol: "shippingbox.fill",
@@ -92,7 +92,7 @@ struct BundleCard: View {
                 }
             }
 
-            HStack(alignment: .lastTextBaseline, spacing: 8) {
+            HStack(alignment: .lastTextBaseline, spacing: GDCTokens.Space.s) {
                 if individualTotal > bundle.bundlePriceEUR {
                     Text(individualTotal.formatted(.currency(code: "EUR")))
                         .font(.caption)
@@ -101,13 +101,13 @@ struct BundleCard: View {
                 }
                 Text(bundle.bundlePriceDisplay)
                     .font(.subheadline.weight(.bold))
-                    .foregroundStyle(.orange)
+                    .foregroundStyle(GDCTokens.Palette.warning)
             }
 
             ExtraLinksRow(purchaseURL: nil, demoURL: nil, social: bundle.socialLinks)
             Button(L.t("bundles.buy")) { NSWorkspace.shared.open(buyURL) }
         }
-        .padding(12)
+        .padding(GDCTokens.Space.m)
         .frame(maxWidth: .infinity, alignment: .leading)
         .glassCardBackground()
         .overlay(alignment: .topTrailing) {
@@ -120,7 +120,7 @@ struct BundleCard: View {
                 }
                 .buttonStyle(.plain)
                 .help(L.t("card.youtubeLink"))
-                .padding(8)
+                .padding(GDCTokens.Space.s)
                 .help(L.t("card.tutorial"))
             }
         }

@@ -68,13 +68,13 @@ struct RepoStorageView: View {
 
     private var header: some View {
         HStack(alignment: .firstTextBaseline) {
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: GDCTokens.Space.xs) {
                 Text("Stocare pe repo-uri").font(.title2).fontWeight(.semibold)
                 Text("\(model.totalFiles) fișiere · \(RepoStorageScanner.formatted(model.totalBytes)) de conținut publicat")
                     .font(.callout).foregroundStyle(.secondary)
             }
             Spacer()
-            VStack(alignment: .trailing, spacing: 4) {
+            VStack(alignment: .trailing, spacing: GDCTokens.Space.xs) {
                 Button {
                     Task { await model.scan() }
                 } label: {
@@ -93,7 +93,7 @@ struct RepoStorageView: View {
     // MARK: Graficul
 
     private var chart: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: GDCTokens.Space.s) {
             Text("Conținut per repo").font(.headline)
             Chart(model.usages) { usage in
                 BarMark(
@@ -140,7 +140,7 @@ struct RepoStorageView: View {
     private func repoCard(_ usage: RepoStorageScanner.RepoUsage) -> some View {
         let isOpen = expandedRepo == usage.key
 
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: GDCTokens.Space.m) {
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 3) {
                     Text(usage.repoName).font(.headline)
@@ -148,7 +148,7 @@ struct RepoStorageView: View {
                         .font(.caption).foregroundStyle(.secondary)
                 }
                 Spacer()
-                VStack(alignment: .trailing, spacing: 2) {
+                VStack(alignment: .trailing, spacing: GDCTokens.Space.xxs) {
                     Text(RepoStorageScanner.formatted(usage.totalBytes))
                         .font(.title3).monospacedDigit()
                     Text("\(usage.fileCount) fișiere").font(.caption).foregroundStyle(.secondary)
@@ -189,9 +189,9 @@ struct RepoStorageView: View {
 
             if isOpen { repoDetail(usage) }
         }
-        .padding(16)
+        .padding(GDCTokens.Space.l)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(RoundedRectangle(cornerRadius: 10).fill(Color.secondary.opacity(0.07)))
+        .background(RoundedRectangle(cornerRadius: GDCTokens.Radius.inset).fill(Color.secondary.opacity(0.07)))
     }
 
     @ViewBuilder
@@ -203,7 +203,7 @@ struct RepoStorageView: View {
                     // Grupat pe proprietar: interesează „ce produs", nu 55 de
                     // căi de fișiere una sub alta.
                     ForEach(groupedOwners(usage.references), id: \.0) { owner, references in
-                        HStack(alignment: .firstTextBaseline, spacing: 8) {
+                        HStack(alignment: .firstTextBaseline, spacing: GDCTokens.Space.s) {
                             Text(owner).font(.callout)
                             Text("\(references.count) fișiere · \(references[0].section)")
                                 .font(.caption).foregroundStyle(.secondary)
@@ -213,7 +213,7 @@ struct RepoStorageView: View {
             }
 
             if !usage.largestFiles.isEmpty {
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: GDCTokens.Space.xs) {
                     Text("Cele mai mari fișiere").font(.caption).fontWeight(.semibold).foregroundStyle(.secondary)
                     ForEach(usage.largestFiles) { file in
                         HStack {
@@ -226,8 +226,8 @@ struct RepoStorageView: View {
             }
 
             if !usage.missingFiles.isEmpty {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("În catalog, dar lipsă pe disc").font(.caption).fontWeight(.semibold).foregroundStyle(.red)
+                VStack(alignment: .leading, spacing: GDCTokens.Space.xs) {
+                    Text("În catalog, dar lipsă pe disc").font(.caption).fontWeight(.semibold).foregroundStyle(GDCTokens.Palette.error)
                     ForEach(usage.missingFiles) { reference in
                         Text("\(reference.ownerName) — \(reference.path)")
                             .font(.system(.caption, design: .monospaced))
@@ -236,7 +236,7 @@ struct RepoStorageView: View {
             }
 
             if !usage.orphanFiles.isEmpty {
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: GDCTokens.Space.xs) {
                     Text("Pe disc, dar nereferite").font(.caption).fontWeight(.semibold).foregroundStyle(.secondary)
                     ForEach(usage.orphanFiles.prefix(20)) { file in
                         HStack {
@@ -250,7 +250,7 @@ struct RepoStorageView: View {
                 }
             }
         }
-        .padding(.top, 4)
+        .padding(.top, GDCTokens.Space.xs)
     }
 
     private func groupedOwners(_ references: [RepoStorageScanner.CatalogReference]) -> [(String, [RepoStorageScanner.CatalogReference])] {
@@ -269,7 +269,7 @@ struct RepoStorageView: View {
                 .fixedSize(horizontal: false, vertical: true)
 
             ForEach(model.duplicates.prefix(12)) { group in
-                VStack(alignment: .leading, spacing: 2) {
+                VStack(alignment: .leading, spacing: GDCTokens.Space.xxs) {
                     HStack {
                         Text(group.filename).font(.callout)
                         Spacer()
@@ -280,27 +280,27 @@ struct RepoStorageView: View {
                         Text(location).font(.system(.caption2, design: .monospaced)).foregroundStyle(.secondary)
                     }
                 }
-                .padding(.vertical, 4)
+                .padding(.vertical, GDCTokens.Space.xs)
             }
         }
-        .padding(16)
+        .padding(GDCTokens.Space.l)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(RoundedRectangle(cornerRadius: 10).fill(Color.secondary.opacity(0.07)))
+        .background(RoundedRectangle(cornerRadius: GDCTokens.Radius.inset).fill(Color.secondary.opacity(0.07)))
     }
 
     // MARK: Elemente comune
 
     private func metric(_ label: String, _ value: String, highlighted: Bool = false) -> some View {
-        VStack(alignment: .leading, spacing: 2) {
+        VStack(alignment: .leading, spacing: GDCTokens.Space.xxs) {
             Text(label).font(.caption2).foregroundStyle(.secondary)
-            Text(value).font(.callout).foregroundStyle(highlighted ? Color.orange : Color.primary)
+            Text(value).font(.callout).foregroundStyle(highlighted ? GDCTokens.Palette.warning : Color.primary)
         }
     }
 
     private func warning(_ text: String) -> some View {
         Label(text, systemImage: "exclamationmark.triangle.fill")
             .font(.caption)
-            .foregroundStyle(.orange)
+            .foregroundStyle(GDCTokens.Palette.warning)
             .fixedSize(horizontal: false, vertical: true)
     }
 }

@@ -162,7 +162,7 @@ struct PublishDownloadableResourceView: View {
                     .font(.caption).foregroundStyle(.secondary)
 
                 GroupBox {
-                    VStack(alignment: .leading, spacing: 12) {
+                    VStack(alignment: .leading, spacing: GDCTokens.Space.m) {
                         TextField("ID (ex. lut-wedding-pack, nu se mai poate schimba)", text: $id)
                             .textFieldStyle(.roundedBorder)
                             .disabled(editingID != nil)
@@ -221,7 +221,7 @@ struct PublishDownloadableResourceView: View {
                                 if let currentFileName {
                                     Text(currentFileName).font(.caption).lineLimit(1).truncationMode(.middle)
                                     if !pickedURLs.isEmpty {
-                                        Text("(nou)").font(.caption2).foregroundStyle(.green)
+                                        Text("(nou)").font(.caption2).foregroundStyle(GDCTokens.Palette.success)
                                     }
                                 } else {
                                     Text("Niciun fișier ales").font(.caption).foregroundStyle(.secondary)
@@ -238,11 +238,11 @@ struct PublishDownloadableResourceView: View {
                                 if description.isEmpty {
                                     Text("Informații / descriere (format, compatibilitate host, conținut pachet…)")
                                         .foregroundStyle(.secondary)
-                                        .padding(.top, 8).padding(.leading, 5)
+                                        .padding(.top, GDCTokens.Space.s).padding(.leading, 5)
                                         .allowsHitTesting(false)
                                 }
                             }
-                            .overlay(RoundedRectangle(cornerRadius: 6).stroke(.separator))
+                            .overlay(RoundedRectangle(cornerRadius: GDCTokens.Radius.badge).stroke(.separator))
                         TextField("Link tutorial YouTube (opțional, nelistat)", text: $youtubeURL).textFieldStyle(.roundedBorder)
 
                         Picker("Acces", selection: $accessMode) {
@@ -272,7 +272,7 @@ struct PublishDownloadableResourceView: View {
                         .pickerStyle(.segmented)
 
                         DisclosureGroup("Linkuri suplimentare & rețele sociale (opțional)") {
-                            VStack(alignment: .leading, spacing: 8) {
+                            VStack(alignment: .leading, spacing: GDCTokens.Space.s) {
                                 TextField("Link Achiziție/Magazin extern", text: $purchaseURL).textFieldStyle(.roundedBorder)
                                 TextField("Link Demo/Preview", text: $demoURL).textFieldStyle(.roundedBorder)
                                 SocialLinksFields(state: $socialForm, youtubeLabel: "YouTube (canal, nu tutorialul de mai sus)")
@@ -280,7 +280,7 @@ struct PublishDownloadableResourceView: View {
                             .padding(.top, 6)
                         }
                     }
-                    .padding(8)
+                    .padding(GDCTokens.Space.s)
                 }
 
                 AccessEditorSection(
@@ -306,14 +306,14 @@ struct PublishDownloadableResourceView: View {
 
                 if let errorMessage {
                     Label(errorMessage, systemImage: "exclamationmark.triangle.fill")
-                        .foregroundStyle(.red)
+                        .foregroundStyle(GDCTokens.Palette.error)
                         .padding(10)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(Color.red.opacity(0.1))
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        .background(GDCTokens.Palette.error.opacity(0.1))
+                        .clipShape(RoundedRectangle(cornerRadius: GDCTokens.Radius.control))
                 }
                 if let successMessage {
-                    Label(successMessage, systemImage: "checkmark.circle.fill").foregroundStyle(.green)
+                    Label(successMessage, systemImage: "checkmark.circle.fill").foregroundStyle(GDCTokens.Palette.success)
                 }
 
                 HStack {
@@ -325,7 +325,7 @@ struct PublishDownloadableResourceView: View {
                     }
                 }
                 if !isFormValid && !isBusy {
-                    Text(validationHint).font(.caption).foregroundStyle(.orange)
+                    Text(validationHint).font(.caption).foregroundStyle(GDCTokens.Palette.warning)
                 }
 
                 if !existingResources.isEmpty {
@@ -339,7 +339,7 @@ struct PublishDownloadableResourceView: View {
                                     Text(categoryLabel(resource.category).uppercased())
                                         .font(.system(size: 9, weight: .bold))
                                         .foregroundStyle(resource.category.tintColor)
-                                        .padding(.horizontal, 6).padding(.vertical, 2)
+                                        .padding(.horizontal, 6).padding(.vertical, GDCTokens.Space.xxs)
                                         .background(Capsule().fill(resource.category.tintColor.opacity(0.15)))
                                 }
                                 if resource.sourceProductID != nil {
@@ -357,13 +357,13 @@ struct PublishDownloadableResourceView: View {
                             Button("Editează") { load(resource) }
                             Button("Șterge", role: .destructive) { pendingDelete = resource }
                         }
-                        .padding(.vertical, 4)
+                        .padding(.vertical, GDCTokens.Space.xs)
                     }
                 }
 
                 Spacer(minLength: 0)
             }
-            .padding(24)
+            .padding(GDCTokens.Space.xl)
             .frame(maxWidth: 640, alignment: .leading)
         }
         .confirmationDialog(

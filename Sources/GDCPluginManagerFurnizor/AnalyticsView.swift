@@ -29,14 +29,14 @@ struct AnalyticsView: View {
                 }
             }
             .padding([.horizontal, .top], 24)
-            .padding(.bottom, 12)
+            .padding(.bottom, GDCTokens.Space.m)
 
             if let errorMessage {
-                Text(errorMessage).foregroundStyle(.red).padding(.horizontal, 24).padding(.bottom, 12)
+                Text(errorMessage).foregroundStyle(GDCTokens.Palette.error).padding(.horizontal, GDCTokens.Space.xl).padding(.bottom, GDCTokens.Space.m)
             }
 
             ScrollView {
-                VStack(alignment: .leading, spacing: 24) {
+                VStack(alignment: .leading, spacing: GDCTokens.Space.xl) {
                     revenueSection
                     monthlyRevenueSection
                     retentionSection
@@ -47,7 +47,7 @@ struct AnalyticsView: View {
                         devicesSection
                     }
                 }
-                .padding(24)
+                .padding(GDCTokens.Space.xl)
             }
         }
         .task {
@@ -84,9 +84,9 @@ struct AnalyticsView: View {
     }
 
     private var revenueSection: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: GDCTokens.Space.s) {
             Text("Venituri").font(.headline)
-            HStack(spacing: 24) {
+            HStack(spacing: GDCTokens.Space.xl) {
                 statCard(title: "Venituri totale", value: totalRevenueEUR.formatted(.currency(code: "EUR")))
                 statCard(title: "Licențe acordate", value: "\(salesEntries.count)")
                 statCard(title: "Cel mai popular", value: mostPopularByLicenses?.productName ?? "—")
@@ -129,7 +129,7 @@ struct AnalyticsView: View {
     }
 
     private var monthlyRevenueSection: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: GDCTokens.Space.s) {
             Text("Venituri pe lună").font(.headline)
             if monthlyRevenue.isEmpty {
                 Text("Niciun cod generat încă.").foregroundStyle(.secondary)
@@ -156,9 +156,9 @@ struct AnalyticsView: View {
         let returning = profiles.filter { $0.licenseCount > 1 }.count
         let rate = profiles.isEmpty ? 0 : Double(returning) / Double(profiles.count) * 100
 
-        return VStack(alignment: .leading, spacing: 8) {
+        return VStack(alignment: .leading, spacing: GDCTokens.Space.s) {
             Text("Retenție clienți").font(.headline)
-            HStack(spacing: 24) {
+            HStack(spacing: GDCTokens.Space.xl) {
                 statCard(title: "Clienți unici", value: "\(profiles.count)")
                 statCard(title: "Cu 2+ licențe", value: "\(returning)")
                 statCard(title: "Rată de revenire", value: String(format: "%.0f%%", rate))
@@ -203,7 +203,7 @@ struct AnalyticsView: View {
     }
 
     private var categoryDownloadsSection: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: GDCTokens.Space.s) {
             Text("Descărcări pe categorie").font(.headline)
             if categoryDownloads.isEmpty {
                 Text("Niciun eveniment de descărcare încă.").foregroundStyle(.secondary)
@@ -238,13 +238,13 @@ struct AnalyticsView: View {
     }
 
     private func statCard(title: String, value: String) -> some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: GDCTokens.Space.xs) {
             Text(title).font(.caption).foregroundStyle(.secondary)
             Text(value).font(.title3).fontWeight(.semibold)
         }
-        .padding(12)
+        .padding(GDCTokens.Space.m)
         .frame(minWidth: 140, alignment: .leading)
-        .background(RoundedRectangle(cornerRadius: 10).fill(Color(nsColor: .controlBackgroundColor)))
+        .background(RoundedRectangle(cornerRadius: GDCTokens.Radius.inset).fill(Color(nsColor: .controlBackgroundColor)))
     }
 
     // MARK: - Totals per product
@@ -265,7 +265,7 @@ struct AnalyticsView: View {
     }
 
     private var productTotalsSection: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: GDCTokens.Space.s) {
             Text("Descărcări totale per produs").font(.headline)
             if productTotals.isEmpty {
                 Text("Niciun eveniment de descărcare încă.").foregroundStyle(.secondary)
@@ -299,7 +299,7 @@ struct AnalyticsView: View {
     }
 
     private var dailyHistorySection: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: GDCTokens.Space.s) {
             Text("Descărcări pe zi").font(.headline)
             if dailyCounts.isEmpty {
                 Text("Niciun eveniment de descărcare încă.").foregroundStyle(.secondary)
@@ -348,7 +348,7 @@ struct AnalyticsView: View {
     }
 
     private var devicesSection: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: GDCTokens.Space.s) {
             HStack {
                 Text("Clienți înregistrați (\(devices.count))").font(.headline)
                 Spacer()

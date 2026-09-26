@@ -27,7 +27,7 @@ struct SeasonalBackgroundView: View {
     /// deodată, într-un SINGUR commit.
     @State private var drafts: [String: SeasonalBackgroundConfig] = [:]
 
-    private let columns = [GridItem(.adaptive(minimum: 140, maximum: 180), spacing: 12)]
+    private let columns = [GridItem(.adaptive(minimum: 140, maximum: 180), spacing: GDCTokens.Space.m)]
 
     var body: some View {
         ScrollView {
@@ -41,20 +41,20 @@ struct SeasonalBackgroundView: View {
 
                 if let errorMessage {
                     Label(errorMessage, systemImage: "exclamationmark.triangle.fill")
-                        .foregroundStyle(.red)
+                        .foregroundStyle(GDCTokens.Palette.error)
                         .padding(10)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(Color.red.opacity(0.1))
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        .background(GDCTokens.Palette.error.opacity(0.1))
+                        .clipShape(RoundedRectangle(cornerRadius: GDCTokens.Radius.control))
                 }
                 if let successMessage {
-                    Label(successMessage, systemImage: "checkmark.circle.fill").foregroundStyle(.green)
+                    Label(successMessage, systemImage: "checkmark.circle.fill").foregroundStyle(GDCTokens.Palette.success)
                 }
                 if isBusy { ProgressView().controlSize(.small) }
 
                 Spacer(minLength: 0)
             }
-            .padding(24)
+            .padding(GDCTokens.Space.xl)
             .frame(maxWidth: 680, alignment: .leading)
         }
         .confirmationDialog(
@@ -83,7 +83,7 @@ struct SeasonalBackgroundView: View {
                 Text("Biblioteca e goală — fundalul Shift normal, fără filigran. Adaugă unul mai jos.")
                     .font(.caption).foregroundStyle(.secondary)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(8)
+                    .padding(GDCTokens.Space.s)
             } else {
                 VStack(spacing: 14) {
                     ForEach(library) { config in
@@ -91,7 +91,7 @@ struct SeasonalBackgroundView: View {
                         if config.id != library.last?.id { Divider() }
                     }
                 }
-                .padding(8)
+                .padding(GDCTokens.Space.s)
             }
         }
     }
@@ -112,10 +112,10 @@ struct SeasonalBackgroundView: View {
         let current = draft(for: config)
         let dirty = hasPendingChanges(config)
 
-        VStack(alignment: .leading, spacing: 8) {
-            HStack(alignment: .top, spacing: 12) {
+        VStack(alignment: .leading, spacing: GDCTokens.Space.s) {
+            HStack(alignment: .top, spacing: GDCTokens.Space.m) {
                 SeasonalThumbnail(url: config.imageURL)
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: GDCTokens.Space.xs) {
                     Text(config.label.isEmpty ? config.id : config.label).fontWeight(.medium)
                     Text(config.imagePath).font(.caption2.monospaced()).foregroundStyle(.secondary).lineLimit(1)
                     Text(statusText(config))
@@ -147,7 +147,7 @@ struct SeasonalBackgroundView: View {
             // vadă", plus "mi-ar plăcut să pot vedea intensitatea care se
             // aplică". Procentul se actualizează live, în timp ce tragi —
             // dar rămâne 100% local până apeși "Trimite modificările".
-            VStack(alignment: .leading, spacing: 2) {
+            VStack(alignment: .leading, spacing: GDCTokens.Space.xxs) {
                 HStack {
                     Text("Intensitate").font(.caption).foregroundStyle(.secondary)
                     Spacer()
@@ -173,7 +173,7 @@ struct SeasonalBackgroundView: View {
             if dirty {
                 HStack {
                     Text("Modificări nepublicate încă.")
-                        .font(.caption).foregroundStyle(.orange)
+                        .font(.caption).foregroundStyle(GDCTokens.Palette.warning)
                     Spacer()
                     Button("Anulează") { drafts[config.id] = nil }
                     Button("Trimite modificările") { Task { await publish(config) } }
@@ -198,9 +198,9 @@ struct SeasonalBackgroundView: View {
     @ViewBuilder
     private var addBox: some View {
         GroupBox("Adaugă în bibliotecă") {
-            VStack(alignment: .leading, spacing: 12) {
+            VStack(alignment: .leading, spacing: GDCTokens.Space.m) {
                 Text("Din galeria predefinită (imagini gata de folosit)").font(.caption).foregroundStyle(.secondary)
-                LazyVGrid(columns: columns, spacing: 12) {
+                LazyVGrid(columns: columns, spacing: GDCTokens.Space.m) {
                     ForEach(SeasonalPresets.all) { preset in
                         Button {
                             Task { await addPreset(preset) }
@@ -210,7 +210,7 @@ struct SeasonalBackgroundView: View {
                                     .font(.system(size: 22))
                                     .foregroundStyle(.secondary)
                                     .frame(width: 60, height: 60)
-                                    .background(RoundedRectangle(cornerRadius: 8).fill(Color.gray.opacity(0.15)))
+                                    .background(RoundedRectangle(cornerRadius: GDCTokens.Radius.control).fill(Color.gray.opacity(0.15)))
                                 Text(preset.label).font(.caption2).multilineTextAlignment(.center)
                             }
                         }
@@ -229,7 +229,7 @@ struct SeasonalBackgroundView: View {
                     Task { await addCustom(url) }
                 }
             }
-            .padding(8)
+            .padding(GDCTokens.Space.s)
         }
     }
 
@@ -374,7 +374,7 @@ private struct SeasonalThumbnail: View {
             }
         }
         .frame(width: 56, height: 56)
-        .background(RoundedRectangle(cornerRadius: 8).fill(Color.gray.opacity(0.15)))
+        .background(RoundedRectangle(cornerRadius: GDCTokens.Radius.control).fill(Color.gray.opacity(0.15)))
         .task(id: url) {
             // `URLSession` async, nu `Data(contentsOf:)` — acesta din urmă
             // ar bloca main thread-ul pe un URL de rețea (miniatura vine de

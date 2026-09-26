@@ -43,7 +43,7 @@ struct LicensePane: View {
 
                 Spacer(minLength: 0)
             }
-            .padding(24)
+            .padding(GDCTokens.Space.xl)
             .frame(maxWidth: 520, alignment: .leading)
         }
     }
@@ -61,9 +61,9 @@ struct LicensePane: View {
             .pickerStyle(.segmented)
             .frame(width: 220)
         }
-        .padding(16)
-        .background(RoundedRectangle(cornerRadius: 12).fill(Color(nsColor: .controlBackgroundColor)))
-        .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color(nsColor: .separatorColor), lineWidth: 1))
+        .padding(GDCTokens.Space.l)
+        .background(RoundedRectangle(cornerRadius: GDCTokens.Radius.card).fill(Color(nsColor: .controlBackgroundColor)))
+        .overlay(RoundedRectangle(cornerRadius: GDCTokens.Radius.card).stroke(Color(nsColor: .separatorColor), lineWidth: 1))
     }
 
     private var statusCard: some View {
@@ -73,7 +73,7 @@ struct LicensePane: View {
                 .foregroundStyle(license.isLicensed ? .green : .secondary)
                 .frame(width: 36)
 
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: GDCTokens.Space.xs) {
                 Text(statusTitle).font(.headline)
                 Text(statusBody)
                     .font(.callout)
@@ -82,9 +82,9 @@ struct LicensePane: View {
             }
             Spacer(minLength: 0)
         }
-        .padding(16)
-        .background(RoundedRectangle(cornerRadius: 12).fill(Color(nsColor: .controlBackgroundColor)))
-        .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color(nsColor: .separatorColor), lineWidth: 1))
+        .padding(GDCTokens.Space.l)
+        .background(RoundedRectangle(cornerRadius: GDCTokens.Radius.card).fill(Color(nsColor: .controlBackgroundColor)))
+        .overlay(RoundedRectangle(cornerRadius: GDCTokens.Radius.card).stroke(Color(nsColor: .separatorColor), lineWidth: 1))
     }
 
     private var statusTitle: String {
@@ -112,9 +112,9 @@ struct LicensePane: View {
                 }
             }
         }
-        .padding(16)
-        .background(RoundedRectangle(cornerRadius: 12).fill(Color(nsColor: .controlBackgroundColor)))
-        .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color(nsColor: .separatorColor), lineWidth: 1))
+        .padding(GDCTokens.Space.l)
+        .background(RoundedRectangle(cornerRadius: GDCTokens.Radius.card).fill(Color(nsColor: .controlBackgroundColor)))
+        .overlay(RoundedRectangle(cornerRadius: GDCTokens.Radius.card).stroke(Color(nsColor: .separatorColor), lineWidth: 1))
     }
 
     private func productName(for productID: String) -> String {
@@ -122,7 +122,7 @@ struct LicensePane: View {
     }
 
     private var machineIDCard: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: GDCTokens.Space.s) {
             Text(L.t("license.machineID.title")).font(.headline)
             Text(L.t("license.machineID.body"))
                 .font(.callout).foregroundStyle(.secondary)
@@ -131,8 +131,8 @@ struct LicensePane: View {
                 Text(Self.machineID)
                     .font(.system(.body, design: .monospaced))
                     .padding(.horizontal, 10).padding(.vertical, 6)
-                    .background(RoundedRectangle(cornerRadius: 6).fill(Color(nsColor: .textBackgroundColor)))
-                    .overlay(RoundedRectangle(cornerRadius: 6).stroke(Color(nsColor: .separatorColor), lineWidth: 1))
+                    .background(RoundedRectangle(cornerRadius: GDCTokens.Radius.badge).fill(Color(nsColor: .textBackgroundColor)))
+                    .overlay(RoundedRectangle(cornerRadius: GDCTokens.Radius.badge).stroke(Color(nsColor: .separatorColor), lineWidth: 1))
                 Button(justCopiedMachineID ? L.t("license.machineID.copied") : L.t("license.machineID.copy")) {
                     let pb = NSPasteboard.general
                     pb.clearContents()
@@ -141,9 +141,9 @@ struct LicensePane: View {
                 }
             }
         }
-        .padding(16)
-        .background(RoundedRectangle(cornerRadius: 12).fill(Color(nsColor: .controlBackgroundColor)))
-        .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color(nsColor: .separatorColor), lineWidth: 1))
+        .padding(GDCTokens.Space.l)
+        .background(RoundedRectangle(cornerRadius: GDCTokens.Radius.card).fill(Color(nsColor: .controlBackgroundColor)))
+        .overlay(RoundedRectangle(cornerRadius: GDCTokens.Radius.card).stroke(Color(nsColor: .separatorColor), lineWidth: 1))
     }
 
     private var activationCard: some View {
@@ -153,11 +153,11 @@ struct LicensePane: View {
                 .font(.system(.body, design: .monospaced))
 
             if let error = license.activationError {
-                Text(error).font(.callout).foregroundStyle(.red)
+                Text(error).font(.callout).foregroundStyle(GDCTokens.Palette.error)
             }
             if justActivated {
                 Label(L.t("license.activated.success"), systemImage: "checkmark.circle.fill")
-                    .font(.callout).foregroundStyle(.green)
+                    .font(.callout).foregroundStyle(GDCTokens.Palette.success)
             }
 
             Button(L.t("license.activate")) {
@@ -170,20 +170,20 @@ struct LicensePane: View {
             }
             .disabled(codeField.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || catalog.items.isEmpty)
         }
-        .padding(16)
-        .background(RoundedRectangle(cornerRadius: 12).fill(Color(nsColor: .controlBackgroundColor)))
-        .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color(nsColor: .separatorColor), lineWidth: 1))
+        .padding(GDCTokens.Space.l)
+        .background(RoundedRectangle(cornerRadius: GDCTokens.Radius.card).fill(Color(nsColor: .controlBackgroundColor)))
+        .overlay(RoundedRectangle(cornerRadius: GDCTokens.Radius.card).stroke(Color(nsColor: .separatorColor), lineWidth: 1))
     }
 
     private var buyCard: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: GDCTokens.Space.s) {
             Text(L.t("license.buy.title")).font(.headline)
             Text(L.t("license.buy.price")).font(.callout).foregroundStyle(.secondary)
             Button(L.t("license.buy.button")) { NSWorkspace.shared.open(Self.whatsAppURL) }
         }
-        .padding(16)
+        .padding(GDCTokens.Space.l)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(RoundedRectangle(cornerRadius: 12).fill(Color(nsColor: .controlBackgroundColor)))
-        .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color(nsColor: .separatorColor), lineWidth: 1))
+        .background(RoundedRectangle(cornerRadius: GDCTokens.Radius.card).fill(Color(nsColor: .controlBackgroundColor)))
+        .overlay(RoundedRectangle(cornerRadius: GDCTokens.Radius.card).stroke(Color(nsColor: .separatorColor), lineWidth: 1))
     }
 }

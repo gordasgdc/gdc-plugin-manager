@@ -8,7 +8,7 @@ struct CoursesGrid: View {
     // Mai lat decât înainte (260→300): cardurile au acum copertă și
     // descrierea se vede întreagă, deci au nevoie de spațiu ca să nu se
     // înghesuie textul pe rânduri de 3 cuvinte.
-    private let columns = [GridItem(.adaptive(minimum: 300, maximum: 400), spacing: 16)]
+    private let columns = [GridItem(.adaptive(minimum: 300, maximum: 400), spacing: GDCTokens.Space.l)]
 
     var body: some View {
         // Bara de filtre comuna (2026-09-11) — shadowing pe `courses`,
@@ -17,14 +17,14 @@ struct CoursesGrid: View {
         FilteredCatalogSection(items: courses, options: .content) { courses in
         ScrollView {
             if courses.isEmpty {
-                Text(L.t("courses.empty")).foregroundStyle(.secondary).padding(40)
+                Text(L.t("courses.empty")).foregroundStyle(.secondary).padding(GDCTokens.Space.page)
             } else {
-                LazyVGrid(columns: columns, spacing: 14) {
+                LazyVGrid(columns: columns, spacing: GDCTokens.Space.grid) {
                     ForEach(courses) { course in
                         CourseCard(course: course)
                     }
                 }
-                .padding(16)
+                .padding(GDCTokens.Space.l)
             }
         }
         }
@@ -35,7 +35,7 @@ struct CourseCard: View {
     let course: Course
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: GDCTokens.Space.s) {
             CoverThumbnail(
                 url: course.coverImageURL,
                 fallbackSymbol: "graduationcap.fill",
@@ -48,7 +48,7 @@ struct CourseCard: View {
                 Spacer(minLength: 4)
                 BadgePill(text: L.t(accessTypeKey), color: accessTypeColor)
             }
-            HStack(spacing: 8) {
+            HStack(spacing: GDCTokens.Space.s) {
                 CountdownBadge(scheduling: course.scheduling)
                 if let formatLabel = course.formatLabel, !formatLabel.trimmingCharacters(in: .whitespaces).isEmpty {
                     Label(formatLabel, systemImage: "clock").font(.caption2).foregroundStyle(.secondary)
@@ -81,7 +81,7 @@ struct CourseCard: View {
             }
             SocialLinksRow(course.socialLinks)
         }
-        .padding(12)
+        .padding(GDCTokens.Space.m)
         .frame(maxWidth: .infinity, alignment: .leading)
         .glassCardBackground()
     }

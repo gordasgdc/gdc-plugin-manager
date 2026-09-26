@@ -52,8 +52,8 @@ struct ExtendLicenseView: View {
                 Text(newCode)
                     .font(.system(.body, design: .monospaced))
                     .textSelection(.enabled)
-                    .padding(8)
-                    .background(Color.secondary.opacity(0.1), in: RoundedRectangle(cornerRadius: 6))
+                    .padding(GDCTokens.Space.s)
+                    .background(Color.secondary.opacity(0.1), in: RoundedRectangle(cornerRadius: GDCTokens.Radius.badge))
                 Button(justCopied ? "Copiat" : "Copiază codul nou") {
                     let pb = NSPasteboard.general
                     pb.clearContents()
@@ -78,7 +78,7 @@ struct ExtendLicenseView: View {
                     }
                 }
                 if let errorMessage {
-                    Text(errorMessage).font(.caption).foregroundStyle(.red)
+                    Text(errorMessage).font(.caption).foregroundStyle(GDCTokens.Palette.error)
                 }
                 HStack {
                     Button("Anulează") { onCancel() }

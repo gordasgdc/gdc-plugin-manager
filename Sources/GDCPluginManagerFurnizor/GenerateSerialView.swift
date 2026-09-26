@@ -128,13 +128,13 @@ struct GenerateSerialView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
+            VStack(alignment: .leading, spacing: GDCTokens.Space.l) {
                 Text("Generează serial").font(.title2).fontWeight(.semibold)
 
                 productPicker
                 GroupBox {
                     VStack(alignment: .leading, spacing: 10) {
-                        VStack(alignment: .leading, spacing: 4) {
+                        VStack(alignment: .leading, spacing: GDCTokens.Space.xs) {
                             TextField("Nume client", text: $customerName).textFieldStyle(.roundedBorder)
                                 .onChange(of: customerName) {
                                     autofilledFrom = nil
@@ -165,12 +165,12 @@ struct GenerateSerialView: View {
                                             .contentShape(Rectangle())
                                         }
                                         .buttonStyle(.plain)
-                                        .padding(.vertical, 4)
-                                        .padding(.horizontal, 8)
+                                        .padding(.vertical, GDCTokens.Space.xs)
+                                        .padding(.horizontal, GDCTokens.Space.s)
                                     }
                                 }
                                 .background(Color.gray.opacity(0.1))
-                                .clipShape(RoundedRectangle(cornerRadius: 6))
+                                .clipShape(RoundedRectangle(cornerRadius: GDCTokens.Radius.badge))
                             }
                         }
                         TextField("Email (opțional)", text: $email).textFieldStyle(.roundedBorder)
@@ -196,7 +196,7 @@ struct GenerateSerialView: View {
                         if let autofilledFrom {
                             Label("Date preluate automat pentru „\(autofilledFrom.name)”", systemImage: "checkmark.circle.fill")
                                 .font(.caption2)
-                                .foregroundStyle(.green)
+                                .foregroundStyle(GDCTokens.Palette.success)
                         }
                         HStack {
                             Picker("Durată", selection: $durationUnit) {
@@ -224,16 +224,16 @@ struct GenerateSerialView: View {
                         }
                         .pickerStyle(.menu)
                     }
-                    .padding(8)
+                    .padding(GDCTokens.Space.s)
                 }
 
                 if let errorMessage {
                     Label(errorMessage, systemImage: "exclamationmark.triangle.fill")
-                        .foregroundStyle(.red)
+                        .foregroundStyle(GDCTokens.Palette.error)
                         .padding(10)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(Color.red.opacity(0.1))
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        .background(GDCTokens.Palette.error.opacity(0.1))
+                        .clipShape(RoundedRectangle(cornerRadius: GDCTokens.Radius.control))
                 }
 
                 HStack {
@@ -252,7 +252,7 @@ struct GenerateSerialView: View {
                 if !generated.isEmpty { generatedTable }
                 Spacer(minLength: 0)
             }
-            .padding(24)
+            .padding(GDCTokens.Space.xl)
             .frame(maxWidth: 820, alignment: .leading)
         }
         .task {
@@ -336,7 +336,7 @@ struct GenerateSerialView: View {
     @ViewBuilder private func productSection(_ title: String, _ rows: [ProductRow]) -> some View {
         let visible = rows.filter { matches($0.label) || matches($0.id) }
         if !visible.isEmpty {
-            Text(title).font(.caption).foregroundStyle(.secondary).padding(.top, 4)
+            Text(title).font(.caption).foregroundStyle(.secondary).padding(.top, GDCTokens.Space.xs)
             ForEach(visible) { row in
                 Toggle(isOn: toggle(row.id)) {
                     HStack {
@@ -351,7 +351,7 @@ struct GenerateSerialView: View {
     /// Selecție multiplă: bife pe secțiuni, filtru de căutare, Product ID nou (memorat pentru data viitoare).
     private var productPicker: some View {
         GroupBox {
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: GDCTokens.Space.xs) {
                 HStack {
                     Text("Produse").fontWeight(.semibold)
                     Text(selectedIDs.isEmpty ? "niciunul bifat" : "\(selectedIDs.count) bifate").font(.caption).foregroundStyle(.secondary)
@@ -359,7 +359,7 @@ struct GenerateSerialView: View {
                     TextField("Caută produs…", text: $productFilter).textFieldStyle(.roundedBorder).frame(width: 220)
                 }
                 ScrollView {
-                    VStack(alignment: .leading, spacing: 2) {
+                    VStack(alignment: .leading, spacing: GDCTokens.Space.xxs) {
                         productSection("Aplicații standalone", gdcStandaloneProducts.map { ProductRow(id: $0.id, label: $0.name) })
                         productSection("Pachete OFX (GDC STYLE Lab) — Product ID-uri memorate", customIDs.map { ProductRow(id: $0, label: $0) })
                         productSection("Din catalog (LUT / DCTL / PowerGrade)", items.map { ProductRow(id: $0.id, label: "\($0.name) — \($0.priceDisplay)") })
@@ -376,7 +376,7 @@ struct GenerateSerialView: View {
                         .disabled(customProductID.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 }
             }
-            .padding(8)
+            .padding(GDCTokens.Space.s)
         }
     }
 
@@ -422,7 +422,7 @@ struct GenerateSerialView: View {
                     }
                 }
             }
-            .padding(8)
+            .padding(GDCTokens.Space.s)
         }
     }
 

@@ -138,7 +138,7 @@ struct PublishView: View {
                 }
 
                 GroupBox {
-                    VStack(alignment: .leading, spacing: 12) {
+                    VStack(alignment: .leading, spacing: GDCTokens.Space.m) {
                         fileRow
 
                         if !isUpdate {
@@ -179,7 +179,7 @@ struct PublishView: View {
                                 Text("nouă: v\(version.trimmingCharacters(in: .whitespaces))")
                                     .foregroundStyle(version.trimmingCharacters(in: .whitespaces) == previousVersion && pickedURL != nil ? .red : .primary)
                                 if version.trimmingCharacters(in: .whitespaces) == previousVersion && pickedURL != nil {
-                                    Text("— la fișiere noi versiunea trebuie schimbată").foregroundStyle(.red)
+                                    Text("— la fișiere noi versiunea trebuie schimbată").foregroundStyle(GDCTokens.Palette.error)
                                 }
                             }
                             .font(.caption)
@@ -214,7 +214,7 @@ struct PublishView: View {
 
                         // Etapa 2 (2026-08-29) — linkuri multiple, 100% opționale.
                         DisclosureGroup("Linkuri suplimentare & rețele sociale (opțional)") {
-                            VStack(alignment: .leading, spacing: 8) {
+                            VStack(alignment: .leading, spacing: GDCTokens.Space.s) {
                                 TextField("Link Achiziție/Magazin extern", text: $purchaseURL).textFieldStyle(.roundedBorder)
                                 TextField("Link Demo/Preview", text: $demoURL).textFieldStyle(.roundedBorder)
                                 SocialLinksFields(state: $socialForm, youtubeLabel: "YouTube (canal, nu tutorialul de mai sus)")
@@ -233,7 +233,7 @@ struct PublishView: View {
                                 .font(.caption).foregroundStyle(.secondary)
                         }
                     }
-                    .padding(8)
+                    .padding(GDCTokens.Space.s)
                 }
 
                 AccessEditorSection(
@@ -257,13 +257,13 @@ struct PublishView: View {
                 SchedulingPicker(scheduling: $scheduling)
 
                 if let errorMessage {
-                    Text(errorMessage).foregroundStyle(.red)
+                    Text(errorMessage).foregroundStyle(GDCTokens.Palette.error)
                 }
                 if let successMessage {
-                    Label(successMessage, systemImage: "checkmark.circle.fill").foregroundStyle(.green)
+                    Label(successMessage, systemImage: "checkmark.circle.fill").foregroundStyle(GDCTokens.Palette.success)
                 }
                 if !statusLines.isEmpty {
-                    VStack(alignment: .leading, spacing: 2) {
+                    VStack(alignment: .leading, spacing: GDCTokens.Space.xxs) {
                         ForEach(statusLines, id: \.self) { line in
                             Text(line).font(.system(.caption, design: .monospaced)).foregroundStyle(.secondary)
                         }
@@ -276,10 +276,10 @@ struct PublishView: View {
                         .disabled(isBusy || !isFormValid)
                 }
                 if !isFormValid && !isBusy {
-                    Text(validationHint).font(.caption).foregroundStyle(.orange)
+                    Text(validationHint).font(.caption).foregroundStyle(GDCTokens.Palette.warning)
                 }
             }
-            .padding(24)
+            .padding(GDCTokens.Space.xl)
             .frame(maxWidth: 640, alignment: .leading)
         }
         .task { loadExistingIfNeeded() }
@@ -605,7 +605,7 @@ struct PublishView: View {
                         }
                 }
                 ScrollView {
-                    VStack(alignment: .leading, spacing: 2) {
+                    VStack(alignment: .leading, spacing: GDCTokens.Space.xxs) {
                         ForEach(existingItems) { item in
                             Toggle(isOn: Binding(get: { batchSelection.contains(item.id) },
                                                  set: { if $0 { batchSelection.insert(item.id) } else { batchSelection.remove(item.id) } })) {
@@ -620,7 +620,7 @@ struct PublishView: View {
                 }
                 .frame(maxHeight: 220)
             }
-            .padding(8)
+            .padding(GDCTokens.Space.s)
         }
     }
 

@@ -15,7 +15,7 @@ struct AdditionalAddressesEditor: View {
 
     var body: some View {
         GroupBox {
-            VStack(alignment: .leading, spacing: 8) {
+            VStack(alignment: .leading, spacing: GDCTokens.Space.s) {
                 Text("Sedii/locații suplimentare (opțional)").fontWeight(.medium)
                 ForEach(addresses, id: \.self) { addr in
                     HStack {
@@ -27,7 +27,7 @@ struct AdditionalAddressesEditor: View {
                             Image(systemName: "minus.circle.fill")
                         }
                         .buttonStyle(.plain)
-                        .foregroundStyle(.red)
+                        .foregroundStyle(GDCTokens.Palette.error)
                     }
                 }
                 HStack {
@@ -42,7 +42,7 @@ struct AdditionalAddressesEditor: View {
                     .disabled(newAddress.trimmingCharacters(in: .whitespaces).isEmpty)
                 }
             }
-            .padding(8)
+            .padding(GDCTokens.Space.s)
         }
     }
 }

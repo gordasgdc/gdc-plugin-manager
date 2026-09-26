@@ -308,7 +308,7 @@ struct ContentView: View {
                 }
             }
             .frame(maxWidth: .infinity, alignment: .center)
-            .padding(.vertical, 8)
+            .padding(.vertical, GDCTokens.Space.s)
             }
             .navigationSplitViewColumnWidth(min: 180, ideal: 220, max: 380)
         } detail: {
@@ -336,7 +336,7 @@ struct ContentView: View {
                 // câmp gol → se revine exact la rubrica selectată, ca înainte.
                 SearchBar(text: $globalSearchText, historyKey: "gdcpm_search_history_global",
                           liveSuggestions: globalSearchSuggestions)
-                    .padding(.horizontal, 16)
+                    .padding(.horizontal, GDCTokens.Space.l)
                     .padding(.top, 10)
                 if globalSearchText.trimmingCharacters(in: .whitespaces).isEmpty {
                     detailContent

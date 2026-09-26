@@ -39,7 +39,7 @@ struct PublishPartnerStoreView: View {
                 Text("Magazine partenere").font(.title2).fontWeight(.semibold)
 
                 GroupBox {
-                    VStack(alignment: .leading, spacing: 12) {
+                    VStack(alignment: .leading, spacing: GDCTokens.Space.m) {
                         TextField("ID (ex. magazin-fotovideo-x, nu se mai poate schimba)", text: $id)
                             .textFieldStyle(.roundedBorder)
                             .disabled(editingID != nil)
@@ -49,7 +49,7 @@ struct PublishPartnerStoreView: View {
                         AutocompleteTextField(placeholder: "Adresă fizică (opțional — apare buton Google Maps în Client)", text: $address,
                                                existingValues: existingStores.compactMap(\.address))
                     }
-                    .padding(8)
+                    .padding(GDCTokens.Space.s)
                 }
 
                 AccessEditorSection(
@@ -74,14 +74,14 @@ struct PublishPartnerStoreView: View {
 
                 if let errorMessage {
                     Label(errorMessage, systemImage: "exclamationmark.triangle.fill")
-                        .foregroundStyle(.red)
+                        .foregroundStyle(GDCTokens.Palette.error)
                         .padding(10)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(Color.red.opacity(0.1))
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        .background(GDCTokens.Palette.error.opacity(0.1))
+                        .clipShape(RoundedRectangle(cornerRadius: GDCTokens.Radius.control))
                 }
                 if let successMessage {
-                    Label(successMessage, systemImage: "checkmark.circle.fill").foregroundStyle(.green)
+                    Label(successMessage, systemImage: "checkmark.circle.fill").foregroundStyle(GDCTokens.Palette.success)
                 }
 
                 HStack {
@@ -93,7 +93,7 @@ struct PublishPartnerStoreView: View {
                     }
                 }
                 if !isFormValid && !isBusy {
-                    Text(validationHint).font(.caption).foregroundStyle(.orange)
+                    Text(validationHint).font(.caption).foregroundStyle(GDCTokens.Palette.warning)
                 }
 
                 if !existingStores.isEmpty {
@@ -109,13 +109,13 @@ struct PublishPartnerStoreView: View {
                             Button("Editează") { load(store) }
                             Button("Șterge", role: .destructive) { pendingDelete = store }
                         }
-                        .padding(.vertical, 4)
+                        .padding(.vertical, GDCTokens.Space.xs)
                     }
                 }
 
                 Spacer(minLength: 0)
             }
-            .padding(24)
+            .padding(GDCTokens.Space.xl)
             .frame(maxWidth: 640, alignment: .leading)
         }
         .confirmationDialog(

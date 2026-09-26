@@ -56,8 +56,8 @@ struct SocialLinksFields: View {
     var youtubeLabel = "YouTube (canal)"
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("Rețele sociale").font(.caption).foregroundStyle(.secondary).padding(.top, 4)
+        VStack(alignment: .leading, spacing: GDCTokens.Space.s) {
+            Text("Rețele sociale").font(.caption).foregroundStyle(.secondary).padding(.top, GDCTokens.Space.xs)
             TextField("Facebook", text: $state.facebook).textFieldStyle(.roundedBorder)
             TextField(youtubeLabel, text: $state.youtube).textFieldStyle(.roundedBorder)
             TextField("Instagram", text: $state.instagram).textFieldStyle(.roundedBorder)

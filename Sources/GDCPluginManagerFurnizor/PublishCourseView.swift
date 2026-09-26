@@ -48,7 +48,7 @@ struct PublishCourseView: View {
                 Text("Cursuri").font(.title2).fontWeight(.semibold)
 
                 GroupBox {
-                    VStack(alignment: .leading, spacing: 12) {
+                    VStack(alignment: .leading, spacing: GDCTokens.Space.m) {
                         TextField("ID curs (ex. curs-color-grading, nu se mai poate schimba)", text: $id)
                             .textFieldStyle(.roundedBorder)
                             .disabled(editingID != nil)
@@ -102,7 +102,7 @@ struct PublishCourseView: View {
                                     Image(systemName: "minus.circle.fill")
                                 }
                                 .buttonStyle(.plain)
-                                .foregroundStyle(.red)
+                                .foregroundStyle(GDCTokens.Palette.error)
                             }
                         }
 
@@ -116,7 +116,7 @@ struct PublishCourseView: View {
                                 .disabled(newOptionLabel.trimmingCharacters(in: .whitespaces).isEmpty || Double(newOptionPrice) == nil)
                         }
                     }
-                    .padding(8)
+                    .padding(GDCTokens.Space.s)
                 }
 
                 AccessEditorSection(
@@ -143,14 +143,14 @@ struct PublishCourseView: View {
 
                 if let errorMessage {
                     Label(errorMessage, systemImage: "exclamationmark.triangle.fill")
-                        .foregroundStyle(.red)
+                        .foregroundStyle(GDCTokens.Palette.error)
                         .padding(10)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(Color.red.opacity(0.1))
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        .background(GDCTokens.Palette.error.opacity(0.1))
+                        .clipShape(RoundedRectangle(cornerRadius: GDCTokens.Radius.control))
                 }
                 if let successMessage {
-                    Label(successMessage, systemImage: "checkmark.circle.fill").foregroundStyle(.green)
+                    Label(successMessage, systemImage: "checkmark.circle.fill").foregroundStyle(GDCTokens.Palette.success)
                 }
 
                 HStack {
@@ -162,7 +162,7 @@ struct PublishCourseView: View {
                     }
                 }
                 if !isFormValid && !isBusy {
-                    Text(validationHint).font(.caption).foregroundStyle(.orange)
+                    Text(validationHint).font(.caption).foregroundStyle(GDCTokens.Palette.warning)
                 }
 
                 if !existingCourses.isEmpty {
@@ -178,13 +178,13 @@ struct PublishCourseView: View {
                             Button("Editează") { load(course) }
                             Button("Șterge", role: .destructive) { pendingDelete = course }
                         }
-                        .padding(.vertical, 4)
+                        .padding(.vertical, GDCTokens.Space.xs)
                     }
                 }
 
                 Spacer(minLength: 0)
             }
-            .padding(24)
+            .padding(GDCTokens.Space.xl)
             .frame(maxWidth: 640, alignment: .leading)
         }
         .confirmationDialog(

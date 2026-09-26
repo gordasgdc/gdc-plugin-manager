@@ -1,4 +1,5 @@
 import SwiftUI
+import GDCPluginManagerCore
 
 /// 1.52.5: mediul e mereu vizibil, sus, ca frate în VStack (nu suprapus — Regula 24).
 /// - STAGING: banner roșu.
@@ -15,7 +16,7 @@ struct EnvironmentBanner: View {
                 bar("MEDIU DE TEST — STAGING · publicările merg DOAR în repo-urile *-staging; Supabase, secretele și registrul de vânzări sunt blocate",
                     color: .red)
             } else if pending {
-                HStack(spacing: 12) {
+                HStack(spacing: GDCTokens.Space.m) {
                     Text("PRODUCȚIE — ultima sesiune a fost STAGING. Toate scrierile sunt BLOCATE până confirmi.")
                         .font(.callout.weight(.bold))
                     Button("Continuă în PRODUCȚIE…") { askConfirmation = true }
@@ -23,7 +24,7 @@ struct EnvironmentBanner: View {
                 .foregroundStyle(.white)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 6)
-                .background(Color.orange)
+                .background(GDCTokens.Palette.warning)
             } else {
                 bar("PRODUCȚIE", color: Color(nsColor: .systemGreen))
             }

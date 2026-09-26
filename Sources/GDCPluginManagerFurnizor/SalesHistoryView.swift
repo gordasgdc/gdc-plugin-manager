@@ -90,14 +90,14 @@ struct SalesHistoryView: View {
                 }
             }
             .padding([.horizontal, .top], 24)
-            .padding(.bottom, 12)
+            .padding(.bottom, GDCTokens.Space.m)
 
             if let syncStatus {
                 Text(syncStatus)
                     .font(.caption)
                     .foregroundStyle(.secondary)
-                    .padding(.horizontal, 24)
-                    .padding(.bottom, 8)
+                    .padding(.horizontal, GDCTokens.Space.xl)
+                    .padding(.bottom, GDCTokens.Space.s)
             }
 
             HStack(spacing: 10) {
@@ -135,21 +135,21 @@ struct SalesHistoryView: View {
                 .menuStyle(.borderlessButton)
                 .fixedSize()
             }
-            .padding(.horizontal, 24)
+            .padding(.horizontal, GDCTokens.Space.xl)
             .padding(.bottom, 6)
 
             if let exportStatus {
                 Text(exportStatus)
                     .font(.caption)
-                    .foregroundStyle(.green)
-                    .padding(.horizontal, 24)
+                    .foregroundStyle(GDCTokens.Palette.success)
+                    .padding(.horizontal, GDCTokens.Space.xl)
                     .padding(.bottom, 6)
             }
 
             if filteredEntries.isEmpty {
                 Text(entries.isEmpty ? "Niciun cod generat încă." : "Niciun rezultat pentru „\(searchText)”.")
                     .foregroundStyle(.secondary)
-                    .padding(24)
+                    .padding(GDCTokens.Space.xl)
                 Spacer()
             } else {
                 Table(filteredEntries) {
@@ -163,7 +163,7 @@ struct SalesHistoryView: View {
                                 .underline()
                         }
                         .buttonStyle(.plain)
-                        .foregroundStyle(.blue)
+                        .foregroundStyle(GDCTokens.Palette.info)
                         .help("Deschide fișa clientului")
                     }
                     // Copiere rapida (cerut explicit 2026-08-26) - direct din
@@ -175,7 +175,7 @@ struct SalesHistoryView: View {
                         copyableCell(entry.machineID.isEmpty ? "—" : entry.machineID, key: "hwid:\(entry.serial)", monospaced: true)
                     }
                     TableColumn("") { entry in
-                        HStack(spacing: 8) {
+                        HStack(spacing: GDCTokens.Space.s) {
                             Button(justCopiedSerial == entry.serial ? "Copiat" : "Copiază cod") {
                                 let pb = NSPasteboard.general
                                 pb.clearContents()
@@ -201,12 +201,12 @@ struct SalesHistoryView: View {
             // datele, doar că nu i s-a generat încă un serial. Afișați DOAR
             // aici, niciodată ca rând fals în SalesLog (n-au produs/preț/serial).
             if !trackerOnlyClients.isEmpty {
-                Divider().padding(.top, 8)
+                Divider().padding(.top, GDCTokens.Space.s)
                 Text("Din Tracker, fără licență generată încă (\(trackerOnlyClients.count))")
                     .font(.caption).fontWeight(.semibold)
                     .foregroundStyle(.secondary)
-                    .padding(.horizontal, 24)
-                    .padding(.top, 12)
+                    .padding(.horizontal, GDCTokens.Space.xl)
+                    .padding(.top, GDCTokens.Space.m)
                 ScrollView {
                     VStack(alignment: .leading, spacing: 0) {
                         ForEach(trackerOnlyClients) { client in
@@ -219,8 +219,8 @@ struct SalesHistoryView: View {
                                     .foregroundStyle(.tertiary)
                             }
                             .font(.caption)
-                            .padding(.vertical, 4)
-                            .padding(.horizontal, 24)
+                            .padding(.vertical, GDCTokens.Space.xs)
+                            .padding(.horizontal, GDCTokens.Space.xl)
                         }
                     }
                 }
@@ -353,7 +353,7 @@ struct SalesHistoryView: View {
     /// 2026-08-26) - Email și ID Mașină, fără să deschizi editarea.
     @ViewBuilder
     private func copyableCell(_ value: String, key: String, monospaced: Bool = false) -> some View {
-        HStack(spacing: 4) {
+        HStack(spacing: GDCTokens.Space.xs) {
             Text(value)
                 .font(monospaced ? .system(.caption, design: .monospaced) : .body)
                 .lineLimit(1)
@@ -446,7 +446,7 @@ private struct EditSalesEntryView: View {
             TextField("Expiră (text afișat)", text: $expiresDisplay).textFieldStyle(.roundedBorder)
 
             if let errorMessage {
-                Text(errorMessage).foregroundStyle(.red).font(.caption)
+                Text(errorMessage).foregroundStyle(GDCTokens.Palette.error).font(.caption)
             }
 
             HStack {
@@ -457,7 +457,7 @@ private struct EditSalesEntryView: View {
                     .disabled(customer.trimmingCharacters(in: .whitespaces).isEmpty || Double(priceText) == nil)
             }
         }
-        .padding(24)
+        .padding(GDCTokens.Space.xl)
         .frame(width: 420)
     }
 
@@ -530,7 +530,7 @@ private struct BulkImportView: View {
             TextEditor(text: $rawInput)
                 .font(.system(.body, design: .monospaced))
                 .frame(height: 140)
-                .overlay(RoundedRectangle(cornerRadius: 6).stroke(.separator))
+                .overlay(RoundedRectangle(cornerRadius: GDCTokens.Radius.badge).stroke(.separator))
 
             Picker("Produs", selection: $selectedID) {
                 Text("Alege…").tag("")
@@ -548,10 +548,10 @@ private struct BulkImportView: View {
             }
 
             if let errorMessage {
-                Text(errorMessage).foregroundStyle(.red).font(.caption)
+                Text(errorMessage).foregroundStyle(GDCTokens.Palette.error).font(.caption)
             }
             if let resultSummary {
-                Text(resultSummary).foregroundStyle(.green).font(.caption)
+                Text(resultSummary).foregroundStyle(GDCTokens.Palette.success).font(.caption)
             }
 
             HStack {
@@ -562,7 +562,7 @@ private struct BulkImportView: View {
                     .disabled(isRunning || selectedID.isEmpty || parsedLines.isEmpty || Double(priceText) == nil)
             }
         }
-        .padding(24)
+        .padding(GDCTokens.Space.xl)
         .frame(width: 480)
         .task { loadItems() }
     }

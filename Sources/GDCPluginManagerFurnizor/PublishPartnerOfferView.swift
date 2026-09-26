@@ -38,7 +38,7 @@ struct PublishPartnerOfferView: View {
                     .font(.caption).foregroundStyle(.secondary)
 
                 GroupBox {
-                    VStack(alignment: .leading, spacing: 12) {
+                    VStack(alignment: .leading, spacing: GDCTokens.Space.m) {
                         TextField("ID ofertă (ex. aputure-black-friday-2026, nu se mai poate schimba)", text: $id)
                             .textFieldStyle(.roundedBorder)
                             .disabled(editingID != nil)
@@ -51,11 +51,11 @@ struct PublishPartnerOfferView: View {
                                 if description.isEmpty {
                                     Text("Descrierea ofertei…")
                                         .foregroundStyle(.secondary)
-                                        .padding(.top, 8).padding(.leading, 5)
+                                        .padding(.top, GDCTokens.Space.s).padding(.leading, 5)
                                         .allowsHitTesting(false)
                                 }
                             }
-                            .overlay(RoundedRectangle(cornerRadius: 6).stroke(.separator))
+                            .overlay(RoundedRectangle(cornerRadius: GDCTokens.Radius.badge).stroke(.separator))
                         HStack {
                             TextField("Badge discount (ex. -20%, SPECIAL OFFER)", text: $discountText).textFieldStyle(.roundedBorder)
                             TextField("Cod cupon (opțional)", text: $couponCode).textFieldStyle(.roundedBorder)
@@ -64,7 +64,7 @@ struct PublishPartnerOfferView: View {
 
                         SocialLinksFields(state: $socialForm, youtubeLabel: "YouTube")
                     }
-                    .padding(8)
+                    .padding(GDCTokens.Space.s)
                 }
 
                 AccessEditorSection(
@@ -86,14 +86,14 @@ struct PublishPartnerOfferView: View {
 
                 if let errorMessage {
                     Label(errorMessage, systemImage: "exclamationmark.triangle.fill")
-                        .foregroundStyle(.red)
+                        .foregroundStyle(GDCTokens.Palette.error)
                         .padding(10)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(Color.red.opacity(0.1))
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        .background(GDCTokens.Palette.error.opacity(0.1))
+                        .clipShape(RoundedRectangle(cornerRadius: GDCTokens.Radius.control))
                 }
                 if let successMessage {
-                    Label(successMessage, systemImage: "checkmark.circle.fill").foregroundStyle(.green)
+                    Label(successMessage, systemImage: "checkmark.circle.fill").foregroundStyle(GDCTokens.Palette.success)
                 }
 
                 HStack {
@@ -108,7 +108,7 @@ struct PublishPartnerOfferView: View {
                 // niciun mesaj, nu spunea CE lipsește — userul nu avea
                 // cum să știe de ce nu poate publica.
                 if !isFormValid && !isBusy {
-                    Text(validationHint).font(.caption).foregroundStyle(.orange)
+                    Text(validationHint).font(.caption).foregroundStyle(GDCTokens.Palette.warning)
                 }
 
                 if !existingOffers.isEmpty {
@@ -123,8 +123,8 @@ struct PublishPartnerOfferView: View {
                                         Text(discountText.uppercased())
                                             .font(.system(size: 9, weight: .bold))
                                             .foregroundStyle(.white)
-                                            .padding(.horizontal, 6).padding(.vertical, 2)
-                                            .background(Capsule().fill(Color.red))
+                                            .padding(.horizontal, 6).padding(.vertical, GDCTokens.Space.xxs)
+                                            .background(Capsule().fill(GDCTokens.Palette.error))
                                     }
                                 }
                                 Text(offer.url).font(.caption).foregroundStyle(.secondary).lineLimit(1)
@@ -133,13 +133,13 @@ struct PublishPartnerOfferView: View {
                             Button("Editează") { load(offer) }
                             Button("Șterge", role: .destructive) { pendingDelete = offer }
                         }
-                        .padding(.vertical, 4)
+                        .padding(.vertical, GDCTokens.Space.xs)
                     }
                 }
 
                 Spacer(minLength: 0)
             }
-            .padding(24)
+            .padding(GDCTokens.Space.xl)
             .frame(maxWidth: 640, alignment: .leading)
         }
         .confirmationDialog(

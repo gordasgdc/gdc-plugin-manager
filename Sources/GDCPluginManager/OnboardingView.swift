@@ -1,4 +1,5 @@
 import SwiftUI
+import GDCPluginManagerCore
 
 /// Shown once, on first launch only — never blocks using the app either
 /// way ("Sari peste" or "Trimite" both dismiss it for good). Keeps the
@@ -10,7 +11,7 @@ struct OnboardingView: View {
     @State private var email = ""
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: GDCTokens.Space.l) {
             Image(systemName: "hand.wave.fill")
                 .font(.system(size: 32))
                 .foregroundStyle(.tint)

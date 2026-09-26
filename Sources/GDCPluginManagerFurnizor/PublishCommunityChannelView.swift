@@ -43,7 +43,7 @@ struct PublishCommunityChannelView: View {
 
     private var form: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
+            VStack(alignment: .leading, spacing: GDCTokens.Space.l) {
                 Text(editingID == nil ? "Canal nou" : "Editezi „\(editingID ?? "")”")
                     .font(.title3).fontWeight(.semibold)
 
@@ -67,8 +67,8 @@ struct PublishCommunityChannelView: View {
                         .fixedSize(horizontal: false, vertical: true)
                 }
 
-                HStack(spacing: 16) {
-                    VStack(alignment: .leading, spacing: 4) {
+                HStack(spacing: GDCTokens.Space.l) {
+                    VStack(alignment: .leading, spacing: GDCTokens.Space.xs) {
                         Text("Tip (dă eticheta butonului)").font(.caption).foregroundStyle(.secondary)
                         Picker("", selection: $kind) {
                             ForEach(CommunityKind.allCases, id: \.self) { value in
@@ -77,7 +77,7 @@ struct PublishCommunityChannelView: View {
                         }
                         .labelsHidden()
                     }
-                    VStack(alignment: .leading, spacing: 4) {
+                    VStack(alignment: .leading, spacing: GDCTokens.Space.xs) {
                         Text("Iconiță").font(.caption).foregroundStyle(.secondary)
                         Picker("", selection: $icon) {
                             ForEach(Self.iconKeys, id: \.self) { key in
@@ -86,7 +86,7 @@ struct PublishCommunityChannelView: View {
                         }
                         .labelsHidden()
                     }
-                    VStack(alignment: .leading, spacing: 4) {
+                    VStack(alignment: .leading, spacing: GDCTokens.Space.xs) {
                         Text("Ordine").font(.caption).foregroundStyle(.secondary)
                         TextField("", text: $orderText).frame(width: 60)
                     }
@@ -98,12 +98,12 @@ struct PublishCommunityChannelView: View {
 
                 if let errorMessage {
                     Label(errorMessage, systemImage: "xmark.octagon.fill")
-                        .foregroundStyle(.red).font(.callout)
+                        .foregroundStyle(GDCTokens.Palette.error).font(.callout)
                         .fixedSize(horizontal: false, vertical: true)
                 }
                 if let successMessage {
                     Label(successMessage, systemImage: "checkmark.circle.fill")
-                        .foregroundStyle(.green).font(.callout)
+                        .foregroundStyle(GDCTokens.Palette.success).font(.callout)
                         .fixedSize(horizontal: false, vertical: true)
                 }
 
@@ -129,7 +129,7 @@ struct PublishCommunityChannelView: View {
     private var list: some View {
         VStack(alignment: .leading, spacing: 0) {
             Text("Publicate (\(channels.count))")
-                .font(.headline).padding(16)
+                .font(.headline).padding(GDCTokens.Space.l)
             Divider()
             if channels.isEmpty {
                 Text("Niciun canal publicat încă.")
@@ -155,10 +155,10 @@ struct PublishCommunityChannelView: View {
                                 Button("Editează") { startEditing(channel) }
                                     .buttonStyle(.link).font(.caption)
                                 Button("Șterge") { Task { await remove(channel) } }
-                                    .buttonStyle(.link).font(.caption).foregroundStyle(.red)
+                                    .buttonStyle(.link).font(.caption).foregroundStyle(GDCTokens.Palette.error)
                             }
                         }
-                        .padding(.vertical, 4)
+                        .padding(.vertical, GDCTokens.Space.xs)
                     }
                 }
             }
@@ -283,7 +283,7 @@ struct PublishCommunityChannelView: View {
     }
 
     private func labeled<Content: View>(_ title: String, _ hint: String, @ViewBuilder content: () -> Content) -> some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: GDCTokens.Space.xs) {
             Text(title).font(.caption).fontWeight(.semibold).foregroundStyle(.secondary)
             content()
                 .textFieldStyle(.roundedBorder)

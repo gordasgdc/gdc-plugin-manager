@@ -86,7 +86,7 @@ struct LaunchOfferBanner: View {
     private func textBand(_ config: LaunchBannerConfig) -> some View {
         ZStack {
             Color.black.opacity(0.82)
-            VStack(spacing: 2) {
+            VStack(spacing: GDCTokens.Space.xxs) {
                 Text(config.topText)
                     .font(.system(size: 11, weight: .bold))
                     .tracking(2)
@@ -101,7 +101,7 @@ struct LaunchOfferBanner: View {
                     .minimumScaleFactor(0.6)
             }
             .multilineTextAlignment(.center)
-            .padding(.horizontal, 16)
+            .padding(.horizontal, GDCTokens.Space.l)
         }
         .frame(height: Self.textBandHeight)
     }

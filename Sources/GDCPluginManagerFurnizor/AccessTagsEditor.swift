@@ -135,11 +135,11 @@ struct AccessTagsEditor: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: GDCTokens.Space.s) {
             if !selected.isEmpty {
                 FlowRow(spacing: 6) {
                     ForEach(selected, id: \.self) { tag in
-                        HStack(spacing: 4) {
+                        HStack(spacing: GDCTokens.Space.xs) {
                             Text(tag).font(.caption)
                             Button {
                                 remove(tag)
@@ -151,14 +151,14 @@ struct AccessTagsEditor: View {
                             .buttonStyle(.plain)
                             .help("Elimină eticheta")
                         }
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 4)
+                        .padding(.horizontal, GDCTokens.Space.s)
+                        .padding(.vertical, GDCTokens.Space.xs)
                         .background(Capsule().fill(Color.accentColor.opacity(0.15)))
                     }
                 }
             }
 
-            HStack(spacing: 8) {
+            HStack(spacing: GDCTokens.Space.s) {
                 TextField("Scrie o etichetă nouă și apasă Enter", text: $draft)
                     .textFieldStyle(.roundedBorder)
                     .focused($focused)
@@ -168,7 +168,7 @@ struct AccessTagsEditor: View {
             }
 
             if !suggestions.isEmpty {
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: GDCTokens.Space.xs) {
                     Text(draft.isEmpty ? "Alege dintre cele deja folosite:" : "Sugestii:")
                         .font(.caption).foregroundStyle(.secondary)
                     FlowRow(spacing: 6) {
@@ -176,8 +176,8 @@ struct AccessTagsEditor: View {
                             Button { add(suggestion) } label: {
                                 Text(suggestion)
                                     .font(.caption)
-                                    .padding(.horizontal, 8)
-                                    .padding(.vertical, 4)
+                                    .padding(.horizontal, GDCTokens.Space.s)
+                                    .padding(.vertical, GDCTokens.Space.xs)
                                     .background(Capsule().fill(.quaternary))
                                     .contentShape(Capsule())
                             }
@@ -248,7 +248,7 @@ struct TagSuggestionsRow: View {
 
     var body: some View {
         if !visible.isEmpty {
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: GDCTokens.Space.xs) {
                 Text(draft.isEmpty ? "Alege dintre cele deja folosite:" : "Sugestii:")
                     .font(.caption).foregroundStyle(.secondary)
                 FlowRow(spacing: 6) {
@@ -256,8 +256,8 @@ struct TagSuggestionsRow: View {
                         Button { onPick(suggestion) } label: {
                             Text(suggestion)
                                 .font(.caption)
-                                .padding(.horizontal, 8)
-                                .padding(.vertical, 4)
+                                .padding(.horizontal, GDCTokens.Space.s)
+                                .padding(.vertical, GDCTokens.Space.xs)
                                 .background(Capsule().fill(.quaternary))
                                 .contentShape(Capsule())
                         }

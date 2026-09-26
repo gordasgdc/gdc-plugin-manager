@@ -1,4 +1,5 @@
 import SwiftUI
+import GDCPluginManagerCore
 
 /// Panoul "Revocări licențe" (vezi CLAUDE.md, Partea 1, Regula 12) —
 /// permite revocarea instant a unei licențe deja generate/activate
@@ -16,7 +17,7 @@ struct RevocationsView: View {
     @State private var isSubmitting = false
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: GDCTokens.Space.l) {
             Text("Revocări licențe").font(.title2).fontWeight(.semibold)
             Text("Revocă instant o licență deja activată (sabotaj, abuz, test expirat) — clientul o pierde la următoarea verificare online. Funcționează fail-open: fără conexiune, licența existentă rămâne activă, nu se blochează niciodată doar din cauza rețelei.")
                 .font(.callout)
@@ -34,15 +35,15 @@ struct RevocationsView: View {
                         Spacer()
                         Button("Revocă") { Task { await submitRevocation() } }
                             .buttonStyle(.borderedProminent)
-                            .tint(.red)
+                            .tint(GDCTokens.Palette.error)
                             .disabled(isSubmitting || newMachineID.trimmingCharacters(in: .whitespaces).isEmpty || newProductID.trimmingCharacters(in: .whitespaces).isEmpty)
                     }
                 }
-                .padding(.top, 4)
+                .padding(.top, GDCTokens.Space.xs)
             }
 
             if let errorMessage {
-                Text(errorMessage).foregroundStyle(.red).font(.callout)
+                Text(errorMessage).foregroundStyle(GDCTokens.Palette.error).font(.callout)
             }
 
             HStack {
@@ -54,7 +55,7 @@ struct RevocationsView: View {
 
             List(records) { record in
                 HStack {
-                    VStack(alignment: .leading, spacing: 2) {
+                    VStack(alignment: .leading, spacing: GDCTokens.Space.xxs) {
                         Text(record.product_id).fontWeight(.medium)
                         Text(record.machine_id).font(.caption).foregroundStyle(.secondary).textSelection(.enabled)
                         if let reason = record.reason, !reason.isEmpty {

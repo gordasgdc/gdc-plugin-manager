@@ -1,4 +1,5 @@
 import SwiftUI
+import GDCPluginManagerCore
 
 /// Un grup de intrări din SalesLog care au ACELAȘI ID de mașină, dar nume
 /// și/sau email diferite — semn de dublură/typo la introducere manuală
@@ -62,14 +63,14 @@ struct DuplicateClientsView: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .padding(.horizontal, 20)
-                    .padding(.bottom, 12)
+                    .padding(.bottom, GDCTokens.Space.m)
 
                 if let errorMessage {
-                    Text(errorMessage).foregroundStyle(.red).font(.caption).padding(.horizontal, 20)
+                    Text(errorMessage).foregroundStyle(GDCTokens.Palette.error).font(.caption).padding(.horizontal, 20)
                 }
 
                 ScrollView {
-                    VStack(alignment: .leading, spacing: 16) {
+                    VStack(alignment: .leading, spacing: GDCTokens.Space.l) {
                         ForEach(groups) { group in
                             groupCard(group)
                         }
@@ -85,7 +86,7 @@ struct DuplicateClientsView: View {
     @ViewBuilder
     private func groupCard(_ group: DuplicateGroup) -> some View {
         GroupBox {
-            VStack(alignment: .leading, spacing: 8) {
+            VStack(alignment: .leading, spacing: GDCTokens.Space.s) {
                 Text(group.machineID)
                     .font(.system(.caption, design: .monospaced))
                     .foregroundStyle(.secondary)

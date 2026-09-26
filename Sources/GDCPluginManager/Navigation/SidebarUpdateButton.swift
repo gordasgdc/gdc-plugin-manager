@@ -27,8 +27,8 @@ struct SidebarUpdateButton: View {
                     .font(.system(size: 10, weight: .bold, design: .rounded))
                     .lineLimit(1)
                     .foregroundStyle(.white)
-                    .padding(.horizontal, 8).padding(.vertical, 3)
-                    .background(Capsule().fill(Color.green))
+                    .padding(.horizontal, GDCTokens.Space.s).padding(.vertical, 3)
+                    .background(Capsule().fill(GDCTokens.Palette.success))
             }
             .buttonStyle(.plain)
             .help(L.t("update.popup.now"))

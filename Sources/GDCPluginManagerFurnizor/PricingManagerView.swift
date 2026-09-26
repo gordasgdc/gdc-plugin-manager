@@ -1,4 +1,5 @@
 import SwiftUI
+import GDCPluginManagerCore
 
 /// Panou nou (2026-08-30): "Pricing Manager" — programează dinainte
 /// mai multe ferestre de preț per aplicație ("1-15 sept: preț X, Black
@@ -38,19 +39,19 @@ struct PricingManagerView: View {
             .padding()
 
             if let loadError {
-                Text(loadError).foregroundStyle(.red).font(.caption).padding(.horizontal)
+                Text(loadError).foregroundStyle(GDCTokens.Palette.error).font(.caption).padding(.horizontal)
             }
 
             List(selection: $selectedProductID) {
                 ForEach(gdcStandaloneProducts) { product in
                     let pricing = catalog?.products[product.id]
                     HStack {
-                        VStack(alignment: .leading, spacing: 2) {
+                        VStack(alignment: .leading, spacing: GDCTokens.Space.xxs) {
                             Text(product.name).bold()
                             if let pricing {
                                 if let active = pricing.activePromo {
                                     Text("🔥 \(formatPrice(active.price, pricing.currency)) — \(active.label)")
-                                        .font(.caption).foregroundStyle(.orange)
+                                        .font(.caption).foregroundStyle(GDCTokens.Palette.warning)
                                 } else if let next = pricing.nextScheduledPromo {
                                     Text("\(formatPrice(pricing.basePrice, pricing.currency)) · „\(next.label)” programată \(next.startsAt.formatted(date: .abbreviated, time: .omitted))")
                                         .font(.caption).foregroundStyle(.secondary)
@@ -59,7 +60,7 @@ struct PricingManagerView: View {
                                         .font(.caption).foregroundStyle(.secondary)
                                 }
                             } else {
-                                Text("Neconfigurat încă în pricing.json").font(.caption).foregroundStyle(.orange)
+                                Text("Neconfigurat încă în pricing.json").font(.caption).foregroundStyle(GDCTokens.Palette.warning)
                             }
                         }
                         Spacer()
@@ -111,9 +112,9 @@ struct PricingManagerView: View {
 
                     if draftSchedule.isEmpty {
                         Text("Nicio fereastră programată — se folosește mereu prețul de bază.")
-                            .font(.caption).foregroundStyle(.secondary).padding(.vertical, 4)
+                            .font(.caption).foregroundStyle(.secondary).padding(.vertical, GDCTokens.Space.xs)
                     } else {
-                        VStack(spacing: 8) {
+                        VStack(spacing: GDCTokens.Space.s) {
                             ForEach(sortedDraftSchedule) { promo in
                                 scheduleRow(promo)
                             }
@@ -123,11 +124,11 @@ struct PricingManagerView: View {
                     Divider()
 
                     if let publishError {
-                        Text(publishError).foregroundStyle(.red).font(.caption)
+                        Text(publishError).foregroundStyle(GDCTokens.Palette.error).font(.caption)
                     }
                     if let lastPublishedAt {
                         Text("Publicat la \(lastPublishedAt.formatted(date: .omitted, time: .standard)) — vizibil pe toate aplicațiile în câteva secunde/minute (verifică la lansarea aplicației).")
-                            .font(.caption).foregroundStyle(.green)
+                            .font(.caption).foregroundStyle(GDCTokens.Palette.success)
                     }
 
                     HStack {
@@ -146,7 +147,7 @@ struct PricingManagerView: View {
                         .disabled(isPublishing || Double(draftBasePrice.replacingOccurrences(of: ",", with: ".")) == nil)
                     }
                 }
-                .padding(24)
+                .padding(GDCTokens.Space.xl)
             }
             .sheet(isPresented: $showAddSheet) {
                 AddPromoWindowSheet { newPromo in
@@ -174,8 +175,8 @@ struct PricingManagerView: View {
                 HStack(spacing: 6) {
                     if promo.isActiveNow {
                         Text("ACTIV ACUM").font(.caption2.bold()).foregroundStyle(.white)
-                            .padding(.horizontal, 6).padding(.vertical, 2)
-                            .background(Color.orange, in: Capsule())
+                            .padding(.horizontal, 6).padding(.vertical, GDCTokens.Space.xxs)
+                            .background(GDCTokens.Palette.warning, in: Capsule())
                     }
                     Text(promo.label).bold()
                     if promo.showCountdown { Image(systemName: "timer").foregroundStyle(.secondary) }
@@ -192,7 +193,7 @@ struct PricingManagerView: View {
             .buttonStyle(.plain)
         }
         .padding(10)
-        .background(promo.isActiveNow ? Color.orange.opacity(0.12) : Color.gray.opacity(0.08), in: RoundedRectangle(cornerRadius: 8))
+        .background(promo.isActiveNow ? GDCTokens.Palette.warning.opacity(0.12) : Color.gray.opacity(0.08), in: RoundedRectangle(cornerRadius: GDCTokens.Radius.control))
     }
 
     private func reload() {
@@ -293,7 +294,7 @@ private struct AddPromoWindowSheet: View {
             DatePicker("Se termină:", selection: $endsAt)
             if endsAt <= startsAt {
                 Label("Data de final trebuie să fie după data de început.", systemImage: "exclamationmark.triangle.fill")
-                    .font(.caption).foregroundStyle(.orange)
+                    .font(.caption).foregroundStyle(GDCTokens.Palette.warning)
             }
             Toggle("Arată countdown live în aplicație", isOn: $showCountdown)
             Text("Creează urgență (\"Se termină în 2z 14h\") — util pentru Black Friday; lasă dezactivat pentru o reducere liniștită.")
@@ -311,7 +312,7 @@ private struct AddPromoWindowSheet: View {
                 .disabled(!isValid)
             }
         }
-        .padding(24)
+        .padding(GDCTokens.Space.xl)
         .frame(width: 420)
     }
 }

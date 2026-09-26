@@ -34,11 +34,11 @@ struct LaunchBannerManagerView: View {
                     .font(.callout).foregroundStyle(.secondary)
 
                 if let loadError {
-                    Label(loadError, systemImage: "exclamationmark.triangle.fill").foregroundStyle(.orange)
+                    Label(loadError, systemImage: "exclamationmark.triangle.fill").foregroundStyle(GDCTokens.Palette.warning)
                 }
 
                 GroupBox {
-                    VStack(alignment: .leading, spacing: 12) {
+                    VStack(alignment: .leading, spacing: GDCTokens.Space.m) {
                         Toggle("Arată bannerul la clienți", isOn: $draftEnabled)
                         TextField("Text mic, sus (ex. LANSARE)", text: $draftTopText)
                             .textFieldStyle(.roundedBorder)
@@ -50,7 +50,7 @@ struct LaunchBannerManagerView: View {
                         }
                         .pickerStyle(.segmented)
                     }
-                    .padding(8)
+                    .padding(GDCTokens.Space.s)
                 }
 
                 CoverImagePicker(preset: .cover, selection: $coverSelection)
@@ -58,11 +58,11 @@ struct LaunchBannerManagerView: View {
                     .id(loadGeneration)
 
                 if let publishError {
-                    Label(publishError, systemImage: "exclamationmark.triangle.fill").foregroundStyle(.red)
+                    Label(publishError, systemImage: "exclamationmark.triangle.fill").foregroundStyle(GDCTokens.Palette.error)
                 }
                 if let lastPublishedAt {
                     Label("Publicat \(lastPublishedAt.formatted(date: .omitted, time: .shortened))", systemImage: "checkmark.circle.fill")
-                        .foregroundStyle(.green)
+                        .foregroundStyle(GDCTokens.Palette.success)
                 }
 
                 Button {
@@ -73,7 +73,7 @@ struct LaunchBannerManagerView: View {
                 .disabled(isBusy)
                 .buttonStyle(.borderedProminent)
             }
-            .padding(24)
+            .padding(GDCTokens.Space.xl)
         }
         .onAppear(perform: reload)
     }

@@ -1,4 +1,5 @@
 import SwiftUI
+import GDCPluginManagerCore
 
 /// Bloc "Profil Utilizator" în sidebar-ul din stânga (vezi CLAUDE.md,
 /// Partea 1, Regula 12) — arată Nume (sau „Anonim"), Email și Machine ID
@@ -18,7 +19,7 @@ struct ProfileSidebarBlock: View {
         // plus spatiere verticala marita (2 -> 4) si padding propriu, ca
         // blocul sa respire fata de restul sidebar-ului.
         Button { showEditor = true } label: {
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: GDCTokens.Space.xs) {
                 HStack(spacing: 6) {
                     Image(systemName: "person.circle")
                         .foregroundStyle(.secondary)
@@ -37,7 +38,7 @@ struct ProfileSidebarBlock: View {
                     .foregroundStyle(.tertiary)
                     .lineLimit(1)
             }
-            .padding(.vertical, 4)
+            .padding(.vertical, GDCTokens.Space.xs)
         }
         .buttonStyle(.plain)
         .popover(isPresented: $showEditor) {
@@ -69,7 +70,7 @@ struct ProfileSidebarBlock: View {
                     .buttonStyle(.borderedProminent)
                 }
             }
-            .padding(16)
+            .padding(GDCTokens.Space.l)
             .frame(width: 300)
             .onAppear {
                 editName = profile.name

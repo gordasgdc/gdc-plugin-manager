@@ -67,7 +67,7 @@ struct ClientDetailView: View {
             Spacer()
             if profile.hasActiveLicense {
                 Label("Licență activă", systemImage: "checkmark.seal.fill")
-                    .font(.caption).foregroundStyle(.green)
+                    .font(.caption).foregroundStyle(GDCTokens.Palette.success)
             }
             Button("Închide") { onClose() }
         }
@@ -84,8 +84,8 @@ struct ClientDetailView: View {
             Divider().frame(height: 34)
             statTile(title: "Descărcări", value: "\(profile.downloadCount)")
         }
-        .padding(.vertical, 12)
-        .background(Color.secondary.opacity(0.08), in: RoundedRectangle(cornerRadius: 8))
+        .padding(.vertical, GDCTokens.Space.m)
+        .background(Color.secondary.opacity(0.08), in: RoundedRectangle(cornerRadius: GDCTokens.Radius.control))
     }
 
     private func statTile(title: String, value: String) -> some View {
@@ -102,7 +102,7 @@ struct ClientDetailView: View {
                 Text("Istoric achiziții (\(profile.purchases.count))").font(.headline)
                 Spacer()
                 if let actionError {
-                    Text(actionError).font(.caption).foregroundStyle(.red)
+                    Text(actionError).font(.caption).foregroundStyle(GDCTokens.Palette.error)
                 }
             }
             Table(profile.purchases) {
@@ -143,9 +143,9 @@ struct ClientDetailView: View {
             if p.machineID.isEmpty {
                 Text("—").foregroundStyle(.tertiary)
             } else if isBlocked(p) {
-                Label("Blocată", systemImage: "lock.fill").foregroundStyle(.red)
+                Label("Blocată", systemImage: "lock.fill").foregroundStyle(GDCTokens.Palette.error)
             } else {
-                Label("Activă", systemImage: "checkmark").foregroundStyle(.green)
+                Label("Activă", systemImage: "checkmark").foregroundStyle(GDCTokens.Palette.success)
             }
         }
         .font(.caption)
@@ -167,7 +167,7 @@ struct ClientDetailView: View {
                 } else {
                     Button("Blochează") { Task { await block(p) } }
                         .controlSize(.small)
-                        .tint(.red)
+                        .tint(GDCTokens.Palette.error)
                 }
             }
             Button("Prelungește…") { extendingPurchase = p }
@@ -218,7 +218,7 @@ struct ClientDetailView: View {
             Text("Note").font(.headline)
             TextEditor(text: $notes)
                 .frame(height: 90)
-                .overlay(RoundedRectangle(cornerRadius: 6).stroke(Color.secondary.opacity(0.3)))
+                .overlay(RoundedRectangle(cornerRadius: GDCTokens.Radius.badge).stroke(Color.secondary.opacity(0.3)))
                 .onChange(of: notes) { _, newValue in
                     ClientNotesStore.setNote(newValue, for: profile.key)
                 }

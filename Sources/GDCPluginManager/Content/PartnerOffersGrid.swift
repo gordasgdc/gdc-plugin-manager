@@ -5,7 +5,7 @@ import GDCPluginManagerCore
 struct PartnerOffersGrid: View {
     let offers: [PartnerOffer]
 
-    private let columns = [GridItem(.adaptive(minimum: 300, maximum: 400), spacing: 16)]
+    private let columns = [GridItem(.adaptive(minimum: 300, maximum: 400), spacing: GDCTokens.Space.l)]
 
     var body: some View {
         // Bara de filtre comuna (2026-09-11) — shadowing pe `offers`,
@@ -14,14 +14,14 @@ struct PartnerOffersGrid: View {
         FilteredCatalogSection(items: offers, options: .content) { offers in
         ScrollView {
             if offers.isEmpty {
-                Text(L.t("partnerOffers.empty")).foregroundStyle(.secondary).padding(40)
+                Text(L.t("partnerOffers.empty")).foregroundStyle(.secondary).padding(GDCTokens.Space.page)
             } else {
-                LazyVGrid(columns: columns, spacing: 14) {
+                LazyVGrid(columns: columns, spacing: GDCTokens.Space.grid) {
                     ForEach(offers) { offer in
                         PartnerOfferCard(offer: offer)
                     }
                 }
-                .padding(16)
+                .padding(GDCTokens.Space.l)
             }
         }
         }
@@ -32,7 +32,7 @@ struct PartnerOfferCard: View {
     let offer: PartnerOffer
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: GDCTokens.Space.s) {
             ZStack(alignment: .topTrailing) {
                 CoverThumbnail(
                     url: offer.coverImageURL,
@@ -47,16 +47,16 @@ struct PartnerOfferCard: View {
                     Text(discountText.uppercased())
                         .font(.system(size: 11, weight: .bold))
                         .foregroundStyle(.white)
-                        .padding(.horizontal, 10).padding(.vertical, 4)
-                        .background(Capsule().fill(Color.red))
-                        .padding(8)
+                        .padding(.horizontal, 10).padding(.vertical, GDCTokens.Space.xs)
+                        .background(Capsule().fill(GDCTokens.Palette.error))
+                        .padding(GDCTokens.Space.s)
                 }
             }
             Text(offer.brandName).font(.headline)
             CountdownBadge(scheduling: offer.scheduling)
             CollapsibleDescription(text: offer.description)
             if let coupon = offer.couponCode {
-                HStack(spacing: 4) {
+                HStack(spacing: GDCTokens.Space.xs) {
                     Text(L.t("partnerOffers.coupon")).font(.caption2).foregroundStyle(.secondary)
                     Text(coupon).font(.caption2.monospaced()).fontWeight(.bold)
                 }
@@ -66,7 +66,7 @@ struct PartnerOfferCard: View {
                 Button(L.t("partnerOffers.open")) { NSWorkspace.shared.open(url) }
             }
         }
-        .padding(12)
+        .padding(GDCTokens.Space.m)
         .frame(maxWidth: .infinity, alignment: .leading)
         .glassCardBackground()
         .overlay(alignment: .topLeading) {
@@ -79,7 +79,7 @@ struct PartnerOfferCard: View {
                 }
                 .buttonStyle(.plain)
                 .help(L.t("card.youtubeLink"))
-                .padding(8)
+                .padding(GDCTokens.Space.s)
                 .help(L.t("card.tutorial"))
             }
         }

@@ -14,7 +14,7 @@ struct DownloadResourceGrid: View {
     // sursa de adevar (pasul 1 al precedentei).
     @StateObject private var filters = CatalogFilterState()
 
-    private let columns = [GridItem(.adaptive(minimum: 220, maximum: 280), spacing: 14)]
+    private let columns = [GridItem(.adaptive(minimum: 220, maximum: 280), spacing: GDCTokens.Space.grid)]
 
     private var filteredResources: [DownloadableResource] { filters.filter(resources) }
 
@@ -30,16 +30,16 @@ struct DownloadResourceGrid: View {
             }
             ScrollView {
                 if resources.isEmpty {
-                    Text(L.t("download.empty")).foregroundStyle(.secondary).padding(40)
+                    Text(L.t("download.empty")).foregroundStyle(.secondary).padding(GDCTokens.Space.page)
                 } else if filteredResources.isEmpty {
-                    Text(L.t("filter.price.empty")).foregroundStyle(.secondary).padding(40)
+                    Text(L.t("filter.price.empty")).foregroundStyle(.secondary).padding(GDCTokens.Space.page)
                 } else {
-                    LazyVGrid(columns: columns, spacing: 14) {
+                    LazyVGrid(columns: columns, spacing: GDCTokens.Space.grid) {
                         ForEach(filteredResources) { resource in
                             DownloadResourceCard(resource: resource)
                         }
                     }
-                    .padding(16)
+                    .padding(GDCTokens.Space.l)
                 }
             }
         }
@@ -56,7 +56,7 @@ struct DownloadResourceCard: View {
     @ObservedObject private var license = LicenseManager.shared
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: GDCTokens.Space.s) {
             HStack(alignment: .top) {
                 Spacer()
                 VStack(alignment: .trailing, spacing: 6) {
@@ -94,7 +94,7 @@ struct DownloadResourceCard: View {
             Spacer(minLength: 0)
             actionButton
         }
-        .padding(12)
+        .padding(GDCTokens.Space.m)
         .frame(maxWidth: .infinity, minHeight: 96, alignment: .leading)
         .glassCardBackground()
         .overlay(alignment: .topLeading) { infoButton }
@@ -127,13 +127,13 @@ struct DownloadResourceCard: View {
     @ViewBuilder
     private var actionButton: some View {
         if !resource.supportedOS.allows(current: .current) {
-            Text(L.t("card.incompatibleOS")).font(.caption).foregroundStyle(.red)
+            Text(L.t("card.incompatibleOS")).font(.caption).foregroundStyle(GDCTokens.Palette.error)
         } else if !license.isUnlocked(for: resource) {
             Button(L.t("card.buy")) { NSWorkspace.shared.open(buyURL) }
         } else if resource.hasDirectFile {
             // [2026-09-14] Fișier încărcat direct pe server: se descarcă din
             // aplicație și se arată în Finder. Fără browser — vezi Regula 20.
-            HStack(spacing: 8) {
+            HStack(spacing: GDCTokens.Space.s) {
                 Button(isDownloading ? L.t("resource.downloading") : L.t("resource.download")) {
                     Task { await downloadDirect() }
                 }
@@ -141,7 +141,7 @@ struct DownloadResourceCard: View {
                 if isDownloading { ProgressView().controlSize(.small) }
             }
             if let downloadError {
-                Text(downloadError).font(.caption).foregroundStyle(.red)
+                Text(downloadError).font(.caption).foregroundStyle(GDCTokens.Palette.error)
             }
         } else if let url = URL(string: resource.url) {
             Button(L.t("audio.open")) { NSWorkspace.shared.open(url) }
@@ -215,7 +215,7 @@ struct DownloadResourceCard: View {
             }
             .buttonStyle(.plain)
             .help(L.t("card.youtubeLink"))
-            .padding(8)
+            .padding(GDCTokens.Space.s)
             .help(L.t("card.tutorial"))
         }
     }

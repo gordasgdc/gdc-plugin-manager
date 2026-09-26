@@ -13,14 +13,14 @@ import GDCPluginManagerCore
 struct CommunityGrid: View {
     let channels: [CommunityChannel]
 
-    private let columns = [GridItem(.adaptive(minimum: 260), spacing: 16)]
+    private let columns = [GridItem(.adaptive(minimum: 260), spacing: GDCTokens.Space.l)]
 
     var body: some View {
         if channels.isEmpty {
             emptyState
         } else {
             ScrollView {
-                LazyVGrid(columns: columns, spacing: 16) {
+                LazyVGrid(columns: columns, spacing: GDCTokens.Space.l) {
                     ForEach(channels) { channel in
                         CommunityChannelCard(channel: channel)
                     }
@@ -85,7 +85,7 @@ struct CommunityChannelCard: View {
                 .help(destination.absoluteString)
             }
         }
-        .padding(16)
+        .padding(GDCTokens.Space.l)
         .frame(minHeight: 172, alignment: .topLeading)
         .glassCardBackground()
     }

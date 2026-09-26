@@ -23,7 +23,7 @@ struct TutorialsGrid: View {
         }
     }
 
-    private let columns = [GridItem(.adaptive(minimum: 280, maximum: 340), spacing: 16)]
+    private let columns = [GridItem(.adaptive(minimum: 280, maximum: 340), spacing: GDCTokens.Space.l)]
 
     var body: some View {
         ScrollView {
@@ -37,12 +37,12 @@ struct TutorialsGrid: View {
                             .buttonStyle(.plain).foregroundStyle(.secondary)
                     }
                 }
-                .padding(8)
-                .background(RoundedRectangle(cornerRadius: 8).fill(.background.secondary))
+                .padding(GDCTokens.Space.s)
+                .background(RoundedRectangle(cornerRadius: GDCTokens.Radius.control).fill(.background.secondary))
 
                 if categories.count > 1 {
                     ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 8) {
+                        HStack(spacing: GDCTokens.Space.s) {
                             categoryChip(nil, label: L.t("tutorials.allCategories"))
                             ForEach(categories, id: \.self) { cat in categoryChip(cat, label: cat) }
                         }
@@ -50,14 +50,14 @@ struct TutorialsGrid: View {
                 }
 
                 if filtered.isEmpty {
-                    Text(L.t("search.noResults")).foregroundStyle(.secondary).padding(40)
+                    Text(L.t("search.noResults")).foregroundStyle(.secondary).padding(GDCTokens.Space.page)
                 } else {
-                    LazyVGrid(columns: columns, spacing: 16) {
+                    LazyVGrid(columns: columns, spacing: GDCTokens.Space.l) {
                         ForEach(filtered) { TutorialCard(tutorial: $0) }
                     }
                 }
             }
-            .padding(24)
+            .padding(GDCTokens.Space.xl)
         }
     }
 
@@ -67,7 +67,7 @@ struct TutorialsGrid: View {
             selectedCategory = value
         } label: {
             Text(label).font(.caption).fontWeight(selectedCategory == value ? .bold : .regular)
-                .padding(.horizontal, 12).padding(.vertical, 6)
+                .padding(.horizontal, GDCTokens.Space.m).padding(.vertical, 6)
                 .background(Capsule().fill(selectedCategory == value ? Color.accentColor.opacity(0.3) : Color.gray.opacity(0.15)))
         }
         .buttonStyle(.plain)
@@ -79,7 +79,7 @@ struct TutorialCard: View {
     @State private var showTags = false
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: GDCTokens.Space.s) {
             ZStack {
                 if let url = tutorial.thumbnail {
                     AsyncImage(url: url) { phase in
@@ -104,12 +104,12 @@ struct TutorialCard: View {
                 }
             }
             .frame(height: 160)
-            .clipShape(RoundedRectangle(cornerRadius: 8))
+            .clipShape(RoundedRectangle(cornerRadius: GDCTokens.Radius.control))
             .clipped()
 
             HStack {
                 Text(tutorial.category).font(.caption2).fontWeight(.semibold)
-                    .padding(.horizontal, 8).padding(.vertical, 3)
+                    .padding(.horizontal, GDCTokens.Space.s).padding(.vertical, 3)
                     .background(Capsule().fill(.tint.opacity(0.18)))
                 Spacer()
                 CountdownBadge(scheduling: tutorial.scheduling)
@@ -122,11 +122,11 @@ struct TutorialCard: View {
                     FlowLayout(spacing: 6) {
                         ForEach(tutorial.tags, id: \.self) { tag in
                             Text(tag).font(.caption2).foregroundStyle(.secondary)
-                                .padding(.horizontal, 7).padding(.vertical, 2)
+                                .padding(.horizontal, 7).padding(.vertical, GDCTokens.Space.xxs)
                                 .background(Capsule().fill(Color.gray.opacity(0.15)))
                         }
                     }
-                    .padding(.top, 4)
+                    .padding(.top, GDCTokens.Space.xs)
                 } label: {
                     Text(String(format: L.t("tutorials.showTags"), tutorial.tags.count)).font(.caption).foregroundStyle(.secondary)
                 }
@@ -134,7 +134,7 @@ struct TutorialCard: View {
 
             CollapsibleDescription(text: tutorial.description)
         }
-        .padding(12)
+        .padding(GDCTokens.Space.m)
         .glassCardBackground()
     }
 }

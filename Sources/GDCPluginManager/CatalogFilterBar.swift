@@ -118,8 +118,8 @@ struct CatalogFilterBar: View {
     let availableGroups: [CatalogGroup]
 
     var body: some View {
-        VStack(spacing: 8) {
-            HStack(spacing: 12) {
+        VStack(spacing: GDCTokens.Space.s) {
+            HStack(spacing: GDCTokens.Space.m) {
                 if options.contains(.price) {
                     Picker("", selection: $state.price) {
                         ForEach(AccessPriceFilter.allCases) { Text($0.label).tag($0) }
@@ -137,7 +137,7 @@ struct CatalogFilterBar: View {
                 Spacer(minLength: 0)
             }
             if showsSecondRow {
-                HStack(spacing: 12) {
+                HStack(spacing: GDCTokens.Space.m) {
                     if options.contains(.group) && !availableGroups.isEmpty {
                         Picker("", selection: $state.group) {
                             Text(AccessGroupFilter.all.label).tag(AccessGroupFilter.all)
@@ -160,7 +160,7 @@ struct CatalogFilterBar: View {
                 }
             }
         }
-        .padding(.horizontal, 16)
+        .padding(.horizontal, GDCTokens.Space.l)
         .padding(.vertical, 10)
     }
 
@@ -186,7 +186,7 @@ struct AccessBadge: View {
                 .font(.system(size: 9, weight: .bold))
                 .tracking(0.5)
                 .foregroundStyle(tint)
-                .padding(.horizontal, 8)
+                .padding(.horizontal, GDCTokens.Space.s)
                 .padding(.vertical, 3)
                 .background(Capsule().fill(tint.opacity(0.15)))
         }
@@ -208,7 +208,7 @@ struct AccessPriceLabel: View {
     let access: ResolvedAccess
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 2) {
+        VStack(alignment: .leading, spacing: GDCTokens.Space.xxs) {
             if let price = access.priceDisplay {
                 Text(price)
                     .font(.system(size: 13, weight: .semibold))
@@ -231,13 +231,13 @@ struct AccessTagsRow: View {
 
     var body: some View {
         if !tags.isEmpty {
-            HStack(spacing: 4) {
+            HStack(spacing: GDCTokens.Space.xs) {
                 ForEach(tags.prefix(limit), id: \.self) { tag in
                     Text(tag)
                         .font(.system(size: 9))
                         .foregroundStyle(.secondary)
                         .padding(.horizontal, 6)
-                        .padding(.vertical, 2)
+                        .padding(.vertical, GDCTokens.Space.xxs)
                         .background(Capsule().fill(.quaternary))
                 }
             }
@@ -286,7 +286,7 @@ struct FilteredCatalogSection<T: AccessDescribing, Content: View>: View {
             }
             if !items.isEmpty && filtered.isEmpty {
                 ScrollView {
-                    Text(L.t(emptyTextKey)).foregroundStyle(.secondary).padding(40)
+                    Text(L.t(emptyTextKey)).foregroundStyle(.secondary).padding(GDCTokens.Space.page)
                 }
             } else {
                 content(filtered)

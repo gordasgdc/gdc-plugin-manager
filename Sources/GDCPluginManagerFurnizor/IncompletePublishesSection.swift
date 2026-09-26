@@ -1,4 +1,5 @@
 import SwiftUI
+import GDCPluginManagerCore
 
 /// D2b: operațiile de publicare neterminate (din `PublishJournal`), cu „Reia” și „Curăță orfanii”.
 /// Ambele reverifică și resincronizează toate repo-urile înainte de orice scriere; curățarea cere
@@ -14,19 +15,19 @@ struct IncompletePublishesSection: View {
     var body: some View {
         if !records.isEmpty {
             GroupBox {
-                VStack(alignment: .leading, spacing: 8) {
+                VStack(alignment: .leading, spacing: GDCTokens.Space.s) {
                     Label("Publicări incomplete (\(records.count))", systemImage: "exclamationmark.triangle")
                         .fontWeight(.semibold)
                     Text("Catalogul nu referă fișiere lipsă. „Reia” continuă de la pasul neconfirmat; „Curăță orfanii” șterge fișierele urcate de o publicare al cărei catalog n-a ajuns pe server.")
                         .font(.caption).foregroundStyle(.secondary)
                     ForEach(records) { record in
                         HStack(alignment: .firstTextBaseline) {
-                            VStack(alignment: .leading, spacing: 2) {
+                            VStack(alignment: .leading, spacing: GDCTokens.Space.xxs) {
                                 Text(record.label)
                                 Text("\(record.kind == .publish ? "Publicare" : "Ștergere") · pași: \(record.completed.map(\.rawValue).joined(separator: ", ").isEmpty ? "niciunul" : record.completed.map(\.rawValue).joined(separator: ", "))")
                                     .font(.caption2).foregroundStyle(.secondary)
                                 if let error = record.lastError {
-                                    Text(error).font(.caption2).foregroundStyle(.red).lineLimit(3)
+                                    Text(error).font(.caption2).foregroundStyle(GDCTokens.Palette.error).lineLimit(3)
                                 }
                             }
                             Spacer()
@@ -39,7 +40,7 @@ struct IncompletePublishesSection: View {
                         }
                     }
                 }
-                .padding(8)
+                .padding(GDCTokens.Space.s)
             }
             .confirmationDialog("Ștergi fișierele urcate de „\(cleanupTarget?.label ?? "")”?",
                                 isPresented: Binding(get: { cleanupTarget != nil }, set: { if !$0 { cleanupTarget = nil } }),

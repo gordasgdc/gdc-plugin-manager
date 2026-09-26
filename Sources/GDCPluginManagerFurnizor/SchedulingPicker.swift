@@ -29,7 +29,7 @@ struct SchedulingPicker: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: GDCTokens.Space.s) {
             Toggle("Valabilitate temporală (apare/dispare automat)", isOn: $isEnabled)
                 .onChange(of: isEnabled) { _, enabled in
                     scheduling = enabled ? Scheduling(startDate: startDate, endDate: endDate, showCountdown: showCountdown) : nil

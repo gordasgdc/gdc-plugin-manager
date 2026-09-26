@@ -54,7 +54,7 @@ struct CoverImagePicker: View {
 
     var body: some View {
         GroupBox {
-            VStack(alignment: .leading, spacing: 12) {
+            VStack(alignment: .leading, spacing: GDCTokens.Space.m) {
                 HStack {
                     Text("Imagine de prezentare").font(.headline)
                     Spacer()
@@ -81,10 +81,10 @@ struct CoverImagePicker: View {
                 }
 
                 if let errorMessage {
-                    Text(errorMessage).font(.caption).foregroundStyle(.red)
+                    Text(errorMessage).font(.caption).foregroundStyle(GDCTokens.Palette.error)
                 }
             }
-            .padding(8)
+            .padding(GDCTokens.Space.s)
         }
         .task { syncModeFromSelection() }
         .sheet(isPresented: $showingLibrary) { libraryPicker }
@@ -92,11 +92,11 @@ struct CoverImagePicker: View {
 
     // MARK: - Sheet "Bibliotecă imagini"
 
-    private static let libraryColumns = [GridItem(.adaptive(minimum: 96), spacing: 12)]
+    private static let libraryColumns = [GridItem(.adaptive(minimum: 96), spacing: GDCTokens.Space.m)]
 
     @ViewBuilder
     private var libraryPicker: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: GDCTokens.Space.m) {
             Text("Bibliotecă imagini").font(.title3).fontWeight(.semibold)
             Text("Imagini deja publicate — alege una ca să o refolosești aici, fără reîncărcare.")
                 .font(.caption).foregroundStyle(.secondary)
@@ -107,16 +107,16 @@ struct CoverImagePicker: View {
                     .frame(maxWidth: .infinity, minHeight: 120)
             } else {
                 ScrollView {
-                    LazyVGrid(columns: Self.libraryColumns, spacing: 12) {
+                    LazyVGrid(columns: Self.libraryColumns, spacing: GDCTokens.Space.m) {
                         ForEach(libraryEntries) { entry in
                             Button {
                                 selection = .existing(entry.catalogValue)
                                 mode = .local
                                 showingLibrary = false
                             } label: {
-                                VStack(spacing: 4) {
+                                VStack(spacing: GDCTokens.Space.xs) {
                                     ZStack {
-                                        RoundedRectangle(cornerRadius: 8).fill(Color.secondary.opacity(0.1))
+                                        RoundedRectangle(cornerRadius: GDCTokens.Radius.control).fill(Color.secondary.opacity(0.1))
                                         if let image = NSImage(contentsOf: entry.fileURL) {
                                             Image(nsImage: image).resizable().scaledToFill()
                                         } else {
@@ -124,7 +124,7 @@ struct CoverImagePicker: View {
                                         }
                                     }
                                     .frame(width: 80, height: 80)
-                                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                                    .clipShape(RoundedRectangle(cornerRadius: GDCTokens.Radius.control))
                                     Text(entry.id).font(.caption2).lineLimit(1).truncationMode(.middle)
                                 }
                                 .frame(width: 96)
@@ -152,8 +152,8 @@ struct CoverImagePicker: View {
         HStack(alignment: .top, spacing: 14) {
             preview
 
-            VStack(alignment: .leading, spacing: 8) {
-                HStack(spacing: 8) {
+            VStack(alignment: .leading, spacing: GDCTokens.Space.s) {
+                HStack(spacing: GDCTokens.Space.s) {
                     Button("Alege imagine…") { pickLocal() }
                     Button("Din bibliotecă…") {
                         libraryEntries = CoverImageStore.libraryEntries()
@@ -166,7 +166,7 @@ struct CoverImagePicker: View {
                     // mic)"), nu doar un checkmark — furnizorul vede imediat
                     // daca a urcat din greseala un export urias.
                     Label(savings, systemImage: "arrow.down.circle")
-                        .font(.caption).foregroundStyle(.green)
+                        .font(.caption).foregroundStyle(GDCTokens.Palette.success)
                 } else if case .existing(let value) = selection, !CatalogAssets.isExternal(value) {
                     Text("Publicată: \(value)").font(.caption).foregroundStyle(.secondary)
                 } else {
@@ -185,7 +185,7 @@ struct CoverImagePicker: View {
         HStack(alignment: .top, spacing: 14) {
             preview
 
-            VStack(alignment: .leading, spacing: 8) {
+            VStack(alignment: .leading, spacing: GDCTokens.Space.s) {
                 TextField("https://cdn.exemplu.com/imagine.jpg", text: $urlText)
                     .textFieldStyle(.roundedBorder)
                     .onChange(of: urlText) { _, newValue in
@@ -202,7 +202,7 @@ struct CoverImagePicker: View {
                     "Dacă ștergi imaginea de pe server, dispare și din aplicație.",
                     systemImage: "exclamationmark.triangle"
                 )
-                .font(.caption).foregroundStyle(.orange)
+                .font(.caption).foregroundStyle(GDCTokens.Palette.warning)
             }
         }
         // Debounce: asteptam 500 ms de liniste inainte sa cerem imaginea,
@@ -223,7 +223,7 @@ struct CoverImagePicker: View {
     @ViewBuilder
     private var preview: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 8)
+            RoundedRectangle(cornerRadius: GDCTokens.Radius.control)
                 .fill(Color.secondary.opacity(0.1))
 
             switch selection {
@@ -247,7 +247,7 @@ struct CoverImagePicker: View {
             }
         }
         .frame(width: Self.previewSide, height: Self.previewSide)
-        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .clipShape(RoundedRectangle(cornerRadius: GDCTokens.Radius.control))
     }
 
     @ViewBuilder

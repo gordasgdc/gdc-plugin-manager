@@ -1,4 +1,5 @@
 import SwiftUI
+import GDCPluginManagerCore
 
 enum FurnizorSection: Hashable {
     case publish
@@ -126,7 +127,7 @@ struct FurnizorContentView: View {
                 Text("v\(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "?")")
                     .font(.caption)
                     .foregroundStyle(.secondary)
-                    .padding(.bottom, 8)
+                    .padding(.bottom, GDCTokens.Space.s)
             }
         } detail: {
             VStack(spacing: 0) {

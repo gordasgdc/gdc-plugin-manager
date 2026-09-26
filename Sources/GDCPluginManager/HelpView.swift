@@ -1,4 +1,5 @@
 import SwiftUI
+import GDCPluginManagerCore
 
 /// Static in-app explainer — how the app works, how buying/activating a
 /// product works, how installs interact with DaVinci Resolve.
@@ -25,7 +26,7 @@ struct HelpView: View {
 
                 Spacer(minLength: 0)
             }
-            .padding(24)
+            .padding(GDCTokens.Space.xl)
             .frame(maxWidth: 560, alignment: .leading)
         }
     }
@@ -36,7 +37,7 @@ struct HelpView: View {
                 .font(.system(size: 20))
                 .foregroundStyle(.tint)
                 .frame(width: 28)
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: GDCTokens.Space.xs) {
                 Text(L.t(title)).font(.headline)
                 Text(L.t(body))
                     .font(.callout)
@@ -44,9 +45,9 @@ struct HelpView: View {
                     .fixedSize(horizontal: false, vertical: true)
             }
         }
-        .padding(16)
+        .padding(GDCTokens.Space.l)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(RoundedRectangle(cornerRadius: 12).fill(Color(nsColor: .controlBackgroundColor)))
-        .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color(nsColor: .separatorColor), lineWidth: 1))
+        .background(RoundedRectangle(cornerRadius: GDCTokens.Radius.card).fill(Color(nsColor: .controlBackgroundColor)))
+        .overlay(RoundedRectangle(cornerRadius: GDCTokens.Radius.card).stroke(Color(nsColor: .separatorColor), lineWidth: 1))
     }
 }

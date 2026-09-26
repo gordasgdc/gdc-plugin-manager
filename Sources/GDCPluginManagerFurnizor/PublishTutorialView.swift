@@ -51,7 +51,7 @@ struct PublishTutorialView: View {
                 Text("Tutoriale (video-uri YouTube embedded)").font(.title2).fontWeight(.semibold)
 
                 GroupBox("Cheie YouTube Data API v3 (opțional)") {
-                    VStack(alignment: .leading, spacing: 8) {
+                    VStack(alignment: .leading, spacing: GDCTokens.Space.s) {
                         Text("Fără ea vin automat doar titlul și imaginea. Cu o cheie (gratuită) vin automat și descrierea + tagurile.")
                             .font(.caption).foregroundStyle(.secondary)
 
@@ -84,7 +84,7 @@ struct PublishTutorialView: View {
                                     .font(.caption)
                             }
                             .padding(10)
-                            .background(RoundedRectangle(cornerRadius: 8).fill(Color.gray.opacity(0.08)))
+                            .background(RoundedRectangle(cornerRadius: GDCTokens.Radius.control).fill(Color.gray.opacity(0.08)))
                         }
 
                         HStack {
@@ -103,11 +103,11 @@ struct PublishTutorialView: View {
                                 .foregroundStyle(apiKeyTestSucceeded ? .green : .red)
                         }
                     }
-                    .padding(8)
+                    .padding(GDCTokens.Space.s)
                 }
 
                 GroupBox {
-                    VStack(alignment: .leading, spacing: 12) {
+                    VStack(alignment: .leading, spacing: GDCTokens.Space.m) {
                         HStack {
                             TextField("Link YouTube (youtube.com/watch?v=... sau youtu.be/...)", text: $youtubeURLInput)
                                 .textFieldStyle(.roundedBorder)
@@ -121,7 +121,7 @@ struct PublishTutorialView: View {
                                 image.resizable().aspectRatio(16/9, contentMode: .fit)
                             } placeholder: { ProgressView() }
                             .frame(maxWidth: 320)
-                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                            .clipShape(RoundedRectangle(cornerRadius: GDCTokens.Radius.control))
                         }
 
                         TextField("Titlu", text: $title).textFieldStyle(.roundedBorder)
@@ -129,7 +129,7 @@ struct PublishTutorialView: View {
                         Text("Descriere").font(.caption).foregroundStyle(.secondary)
                         TextEditor(text: $description)
                             .frame(minHeight: 100)
-                            .overlay(RoundedRectangle(cornerRadius: 6).stroke(.separator))
+                            .overlay(RoundedRectangle(cornerRadius: GDCTokens.Radius.badge).stroke(.separator))
 
                         HStack {
                             AutocompleteTextField(placeholder: "Categorie (ex. Color Grading, Instalare)", text: $category, existingValues: knownCategories)
@@ -165,7 +165,7 @@ struct PublishTutorialView: View {
                             newTag = ""
                         }
                     }
-                    .padding(8)
+                    .padding(GDCTokens.Space.s)
                 }
 
                 AccessEditorSection(
@@ -186,14 +186,14 @@ struct PublishTutorialView: View {
 
                 if let errorMessage {
                     Label(errorMessage, systemImage: "exclamationmark.triangle.fill")
-                        .foregroundStyle(.red)
+                        .foregroundStyle(GDCTokens.Palette.error)
                         .padding(10)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(Color.red.opacity(0.1))
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        .background(GDCTokens.Palette.error.opacity(0.1))
+                        .clipShape(RoundedRectangle(cornerRadius: GDCTokens.Radius.control))
                 }
                 if let successMessage {
-                    Label(successMessage, systemImage: "checkmark.circle.fill").foregroundStyle(.green)
+                    Label(successMessage, systemImage: "checkmark.circle.fill").foregroundStyle(GDCTokens.Palette.success)
                 }
 
                 HStack {
@@ -205,7 +205,7 @@ struct PublishTutorialView: View {
                     }
                 }
                 if !isFormValid && !isBusy {
-                    Text("Lipsește: link YouTube valid și titlu.").font(.caption).foregroundStyle(.orange)
+                    Text("Lipsește: link YouTube valid și titlu.").font(.caption).foregroundStyle(GDCTokens.Palette.warning)
                 }
 
                 if !existingTutorials.isEmpty {
@@ -221,13 +221,13 @@ struct PublishTutorialView: View {
                             Button("Editează") { load(tutorial) }
                             Button("Șterge", role: .destructive) { pendingDelete = tutorial }
                         }
-                        .padding(.vertical, 4)
+                        .padding(.vertical, GDCTokens.Space.xs)
                     }
                 }
 
                 Spacer(minLength: 0)
             }
-            .padding(24)
+            .padding(GDCTokens.Space.xl)
             .frame(maxWidth: 640, alignment: .leading)
         }
         .confirmationDialog(
@@ -253,7 +253,7 @@ struct PublishTutorialView: View {
 
     @ViewBuilder
     private func apiKeyStep(number: Int, text: String, buttonLabel: String, url: String) -> some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: GDCTokens.Space.xs) {
             Text("\(number). \(text)").font(.caption)
             if let link = URL(string: url) {
                 Button(buttonLabel) { NSWorkspace.shared.open(link) }
@@ -410,7 +410,7 @@ private struct TagChipsFlow: View {
         } else {
             HStack {
                 ForEach(tags, id: \.self) { tag in
-                    HStack(spacing: 4) {
+                    HStack(spacing: GDCTokens.Space.xs) {
                         Text(tag).font(.caption)
                         Button {
                             onRemove(tag)
@@ -419,7 +419,7 @@ private struct TagChipsFlow: View {
                         }
                         .buttonStyle(.plain)
                     }
-                    .padding(.horizontal, 8).padding(.vertical, 3)
+                    .padding(.horizontal, GDCTokens.Space.s).padding(.vertical, 3)
                     .background(Capsule().fill(.tint.opacity(0.18)))
                 }
                 Spacer()

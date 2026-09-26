@@ -1,4 +1,5 @@
 import SwiftUI
+import GDCPluginManagerCore
 import AppKit
 
 /// Bancul de imagini: tot ce s-a publicat vreodată ca imagine de prezentare,
@@ -16,7 +17,7 @@ struct ImageLibraryView: View {
     @State private var deleteError: String?
     @State private var isWorking = false
 
-    private let columns = [GridItem(.adaptive(minimum: 150), spacing: 16)]
+    private let columns = [GridItem(.adaptive(minimum: 150), spacing: GDCTokens.Space.l)]
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -26,7 +27,7 @@ struct ImageLibraryView: View {
                 emptyState
             } else {
                 ScrollView {
-                    LazyVGrid(columns: columns, spacing: 16) {
+                    LazyVGrid(columns: columns, spacing: GDCTokens.Space.l) {
                         ForEach(visibleImages) { image in card(image) }
                     }
                     .padding(20)
@@ -55,12 +56,12 @@ struct ImageLibraryView: View {
 
     private var header: some View {
         HStack(alignment: .firstTextBaseline) {
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: GDCTokens.Space.xs) {
                 Text("Banc de imagini").font(.title2).fontWeight(.semibold)
                 Text(summary).font(.callout).foregroundStyle(.secondary)
             }
             Spacer()
-            VStack(alignment: .trailing, spacing: 8) {
+            VStack(alignment: .trailing, spacing: GDCTokens.Space.s) {
                 Button {
                     reload()
                 } label: {
@@ -86,7 +87,7 @@ struct ImageLibraryView: View {
     }
 
     private var emptyState: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: GDCTokens.Space.s) {
             Image(systemName: "photo.on.rectangle.angled")
                 .font(.system(size: 34)).foregroundStyle(.secondary)
             Text(showOnlyUnused ? "Toate imaginile sunt folosite." : "Nicio imagine publicată încă.")
@@ -101,11 +102,11 @@ struct ImageLibraryView: View {
         Button { selected = image } label: {
             VStack(alignment: .leading, spacing: 6) {
                 ZStack {
-                    RoundedRectangle(cornerRadius: 8).fill(Color.secondary.opacity(0.10))
+                    RoundedRectangle(cornerRadius: GDCTokens.Radius.control).fill(Color.secondary.opacity(0.10))
                     if let nsImage = NSImage(contentsOf: image.fileURL) {
-                        Image(nsImage: nsImage).resizable().scaledToFit().padding(4)
+                        Image(nsImage: nsImage).resizable().scaledToFit().padding(GDCTokens.Space.xs)
                     } else {
-                        Image(systemName: "exclamationmark.triangle").foregroundStyle(.orange)
+                        Image(systemName: "exclamationmark.triangle").foregroundStyle(GDCTokens.Palette.warning)
                     }
                 }
                 .frame(height: 110)
@@ -116,8 +117,8 @@ struct ImageLibraryView: View {
                     if image.isUnused {
                         Text("nefolosită")
                             .font(.caption2)
-                            .padding(.horizontal, 6).padding(.vertical, 2)
-                            .background(Capsule().fill(Color.orange.opacity(0.18)))
+                            .padding(.horizontal, 6).padding(.vertical, GDCTokens.Space.xxs)
+                            .background(Capsule().fill(GDCTokens.Palette.warning.opacity(0.18)))
                     } else {
                         Text("\(image.usages.count) ×")
                             .font(.caption2).foregroundStyle(.secondary)
@@ -134,7 +135,7 @@ struct ImageLibraryView: View {
     // MARK: Detaliu
 
     private func detailSheet(_ image: ImageLibraryScanner.LibraryImage) -> some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: GDCTokens.Space.l) {
             HStack {
                 Text(image.filename).font(.title3).fontWeight(.semibold)
                     .lineLimit(1).truncationMode(.middle)
@@ -146,7 +147,7 @@ struct ImageLibraryView: View {
                 Image(nsImage: nsImage)
                     .resizable().scaledToFit()
                     .frame(maxHeight: 240)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .clipShape(RoundedRectangle(cornerRadius: GDCTokens.Radius.control))
             }
 
             HStack(spacing: 22) {
@@ -162,7 +163,7 @@ struct ImageLibraryView: View {
                     .font(.callout).foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
             } else {
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: GDCTokens.Space.xs) {
                     Text("Folosită de").font(.caption).fontWeight(.semibold).foregroundStyle(.secondary)
                     ForEach(image.usages) { usage in
                         Text("• \(usage.ownerName)").font(.callout)
@@ -193,7 +194,7 @@ struct ImageLibraryView: View {
     }
 
     private func detailMetric(_ label: String, _ value: String) -> some View {
-        VStack(alignment: .leading, spacing: 2) {
+        VStack(alignment: .leading, spacing: GDCTokens.Space.xxs) {
             Text(label).font(.caption2).foregroundStyle(.secondary)
             Text(value).font(.callout)
         }

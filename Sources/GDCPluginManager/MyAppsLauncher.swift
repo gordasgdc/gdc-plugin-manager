@@ -1,4 +1,5 @@
 import SwiftUI
+import GDCPluginManagerCore
 import AppKit
 import UniformTypeIdentifiers
 
@@ -352,21 +353,21 @@ struct MyAppsGrid: View {
     @StateObject private var store = MyAppsStore.shared
     @State private var showAddLauncher = false
 
-    private let columns = [GridItem(.adaptive(minimum: 220, maximum: 280), spacing: 14)]
+    private let columns = [GridItem(.adaptive(minimum: 220, maximum: 280), spacing: GDCTokens.Space.grid)]
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                VStack(alignment: .leading, spacing: 8) {
+                VStack(alignment: .leading, spacing: GDCTokens.Space.s) {
                     Text(L.t("myApps.section.gdc")).font(.headline).foregroundStyle(.secondary)
-                    LazyVGrid(columns: columns, spacing: 14) {
+                    LazyVGrid(columns: columns, spacing: GDCTokens.Space.grid) {
                         ForEach(knownGDCApps) { app in
                             MyAppCard(app: app, status: store.statuses[app.id] ?? .init())
                         }
                     }
                 }
 
-                VStack(alignment: .leading, spacing: 8) {
+                VStack(alignment: .leading, spacing: GDCTokens.Space.s) {
                     HStack {
                         Text(L.t("myApps.section.custom")).font(.headline).foregroundStyle(.secondary)
                         Spacer()
@@ -380,7 +381,7 @@ struct MyAppsGrid: View {
                     if store.customLaunchers.isEmpty {
                         Text(L.t("myApps.custom.empty")).font(.caption).foregroundStyle(.secondary)
                     } else {
-                        LazyVGrid(columns: columns, spacing: 14) {
+                        LazyVGrid(columns: columns, spacing: GDCTokens.Space.grid) {
                             ForEach(store.customLaunchers) { launcher in
                                 CustomLauncherCard(launcher: launcher, store: store)
                             }
@@ -388,7 +389,7 @@ struct MyAppsGrid: View {
                     }
                 }
             }
-            .padding(16)
+            .padding(GDCTokens.Space.l)
         }
         .onAppear { store.refreshAll() }
         .fileImporter(isPresented: $showAddLauncher, allowedContentTypes: [.application], allowsMultipleSelection: true) { result in
@@ -405,7 +406,7 @@ private struct MyAppCard: View {
     let status: MyAppsStore.Status
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: GDCTokens.Space.s) {
             HStack {
                 // Iconita REALA a aplicatiei instalate (extrasa din bundle,
                 // niciodata bundle-uita in cod - vezi nota de mai jos despre
@@ -424,8 +425,8 @@ private struct MyAppCard: View {
                     Text(L.t("myApps.updateAvailable"))
                         .font(.system(size: 9, weight: .bold))
                         .foregroundStyle(.white)
-                        .padding(.horizontal, 8).padding(.vertical, 3)
-                        .background(Capsule().fill(Color.orange))
+                        .padding(.horizontal, GDCTokens.Space.s).padding(.vertical, 3)
+                        .background(Capsule().fill(GDCTokens.Palette.warning))
                 }
             }
             Text(app.name).font(.headline)
@@ -439,7 +440,7 @@ private struct MyAppCard: View {
                 Text(L.t("myApps.notInstalled")).font(.caption).foregroundStyle(.secondary)
             }
         }
-        .padding(12)
+        .padding(GDCTokens.Space.m)
         .frame(maxWidth: .infinity, minHeight: 100, alignment: .leading)
         .glassCardBackground()
         .opacity(status.isInstalled ? 1 : 0.55)
@@ -451,7 +452,7 @@ private struct CustomLauncherCard: View {
     @ObservedObject var store: MyAppsStore
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: GDCTokens.Space.s) {
             HStack {
                 // Iconita reala a aplicatiei alese (DaVinci Resolve,
                 // Photoshop, Lightroom etc.) - extrasa direct din bundle-ul
@@ -473,7 +474,7 @@ private struct CustomLauncherCard: View {
             Spacer(minLength: 0)
             Button(L.t("myApps.open")) { store.launchCustom(launcher) }
         }
-        .padding(12)
+        .padding(GDCTokens.Space.m)
         .frame(maxWidth: .infinity, minHeight: 100, alignment: .leading)
         .glassCardBackground()
     }

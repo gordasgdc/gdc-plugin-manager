@@ -8,7 +8,7 @@ struct EducationalResourcesGrid: View {
     // Mai lat decât înainte (260→300): cardurile au acum copertă și
     // descrierea se vede întreagă, deci au nevoie de spațiu ca să nu se
     // înghesuie textul pe rânduri de 3 cuvinte.
-    private let columns = [GridItem(.adaptive(minimum: 300, maximum: 400), spacing: 16)]
+    private let columns = [GridItem(.adaptive(minimum: 300, maximum: 400), spacing: GDCTokens.Space.l)]
 
     var body: some View {
         // Bara de filtre comuna (2026-09-11) — shadowing pe `resources`,
@@ -17,14 +17,14 @@ struct EducationalResourcesGrid: View {
         FilteredCatalogSection(items: resources, options: .content) { resources in
         ScrollView {
             if resources.isEmpty {
-                Text(L.t("resources.empty")).foregroundStyle(.secondary).padding(40)
+                Text(L.t("resources.empty")).foregroundStyle(.secondary).padding(GDCTokens.Space.page)
             } else {
-                LazyVGrid(columns: columns, spacing: 14) {
+                LazyVGrid(columns: columns, spacing: GDCTokens.Space.grid) {
                     ForEach(resources) { resource in
                         EducationalResourceCard(resource: resource)
                     }
                 }
-                .padding(16)
+                .padding(GDCTokens.Space.l)
             }
         }
         }
@@ -35,7 +35,7 @@ struct EducationalResourceCard: View {
     let resource: EducationalResource
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: GDCTokens.Space.s) {
             CoverThumbnail(
                 url: resource.coverImageURL,
                 fallbackSymbol: "book.fill",
@@ -47,7 +47,7 @@ struct EducationalResourceCard: View {
                 Spacer()
                 Text(resource.kind.label)
                     .font(.caption2).fontWeight(.semibold)
-                    .padding(.horizontal, 8).padding(.vertical, 3)
+                    .padding(.horizontal, GDCTokens.Space.s).padding(.vertical, 3)
                     .background(Capsule().fill(.tint.opacity(0.18)))
                 if let urlString = resource.youtubeURL, let url = URL(string: urlString) {
                     Button { NSWorkspace.shared.open(url) } label: {
@@ -67,7 +67,7 @@ struct EducationalResourceCard: View {
             }
             SocialLinksRow(resource.socialLinks)
         }
-        .padding(12)
+        .padding(GDCTokens.Space.m)
         .frame(maxWidth: .infinity, minHeight: 200, alignment: .leading)
         .glassCardBackground()
     }

@@ -5,7 +5,7 @@ import GDCPluginManagerCore
 struct ServiceCentersGrid: View {
     let centers: [ServiceCenter]
 
-    private let columns = [GridItem(.adaptive(minimum: 280, maximum: 380), spacing: 16)]
+    private let columns = [GridItem(.adaptive(minimum: 280, maximum: 380), spacing: GDCTokens.Space.l)]
 
     var body: some View {
         // Bara de filtre comuna (2026-09-11) — shadowing pe `centers`,
@@ -14,7 +14,7 @@ struct ServiceCentersGrid: View {
         FilteredCatalogSection(items: centers, options: .content) { centers in
         ScrollView {
             if centers.isEmpty {
-                Text(L.t("servicecenters.empty")).foregroundStyle(.secondary).padding(40)
+                Text(L.t("servicecenters.empty")).foregroundStyle(.secondary).padding(GDCTokens.Space.page)
             } else {
                 // Grup pe categorie, fiecare cu propriul grid — nu o singura
                 // grila cu header "spanned" (nu se poate garanta latimea
@@ -26,7 +26,7 @@ struct ServiceCentersGrid: View {
                             VStack(alignment: .leading, spacing: 10) {
                                 Label(serviceCategoryLabel(category), systemImage: category.symbol)
                                     .font(.headline)
-                                LazyVGrid(columns: columns, spacing: 14) {
+                                LazyVGrid(columns: columns, spacing: GDCTokens.Space.grid) {
                                     ForEach(group) { center in
                                         ServiceCenterCard(center: center)
                                     }
@@ -35,7 +35,7 @@ struct ServiceCentersGrid: View {
                         }
                     }
                 }
-                .padding(16)
+                .padding(GDCTokens.Space.l)
             }
         }
         }
@@ -46,7 +46,7 @@ struct ServiceCenterCard: View {
     let center: ServiceCenter
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: GDCTokens.Space.s) {
             CoverThumbnail(
                 url: center.coverImageURL,
                 fallbackSymbol: center.category.symbol,
@@ -78,7 +78,7 @@ struct ServiceCenterCard: View {
             }
             SocialLinksRow(center.socialLinks)
         }
-        .padding(12)
+        .padding(GDCTokens.Space.m)
         .frame(maxWidth: .infinity, minHeight: 170, alignment: .leading)
         .glassCardBackground()
     }

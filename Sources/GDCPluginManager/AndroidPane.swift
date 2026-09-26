@@ -1,4 +1,5 @@
 import SwiftUI
+import GDCPluginManagerCore
 import CoreImage
 import CoreImage.CIFilterBuiltins
 import AppKit
@@ -34,7 +35,7 @@ struct MobileAppPane: View {
             VStack(alignment: .leading, spacing: 20) {
                 header
 
-                HStack(alignment: .top, spacing: 24) {
+                HStack(alignment: .top, spacing: GDCTokens.Space.xl) {
                     qrBlock
                     VStack(alignment: .leading, spacing: 14) {
                         Text(L.t("mobileapp.url"))
@@ -46,7 +47,7 @@ struct MobileAppPane: View {
                 }
                 instructions
             }
-            .padding(24)
+            .padding(GDCTokens.Space.xl)
             .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
@@ -69,7 +70,7 @@ struct MobileAppPane: View {
 
     // ── Cod QR ──────────────────────────────────────────────────────────────
     private var qrBlock: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: GDCTokens.Space.s) {
             if let img = Self.qrImage(from: Self.appURL.absoluteString) {
                 Image(nsImage: img)
                     .interpolation(.none)          // fara asta, QR-ul iese neclar la scalare
@@ -77,7 +78,7 @@ struct MobileAppPane: View {
                     .frame(width: 168, height: 168)
                     .padding(10)
                     .background(Color.white)       // QR-ul are nevoie de fundal alb ca sa fie citit
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                    .clipShape(RoundedRectangle(cornerRadius: GDCTokens.Radius.inset))
             }
             Text(L.t("android.qr.hint"))
                 .font(.caption2)
@@ -127,19 +128,19 @@ struct MobileAppPane: View {
         VStack(alignment: .leading, spacing: 10) {
             Text(L.t("mobileapp.steps.title")).font(.headline)
 
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: GDCTokens.Space.xs) {
                 Text(L.t("mobileapp.steps.android.title")).font(.subheadline).fontWeight(.semibold)
                 ForEach(Array(["mobileapp.steps.android.1", "mobileapp.steps.android.2"].enumerated()), id: \.offset) { i, key in
-                    HStack(alignment: .top, spacing: 8) {
+                    HStack(alignment: .top, spacing: GDCTokens.Space.s) {
                         Text("\(i + 1).").font(.caption.monospaced()).foregroundStyle(.tint)
                         Text(L.t(key)).font(.caption).fixedSize(horizontal: false, vertical: true)
                     }
                 }
             }
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: GDCTokens.Space.xs) {
                 Text(L.t("mobileapp.steps.ios.title")).font(.subheadline).fontWeight(.semibold)
                 ForEach(Array(["mobileapp.steps.ios.1", "mobileapp.steps.ios.2"].enumerated()), id: \.offset) { i, key in
-                    HStack(alignment: .top, spacing: 8) {
+                    HStack(alignment: .top, spacing: GDCTokens.Space.s) {
                         Text("\(i + 1).").font(.caption.monospaced()).foregroundStyle(.tint)
                         Text(L.t(key)).font(.caption).fixedSize(horizontal: false, vertical: true)
                     }
@@ -149,6 +150,6 @@ struct MobileAppPane: View {
         .padding(14)
         .frame(maxWidth: 520, alignment: .leading)
         .background(Color.primary.opacity(0.04))
-        .clipShape(RoundedRectangle(cornerRadius: 10))
+        .clipShape(RoundedRectangle(cornerRadius: GDCTokens.Radius.inset))
     }
 }

@@ -19,7 +19,7 @@ struct PluginCard: View {
     @State private var showPaidResourceSupportError = false
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: GDCTokens.Space.s) {
             ZStack(alignment: .topTrailing) {
                 typeBadge
                 // Badge vizibil pentru TOATE cele 3 stari, inclusiv
@@ -71,11 +71,11 @@ struct PluginCard: View {
             extraLinksRow
 
             if let errorMessage {
-                Text(errorMessage).font(.caption2).foregroundStyle(.red)
+                Text(errorMessage).font(.caption2).foregroundStyle(GDCTokens.Palette.error)
                     .lineLimit(1).help(errorMessage)
             }
             if let statusMessage {
-                Text(statusMessage).font(.caption2).foregroundStyle(.blue)
+                Text(statusMessage).font(.caption2).foregroundStyle(GDCTokens.Palette.info)
                     .lineLimit(1).help(statusMessage)
                 if let first = installedPaths.first {
                     Button(L.t("install.revealInFinder")) {
@@ -94,17 +94,17 @@ struct PluginCard: View {
                         .lineLimit(1)
                 }
                 .buttonStyle(.bordered)
-                .tint(.green)
+                .tint(GDCTokens.Palette.success)
             }
 
             Spacer(minLength: 0)
             actionButton
                 .frame(height: 28)
         }
-        .padding(12)
+        .padding(GDCTokens.Space.m)
         .frame(maxWidth: .infinity, minHeight: cardHeight, maxHeight: cardHeight, alignment: .topLeading)
-        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
-        .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color.white.opacity(0.2), lineWidth: 1))
+        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: GDCTokens.Radius.card))
+        .overlay(RoundedRectangle(cornerRadius: GDCTokens.Radius.card).stroke(Color.white.opacity(0.2), lineWidth: 1))
         .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: 4)
         .alert(resolveWarningTitle, isPresented: $showResolveWarning) {
             Button(L.t("resolve.running.ok")) {}
@@ -121,7 +121,7 @@ struct PluginCard: View {
     /// TRIAL / LICENȚĂ / PROMO) + suma de susținere, dacă e cazul.
     @ViewBuilder
     private var priceBadges: some View {
-        VStack(alignment: .trailing, spacing: 4) {
+        VStack(alignment: .trailing, spacing: GDCTokens.Space.xs) {
             if item.isFree && item.isTrial {
                 BadgePill(text: L.t("card.trial"), color: .blue)
             } else if item.isFree {
@@ -133,7 +133,7 @@ struct PluginCard: View {
                     BadgePill(text: L.t("card.paid"), color: .orange)
                         .help(L.t("card.trustMessage"))
                 }
-                HStack(spacing: 4) {
+                HStack(spacing: GDCTokens.Space.xs) {
                     if item.isPromoActive {
                         Text(item.priceDisplay).strikethrough().foregroundStyle(.secondary)
                     }
@@ -141,7 +141,7 @@ struct PluginCard: View {
                         .fontWeight(.semibold)
                 }
                 .font(.system(size: 10, design: .rounded))
-                .padding(.horizontal, 6).padding(.vertical, 2)
+                .padding(.horizontal, 6).padding(.vertical, GDCTokens.Space.xxs)
                 .background(.ultraThinMaterial, in: Capsule())
             }
         }
@@ -159,7 +159,7 @@ struct PluginCard: View {
             .font(.system(size: 9, weight: .bold))
             .tracking(0.5)
             .foregroundStyle(item.type.tintColor)
-            .padding(.horizontal, 8)
+            .padding(.horizontal, GDCTokens.Space.s)
             .padding(.vertical, 3)
             .background(Capsule().fill(item.type.tintColor.opacity(0.15)))
             .frame(maxWidth: .infinity, alignment: .center)
@@ -203,7 +203,7 @@ struct PluginCard: View {
         if !item.supportedOS.allows(current: .current) {
             Text(L.t("card.incompatibleOS"))
                 .font(.caption)
-                .foregroundStyle(.red)
+                .foregroundStyle(GDCTokens.Palette.error)
         } else if !license.isUnlocked(for: item) {
             Button(L.t("card.buy")) { NSWorkspace.shared.open(buyURL) }
         } else if isBusy {
@@ -212,14 +212,14 @@ struct PluginCard: View {
             HStack {
                 Button(L.t("card.update")) { runGuarded { install() } }
                     .buttonStyle(.borderedProminent)
-                    .tint(.orange)
+                    .tint(GDCTokens.Palette.warning)
                 Button(L.t("card.remove"), role: .destructive) { runGuarded { remove() } }
             }
         } else if installs.isInstalled(item) {
             HStack {
                 Label(L.t("card.installed"), systemImage: "checkmark.circle.fill")
                     .font(.caption)
-                    .foregroundStyle(.green)
+                    .foregroundStyle(GDCTokens.Palette.success)
                 Spacer()
                 Button(L.t("card.remove"), role: .destructive) { runGuarded { remove() } }
             }

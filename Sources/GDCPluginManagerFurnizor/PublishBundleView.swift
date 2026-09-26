@@ -46,7 +46,7 @@ struct PublishBundleView: View {
                     .font(.caption).foregroundStyle(.secondary)
 
                 GroupBox {
-                    VStack(alignment: .leading, spacing: 12) {
+                    VStack(alignment: .leading, spacing: GDCTokens.Space.m) {
                         TextField("ID pachet (ex. pachet-black-friday-2026, nu se mai poate schimba)", text: $id)
                             .textFieldStyle(.roundedBorder)
                             .disabled(editingID != nil)
@@ -57,11 +57,11 @@ struct PublishBundleView: View {
                                 if description.isEmpty {
                                     Text("Descrierea pachetului…")
                                         .foregroundStyle(.secondary)
-                                        .padding(.top, 8).padding(.leading, 5)
+                                        .padding(.top, GDCTokens.Space.s).padding(.leading, 5)
                                         .allowsHitTesting(false)
                                 }
                             }
-                            .overlay(RoundedRectangle(cornerRadius: 6).stroke(.separator))
+                            .overlay(RoundedRectangle(cornerRadius: GDCTokens.Radius.badge).stroke(.separator))
                         TextField("Preț TOTAL pachet (EUR)", text: $bundlePriceText).textFieldStyle(.roundedBorder)
                         if individualTotal > 0 {
                             Text("Sumă individuală (dacă s-ar cumpăra separat): \(individualTotal.formatted(.currency(code: "EUR")))")
@@ -89,13 +89,13 @@ struct PublishBundleView: View {
                                       labels: Dictionary(uniqueKeysWithValues: educationalResources.map { ($0.id, $0.name) }))
 
                         DisclosureGroup("Rețele sociale (opțional)") {
-                            VStack(alignment: .leading, spacing: 8) {
+                            VStack(alignment: .leading, spacing: GDCTokens.Space.s) {
                                 SocialLinksFields(state: $socialForm, youtubeLabel: "YouTube")
                             }
                             .padding(.top, 6)
                         }
                     }
-                    .padding(8)
+                    .padding(GDCTokens.Space.s)
                 }
 
                 AccessEditorSection(
@@ -121,14 +121,14 @@ struct PublishBundleView: View {
 
                 if let errorMessage {
                     Label(errorMessage, systemImage: "exclamationmark.triangle.fill")
-                        .foregroundStyle(.red)
+                        .foregroundStyle(GDCTokens.Palette.error)
                         .padding(10)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(Color.red.opacity(0.1))
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        .background(GDCTokens.Palette.error.opacity(0.1))
+                        .clipShape(RoundedRectangle(cornerRadius: GDCTokens.Radius.control))
                 }
                 if let successMessage {
-                    Label(successMessage, systemImage: "checkmark.circle.fill").foregroundStyle(.green)
+                    Label(successMessage, systemImage: "checkmark.circle.fill").foregroundStyle(GDCTokens.Palette.success)
                 }
 
                 HStack {
@@ -140,7 +140,7 @@ struct PublishBundleView: View {
                     }
                 }
                 if !isFormValid && !isBusy {
-                    Text(validationHint).font(.caption).foregroundStyle(.orange)
+                    Text(validationHint).font(.caption).foregroundStyle(GDCTokens.Palette.warning)
                 }
 
                 if !existingBundles.isEmpty {
@@ -157,13 +157,13 @@ struct PublishBundleView: View {
                             Button("Editează") { load(bundle) }
                             Button("Șterge", role: .destructive) { pendingDelete = bundle }
                         }
-                        .padding(.vertical, 4)
+                        .padding(.vertical, GDCTokens.Space.xs)
                     }
                 }
 
                 Spacer(minLength: 0)
             }
-            .padding(24)
+            .padding(GDCTokens.Space.xl)
             .frame(maxWidth: 640, alignment: .leading)
         }
         .confirmationDialog(
@@ -183,7 +183,7 @@ struct PublishBundleView: View {
     @ViewBuilder
     private func itemChecklist(title: String, refs: [BundleItemRef], labels: [String: String]) -> some View {
         if !refs.isEmpty {
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: GDCTokens.Space.xs) {
                 Text(title).font(.caption).foregroundStyle(.secondary)
                 ForEach(refs, id: \.self) { ref in
                     Toggle(labels[ref.id] ?? ref.id, isOn: Binding(

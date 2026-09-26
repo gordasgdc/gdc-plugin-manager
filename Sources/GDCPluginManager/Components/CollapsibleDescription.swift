@@ -20,7 +20,7 @@ struct CollapsibleDescription: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
-                    .padding(.top, 4)
+                    .padding(.top, GDCTokens.Space.xs)
             } label: {
                 Text(L.t("card.showDescription")).font(.caption).foregroundStyle(.secondary)
             }

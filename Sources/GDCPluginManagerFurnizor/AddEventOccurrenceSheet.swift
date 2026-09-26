@@ -45,7 +45,7 @@ struct AddEventOccurrenceSheet: View {
             }
             if !priceIsValid {
                 Label("Prețul trebuie să fie un număr (sau lasă câmpul gol).", systemImage: "exclamationmark.triangle.fill")
-                    .font(.caption).foregroundStyle(.orange)
+                    .font(.caption).foregroundStyle(GDCTokens.Palette.warning)
             }
 
             HStack {
@@ -67,7 +67,7 @@ struct AddEventOccurrenceSheet: View {
                 .disabled(!priceIsValid)
             }
         }
-        .padding(24)
+        .padding(GDCTokens.Space.xl)
         .frame(width: 420)
     }
 }

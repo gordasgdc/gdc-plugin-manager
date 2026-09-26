@@ -1,4 +1,5 @@
 import SwiftUI
+import GDCPluginManagerCore
 
 /// Dashboard-ul tuturor secretelor de care depinde ecosistemul GDC Plugin
 /// Manager — vezi `SecretRegistry` pentru inventar și pentru sursa fiecărei
@@ -42,7 +43,7 @@ struct SecretsDashboardView: View {
 
     private var header: some View {
         HStack(alignment: .firstTextBaseline) {
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: GDCTokens.Space.xs) {
                 Text("Token-uri & Chei").font(.title2).fontWeight(.semibold)
                 Text(summaryLine)
                     .font(.callout)
@@ -112,7 +113,7 @@ struct SecretsDashboardView: View {
             Button {
                 if isOpen { expanded.remove(secret.id) } else { expanded.insert(secret.id) }
             } label: {
-                HStack(spacing: 12) {
+                HStack(spacing: GDCTokens.Space.m) {
                     statusPill(status.severity)
                     VStack(alignment: .leading, spacing: 3) {
                         Text(secret.name).font(.headline)
@@ -124,13 +125,13 @@ struct SecretsDashboardView: View {
                     if status.mirrorReport.contains(where: { $0.inSync == false }) {
                         Label("oglindă desincronizată", systemImage: "arrow.triangle.branch")
                             .font(.caption)
-                            .foregroundStyle(.orange)
+                            .foregroundStyle(GDCTokens.Palette.warning)
                     }
                     Image(systemName: isOpen ? "chevron.down" : "chevron.right")
                         .font(.caption).foregroundStyle(.secondary)
                 }
                 .padding(.horizontal, 20)
-                .padding(.vertical, 12)
+                .padding(.vertical, GDCTokens.Space.m)
                 .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
@@ -146,15 +147,15 @@ struct SecretsDashboardView: View {
 
             // Impactul stă într-o casetă proprie: e singura informație de
             // care ai nevoie ca să decizi dacă te oprești din ce faci acum.
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: GDCTokens.Space.xs) {
                 Label("Dacă expiră", systemImage: "exclamationmark.triangle")
                     .font(.caption).fontWeight(.semibold)
                     .foregroundStyle(.secondary)
                 Text(secret.impact).font(.callout).fixedSize(horizontal: false, vertical: true)
             }
-            .padding(12)
+            .padding(GDCTokens.Space.m)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(RoundedRectangle(cornerRadius: 8).fill(Color.orange.opacity(0.10)))
+            .background(RoundedRectangle(cornerRadius: GDCTokens.Radius.control).fill(GDCTokens.Palette.warning.opacity(0.10)))
 
             labeled("Unde e stocat", secret.location.humanDescription, monospaced: true)
 
@@ -167,12 +168,12 @@ struct SecretsDashboardView: View {
                     Text("Trebuie să fie aceeași valoare și în:")
                         .font(.caption).fontWeight(.semibold).foregroundStyle(.secondary)
                     ForEach(status.mirrorReport) { check in
-                        HStack(alignment: .top, spacing: 8) {
+                        HStack(alignment: .top, spacing: GDCTokens.Space.s) {
                             Image(systemName: check.inSync == true ? "checkmark.circle.fill"
                                             : check.inSync == false ? "xmark.circle.fill" : "questionmark.circle")
-                                .foregroundStyle(check.inSync == true ? Color.green
-                                               : check.inSync == false ? Color.red : Color.secondary)
-                            VStack(alignment: .leading, spacing: 2) {
+                                .foregroundStyle(check.inSync == true ? GDCTokens.Palette.success
+                                               : check.inSync == false ? GDCTokens.Palette.error : Color.secondary)
+                            VStack(alignment: .leading, spacing: GDCTokens.Space.xxs) {
                                 Text(check.label).font(.callout)
                                 Text(check.note).font(.caption).foregroundStyle(.secondary)
                                     .fixedSize(horizontal: false, vertical: true)
@@ -183,7 +184,7 @@ struct SecretsDashboardView: View {
             }
 
             if !secret.requiredScopes.isEmpty {
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: GDCTokens.Space.xs) {
                     Text("Permisiuni necesare la generare")
                         .font(.caption).fontWeight(.semibold).foregroundStyle(.secondary)
                     ForEach(secret.requiredScopes, id: \.self) { scope in
@@ -193,7 +194,7 @@ struct SecretsDashboardView: View {
             }
 
             if !secret.afterRenewal.isEmpty {
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: GDCTokens.Space.xs) {
                     Text("După înlocuire")
                         .font(.caption).fontWeight(.semibold).foregroundStyle(.secondary)
                     ForEach(Array(secret.afterRenewal.enumerated()), id: \.offset) { index, step in
@@ -204,7 +205,7 @@ struct SecretsDashboardView: View {
                 }
             }
 
-            HStack(spacing: 12) {
+            HStack(spacing: GDCTokens.Space.m) {
                 Button {
                     renewing = secret
                 } label: {

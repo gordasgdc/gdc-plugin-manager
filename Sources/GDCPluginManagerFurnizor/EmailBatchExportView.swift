@@ -1,4 +1,5 @@
 import SwiftUI
+import GDCPluginManagerCore
 import AppKit
 
 /// Export de e-mailuri segmentat automat în loturi — Etapa 7 din Planul
@@ -29,7 +30,7 @@ struct EmailBatchExportView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: GDCTokens.Space.l) {
             Text("Export e-mailuri pentru BCC (loturi)").font(.title2).fontWeight(.semibold)
             Text("\(deduped.count) e-mailuri unice, în selecția curentă (produs/status/căutare aplicate deja).")
                 .font(.caption).foregroundStyle(.secondary)
@@ -72,7 +73,7 @@ struct EmailBatchExportView: View {
                                         }
                                     }
                                 }
-                                .padding(8)
+                                .padding(GDCTokens.Space.s)
                             }
                         }
                     }
@@ -85,7 +86,7 @@ struct EmailBatchExportView: View {
                 Button("Închide") { onClose() }
             }
         }
-        .padding(24)
+        .padding(GDCTokens.Space.xl)
         .frame(width: 560)
     }
 

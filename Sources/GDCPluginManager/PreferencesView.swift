@@ -84,9 +84,9 @@ struct PreferencesView: View {
                         if dep.isPresent {
                             Text(L.t("prefs.dependencies.installed")).foregroundStyle(.secondary).font(.callout)
                         } else if dep.isOptional {
-                            Text(L.t("deps.state.optionalMissing")).foregroundStyle(.orange).font(.callout)
+                            Text(L.t("deps.state.optionalMissing")).foregroundStyle(GDCTokens.Palette.warning).font(.callout)
                         } else {
-                            Text(L.t("prefs.dependencies.missing")).foregroundStyle(.red).font(.callout)
+                            Text(L.t("prefs.dependencies.missing")).foregroundStyle(GDCTokens.Palette.error).font(.callout)
                             if let url = dep.downloadURL {
                                 Button(L.t("prefs.dependencies.install")) { NSWorkspace.shared.open(url) }
                                     .controlSize(.small)

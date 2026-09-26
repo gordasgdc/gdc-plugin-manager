@@ -1,4 +1,5 @@
 import SwiftUI
+import GDCPluginManagerCore
 
 /// Asistentul de reînnoire a unui secret, pas cu pas — gândit pentru
 /// situația în care nu ai pe nimeni și nimic de întrebat: fără internet
@@ -42,7 +43,7 @@ struct SecretRenewalWizardView: View {
                     default: stepAfter
                     }
                 }
-                .padding(24)
+                .padding(GDCTokens.Space.xl)
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
             Divider()
@@ -62,7 +63,7 @@ struct SecretRenewalWizardView: View {
     private var header: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
-                VStack(alignment: .leading, spacing: 2) {
+                VStack(alignment: .leading, spacing: GDCTokens.Space.xxs) {
                     Text("Reînnoire: \(secret.name)").font(.title3).fontWeight(.semibold)
                     Text("Pasul \(step) din \(totalSteps)").font(.caption).foregroundStyle(.secondary)
                 }
@@ -216,7 +217,7 @@ struct SecretRenewalWizardView: View {
                 VStack(alignment: .leading, spacing: 6) {
                     Text("Rezultatul scrierii").font(.caption).fontWeight(.semibold).foregroundStyle(.secondary)
                     ForEach(writeReport) { outcome in
-                        HStack(alignment: .top, spacing: 8) {
+                        HStack(alignment: .top, spacing: GDCTokens.Space.s) {
                             Image(systemName: outcome.ok ? "checkmark.circle.fill" : "xmark.circle.fill")
                                 .foregroundStyle(outcome.ok ? .green : .red)
                             VStack(alignment: .leading, spacing: 1) {
@@ -314,12 +315,12 @@ struct SecretRenewalWizardView: View {
     }
 
     private func calloutBox(title: String, text: String, color: Color) -> some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: GDCTokens.Space.xs) {
             Text(title).font(.caption).fontWeight(.semibold).foregroundStyle(color)
             Text(text).font(.callout).fixedSize(horizontal: false, vertical: true)
         }
-        .padding(12)
+        .padding(GDCTokens.Space.m)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(RoundedRectangle(cornerRadius: 8).fill(color.opacity(0.10)))
+        .background(RoundedRectangle(cornerRadius: GDCTokens.Radius.control).fill(color.opacity(0.10)))
     }
 }

@@ -5,7 +5,7 @@ import GDCPluginManagerCore
 struct AudioGrid: View {
     let tracks: [AudioTrack]
 
-    private let columns = [GridItem(.adaptive(minimum: 220, maximum: 280), spacing: 14)]
+    private let columns = [GridItem(.adaptive(minimum: 220, maximum: 280), spacing: GDCTokens.Space.grid)]
 
     var body: some View {
         // Bara de filtre comuna (2026-09-11) — shadowing pe `tracks`,
@@ -14,14 +14,14 @@ struct AudioGrid: View {
         FilteredCatalogSection(items: tracks, options: .content) { tracks in
         ScrollView {
             if tracks.isEmpty {
-                Text(L.t("audio.empty")).foregroundStyle(.secondary).padding(40)
+                Text(L.t("audio.empty")).foregroundStyle(.secondary).padding(GDCTokens.Space.page)
             } else {
-                LazyVGrid(columns: columns, spacing: 14) {
+                LazyVGrid(columns: columns, spacing: GDCTokens.Space.grid) {
                     ForEach(tracks) { track in
                         AudioCard(track: track)
                     }
                 }
-                .padding(16)
+                .padding(GDCTokens.Space.l)
             }
         }
         }
@@ -37,12 +37,12 @@ struct AudioCard: View {
     private let tint = Color.indigo
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: GDCTokens.Space.s) {
             Text(L.t("audio.badge"))
                 .font(.system(size: 9, weight: .bold))
                 .tracking(0.5)
                 .foregroundStyle(tint)
-                .padding(.horizontal, 8)
+                .padding(.horizontal, GDCTokens.Space.s)
                 .padding(.vertical, 3)
                 .background(Capsule().fill(tint.opacity(0.15)))
                 .frame(maxWidth: .infinity, alignment: .center)
@@ -61,7 +61,7 @@ struct AudioCard: View {
                 Button(L.t("audio.open")) { NSWorkspace.shared.open(url) }
             }
         }
-        .padding(12)
+        .padding(GDCTokens.Space.m)
         .frame(maxWidth: .infinity, minHeight: 96, alignment: .leading)
         .glassCardBackground()
         .overlay(alignment: .topTrailing) { infoButton }
@@ -78,7 +78,7 @@ struct AudioCard: View {
             }
             .buttonStyle(.plain)
             .help(L.t("card.youtubeLink"))
-            .padding(8)
+            .padding(GDCTokens.Space.s)
             .help(L.t("card.tutorial"))
         }
     }
