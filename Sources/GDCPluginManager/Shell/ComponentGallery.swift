@@ -43,6 +43,36 @@ struct ComponentGallery: View {
     }
 
     var body: some View {
+        if UserDefaults.standard.string(forKey: "GDCGalleryMode") == "states" { statesGallery } else { cardsGallery }
+    }
+
+    /// Bannerele (texte reale, inclusiv mesajul lung de verificare eșuată) + stările de ecran.
+    private var statesGallery: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: GDCTokens.Space.s) {
+                Banner(kind: .info, title: L.t("update.title"),
+                       message: "v1.40.0 — " + L.t("offline.banner.body"),
+                       actions: [.init(title: L.t("update.download"), isPrimary: true) {}],
+                       dismiss: .init(title: L.t("update.dismiss")) {})
+                Banner(kind: .warning, title: L.t("dependency.missing.title"), message: "Python 3",
+                       actions: [.init(title: String(format: L.t("dependency.install.button"), "Python 3"), isPrimary: true) {}])
+                Banner(kind: .warning, title: L.t("update.check.failed.title"), message: L.t("update.check.failed"),
+                       actions: [.init(title: L.t("update.check.openWebsite")) {}], dismiss: .init(title: L.t("update.dismiss")) {})
+                Banner(kind: .offline, title: L.t("offline.banner.title"), message: L.t("offline.banner.body"),
+                       actions: [.init(title: L.t("card.retry")) {}], dismiss: .init(title: L.t("update.dismiss")) {})
+                HStack(alignment: .top, spacing: GDCTokens.Space.l) {
+                    StateView(kind: .empty, title: L.t("state.empty.title"), message: L.t("filter.price.empty"),
+                              symbol: "line.3.horizontal.decrease.circle", actions: [.init(title: L.t("state.resetFilters")) {}])
+                    StateView(kind: .error, title: L.t("state.error.title"), message: L.t("catalog.error.parse"),
+                              actions: [.init(title: L.t("card.retry"), isPrimary: true) {}])
+                }
+                StateView(kind: .loading, message: L.t("catalog.loading"))
+            }
+            .padding(.vertical, GDCTokens.Space.m)
+        }
+    }
+
+    private var cardsGallery: some View {
         ScrollView {
             LazyVGrid(columns: [GridItem(.adaptive(minimum: GDCTokens.Size.cardMinWidth), spacing: GDCTokens.Space.grid)],
                       spacing: GDCTokens.Space.grid) {

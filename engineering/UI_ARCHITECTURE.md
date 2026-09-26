@@ -103,7 +103,9 @@ secțiunea atinsă verificată în RO/EN/ES și Light/Dark. „Compilează” nu
   (toate cardurile de conținut + MyApps; `glassCardBackground` rămas doar la Comunitate, cu aceeași suprafață), `Catalog/ProductCard.swift`
   cu 8 stări (OFFLINE = `CatalogService.isShowingCachedCatalog`, informativ, acțiunea rămâne activă; FAILED = „Reîncearcă”, aceeași operație).
   Galerie DEBUG `Shell/ComponentGallery.swift` (`-GDCComponentGallery YES [-GDCGalleryOffset N] [-GDCGalleryWidth W]`).
-- `StateView` (Loading/Empty/Error/Offline) + `Banner` unificat: PROTOTIPATE (canvas, rândul 3), neimplementate — așteaptă aprobarea.
+- `States/StateView.swift` (loading = schelet fără pulsație la Reduce Motion, empty, error) + `States/Banner.swift` (update, dependență,
+  verificare eșuată, offline) IMPLEMENTATE; anunț VoiceOver o singură dată per apariție. Galerie: `-GDCGalleryMode states`.
+- F3/F4 încheiate pe ramură; rămân la livrare: bump client 1.40.0 / Furnizor 1.53.0, CHANGELOG, instalare aprobată.
 - Redimensionare pe fereastra reală (DEBUG, fără instalare): `EXTRA_ARGS="-GDCWindowSize 760x500 [-GDCWindowResizeStress YES]"
   LANGS=ro scripts/ui-snapshots.sh <out>`; verificat 760×500, 1000×680, 1440×900 și resize rapid: fără suprapuneri, fără regresii.
 - Tokeni: `scripts/tokenize_literals.py` (doar valori identice) + gardă `scripts/audit-design-literals.sh` (bază în `design-literals-baseline.txt`).
