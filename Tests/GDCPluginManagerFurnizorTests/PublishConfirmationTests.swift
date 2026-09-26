@@ -28,7 +28,10 @@ final class PublishConfirmationTests: XCTestCase {
         let file = dir.appendingPathComponent("session.json")
         try #"{"environment":"staging"}"#.write(to: file, atomically: true, encoding: .utf8)
         let savedFile = FurnizorEnvironment.sessionFileOverride, savedEnv = FurnizorEnvironment.override
-        defer { FurnizorEnvironment.sessionFileOverride = savedFile; FurnizorEnvironment.override = savedEnv }
+        defer {
+            FurnizorEnvironment.sessionFileOverride = savedFile; FurnizorEnvironment.override = savedEnv
+            FurnizorEnvironment.resetSessionStateForTests()   // altfel blocajul se scurge în testele următoare
+        }
         FurnizorEnvironment.sessionFileOverride = file
         FurnizorEnvironment.override = .production
         FurnizorEnvironment.bootstrapSession()
