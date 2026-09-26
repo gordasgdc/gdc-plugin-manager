@@ -170,6 +170,12 @@ struct CatalogWorkspace: View {
             if let id = UserDefaults.standard.string(forKey: "FurnizorSelectID"), rows.contains(where: { $0.id == id }) {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { selection = id }
             }
+            // `-FurnizorShowPublishSheet YES`: foaia de confirmare cu o acțiune goală (capturi; nu publică nimic).
+            if UserDefaults.standard.bool(forKey: "FurnizorShowPublishSheet") {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
+                    pendingPublish = PendingPublish(title: rows.first?.name ?? "Test") { DiagnosticLog.write("workspace", "DEBUG: foaie de publicare închisă fără acțiune") }
+                }
+            }
             #endif
         }
         .onReceive(NotificationCenter.default.publisher(for: .furnizorCatalogChanged)) { _ in reload() }

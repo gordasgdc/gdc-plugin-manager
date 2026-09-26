@@ -20,7 +20,7 @@ let w = list.filter { ($0[kCGWindowOwnerPID as String] as? Int) == pid && ($0[kC
 print(w?[kCGWindowNumber as String] as? Int ?? 0)
 SW
 for sec in ${SECTIONS:-publish}; do for theme in ${THEMES:-dark light}; do
-  open -n "$APP" --args -GDCPluginManager.appTheme "$theme" -FurnizorStartSection "$sec" -GDCWindowSize "${SIZE:-1280x800}" -NSQuitAlwaysKeepsWindows NO ${EXTRA_ARGS:-}
+  open -n ${FZ_ENV:+--env GDC_FURNIZOR_ENV=$FZ_ENV} "$APP" --args -GDCPluginManager.appTheme "$theme" -FurnizorStartSection "$sec" -GDCWindowSize "${SIZE:-1280x800}" -NSQuitAlwaysKeepsWindows NO ${EXTRA_ARGS:-}
   sleep "${WAIT:-8}"
   pid=$(pgrep -f "$APP/Contents/MacOS/GDCPluginManagerFurnizor" | head -1 || true)
   wid=$( [ -n "$pid" ] && swift "$OUT/.wid.swift" "$pid" 2>/dev/null || echo 0)

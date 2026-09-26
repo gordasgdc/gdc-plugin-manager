@@ -44,10 +44,13 @@ Bază: DESIGN_SYSTEM.md („Furnizor — aceeași identitate, altă UX”) + UI_
 - Clienți: `ClientDetailView` în inspector lângă tabel (nu mai e foaie); fereastră minimă 1040×600.
 - Verificare: build + teste; capturi DEBUG `scripts/furnizor-snapshots.sh` (Dark/Light, 1280×800 și 1040×600, rând preselectat).
   Rularea de previzualizare pornește blocată la scriere (confirmarea PRODUCȚIE după STAGING rămâne neconfirmată).
-- RĂMAS: editorii își păstrează încă propria listă internă (dublură cu tabelul) — de scos tip cu tip; `InspectorPanel`/`ActionBar`
-  comune; foaia „Publică în producție” din prototip peste fluxul existent; Prețuri/Întreținere pe tiparul listă + inspector.
+- Lot 2: listele proprii ale editorilor ascunse în spațiul de lucru (`embedded`), ștergerea intrării selectate păstrată cu aceeași
+  confirmare; la Produse rămân „Șterge acest produs” și ștergerea multiplă. Foaia „Publică în producție/staging”
+  (`Workspace/PublishConfirmation.swift`, `PublishGate` prin environment) peste `publish()` existent — în PRODUCȚIE cere bifa explicită.
+- RĂMAS: `InspectorPanel`/`ActionBar` comune; Prețuri/Întreținere pe tiparul listă + inspector; captura foii în PRODUCȚIE
+  (acolo alerta de siguranță STAGING→PRODUCȚIE are prioritate).
 
-## Modul „Bannere promoționale” (propus; prototip pe canvas, NEimplementat)
+## Modul „Bannere promoționale” — IMPLEMENTAT pe ramură (2026-09-26), nepublicat
 - Moduri: Doar text · Imagine + text · Doar imagine. Texte RO (obligatoriu) / EN / ES. Imagini separate Light/Dark (Dark opțional).
 - PNG și SVG; SVG se rasterizează la publicare în PNG @2x (ImageIO nu randează `<text>` din SVG — vezi preseturile sezoniere),
   sursa SVG se păstrează. Recomandat 1200×200, < 400 KB.
@@ -57,3 +60,18 @@ Bază: DESIGN_SYSTEM.md („Furnizor — aceeași identitate, altă UX”) + UI_
   rămân și sunt scrise mereu din campania activă ca rezervă (clienții ≤ 1.40 văd textul RO); câmpuri noi opționale
   (`mode`, `campaigns[]`, `imageDark`, texte localizate). „Doar imagine” = invizibil pe clienții vechi (isDisplayable cere text).
 - Conținutul actual din producție („PREȚURI SPECIALE…”) NU se modifică în acest lot; încalcă Regula 3 — decizia rămâne la Cristi.
+
+### Implementare (lot 2)
+- Core: `PromoBanner.swift` (model, `PromoBannerSpec`, `activeCampaign`, suprapuneri, `withLegacyFallback`, `PromoBannerView` comun
+  client + previzualizare Furnizor). `campaigns` decodat tolerant — o listă stricată nu ascunde bannerul clasic.
+- Rapoarte: Doar imagine 6:1 (1200×200), opțional lată 12:1 (2400×200) de la 900 pt, afișare `fit` (integral vizibilă),
+  înălțime plafonată la 160 pt; Imagine + text 3:1 (600×200), `fill` cu decupare centrală într-un panou de 72 pt; Doar text 56 pt.
+- Furnizor: `BannerImageProcessor` — PNG/SVG, raport ±2%, minim @1x, peste @2x micșorat, PNG fără metadate ≤ 400 KB
+  (dacă @2x depășește, se încearcă @1x); SVG respins la script/foreignObject/entități/DOCTYPE/href extern/url() extern, apoi
+  rasterizat local cu NSImage (verificat în teste). `PromoBanner/PromoBannerEditorView.swift`: listă campanii, mod, RO/EN/ES,
+  sloturi Light/Dark/lată, program, link, blocarea publicării la suprapuneri sau conținut incomplet, previzualizare 470/760/1150 pt
+  × Light/Dark, publicare prin foaia de confirmare. „Banner clasic” = editorul vechi (păstrează acum și campaniile).
+- Client: `LaunchBannerChecker` alege campania activă, descarcă imaginile asincron cu cache pe disc (nume SHA-256 stabil) și
+  memorie (decodare o singură dată); fără campanii → bannerul clasic neschimbat.
+- Verificat: 14 teste noi; capturi pe fereastra reală a clientului (DEBUG `-PromoBannerFixture text|imageText|image`) la 760×500
+  și 1440×900, Light/Dark, RO + ES; editorul Furnizor cu `-PromoBannerFixture YES`.
