@@ -95,7 +95,7 @@
       ]
     },
     "media-flow-monitor" : {
-      "basePrice" : 3,
+      "basePrice" : 0,
       "currency" : "EUR",
       "name" : "MediaFlow Monitor",
       "promoSchedule" : [
