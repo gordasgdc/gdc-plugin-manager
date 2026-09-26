@@ -49,7 +49,19 @@ struct LaunchOfferBanner: View {
         checker.nsImage != nil ? Self.imageHeight + Self.textBandHeight : Self.textBandHeight
     }
 
+    @ObservedObject private var language = LanguageStore.shared
+
     var body: some View {
+        // Faza 5: cu campanii în launch-banner.json se afișează campania activă; altfel bannerul clasic, neschimbat.
+        if let campaign = checker.activeCampaign {
+            PromoBannerView(campaign: campaign, language: language.current.rawValue, images: checker.promoImages,
+                            onTap: campaign.linkURL.flatMap(URL.init(string:)).map { url in { NSWorkspace.shared.open(url) } })
+        } else {
+            classicBanner
+        }
+    }
+
+    private var classicBanner: some View {
         Color.clear
             .frame(height: bannerHeight)
             .overlay(alignment: .bottom) {

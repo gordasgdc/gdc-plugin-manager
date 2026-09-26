@@ -40,6 +40,7 @@ struct FurnizorContentView: View {
         case "downloadResources": return .downloadResources
         case "secrets": return .secrets
         case "pricing": return .pricing
+        case "launchBanner": return .launchBanner
         default: return .publish
         }
         #else
@@ -119,7 +120,7 @@ struct FurnizorContentView: View {
 
                 Section(isExpanded: $expandPricing) {
                     Label("Prețuri & Oferte", systemImage: "eurosign.circle").tag(FurnizorSection.pricing)
-                    Label("Banner Lansare", systemImage: "megaphone").tag(FurnizorSection.launchBanner)
+                    Label("Bannere promoționale", systemImage: "megaphone").tag(FurnizorSection.launchBanner)
                 } header: {
                     Text("PREȚURI & OFERTE")
                 }
@@ -171,7 +172,7 @@ struct FurnizorContentView: View {
                 case .pricing:
                     PricingManagerView()
                 case .launchBanner:
-                    LaunchBannerManagerView()
+                    PromoBannerEditorView()
                 case .courses:
                     CatalogWorkspace(type: .courses).id(CatalogContentType.courses)
                 case .educationalResources:

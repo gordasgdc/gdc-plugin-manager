@@ -1,6 +1,7 @@
 import Foundation
 import AppKit
 import Combine
+import CryptoKit
 import GDCPluginManagerCore
 
 /// Fetch-ul `docs/launch-banner.json` + descărcarea/cache-ul imaginii,
@@ -13,6 +14,11 @@ final class LaunchBannerChecker: ObservableObject {
 
     @Published private(set) var config: LaunchBannerConfig?
     @Published private(set) var nsImage: NSImage?
+    /// Faza 5: campania activă (dacă `launch-banner.json` are `campaigns`) și imaginile ei, decodate o singură dată.
+    @Published private(set) var activeCampaign: PromoBannerCampaign?
+    @Published private(set) var promoImages = PromoBannerImages()
+    /// Imagini deja decodate, pe cale — nicio decodare repetată la redesenare sau la reîmprospătare.
+    private var decoded: [String: NSImage] = [:]
 
     private static let jsonURL = URL(string: "https://gordas.dev/launch-banner.json")!
     private var cacheDirectory: URL {
@@ -38,6 +44,7 @@ final class LaunchBannerChecker: ObservableObject {
                 try? FileManager.default.createDirectory(at: cacheDirectory, withIntermediateDirectories: true)
                 try? data.write(to: jsonCacheURL)
                 await loadImage(for: decoded)
+                await loadCampaign(for: decoded)
                 DiagnosticLog.write("LaunchBanner", "OK, enabled=\(decoded.enabled)")
                 return
             } catch {
@@ -53,6 +60,7 @@ final class LaunchBannerChecker: ObservableObject {
             DiagnosticLog.write("LaunchBanner", "fetch eșuat (\(String(describing: lastError))), fallback pe cache local")
             config = decoded
             await loadImage(for: decoded)
+            await loadCampaign(for: decoded)
         } else {
             DiagnosticLog.write("LaunchBanner", "fetch eșuat (\(String(describing: lastError))) ȘI niciun cache local - banner ascuns")
         }
@@ -78,4 +86,67 @@ final class LaunchBannerChecker: ObservableObject {
             nsImage = (try? Data(contentsOf: imageCacheURL)).flatMap(NSImage.init(data:))
         }
     }
+
+    // MARK: Campanii (Faza 5)
+
+    private var promoCacheDirectory: URL { cacheDirectory.appendingPathComponent("promo-banner-images", isDirectory: true) }
+
+    /// Alege campania activă și îi încarcă imaginile asincron, cu cache pe disc (fallback offline).
+    private func loadCampaign(for config: LaunchBannerConfig) async {
+        #if DEBUG
+        // `-PromoBannerFixture text|imageText|image`: campanie de test cu grafică generată local.
+        if let raw = UserDefaults.standard.string(forKey: "PromoBannerFixture"), let mode = PromoBannerMode(rawValue: raw) {
+            promoImages = PromoBannerFixtures.images(for: mode)
+            activeCampaign = PromoBannerFixtures.campaign(mode)
+            return
+        }
+        #endif
+        guard let campaign = config.activeCampaign() else {
+            activeCampaign = nil
+            promoImages = PromoBannerImages()
+            return
+        }
+        var images = PromoBannerImages()
+        if campaign.mode != .text {
+            images.light = await image(at: campaign.imagePath)
+            images.dark = await image(at: campaign.imagePathDark)
+            if campaign.mode == .image {
+                images.wideLight = await image(at: campaign.imagePathWide)
+                images.wideDark = await image(at: campaign.imagePathWideDark)
+            }
+        }
+        // O campanie cu imagine obligatorie, dar nedescărcabilă și fără cache, nu se afișează pe jumătate.
+        if campaign.mode != .text && images.light == nil {
+            DiagnosticLog.write("LaunchBanner", "campania \(campaign.id): imaginea lipsește — banner ascuns")
+            activeCampaign = nil
+            return
+        }
+        promoImages = images
+        activeCampaign = campaign
+        DiagnosticLog.write("LaunchBanner", "campanie activă \(campaign.id) (\(campaign.mode.rawValue))")
+    }
+
+    private func image(at path: String?) async -> NSImage? {
+        guard let path, !path.isEmpty, let url = CatalogAssets.imageURL(for: path) else { return nil }
+        if let cached = decoded[path] { return cached }
+        // Nume stabil între porniri (hashValue e aleator per proces): SHA-256 al căii.
+        let digest = SHA256.hash(data: Data(path.utf8)).prefix(8).map { String(format: "%02x", $0) }.joined()
+        let file = promoCacheDirectory.appendingPathComponent(digest + "-" + url.lastPathComponent)
+        var data: Data?
+        do {
+            let (fetched, response) = try await URLSession.shared.data(from: url)
+            if (response as? HTTPURLResponse)?.statusCode == 200 {
+                data = fetched
+                try? FileManager.default.createDirectory(at: promoCacheDirectory, withIntermediateDirectories: true)
+                try? fetched.write(to: file)
+            }
+        } catch {
+            DiagnosticLog.write("LaunchBanner", "imagine campanie: \(error) — încerc cache-ul")
+        }
+        if data == nil { data = try? Data(contentsOf: file) }
+        guard let data, let image = NSImage(data: data) else { return nil }
+        decoded[path] = image
+        return image
+    }
+
 }

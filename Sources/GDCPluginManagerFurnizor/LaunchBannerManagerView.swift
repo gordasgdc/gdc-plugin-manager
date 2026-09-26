@@ -108,11 +108,13 @@ struct LaunchBannerManagerView: View {
         let selection = coverSelection
         let schedulingValue = scheduling
         let textOnTop = draftTextOnTop
+        let existingCampaigns = config?.campaigns
 
         DispatchQueue.global(qos: .userInitiated).async {
             do {
                 let imagePath = try CoverImageStore.commit(selection, id: "launch-banner", previous: previousImagePath) ?? ""
-                let updated = LaunchBannerConfig(enabled: enabled, imagePath: imagePath, topText: topText, mainText: mainText, scheduling: schedulingValue, textOnTop: textOnTop)
+                // Faza 5: campaniile existente se păstrează la o publicare din editorul clasic.
+                let updated = LaunchBannerConfig(enabled: enabled, imagePath: imagePath, topText: topText, mainText: mainText, scheduling: schedulingValue, textOnTop: textOnTop, campaigns: existingCampaigns)
                 try LaunchBannerEditor.publish(updated, message: "Banner Lansare: \(enabled ? "activat" : "dezactivat")")
                 DispatchQueue.main.async {
                     config = updated

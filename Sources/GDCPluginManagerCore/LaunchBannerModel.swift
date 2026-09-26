@@ -26,10 +26,12 @@ public struct LaunchBannerConfig: Codable, Equatable {
     /// `false` = dedesubt (cerut explicit de Cristi, 2026-08-31, ca opțiune
     /// aleasă de el, nu fixă în cod). Implicit `true` (deasupra).
     public var textOnTop: Bool
+    /// Faza 5: campanii programate (opțional; clienții vechi îl ignoră). Vezi PromoBanner.swift.
+    public var campaigns: [PromoBannerCampaign]?
 
     public init(enabled: Bool = false, imagePath: String = "", topText: String = "",
                 mainText: String = "", updatedAt: String = "", scheduling: Scheduling? = nil,
-                textOnTop: Bool = true) {
+                textOnTop: Bool = true, campaigns: [PromoBannerCampaign]? = nil) {
         self.enabled = enabled
         self.imagePath = imagePath
         self.topText = topText
@@ -37,9 +39,10 @@ public struct LaunchBannerConfig: Codable, Equatable {
         self.updatedAt = updatedAt
         self.scheduling = scheduling
         self.textOnTop = textOnTop
+        self.campaigns = campaigns
     }
 
-    enum CodingKeys: String, CodingKey { case enabled, imagePath, topText, mainText, updatedAt, scheduling, textOnTop }
+    enum CodingKeys: String, CodingKey { case enabled, imagePath, topText, mainText, updatedAt, scheduling, textOnTop, campaigns }
 
     /// Decodare tolerantă — un `launch-banner.json` viitor cu un câmp în
     /// plus, sau un client vechi care citește un JSON mai nou, nu trebuie
@@ -53,6 +56,8 @@ public struct LaunchBannerConfig: Codable, Equatable {
         updatedAt = try c.decodeIfPresent(String.self, forKey: .updatedAt) ?? ""
         scheduling = try c.decodeIfPresent(Scheduling.self, forKey: .scheduling)
         textOnTop = try c.decodeIfPresent(Bool.self, forKey: .textOnTop) ?? true
+        // Tolerant: o listă stricată nu ascunde bannerul clasic.
+        campaigns = try? c.decodeIfPresent([PromoBannerCampaign].self, forKey: .campaigns)
     }
 
     public var imageURL: URL? { CatalogAssets.imageURL(for: imagePath) }
