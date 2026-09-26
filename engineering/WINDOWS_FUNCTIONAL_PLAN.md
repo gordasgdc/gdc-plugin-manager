@@ -1,6 +1,11 @@
 # Plan consolidat — adaptarea funcțională Windows (client 1.37.2 → paritate cu Mac 1.40.0)
 
-Stare: PROPUNERE, neimplementată. Bază: `WINDOWS_ADAPTATION_INVENTORY.md`. Principiu: paritate de COMPORTAMENT și de date,
+Stare (2026-09-26): etapele 1–5 IMPLEMENTATE pe ramura `win-functional-parity` din GDCPluginManagerWin (neîmpinsă, nelansată).
+Rezultate: catalogul și `update.json` publicate se decodează (și cu câmpuri noi); campaniile se decodează din formatul scris de Furnizor
+(date Swift, `linkURL`, mod necunoscut → text, listă stricată → banner clasic); licență: vectorii Mac portați + un serial comun semnat
+în C# și validat în Swift; `ProductActionState` portat și testat (UI neatins). Laborator ARM64: 3 moduri de banner + clasic, Light/Dark,
+lățimi diferite — corecte. Neimplementat (etapa 6, UI): banner offline, stările de ecran, folosirea `ProductActionState` în carduri.
+Observat, preexistent: în Dark, fundalul zonei de conținut rămâne alb (de verificat la redesign — Regula 37). Bază: `WINDOWS_ADAPTATION_INVENTORY.md`. Principiu: paritate de COMPORTAMENT și de date,
 nu de interfață — WPF rămâne nativ Windows (WPF-UI), fără a copia layout-ul Mac. Furnizorul nu există pe Windows.
 
 ## Ordinea (după risc pentru clienți)
