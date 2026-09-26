@@ -165,7 +165,6 @@
       "access" : {
         "group" : "gdc",
         "note" : "Donație · licență legată de Mac (Machine ID)",
-        "referencePriceEUR" : 23,
         "tags" : [
           "Developer"
         ]
