@@ -302,7 +302,6 @@ final class PublishTransactionTests: XCTestCase {
         XCTAssertThrowsError(try publishProduct(try newProductSource("LUT b")))
         let files = try FileManager.default.contentsOfDirectory(at: PublishJournal.directory, includingPropertiesForKeys: nil)
         let text = try files.map { try String(contentsOf: $0, encoding: .utf8) }.joined()
-        XCTAssertFalse(text.contains(PrivateCatalogAuth.token), "jurnalul nu conține tokenul")
         XCTAssertNil(text.range(of: #"github_pat_|ghp_|x-access-token"#, options: .regularExpression))
     }
 }

@@ -79,13 +79,13 @@ enum RepoStorageScanner {
 
     static func scanAll(catalog: Catalog?) -> [RepoUsage] {
         let references = catalogReferences(catalog)
-        return PrivateCatalogAuth.repos.keys.sorted().map { key in
+        return ResourceRepos.repos.keys.sorted().map { key in
             scan(key: key, references: references[key] ?? [])
         }
     }
 
     private static func scan(key: String, references: [CatalogReference]) -> RepoUsage {
-        let repoName = PrivateCatalogAuth.repos[key]?.name ?? "gdc-plugin-manager-\(key)"
+        let repoName = ResourceRepos.repos[key]?.name ?? "gdc-plugin-manager-\(key)"
         let path = RepoCheckoutPaths.resourceRepoCheckouts[key]
             ?? RepoCheckoutPaths.privateFilesRepo
         let cloned = FileManager.default.fileExists(atPath: path.appendingPathComponent(".git").path)
@@ -189,14 +189,14 @@ enum RepoStorageScanner {
 
     /// Toate trimiterile din catalog, grupate pe cheia de repo. Cheia lipsă
     /// înseamnă repo-ul principal — exact regula de compatibilitate din
-    /// `PrivateCatalogAuth.defaultRepoKey`, altfel tot ce e publicat înainte
+    /// `ResourceRepos.defaultRepoKey`, altfel tot ce e publicat înainte
     /// de arhitectura multi-repo ar apărea ca orfan.
     static func catalogReferences(_ catalog: Catalog?) -> [String: [CatalogReference]] {
         guard let catalog else { return [:] }
         var map: [String: [CatalogReference]] = [:]
 
         func add(_ reference: CatalogReference, repo: String?) {
-            let key = repo ?? PrivateCatalogAuth.defaultRepoKey
+            let key = repo ?? ResourceRepos.defaultRepoKey
             map[key, default: []].append(reference)
         }
 
@@ -237,13 +237,10 @@ enum RepoStorageScanner {
 
     /// Dimensiunea raportată de GitHub, în octeți. API-ul o dă în KB.
     static func remoteSize(repoName: String) async -> Int64? {
-        var request = URLRequest(url: URL(string: "https://api.github.com/repos/\(PrivateCatalogAuth.ownerLogin)/\(repoName)")!)
-        request.setValue("Bearer \(PrivateCatalogAuth.token)", forHTTPHeaderField: "Authorization")
-        request.setValue("2022-11-28", forHTTPHeaderField: "X-GitHub-Api-Version")
-        guard let (data, response) = try? await URLSession.shared.data(for: request),
-              let http = response as? HTTPURLResponse, http.statusCode == 200,
-              let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-              let kilobytes = json["size"] as? Int64 else { return nil }
+        // Prin `gh` (autentificarea de pe acest Mac), nu cu un token încorporat.
+        // Fără `gh`/autentificare → nil → UI-ul arată dimensiunea ca necunoscută.
+        guard let output = try? await GHCLI.run(["api", "/repos/\(ResourceRepos.ownerLogin)/\(repoName)", "--jq", ".size"]),
+              let kilobytes = Int64(output.trimmingCharacters(in: .whitespacesAndNewlines)) else { return nil }
         return kilobytes * 1024
     }
 

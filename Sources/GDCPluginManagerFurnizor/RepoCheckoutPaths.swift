@@ -26,7 +26,7 @@ enum RepoCheckoutPaths {
     /// [2026-09-14] Arhitectura multi-repo: fiecare tip de resursa are repo-ul
     /// lui privat, ca sa nu atingem limitele de dimensiune ale unuia singur.
     /// Cheia e ACEEASI cu cea din catalog (`PluginFile.repo`) si cu cea din
-    /// `PrivateCatalogAuth.repos` — o singura sursa de adevar pentru nume.
+    /// `ResourceRepos.repos` — o singura sursa de adevar pentru nume.
     static var resourceRepoCheckouts: [String: URL] {
         let base = isStaging ? stagingDir : developerDir
         return [

@@ -197,9 +197,9 @@ extension SecretRegistry {
         return [
             ManagedSecret(
                 id: "github-pat",
-                name: "PAT GitHub (catalog privat)",
-                purpose: "Singura cale prin care clientul descarcă fișierele produselor din cele 4 repo-uri private.",
-                impact: "Toți clienții instalați primesc eroare de autentificare la orice descărcare. Nu se repară din catalog — cere build + release nou pe Mac ȘI pe Windows.",
+                name: "PAT GitHub VECHI (clienți Mac ≤1.39.3 / Windows ≤1.37.0)",
+                purpose: "Încorporat doar în clienții vechi, care descarcă direct din GitHub. Furnizorul și clienții noi NU îl mai folosesc (authorize-download + gh). Se revocă după migrarea clienților — nu se reînnoiește.",
+                impact: "La expirare/revocare, doar clienții vechi nemigrați nu mai pot descărca; soluția pentru ei e actualizarea, nu un token nou.",
                 location: .sourceFile(path: "Sources/GDCPluginManagerFurnizor/PrivateCatalogAuth.swift",
                                       pattern: #"public static let token = "([^"]+)""#),
                 expiry: .githubTokenHeader,
@@ -217,13 +217,12 @@ extension SecretRegistry {
                     SecretMirror(label: "Secret CI Windows",
                                  location: .githubActionsSecret(repo: winRepo, name: "PRIVATE_CATALOG_TOKEN")),
                 ],
+                isOptional: true,
                 validation: .githubPAT(repos: ["gdc-plugin-manager-files", "gdc-plugin-manager-pdfs",
                                                "gdc-plugin-manager-scripts", "gdc-plugin-manager-resources"]),
                 afterRenewal: [
-                    "./build_app.sh && ./build_furnizor_app.sh (Regula 0 — se verifică versiunea INSTALATĂ)",
-                    "Bump versiune Client + CHANGELOG, commit, push",
-                    "Release nou Mac + Windows, altfel clienții rămân pe tokenul vechi",
-                    "Abia DUPĂ ce un client actualizat descarcă cu succes: revocă tokenul vechi",
+                    "NU se reînnoiește. Monitorizare migrare: scripts/migration-status.sh",
+                    "Revocarea: doar cu aprobarea explicită a lui Cristi, după migrare",
                 ]
             ),
             ManagedSecret(
@@ -490,7 +489,7 @@ extension SecretRegistry {
     /// autentificat cu un PAT fine-grained poartă headerul de expirare.
     static func githubTokenExpiry(token: String) async -> Date? {
         guard !token.isEmpty else { return nil }
-        var request = URLRequest(url: URL(string: "https://api.github.com/repos/\(PrivateCatalogAuth.owner)/\(PrivateCatalogAuth.repo)")!)
+        var request = URLRequest(url: URL(string: "https://api.github.com/repos/\(ResourceRepos.owner)/\(ResourceRepos.repo)")!)
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         request.setValue("2022-11-28", forHTTPHeaderField: "X-GitHub-Api-Version")
         guard let (_, response) = try? await URLSession.shared.data(for: request),
@@ -571,30 +570,8 @@ extension SecretRegistry {
         return ISO8601DateFormatter().date(from: raw.trimmingCharacters(in: .whitespaces))
     }
 
-    /// `gh` nu e în PATH-ul unei aplicații pornite din Finder (aplicațiile
-    /// GUI nu moștenesc mediul shell-ului), deci îl căutăm explicit.
-    private static func ghExecutable() -> URL? {
-        for path in ["/opt/homebrew/bin/gh", "/usr/local/bin/gh", "/usr/bin/gh"] where FileManager.default.isExecutableFile(atPath: path) {
-            return URL(fileURLWithPath: path)
-        }
-        return nil
-    }
-
     private static func runGH(_ args: [String]) async throws -> String? {
-        guard let gh = ghExecutable() else { return nil }
-        return try await Task.detached {
-            let process = Process()
-            process.executableURL = gh
-            process.arguments = args
-            let pipe = Pipe()
-            process.standardOutput = pipe
-            process.standardError = Pipe()
-            try process.run()
-            let data = pipe.fileHandleForReading.readDataToEndOfFile()
-            process.waitUntilExit()
-            guard process.terminationStatus == 0 else { return nil }
-            return String(data: data, encoding: .utf8)
-        }.value
+        try await GHCLI.run(args)
     }
 
     // MARK: Oglinzi

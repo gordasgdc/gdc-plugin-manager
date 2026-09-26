@@ -404,10 +404,10 @@ enum PublishTransaction {
         func walk(_ value: Any) {
             if let obj = value as? [String: Any] {
                 if let path = obj["path"] as? String, obj["sha256"] != nil || obj["repo"] != nil {
-                    refs.insert(RepoPath(repo: (obj["repo"] as? String) ?? PrivateCatalogAuth.defaultRepoKey, path: path))
+                    refs.insert(RepoPath(repo: (obj["repo"] as? String) ?? ResourceRepos.defaultRepoKey, path: path))
                 }
                 if let path = obj["filePath"] as? String {
-                    refs.insert(RepoPath(repo: (obj["fileRepo"] as? String) ?? PrivateCatalogAuth.defaultRepoKey, path: path))
+                    refs.insert(RepoPath(repo: (obj["fileRepo"] as? String) ?? ResourceRepos.defaultRepoKey, path: path))
                 }
                 obj.values.forEach(walk)
             } else if let array = value as? [Any] {

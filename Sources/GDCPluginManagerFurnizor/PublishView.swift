@@ -508,7 +508,7 @@ struct PublishView: View {
                 log("Fără fișiere noi — păstrez cele \(existingFiles.count) existente.")
             }
             let fileRefs = pluginFiles.map {
-                PublishTransaction.FileRef(repoKey: $0.repo ?? PrivateCatalogAuth.defaultRepoKey, path: $0.path, sha256: $0.sha256)
+                PublishTransaction.FileRef(repoKey: $0.repo ?? ResourceRepos.defaultRepoKey, path: $0.path, sha256: $0.sha256)
             }
 
             log("Verific și sincronizez toate repo-urile implicate (preflight)…")
@@ -640,8 +640,8 @@ struct PublishView: View {
             // D2b: catalogul întâi (confirmat pe server), apoi DOAR fișierele pe care nu le mai referă
             // nimic din catalog (alt produs, altă versiune, o resursă descărcabilă legată de ele).
             let folders = items.flatMap { item -> [PublishTransaction.FolderRef] in
-                let repos = Set(item.files.map { $0.repo ?? PrivateCatalogAuth.defaultRepoKey })
-                return (repos.isEmpty ? [PrivateCatalogAuth.defaultRepoKey] : Array(repos)).sorted()
+                let repos = Set(item.files.map { $0.repo ?? ResourceRepos.defaultRepoKey })
+                return (repos.isEmpty ? [ResourceRepos.defaultRepoKey] : Array(repos)).sorted()
                     .map { PublishTransaction.FolderRef(repoKey: $0, folder: "\(item.id)/") }
             }
             log("Verific și sincronizez toate repo-urile implicate (preflight)…")

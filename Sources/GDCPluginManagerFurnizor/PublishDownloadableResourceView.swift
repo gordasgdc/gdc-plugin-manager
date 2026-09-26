@@ -560,7 +560,7 @@ struct PublishDownloadableResourceView: View {
 
             // D2b: toate repo-urile implicate (catalog + fișierele referite) verificate înainte de prima scriere.
             let fileRefs = resourceFiles.map {
-                PublishTransaction.FileRef(repoKey: $0.repo ?? PrivateCatalogAuth.defaultRepoKey, path: $0.path, sha256: $0.sha256)
+                PublishTransaction.FileRef(repoKey: $0.repo ?? ResourceRepos.defaultRepoKey, path: $0.path, sha256: $0.sha256)
             }
             try PublishTransaction.preflight(repoKeys: fileRefs.map(\.repoKey))
 

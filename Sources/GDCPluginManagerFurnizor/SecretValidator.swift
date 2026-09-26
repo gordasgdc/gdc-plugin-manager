@@ -60,7 +60,7 @@ enum SecretValidator {
         var expiresAt: Date?
 
         for repo in repos {
-            var request = URLRequest(url: URL(string: "https://api.github.com/repos/\(PrivateCatalogAuth.ownerLogin)/\(repo)")!)
+            var request = URLRequest(url: URL(string: "https://api.github.com/repos/\(ResourceRepos.ownerLogin)/\(repo)")!)
             request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
             request.setValue("2022-11-28", forHTTPHeaderField: "X-GitHub-Api-Version")
 

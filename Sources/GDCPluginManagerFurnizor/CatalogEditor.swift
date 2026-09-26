@@ -104,9 +104,9 @@ enum CatalogEditor {
         // produsului din cauza ei ar insemna gunoi lasat pe server pentru
         // totdeauna. Conteaza perechea cale + repo.
         let product = (catalog.items + catalog.scriptItems).first { $0.id == id }
-        let productRepo = product?.files.first?.repo ?? PrivateCatalogAuth.defaultRepoKey
+        let productRepo = product?.files.first?.repo ?? ResourceRepos.defaultRepoKey
         func sameStorage(_ repo: String?) -> Bool {
-            (repo ?? PrivateCatalogAuth.defaultRepoKey) == productRepo
+            (repo ?? ResourceRepos.defaultRepoKey) == productRepo
         }
         return all.filter { r in
             if r.sourceProductID == id { return true }
