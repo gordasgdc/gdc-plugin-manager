@@ -7,6 +7,12 @@ struct GDCPluginManagerFurnizorApp: App {
     init() {
         // 1.52.5: înaintea oricărei operații (inclusiv modul fără fereastră): producția după staging
         // pornește cu scrierile blocate până la confirmarea explicită.
+        #if DEBUG
+        // `-FurnizorSessionFile <cale>`: fișier de sesiune izolat pentru verificări (nu atinge sesiunea reală).
+        if let path = UserDefaults.standard.string(forKey: "FurnizorSessionFile") {
+            FurnizorEnvironment.sessionFileOverride = URL(fileURLWithPath: path)
+        }
+        #endif
         FurnizorEnvironment.bootstrapSession()
         if CommandLine.arguments.contains("--publish-demo-inbox") {
             DemoPublisher.run()

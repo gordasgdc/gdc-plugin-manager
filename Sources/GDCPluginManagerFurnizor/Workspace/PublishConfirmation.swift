@@ -34,6 +34,10 @@ struct PublishConfirmationSheet: View {
     @State private var confirmed = false
     private var isProduction: Bool { FurnizorEnvironment.active == .production }
 
+    /// În PRODUCȚIE butonul cere bifa explicită; în STAGING nu. (Scrierea rămâne oricum refuzată de
+    /// `FurnizorEnvironment.assertRepoWritable` cât timp PRODUCȚIA nu e confirmată după o sesiune STAGING.)
+    static func canPublish(isProduction: Bool, confirmed: Bool) -> Bool { !isProduction || confirmed }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack(spacing: GDCTokens.Space.s) {
@@ -71,7 +75,7 @@ struct PublishConfirmationSheet: View {
                     Task { await action() }
                 }
                 .buttonStyle(GDCButtonStyle(role: .primary))
-                .disabled(isProduction && !confirmed)
+                .disabled(!Self.canPublish(isProduction: isProduction, confirmed: confirmed))
                 .keyboardShortcut(.defaultAction)
             }
             .padding(GDCTokens.Space.m)
