@@ -73,6 +73,7 @@
       "access" : {
         "group" : "gdc",
         "kind" : "trial",
+        "referencePriceEUR" : 124,
         "tags" : [
 
         ]
@@ -102,19 +103,18 @@
     {
       "access" : {
         "group" : "gdc",
-        "note" : "Donație · licență legată de Mac (Machine ID)",
-        "referencePriceEUR" : 23,
+        "kind" : "free",
         "tags" : [
-          "Developer"
+          "Utilitare",
+          "Securitate"
         ]
       },
-      "coverImage" : "covers/GDC STYLE Lab.png?v=4990453c",
-      "downloadURL" : "https://gordas.dev/gdc-style-lab/GDCStyleLab-1.36.1.dmg",
-      "id" : "gdc-lut-lab",
-      "name" : "GDC STYLE Lab",
-      "pricingProductID" : "gdc-lut-lab",
+      "coverImage" : "covers/GDC Firewall.png?v=09789091",
+      "downloadURL" : "https://gordas.dev/gdc-firewall/GDCFirewall-macOS.zip",
+      "id" : "gdc-firewall",
+      "name" : "GDC Firewall",
       "supportedOS" : "macOS",
-      "url" : "https://gordas.dev/gdc-style-lab/"
+      "url" : "https://gordas.dev/gdc-firewall/"
     },
     {
       "access" : {
@@ -150,22 +150,6 @@
     {
       "access" : {
         "group" : "gdc",
-        "kind" : "free",
-        "tags" : [
-          "Utilitare",
-          "Securitate"
-        ]
-      },
-      "coverImage" : "covers/GDC Firewall.png?v=09789091",
-      "downloadURL" : "https://gordas.dev/gdc-firewall/GDCFirewall-macOS.zip",
-      "id" : "gdc-firewall",
-      "name" : "GDC Firewall",
-      "supportedOS" : "macOS",
-      "url" : "https://gordas.dev/gdc-firewall/"
-    },
-    {
-      "access" : {
-        "group" : "gdc",
         "kind" : "trial",
         "tags" : [
 
@@ -176,6 +160,23 @@
       "supportedOS" : "crossPlatform",
       "url" : "https://gordas.dev/gdc-resolve-encoder/",
       "youtubeURL" : "https://www.youtube.com/@cristigordas"
+    },
+    {
+      "access" : {
+        "group" : "gdc",
+        "note" : "Donație · licență legată de Mac (Machine ID)",
+        "referencePriceEUR" : 23,
+        "tags" : [
+          "Developer"
+        ]
+      },
+      "coverImage" : "covers/GDC STYLE Lab.png?v=4990453c",
+      "downloadURL" : "https://gordas.dev/gdc-style-lab/GDCStyleLab-1.36.1.dmg",
+      "id" : "gdc-lut-lab",
+      "name" : "GDC STYLE Lab",
+      "pricingProductID" : "gdc-lut-lab",
+      "supportedOS" : "macOS",
+      "url" : "https://gordas.dev/gdc-style-lab/"
     },
     {
       "access" : {
@@ -1055,5 +1056,5 @@
       "youtubeURL" : "https://www.youtube.com/watch?v=dnkUIGXIzIM"
     }
   ],
-  "updatedAt" : "2026-09-25"
+  "updatedAt" : "2026-09-26"
 }
