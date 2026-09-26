@@ -58,6 +58,14 @@
 
       ]
     },
+    "gdc-resolve-encoder" : {
+      "basePrice" : 45,
+      "currency" : "EUR",
+      "name" : "GDC Resolve Encoder",
+      "promoSchedule" : [
+
+      ]
+    },
     "gdc-vault" : {
       "basePrice" : 18,
       "currency" : "EUR",
@@ -95,5 +103,5 @@
       ]
     }
   },
-  "updatedAt" : "2026-09-09"
+  "updatedAt" : "2026-09-26"
 }
