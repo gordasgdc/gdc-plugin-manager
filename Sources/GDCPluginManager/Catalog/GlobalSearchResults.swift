@@ -67,7 +67,7 @@ struct GlobalSearchResults: View {
                 VStack(alignment: .leading, spacing: 20) {
                     section(title: L.t("sidebar.all"), isEmpty: matchedItems.isEmpty) {
                         LazyVGrid(columns: productColumns, spacing: GDCTokens.Space.grid) {
-                            ForEach(matchedItems) { PluginCard(item: $0) }
+                            ForEach(matchedItems) { ProductCard(item: $0) }
                         }
                     }
                     section(title: L.t("sidebar.apps"), isEmpty: matchedApps.isEmpty) {

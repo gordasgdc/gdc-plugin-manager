@@ -40,7 +40,7 @@ struct CourseCard: View {
                 url: course.coverImageURL,
                 fallbackSymbol: "graduationcap.fill",
                 tint: .accentColor,
-                height: 150,
+                height: GDCTokens.Size.cardArtworkHeight,
                 lightboxTitle: course.name
             )
             HStack(alignment: .top, spacing: 6) {
@@ -81,9 +81,7 @@ struct CourseCard: View {
             }
             SocialLinksRow(course.socialLinks)
         }
-        .padding(GDCTokens.Space.m)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .glassCardBackground()
+        .contentCard(alignment: .leading)
     }
 
     private var accessTypeKey: String { "courses.access.\(course.accessType.rawValue)" }

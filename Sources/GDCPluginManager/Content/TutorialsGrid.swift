@@ -134,7 +134,6 @@ struct TutorialCard: View {
 
             CollapsibleDescription(text: tutorial.description)
         }
-        .padding(GDCTokens.Space.m)
-        .glassCardBackground()
+        .contentCard()
     }
 }

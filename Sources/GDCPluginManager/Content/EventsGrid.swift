@@ -90,8 +90,6 @@ struct EventCard: View {
             }
             SocialLinksRow(event.socialLinks)
         }
-        .padding(GDCTokens.Space.m)
-        .frame(maxWidth: .infinity, minHeight: 220, alignment: .leading)
-        .glassCardBackground()
+        .contentCard(minHeight: 220, alignment: .leading)
     }
 }

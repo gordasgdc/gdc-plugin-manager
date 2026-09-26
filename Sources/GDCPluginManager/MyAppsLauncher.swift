@@ -440,9 +440,7 @@ private struct MyAppCard: View {
                 Text(L.t("myApps.notInstalled")).font(.caption).foregroundStyle(.secondary)
             }
         }
-        .padding(GDCTokens.Space.m)
-        .frame(maxWidth: .infinity, minHeight: 100, alignment: .leading)
-        .glassCardBackground()
+        .contentCard(minHeight: 100, alignment: .leading)
         .opacity(status.isInstalled ? 1 : 0.55)
     }
 }
@@ -474,9 +472,7 @@ private struct CustomLauncherCard: View {
             Spacer(minLength: 0)
             Button(L.t("myApps.open")) { store.launchCustom(launcher) }
         }
-        .padding(GDCTokens.Space.m)
-        .frame(maxWidth: .infinity, minHeight: 100, alignment: .leading)
-        .glassCardBackground()
+        .contentCard(minHeight: 100, alignment: .leading)
     }
 
 }

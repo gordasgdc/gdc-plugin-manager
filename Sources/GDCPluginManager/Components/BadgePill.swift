@@ -2,17 +2,13 @@ import SwiftUI
 import AppKit
 import GDCPluginManagerCore
 
+/// Păstrat ca API pentru cardurile de conținut; desenat acum ca `StatusBadge` (prototip A+B),
+/// ca toate insignele din aplicație să arate la fel.
 struct BadgePill: View {
     let text: String
     let color: Color
 
     var body: some View {
-        Text(text.uppercased())
-            .font(.system(size: 10, weight: .bold, design: .rounded))
-            .foregroundStyle(.white)
-            .padding(.horizontal, GDCTokens.Space.s)
-            .padding(.vertical, 3)
-            .background(color)
-            .clipShape(Capsule())
+        StatusBadge(kind: .custom(text, color), onArtwork: true)
     }
 }

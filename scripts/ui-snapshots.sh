@@ -3,6 +3,7 @@
 # construiește un .app temporar în <out>/, semnat ad-hoc, și îl pornește cu setările date ca
 # argumente (domeniul NSArgumentDomain — preferințele reale ale utilizatorului nu se modifică).
 # Utilizare: scripts/ui-snapshots.sh <out-dir> [repo-dir]    (repo-dir implicit: acest repo)
+# Argumente suplimentare de pornire: EXTRA_ARGS="-GDCComponentGallery YES -GDCGalleryWidth 560" (galeria există doar în DEBUG).
 set -euo pipefail
 OUT="${1:?director de ieșire}"; REPO="${2:-$(cd "$(dirname "$0")/.." && pwd)}"
 mkdir -p "$OUT"; APP="$OUT/GDCPluginManager-preview.app"
@@ -23,7 +24,7 @@ let w = list.filter { ($0[kCGWindowOwnerName as String] as? String) == "GDC Plug
 print(w?[kCGWindowNumber as String] as? Int ?? 0)
 SW
 for lang in ro en es; do for theme in light dark; do
-  open -n "$APP" --args -gdcpm_lang "$lang" -GDCPluginManager.appTheme "$theme" -NSQuitAlwaysKeepsWindows NO
+  open -n "$APP" --args -gdcpm_lang "$lang" -GDCPluginManager.appTheme "$theme" -NSQuitAlwaysKeepsWindows NO ${EXTRA_ARGS:-}
   sleep 9
   wid=$(swift "$WID_SWIFT" 2>/dev/null || echo 0)
   if [ "$wid" != 0 ]; then screencapture -x -o -l"$wid" "$OUT/$lang-$theme.png" && echo "✓ $lang-$theme"; else echo "✗ $lang-$theme: fereastră negăsită"; fi

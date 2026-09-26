@@ -42,7 +42,7 @@ struct CatalogGrid: View {
                 } else {
                     LazyVGrid(columns: columns, spacing: GDCTokens.Space.grid) {
                         ForEach(filteredItems) { item in
-                            PluginCard(item: item)
+                            ProductCard(item: item)
                         }
                     }
                     .padding(GDCTokens.Space.l)

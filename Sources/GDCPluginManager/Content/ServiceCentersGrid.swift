@@ -78,8 +78,6 @@ struct ServiceCenterCard: View {
             }
             SocialLinksRow(center.socialLinks)
         }
-        .padding(GDCTokens.Space.m)
-        .frame(maxWidth: .infinity, minHeight: 170, alignment: .leading)
-        .glassCardBackground()
+        .contentCard(minHeight: 170, alignment: .leading)
     }
 }

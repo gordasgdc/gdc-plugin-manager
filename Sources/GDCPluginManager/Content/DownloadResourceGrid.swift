@@ -94,9 +94,7 @@ struct DownloadResourceCard: View {
             Spacer(minLength: 0)
             actionButton
         }
-        .padding(GDCTokens.Space.m)
-        .frame(maxWidth: .infinity, minHeight: 96, alignment: .leading)
-        .glassCardBackground()
+        .contentCard(minHeight: 96, alignment: .leading)
         .overlay(alignment: .topLeading) { infoButton }
     }
 

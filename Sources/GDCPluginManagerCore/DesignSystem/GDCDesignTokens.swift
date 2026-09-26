@@ -74,6 +74,26 @@ public enum GDCTokens {
         public static let error = Color.red
         public static let destructive = Color.red
         public static let info = Color.blue
+        /// Textul de pe accent. Închis în ambele teme: alb pe amberul Light dă ~3.3:1 (sub 4.5:1).
+        public static let onAccent = Color(nsColor: NSColor(srgbRed: 0.11, green: 0.07, blue: 0.02, alpha: 1))
+    }
+
+    /// Finisajul „lucios discret” (prototip A+B): reflex pe imagine + muchie de lumină.
+    /// Doar pe suprafețe care plutesc (carduri); niciodată pe tabele sau formulare.
+    public enum Finish {
+        private static func dynamic(dark: CGFloat, light: CGFloat) -> Color {
+            Color(nsColor: NSColor(name: nil) { a in
+                NSColor(white: 1, alpha: a.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua ? dark : light)
+            })
+        }
+        /// Începutul gradientului de reflex (sus), care se stinge la 42% din înălțime.
+        public static let glossTop = dynamic(dark: 0.09, light: 0.55)
+        /// Linia de lumină de pe muchia de sus a imaginii și a cardului.
+        public static let edge = dynamic(dark: 0.14, light: 0.70)
+        public static var gloss: LinearGradient {
+            LinearGradient(stops: [.init(color: glossTop, location: 0), .init(color: .clear, location: 0.42)],
+                           startPoint: .top, endPoint: .bottom)
+        }
     }
 
     /// Ierarhia suprafețelor: opac < translucid < material < ridicat.
@@ -118,7 +138,11 @@ public enum GDCTokens {
     public enum Size {
         public static let minHitTarget: CGFloat = 28
         public static let cardMinWidth: CGFloat = 260
-        public static let cardArtworkHeight: CGFloat = 140
+        /// Imaginea cardului de produs (prototip A+B aprobat 2026-09-26).
+        public static let cardArtworkHeight: CGFloat = 156
+        /// Înălțimea fixă a cardului de produs (butonul cade pe aceeași linie în grilă).
+        public static let productCardHeight: CGFloat = 372
+        public static let badgeHeight: CGFloat = 20
         public static let sidebarMinWidth: CGFloat = 220
         public static let iconS: CGFloat = 14
         public static let iconM: CGFloat = 20

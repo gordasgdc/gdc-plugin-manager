@@ -19,4 +19,19 @@ final class ProductActionStateTests: XCTestCase {
         // Ca înainte: orice diferență (și o versiune locală mai nouă) = actualizare disponibilă.
         XCTAssertEqual(d(i: "2.0", v: "1.0"), .updateAvailable(installed: "2.0", latest: "1.0"))
     }
+
+    func testFailedAndOffline() {
+        let f = { (i: String?, failed: Bool, offline: Bool) in
+            ProductActionState.derive(isCompatible: true, isUnlocked: true, isBusy: false, installedVersion: i,
+                                      catalogVersion: "1.0", lastInstallFailed: failed, isOffline: offline)
+        }
+        XCTAssertEqual(f(nil, true, false), .failed(isUpdate: false))
+        XCTAssertEqual(f("0.9", true, false), .failed(isUpdate: true))
+        // Eroare la „Elimină” pe un produs la zi: rămâne instalat (mesajul apare separat).
+        XCTAssertEqual(f("1.0", true, false), .installed(version: "1.0"))
+        XCTAssertEqual(f(nil, false, true), .offline)
+        XCTAssertEqual(f("1.0", false, true), .installed(version: "1.0"))
+        XCTAssertEqual(ProductActionState.derive(isCompatible: true, isUnlocked: true, isBusy: true, installedVersion: nil,
+                                                 catalogVersion: "1.0", lastInstallFailed: true, isOffline: true), .installing)
+    }
 }

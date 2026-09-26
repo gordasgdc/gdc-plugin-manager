@@ -61,9 +61,7 @@ struct AudioCard: View {
                 Button(L.t("audio.open")) { NSWorkspace.shared.open(url) }
             }
         }
-        .padding(GDCTokens.Space.m)
-        .frame(maxWidth: .infinity, minHeight: 96, alignment: .leading)
-        .glassCardBackground()
+        .contentCard(minHeight: 96, alignment: .leading)
         .overlay(alignment: .topTrailing) { infoButton }
     }
 

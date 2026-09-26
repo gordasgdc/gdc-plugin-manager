@@ -37,7 +37,7 @@ struct CoverThumbnail: View {
 
     var body: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: GDCTokens.Radius.control)
+            RoundedRectangle(cornerRadius: GDCTokens.Radius.inset)
                 .fill(tint.opacity(0.10))
 
             if let url {
@@ -68,7 +68,10 @@ struct CoverThumbnail: View {
         }
         .frame(height: height)
         .frame(maxWidth: .infinity)
-        .clipShape(RoundedRectangle(cornerRadius: GDCTokens.Radius.control))
+        // Finisajul lucios discret (prototip A+B): reflex sus + linie de lumină pe muchie.
+        .overlay { GDCTokens.Finish.gloss.allowsHitTesting(false) }
+        .overlay(alignment: .top) { GDCTokens.Finish.edge.frame(height: GDCTokens.Border.hairline).allowsHitTesting(false) }
+        .clipShape(RoundedRectangle(cornerRadius: GDCTokens.Radius.inset))
         .contentShape(Rectangle())
         .onTapGesture {
             guard didLoad, url != nil else { return }
@@ -89,7 +92,7 @@ struct CoverThumbnail: View {
 
     private var fallbackIcon: some View {
         Image(systemName: fallbackSymbol)
-            .font(.system(size: 30))
+            .font(.system(size: GDCTokens.Size.iconL))
             .foregroundStyle(tint)
     }
 }

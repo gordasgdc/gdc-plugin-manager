@@ -78,7 +78,7 @@ struct BundleCard: View {
                 url: bundle.coverImageURL,
                 fallbackSymbol: "shippingbox.fill",
                 tint: .purple,
-                height: 130,
+                height: GDCTokens.Size.cardArtworkHeight,
                 lightboxTitle: bundle.name
             )
             Text(bundle.name).font(.headline)
@@ -107,9 +107,7 @@ struct BundleCard: View {
             ExtraLinksRow(purchaseURL: nil, demoURL: nil, social: bundle.socialLinks)
             Button(L.t("bundles.buy")) { NSWorkspace.shared.open(buyURL) }
         }
-        .padding(GDCTokens.Space.m)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .glassCardBackground()
+        .contentCard(alignment: .leading)
         .overlay(alignment: .topTrailing) {
             if let urlString = bundle.youtubeURL, let url = URL(string: urlString) {
                 Button { NSWorkspace.shared.open(url) } label: {

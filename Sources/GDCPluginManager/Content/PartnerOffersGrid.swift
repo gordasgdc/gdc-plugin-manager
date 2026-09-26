@@ -38,7 +38,7 @@ struct PartnerOfferCard: View {
                     url: offer.coverImageURL,
                     fallbackSymbol: "tag.fill",
                     tint: .red,
-                    height: 150,
+                    height: GDCTokens.Size.cardArtworkHeight,
                     lightboxTitle: offer.brandName
                 )
                 // Badge de discount, generat automat din `discountText` —
@@ -66,9 +66,7 @@ struct PartnerOfferCard: View {
                 Button(L.t("partnerOffers.open")) { NSWorkspace.shared.open(url) }
             }
         }
-        .padding(GDCTokens.Space.m)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .glassCardBackground()
+        .contentCard(alignment: .leading)
         .overlay(alignment: .topLeading) {
             if let urlString = offer.youtubeURL, let url = URL(string: urlString) {
                 Button { NSWorkspace.shared.open(url) } label: {

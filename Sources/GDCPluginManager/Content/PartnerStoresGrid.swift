@@ -40,7 +40,7 @@ struct PartnerStoreCard: View {
                 url: store.coverImageURL,
                 fallbackSymbol: "storefront.fill",
                 tint: .accentColor,
-                height: 130,
+                height: GDCTokens.Size.cardArtworkHeight,
                 lightboxTitle: store.name
             )
             Text(store.name).font(.headline)
@@ -63,9 +63,7 @@ struct PartnerStoreCard: View {
             }
             SocialLinksRow(store.socialLinks)
         }
-        .padding(GDCTokens.Space.m)
-        .frame(maxWidth: .infinity, minHeight: 180, alignment: .leading)
-        .glassCardBackground()
+        .contentCard(minHeight: 180, alignment: .leading)
     }
 }
 

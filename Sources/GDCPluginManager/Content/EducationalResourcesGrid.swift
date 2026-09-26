@@ -40,7 +40,7 @@ struct EducationalResourceCard: View {
                 url: resource.coverImageURL,
                 fallbackSymbol: "book.fill",
                 tint: .accentColor,
-                height: 170,
+                height: GDCTokens.Size.cardArtworkHeight,
                 lightboxTitle: resource.name
             )
             HStack {
@@ -67,8 +67,6 @@ struct EducationalResourceCard: View {
             }
             SocialLinksRow(resource.socialLinks)
         }
-        .padding(GDCTokens.Space.m)
-        .frame(maxWidth: .infinity, minHeight: 200, alignment: .leading)
-        .glassCardBackground()
+        .contentCard(minHeight: 200, alignment: .leading)
     }
 }

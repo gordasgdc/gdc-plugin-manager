@@ -14,16 +14,24 @@ public enum ProductActionState: Equatable, Sendable {
     case updateAvailable(installed: String, latest: String)
     case installed(version: String)
     case notInstalled
+    /// Ultima instalare/actualizare a eșuat; acțiunea principală o reia (aceeași operație).
+    case failed(isUpdate: Bool)
+    /// Neinstalat, iar catalogul afișat e cel din cache (rețea indisponibilă). Informativ:
+    /// acțiunea rămâne activă, exact ca înainte.
+    case offline
 
     public static func derive(isCompatible: Bool,
                               isUnlocked: Bool,
                               isBusy: Bool,
                               installedVersion: String?,
-                              catalogVersion: String) -> ProductActionState {
+                              catalogVersion: String,
+                              lastInstallFailed: Bool = false,
+                              isOffline: Bool = false) -> ProductActionState {
         if !isCompatible { return .incompatible }
         if !isUnlocked { return .licenseRequired }
         if isBusy { return .installing }
-        guard let installedVersion else { return .notInstalled }
+        if lastInstallFailed && installedVersion != catalogVersion { return .failed(isUpdate: installedVersion != nil) }
+        guard let installedVersion else { return isOffline ? .offline : .notInstalled }
         if installedVersion != catalogVersion {
             return .updateAvailable(installed: installedVersion, latest: catalogVersion)
         }

@@ -132,9 +132,7 @@ struct AppCard: View {
             }
             SocialLinksRow(app.socialLinks)
         }
-        .padding(GDCTokens.Space.m)
-        .frame(maxWidth: .infinity, minHeight: 96, alignment: .leading)
-        .glassCardBackground()
+        .contentCard(minHeight: 96, alignment: .leading)
         .overlay(alignment: .topTrailing) { infoButton }
     }
 

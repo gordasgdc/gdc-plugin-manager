@@ -87,10 +87,18 @@ extension Notification.Name {
 private struct ScaledContentView: View {
     @ObservedObject private var textScale = TextScaleManager.shared
 
+    @ViewBuilder private var root: some View {
+        #if DEBUG
+        if UserDefaults.standard.bool(forKey: "GDCComponentGallery") { ComponentGallery() } else { ContentView() }
+        #else
+        ContentView()
+        #endif
+    }
+
     var body: some View {
         GeometryReader { geo in
             let scale = textScale.current.scaleFactor
-            ContentView()
+            root
                 .frame(width: geo.size.width / scale, height: geo.size.height / scale)
                 .scaleEffect(scale)
                 .position(x: geo.size.width / 2, y: geo.size.height / 2)

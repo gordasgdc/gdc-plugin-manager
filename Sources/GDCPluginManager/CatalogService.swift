@@ -40,6 +40,9 @@ final class CatalogService: ObservableObject {
     @Published private(set) var communityChannels: [CommunityChannel] = []
     @Published private(set) var isLoading = false
     @Published private(set) var loadError: String?
+    /// Ultima reîmprospătare a eșuat din cauza rețelei, iar pe ecran e catalogul din cache.
+    /// Doar informativ (starea OFFLINE a cardului); nu blochează nicio acțiune.
+    @Published private(set) var isShowingCachedCatalog = false
 
     private var cacheFileURL: URL {
         FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
@@ -88,6 +91,7 @@ final class CatalogService: ObservableObject {
                 tutorials = catalog.tutorials
                 communityChannels = catalog.communityChannels
                 saveToCache(data: data)
+                isShowingCachedCatalog = false
             } catch {
                 throw CatalogFetchError.decodeFailed
             }
@@ -98,7 +102,12 @@ final class CatalogService: ObservableObject {
             // internet" — a decode failure (old app version, catalog
             // grew a type it doesn't know) or a bad server response need
             // a different fix than an actual network outage.
-            guard items.isEmpty else { return }
+            guard items.isEmpty else {
+                if case CatalogFetchError.decodeFailed = error { return }
+                if case CatalogFetchError.badStatus = error { return }
+                isShowingCachedCatalog = true
+                return
+            }
             switch error {
             case CatalogFetchError.decodeFailed:
                 loadError = L.t("catalog.error.parse")
