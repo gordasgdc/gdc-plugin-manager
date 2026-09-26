@@ -142,3 +142,10 @@ final class CatalogService: ObservableObject {
         try? data.write(to: cacheFileURL)
     }
 }
+
+extension CatalogService {
+    /// Toate produsele instalabile, indiferent în ce cheie de catalog stau.
+    /// Scripturile au cheia lor (`scriptItems`) din motive de retrocompatibilitate,
+    /// dar pentru UI sunt produse ca oricare altele.
+    var allInstallableItems: [PluginItem] { items + scriptItems }
+}
