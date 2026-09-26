@@ -1,7 +1,7 @@
 {
-  "version": "2.16.2",
+  "version": "2.16.3",
   "release_date": "2026-09-26",
-  "changes": "Rapoarte de livrare PDF și HTML noi, cu verdict clar pentru fiecare destinație, în română, engleză sau spaniolă; aceleași informații pe macOS și Windows.",
+  "changes": "Ghid de utilizare actualizat pentru interfața actuală (română, engleză, spaniolă); pe Windows, dezinstalarea nu mai lasă foldere goale.",
   "download_url": {
     "windows": "https://github.com/gordasgdc/datamover/releases/latest/download/DataMover-Windows.zip",
     "mac": "https://github.com/gordasgdc/datamover/releases/latest/download/DataMover.pkg",
