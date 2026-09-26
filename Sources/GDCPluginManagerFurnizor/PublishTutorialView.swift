@@ -48,9 +48,14 @@ struct PublishTutorialView: View {
     /// Selecția din tabelul spațiului de lucru (Faza 5). `nil` = formular gol („+ Nou”).
     /// Editorul rămâne cel existent: aceleași câmpuri, aceeași publicare.
     @Binding var workspaceSelection: String?
+    /// În spațiul de lucru lista proprie a editorului se ascunde (dublură cu tabelul);
+    /// ștergerea intrării selectate rămâne aici, cu aceeași confirmare.
+    private let embedded: Bool
+    @Environment(\.publishGate) private var publishGate
 
-    init(workspaceSelection: Binding<String?> = .constant(nil)) {
-        _workspaceSelection = workspaceSelection
+    init(workspaceSelection: Binding<String?>? = nil) {
+        _workspaceSelection = workspaceSelection ?? .constant(nil)
+        embedded = workspaceSelection != nil
     }
 
     var body: some View {
@@ -217,7 +222,7 @@ struct PublishTutorialView: View {
 
                 HStack {
                     if isBusy { ProgressView().controlSize(.small) }
-                    Button(editingID == nil ? "Publică" : "Actualizează") { Task { await publish() } }
+                    Button(editingID == nil ? "Publică" : "Actualizează") { publishGate.request(title) { await publish() } }
                         .disabled(isBusy || !isFormValid)
                     if editingID != nil {
                         Button("Tutorial nou") { clearForm() }
@@ -227,7 +232,13 @@ struct PublishTutorialView: View {
                     Text("Lipsește: link YouTube valid și titlu.").font(.caption).foregroundStyle(GDCTokens.Palette.warning)
                 }
 
-                if !existingTutorials.isEmpty {
+                if embedded, let selectedID = editingID, let entry = existingTutorials.first(where: { $0.id == selectedID }) {
+
+                    Button("Șterge…", role: .destructive) { pendingDelete = entry }
+
+                }
+
+                if !embedded && !existingTutorials.isEmpty {
                     Divider()
                     Text("Tutoriale publicate").font(.headline)
                     ForEach(existingTutorials) { tutorial in

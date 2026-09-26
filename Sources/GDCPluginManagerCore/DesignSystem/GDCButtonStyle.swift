@@ -1,14 +1,18 @@
 import SwiftUI
-import GDCPluginManagerCore
 
 /// Butoanele GDC (DESIGN_SYSTEM.md, componenta 2). Accentul amber doar pe `.primary`.
 /// Stări: hover, apăsat, dezactivat; ținta minimă `Size.minHitTarget`; animații oprite la Reduce Motion.
-struct GDCButtonStyle: ButtonStyle {
-    enum Role { case primary, secondary, destructive, plain }
-    var role: Role = .secondary
-    var fullWidth = false
+public struct GDCButtonStyle: ButtonStyle {
+    public enum Role: Sendable { case primary, secondary, destructive, plain }
+    public var role: Role = .secondary
+    public var fullWidth = false
 
-    func makeBody(configuration: Configuration) -> some View {
+    public init(role: Role = .secondary, fullWidth: Bool = false) {
+        self.role = role
+        self.fullWidth = fullWidth
+    }
+
+    public func makeBody(configuration: Configuration) -> some View {
         StyledBody(configuration: configuration, role: role, fullWidth: fullWidth)
     }
 
@@ -76,7 +80,7 @@ struct GDCButtonStyle: ButtonStyle {
     }
 }
 
-extension ButtonStyle where Self == GDCButtonStyle {
+public extension ButtonStyle where Self == GDCButtonStyle {
     static var gdcPrimary: GDCButtonStyle { GDCButtonStyle(role: .primary) }
     static var gdcSecondary: GDCButtonStyle { GDCButtonStyle(role: .secondary) }
     static var gdcDestructive: GDCButtonStyle { GDCButtonStyle(role: .destructive) }

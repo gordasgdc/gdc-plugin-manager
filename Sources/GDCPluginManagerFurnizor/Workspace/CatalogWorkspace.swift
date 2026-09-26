@@ -99,6 +99,7 @@ struct CatalogWorkspace: View {
     @State private var search = ""
     @State private var showEditor = true
     @State private var loadError: String?
+    @State private var pendingPublish: PendingPublish?
 
     private var filtered: [CatalogRow] {
         let q = search.trimmingCharacters(in: .whitespaces).lowercased()
@@ -155,7 +156,11 @@ struct CatalogWorkspace: View {
         }
         .inspector(isPresented: $showEditor) {
             editor
+                .environment(\.publishGate, PublishGate { title, action in pendingPublish = PendingPublish(title: title, action: action) })
                 .inspectorColumnWidth(min: 420, ideal: 500, max: 820)
+        }
+        .sheet(item: $pendingPublish) { pending in
+            PublishConfirmationSheet(pending: pending) { pendingPublish = nil }
         }
         .onChange(of: selection) { _, id in if id != nil { showEditor = true } }
         .onAppear {
@@ -193,6 +198,8 @@ struct CatalogWorkspace: View {
         do {
             rows = CatalogRow.rows(for: type, in: try CatalogEditor.load())
             loadError = nil
+            // Intrarea selectată a fost ștearsă → formular gol, nu o selecție fantomă.
+            if let id = selection, !rows.contains(where: { $0.id == id }) { selection = nil }
         } catch {
             loadError = "Catalogul local nu a putut fi citit: \(error.localizedDescription)"
             DiagnosticLog.write("workspace", "catalog load failed: \(error)")

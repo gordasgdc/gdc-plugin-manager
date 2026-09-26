@@ -34,9 +34,15 @@ struct PublishCommunityChannelView: View {
     /// Selecția din tabelul spațiului de lucru (Faza 5). `nil` = formular gol („+ Nou”).
     /// Editorul rămâne cel existent: aceleași câmpuri, aceeași publicare.
     @Binding var workspaceSelection: String?
+    /// În spațiul de lucru lista proprie a editorului se ascunde (dublură cu tabelul);
+    /// ștergerea intrării selectate rămâne aici, cu aceeași confirmare.
+    private let embedded: Bool
+    @Environment(\.publishGate) private var publishGate
+    @State private var pendingRemoval: CommunityChannel?
 
-    init(workspaceSelection: Binding<String?> = .constant(nil)) {
-        _workspaceSelection = workspaceSelection
+    init(workspaceSelection: Binding<String?>? = nil) {
+        _workspaceSelection = workspaceSelection ?? .constant(nil)
+        embedded = workspaceSelection != nil
     }
 
     var body: some View {
@@ -53,7 +59,16 @@ struct PublishCommunityChannelView: View {
     private var editorBody: some View {
         HSplitView {
             form.frame(minWidth: 420)
-            list.frame(minWidth: 280)
+            if !embedded { list.frame(minWidth: 280) }
+        }
+        .confirmationDialog("Ștergi canalul „\(pendingRemoval?.title ?? "")”?",
+                            isPresented: Binding(get: { pendingRemoval != nil }, set: { if !$0 { pendingRemoval = nil } }),
+                            titleVisibility: .visible) {
+            Button("Șterge", role: .destructive) {
+                if let channel = pendingRemoval { Task { await remove(channel) } }
+                pendingRemoval = nil
+            }
+            Button("Anulează", role: .cancel) { pendingRemoval = nil }
         }
         .task { load() }
     }
@@ -127,8 +142,11 @@ struct PublishCommunityChannelView: View {
                 }
 
                 HStack {
+                    if embedded, let id = editingID, let channel = channels.first(where: { $0.id == id }) {
+                        Button("Șterge…", role: .destructive) { pendingRemoval = channel }
+                    }
                     Button(editingID == nil ? "Publică" : "Salvează") {
-                        Task { await publish() }
+                        publishGate.request(title) { await publish() }
                     }
                     .buttonStyle(.borderedProminent)
                     .disabled(!canPublish || isPublishing)

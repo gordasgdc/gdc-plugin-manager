@@ -37,9 +37,14 @@ struct PublishEducationalResourceView: View {
     /// Selecția din tabelul spațiului de lucru (Faza 5). `nil` = formular gol („+ Nou”).
     /// Editorul rămâne cel existent: aceleași câmpuri, aceeași publicare.
     @Binding var workspaceSelection: String?
+    /// În spațiul de lucru lista proprie a editorului se ascunde (dublură cu tabelul);
+    /// ștergerea intrării selectate rămâne aici, cu aceeași confirmare.
+    private let embedded: Bool
+    @Environment(\.publishGate) private var publishGate
 
-    init(workspaceSelection: Binding<String?> = .constant(nil)) {
-        _workspaceSelection = workspaceSelection
+    init(workspaceSelection: Binding<String?>? = nil) {
+        _workspaceSelection = workspaceSelection ?? .constant(nil)
+        embedded = workspaceSelection != nil
     }
 
     var body: some View {
@@ -113,7 +118,7 @@ struct PublishEducationalResourceView: View {
 
                 HStack {
                     if isBusy { ProgressView().controlSize(.small) }
-                    Button(editingID == nil ? "Publică" : "Actualizează") { Task { await publish() } }
+                    Button(editingID == nil ? "Publică" : "Actualizează") { publishGate.request(name) { await publish() } }
                         .disabled(isBusy || !isFormValid)
                     if editingID != nil {
                         Button("Material nou") { clearForm() }
@@ -123,7 +128,13 @@ struct PublishEducationalResourceView: View {
                     Text(validationHint).font(.caption).foregroundStyle(GDCTokens.Palette.warning)
                 }
 
-                if !existingResources.isEmpty {
+                if embedded, let selectedID = editingID, let entry = existingResources.first(where: { $0.id == selectedID }) {
+
+                    Button("Șterge…", role: .destructive) { pendingDelete = entry }
+
+                }
+
+                if !embedded && !existingResources.isEmpty {
                     Divider()
                     Text("Materiale publicate").font(.headline)
                     ForEach(existingResources) { resource in

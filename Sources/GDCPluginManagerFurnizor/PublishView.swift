@@ -78,9 +78,14 @@ struct PublishView: View {
     /// Selecția din tabelul spațiului de lucru (Faza 5). `nil` = formular gol („+ Nou”).
     /// Editorul rămâne cel existent: aceleași câmpuri, aceeași publicare.
     @Binding var workspaceSelection: String?
+    /// În spațiul de lucru lista proprie a editorului se ascunde (dublură cu tabelul);
+    /// ștergerea intrării selectate rămâne aici, cu aceeași confirmare.
+    private let embedded: Bool
+    @Environment(\.publishGate) private var publishGate
 
-    init(workspaceSelection: Binding<String?> = .constant(nil)) {
-        _workspaceSelection = workspaceSelection
+    init(workspaceSelection: Binding<String?>? = nil) {
+        _workspaceSelection = workspaceSelection ?? .constant(nil)
+        embedded = workspaceSelection != nil
     }
 
     var body: some View {
@@ -90,7 +95,9 @@ struct PublishView: View {
     }
 
     private func applyWorkspaceSelection(_ id: String?) {
-        guard let id else { isUpdate = false; return }
+        // Selectorul „Produs nou / Actualizare” (cu onChange-urile lui) e ascuns în spațiul de lucru,
+        // deci efectele lui se aplică explicit aici.
+        guard let id else { isUpdate = false; clearForm(); return }
         loadExistingIfNeeded()
         skipClear = true
         isUpdate = true
@@ -120,6 +127,7 @@ struct PublishView: View {
                     .help("Pachete OFX validate și trimise de GDC STYLE Lab: completează singure ID-ul, numele, versiunea și fișierele")
                 }
 
+                if !embedded {
                 Picker("", selection: $isUpdate) {
                     Text("Produs nou").tag(false)
                     Text("Actualizare versiune existentă").tag(true)
@@ -132,7 +140,9 @@ struct PublishView: View {
                     skipClear = false
                 }
 
+                }
                 if isUpdate {
+                    if !embedded {
                     Picker("Produs existent", selection: $id) {
                         Text("Alege…").tag("")
                         ForEach(existingItems) { item in
@@ -140,6 +150,7 @@ struct PublishView: View {
                         }
                     }
                     .onChange(of: id) { fillFromExisting() }
+                    }
 
                     if !id.trimmingCharacters(in: .whitespaces).isEmpty {
                         Button("Șterge acest produs definitiv", role: .destructive) {
@@ -295,7 +306,7 @@ struct PublishView: View {
 
                 HStack {
                     if isBusy { ProgressView().controlSize(.small) }
-                    Button("Publică") { Task { await publish() } }
+                    Button("Publică") { publishGate.request(name) { await publish() } }
                         .disabled(isBusy || !isFormValid)
                 }
                 if !isFormValid && !isBusy {
