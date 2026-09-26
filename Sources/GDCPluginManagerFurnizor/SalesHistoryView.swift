@@ -20,6 +20,7 @@ struct SalesHistoryView: View {
     @State private var justCopiedSerial: String?
     @State private var justCopiedField: String?
     @State private var editingEntry: SalesLog.Entry?
+    @State private var reissuingEntry: SalesLog.Entry?
     @State private var showDuplicates = false
     @State private var showBulkImport = false
     @State private var selectedProductFilter: String = "Toate"
@@ -187,6 +188,12 @@ struct SalesHistoryView: View {
                                 editingEntry = entry
                             }
                             .controlSize(.small)
+                            if entry.productID == LicenseIdentity.dataMoverCanonicalID,
+                               LicenseIdentity.dataMoverGeneration(ofSerial: entry.serial) == .legacyV1 {
+                                Button("Reemite v2…") { reissuingEntry = entry }
+                                    .controlSize(.small)
+                                    .help("Licență DataMover LEGACY: emite un cod generația 2 pentru același calculator")
+                            }
                             Button("Șterge", role: .destructive) {
                                 pendingDelete = entry
                             }
@@ -249,6 +256,12 @@ struct SalesHistoryView: View {
                 ClientDetailView(profile: profile, onClose: { selectedProfile = nil }, embedded: true)
                     .id(profile.id)
                     .inspectorColumnWidth(min: 400, ideal: 560, max: 820)
+            }
+        }
+        .sheet(item: $reissuingEntry) { entry in
+            ReissueDataMoverView(entry: entry) {
+                reissuingEntry = nil
+                loadEntries()
             }
         }
         .sheet(item: $editingEntry) { entry in

@@ -42,6 +42,14 @@ enum LicenseGenerator {
               let privateKey = try? Curve25519.Signing.PrivateKey(rawRepresentation: keyData) else {
             throw GenerationError.invalidPrivateKey
         }
+        return try sign(privateKey: privateKey, productID: productID, expiresAt: expiresAt,
+                        machineIDBase32: machineIDBase32, platform: platform)
+    }
+
+    /// Semnarea propriu-zisă, fără garda de mediu — testabilă cu o cheie de test.
+    /// `productID` este ID-ul de SEMNARE (vezi LicenseIdentity.signingProductID).
+    static func sign(privateKey: Curve25519.Signing.PrivateKey, productID: String, expiresAt: Int64 = 0,
+                     machineIDBase32: String? = nil, platform: LicenseCore.LicensePlatform = .any) throws -> String {
 
         let productHash = LicenseCore.productHash(for: productID)
 

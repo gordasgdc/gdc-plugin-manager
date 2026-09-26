@@ -28,7 +28,9 @@ struct StandaloneProduct: Identifiable, Hashable {
 }
 
 let gdcStandaloneProducts: [StandaloneProduct] = [
-    StandaloneProduct(id: "gdc-datamover", name: "DataMover"),
+    // 2026-09-27: DataMover semnează cu ID-ul generația 2 (vezi LicenseIdentity). Emiterea
+    // de coduri DataMover LEGACY (semnate cu „gdc-datamover”) nu mai e posibilă din Furnizor.
+    StandaloneProduct(id: "gdc-datamover", name: "DataMover · licență v2"),
     StandaloneProduct(id: "cursorpro", name: "CursorPro GDC"),
     StandaloneProduct(id: "gdc-production-manager", name: "GDC Production Manager"),
     StandaloneProduct(id: "gdc-resolve-encoder", name: "GDC Resolve Encoder"),
@@ -324,6 +326,11 @@ struct GenerateSerialView: View {
     private func toggle(_ id: String) -> Binding<Bool> {
         Binding(get: { selectedIDs.contains(id) }, set: { on in
             if on { selectedIDs.insert(id) } else { selectedIDs.remove(id) }
+            if on, id == LicenseIdentity.dataMoverCanonicalID {
+                // Recomandare pentru testeri: licență cu expirare, nu pe viață.
+                durationUnit = .days
+                durationValue = "30"
+            }
             if selectedIDs.count == 1, let only = selectedIDs.first {
                 if let item = items.first(where: { $0.id == only }) { priceText = String(item.priceEUR) }
                 else if let r = downloadResources.first(where: { $0.id == only }) { priceText = String(r.priceEUR) }
@@ -383,6 +390,10 @@ struct GenerateSerialView: View {
     private func addCustomID() {
         let id = customProductID.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !id.isEmpty else { return }
+        guard !LicenseIdentity.isReservedCustomID(id) else {
+            errorMessage = "„\(id)” e rezervat: bifează DataMover din listă (semnare generația 2 automată)."
+            return
+        }
         rememberCustomID(id)
         selectedIDs.insert(id)
         customProductID = ""
@@ -465,14 +476,20 @@ struct GenerateSerialView: View {
         let trimmedMachineID = machineID.trimmingCharacters(in: .whitespacesAndNewlines)
         let customer = customerName.trimmingCharacters(in: .whitespaces)
         let known = Set(items.map(\.id) + downloadResources.map(\.id) + gdcStandaloneProducts.map(\.id))
+        if trimmedMachineID.isEmpty, let needs = selectedIDs.first(where: LicenseIdentity.requiresMachineID) {
+            errorMessage = "\(name(of: needs)) cere ID-ul calculatorului (licențele generația 2 sunt legate de un calculator)."
+            return
+        }
         do {
             let key = try VendorKeyStore.loadPrivateKeyBase64()
             // Un serial per produs bifat, același client / ID de mașină / durată; fiecare intră în SalesLog.
             for productID in selectedIDs.sorted(by: { name(of: $0) > name(of: $1) }) {
+                // Registrul și catalogul păstrează ID-ul comercial; semnarea folosește ID-ul criptografic.
+                let isDataMover = productID == LicenseIdentity.dataMoverCanonicalID
                 let code = try LicenseGenerator.generate(
-                    privateKeyBase64: key, productID: productID, expiresAt: expiresAt,
+                    privateKeyBase64: key, productID: LicenseIdentity.signingProductID(for: productID), expiresAt: expiresAt,
                     machineIDBase32: trimmedMachineID.isEmpty ? nil : trimmedMachineID,
-                    platform: licensePlatform
+                    platform: isDataMover ? .any : licensePlatform   // DataMover citește doar payload-ul de 22 de octeți
                 )
                 try? SalesLog.append(
                     productID: productID, productName: name(of: productID), customer: customer,

@@ -21,6 +21,8 @@ enum LicenseAction: String, Codable {
     case blocked = "Blocată"
     case unblocked = "Deblocată"
     case extended = "Prelungită"
+    /// 2026-09-27: cod DataMover generația 2 emis în locul unei licențe legacy (istoricul rămâne).
+    case reissued = "Reemisă (v2)"
 }
 
 struct LicenseActionRecord: Codable, Identifiable {
