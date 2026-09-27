@@ -34,6 +34,7 @@ final class LicenseIdentityTests: XCTestCase {
     func testLegacyDetectionInRegistry() throws {
         let legacy = try LicenseGenerator.sign(privateKey: key, productID: "gdc-datamover", machineIDBase32: machine)
         XCTAssertEqual(LicenseIdentity.dataMoverGeneration(ofSerial: legacy), .legacyV1)
+        XCTAssertEqual(LicenseIdentity.dataMoverGeneration(ofSerial: legacy + "\r"), .legacyV1, "rânduri CRLF din registru")
         let other = try LicenseGenerator.sign(privateKey: key, productID: "cursorpro", machineIDBase32: machine)
         XCTAssertEqual(LicenseIdentity.dataMoverGeneration(ofSerial: other), .unknown)
         XCTAssertEqual(LicenseIdentity.dataMoverGeneration(ofSerial: "nu-e-un-cod"), .unknown)

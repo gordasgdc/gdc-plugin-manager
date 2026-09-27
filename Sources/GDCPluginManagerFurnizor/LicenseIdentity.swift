@@ -28,7 +28,9 @@ enum LicenseIdentity {
     /// Generația unui serial DataMover din registru, după hash-ul de produs din payload
     /// (fără verificarea semnăturii și fără a afișa serialul).
     static func dataMoverGeneration(ofSerial serial: String) -> Generation {
-        guard let packed = LicenseCore.base32Decode(serial), packed.count >= 4 else { return .unknown }
+        // Rândurile vechi importate pot avea terminații CRLF: „\r” rămâne în ultimul câmp (serialul).
+        let cleaned = serial.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard let packed = LicenseCore.base32Decode(cleaned), packed.count >= 4 else { return .unknown }
         let hash = Array(packed.prefix(4))
         if hash == LicenseCore.productHash(for: dataMoverSigningIDv2) { return .v2 }
         if hash == LicenseCore.productHash(for: dataMoverCanonicalID) { return .legacyV1 }
