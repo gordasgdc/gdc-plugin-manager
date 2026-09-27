@@ -1,11 +1,11 @@
 {
-  "version": "2.3.5",
-  "app_version": "2.3.5",
+  "version": "2.4.0",
+  "app_version": "2.4.0",
   "engine_version_required": "4.5.1",
-  "changes": "Versiunea 2.3.5 îmbunătățește protecția în timpul actualizării filtrului și remediază situațiile în care aplicațiile noi puteau rămâne blocate fără alertă. Înlocuirea filtrului folosește mecanismul oficial macOS, compatibil cu SIP activat. În anumite situații, este necesară repornirea Mac-ului pentru finalizarea actualizării.",
+  "changes": "Versiunea 2.4.0 aduce Setări reorganizate în cinci secțiuni, alegerea mărimii textului, explicații mai clare în alerte (ce s-a observat despre semnătură, separat de riscul estimat), o pictogramă nouă, un pachet de diagnostic local care nu se trimite automat și dezinstalarea direct din aplicație. Actualizarea filtrului poate cere repornirea Mac-ului; până atunci conexiunile noi fără regulă sunt blocate pentru siguranță, iar regulile tale sunt păstrate.",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-firewall/GDCFirewall-macOS-2.3.5.zip",
-    "mac_dmg": "https://gordas.dev/gdc-firewall/GDCFirewall-macOS-2.3.5.dmg"
+    "mac": "https://gordas.dev/gdc-firewall/GDCFirewall-macOS-2.4.0.zip",
+    "mac_dmg": "https://gordas.dev/gdc-firewall/GDCFirewall-macOS-2.4.0.dmg"
   },
   "mandatory": false
 }
