@@ -1,7 +1,7 @@
 {
-  "version": "2.17.0",
+  "version": "2.17.1",
   "release_date": "2026-09-27",
-  "changes": "Sistemul de licențiere a fost actualizat: codurile emise anterior nu mai activează DataMover și este necesar un cod nou, legat de calculator. Fără licență activă, transferurile rămân limitate la 2 GB. Pe macOS, aplicația verifică la pornire dacă există o versiune nouă.",
+  "changes": "Windows: traseul sursă → verificare → copii arată fluxul datelor în timpul transferului, ca pe macOS; animația se oprește la pauză și la minimizare și respectă setările Windows pentru animații și contrast ridicat. La dimensiunea minimă și scalare 150%, sursa și copiile se văd complet.",
   "download_url": {
     "windows": "https://github.com/gordasgdc/datamover/releases/latest/download/DataMover-Windows.zip",
     "mac": "https://github.com/gordasgdc/datamover/releases/latest/download/DataMover.pkg",
