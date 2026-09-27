@@ -8,6 +8,6 @@
     "mac_dmg": "https://github.com/gordasgdc/datamover/releases/latest/download/DataMover.dmg",
     "windows_wpf": "https://github.com/gordasgdc/datamover/releases/latest/download/DataMover-WPF-Windows.zip"
   },
-  "mandatory": false,
+  "mandatory": true,
   "min_version": "1.0.0"
 }
