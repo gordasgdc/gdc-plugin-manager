@@ -1,9 +1,9 @@
 {
-  "version": "1.47.0",
-  "app_version": "1.47.0",
-  "changes": "Pipeline V2 profesional: Workspace nou cu Bibliotecă, Pipeline validat, Inspector și export fail-closed; Quick Start 010→200→900 pe patru profile; modulele 010, 110, 120, 140, 200, 210, 300 și 900 sunt implementate CPU/Metal, Full și Demo. Alegerile Input Camera / Log și Target folosesc registrele canonice, iar repararea ordinii pipeline-ului este verificată determinist. Actualizare importantă — recomandăm instalarea imediată.",
+  "version": "1.47.1",
+  "app_version": "1.47.1",
+  "changes": "Reparare: controalele din Inspector (Exposure, White Balance, Channel Mixer, Saturation, Contrast) nu se mai afișau la unele module și, când se afișau, mișcarea cursoarelor nu avea efect vizibil. Ambele probleme sunt reparate.",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-style-lab/GDCStyleLab-1.47.0.dmg"
+    "mac": "https://gordas.dev/gdc-style-lab/GDCStyleLab-1.47.1.dmg"
   },
   "mandatory": true
 }
