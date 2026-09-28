@@ -40,8 +40,8 @@
   "applicationCategory": "MultimediaApplication",
   "operatingSystem": "macOS 14 or later (Apple Silicon); Windows 11 (x64)",
   "softwareVersion": "2.17.1",
-  "downloadUrl": "https://github.com/gordasgdc/datamover/releases/latest",
-  "license": "https://github.com/gordasgdc/datamover/blob/main/LICENSE",
+  "downloadUrl": ["https://gordas.dev/datamover/downloads/DataMover.dmg", "https://gordas.dev/datamover/downloads/DataMover-WPF-Windows.zip"],
+  "license": "https://gordas.dev/datamover/licenta.html",
   "image": "https://gordas.dev/datamover/img/2.16/og-datamover.jpg",
   "author": { "@type": "Person", "name": "Cristi Gordaș", "url": "https://gordas.dev/" }
 }
@@ -241,11 +241,11 @@
       <h1 data-i18n-html="hero.title">Cardul citit o dată.<br><span>Fiecare copie, verificată.</span></h1>
       <p class="lead" data-i18n="hero.lead">DataMover copiază materialul de pe card simultan pe mai multe discuri independente. Fiecare fișier primește numele final doar după ce checksum-ul copiei se potrivește cu sursa, iar la final primești rapoarte pentru fiecare destinație.</p>
       <div class="dl">
-        <a class="btn primary" href="https://github.com/gordasgdc/datamover/releases/latest/download/DataMover.dmg">
+        <a class="btn primary" href="https://gordas.dev/datamover/downloads/DataMover.dmg">
           <strong><svg aria-hidden="true"><use href="#i-download"/></svg><span data-i18n="dl.mac">Descarcă pentru macOS</span></strong>
           <small data-i18n="dl.mac.note">DMG · Apple Silicon · macOS 14+ · semnat Developer ID și notarizat de Apple</small>
         </a>
-        <a class="btn" href="https://github.com/gordasgdc/datamover/releases/latest/download/DataMover-WPF-Windows.zip">
+        <a class="btn" href="https://gordas.dev/datamover/downloads/DataMover-WPF-Windows.zip">
           <strong><svg aria-hidden="true"><use href="#i-download"/></svg><span data-i18n="dl.win">Descarcă pentru Windows</span></strong>
           <small data-i18n="dl.win.note">ZIP cu installer · Windows 11 x64 · semnătură self-signed: SmartScreen poate avertiza</small>
         </a>
@@ -416,7 +416,7 @@
     </div>
     <div class="box" style="margin-top:16px">
       <h3 data-i18n="act.title">Probă și activare</h3>
-      <p class="sub" data-i18n="act.sub">Cod sursă pe GitHub, sub licență MIT</p>
+      <p class="sub" data-i18n="act.sub">Cod personal, legat de calculatorul tău</p>
       <ul>
         <li data-i18n="act.1">7 zile complet funcțional, fără cont și fără card.</li>
         <li data-i18n="act.2">După perioada de probă, versiunea neactivată copiază cel mult 2 GB per transfer.</li>
@@ -477,19 +477,18 @@
   <div class="wrap">
     <div class="sec-head">
       <h2 data-i18n="cta.title">Descarcă DataMover</h2>
-      <p class="lead" data-i18n="cta.lead">Încearcă-l pe un card de test înainte de o filmare reală. Arhivele cu versiunile anterioare rămân disponibile pe GitHub.</p>
+      <p class="lead" data-i18n="cta.lead">Încearcă-l pe un card de test înainte de o filmare reală.</p>
     </div>
     <div class="dl">
-      <a class="btn primary" href="https://github.com/gordasgdc/datamover/releases/latest/download/DataMover.dmg">
+      <a class="btn primary" href="https://gordas.dev/datamover/downloads/DataMover.dmg">
         <strong><svg aria-hidden="true"><use href="#i-download"/></svg><span data-i18n="dl.mac">Descarcă pentru macOS</span></strong>
         <small data-i18n="dl.mac.note">DMG · Apple Silicon · macOS 14+ · semnat Developer ID și notarizat de Apple</small>
       </a>
-      <a class="btn" href="https://github.com/gordasgdc/datamover/releases/latest/download/DataMover-WPF-Windows.zip">
+      <a class="btn" href="https://gordas.dev/datamover/downloads/DataMover-WPF-Windows.zip">
         <strong><svg aria-hidden="true"><use href="#i-download"/></svg><span data-i18n="dl.win">Descarcă pentru Windows</span></strong>
         <small data-i18n="dl.win.note">ZIP cu installer · Windows 11 x64 · semnătură self-signed: SmartScreen poate avertiza</small>
       </a>
     </div>
-    <p class="meta-row"><a href="https://github.com/gordasgdc/datamover/releases" data-i18n="cta.all">Toate versiunile și notele de lansare</a><a href="https://github.com/gordasgdc/datamover" data-i18n="cta.src">Cod sursă (MIT)</a></p>
   </div>
 </section>
 </main>
@@ -568,7 +567,7 @@
       "inst.win.4": "Uninstall from Settings → Apps. This also removes DataMover's settings, local license and logs.",
       "req.win.os": "Windows 11, 64-bit (x64; ARM64 through emulation)", "req.win.sign": "Self-signed certificate, not a commercial Authenticode certificate",
       "inst.win.note": "Windows SmartScreen may show “Windows protected your PC” or “Unknown publisher”. The reason: the installer isn't signed with a commercial certificate yet. If you downloaded the file from this page, click <strong>More info</strong> → <strong>Run anyway</strong>.",
-      "act.title": "Trial and activation", "act.sub": "Source code on GitHub, under the MIT license",
+      "act.title": "Trial and activation", "act.sub": "A personal code, tied to your computer",
       "act.1": "7 days fully functional, no account, no card.", "act.2": "After the trial, the unactivated version copies at most 2 GB per transfer.",
       "act.3": "Activation is tied to your computer's ID and comes with a development donation. The current amount is shown in the app. Message us on <a href=\"https://wa.me/34643109970?text=Hi!%20I%20want%20to%20activate%20DataMover.\" rel=\"noopener\" target=\"_blank\">WhatsApp</a>.",
       "lim.eyebrow": "Trust and limits", "lim.title": "What is tested, and what isn't yet", "lim.lead": "DataMover lowers the risk of copying, it doesn't remove it. Keep the card unformatted until you have checked your copies.",
@@ -582,8 +581,7 @@
       "lim.no.1": "A real power cut or hard shutdown during a copy", "lim.no.2": "A card or drive physically removed during a transfer",
       "lim.no.3": "Network destinations (SMB) and exFAT on Windows", "lim.no.4": "A real full disk on Windows", "lim.no.5": "Keyboard-only navigation and screen readers on Windows",
       "guide.eyebrow": "Documentation", "guide.title": "User guide", "guide.lead": "The PDF guide walks through installation, activation and the workflow, step by step. It is also included in the app.",
-      "cta.title": "Download DataMover", "cta.lead": "Try it on a test card before a real shoot. Archives of earlier versions stay available on GitHub.",
-      "cta.all": "All versions and release notes", "cta.src": "Source code (MIT)",
+      "cta.title": "Download DataMover", "cta.lead": "Try it on a test card before a real shoot.",
       "f.home": "gordas.dev", "f.appterms": "DataMover terms", "f.terms": "Terms and Conditions", "f.privacy": "Privacy (GDPR)", "f.cookie": "Cookies",
       "f.author": "DataMover · made by Cristi Gordaș, colorist and video editor · MIT license",
       "f.legal": "gordas.dev is a platform run by independent developers. The apps and resources are provided as is (AS IS), and the project is supported through optional contributions and donations."
@@ -642,7 +640,7 @@
       "inst.win.4": "Se desinstala desde Configuración → Aplicaciones. También elimina los ajustes, la licencia local y los registros de DataMover.",
       "req.win.os": "Windows 11, 64 bits (x64; en ARM64 mediante emulación)", "req.win.sign": "Certificado autofirmado, no un certificado Authenticode comercial",
       "inst.win.note": "Windows SmartScreen puede mostrar “Windows protegió tu PC” o “Editor desconocido”. El motivo: el instalador aún no está firmado con un certificado comercial. Si descargaste el archivo desde esta página, pulsa <strong>Más información</strong> → <strong>Ejecutar de todas formas</strong>.",
-      "act.title": "Prueba y activación", "act.sub": "Código fuente en GitHub, con licencia MIT",
+      "act.title": "Prueba y activación", "act.sub": "Un código personal, vinculado a tu ordenador",
       "act.1": "7 días totalmente funcional, sin cuenta y sin tarjeta.", "act.2": "Tras la prueba, la versión sin activar copia como máximo 2 GB por transferencia.",
       "act.3": "La activación está ligada al ID del ordenador y se obtiene con una donación para el desarrollo. El importe actual aparece en la aplicación. Escríbenos por <a href=\"https://wa.me/34643109970?text=Hola!%20Quiero%20activar%20DataMover.\" rel=\"noopener\" target=\"_blank\">WhatsApp</a>.",
       "lim.eyebrow": "Confianza y límites", "lim.title": "Qué está probado y qué todavía no", "lim.lead": "DataMover reduce el riesgo al copiar, pero no lo elimina. No formatees la tarjeta hasta haber comprobado tus copias.",
@@ -656,8 +654,7 @@
       "lim.no.1": "Un corte de corriente o apagado brusco real durante la copia", "lim.no.2": "Una tarjeta o disco extraído físicamente durante la transferencia",
       "lim.no.3": "Destinos de red (SMB) y exFAT en Windows", "lim.no.4": "Un disco lleno real en Windows", "lim.no.5": "Navegación solo con teclado y lectores de pantalla en Windows",
       "guide.eyebrow": "Documentación", "guide.title": "Guía de uso", "guide.lead": "La guía en PDF explica la instalación, la activación y el flujo de trabajo, paso a paso. También está incluida en la aplicación.",
-      "cta.title": "Descarga DataMover", "cta.lead": "Pruébalo con una tarjeta de prueba antes de un rodaje real. Las versiones anteriores siguen disponibles en GitHub.",
-      "cta.all": "Todas las versiones y notas de lanzamiento", "cta.src": "Código fuente (MIT)",
+      "cta.title": "Descarga DataMover", "cta.lead": "Pruébalo con una tarjeta de prueba antes de un rodaje real.",
       "f.home": "gordas.dev", "f.appterms": "Términos de DataMover", "f.terms": "Términos y condiciones", "f.privacy": "Privacidad (RGPD)", "f.cookie": "Cookies",
       "f.author": "DataMover · creado por Cristi Gordaș, colorista y editor de vídeo · licencia MIT",
       "f.legal": "gordas.dev es una plataforma gestionada por desarrolladores independientes. Las aplicaciones y los recursos se ofrecen tal cual (AS IS), y el proyecto se sostiene con contribuciones opcionales y donaciones."
