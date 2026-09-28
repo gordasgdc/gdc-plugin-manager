@@ -1,9 +1,9 @@
 {
-  "version": "1.46.0",
-  "app_version": "1.46.0",
-  "changes": "Film Pipeline: fiecare folder de nivel 1 al catalogului tău devine acum un strat separat în Resolve, cu bifă de activare, Categorie (subfolderele), STYLE și Mix — de exemplu 12 foldere dau 12 straturi. Nou: pentru fiecare folder alegi în aplicație spațiul în care au fost create LUT-urile (intrare și ieșire, ex. S-Log3 → Rec.709); pluginul convertește automat față de intrarea și ieșirea nodului. Cel mult 4 straturi pot fi active simultan.",
+  "version": "1.47.0",
+  "app_version": "1.47.0",
+  "changes": "Pipeline V2 profesional: Workspace nou cu Bibliotecă, Pipeline validat, Inspector și export fail-closed; Quick Start 010→200→900 pe patru profile; modulele 010, 110, 120, 140, 200, 210, 300 și 900 sunt implementate CPU/Metal, Full și Demo. Alegerile Input Camera / Log și Target folosesc registrele canonice, iar repararea ordinii pipeline-ului este verificată determinist. Actualizare importantă — recomandăm instalarea imediată.",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-lut-lab/GDCStyleLab-1.46.0-transition.dmg"
+    "mac": "https://gordas.dev/gdc-lut-lab/GDCStyleLab-1.47.0-transition.dmg"
   },
-  "mandatory": false
+  "mandatory": true
 }
