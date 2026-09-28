@@ -1,7 +1,7 @@
 {
   "products" : {
     "cgconvertor" : {
-      "basePrice" : 96,
+      "basePrice" : 140,
       "currency" : "EUR",
       "name" : "CG Convertor",
       "promoSchedule" : [
@@ -43,7 +43,7 @@
       ]
     },
     "gdc-lut-lab" : {
-      "basePrice" : 23,
+      "basePrice" : 6700,
       "currency" : "EUR",
       "name" : "GDC STYLE Lab",
       "promoSchedule" : [
@@ -103,5 +103,5 @@
       ]
     }
   },
-  "updatedAt" : "2026-09-26"
+  "updatedAt" : "2026-09-28"
 }

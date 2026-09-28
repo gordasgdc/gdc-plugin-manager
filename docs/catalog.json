@@ -165,6 +165,7 @@
       "access" : {
         "group" : "gdc",
         "note" : "Donație · licență legată de Mac (Machine ID)",
+        "referencePriceEUR" : 6700,
         "tags" : [
           "Developer"
         ]
@@ -1055,5 +1056,5 @@
       "youtubeURL" : "https://www.youtube.com/watch?v=dnkUIGXIzIM"
     }
   ],
-  "updatedAt" : "2026-09-27"
+  "updatedAt" : "2026-09-28"
 }
