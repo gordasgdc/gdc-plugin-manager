@@ -1,9 +1,9 @@
 {
-  "version": "1.47.1",
-  "app_version": "1.47.1",
-  "changes": "Reparare: controalele din Inspector (Exposure, White Balance, Channel Mixer, Saturation, Contrast) nu se mai afișau la unele module și, când se afișau, mișcarea cursoarelor nu avea efect vizibil. Ambele probleme sunt reparate.",
+  "version": "1.48.0",
+  "app_version": "1.48.0",
+  "changes": "Pipeline V2: panou „Licențe & Module” (activare separată pe fiecare modul), raport de export inspectabil cu progres și reluare, diagnostic exportabil cu date personale redactate, modulele de intrare și liniare pe toate profilele. Compatibilitate extinsă a exportului pentru viitoarele platforme și îmbunătățiri interne de stabilitate.",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-style-lab/GDCStyleLab-1.47.1.dmg"
+    "mac": "https://gordas.dev/gdc-style-lab/GDCStyleLab-1.48.0.dmg"
   },
-  "mandatory": true
+  "mandatory": false
 }
