@@ -32,6 +32,7 @@ async function makeSerial(productID: string, opts: { expiresAt?: number; machine
 
 const PAID = "gdc-paid-product";
 const FREE = "gdc-free-demo";
+const V3 = "gdc-style-v3-look";
 const SHA = "a".repeat(64);
 const catalog = {
   items: [
@@ -39,6 +40,14 @@ const catalog = {
     { id: FREE, isFree: true, isTrial: true, supportedOS: "macOS", files: [{ path: `${FREE}/1.0/b.ofx`, sha256: SHA, repo: "files" }] },
     { id: "gdc-bad-repo", isFree: true, files: [{ path: "gdc-bad-repo/x", sha256: SHA, repo: "secret-repo" }] },
     { id: "gdc-foreign-path", isFree: true, files: [{ path: `${PAID}/1.0/a.ofx`, sha256: SHA, repo: "files" }] },
+    { id: V3, isFree: false, supportedOS: "macOS", files: [
+        { path: `${V3}/1.1.0/Full/GDC Look — ACES.ofx.bundle/Contents/Info.plist`, sha256: SHA, repo: "files" },
+        { path: `${V3}/1.1.0/Demo/GDC Look — ACES (Demo).ofx.bundle/Contents/Info.plist`, sha256: SHA, repo: "files" },
+        { path: `${V3}/1.1.0/Full/Evil/Contents/Info.plist`, sha256: SHA, repo: "files" }],
+      ofxProduct: { variants: [{ editions: {
+        full: { root: `${V3}/1.1.0/Full/GDC Look — ACES.ofx.bundle` },
+        demo: { root: `${V3}/1.1.0/Demo/GDC Look — ACES (Demo).ofx.bundle` } } },
+        { editions: { demo: { root: `${V3}/1.1.0/Full/Evil` } } }] } },
   ],
   pdfResources: [{ id: "doc", isFree: true, filePath: "doc/x.pdf", fileSHA256: SHA, fileRepo: "pdfs" }],
 };
@@ -181,4 +190,20 @@ Deno.test("cheia publică de producție nu acceptă seriale de test", async () =
 Deno.test("base32 round-trip", () => {
   const data = new Uint8Array(87).map((_, i) => (i * 7) & 0xff);
   assertEquals(base32Decode(base32Encode(data)), data);
+});
+
+// ── PRODUS V3: Demo gratuit, Full cu serial ─────────────────────────────
+Deno.test("produs V3: ediția Demo fără serial → 200", async () => {
+  const r = await authorize(req({ productID: V3, path: `${V3}/1.1.0/Demo/GDC Look — ACES (Demo).ofx.bundle/Contents/Info.plist` }), "1.1.1.1", deps().d);
+  assertEquals(r.status, 200);
+});
+Deno.test("produs V3: ediția Full fără serial → invalid_license", async () => {
+  await expectError(req({ productID: V3, path: `${V3}/1.1.0/Full/GDC Look — ACES.ofx.bundle/Contents/Info.plist` }), 403, "invalid_license");
+});
+Deno.test("produs V3: ediția Full cu serial valid → 200", async () => {
+  const r = await authorize(req({ productID: V3, path: `${V3}/1.1.0/Full/GDC Look — ACES.ofx.bundle/Contents/Info.plist`, serial: await makeSerial(V3) }), "1.1.1.1", deps().d);
+  assertEquals(r.status, 200);
+});
+Deno.test("produs V3: o «rădăcină Demo» care nu e sub Demo/ nu deschide Full", async () => {
+  await expectError(req({ productID: V3, path: `${V3}/1.1.0/Full/Evil/Contents/Info.plist` }), 403, "invalid_license");
 });

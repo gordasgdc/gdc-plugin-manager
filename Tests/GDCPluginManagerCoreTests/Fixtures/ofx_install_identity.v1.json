@@ -1,0 +1,1406 @@
+{
+ "schema": "gdc-ofx-install-identity-vectors@1",
+ "note": "Folderele și identificatorii sunt cei REALI ai motorului (verificați în test); numele legacy „GDC V3 …” sunt cele ale primelor build-uri V3.",
+ "vectors": [
+  {
+   "name": "install: slot gol [distribution]",
+   "mode": "distribution",
+   "installed": [],
+   "incoming": {
+    "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+    "folder": "GDC Film — ACES.ofx.bundle",
+    "version": "2.0.0"
+   },
+   "expect": {
+    "action": "install",
+    "write": "GDC Film — ACES.ofx.bundle",
+    "remove": []
+   },
+   "why": ""
+  },
+  {
+   "name": "keep: identic [distribution]",
+   "mode": "distribution",
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+     "folder": "GDC Film — ACES.ofx.bundle",
+     "version": "2.0.0"
+    }
+   ],
+   "incoming": {
+    "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+    "folder": "GDC Film — ACES.ofx.bundle",
+    "version": "2.0.0"
+   },
+   "expect": {
+    "action": "keep",
+    "write": null,
+    "remove": []
+   },
+   "why": ""
+  },
+  {
+   "name": "install: alt slot (altă variantă) nu blochează [distribution]",
+   "mode": "distribution",
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.v3.film.dwg-davinci-intermediate.full",
+     "folder": "GDC Film — DaVinci.ofx.bundle",
+     "version": "2.0.0"
+    }
+   ],
+   "incoming": {
+    "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+    "folder": "GDC Film — ACES.ofx.bundle",
+    "version": "2.0.0"
+   },
+   "expect": {
+    "action": "install",
+    "write": "GDC Film — ACES.ofx.bundle",
+    "remove": []
+   },
+   "why": "variantele sunt sloturi diferite"
+  },
+  {
+   "name": "install: alt produs pe aceeași variantă nu blochează [distribution]",
+   "mode": "distribution",
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.v3.color.ap1-acescct.full",
+     "folder": "GDC Color — ACES.ofx.bundle",
+     "version": "2.0.0"
+    }
+   ],
+   "incoming": {
+    "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+    "folder": "GDC Film — ACES.ofx.bundle",
+    "version": "2.0.0"
+   },
+   "expect": {
+    "action": "install",
+    "write": "GDC Film — ACES.ofx.bundle",
+    "remove": []
+   },
+   "why": "produsele sunt sloturi diferite"
+  },
+  {
+   "name": "upgrade: aceeași identitate, versiune mai nouă [distribution]",
+   "mode": "distribution",
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+     "folder": "GDC Film — ACES.ofx.bundle",
+     "version": "1.9.0"
+    }
+   ],
+   "incoming": {
+    "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+    "folder": "GDC Film — ACES.ofx.bundle",
+    "version": "2.0.0"
+   },
+   "expect": {
+    "action": "upgrade",
+    "write": "GDC Film — ACES.ofx.bundle",
+    "remove": []
+   },
+   "why": ""
+  },
+  {
+   "name": "upgrade: versiune necunoscută = mai veche [distribution]",
+   "mode": "distribution",
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+     "folder": "GDC Film — ACES.ofx.bundle",
+     "version": null
+    }
+   ],
+   "incoming": {
+    "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+    "folder": "GDC Film — ACES.ofx.bundle",
+    "version": "2.0.0"
+   },
+   "expect": {
+    "action": "upgrade",
+    "write": "GDC Film — ACES.ofx.bundle",
+    "remove": []
+   },
+   "why": ""
+  },
+  {
+   "name": "replace: legacy redenumit, aceeași versiune [distribution]",
+   "mode": "distribution",
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+     "folder": "GDC V3 Film — ACES AP1 - ACEScct.ofx.bundle",
+     "version": "2.0.0"
+    }
+   ],
+   "incoming": {
+    "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+    "folder": "GDC Film — ACES.ofx.bundle",
+    "version": "2.0.0"
+   },
+   "expect": {
+    "action": "replace",
+    "write": "GDC Film — ACES.ofx.bundle",
+    "remove": [
+     "GDC V3 Film — ACES AP1 - ACEScct.ofx.bundle"
+    ]
+   },
+   "why": "identitate = CFBundleIdentifier, nu folderul"
+  },
+  {
+   "name": "replace: legacy redenumit, versiune mai veche [distribution]",
+   "mode": "distribution",
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+     "folder": "GDC V3 Film — ACES AP1 - ACEScct.ofx.bundle",
+     "version": "0.9.0"
+    }
+   ],
+   "incoming": {
+    "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+    "folder": "GDC Film — ACES.ofx.bundle",
+    "version": "2.0.0"
+   },
+   "expect": {
+    "action": "replace",
+    "write": "GDC Film — ACES.ofx.bundle",
+    "remove": [
+     "GDC V3 Film — ACES AP1 - ACEScct.ofx.bundle"
+    ]
+   },
+   "why": ""
+  },
+  {
+   "name": "replace: Demo → Full în același slot [distribution]",
+   "mode": "distribution",
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.v3.film.ap1-acescct.demo",
+     "folder": "GDC Film — ACES (Demo).ofx.bundle",
+     "version": "2.0.0"
+    }
+   ],
+   "incoming": {
+    "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+    "folder": "GDC Film — ACES.ofx.bundle",
+    "version": "2.0.0"
+   },
+   "expect": {
+    "action": "replace",
+    "write": "GDC Film — ACES.ofx.bundle",
+    "remove": [
+     "GDC Film — ACES (Demo).ofx.bundle"
+    ]
+   },
+   "why": "upgrade de ediție: Demo-ul dispare, nu coexistă"
+  },
+  {
+   "name": "replace: dubluri aceeași identitate (canonic + legacy) [distribution]",
+   "mode": "distribution",
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+     "folder": "GDC Film — ACES.ofx.bundle",
+     "version": "2.0.0"
+    },
+    {
+     "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+     "folder": "GDC V3 Film — ACES AP1 - ACEScct.ofx.bundle",
+     "version": "2.0.0"
+    }
+   ],
+   "incoming": {
+    "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+    "folder": "GDC Film — ACES.ofx.bundle",
+    "version": "2.0.0"
+   },
+   "expect": {
+    "action": "replace",
+    "write": "GDC Film — ACES.ofx.bundle",
+    "remove": [
+     "GDC V3 Film — ACES AP1 - ACEScct.ofx.bundle"
+    ]
+   },
+   "why": "curățare de dubluri"
+  },
+  {
+   "name": "replace: Full + Demo + legacy în același slot [distribution]",
+   "mode": "distribution",
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+     "folder": "GDC Film — ACES.ofx.bundle",
+     "version": "2.0.0"
+    },
+    {
+     "identifier": "dev.gordas.style.v3.film.ap1-acescct.demo",
+     "folder": "GDC Film — ACES (Demo).ofx.bundle",
+     "version": "2.0.0"
+    },
+    {
+     "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+     "folder": "GDC V3 Film — ACES AP1 - ACEScct.ofx.bundle",
+     "version": "2.0.0"
+    }
+   ],
+   "incoming": {
+    "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+    "folder": "GDC Film — ACES.ofx.bundle",
+    "version": "2.0.0"
+   },
+   "expect": {
+    "action": "replace",
+    "write": "GDC Film — ACES.ofx.bundle",
+    "remove": [
+     "GDC Film — ACES (Demo).ofx.bundle",
+     "GDC V3 Film — ACES AP1 - ACEScct.ofx.bundle"
+    ]
+   },
+   "why": ""
+  },
+  {
+   "name": "keep: celelalte sloturi nu se ating [distribution]",
+   "mode": "distribution",
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+     "folder": "GDC Film — ACES.ofx.bundle",
+     "version": "2.0.0"
+    },
+    {
+     "identifier": "dev.gordas.style.v3.film.dwg-davinci-intermediate.full",
+     "folder": "GDC Film — DaVinci.ofx.bundle",
+     "version": "2.0.0"
+    },
+    {
+     "identifier": "dev.gordas.style.v3.film.awg4-logc4.full",
+     "folder": "GDC V3 Film — vechi.ofx.bundle",
+     "version": "2.0.0"
+    },
+    {
+     "identifier": "dev.gordas.style.v3.color.ap1-acescct.full",
+     "folder": "GDC Color — ACES.ofx.bundle",
+     "version": "2.0.0"
+    }
+   ],
+   "incoming": {
+    "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+    "folder": "GDC Film — ACES.ofx.bundle",
+    "version": "2.0.0"
+   },
+   "expect": {
+    "action": "keep",
+    "write": null,
+    "remove": []
+   },
+   "why": ""
+  },
+  {
+   "name": "install: Demo în slot gol [distribution]",
+   "mode": "distribution",
+   "installed": [],
+   "incoming": {
+    "identifier": "dev.gordas.style.v3.film.ap1-acescct.demo",
+    "folder": "GDC Film — ACES (Demo).ofx.bundle",
+    "version": "2.0.0"
+   },
+   "expect": {
+    "action": "install",
+    "write": "GDC Film — ACES (Demo).ofx.bundle",
+    "remove": []
+   },
+   "why": ""
+  },
+  {
+   "name": "keep: Demo identic [distribution]",
+   "mode": "distribution",
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.v3.film.ap1-acescct.demo",
+     "folder": "GDC Film — ACES (Demo).ofx.bundle",
+     "version": "2.0.0"
+    }
+   ],
+   "incoming": {
+    "identifier": "dev.gordas.style.v3.film.ap1-acescct.demo",
+    "folder": "GDC Film — ACES (Demo).ofx.bundle",
+    "version": "2.0.0"
+   },
+   "expect": {
+    "action": "keep",
+    "write": null,
+    "remove": []
+   },
+   "why": ""
+  },
+  {
+   "name": "refuse: Demo nu înlocuiește Full [distribution]",
+   "mode": "distribution",
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+     "folder": "GDC Film — ACES.ofx.bundle",
+     "version": "2.0.0"
+    }
+   ],
+   "incoming": {
+    "identifier": "dev.gordas.style.v3.film.ap1-acescct.demo",
+    "folder": "GDC Film — ACES (Demo).ofx.bundle",
+    "version": "2.0.0"
+   },
+   "expect": {
+    "action": "refuse:demoOverFull",
+    "write": null,
+    "remove": []
+   },
+   "why": "nicio degradare de ediție în tăcere"
+  },
+  {
+   "name": "refuse: Demo nu înlocuiește Full (cu Demo vechi alături) [distribution]",
+   "mode": "distribution",
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+     "folder": "GDC Film — ACES.ofx.bundle",
+     "version": "2.0.0"
+    },
+    {
+     "identifier": "dev.gordas.style.v3.film.ap1-acescct.demo",
+     "folder": "GDC Film — ACES (Demo).ofx.bundle",
+     "version": "1.0.0"
+    }
+   ],
+   "incoming": {
+    "identifier": "dev.gordas.style.v3.film.ap1-acescct.demo",
+    "folder": "GDC Film — ACES (Demo).ofx.bundle",
+    "version": "2.0.0"
+   },
+   "expect": {
+    "action": "refuse:demoOverFull",
+    "write": null,
+    "remove": []
+   },
+   "why": ""
+  },
+  {
+   "name": "install: slot gol [authoring]",
+   "mode": "authoring",
+   "installed": [],
+   "incoming": {
+    "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+    "folder": "GDC Film — ACES.ofx.bundle",
+    "version": "2.0.0"
+   },
+   "expect": {
+    "action": "install",
+    "write": "GDC Film — ACES.ofx.bundle",
+    "remove": []
+   },
+   "why": ""
+  },
+  {
+   "name": "keep: identic [authoring]",
+   "mode": "authoring",
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+     "folder": "GDC Film — ACES.ofx.bundle",
+     "version": "2.0.0"
+    }
+   ],
+   "incoming": {
+    "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+    "folder": "GDC Film — ACES.ofx.bundle",
+    "version": "2.0.0"
+   },
+   "expect": {
+    "action": "keep",
+    "write": null,
+    "remove": []
+   },
+   "why": ""
+  },
+  {
+   "name": "install: alt slot (altă variantă) nu blochează [authoring]",
+   "mode": "authoring",
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.v3.film.dwg-davinci-intermediate.full",
+     "folder": "GDC Film — DaVinci.ofx.bundle",
+     "version": "2.0.0"
+    }
+   ],
+   "incoming": {
+    "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+    "folder": "GDC Film — ACES.ofx.bundle",
+    "version": "2.0.0"
+   },
+   "expect": {
+    "action": "install",
+    "write": "GDC Film — ACES.ofx.bundle",
+    "remove": []
+   },
+   "why": "variantele sunt sloturi diferite"
+  },
+  {
+   "name": "install: alt produs pe aceeași variantă nu blochează [authoring]",
+   "mode": "authoring",
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.v3.color.ap1-acescct.full",
+     "folder": "GDC Color — ACES.ofx.bundle",
+     "version": "2.0.0"
+    }
+   ],
+   "incoming": {
+    "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+    "folder": "GDC Film — ACES.ofx.bundle",
+    "version": "2.0.0"
+   },
+   "expect": {
+    "action": "install",
+    "write": "GDC Film — ACES.ofx.bundle",
+    "remove": []
+   },
+   "why": "produsele sunt sloturi diferite"
+  },
+  {
+   "name": "upgrade: aceeași identitate, versiune mai nouă [authoring]",
+   "mode": "authoring",
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+     "folder": "GDC Film — ACES.ofx.bundle",
+     "version": "1.9.0"
+    }
+   ],
+   "incoming": {
+    "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+    "folder": "GDC Film — ACES.ofx.bundle",
+    "version": "2.0.0"
+   },
+   "expect": {
+    "action": "upgrade",
+    "write": "GDC Film — ACES.ofx.bundle",
+    "remove": []
+   },
+   "why": ""
+  },
+  {
+   "name": "upgrade: versiune necunoscută = mai veche [authoring]",
+   "mode": "authoring",
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+     "folder": "GDC Film — ACES.ofx.bundle",
+     "version": null
+    }
+   ],
+   "incoming": {
+    "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+    "folder": "GDC Film — ACES.ofx.bundle",
+    "version": "2.0.0"
+   },
+   "expect": {
+    "action": "upgrade",
+    "write": "GDC Film — ACES.ofx.bundle",
+    "remove": []
+   },
+   "why": ""
+  },
+  {
+   "name": "replace: legacy redenumit, aceeași versiune [authoring]",
+   "mode": "authoring",
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+     "folder": "GDC V3 Film — ACES AP1 - ACEScct.ofx.bundle",
+     "version": "2.0.0"
+    }
+   ],
+   "incoming": {
+    "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+    "folder": "GDC Film — ACES.ofx.bundle",
+    "version": "2.0.0"
+   },
+   "expect": {
+    "action": "replace",
+    "write": "GDC Film — ACES.ofx.bundle",
+    "remove": [
+     "GDC V3 Film — ACES AP1 - ACEScct.ofx.bundle"
+    ]
+   },
+   "why": "identitate = CFBundleIdentifier, nu folderul"
+  },
+  {
+   "name": "replace: legacy redenumit, versiune mai veche [authoring]",
+   "mode": "authoring",
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+     "folder": "GDC V3 Film — ACES AP1 - ACEScct.ofx.bundle",
+     "version": "0.9.0"
+    }
+   ],
+   "incoming": {
+    "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+    "folder": "GDC Film — ACES.ofx.bundle",
+    "version": "2.0.0"
+   },
+   "expect": {
+    "action": "replace",
+    "write": "GDC Film — ACES.ofx.bundle",
+    "remove": [
+     "GDC V3 Film — ACES AP1 - ACEScct.ofx.bundle"
+    ]
+   },
+   "why": ""
+  },
+  {
+   "name": "replace: Demo → Full în același slot [authoring]",
+   "mode": "authoring",
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.v3.film.ap1-acescct.demo",
+     "folder": "GDC Film — ACES (Demo).ofx.bundle",
+     "version": "2.0.0"
+    }
+   ],
+   "incoming": {
+    "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+    "folder": "GDC Film — ACES.ofx.bundle",
+    "version": "2.0.0"
+   },
+   "expect": {
+    "action": "replace",
+    "write": "GDC Film — ACES.ofx.bundle",
+    "remove": [
+     "GDC Film — ACES (Demo).ofx.bundle"
+    ]
+   },
+   "why": "upgrade de ediție: Demo-ul dispare, nu coexistă"
+  },
+  {
+   "name": "replace: dubluri aceeași identitate (canonic + legacy) [authoring]",
+   "mode": "authoring",
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+     "folder": "GDC Film — ACES.ofx.bundle",
+     "version": "2.0.0"
+    },
+    {
+     "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+     "folder": "GDC V3 Film — ACES AP1 - ACEScct.ofx.bundle",
+     "version": "2.0.0"
+    }
+   ],
+   "incoming": {
+    "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+    "folder": "GDC Film — ACES.ofx.bundle",
+    "version": "2.0.0"
+   },
+   "expect": {
+    "action": "replace",
+    "write": "GDC Film — ACES.ofx.bundle",
+    "remove": [
+     "GDC V3 Film — ACES AP1 - ACEScct.ofx.bundle"
+    ]
+   },
+   "why": "curățare de dubluri"
+  },
+  {
+   "name": "replace: Full + Demo + legacy în același slot [authoring]",
+   "mode": "authoring",
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+     "folder": "GDC Film — ACES.ofx.bundle",
+     "version": "2.0.0"
+    },
+    {
+     "identifier": "dev.gordas.style.v3.film.ap1-acescct.demo",
+     "folder": "GDC Film — ACES (Demo).ofx.bundle",
+     "version": "2.0.0"
+    },
+    {
+     "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+     "folder": "GDC V3 Film — ACES AP1 - ACEScct.ofx.bundle",
+     "version": "2.0.0"
+    }
+   ],
+   "incoming": {
+    "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+    "folder": "GDC Film — ACES.ofx.bundle",
+    "version": "2.0.0"
+   },
+   "expect": {
+    "action": "replace",
+    "write": "GDC Film — ACES.ofx.bundle",
+    "remove": [
+     "GDC Film — ACES (Demo).ofx.bundle",
+     "GDC V3 Film — ACES AP1 - ACEScct.ofx.bundle"
+    ]
+   },
+   "why": ""
+  },
+  {
+   "name": "keep: celelalte sloturi nu se ating [authoring]",
+   "mode": "authoring",
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+     "folder": "GDC Film — ACES.ofx.bundle",
+     "version": "2.0.0"
+    },
+    {
+     "identifier": "dev.gordas.style.v3.film.dwg-davinci-intermediate.full",
+     "folder": "GDC Film — DaVinci.ofx.bundle",
+     "version": "2.0.0"
+    },
+    {
+     "identifier": "dev.gordas.style.v3.film.awg4-logc4.full",
+     "folder": "GDC V3 Film — vechi.ofx.bundle",
+     "version": "2.0.0"
+    },
+    {
+     "identifier": "dev.gordas.style.v3.color.ap1-acescct.full",
+     "folder": "GDC Color — ACES.ofx.bundle",
+     "version": "2.0.0"
+    }
+   ],
+   "incoming": {
+    "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+    "folder": "GDC Film — ACES.ofx.bundle",
+    "version": "2.0.0"
+   },
+   "expect": {
+    "action": "keep",
+    "write": null,
+    "remove": []
+   },
+   "why": ""
+  },
+  {
+   "name": "install: Demo în slot gol [authoring]",
+   "mode": "authoring",
+   "installed": [],
+   "incoming": {
+    "identifier": "dev.gordas.style.v3.film.ap1-acescct.demo",
+    "folder": "GDC Film — ACES (Demo).ofx.bundle",
+    "version": "2.0.0"
+   },
+   "expect": {
+    "action": "install",
+    "write": "GDC Film — ACES (Demo).ofx.bundle",
+    "remove": []
+   },
+   "why": ""
+  },
+  {
+   "name": "keep: Demo identic [authoring]",
+   "mode": "authoring",
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.v3.film.ap1-acescct.demo",
+     "folder": "GDC Film — ACES (Demo).ofx.bundle",
+     "version": "2.0.0"
+    }
+   ],
+   "incoming": {
+    "identifier": "dev.gordas.style.v3.film.ap1-acescct.demo",
+    "folder": "GDC Film — ACES (Demo).ofx.bundle",
+    "version": "2.0.0"
+   },
+   "expect": {
+    "action": "keep",
+    "write": null,
+    "remove": []
+   },
+   "why": ""
+  },
+  {
+   "name": "refuse: Demo nu înlocuiește Full [authoring]",
+   "mode": "authoring",
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+     "folder": "GDC Film — ACES.ofx.bundle",
+     "version": "2.0.0"
+    }
+   ],
+   "incoming": {
+    "identifier": "dev.gordas.style.v3.film.ap1-acescct.demo",
+    "folder": "GDC Film — ACES (Demo).ofx.bundle",
+    "version": "2.0.0"
+   },
+   "expect": {
+    "action": "refuse:demoOverFull",
+    "write": null,
+    "remove": []
+   },
+   "why": "nicio degradare de ediție în tăcere"
+  },
+  {
+   "name": "refuse: Demo nu înlocuiește Full (cu Demo vechi alături) [authoring]",
+   "mode": "authoring",
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+     "folder": "GDC Film — ACES.ofx.bundle",
+     "version": "2.0.0"
+    },
+    {
+     "identifier": "dev.gordas.style.v3.film.ap1-acescct.demo",
+     "folder": "GDC Film — ACES (Demo).ofx.bundle",
+     "version": "1.0.0"
+    }
+   ],
+   "incoming": {
+    "identifier": "dev.gordas.style.v3.film.ap1-acescct.demo",
+    "folder": "GDC Film — ACES (Demo).ofx.bundle",
+    "version": "2.0.0"
+   },
+   "expect": {
+    "action": "refuse:demoOverFull",
+    "write": null,
+    "remove": []
+   },
+   "why": ""
+  },
+  {
+   "name": "upgrade: Demo mai vechi → Demo nou [distribution]",
+   "mode": "distribution",
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.v3.film.ap1-acescct.demo",
+     "folder": "GDC Film — ACES (Demo).ofx.bundle",
+     "version": "1.0.0"
+    }
+   ],
+   "incoming": {
+    "identifier": "dev.gordas.style.v3.film.ap1-acescct.demo",
+    "folder": "GDC Film — ACES (Demo).ofx.bundle",
+    "version": "2.0.0"
+   },
+   "expect": {
+    "action": "upgrade",
+    "write": "GDC Film — ACES (Demo).ofx.bundle",
+    "remove": []
+   },
+   "why": ""
+  },
+  {
+   "name": "refuse: versiune mai veche decât cea instalată [distribution]",
+   "mode": "distribution",
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+     "folder": "GDC Film — ACES.ofx.bundle",
+     "version": "2.1.0"
+    }
+   ],
+   "incoming": {
+    "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+    "folder": "GDC Film — ACES.ofx.bundle",
+    "version": "2.0.0"
+   },
+   "expect": {
+    "action": "refuse:downgrade",
+    "write": null,
+    "remove": []
+   },
+   "why": "Plugin Manager nu coboară în tăcere"
+  },
+  {
+   "name": "upgrade: versiune mai veche decât cea instalată [authoring]",
+   "mode": "authoring",
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+     "folder": "GDC Film — ACES.ofx.bundle",
+     "version": "2.1.0"
+    }
+   ],
+   "incoming": {
+    "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+    "folder": "GDC Film — ACES.ofx.bundle",
+    "version": "2.0.0"
+   },
+   "expect": {
+    "action": "upgrade",
+    "write": "GDC Film — ACES.ofx.bundle",
+    "remove": []
+   },
+   "why": "autorul reinstalează ce a construit"
+  },
+  {
+   "name": "refuse: legacy redenumit + versiune mai nouă instalată [distribution]",
+   "mode": "distribution",
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+     "folder": "GDC V3 Film — ACES AP1 - ACEScct.ofx.bundle",
+     "version": "2.1.0"
+    }
+   ],
+   "incoming": {
+    "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+    "folder": "GDC Film — ACES.ofx.bundle",
+    "version": "2.0.0"
+   },
+   "expect": {
+    "action": "refuse:downgrade",
+    "write": null,
+    "remove": []
+   },
+   "why": ""
+  },
+  {
+   "name": "replace: legacy redenumit + versiune mai nouă instalată [authoring]",
+   "mode": "authoring",
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+     "folder": "GDC V3 Film — ACES AP1 - ACEScct.ofx.bundle",
+     "version": "2.1.0"
+    }
+   ],
+   "incoming": {
+    "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+    "folder": "GDC Film — ACES.ofx.bundle",
+    "version": "2.0.0"
+   },
+   "expect": {
+    "action": "replace",
+    "write": "GDC Film — ACES.ofx.bundle",
+    "remove": [
+     "GDC V3 Film — ACES AP1 - ACEScct.ofx.bundle"
+    ]
+   },
+   "why": ""
+  },
+  {
+   "name": "V2 keep: modul V2 neschimbat [distribution]",
+   "mode": "distribution",
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.v2.m110.exposure.ap1-acescct.full",
+     "folder": "GDC V2 110 Exposure and Black — ACES AP1 - ACEScct.ofx.bundle",
+     "version": "1.48.0"
+    }
+   ],
+   "incoming": {
+    "identifier": "dev.gordas.style.v2.m110.exposure.ap1-acescct.full",
+    "folder": "GDC V2 110 Exposure and Black — ACES AP1 - ACEScct.ofx.bundle",
+    "version": "1.48.0"
+   },
+   "expect": {
+    "action": "keep",
+    "write": null,
+    "remove": []
+   },
+   "why": ""
+  },
+  {
+   "name": "V2 replace: modul V2 redenumit [distribution]",
+   "mode": "distribution",
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.v2.m110.exposure.ap1-acescct.full",
+     "folder": "altul.ofx.bundle",
+     "version": "1.48.0"
+    }
+   ],
+   "incoming": {
+    "identifier": "dev.gordas.style.v2.m110.exposure.ap1-acescct.full",
+    "folder": "GDC V2 110 Exposure and Black — ACES AP1 - ACEScct.ofx.bundle",
+    "version": "1.48.0"
+   },
+   "expect": {
+    "action": "replace",
+    "write": "GDC V2 110 Exposure and Black — ACES AP1 - ACEScct.ofx.bundle",
+    "remove": [
+     "altul.ofx.bundle"
+    ]
+   },
+   "why": ""
+  },
+  {
+   "name": "V2 replace: Demo → Full [distribution]",
+   "mode": "distribution",
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.v2.m110.exposure.ap1-acescct.demo",
+     "folder": "GDC V2 110 Exposure and Black — ACES AP1 - ACEScct (Demo).ofx.bundle",
+     "version": "1.48.0"
+    }
+   ],
+   "incoming": {
+    "identifier": "dev.gordas.style.v2.m110.exposure.ap1-acescct.full",
+    "folder": "GDC V2 110 Exposure and Black — ACES AP1 - ACEScct.ofx.bundle",
+    "version": "1.48.0"
+   },
+   "expect": {
+    "action": "replace",
+    "write": "GDC V2 110 Exposure and Black — ACES AP1 - ACEScct.ofx.bundle",
+    "remove": [
+     "GDC V2 110 Exposure and Black — ACES AP1 - ACEScct (Demo).ofx.bundle"
+    ]
+   },
+   "why": ""
+  },
+  {
+   "name": "V1 opac: același identificator, alt folder ⇒ replace [distribution]",
+   "mode": "distribution",
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.single.0123456789abcdef",
+     "folder": "Vechi.ofx.bundle",
+     "version": "1.0.0"
+    }
+   ],
+   "incoming": {
+    "identifier": "dev.gordas.style.single.0123456789abcdef",
+    "folder": "Nou.ofx.bundle",
+    "version": "1.0.0"
+   },
+   "expect": {
+    "action": "replace",
+    "write": "Nou.ofx.bundle",
+    "remove": [
+     "Vechi.ofx.bundle"
+    ]
+   },
+   "why": ""
+  },
+  {
+   "name": "V1 opac: același pachet, versiune nouă ⇒ upgrade [distribution]",
+   "mode": "distribution",
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.single.0123456789abcdef",
+     "folder": "Nou.ofx.bundle",
+     "version": "1.0.0"
+    }
+   ],
+   "incoming": {
+    "identifier": "dev.gordas.style.single.0123456789abcdef",
+    "folder": "Nou.ofx.bundle",
+    "version": "1.1.0"
+   },
+   "expect": {
+    "action": "upgrade",
+    "write": "Nou.ofx.bundle",
+    "remove": []
+   },
+   "why": ""
+  },
+  {
+   "name": "V1 opac nu blochează V3 [distribution]",
+   "mode": "distribution",
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.single.0123456789abcdef",
+     "folder": "Nou.ofx.bundle",
+     "version": "1.0.0"
+    }
+   ],
+   "incoming": {
+    "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+    "folder": "GDC Film — ACES.ofx.bundle",
+    "version": "2.0.0"
+   },
+   "expect": {
+    "action": "install",
+    "write": "GDC Film — ACES.ofx.bundle",
+    "remove": []
+   },
+   "why": ""
+  },
+  {
+   "name": "V3 nu blochează V1 opac [distribution]",
+   "mode": "distribution",
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+     "folder": "GDC Film — ACES.ofx.bundle",
+     "version": "2.0.0"
+    }
+   ],
+   "incoming": {
+    "identifier": "dev.gordas.style.single.0123456789abcdef",
+    "folder": "Nou.ofx.bundle",
+    "version": "1.0.0"
+   },
+   "expect": {
+    "action": "install",
+    "write": "Nou.ofx.bundle",
+    "remove": []
+   },
+   "why": ""
+  },
+  {
+   "name": "V2 keep: modul V2 neschimbat [authoring]",
+   "mode": "authoring",
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.v2.m110.exposure.ap1-acescct.full",
+     "folder": "GDC V2 110 Exposure and Black — ACES AP1 - ACEScct.ofx.bundle",
+     "version": "1.48.0"
+    }
+   ],
+   "incoming": {
+    "identifier": "dev.gordas.style.v2.m110.exposure.ap1-acescct.full",
+    "folder": "GDC V2 110 Exposure and Black — ACES AP1 - ACEScct.ofx.bundle",
+    "version": "1.48.0"
+   },
+   "expect": {
+    "action": "keep",
+    "write": null,
+    "remove": []
+   },
+   "why": ""
+  },
+  {
+   "name": "V2 replace: modul V2 redenumit [authoring]",
+   "mode": "authoring",
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.v2.m110.exposure.ap1-acescct.full",
+     "folder": "altul.ofx.bundle",
+     "version": "1.48.0"
+    }
+   ],
+   "incoming": {
+    "identifier": "dev.gordas.style.v2.m110.exposure.ap1-acescct.full",
+    "folder": "GDC V2 110 Exposure and Black — ACES AP1 - ACEScct.ofx.bundle",
+    "version": "1.48.0"
+   },
+   "expect": {
+    "action": "replace",
+    "write": "GDC V2 110 Exposure and Black — ACES AP1 - ACEScct.ofx.bundle",
+    "remove": [
+     "altul.ofx.bundle"
+    ]
+   },
+   "why": ""
+  },
+  {
+   "name": "V2 replace: Demo → Full [authoring]",
+   "mode": "authoring",
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.v2.m110.exposure.ap1-acescct.demo",
+     "folder": "GDC V2 110 Exposure and Black — ACES AP1 - ACEScct (Demo).ofx.bundle",
+     "version": "1.48.0"
+    }
+   ],
+   "incoming": {
+    "identifier": "dev.gordas.style.v2.m110.exposure.ap1-acescct.full",
+    "folder": "GDC V2 110 Exposure and Black — ACES AP1 - ACEScct.ofx.bundle",
+    "version": "1.48.0"
+   },
+   "expect": {
+    "action": "replace",
+    "write": "GDC V2 110 Exposure and Black — ACES AP1 - ACEScct.ofx.bundle",
+    "remove": [
+     "GDC V2 110 Exposure and Black — ACES AP1 - ACEScct (Demo).ofx.bundle"
+    ]
+   },
+   "why": ""
+  },
+  {
+   "name": "V1 opac: același identificator, alt folder ⇒ replace [authoring]",
+   "mode": "authoring",
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.single.0123456789abcdef",
+     "folder": "Vechi.ofx.bundle",
+     "version": "1.0.0"
+    }
+   ],
+   "incoming": {
+    "identifier": "dev.gordas.style.single.0123456789abcdef",
+    "folder": "Nou.ofx.bundle",
+    "version": "1.0.0"
+   },
+   "expect": {
+    "action": "replace",
+    "write": "Nou.ofx.bundle",
+    "remove": [
+     "Vechi.ofx.bundle"
+    ]
+   },
+   "why": ""
+  },
+  {
+   "name": "V1 opac: același pachet, versiune nouă ⇒ upgrade [authoring]",
+   "mode": "authoring",
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.single.0123456789abcdef",
+     "folder": "Nou.ofx.bundle",
+     "version": "1.0.0"
+    }
+   ],
+   "incoming": {
+    "identifier": "dev.gordas.style.single.0123456789abcdef",
+    "folder": "Nou.ofx.bundle",
+    "version": "1.1.0"
+   },
+   "expect": {
+    "action": "upgrade",
+    "write": "Nou.ofx.bundle",
+    "remove": []
+   },
+   "why": ""
+  },
+  {
+   "name": "V1 opac nu blochează V3 [authoring]",
+   "mode": "authoring",
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.single.0123456789abcdef",
+     "folder": "Nou.ofx.bundle",
+     "version": "1.0.0"
+    }
+   ],
+   "incoming": {
+    "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+    "folder": "GDC Film — ACES.ofx.bundle",
+    "version": "2.0.0"
+   },
+   "expect": {
+    "action": "install",
+    "write": "GDC Film — ACES.ofx.bundle",
+    "remove": []
+   },
+   "why": ""
+  },
+  {
+   "name": "V3 nu blochează V1 opac [authoring]",
+   "mode": "authoring",
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+     "folder": "GDC Film — ACES.ofx.bundle",
+     "version": "2.0.0"
+    }
+   ],
+   "incoming": {
+    "identifier": "dev.gordas.style.single.0123456789abcdef",
+    "folder": "Nou.ofx.bundle",
+    "version": "1.0.0"
+   },
+   "expect": {
+    "action": "install",
+    "write": "Nou.ofx.bundle",
+    "remove": []
+   },
+   "why": ""
+  }
+ ],
+ "removals": [
+  {
+   "name": "remove: toate variantele unui produs (orice ediție, orice nume)",
+   "generation": "v3",
+   "product": "film",
+   "variants": null,
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+     "folder": "GDC Film — ACES.ofx.bundle",
+     "version": "2.0.0"
+    },
+    {
+     "identifier": "dev.gordas.style.v3.film.dwg-davinci-intermediate.demo",
+     "folder": "GDC Film — DaVinci (Demo).ofx.bundle",
+     "version": "2.0.0"
+    },
+    {
+     "identifier": "dev.gordas.style.v3.film.awg4-logc4.full",
+     "folder": "GDC V3 Film — vechi.ofx.bundle",
+     "version": "2.0.0"
+    },
+    {
+     "identifier": "dev.gordas.style.v3.color.ap1-acescct.full",
+     "folder": "GDC Color — ACES.ofx.bundle",
+     "version": "2.0.0"
+    },
+    {
+     "identifier": "dev.gordas.style.v2.m110.exposure.ap1-acescct.full",
+     "folder": "GDC V2 110 Exposure and Black — ACES AP1 - ACEScct.ofx.bundle",
+     "version": "1.48.0"
+    }
+   ],
+   "expect": [
+    "GDC Film — ACES.ofx.bundle",
+    "GDC Film — DaVinci (Demo).ofx.bundle",
+    "GDC V3 Film — vechi.ofx.bundle"
+   ]
+  },
+  {
+   "name": "remove: doar variantele cerute",
+   "generation": "v3",
+   "product": "film",
+   "variants": [
+    "ap1-acescct"
+   ],
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+     "folder": "GDC Film — ACES.ofx.bundle",
+     "version": "2.0.0"
+    },
+    {
+     "identifier": "dev.gordas.style.v3.film.dwg-davinci-intermediate.demo",
+     "folder": "GDC Film — DaVinci (Demo).ofx.bundle",
+     "version": "2.0.0"
+    },
+    {
+     "identifier": "dev.gordas.style.v3.film.awg4-logc4.full",
+     "folder": "GDC V3 Film — vechi.ofx.bundle",
+     "version": "2.0.0"
+    },
+    {
+     "identifier": "dev.gordas.style.v3.color.ap1-acescct.full",
+     "folder": "GDC Color — ACES.ofx.bundle",
+     "version": "2.0.0"
+    },
+    {
+     "identifier": "dev.gordas.style.v2.m110.exposure.ap1-acescct.full",
+     "folder": "GDC V2 110 Exposure and Black — ACES AP1 - ACEScct.ofx.bundle",
+     "version": "1.48.0"
+    },
+    {
+     "identifier": "dev.gordas.style.v3.film.ap1-acescct.demo",
+     "folder": "GDC Film — ACES (Demo).ofx.bundle",
+     "version": "2.0.0"
+    },
+    {
+     "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+     "folder": "GDC V3 Film — ACES AP1 - ACEScct.ofx.bundle",
+     "version": "2.0.0"
+    }
+   ],
+   "expect": [
+    "GDC Film — ACES (Demo).ofx.bundle",
+    "GDC Film — ACES.ofx.bundle",
+    "GDC V3 Film — ACES AP1 - ACEScct.ofx.bundle"
+   ]
+  },
+  {
+   "name": "remove: alt produs nu se atinge",
+   "generation": "v3",
+   "product": "color",
+   "variants": null,
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+     "folder": "GDC Film — ACES.ofx.bundle",
+     "version": "2.0.0"
+    },
+    {
+     "identifier": "dev.gordas.style.v3.film.dwg-davinci-intermediate.demo",
+     "folder": "GDC Film — DaVinci (Demo).ofx.bundle",
+     "version": "2.0.0"
+    },
+    {
+     "identifier": "dev.gordas.style.v3.film.awg4-logc4.full",
+     "folder": "GDC V3 Film — vechi.ofx.bundle",
+     "version": "2.0.0"
+    },
+    {
+     "identifier": "dev.gordas.style.v3.color.ap1-acescct.full",
+     "folder": "GDC Color — ACES.ofx.bundle",
+     "version": "2.0.0"
+    },
+    {
+     "identifier": "dev.gordas.style.v2.m110.exposure.ap1-acescct.full",
+     "folder": "GDC V2 110 Exposure and Black — ACES AP1 - ACEScct.ofx.bundle",
+     "version": "1.48.0"
+    }
+   ],
+   "expect": [
+    "GDC Color — ACES.ofx.bundle"
+   ]
+  },
+  {
+   "name": "remove: produsul V3 nu atinge V2 / V1",
+   "generation": "v3",
+   "product": "exposure",
+   "variants": null,
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+     "folder": "GDC Film — ACES.ofx.bundle",
+     "version": "2.0.0"
+    },
+    {
+     "identifier": "dev.gordas.style.v3.film.dwg-davinci-intermediate.demo",
+     "folder": "GDC Film — DaVinci (Demo).ofx.bundle",
+     "version": "2.0.0"
+    },
+    {
+     "identifier": "dev.gordas.style.v3.film.awg4-logc4.full",
+     "folder": "GDC V3 Film — vechi.ofx.bundle",
+     "version": "2.0.0"
+    },
+    {
+     "identifier": "dev.gordas.style.v3.color.ap1-acescct.full",
+     "folder": "GDC Color — ACES.ofx.bundle",
+     "version": "2.0.0"
+    },
+    {
+     "identifier": "dev.gordas.style.v2.m110.exposure.ap1-acescct.full",
+     "folder": "GDC V2 110 Exposure and Black — ACES AP1 - ACEScct.ofx.bundle",
+     "version": "1.48.0"
+    }
+   ],
+   "expect": []
+  },
+  {
+   "name": "remove: un modul V2",
+   "generation": "v2",
+   "product": "m110.exposure",
+   "variants": null,
+   "installed": [
+    {
+     "identifier": "dev.gordas.style.v3.film.ap1-acescct.full",
+     "folder": "GDC Film — ACES.ofx.bundle",
+     "version": "2.0.0"
+    },
+    {
+     "identifier": "dev.gordas.style.v3.film.dwg-davinci-intermediate.demo",
+     "folder": "GDC Film — DaVinci (Demo).ofx.bundle",
+     "version": "2.0.0"
+    },
+    {
+     "identifier": "dev.gordas.style.v3.film.awg4-logc4.full",
+     "folder": "GDC V3 Film — vechi.ofx.bundle",
+     "version": "2.0.0"
+    },
+    {
+     "identifier": "dev.gordas.style.v3.color.ap1-acescct.full",
+     "folder": "GDC Color — ACES.ofx.bundle",
+     "version": "2.0.0"
+    },
+    {
+     "identifier": "dev.gordas.style.v2.m110.exposure.ap1-acescct.full",
+     "folder": "GDC V2 110 Exposure and Black — ACES AP1 - ACEScct.ofx.bundle",
+     "version": "1.48.0"
+    }
+   ],
+   "expect": [
+    "GDC V2 110 Exposure and Black — ACES AP1 - ACEScct.ofx.bundle"
+   ]
+  }
+ ]
+}

@@ -23,7 +23,7 @@ Supabase Edge Function. Autorizează descărcarea UNUI fișier de produs. Nu în
 4. Fișierul cerut e EXACT unul dintre fișierele produsului, iar calea începe cu `<productID>/` (artifact allowlist).
 5. Repo-ul fișierului ∈ allowlist (`files`, `pdfs`, `scripts`, `resources` → repo-urile private cunoscute).
 6. Platformă: `supportedOS` al produsului permite platforma cerută.
-7. Drept de acces: produs gratuit/probă → permis. Altfel serial Ed25519 valid (semnătură cu cheia publică GDC, product hash = SHA-512(productID)[:4], neexpirat, machine hash = `machineID` dacă serialul e legat de mașină, octetul de platformă permite platforma cerută).
+7. Drept de acces: produs gratuit/probă → permis. Produs OFX GDC STYLE Lab V3 (`ofxProduct`): fișierele ediției Demo (`<id>/<versiune>/Demo/<folder>/…`, rădăcină declarată în `ofxProduct`) → permis fără serial; ediția Full urmează regula produselor plătite. Altfel serial Ed25519 valid (semnătură cu cheia publică GDC, product hash = SHA-512(productID)[:4], neexpirat, machine hash = `machineID` dacă serialul e legat de mașină, octetul de platformă permite platforma cerută).
 8. Revocare: `(machineID, productID)` absent din `license_revocations` (doar pentru produse plătite).
 9. Se cere la GitHub (credential server-side, read-only) metadatele fișierului; se întoarce `download_url`-ul temporar.
 

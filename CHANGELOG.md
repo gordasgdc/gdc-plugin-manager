@@ -1107,3 +1107,7 @@ orice secțiune (Aplicații, Evenimente, Materiale, Magazine, Service,
 Cursuri, Oferte, Pachete, Resurse) — arată toate imaginile deja publicate
 și permite reutilizarea uneia existente pe un produs nou, fără reîncărcare
 de pe disc.
+
+# Unreleased (ramura stylelab-v3-products)
+
+- Produse GDC STYLE Lab V3: un item de catalog per produs (toate pipeline-urile, ediții Demo + Full), instalare după identitatea din Info.plist (Demo → Full înlocuiește, Full → Demo refuzat, copii redenumite / dubluri curățate, alte pachete neatinse), ediția Demo descărcabilă gratuit, Full cu serial. Furnizor: instrumentele V3 în lista de licențiere / prețuri; publicarea unui release de produs din căsuța STYLE Lab. Nepublicat.

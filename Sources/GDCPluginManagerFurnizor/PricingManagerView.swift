@@ -43,7 +43,7 @@ struct PricingManagerView: View {
                 Text(loadError).foregroundStyle(GDCTokens.Palette.error).font(.caption).padding(.horizontal)
             }
 
-            Table(gdcStandaloneProducts, selection: $selectedProductID) {
+            Table(gdcLicensableProducts, selection: $selectedProductID) {
                 TableColumn("Produs") { Text($0.name).fontWeight(.medium) }
                     .width(min: 160, ideal: 220)
                 TableColumn("Sumă de bază") { product in
@@ -81,7 +81,7 @@ struct PricingManagerView: View {
 
     @ViewBuilder
     private var detailPane: some View {
-        if let id = selectedProductID, let product = gdcStandaloneProducts.first(where: { $0.id == id }) {
+        if let id = selectedProductID, let product = gdcLicensableProducts.first(where: { $0.id == id }) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 18) {
                     Text(product.name).font(.title3).bold()

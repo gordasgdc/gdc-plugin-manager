@@ -18,6 +18,11 @@ struct StyleLabSubmission: Codable, Identifiable, Equatable {
     /// Pachet Demo (id = `<cod>-demo`): publicat gratuit. `autoPublish` = STYLE Lab cere publicarea directă (fără formular), vezi DemoPublisher.
     var demo: Bool?
     var autoPublish: Bool?
+    /// [2026-10-04] `ofx-product` = release de produs GDC STYLE Lab V3 (manifest `gdc-product-release@1`, ediții Full + Demo,
+    /// variante de pipeline); `bundlePath` = folderul release-ului, `manifestPath` = manifestul lui. nil = pachet OFX simplu (ca înainte).
+    var kind: String?
+    var manifestPath: String?
+    var isOFXProduct: Bool { kind == "ofx-product" }
 }
 
 enum StyleLabInbox {

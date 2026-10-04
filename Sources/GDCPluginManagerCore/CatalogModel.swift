@@ -438,13 +438,18 @@ public struct PluginItem: Codable, Identifiable, Hashable {
     /// Optional: catalogul deja publicat decodeaza neschimbat.
     public let access: CatalogAccess?
 
+    /// [2026-10-04] Doar OFX: produs GDC STYLE Lab V3 (variante de pipeline × ediții Demo/Full, identitate pe slot) — vezi
+    /// `OFXProductRelease`. nil = comportamentul de dinainte (un pachet, `bundleFolderName`).
+    public let ofxProduct: OFXProductRelease?
+
     public init(id: String, name: String, type: PluginType, description: String, version: String,
                 files: [PluginFile], iconSymbol: String?, priceEUR: Double, isFree: Bool = false, isTrial: Bool = false,
                 youtubeURL: String? = nil, bundleFolderName: String? = nil, scriptFolder: ScriptFolder? = nil, coverImage: String? = nil, supportedOS: SupportedOS = .crossPlatform,
                 purchaseURL: String? = nil, demoURL: String? = nil, socialLinks: SocialLinks? = nil,
-                scheduling: Scheduling? = nil, promoPriceEUR: Double? = nil, access: CatalogAccess? = nil) {
+                scheduling: Scheduling? = nil, promoPriceEUR: Double? = nil, access: CatalogAccess? = nil, ofxProduct: OFXProductRelease? = nil) {
         self.id = id
         self.access = access
+        self.ofxProduct = ofxProduct
         self.name = name
         self.type = type
         self.description = description
@@ -485,12 +490,13 @@ public struct PluginItem: Codable, Identifiable, Hashable {
     // `isFree`/`isTrial`/`youtubeURL`/`bundleFolderName`), so any entry
     // ever published still decodes cleanly.
     private enum CodingKeys: String, CodingKey {
-        case id, name, type, description, version, files, filePath, sha256, iconSymbol, priceEUR, isFree, isTrial, youtubeURL, bundleFolderName, scriptFolder, coverImage, supportedOS, purchaseURL, demoURL, socialLinks, scheduling, promoPriceEUR, access
+        case id, name, type, description, version, files, filePath, sha256, iconSymbol, priceEUR, isFree, isTrial, youtubeURL, bundleFolderName, scriptFolder, coverImage, supportedOS, purchaseURL, demoURL, socialLinks, scheduling, promoPriceEUR, access, ofxProduct
     }
 
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         access = try c.decodeIfPresent(CatalogAccess.self, forKey: .access)
+        ofxProduct = try c.decodeIfPresent(OFXProductRelease.self, forKey: .ofxProduct)
         id = try c.decode(String.self, forKey: .id)
         name = try c.decode(String.self, forKey: .name)
         type = try c.decode(PluginType.self, forKey: .type)
@@ -554,6 +560,7 @@ public struct PluginItem: Codable, Identifiable, Hashable {
         try c.encodeIfPresent(socialLinks, forKey: .socialLinks)
         try c.encodeIfPresent(scheduling, forKey: .scheduling)
         try c.encodeIfPresent(promoPriceEUR, forKey: .promoPriceEUR)
+        try c.encodeIfPresent(ofxProduct, forKey: .ofxProduct)
     }
 
     /// True for a multi-file pack (e.g. a whole folder of LUTs published

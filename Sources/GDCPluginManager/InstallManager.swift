@@ -126,6 +126,7 @@ final class InstallManager: ObservableObject {
     @discardableResult
     func install(_ item: PluginItem) async throws -> InstallOutcome {
         DiagnosticLog.write("Install", "start \(item.id) v\(item.version) (\(item.files.count) fișiere)")
+        if item.type == .ofx, let product = item.ofxProduct { return try await installOFXProduct(item, product) }
         let destinationDir = destinationDirectory(for: item)
         var tempURLs: [URL] = []
         defer { for url in tempURLs { try? FileManager.default.removeItem(at: url) } }
@@ -250,8 +251,104 @@ final class InstallManager: ObservableObject {
         }
     }
 
+    // MARK: - Produse OFX GDC STYLE Lab V3 (identitate pe slot)
+
+    /// [2026-10-04] Un produs V3 = mai multe pachete `.ofx.bundle` (variante de pipeline), fiecare cu identitatea din Info.plist.
+    /// Regulile (OFXProductInstall / OFXIdentity, aceleași ca GDC STYLE Lab): Demo → Full înlocuiește în același slot, Full → Demo
+    /// refuzat, copiile redenumite / dublurile se curăță, alte produse și pachetele altor producători nu se ating niciodată.
+    /// Ediția: Full cu serial pentru produs (sau dacă un Full e deja instalat), altfel Demo (gratuit, cu filigran).
+    private func installOFXProduct(_ item: PluginItem, _ product: OFXProductRelease) async throws -> InstallOutcome {
+        if let problem = product.validate(itemID: item.id, itemVersion: item.version) {
+            DiagnosticLog.write("Install", "produs OFX nevalid \(item.id): \(problem)")
+            throw InstallError.verificationFailed(item.name, "descrierea produsului din catalog nu e validă")
+        }
+        let root = PluginType.ofx.installDirectory
+        let installed = OFXIdentity.scanInstalled(root: root)
+        let serial = LicenseManager.shared.serial(for: item.id)
+        let edition = OFXProductInstall.edition(hasSerial: !(serial ?? "").isEmpty, r: product, installed: installed)
+        let already = OFXProductInstall.installedVariants(product, installed: installed)
+        let selection: OFXProductInstall.Selection = already.isEmpty ? .all : .variants(already)   // actualizarea atinge doar variantele prezente
+        let plan: OFXProductInstall.Plan
+        switch OFXProductInstall.install(product, edition: edition, selection: selection, installed: installed) {
+        case .success(let p): plan = p
+        case .failure(let e):
+            DiagnosticLog.write("Install", "plan OFX eșuat \(item.id): \(e)")
+            throw InstallError.verificationFailed(item.name, "pachetele produsului nu corespund pipeline-urilor instalate")
+        }
+        for d in plan.decisions { DiagnosticLog.write("Install", "\(item.id) \(d.variantId) [\(edition.rawValue)]: \(d.decision.action.code)") }
+        if let refused = plan.refusals.first {
+            // o versiune mai nouă e deja pe disc (refuse:downgrade) sau un Full există (refuse:demoOverFull): nimic nu se schimbă
+            DiagnosticLog.write("Install", "\(item.id): refuzat \(refused.decision.action.code), nimic scris")
+            if plan.writes.isEmpty, plan.removals.isEmpty {
+                installedVersions[item.id] = OFXProductInstall.installedVersion(product, installed: installed) ?? item.version
+                saveState()
+                return .installed(paths: [])
+            }
+        }
+
+        // 1) TOATE fișierele pachetelor de scris se descarcă și se verifică ÎNAINTE de orice ștergere/scriere.
+        var staged: [(folder: String, identifier: String, files: [(rel: String, temp: URL)])] = []
+        var temps: [URL] = []
+        defer { for u in temps { try? FileManager.default.removeItem(at: u) } }
+        for d in plan.writes {
+            let prefix = d.package.root + "/"
+            let files = item.files.filter { $0.path.hasPrefix(prefix) }
+            guard !files.isEmpty, files.contains(where: { $0.path == prefix + "Contents/Info.plist" }) else {
+                throw InstallError.verificationFailed(item.name, "pachetul \(d.package.folder) lipsește din catalog")
+            }
+            var list: [(String, URL)] = []
+            for f in files {
+                let rel = String(f.path.dropFirst(prefix.count))
+                guard !rel.isEmpty, !rel.split(separator: "/").contains(".."), !rel.hasPrefix("/") else { throw InstallError.verificationFailed(item.name, "cale nevalidă în pachet") }
+                let data = try await fetchAuthorizedFileData(productID: item.id, file: f)
+                let sha = SHA256.hash(data: data).compactMap { String(format: "%02x", $0) }.joined()
+                guard sha.lowercased() == f.sha256.lowercased() else { throw InstallError.checksumMismatch }
+                let t = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+                try data.write(to: t); temps.append(t); list.append((rel, t))
+            }
+            staged.append((d.package.folder, d.package.identifier, list))
+        }
+
+        // 2) curățarea slotului (copii redenumite, dubluri, ediția Demo înlocuită), apoi rescriere curată a fiecărui pachet
+        for rel in plan.removals { try deleteDirectory(at: root.appendingPathComponent(rel)) }
+        var written: [URL] = []
+        for s in staged {
+            let dir = root.appendingPathComponent(s.folder)
+            try deleteDirectory(at: dir)
+            for (rel, t) in s.files {
+                let dst = dir.appendingPathComponent(rel)
+                try writeFile(from: t, to: dst, creatingDirectory: dst.deletingLastPathComponent())
+                written.append(dst)
+            }
+            try fixOFXBundlePermissions(at: dir)
+            // verificare: identitatea scrisă = cea anunțată (altfel slotul ar fi greșit în Resolve)
+            let plist = NSDictionary(contentsOf: dir.appendingPathComponent("Contents/Info.plist"))
+            guard plist?["CFBundleIdentifier"] as? String == s.identifier, plist?["CFBundleShortVersionString"] as? String == product.version else {
+                try? FileManager.default.removeItem(at: dir)
+                throw InstallError.verificationFailed(dir.path, "identitatea pachetului OFX nu corespunde catalogului")
+            }
+            let bundlePath = dir.path
+            Task.detached(priority: .utility) { ResolveOFXCache.forget(bundlePath: bundlePath) }
+        }
+        // 3) după instalare: niciun slot al produsului nu are doi ocupanți
+        let after = OFXIdentity.scanInstalled(root: root).filter { OFXIdentity.parse($0.identifier).product == product.instrument && OFXIdentity.parse($0.identifier).generation == .v3 }
+        let slots = after.map { OFXIdentity.parse($0.identifier).slot }
+        if Set(slots).count != slots.count { DiagnosticLog.write("Install", "\(item.id): DUBLURĂ după instalare \(after.map(\.folder))") }
+        installedVersions[item.id] = product.version
+        saveState()
+        DiagnosticLog.write("Install", "\(item.id) \(product.version) [\(edition.rawValue)]: \(staged.count) pachete scrise, \(plan.removals.count) șterse")
+        return .installed(paths: written)
+    }
+
     @discardableResult
     func remove(_ item: PluginItem) throws -> RemoveOutcome {
+        if item.type == .ofx, let product = item.ofxProduct {   // toți ocupanții sloturilor produsului, orice ediție / nume; nimic altceva
+            let root = PluginType.ofx.installDirectory
+            for rel in OFXProductInstall.removal(product, installed: OFXIdentity.scanInstalled(root: root)) { try deleteDirectory(at: root.appendingPathComponent(rel)) }
+            installedVersions.removeValue(forKey: item.id)
+            saveState()
+            return .removed
+        }
         var galleryOutcome: RemoveOutcome = .removed
         if item.type == .powerGrade {
             switch PowerGradeImporter.removeFromGallery(productName: item.name) {

@@ -63,6 +63,22 @@ let gdcStandaloneProducts: [StandaloneProduct] = [
     StandaloneProduct(id: "gdc-lut-lab", name: "GDC STYLE Lab"),
 ]
 
+/// [2026-10-04] Instrumentele GDC STYLE Lab V3 din primul release Mac (un produs comercial per instrument; Demo și Full sunt ediții
+/// ale ACELUIAȘI Product ID, deci un singur serial deblochează toate variantele de pipeline). Sursa: GDC STYLE Lab
+/// `Engine/src/ModuleContractV2.cpp` (`gdc-style-v3-<slug>`) + boundary-ul din `planning/V3_MAC_RELEASE.md`; verificat automat de
+/// `scripts/test_release_boundary.sh` din acel repo (lista de aici == produsele SHIP). Un produs V3 deja publicat în catalog apare
+/// la „Din catalog”; aici rămâne ca să poată fi licențiat (și prețuit) înainte de publicare.
+let gdcStyleLabV3Products: [StandaloneProduct] = [
+    StandaloneProduct(id: "gdc-style-v3-exposure-balance", name: "GDC Exposure + Balance"),
+    StandaloneProduct(id: "gdc-style-v3-color", name: "GDC Color"),
+    StandaloneProduct(id: "gdc-style-v3-look", name: "GDC Look"),
+    StandaloneProduct(id: "gdc-style-v3-skin", name: "GDC Skin"),
+    StandaloneProduct(id: "gdc-style-v3-film", name: "GDC Film"),
+]
+
+/// Produsele licențiabile din afara catalogului: aplicațiile standalone + instrumentele V3 (fără dubluri).
+let gdcLicensableProducts: [StandaloneProduct] = gdcStandaloneProducts + gdcStyleLabV3Products
+
 struct GenerateSerialView: View {
     @State private var items: [PluginItem] = []
     // Etapa 2 extinsă (2026-08-29) — Resursele Download (LUT/SFX/VFX/
@@ -296,7 +312,7 @@ struct GenerateSerialView: View {
 
     /// Product ID-urile personalizate: memorate la generare + cele din istoricul de vânzări care nu sunt în alte liste.
     private var customIDs: [String] {
-        let known = Set(items.map(\.id) + downloadResources.map(\.id) + gdcStandaloneProducts.map(\.id))
+        let known = Set(items.map(\.id) + downloadResources.map(\.id) + gdcLicensableProducts.map(\.id))
         var ids = customIDsStore.split(separator: "\n").map(String.init)
         for e in SalesLog.readAll() where e.productID.hasPrefix("gdc-style-") && !ids.contains(e.productID) { ids.append(e.productID) }
         return ids.filter { !$0.isEmpty && !known.contains($0) }.sorted()
@@ -312,7 +328,7 @@ struct GenerateSerialView: View {
     private func name(of id: String) -> String {
         if let item = items.first(where: { $0.id == id }) { return item.name }
         if let r = downloadResources.first(where: { $0.id == id }) { return r.name }
-        if let app = gdcStandaloneProducts.first(where: { $0.id == id }) { return app.name }
+        if let app = gdcLicensableProducts.first(where: { $0.id == id }) { return app.name }
         return id
     }
 
@@ -368,6 +384,7 @@ struct GenerateSerialView: View {
                 ScrollView {
                     VStack(alignment: .leading, spacing: GDCTokens.Space.xxs) {
                         productSection("Aplicații standalone", gdcStandaloneProducts.map { ProductRow(id: $0.id, label: $0.name) })
+                        productSection("Instrumente GDC STYLE Lab (V3)", gdcStyleLabV3Products.filter { p in !items.contains { $0.id == p.id } }.map { ProductRow(id: $0.id, label: $0.name) })
                         productSection("Pachete OFX (GDC STYLE Lab) — Product ID-uri memorate", customIDs.map { ProductRow(id: $0, label: $0) })
                         productSection("Din catalog (LUT / DCTL / PowerGrade)", items.map { ProductRow(id: $0.id, label: "\($0.name) — \($0.priceDisplay)") })
                         productSection("Resurse Download (LUT/SFX/VFX/Plugin)", downloadResources.map { ProductRow(id: $0.id, label: "\($0.name) — \($0.priceDisplay)") })
@@ -475,7 +492,7 @@ struct GenerateSerialView: View {
         }
         let trimmedMachineID = machineID.trimmingCharacters(in: .whitespacesAndNewlines)
         let customer = customerName.trimmingCharacters(in: .whitespaces)
-        let known = Set(items.map(\.id) + downloadResources.map(\.id) + gdcStandaloneProducts.map(\.id))
+        let known = Set(items.map(\.id) + downloadResources.map(\.id) + gdcLicensableProducts.map(\.id))
         if trimmedMachineID.isEmpty, let needs = selectedIDs.first(where: LicenseIdentity.requiresMachineID) {
             errorMessage = "\(name(of: needs)) cere ID-ul calculatorului (licențele generația 2 sunt legate de un calculator)."
             return

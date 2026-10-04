@@ -33,6 +33,7 @@ struct PublishView: View {
     /// Versiunea deja publicată a produsului editat (nil la un produs nou): afișată lângă câmp, iar noua versiune se sugerează automat (+1 la patch).
     @State private var previousVersion: String?
     @State private var inbox: [StyleLabSubmission] = []
+    @State private var pendingProductSubmission: StyleLabSubmission?
     /// Trimiterea din STYLE Lab aplicată în formular (se scoate din căsuță după publicare).
     @State private var appliedSubmissionID: String?
     @State private var skipClear = false
@@ -118,13 +119,29 @@ struct PublishView: View {
                 if !inbox.isEmpty {
                     Menu {
                         ForEach(inbox) { sub in
-                            Button("\(sub.name) — v\(sub.version) (\(sub.id))") { applySubmission(sub) }
+                            if sub.isOFXProduct {
+                                Button("\(sub.name) — v\(sub.version) · produs V3 (toate pipeline-urile, Demo + Full)") { pendingProductSubmission = sub }
+                            } else {
+                                Button("\(sub.name) — v\(sub.version) (\(sub.id))") { applySubmission(sub) }
+                            }
                         }
                     } label: {
                         Label("Din STYLE Lab (\(inbox.count))", systemImage: "tray.and.arrow.down")
                     }
                     .frame(maxWidth: 360, alignment: .leading)
                     .help("Pachete OFX validate și trimise de GDC STYLE Lab: completează singure ID-ul, numele, versiunea și fișierele")
+                    .alert("Publici produsul GDC STYLE Lab?", isPresented: Binding(get: { pendingProductSubmission != nil }, set: { if !$0 { pendingProductSubmission = nil } })) {
+                        Button("Publică", role: .destructive) {
+                            guard let sub = pendingProductSubmission else { return }
+                            pendingProductSubmission = nil
+                            let r = StyleLabProductPublisher.publish([sub])
+                            if let bad = r.first(where: { $0.status == "error" }) { errorMessage = bad.message } else { successMessage = r.map { "\($0.name) \($0.version): \($0.message)" }.joined(separator: "\n") }
+                            loadExistingIfNeeded()
+                        }
+                        Button("Anulează", role: .cancel) { pendingProductSubmission = nil }
+                    } message: {
+                        Text("\(pendingProductSubmission?.name ?? "") v\(pendingProductSubmission?.version ?? ""): un singur produs în catalog, cu toate pipeline-urile; ediția Demo gratuită, ediția Full cu serial. Se publică în catalogul LIVE.")
+                    }
                 }
 
                 if !embedded {

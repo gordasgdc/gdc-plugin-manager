@@ -31,6 +31,20 @@ export interface CatalogEntry {
   filePath?: string;
   fileSHA256?: string;
   fileRepo?: string | null;
+  // [2026-10-04] Produs OFX GDC STYLE Lab V3 (un item, ediții Demo + Full): fișierele ediției Demo sunt gratuite, Full cere serial.
+  ofxProduct?: { variants?: { editions?: Record<string, { root?: string }> }[] };
+}
+
+/** Ediția Demo a unui produs V3: calea e sub rădăcina unui pachet Demo, iar rădăcina e chiar `<id>/<versiune>/Demo/<folder>` al produsului. */
+export function isFreeDemoPath(entry: CatalogEntry, path: string): boolean {
+  for (const v of entry.ofxProduct?.variants ?? []) {
+    const root = v.editions?.["demo"]?.root;
+    if (typeof root !== "string" || !root.startsWith(`${entry.id}/`)) continue;
+    const parts = root.split("/");
+    if (parts.length !== 4 || parts[2] !== "Demo" || parts.some((x) => x === "" || x === "." || x === "..")) continue;
+    if (path.startsWith(root + "/")) return true;
+  }
+  return false;
 }
 
 export interface GitHubFile { downloadURL: string; size: number }
@@ -126,7 +140,7 @@ export async function authorize(raw: unknown, ip: string, deps: Deps): Promise<O
     return result(fail(403, "unauthorized_platform", "Produsul nu e disponibil pe această platformă."));
   }
 
-  const free = entry.isFree === true;
+  const free = entry.isFree === true || isFreeDemoPath(entry, req.path);
   if (!free) {
     if (!req.serial) return result(fail(403, "invalid_license", "Licență lipsă."));
     const lic = await verifySerial(req.serial, req.productID, req.machineID, req.platform, Math.floor(now.getTime() / 1000), deps.licensePublicKey ?? PUBLIC_KEY_BASE64);

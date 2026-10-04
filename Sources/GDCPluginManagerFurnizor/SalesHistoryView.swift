@@ -534,7 +534,7 @@ private struct BulkImportView: View {
     }
 
     private var allProducts: [(id: String, name: String)] {
-        gdcStandaloneProducts.map { ($0.id, $0.name) } + items.map { ($0.id, $0.name) }
+        gdcStandaloneProducts.map { ($0.id, $0.name) } + gdcStyleLabV3Products.filter { p in !items.contains { $0.id == p.id } }.map { ($0.id, $0.name) } + items.map { ($0.id, $0.name) }
     }
 
     var body: some View {
