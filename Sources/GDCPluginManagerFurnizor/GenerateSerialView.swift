@@ -65,7 +65,7 @@ let gdcStandaloneProducts: [StandaloneProduct] = [
 
 /// [2026-10-04] Instrumentele GDC STYLE Lab V3 din primul release Mac (un produs comercial per instrument; Demo și Full sunt ediții
 /// ale ACELUIAȘI Product ID, deci un singur serial deblochează toate variantele de pipeline). Sursa: GDC STYLE Lab
-/// `Engine/src/ModuleContractV2.cpp` (`gdc-style-v3-<slug>`) + boundary-ul din `planning/V3_MAC_RELEASE.md`; verificat automat de
+/// `Engine/src/ModuleContractV2.cpp` (`gdc-style-v3-<slug>`) + lista produselor livrate în primul release Mac; verificat automat de
 /// `scripts/test_release_boundary.sh` din acel repo (lista de aici == produsele SHIP). Un produs V3 deja publicat în catalog apare
 /// la „Din catalog”; aici rămâne ca să poată fi licențiat (și prețuit) înainte de publicare.
 let gdcStyleLabV3Products: [StandaloneProduct] = [

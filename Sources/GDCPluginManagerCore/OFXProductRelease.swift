@@ -1,7 +1,7 @@
 import Foundation
 
 // [2026-10-04] Produse OFX GDC STYLE Lab V3 (un produs comercial = 4 variante de pipeline × 2 ediții, Demo + Full).
-// Contractul vine din GDC STYLE Lab (planning/V3_PRODUCT_IDENTITY_CONTRACT.md + App/Sources/UI/V3/InstallIdentity.swift,
+// Contractul vine din GDC STYLE Lab (contractul de identitate a produsului + App/Sources/UI/V3/InstallIdentity.swift,
 // ProductInstall.swift). `OFXIdentity` de mai jos e o COPIE a referinței de acolo (aceleași reguli R1–R8, aceiași vectori de
 // conformanță: Tests/GDCPluginManagerCoreTests/Fixtures/ofx_install_identity.v1.json). O schimbare de regulă se face ÎNTÂI
 // în STYLE Lab (referința), apoi se copiază aici împreună cu vectorii.

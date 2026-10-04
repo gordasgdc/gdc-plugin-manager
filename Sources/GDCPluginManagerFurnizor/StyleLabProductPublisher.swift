@@ -6,7 +6,7 @@ import GDCPluginManagerCore
 /// (identitățile vin de acolo, nu se tastează); ieșirea = `PluginItem` cu `ofxProduct` + fișierele în
 /// `<productId>/<version>/<Full|Demo>/<folder>/…` în repo-ul `files`. Produs PLĂTIT: ediția Full cere serial la descărcare,
 /// ediția Demo e gratuită (regula `isDemoPath` din `authorize-download`). Publicarea trece prin `PublishTransaction`
-/// (preflight pe repo-uri, jurnal de reluare) și doar la acțiunea explicită a lui Cristi — niciodată automat.
+/// (preflight pe repo-uri, jurnal de reluare) și doar la o acțiune explicită din Furnizor — niciodată automat.
 enum StyleLabProductPublisher {
     enum Failure: Error, LocalizedError, Equatable {
         case manifest(String)
