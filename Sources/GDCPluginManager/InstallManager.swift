@@ -144,6 +144,25 @@ final class InstallManager: ObservableObject {
             tempURLs.append(tempURL)
         }
 
+        // Pachet OFX (folder `.ofx.bundle`): aceeași instalare ATOMICĂ ca la produsele V3 — pregătit, verificat, pus în loc dintr-o singură operație, fără chown pe folderul de pluginuri.
+        if item.type == .ofx, item.isPack {
+            let root = item.type.installDirectory
+            let folder = destinationDir.lastPathComponent
+            guard destinationDir.deletingLastPathComponent().standardizedFileURL.path == root.standardizedFileURL.path, folder.hasSuffix(".ofx.bundle") else {
+                throw InstallError.verificationFailed(item.name, "structura pachetului OFX")
+            }
+            let files = zip(item.files, tempURLs).map { (relativeInstallPath(for: $0.0, in: item), $0.1) }
+            guard files.contains(where: { $0.0 == "Contents/Info.plist" }), files.allSatisfy({ OFXAtomicInstall.isSafeRelative($0.0) }) else {
+                throw InstallError.verificationFailed(item.name, "structura pachetului OFX")
+            }
+            try atomicOFXInstall(root: root, bundles: [(folder, "", "", files)], removals: [])
+            installedVersions[item.id] = item.version
+            saveState()
+            let bundlePathForCache = destinationDir.path
+            Task.detached(priority: .utility) { ResolveOFXCache.forget(bundlePath: bundlePathForCache) }
+            return .installed(paths: [destinationDir])
+        }
+
         // [2026-09-14] CURATARE INAINTE DE SCRIERE, doar acolo unde folderul
         // apartine EXCLUSIV acestui produs. O versiune noua cu mai putine
         // fisiere decat cea veche lasa altfel resturi care raman incarcate de
@@ -208,7 +227,7 @@ final class InstallManager: ObservableObject {
             // trec prin Safari/browser (le scriem noi direct din bytes
             // descarcati prin API), deci in practica xattr e de multe ori
             // un no-op — dar il rulam oricum, defensiv, e ieftin.
-            try fixOFXBundlePermissions(at: destinationDir)
+            for u in writtenURLs { try fixOFXBundlePermissions(at: u) }   // doar fișierele scrise: niciodată tot folderul de pluginuri
             // Citirea + regex + rescrierea cache-ului Resolve pot dura secunde: niciodata pe firul principal (App Hanging, Sentry 1.39.2).
             let bundlePathForCache = destinationDir.path
             Task.detached(priority: .utility) { ResolveOFXCache.forget(bundlePath: bundlePathForCache) }
@@ -309,22 +328,16 @@ final class InstallManager: ObservableObject {
             staged.append((d.package.folder, d.package.identifier, list))
         }
 
-        // 2) curățarea slotului (copii redenumite, dubluri, ediția Demo înlocuită), apoi rescriere curată a fiecărui pachet
-        for rel in plan.removals { try deleteDirectory(at: root.appendingPathComponent(rel)) }
+        // 2) ATOMIC: pachetele se pregătesc într-un folder temporar, apoi UN script (o singură autorizare, dacă e nevoie) le pune în locul celor vechi și scoate
+        //    copiile de curățat (redenumite, dubluri, ediția Demo înlocuită); un eșec nu lasă nimic pe jumătate (rollback). Fără chown pe folderul de pluginuri.
+        try atomicOFXInstall(root: root, bundles: staged.map { ($0.folder, $0.identifier, product.version, $0.files) }, removals: plan.removals)
         var written: [URL] = []
         for s in staged {
             let dir = root.appendingPathComponent(s.folder)
-            try deleteDirectory(at: dir)
-            for (rel, t) in s.files {
-                let dst = dir.appendingPathComponent(rel)
-                try writeFile(from: t, to: dst, creatingDirectory: dst.deletingLastPathComponent())
-                written.append(dst)
-            }
-            try fixOFXBundlePermissions(at: dir)
+            written.append(dir)
             // verificare: identitatea scrisă = cea anunțată (altfel slotul ar fi greșit în Resolve)
             let plist = NSDictionary(contentsOf: dir.appendingPathComponent("Contents/Info.plist"))
             guard plist?["CFBundleIdentifier"] as? String == s.identifier, plist?["CFBundleShortVersionString"] as? String == product.version else {
-                try? FileManager.default.removeItem(at: dir)
                 throw InstallError.verificationFailed(dir.path, "identitatea pachetului OFX nu corespunde catalogului")
             }
             let bundlePath = dir.path
@@ -480,13 +493,8 @@ final class InstallManager: ObservableObject {
     /// fara elevare (folderul e de obicei scriabil, la fel ca restul
     /// scrierilor din writeFile), cade pe `runElevated` daca nu.
     ///
-    /// La primul fallback elevat, chown-uim si RADACINA /Library/OFX/Plugins
-    /// (nu doar bundle-ul curent) pe userul curent — asta e cererea userului
-    /// de "o singura parola, nu la fiecare instalare OFX", dar implementata
-    /// cu chown in loc de chmod 777: viitoarele instalari scriu direct, fara
-    /// elevare, dar folderul ramane inaccesibil altor useri de pe masina
-    /// (777 ar fi world-writable, risc de securitate inutil pe o masina
-    /// multi-user).
+    /// [2026-10-04] Nu mai schimbă proprietarul folderului de pluginuri: o instalare cu o singură parolă vine acum din instalarea atomică
+    /// (`atomicOFXInstall`, un singur script pentru toate pachetele), nu din preluarea întregului folder de către utilizator.
     private func fixOFXBundlePermissions(at bundleDirectoryOrParent: URL) throws {
         let script = """
         chmod -R 755 \(shellQuote(bundleDirectoryOrParent.path)) && \
@@ -504,10 +512,54 @@ final class InstallManager: ObservableObject {
             if process.terminationStatus == 0 { return }
         } catch { /* fall through to elevated */ }
 
-        let currentUser = NSUserName()
-        let ofxRoot = PluginType.ofx.installDirectory.path
-        let elevatedScript = script + " && chown -R \(shellQuote(currentUser)):staff \(shellQuote(ofxRoot)) 2>/dev/null; true"
-        try runElevated(elevatedScript)
+        try runElevated(script)   // doar ținta dată; proprietarul folderului de pluginuri nu se schimbă niciodată
+    }
+
+    // MARK: - Instalare OFX atomică
+
+    /// Pregătește pachetele într-un folder temporar privat, le verifică (Info.plist prezent, identitate / versiune dacă sunt date, hash de arbore), apoi rulează
+    /// scriptul `OFXAtomicInstall` o singură dată: direct dacă folderul de pluginuri e scriibil, altfel cu o singură autorizare de administrator.
+    private func atomicOFXInstall(root: URL, bundles: [(folder: String, identifier: String, version: String, files: [(rel: String, temp: URL)])], removals: [String]) throws {
+        let fm = FileManager.default
+        let token = UUID().uuidString.lowercased().replacingOccurrences(of: "-", with: "").prefix(20)
+        let stage = fm.temporaryDirectory.appendingPathComponent("gdc-ofx-stage-\(token)")
+        try fm.createDirectory(at: stage, withIntermediateDirectories: false, attributes: [.posixPermissions: 0o700])
+        defer { try? fm.removeItem(at: stage) }
+        var writes: [OFXAtomicInstall.Write] = []
+        for b in bundles {
+            let dir = stage.appendingPathComponent(b.folder)
+            for (rel, temp) in b.files {
+                guard OFXAtomicInstall.isSafeRelative(rel) else { throw InstallError.verificationFailed(b.folder, "cale nevalidă în pachet") }
+                let dst = dir.appendingPathComponent(rel)
+                try fm.createDirectory(at: dst.deletingLastPathComponent(), withIntermediateDirectories: true)
+                try fm.copyItem(at: temp, to: dst)
+            }
+            let plist = NSDictionary(contentsOf: dir.appendingPathComponent("Contents/Info.plist"))
+            guard plist != nil else { throw InstallError.verificationFailed(b.folder, "structura pachetului OFX") }
+            if !b.identifier.isEmpty || !b.version.isEmpty {
+                guard plist?["CFBundleIdentifier"] as? String == b.identifier, plist?["CFBundleShortVersionString"] as? String == b.version else {
+                    throw InstallError.verificationFailed(b.folder, "identitatea pachetului OFX nu corespunde catalogului")
+                }
+            }
+            let sha: String
+            do { sha = try OFXAtomicInstall.treeHash(dir.path) } catch { throw InstallError.verificationFailed(b.folder, "pachet ilizibil") }
+            writes.append(OFXAtomicInstall.Write(staged: dir.path, folder: b.folder, identifier: b.identifier, version: b.version, treeSHA: sha))
+        }
+        guard let script = OFXAtomicInstall.script(root: root.path, writes: writes, removals: removals, token: String(token)) else {
+            DiagnosticLog.write("Install", "plan OFX atomic refuzat: \(OFXAtomicInstall.violation(root: root.path, writes: writes, removals: removals, token: String(token)) ?? "?")")
+            throw InstallError.verificationFailed(root.path, "planul de instalare nu e valid")
+        }
+        let writable = fm.isWritableFile(atPath: root.path) || (!fm.fileExists(atPath: root.path) && fm.isWritableFile(atPath: root.deletingLastPathComponent().path))
+        if writable {
+            let p = Process(); p.executableURL = URL(fileURLWithPath: "/bin/sh"); p.arguments = ["-c", script]
+            let err = Pipe(); p.standardError = err
+            try p.run(); p.waitUntilExit()
+            if p.terminationStatus == 0 { DiagnosticLog.write("Install", "OFX atomic: \(writes.count) pachete, \(removals.count) scoase (fără elevare)"); return }
+            let msg = String(data: err.fileHandleForReading.readDataToEndOfFile(), encoding: .utf8) ?? ""
+            DiagnosticLog.write("Install", "OFX atomic fără elevare a eșuat (\(p.terminationStatus)): \(msg) — reîncerc cu autorizare")
+        }
+        try runElevated(script)
+        DiagnosticLog.write("Install", "OFX atomic: \(writes.count) pachete, \(removals.count) scoase (o autorizare)")
     }
 
     // MARK: - Filesystem, with an admin-elevation fallback
