@@ -28,20 +28,6 @@
         }
       ]
     },
-    "gdc-datamover" : {
-      "basePrice" : 124,
-      "currency" : "EUR",
-      "name" : "DataMover",
-      "promoSchedule" : [
-        {
-          "endsAt" : "2026-09-13T11:29:47Z",
-          "label" : "Oferta lansare",
-          "price" : 40,
-          "showCountdown" : true,
-          "startsAt" : "2026-09-09T11:29:47Z"
-        }
-      ]
-    },
     "gdc-lut-lab" : {
       "basePrice" : 6700,
       "currency" : "EUR",
