@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Termeni &amp; Confidențialitate — DataMover</title>
+<title>Termeni de utilizare — DataMover</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -48,58 +48,339 @@
     margin-top: 40px;
   }
   .note strong { color: var(--ink); }
+  .langs { display: flex; gap: 8px; margin: 18px 0 6px; }
+  .langs button { font-family: var(--mono); font-size: 12px; background: var(--bg-elevated); color: var(--ink-dim); border: 1px solid var(--line); border-radius: 8px; padding: 6px 12px; cursor: pointer; }
+  .langs button[aria-pressed="true"] { color: var(--ink); border-color: var(--accent-verify); }
+  .terms[hidden] { display: none; }
+  ol { padding-left: 22px; }
+  li { margin: 4px 0; }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <a class="back" href="index.html">&larr; Înapoi la DataMover</a>
-
-  <p class="eyebrow">Termeni &amp; Confidențialitate</p>
-  <h1>Ce trebuie să știi înainte să activezi DataMover.</h1>
-  <p class="updated">Ultima actualizare: 15 august 2026</p>
-
-  <h2>Cine sunt</h2>
-  <p>DataMover e făcut și întreținut de mine, Cristi Gordas — colorist &amp; video editor, persoană fizică, fără firmă înregistrată (nu PFA, nu SRL). Nu e produsul unei companii, e un proiect personal pe care-l împart cu comunitatea video.</p>
-
-  <h2>Ce primești</h2>
-  <p>Codul DataMover este publicat sub <a href="licenta.html">licența MIT</a>. Aplicația compilată (.app / .exe) are nevoie de un cod personal de activare, legat de calculatorul tău, ca să poată porni.</p>
-
-  <h2>Donația de 23 €</h2>
-  <p>Nu e prețul de listă al unui produs comercial — e o donație care mă ajută să acopăr costurile de dezvoltare (abonamente, unelte de lucru) și să continui să întrețin și îmbunătățesc aplicația. În schimb, primești un cod de activare personal, valabil pe calculatorul pentru care a fost generat.</p>
-
-  <h2>Cum funcționează activarea</h2>
-  <ul>
-    <li>Deschizi aplicația — vezi un ID de mașină în fereastra de activare.</li>
-    <li>Îmi scrii pe WhatsApp — îți trimit un link de plată pe Revolut.</li>
-    <li>După plată, îmi trimiți ID-ul mașinii și primești codul personal de activare.</li>
-  </ul>
-  <p>Plata se face direct între noi, prin Revolut — nu prin acest site, și nu introduci niciun date de card aici.</p>
-
-  <h2>Politică de retur</h2>
-  <ul>
-    <li>Dacă ai plătit dar încă nu ai trimis ID-ul mașinii (deci nu ai primit codul), poți cere oricând banii înapoi.</li>
-    <li>Odată ce codul de activare a fost generat și trimis, contribuția nu se mai returnează — codul e legat exact de calculatorul tău și, odată livrat, nu mai poate fi „retras".</li>
-    <li>Dacă aplicația nu pornește sau ai o problemă tehnică legată de activare, scrie-mi pe WhatsApp — rezolv problema sau, dacă nu se poate, returnez contribuția.</li>
-  </ul>
-
-  <h2>Ce date colectez și cum le folosesc</h2>
-  <p>Când ceri o activare, țin o evidență (pe calculatorul meu, nu pe un server) cu: numele pe care mi-l dai, opțional un email, ID-ul mașinii tale, și numărul de telefon de pe care-mi scrii pe WhatsApp.</p>
-  <ul>
-    <li>Nu vând, nu închiriez și nu împart aceste date cu terți.</li>
-    <li>Acest site nu folosește cookie-uri și niciun instrument de tracking sau analiză — nicio urmărire, niciun profil publicitar.</li>
-    <li>Poți oricând să-mi ceri să-ți șterg datele din evidență — asta nu invalidează un cod deja activat.</li>
-  </ul>
-
-  <h2>Contact</h2>
-  <p>
-    <a href="https://wa.me/34643109970?text=Salut!%20Am%20o%20intrebare%20despre%20DataMover.">WhatsApp</a> ·
-    <a href="https://web.facebook.com/cristiGDC" target="_blank" rel="noopener">Facebook</a> ·
-    <a href="https://youtube.com/@cristigordas" target="_blank" rel="noopener">YouTube</a>
-  </p>
-
+  <a class="back" href="index.html">&larr; DataMover</a>
+  <p class="eyebrow" id="eyebrow">Termeni de utilizare</p>
+  <p class="updated">DataMover 2.18.1 · termeni versiunea 2.0 · 2026-10-05</p>
+  <div class="langs" role="group" aria-label="Limba / Language / Idioma">
+    <button type="button" data-l="ro" aria-pressed="true">Română</button>
+    <button type="button" data-l="en" aria-pressed="false">English</button>
+    <button type="button" data-l="es" aria-pressed="false">Español</button>
+  </div>
+<section class="terms" data-lang="ro">
+<p>Versiunea termenilor 2.0 · pentru DataMover 2.18.1 (macOS și Windows)</p>
+<h2>Pe scurt</h2>
+<ol>
+<li>DataMover funcționează gratuit, <strong>permanent</strong>, în modul <strong>Demo</strong>: toate funcțiile, dar fiecare transfer nou poate avea cel mult <strong>1.000.000.000 de octeți</strong> (1 GB). Nu există perioadă de încercare și nu există limită de timp.</li>
+<li>O <strong>licență</strong> elimină limita de dimensiune pentru perioada ei: câteva ore, zile, luni, un an, altă perioadă sau <strong>fără expirare (lifetime)</strong>.</li>
+<li>Licența se poate obține prin <strong>donație</strong> confirmată de noi sau poate fi <strong>acordată gratuit</strong> (premiu, concurs, eveniment, colaborare, testare, educație, presă, cadou sau alt caz aprobat). Donația nu e o condiție tehnică, iar o licență gratuită nu este o donație.</li>
+<li>Licența e <strong>personală</strong> și legată de <strong>calculatorul</strong> pe care o activezi. Nu o dai mai departe.</li>
+<li>Când licența expiră, este oprită sau dezactivată, aplicația <strong>rămâne deschisă și revine în Demo</strong>. Nu ți se șterge niciun fișier, nicio setare și niciun istoric. Un transfer aflat în execuție se termină.</li>
+<li>Activarea se confirmă online, trimițând <strong>doar date tehnice minime</strong>. Nu trimitem fișierele tale, numele lor, proiectele, locurile de pe disc, parolele, conversațiile sau diagnosticele.</li>
+<li>După activare, aplicația poate lucra și <strong>fără internet</strong>, în limita unui permis offline semnat, care nu poate depăși valabilitatea licenței.</li>
+<li>DataMover verifică fiecare copie, dar <strong>nu poate garanta că nu pierzi niciodată date</strong>. Păstrează copii de siguranță.</li>
+<li>Codul DataMover până la versiunea <strong>2.17.1</strong> rămâne sub licența <strong>MIT</strong>. De la <strong>2.18.1</strong> aplicația este <strong>proprietară</strong>.</li>
+<li>Acești termeni <strong>nu îți iau niciun drept</strong> pe care ți-l dă legea.</li>
+</ol>
+<h2>1. Cine suntem și ce acoperă termenii</h2>
+<p>DataMover este dezvoltat de <strong>GDC</strong> („noi”), un dezvoltator individual care publică sub marca GDC. Nu suntem o societate comercială. Ne poți contacta prin WhatsApp sau e-mail, la datele afișate în aplicație (Licență și activare) și pe pagina <a href="https://gordas.dev/datamover/" rel="noopener">https://gordas.dev/datamover/</a>.</p>
+<p>Termenii se aplică aplicației DataMover începând cu <strong>versiunea 2.18.1</strong>, pe macOS și pe Windows, inclusiv actualizărilor ei. Versiunile până la <strong>2.17.1 inclusiv</strong> au fost publicate cu codul sursă sub licența MIT și rămân sub licența MIT; acești termeni nu le schimbă.</p>
+<h2>2. Modul Demo</h2>
+<ul>
+<li>Demo e gratuit și nu expiră. Aplicația se deschide normal și toate funcțiile sunt disponibile.</li>
+<li>Fiecare transfer <strong>nou</strong> poate avea cel mult <strong>1.000.000.000 de octeți</strong> (1 GB zecimal), calculați pe totalul transferului, nu pe fișier. Exact 1.000.000.000 de octeți e permis; <strong>1.000.000.001 e refuzat înainte să se scrie primul octet</strong>.</li>
+<li>Poți face oricâte transferuri Demo de cel mult 1 GB. Un transfer mai mare poate fi împărțit sau poți cere activarea.</li>
+<li>Nu există și nu va exista o perioadă de încercare („Trial”) pentru DataMover.</li>
+</ul>
+<h2>3. Licența</h2>
+<ul>
+<li>Licența este un <strong>drept personal de a folosi</strong> aplicația. Nu e exclusivă, nu se transferă și nu se închiriază.</li>
+<li>E legată de <strong>cheia criptografică a aplicației de pe calculatorul tău</strong>; identificatorul calculatorului este doar o amprentă ajutătoare. Numărul de calculatoare e cel din acordarea primită.</li>
+<li><strong>Durata</strong> poate fi de câteva ore, zile, luni, un an, o altă perioadă stabilită sau <strong>lifetime</strong>. „Lifetime” înseamnă că licența nu are dată de expirare; <strong>nu</strong> este o promisiune că aplicația va fi dezvoltată, întreținută sau compatibilă pentru totdeauna.</li>
+<li>Licența îți dă drepturile din oferta sau acordarea ei. Mesajul tău de cerere nu poate schimba durata, numărul de calculatoare sau drepturile.</li>
+<li>Aplicația, codul ei, designul și numele rămân ale noastre.</li>
+</ul>
+<h2>4. Cum obții o licență</h2>
+<ol>
+<li>În aplicație deschizi „Licență și activare”, poți alege o ofertă (opțional) și pregătești cererea.</li>
+<li>Aplicația îți arată mesajul de cerere; <strong>tu decizi</strong> dacă îl trimiți, prin WhatsApp sau e-mail. Aplicația nu trimite nimic în locul tău.</li>
+<li>Răspundem. Dacă licența se obține prin <strong>donație</strong>, îți comunicăm cum poți dona; <strong>după ce confirmăm manual donația</strong>, generăm licența și ți-o trimitem. Dacă licența se <strong>acordă gratuit</strong>, ți-o trimitem fără donație.</li>
+<li>Copiezi sau imporți licența în aplicație. Aplicația o verifică pe calculatorul tău și o activează.</li>
+</ol>
+<ul>
+<li><strong>Licențe gratuite.</strong> Putem acorda licențe fără donație: premii, concursuri, evenimente, colaborări, testare, educație, presă, cadouri, migrări aprobate sau alte cazuri. Valoarea lor financiară este zero; ele nu se înregistrează ca donații. Motivul acordării nu îți este atribuit ca acuzație.</li>
+<li><strong>Dacă nu primești licența</strong> după ce donația a fost confirmată, scrie-ne; rezolvăm prin trimiterea licenței sau prin returnarea donației.</li>
+</ul>
+<h2>5. Ofertele de donație</h2>
+<ul>
+<li>Fiecare ofertă arată, înainte de donație: suma, durata licenței, numărul de calculatoare, perioada de lucru fără internet și funcțiile incluse. <strong>Nu există o sumă fixă generală</strong>: fiecare ofertă își are propria sumă.</li>
+<li>Ofertele sunt publicate într-o <strong>listă semnată</strong> de noi; aplicația o folosește doar pentru afișare. Fără o listă validă, aplicația nu afișează nicio sumă.</li>
+<li><strong>Disponibilitatea unei oferte nu e durata licenței.</strong> O ofertă poate fi disponibilă 24 de ore (de exemplu într-o perioadă promoțională) și să activeze o licență de un an sau lifetime.</li>
+<li>Dacă trimiți cererea cât timp oferta e disponibilă, condițiile ei se păstrează pentru perioada de finalizare indicată în ofertă. Ofertele se pot schimba, dar o schimbare nu afectează licențele deja emise.</li>
+</ul>
+<h2>6. Activare, verificare și funcționare fără internet</h2>
+<ul>
+<li><strong>Verificare locală.</strong> Aplicația verifică pe calculatorul tău semnătura licenței, produsul, calculatorul, cheia dispozitivului și perioada.</li>
+<li><strong>Confirmare online.</strong> Aplicația confirmă activarea la serverul nostru. Trimite doar: licența (care conține identificatorii ei), identificatorul calculatorului, cheia publică a dispozitivului, platforma (macOS sau Windows), ora ceasului și un număr aleator unic (pentru protecție la repetarea cererii). Serverul vede, tehnic, și adresa IP a conexiunii.</li>
+<li><strong>Permis offline.</strong> În urma confirmării, serverul emite un permis offline semnat. Cu el, aplicația funcționează fără internet până la expirarea permisului sau a licenței, <strong>oricare vine prima</strong>. Aplicația îl reînnoiește automat când are conexiune.</li>
+<li><strong>Fără confirmare online.</strong> O licență validă local funcționează fără internet doar în fereastra inițială fixată la emiterea ei. Dacă aceasta se încheie fără confirmare, aplicația rămâne în Demo până la următoarea conexiune. Dacă activarea nu poate fi confirmată, nu o prezentăm drept activată.</li>
+<li><strong>Ceasul.</strong> Dacă dai ceasul calculatorului înapoi, o licență expirată sau oprită nu se reactivează.</li>
+<li>Revocarea sau dezactivarea unei licențe devine efectivă la următoarea verificare online reușită sau, la calculatoarele care rămân offline, cel mai târziu la expirarea permisului offline.</li>
+</ul>
+<h2>7. Când licența expiră, este oprită sau dezactivată</h2>
+<ul>
+<li>Aplicația <strong>rămâne deschisă și revine în Demo</strong>. Nu se șterg fișiere, puncte de control, setări sau istoric.</li>
+<li>Un transfer <strong>aflat în execuție</strong> se termină. După el, nu poți porni alt transfer mai mare de 1 GB.</li>
+<li>Dacă aplicația se închide sau transferul se întrerupe după expirare, <strong>un transfer mai mare de 1 GB nu poate fi reluat fără o licență valabilă</strong>; fișierele parțiale și punctele de control rămân și se pot reia după reactivare.</li>
+<li>Putem opri o licență dacă a fost obținută prin fraudă, dacă donația a fost anulată, contestată sau returnată, sau dacă acești termeni sunt încălcați grav (de exemplu prin redistribuire). Putem dezactiva un calculator la cererea ta sau pentru a elibera un loc.</li>
+<li>Poți elibera tu calculatorul din aplicație („Elimină de pe acest calculator”); licența rămâne salvată și o poți reimporta.</li>
+</ul>
+<h2>8. Ce nu ai voie să faci</h2>
+<ul>
+<li>Să redistribui (inclusiv contra cost), să închiriezi sau să împrumuți aplicația, licența sau fișierele de activare.</li>
+<li>Să folosești aplicația pe calculatoare care nu sunt acoperite de licența ta.</li>
+<li>Să ocolești sau să falsifici activarea, limitele, verificarea actualizărilor sau identificarea calculatorului.</li>
+<li>Să decompilezi sau să modifici aplicația, cu excepția cazurilor permise expres de lege.</li>
+</ul>
+<h2>9. Datele tale</h2>
+<p><strong>Rămân pe calculatorul tău și nu ne sunt trimise:</strong> fișierele și conținutul lor, numele lor, proiectele, căile de pe disc, setările, istoricul transferurilor, rapoartele, jurnalul aplicației și parolele. Jurnalul și exportul de diagnostic se creează doar la cererea ta, cu date personale mascate, și nu se încarcă automat.</p>
+<p><strong>Păstrate local, protejat:</strong> starea licenței, cheia dispozitivului, permisul offline și pragul de timp (în Keychain pe macOS, protejate de Windows pe Windows).</p>
+<p><strong>Către noi, la activare și reînnoire:</strong> datele tehnice minime din secțiunea 6, plus adresa IP vizibilă tehnic.</p>
+<p><strong>Prin mesajul de cerere pe care îl trimiți tu</strong> (WhatsApp sau e-mail): identificatorul cererii, produsul, platforma, versiunea aplicației, identificatorul calculatorului, cheia publică a dispozitivului, oferta aleasă și, doar dacă le adaugi tu, numele și contactul. WhatsApp și serviciul de e-mail prelucrează mesajele după regulile lor.</p>
+<p><strong>Evidența noastră privată</strong> (pentru administrarea licenței): un nume de lucru și contactul tău, produsul, oferta și versiunea ei, felul acordării (donație sau gratuit, cu un motiv intern), durata, identificatorul calculatorului și cheia publică a dispozitivului, data emiterii, data activării confirmate și ultima confirmare online, precum și istoricul administrativ. <strong>Nu păstrăm date de card.</strong> Păstrăm datele cât e necesar pentru administrarea licenței și pentru obligațiile legale.</p>
+<p><strong>Actualizări și oferte:</strong> aplicația descarcă de pe gordas.dev (și, ca rezervă, de pe GitHub) fișierul semnat care anunță actualizările, pachetul de actualizare și lista semnată de oferte. Acești furnizori văd adresa ta IP, ca la orice descărcare.</p>
+<p>Drepturile tale (acces, rectificare, ștergere, restricționare, portabilitate, opoziție) și detaliile sunt în Politica de confidențialitate: <a href="https://gordas.dev/confidentialitate" rel="noopener">https://gordas.dev/confidentialitate</a></p>
+<h2>10. Actualizări</h2>
+<p>O actualizare se instalează numai după ce semnătura ei și pachetul descărcat sunt verificate, și numai cu acordul tău. O actualizare nu întrerupe un transfer în curs. O licență cu durată limitată îți dă acces la versiunile oficiale compatibile cât timp e valabilă; o actualizare nu prelungește licența.</p>
+<h2>11. Siguranța datelor tale</h2>
+<p>DataMover copiază și verifică fișiere, dar defecte ale discurilor, cablurilor, ale sistemului de operare sau ale altor programe pot produce pierderi pe care nicio aplicație nu le poate preveni complet. Păstrează copii de siguranță și nu șterge originalele până nu ai confirmat că au fost copiate corect.</p>
+<h2>12. Garanție și răspundere</h2>
+<p>În limitele permise de lege, aplicația e furnizată <strong>așa cum este</strong> („as is”). Nu răspundem pentru pierderi indirecte și nici pentru pierderi de date care puteau fi evitate printr-o copie de siguranță. Aceste limite nu se aplică acolo unde legea interzice limitarea răspunderii.</p>
+<h2>13. Componente de la alți autori și versiunile MIT</h2>
+<p>Componentele scrise de alți autori sunt folosite sub licențele lor, păstrate în documentul „Open Source Notices”, disponibil în aplicație și în pachetul de instalare; ele se aplică doar acelor componente. Codul DataMover publicat până la 2.17.1 rămâne sub MIT, în repozitoriul public al versiunilor respective.</p>
+<h2>14. Drepturile tale legale</h2>
+<p>Acești termeni nu îți limitează și nu îți anulează drepturile obligatorii pe care ți le dă legea locului în care locuiești, inclusiv cele privind conținutul digital și protecția consumatorului.</p>
+<h2>15. Modificarea termenilor</h2>
+<p>Dacă termenii se schimbă, publicăm versiunea nouă cu data ei. O schimbare nu afectează licențele deja emise, în măsura în care legea nu cere altfel.</p>
+<h2>16. Legea aplicabilă</h2>
+<p>Se aplică legea din țara în care locuiești, în măsura în care normele ei obligatorii de protecție a consumatorului o cer. În rest, se aplică legea locului de reședință al dezvoltatorului individual care publică sub marca GDC.</p>
+</section>
+<section class="terms" data-lang="en" hidden>
+<p>Terms version 2.0 · for DataMover 2.18.1 (macOS and Windows)</p>
+<h2>In short</h2>
+<ol>
+<li>DataMover works for free, <strong>permanently</strong>, in <strong>Demo</strong> mode: every feature, but each new transfer can be at most <strong>1,000,000,000 bytes</strong> (1 GB). There is no trial period and no time limit.</li>
+<li>A <strong>licence</strong> removes the size limit for its duration: a few hours, days, months, one year, another period, or <strong>no expiry (lifetime)</strong>.</li>
+<li>A licence can be obtained through a <strong>donation</strong> that we confirm, or it can be <strong>granted free of charge</strong> (prize, contest, event, collaboration, testing, education, press, gift or another approved case). A donation is not a technical requirement, and a free licence is not a donation.</li>
+<li>The licence is <strong>personal</strong> and tied to the <strong>computer</strong> where you activate it. You do not pass it on.</li>
+<li>When the licence expires, is stopped or is deactivated, the app <strong>stays open and returns to Demo</strong>. No file, setting or history is deleted. A transfer already running finishes.</li>
+<li>Activation is confirmed online by sending <strong>only minimal technical data</strong>. We do not receive your files, their names, your projects, disk locations, passwords, conversations or diagnostics.</li>
+<li>After activation the app can also work <strong>without internet</strong>, within a signed offline permit that can never outlast the licence.</li>
+<li>DataMover verifies every copy, but <strong>cannot guarantee that you will never lose data</strong>. Keep backups.</li>
+<li>DataMover code up to version <strong>2.17.1</strong> remains under the <strong>MIT</strong> licence. From <strong>2.18.1</strong> the app is <strong>proprietary</strong>.</li>
+<li>These terms <strong>do not take away any right</strong> the law gives you.</li>
+</ol>
+<h2>1. Who we are and what these terms cover</h2>
+<p>DataMover is developed by <strong>GDC</strong> (“we”), an individual developer publishing under the GDC brand. We are not a company. You can reach us by WhatsApp or e-mail, using the details shown in the app (Licence and activation) and on <a href="https://gordas.dev/datamover/" rel="noopener">https://gordas.dev/datamover/</a>.</p>
+<p>These terms apply to the DataMover app from <strong>version 2.18.1</strong>, on macOS and Windows, including its updates. Versions up to and <strong>including 2.17.1</strong> were published with source code under the MIT licence and remain under the MIT licence; these terms do not change that.</p>
+<h2>2. Demo mode</h2>
+<ul>
+<li>Demo is free and does not expire. The app opens normally and every feature is available.</li>
+<li>Each <strong>new</strong> transfer can be at most <strong>1,000,000,000 bytes</strong> (1 GB, decimal), counted on the whole transfer, not per file. Exactly 1,000,000,000 bytes is allowed; <strong>1,000,000,001 is refused before the first byte is written</strong>.</li>
+<li>You can run as many Demo transfers of up to 1 GB as you like. A larger transfer can be split, or you can request activation.</li>
+<li>There is no trial period for DataMover, and there will not be one.</li>
+</ul>
+<h2>3. The licence</h2>
+<ul>
+<li>A licence is a <strong>personal right to use</strong> the app. It is not exclusive, cannot be transferred and cannot be rented.</li>
+<li>It is tied to the <strong>cryptographic key of the app on your computer</strong>; the computer identifier is only a helper fingerprint. The number of computers is the one in the grant you received.</li>
+<li>The <strong>duration</strong> can be a few hours, days, months, one year, another set period, or <strong>lifetime</strong>. “Lifetime” means the licence has no expiry date; it is <strong>not</strong> a promise that the app will be developed, maintained or compatible forever.</li>
+<li>The licence gives you the rights of its offer or grant. Your request message cannot change the duration, the number of computers or the rights.</li>
+<li>The app, its code, its design and its name remain ours.</li>
+</ul>
+<h2>4. How you get a licence</h2>
+<ol>
+<li>In the app you open “Licence and activation”, optionally choose an offer, and prepare the request.</li>
+<li>The app shows you the request message; <strong>you decide</strong> whether to send it, by WhatsApp or e-mail. The app sends nothing on your behalf.</li>
+<li>We reply. If the licence is obtained by <strong>donation</strong>, we tell you how you can donate; <strong>once we have manually confirmed the donation</strong>, we generate the licence and send it to you. If the licence is <strong>granted free of charge</strong>, we send it without any donation.</li>
+<li>You copy or import the licence into the app. The app verifies it on your computer and activates it.</li>
+</ol>
+<ul>
+<li><strong>Free licences.</strong> We may grant licences without a donation: prizes, contests, events, collaborations, testing, education, press, gifts, approved migrations or other cases. Their financial value is zero; they are not recorded as donations. The reason for a grant is never held against you.</li>
+<li><strong>If you do not receive the licence</strong> after the donation was confirmed, write to us; we resolve it by sending the licence or by returning the donation.</li>
+</ul>
+<h2>5. Donation offers</h2>
+<ul>
+<li>Every offer shows, before any donation: the amount, the licence duration, the number of computers, the period of offline work and the included features. <strong>There is no general fixed amount</strong>: each offer has its own.</li>
+<li>Offers are published in a list <strong>signed by us</strong>; the app uses it for display only. Without a valid list, the app shows no amount at all.</li>
+<li><strong>An offer’s availability is not the licence duration.</strong> An offer may be available for 24 hours (for example during a promotion) and activate a one-year or lifetime licence.</li>
+<li>If you send the request while the offer is available, its conditions are kept for the completion period stated in the offer. Offers may change, but a change does not affect licences already issued.</li>
+</ul>
+<h2>6. Activation, verification and working without internet</h2>
+<ul>
+<li><strong>Local verification.</strong> The app verifies on your computer the licence signature, the product, the computer, the device key and the period.</li>
+<li><strong>Online confirmation.</strong> The app confirms the activation with our server. It sends only: the licence (which contains its identifiers), the computer identifier, the device’s public key, the platform (macOS or Windows), the clock time and a unique random number (protection against replayed requests). Technically, the server also sees the IP address of the connection.</li>
+<li><strong>Offline permit.</strong> After confirmation, the server issues a signed offline permit. With it the app works without internet until the permit or the licence expires, <strong>whichever comes first</strong>. The app renews it automatically when it is connected.</li>
+<li><strong>Without online confirmation.</strong> A locally valid licence works without internet only within the initial window fixed when it was issued. If that window ends without confirmation, the app stays in Demo until the next connection. If activation cannot be confirmed, we do not present it as activated.</li>
+<li><strong>The clock.</strong> Setting your computer’s clock back does not reactivate an expired or stopped licence.</li>
+<li>Revocation or deactivation of a licence takes effect at the next successful online check or, on computers that stay offline, at the latest when the offline permit expires.</li>
+</ul>
+<h2>7. When the licence expires, is stopped or is deactivated</h2>
+<ul>
+<li>The app <strong>stays open and returns to Demo</strong>. No files, checkpoints, settings or history are deleted.</li>
+<li>A transfer <strong>already running</strong> finishes. After it, you cannot start another transfer larger than 1 GB.</li>
+<li>If the app is closed or the transfer is interrupted after expiry, <strong>a transfer larger than 1 GB cannot be resumed without a valid licence</strong>; partial files and checkpoints remain and can be resumed after reactivation.</li>
+<li>We may stop a licence if it was obtained by fraud, if the donation was cancelled, disputed or returned, or if these terms are seriously breached (for example by redistribution). We may deactivate a computer at your request or to free a slot.</li>
+<li>You can release the computer yourself from the app (“Remove from this computer”); the licence stays saved and you can import it again.</li>
+</ul>
+<h2>8. What you may not do</h2>
+<ul>
+<li>Redistribute (including for payment), rent or lend the app, the licence or the activation files.</li>
+<li>Use the app on computers not covered by your licence.</li>
+<li>Bypass or falsify the activation, the limits, the update verification or the computer identification.</li>
+<li>Decompile or modify the app, except where the law expressly allows it.</li>
+</ul>
+<h2>9. Your data</h2>
+<p><strong>It stays on your computer and is not sent to us:</strong> your files and their contents, their names, your projects, disk paths, settings, transfer history, reports, the app log and passwords. The log and the diagnostic export are created only at your request, with personal data masked, and are never uploaded automatically.</p>
+<p><strong>Kept locally, protected:</strong> the licence state, the device key, the offline permit and the time floor (in the Keychain on macOS, protected by Windows on Windows).</p>
+<p><strong>Sent to us, at activation and renewal:</strong> the minimal technical data in section 6, plus the technically visible IP address.</p>
+<p><strong>Through the request message that you send yourself</strong> (WhatsApp or e-mail): the request identifier, the product, the platform, the app version, the computer identifier, the device’s public key, the chosen offer and, only if you add them, your name and contact. WhatsApp and the e-mail service process the messages under their own rules.</p>
+<p><strong>Our private records</strong> (to administer the licence): a working name and your contact, the product, the offer and its version, the kind of grant (donation or free, with an internal reason), the duration, the computer identifier and the device’s public key, the issue date, the date of confirmed activation and the last online confirmation, and the administrative history. <strong>We do not keep card details.</strong> We keep the data for as long as needed to administer the licence and meet legal obligations.</p>
+<p><strong>Updates and offers:</strong> the app downloads from gordas.dev (and, as a fallback, from GitHub) the signed file announcing updates, the update package and the signed list of offers. These providers see your IP address, as with any download.</p>
+<p>Your rights (access, rectification, erasure, restriction, portability, objection) and the details are in the Privacy Policy: <a href="https://gordas.dev/confidentialitate" rel="noopener">https://gordas.dev/confidentialitate</a></p>
+<h2>10. Updates</h2>
+<p>An update is installed only after its signature and the downloaded package are verified, and only with your consent. An update does not interrupt a transfer in progress. A time-limited licence gives you access to compatible official versions while it is valid; an update does not extend the licence.</p>
+<h2>11. Safety of your data</h2>
+<p>DataMover copies and verifies files, but defects in disks, cables, the operating system or other programs can cause losses that no application can fully prevent. Keep backups and do not delete the originals until you have confirmed they were copied correctly.</p>
+<h2>12. Warranty and liability</h2>
+<p>To the extent permitted by law, the app is provided <strong>as is</strong>. We are not liable for indirect losses, nor for data losses that a backup could have avoided. These limits do not apply where the law forbids limiting liability.</p>
+<h2>13. Third-party components and the MIT versions</h2>
+<p>Components written by other authors are used under their own licences, kept in the “Open Source Notices” document, available in the app and in the installation package; they apply only to those components. DataMover code published up to 2.17.1 remains under MIT, in the public repository of those versions.</p>
+<h2>14. Your statutory rights</h2>
+<p>These terms do not limit or cancel the mandatory rights that the law of the place where you live gives you, including those on digital content and consumer protection.</p>
+<h2>15. Changes to these terms</h2>
+<p>If the terms change, we publish the new version with its date. A change does not affect licences already issued, unless the law requires otherwise.</p>
+<h2>16. Applicable law</h2>
+<p>The law of the country where you live applies, to the extent its mandatory consumer-protection rules require it. Otherwise, the law of the place of residence of the individual developer publishing under the GDC brand applies.</p>
+</section>
+<section class="terms" data-lang="es" hidden>
+<p>Versión de los términos 2.0 · para DataMover 2.18.1 (macOS y Windows)</p>
+<h2>En resumen</h2>
+<ol>
+<li>DataMover funciona gratis y <strong>de forma permanente</strong> en modo <strong>Demo</strong>: todas las funciones, pero cada transferencia nueva puede tener como máximo <strong>1.000.000.000 de bytes</strong> (1 GB). No hay periodo de prueba ni límite de tiempo.</li>
+<li>Una <strong>licencia</strong> elimina el límite de tamaño durante su vigencia: unas horas, días, meses, un año, otro periodo o <strong>sin caducidad (lifetime)</strong>.</li>
+<li>La licencia se puede obtener mediante una <strong>donación</strong> que confirmamos nosotros, o se puede <strong>conceder gratuitamente</strong> (premio, concurso, evento, colaboración, pruebas, educación, prensa, regalo u otro caso aprobado). La donación no es un requisito técnico, y una licencia gratuita no es una donación.</li>
+<li>La licencia es <strong>personal</strong> y está vinculada al <strong>ordenador</strong> donde la activas. No la cedes a otros.</li>
+<li>Cuando la licencia caduca, se detiene o se desactiva, la aplicación <strong>sigue abierta y vuelve a Demo</strong>. No se borra ningún archivo, ajuste ni historial. Una transferencia en curso termina.</li>
+<li>La activación se confirma en línea enviando <strong>solo datos técnicos mínimos</strong>. No recibimos tus archivos, sus nombres, tus proyectos, las ubicaciones en el disco, las contraseñas, las conversaciones ni los diagnósticos.</li>
+<li>Tras la activación, la aplicación también puede funcionar <strong>sin internet</strong>, dentro de un permiso sin conexión firmado que nunca puede superar la vigencia de la licencia.</li>
+<li>DataMover verifica cada copia, pero <strong>no puede garantizar que nunca pierdas datos</strong>. Conserva copias de seguridad.</li>
+<li>El código de DataMover hasta la versión <strong>2.17.1</strong> sigue bajo la licencia <strong>MIT</strong>. Desde la <strong>2.18.1</strong> la aplicación es <strong>propietaria</strong>.</li>
+<li>Estos términos <strong>no te quitan ningún derecho</strong> que te dé la ley.</li>
+</ol>
+<h2>1. Quiénes somos y qué cubren estos términos</h2>
+<p>DataMover lo desarrolla <strong>GDC</strong> («nosotros»), un desarrollador individual que publica bajo la marca GDC. No somos una empresa. Puedes contactarnos por WhatsApp o correo electrónico, con los datos que aparecen en la aplicación (Licencia y activación) y en <a href="https://gordas.dev/datamover/" rel="noopener">https://gordas.dev/datamover/</a>.</p>
+<p>Los términos se aplican a la aplicación DataMover desde la <strong>versión 2.18.1</strong>, en macOS y Windows, incluidas sus actualizaciones. Las versiones hasta la <strong>2.17.1 incluida</strong> se publicaron con el código fuente bajo la licencia MIT y siguen bajo la licencia MIT; estos términos no lo cambian.</p>
+<h2>2. Modo Demo</h2>
+<ul>
+<li>Demo es gratuito y no caduca. La aplicación se abre con normalidad y todas las funciones están disponibles.</li>
+<li>Cada transferencia <strong>nueva</strong> puede tener como máximo <strong>1.000.000.000 de bytes</strong> (1 GB decimal), contados sobre el total de la transferencia, no por archivo. Exactamente 1.000.000.000 de bytes está permitido; <strong>1.000.000.001 se rechaza antes de escribir el primer byte</strong>.</li>
+<li>Puedes hacer tantas transferencias Demo de hasta 1 GB como quieras. Una transferencia mayor se puede dividir, o puedes solicitar la activación.</li>
+<li>No existe ni existirá un periodo de prueba («Trial») para DataMover.</li>
+</ul>
+<h2>3. La licencia</h2>
+<ul>
+<li>La licencia es un <strong>derecho personal de uso</strong> de la aplicación. No es exclusiva, no se transfiere y no se alquila.</li>
+<li>Está vinculada a la <strong>clave criptográfica de la aplicación en tu ordenador</strong>; el identificador del ordenador es solo una huella auxiliar. El número de ordenadores es el de la concesión que recibiste.</li>
+<li>La <strong>duración</strong> puede ser de unas horas, días, meses, un año, otro periodo establecido o <strong>lifetime</strong>. «Lifetime» significa que la licencia no tiene fecha de caducidad; <strong>no</strong> es una promesa de que la aplicación se desarrollará, mantendrá o será compatible para siempre.</li>
+<li>La licencia te da los derechos de su oferta o concesión. Tu mensaje de solicitud no puede cambiar la duración, el número de ordenadores ni los derechos.</li>
+<li>La aplicación, su código, su diseño y su nombre siguen siendo nuestros.</li>
+</ul>
+<h2>4. Cómo obtienes una licencia</h2>
+<ol>
+<li>En la aplicación abres «Licencia y activación», puedes elegir una oferta (opcional) y preparas la solicitud.</li>
+<li>La aplicación te muestra el mensaje de solicitud; <strong>tú decides</strong> si lo envías, por WhatsApp o correo electrónico. La aplicación no envía nada en tu nombre.</li>
+<li>Respondemos. Si la licencia se obtiene mediante <strong>donación</strong>, te indicamos cómo puedes donar; <strong>cuando confirmemos manualmente la donación</strong>, generamos la licencia y te la enviamos. Si la licencia se <strong>concede gratuitamente</strong>, te la enviamos sin donación.</li>
+<li>Copias o importas la licencia en la aplicación. La aplicación la verifica en tu ordenador y la activa.</li>
+</ol>
+<ul>
+<li><strong>Licencias gratuitas.</strong> Podemos conceder licencias sin donación: premios, concursos, eventos, colaboraciones, pruebas, educación, prensa, regalos, migraciones aprobadas u otros casos. Su valor financiero es cero; no se registran como donaciones. El motivo de la concesión nunca se te atribuye como una acusación.</li>
+<li><strong>Si no recibes la licencia</strong> después de confirmada la donación, escríbenos; lo resolvemos enviándote la licencia o devolviéndote la donación.</li>
+</ul>
+<h2>5. Ofertas de donación</h2>
+<ul>
+<li>Cada oferta muestra, antes de donar: el importe, la duración de la licencia, el número de ordenadores, el periodo de trabajo sin internet y las funciones incluidas. <strong>No existe un importe fijo general</strong>: cada oferta tiene el suyo.</li>
+<li>Las ofertas se publican en una lista <strong>firmada por nosotros</strong>; la aplicación la usa solo para mostrarlas. Sin una lista válida, la aplicación no muestra ningún importe.</li>
+<li><strong>La disponibilidad de una oferta no es la duración de la licencia.</strong> Una oferta puede estar disponible 24 horas (por ejemplo, en una promoción) y activar una licencia de un año o lifetime.</li>
+<li>Si envías la solicitud mientras la oferta está disponible, sus condiciones se mantienen durante el periodo de finalización indicado en la oferta. Las ofertas pueden cambiar, pero un cambio no afecta a las licencias ya emitidas.</li>
+</ul>
+<h2>6. Activación, verificación y funcionamiento sin internet</h2>
+<ul>
+<li><strong>Verificación local.</strong> La aplicación verifica en tu ordenador la firma de la licencia, el producto, el ordenador, la clave del dispositivo y el periodo.</li>
+<li><strong>Confirmación en línea.</strong> La aplicación confirma la activación con nuestro servidor. Envía solo: la licencia (que contiene sus identificadores), el identificador del ordenador, la clave pública del dispositivo, la plataforma (macOS o Windows), la hora del reloj y un número aleatorio único (protección contra la repetición de solicitudes). Técnicamente, el servidor también ve la dirección IP de la conexión.</li>
+<li><strong>Permiso sin conexión.</strong> Tras la confirmación, el servidor emite un permiso sin conexión firmado. Con él, la aplicación funciona sin internet hasta que caduque el permiso o la licencia, <strong>lo que ocurra primero</strong>. La aplicación lo renueva automáticamente cuando tiene conexión.</li>
+<li><strong>Sin confirmación en línea.</strong> Una licencia válida localmente funciona sin internet solo dentro de la ventana inicial fijada al emitirla. Si esa ventana termina sin confirmación, la aplicación queda en Demo hasta la próxima conexión. Si la activación no puede confirmarse, no la presentamos como activada.</li>
+<li><strong>El reloj.</strong> Retrasar el reloj del ordenador no reactiva una licencia caducada o detenida.</li>
+<li>La revocación o desactivación de una licencia surte efecto en la siguiente comprobación en línea correcta o, en los ordenadores que siguen sin conexión, como muy tarde cuando caduque el permiso sin conexión.</li>
+</ul>
+<h2>7. Cuando la licencia caduca, se detiene o se desactiva</h2>
+<ul>
+<li>La aplicación <strong>sigue abierta y vuelve a Demo</strong>. No se borran archivos, puntos de control, ajustes ni historial.</li>
+<li>Una transferencia <strong>en curso</strong> termina. Después, no puedes iniciar otra transferencia mayor de 1 GB.</li>
+<li>Si la aplicación se cierra o la transferencia se interrumpe tras la caducidad, <strong>una transferencia mayor de 1 GB no puede reanudarse sin una licencia válida</strong>; los archivos parciales y los puntos de control permanecen y pueden reanudarse tras la reactivación.</li>
+<li>Podemos detener una licencia si se obtuvo mediante fraude, si la donación se canceló, se impugnó o se devolvió, o si estos términos se incumplen gravemente (por ejemplo, por redistribución). Podemos desactivar un ordenador a petición tuya o para liberar una plaza.</li>
+<li>Puedes liberar tú mismo el ordenador desde la aplicación («Quitar de este ordenador»); la licencia queda guardada y puedes importarla de nuevo.</li>
+</ul>
+<h2>8. Qué no puedes hacer</h2>
+<ul>
+<li>Redistribuir (incluso a cambio de dinero), alquilar o prestar la aplicación, la licencia o los archivos de activación.</li>
+<li>Usar la aplicación en ordenadores no cubiertos por tu licencia.</li>
+<li>Eludir o falsificar la activación, los límites, la verificación de actualizaciones o la identificación del ordenador.</li>
+<li>Descompilar o modificar la aplicación, salvo en los casos que la ley permita expresamente.</li>
+</ul>
+<h2>9. Tus datos</h2>
+<p><strong>Permanecen en tu ordenador y no nos los enviamos:</strong> tus archivos y su contenido, sus nombres, tus proyectos, las rutas del disco, los ajustes, el historial de transferencias, los informes, el registro de la aplicación y las contraseñas. El registro y la exportación de diagnóstico se crean solo a petición tuya, con los datos personales enmascarados, y nunca se suben automáticamente.</p>
+<p><strong>Guardados localmente y protegidos:</strong> el estado de la licencia, la clave del dispositivo, el permiso sin conexión y el umbral de tiempo (en el llavero en macOS, protegidos por Windows en Windows).</p>
+<p><strong>Enviados a nosotros, en la activación y la renovación:</strong> los datos técnicos mínimos de la sección 6, además de la dirección IP visible técnicamente.</p>
+<p><strong>Mediante el mensaje de solicitud que envías tú</strong> (WhatsApp o correo): el identificador de la solicitud, el producto, la plataforma, la versión de la aplicación, el identificador del ordenador, la clave pública del dispositivo, la oferta elegida y, solo si los añades tú, tu nombre y contacto. WhatsApp y el servicio de correo tratan los mensajes según sus propias normas.</p>
+<p><strong>Nuestros registros privados</strong> (para administrar la licencia): un nombre de trabajo y tu contacto, el producto, la oferta y su versión, el tipo de concesión (donación o gratuita, con un motivo interno), la duración, el identificador del ordenador y la clave pública del dispositivo, la fecha de emisión, la fecha de la activación confirmada y la última confirmación en línea, y el historial administrativo. <strong>No guardamos datos de tarjeta.</strong> Conservamos los datos el tiempo necesario para administrar la licencia y cumplir obligaciones legales.</p>
+<p><strong>Actualizaciones y ofertas:</strong> la aplicación descarga de gordas.dev (y, como respaldo, de GitHub) el archivo firmado que anuncia las actualizaciones, el paquete de actualización y la lista firmada de ofertas. Esos proveedores ven tu dirección IP, como en cualquier descarga.</p>
+<p>Tus derechos (acceso, rectificación, supresión, limitación, portabilidad, oposición) y los detalles están en la Política de privacidad: <a href="https://gordas.dev/confidentialitate" rel="noopener">https://gordas.dev/confidentialitate</a></p>
+<h2>10. Actualizaciones</h2>
+<p>Una actualización solo se instala después de verificar su firma y el paquete descargado, y solo con tu consentimiento. Una actualización no interrumpe una transferencia en curso. Una licencia de duración limitada te da acceso a las versiones oficiales compatibles mientras es válida; una actualización no prolonga la licencia.</p>
+<h2>11. Seguridad de tus datos</h2>
+<p>DataMover copia y verifica archivos, pero los defectos de discos, cables, del sistema operativo o de otros programas pueden causar pérdidas que ninguna aplicación puede evitar por completo. Conserva copias de seguridad y no borres los originales hasta confirmar que se copiaron correctamente.</p>
+<h2>12. Garantía y responsabilidad</h2>
+<p>En la medida que permita la ley, la aplicación se ofrece <strong>tal cual</strong> («as is»). No respondemos de pérdidas indirectas ni de pérdidas de datos que una copia de seguridad habría evitado. Estos límites no se aplican donde la ley prohíba limitar la responsabilidad.</p>
+<h2>13. Componentes de terceros y versiones MIT</h2>
+<p>Los componentes escritos por otros autores se usan bajo sus propias licencias, conservadas en el documento «Open Source Notices», disponible en la aplicación y en el paquete de instalación; se aplican solo a esos componentes. El código de DataMover publicado hasta la 2.17.1 sigue bajo MIT, en el repositorio público de esas versiones.</p>
+<h2>14. Tus derechos legales</h2>
+<p>Estos términos no limitan ni anulan los derechos imperativos que te otorga la ley del lugar donde resides, incluidos los relativos a contenidos digitales y a la protección de los consumidores.</p>
+<h2>15. Modificación de los términos</h2>
+<p>Si los términos cambian, publicamos la nueva versión con su fecha. Un cambio no afecta a las licencias ya emitidas, salvo que la ley exija otra cosa.</p>
+<h2>16. Ley aplicable</h2>
+<p>Se aplica la ley del país donde resides, en la medida en que lo exijan sus normas imperativas de protección de los consumidores. En lo demás, se aplica la ley del lugar de residencia del desarrollador individual que publica bajo la marca GDC.</p>
+</section>
   <div class="note">
-    <strong>Notă:</strong> pagina asta descrie clar, în cuvinte simple, cum funcționează activarea și ce fac cu datele tale — nu e redactată de un avocat. Dacă ai nelămuriri înainte să plătești, scrie-mi pe WhatsApp înainte de activare.
+    <strong>Site:</strong> <span data-n="ro">acest site nu folosește cookie-uri și niciun instrument de urmărire sau analiză; fonturile se încarcă de la Google Fonts, care vede adresa IP ca la orice încărcare. Politica de confidențialitate: <a href="https://gordas.dev/confidentialitate">gordas.dev/confidentialitate</a>. Termenii nu sunt consultanță juridică.</span>
+    <span data-n="en" hidden>this site uses no cookies and no tracking or analytics; fonts load from Google Fonts, which sees the IP address as with any load. Privacy policy: <a href="https://gordas.dev/confidentialitate">gordas.dev/confidentialitate</a>. These terms are not legal advice.</span>
+    <span data-n="es" hidden>este sitio no usa cookies ni herramientas de seguimiento o analítica; las fuentes se cargan desde Google Fonts, que ve la dirección IP como en cualquier carga. Política de privacidad: <a href="https://gordas.dev/confidentialitate">gordas.dev/confidentialitate</a>. Estos términos no son asesoramiento jurídico.</span>
   </div>
 </div>
+<script>
+(function () {
+  var titles = { ro: "Termeni de utilizare", en: "Terms of use", es: "Términos de uso" };
+  function show(l) {
+    document.documentElement.lang = l;
+    document.querySelectorAll(".terms").forEach(function (s) { s.hidden = s.getAttribute("data-lang") !== l; });
+    document.querySelectorAll("[data-n]").forEach(function (s) { s.hidden = s.getAttribute("data-n") !== l; });
+    document.querySelectorAll(".langs button").forEach(function (b) { b.setAttribute("aria-pressed", b.getAttribute("data-l") === l ? "true" : "false"); });
+    document.getElementById("eyebrow").textContent = titles[l];
+    document.title = titles[l] + " — DataMover";
+  }
+  var q = (location.hash || "").replace("#", "") || new URLSearchParams(location.search).get("lang") || (navigator.language || "ro").slice(0, 2);
+  show(["ro", "en", "es"].indexOf(q) >= 0 ? q : "ro");
+  document.querySelectorAll(".langs button").forEach(function (b) { b.addEventListener("click", function () { show(b.getAttribute("data-l")); }); });
+})();
+</script>
 </body>
 </html>

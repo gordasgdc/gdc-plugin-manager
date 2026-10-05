@@ -1,13 +1,13 @@
 {
-  "version": "2.17.1",
-  "release_date": "2026-09-27",
-  "changes": "Windows: traseul sursă → verificare → copii arată fluxul datelor în timpul transferului, ca pe macOS; animația se oprește la pauză și la minimizare și respectă setările Windows pentru animații și contrast ridicat. La dimensiunea minimă și scalare 150%, sursa și copiile se văd complet.",
+  "version": "2.18.1",
+  "release_date": "2026-10-05",
+  "changes": "DataMover rămâne gratuit în modul Demo (cel mult 1 GB per transfer, fără limită de timp, fără perioadă de probă). Licențele personale, pe câteva ore până la fără expirare, se obțin prin donație sau se acordă gratuit; activarea se confirmă online cu date tehnice minime. Când o licență expiră, aplicația revine în Demo și nu se șterge nimic. Termeni de utilizare și Open Source Notices, în aplicație.",
   "download_url": {
     "windows": "https://github.com/gordasgdc/datamover/releases/latest/download/DataMover-Windows.zip",
     "mac": "https://github.com/gordasgdc/datamover/releases/latest/download/DataMover.pkg",
     "mac_dmg": "https://github.com/gordasgdc/datamover/releases/latest/download/DataMover.dmg",
     "windows_wpf": "https://github.com/gordasgdc/datamover/releases/latest/download/DataMover-WPF-Windows.zip"
   },
-  "mandatory": true,
+  "mandatory": false,
   "min_version": "1.0.0"
 }

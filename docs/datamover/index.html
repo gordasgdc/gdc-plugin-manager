@@ -39,11 +39,11 @@
   "url": "https://gordas.dev/datamover/",
   "applicationCategory": "MultimediaApplication",
   "operatingSystem": "macOS 14 or later (Apple Silicon); Windows 11 (x64)",
-  "softwareVersion": "2.17.1",
-  "downloadUrl": ["https://gordas.dev/datamover/downloads/DataMover.dmg", "https://gordas.dev/datamover/downloads/DataMover-WPF-Windows.zip"],
-  "license": "https://gordas.dev/datamover/licenta.html",
+  "softwareVersion": "2.18.1",
+  "downloadUrl": ["https://gordas.dev/datamover/downloads/DataMover-2.18.1.dmg", "https://gordas.dev/datamover/downloads/DataMover-WPF-Windows-2.18.1.zip"],
+  "license": "https://gordas.dev/datamover/termeni.html",
   "image": "https://gordas.dev/datamover/img/2.16/og-datamover.jpg",
-  "author": { "@type": "Person", "name": "Cristi Gordaș", "url": "https://gordas.dev/" }
+  "author": { "@type": "Organization", "name": "GDC", "url": "https://gordas.dev/" }
 }
 </script>
 <style>
@@ -241,16 +241,23 @@
       <h1 data-i18n-html="hero.title">Cardul citit o dată.<br><span>Fiecare copie, verificată.</span></h1>
       <p class="lead" data-i18n="hero.lead">DataMover copiază materialul de pe card simultan pe mai multe discuri independente. Fiecare fișier primește numele final doar după ce checksum-ul copiei se potrivește cu sursa, iar la final primești rapoarte pentru fiecare destinație.</p>
       <div class="dl">
-        <a class="btn primary" href="https://gordas.dev/datamover/downloads/DataMover.dmg">
+        <a class="btn primary" href="https://gordas.dev/datamover/downloads/DataMover-2.18.1.dmg">
           <strong><svg aria-hidden="true"><use href="#i-download"/></svg><span data-i18n="dl.mac">Descarcă pentru macOS</span></strong>
           <small data-i18n="dl.mac.note">DMG · Apple Silicon · macOS 14+ · semnat Developer ID și notarizat de Apple</small>
         </a>
-        <a class="btn" href="https://gordas.dev/datamover/downloads/DataMover-WPF-Windows.zip">
+        <a class="btn" href="https://gordas.dev/datamover/downloads/DataMover-WPF-Windows-2.18.1.zip">
           <strong><svg aria-hidden="true"><use href="#i-download"/></svg><span data-i18n="dl.win">Descarcă pentru Windows</span></strong>
           <small data-i18n="dl.win.note">ZIP cu installer · Windows 11 x64 · semnătură self-signed: SmartScreen poate avertiza</small>
         </a>
       </div>
-      <p class="meta-row"><span><span data-i18n="meta.version">Versiunea</span> <span class="mono" id="ver-text">2.17.1</span></span><span data-i18n="meta.trial">7 zile complet funcțional, fără cont</span><a href="#instalare" data-i18n="meta.how">Cum se instalează</a></p>
+      <p class="meta-row"><span><span data-i18n="meta.version">Versiunea</span> <span class="mono" id="ver-text">2.18.1</span></span><span data-i18n="meta.demo">Demo gratuit permanent · 1 GB per transfer</span><a href="#instalare" data-i18n="meta.how">Cum se instalează</a></p>
+      <p class="meta-row hashes" style="flex-direction:column;align-items:flex-start;gap:4px;font-size:12px;overflow-wrap:anywhere">
+        <span><span data-i18n="hash.mac">SHA-256 DMG macOS</span>: <span class="mono">2b36636fc5ee989405a3cd022b32f04f4ef3d604441ba45c030412a2cdfe7462</span></span>
+        <span><span data-i18n="hash.win">SHA-256 ZIP Windows</span>: <span class="mono">1e33b3f55da129fd1c400174c6482c2d1f5744e37839cb28a1fe5c04e50f15c9</span></span>
+        <span><span data-i18n="hash.exe">SHA-256 installer Windows (în ZIP)</span>: <span class="mono">6e8989ca339fe2cbffbcff9aef60f977e1c90aac077a39cb3c2d4c011111ad01</span></span>
+        <span><span data-i18n="hash.cert">Certificat Windows (amprentă SHA-1)</span>: <span class="mono">302C942ED83EDE43965C0CBAB368DC08936A2472</span></span>
+        <span><span data-i18n="hash.cert256">Certificat Windows (amprentă SHA-256)</span>: <span class="mono">3ECEA21C150493988552D2E7D4B6A4CBE8ED511C564BFB2E4D0BB621850AF4D9</span></span>
+      </p>
     </div>
 
     <figure class="split">
@@ -387,7 +394,7 @@
         <h3>macOS</h3>
         <p class="sub" data-i18n="inst.mac.sub">DMG cu pachet de instalare</p>
         <ol>
-          <li data-i18n="inst.mac.1">Deschide fișierul DataMover.dmg descărcat.</li>
+          <li data-i18n="inst.mac.1">Deschide fișierul DataMover-2.18.1.dmg descărcat.</li>
           <li data-i18n="inst.mac.2">Dublu-clic pe pachetul .pkg din fereastra deschisă. Installerul pune aplicația direct în folderul Aplicații.</li>
           <li data-i18n="inst.mac.3">Confirmă cu parola de administrator a Mac-ului, când ți se cere.</li>
           <li data-i18n="inst.mac.4">Pornește DataMover din Aplicații. Actualizările apar în aplicație.</li>
@@ -400,10 +407,10 @@
       </div>
       <div class="box">
         <h3>Windows</h3>
-        <p class="sub" data-i18n="inst.win.sub">ZIP cu DataMoverSetup.exe</p>
+        <p class="sub" data-i18n="inst.win.sub">ZIP cu DataMoverSetup-2.18.1.exe</p>
         <ol>
-          <li data-i18n="inst.win.1">Extrage arhiva DataMover-WPF-Windows.zip.</li>
-          <li data-i18n="inst.win.2">Rulează DataMoverSetup.exe și acceptă acordul de licență.</li>
+          <li data-i18n="inst.win.1">Extrage arhiva DataMover-WPF-Windows-2.18.1.zip.</li>
+          <li data-i18n="inst.win.2">Rulează DataMoverSetup-2.18.1.exe și acceptă acordul de licență.</li>
           <li data-i18n="inst.win.3">Aplicația se instalează în Program Files, cu scurtătură în meniul Start. Scurtătura pe Desktop e opțională.</li>
           <li data-i18n="inst.win.4">Dezinstalarea se face din Setări → Aplicații. Șterge și setările, licența locală și jurnalele DataMover.</li>
         </ol>
@@ -415,12 +422,14 @@
       </div>
     </div>
     <div class="box" style="margin-top:16px">
-      <h3 data-i18n="act.title">Probă și activare</h3>
-      <p class="sub" data-i18n="act.sub">Cod personal, legat de calculatorul tău</p>
+      <h3 data-i18n="act.title">Demo și licență</h3>
+      <p class="sub" data-i18n="act.sub">Gratuit permanent; licență personală, legată de calculatorul tău</p>
       <ul>
-        <li data-i18n="act.1">7 zile complet funcțional, fără cont și fără card.</li>
-        <li data-i18n="act.2">După perioada de probă, versiunea neactivată copiază cel mult 2 GB per transfer.</li>
-        <li data-i18n-html="act.3">Activarea e legată de ID-ul calculatorului și se obține printr-o donație pentru dezvoltare. Suma curentă apare în aplicație. Scrie-ne pe <a href="https://wa.me/34643109970?text=Salut!%20Vreau%20sa%20activez%20DataMover." rel="noopener" target="_blank">WhatsApp</a>.</li>
+        <li data-i18n-html="act.1"><strong>Demo permanent, fără perioadă de probă:</strong> toate funcțiile, dar fiecare transfer nou poate avea cel mult 1 GB (1.000.000.000 de octeți). Fără limită de timp, fără cont.</li>
+        <li data-i18n="act.2">Licență pentru câteva ore, zile, luni, un an sau fără expirare, obținută prin donație pentru dezvoltare sau acordată gratuit (premii, concursuri, evenimente, colaborări, testare, educație).</li>
+        <li data-i18n-html="act.3">Cum o ceri: în aplicație, <strong>Licență și activare</strong> → alegi o ofertă (opțional) → <strong>Pregătește cererea</strong> → o trimiți tu pe <a href="https://wa.me/34643109970?text=Salut!%20Vreau%20sa%20activez%20DataMover." rel="noopener" target="_blank">WhatsApp</a> sau e-mail → primești licența, o lipești sau o imporți și apeși <strong>Activează</strong>.</li>
+        <li data-i18n="act.4">Activarea se confirmă online cu date tehnice minime (niciodată fișierele sau proiectele tale); apoi aplicația poate lucra și fără internet, în limita unui permis offline.</li>
+        <li data-i18n-html="act.5">Când licența expiră sau este oprită, aplicația rămâne deschisă și revine în Demo; nu se șterge nimic. Detalii: <a href="termeni.html">Termeni de utilizare</a>.</li>
       </ul>
     </div>
   </div>
@@ -480,11 +489,11 @@
       <p class="lead" data-i18n="cta.lead">Încearcă-l pe un card de test înainte de o filmare reală.</p>
     </div>
     <div class="dl">
-      <a class="btn primary" href="https://gordas.dev/datamover/downloads/DataMover.dmg">
+      <a class="btn primary" href="https://gordas.dev/datamover/downloads/DataMover-2.18.1.dmg">
         <strong><svg aria-hidden="true"><use href="#i-download"/></svg><span data-i18n="dl.mac">Descarcă pentru macOS</span></strong>
         <small data-i18n="dl.mac.note">DMG · Apple Silicon · macOS 14+ · semnat Developer ID și notarizat de Apple</small>
       </a>
-      <a class="btn" href="https://gordas.dev/datamover/downloads/DataMover-WPF-Windows.zip">
+      <a class="btn" href="https://gordas.dev/datamover/downloads/DataMover-WPF-Windows-2.18.1.zip">
         <strong><svg aria-hidden="true"><use href="#i-download"/></svg><span data-i18n="dl.win">Descarcă pentru Windows</span></strong>
         <small data-i18n="dl.win.note">ZIP cu installer · Windows 11 x64 · semnătură self-signed: SmartScreen poate avertiza</small>
       </a>
@@ -504,7 +513,7 @@
       <a href="https://gordas.dev/confidentialitate" data-i18n="f.privacy">Confidențialitate (GDPR)</a>
       <a href="https://gordas.dev/cookie" data-i18n="f.cookie">Cookie-uri</a>
     </div>
-    <p data-i18n="f.author">DataMover · creat de Cristi Gordaș, colorist și editor video · licență MIT</p>
+    <p data-i18n="f.author">DataMover · GDC · software proprietar de la versiunea 2.18.1; versiunile până la 2.17.1 sunt sub licența MIT</p>
     <p data-i18n="f.legal">gordas.dev este o platformă administrată de dezvoltatori independenți. Aplicațiile și resursele sunt furnizate ca atare (AS IS), iar susținerea proiectului se bazează pe contribuții opționale de sprijin și donații.</p>
   </div>
 </footer>
@@ -524,7 +533,7 @@
       "hero.lead": "DataMover copies footage from the card to several independent drives at the same time. Each file gets its final name only after the copy's checksum matches the source, and at the end you get reports for every destination.",
       "dl.mac": "Download for macOS", "dl.mac.note": "DMG · Apple Silicon · macOS 14+ · Developer ID signed and notarized by Apple",
       "dl.win": "Download for Windows", "dl.win.note": "ZIP with installer · Windows 11 x64 · self-signed: SmartScreen may warn",
-      "meta.version": "Version", "meta.trial": "7 days fully functional, no account", "meta.how": "How to install",
+      "meta.version": "Version", "meta.demo": "Free permanent Demo · 1 GB per transfer", "hash.mac": "SHA-256 of the macOS DMG", "hash.win": "SHA-256 of the Windows ZIP", "hash.cert": "Windows certificate (SHA-1 fingerprint)", "hash.exe": "SHA-256 of the Windows installer (inside the ZIP)", "hash.cert256": "Windows certificate (SHA-256 fingerprint)", "meta.how": "How to install",
       "split.alt": "Diagram: one source enters the verification node and leaves as two independent copies, each with the same checksum fingerprint.",
       "split.card": "CARD", "split.verify": "one read · xxHash64", "split.copy1": "COPY 1", "split.copy2": "COPY 2", "split.match": "same fingerprint",
       "split.caption": "Source → verification → independent copies. The green fingerprint appears only when the copy matches the source.",
@@ -556,20 +565,20 @@
       "p6.t": "Redacted diagnostic package", "p6.p": "The app keeps a rotating local log and, on request, exports a ZIP archive. Paths and names are replaced with identifiers. Nothing is sent automatically.",
       "inst.eyebrow": "Install and requirements", "inst.title": "Installing on each platform",
       "inst.mac.sub": "DMG with an installer package",
-      "inst.mac.1": "Open the downloaded DataMover.dmg.", "inst.mac.2": "Double-click the .pkg package in the window that opens. The installer puts the app straight into Applications.",
+      "inst.mac.1": "Open the downloaded DataMover-2.18.1.dmg.", "inst.mac.2": "Double-click the .pkg package in the window that opens. The installer puts the app straight into Applications.",
       "inst.mac.3": "Confirm with your Mac's administrator password when asked.", "inst.mac.4": "Launch DataMover from Applications. Updates show up inside the app.",
       "req.os": "System", "req.sign": "Signature",
       "req.mac.os": "macOS 14 or later, Apple Silicon", "req.mac.sign": "Developer ID (Team 8AR6XP8MG7), notarized by Apple, accepted by Gatekeeper",
       "inst.mac.note": "The package is notarized by Apple, so Gatekeeper opens it without extra steps.",
-      "inst.win.sub": "ZIP with DataMoverSetup.exe",
-      "inst.win.1": "Extract DataMover-WPF-Windows.zip.", "inst.win.2": "Run DataMoverSetup.exe and accept the license agreement.",
+      "inst.win.sub": "ZIP with DataMoverSetup-2.18.1.exe",
+      "inst.win.1": "Extract DataMover-WPF-Windows-2.18.1.zip.", "inst.win.2": "Run DataMoverSetup-2.18.1.exe and accept the license agreement.",
       "inst.win.3": "The app is installed in Program Files, with a Start menu shortcut. The Desktop shortcut is optional.",
       "inst.win.4": "Uninstall from Settings → Apps. This also removes DataMover's settings, local license and logs.",
       "req.win.os": "Windows 11, 64-bit (x64; ARM64 through emulation)", "req.win.sign": "Self-signed certificate, not a commercial Authenticode certificate",
       "inst.win.note": "Windows SmartScreen may show “Windows protected your PC” or “Unknown publisher”. The reason: the installer isn't signed with a commercial certificate yet. If you downloaded the file from this page, click <strong>More info</strong> → <strong>Run anyway</strong>.",
-      "act.title": "Trial and activation", "act.sub": "A personal code, tied to your computer",
-      "act.1": "7 days fully functional, no account, no card.", "act.2": "After the trial, the unactivated version copies at most 2 GB per transfer.",
-      "act.3": "Activation is tied to your computer's ID and comes with a development donation. The current amount is shown in the app. Message us on <a href=\"https://wa.me/34643109970?text=Hi!%20I%20want%20to%20activate%20DataMover.\" rel=\"noopener\" target=\"_blank\">WhatsApp</a>.",
+      "act.title": "Demo and licence", "act.sub": "Free and permanent; a personal licence tied to your computer",
+      "act.1": "<strong>Permanent Demo, no trial period:</strong> every feature, but each new transfer can be at most 1 GB (1,000,000,000 bytes). No time limit, no account.", "act.2": "A licence for a few hours, days, months, one year or no expiry, obtained through a development donation or granted free of charge (prizes, contests, events, collaborations, testing, education).",
+      "act.3": "How to request it: in the app, <strong>Licence and activation</strong> → optionally pick an offer → <strong>Prepare request</strong> → you send it on <a href=\"https://wa.me/34643109970?text=Hi!%20I%20want%20to%20activate%20DataMover.\" rel=\"noopener\" target=\"_blank\">WhatsApp</a> or e-mail → you receive the licence, paste or import it and press <strong>Activate</strong>.", "act.4": "Activation is confirmed online with minimal technical data (never your files or projects); afterwards the app can also work without internet, within an offline permit.", "act.5": "When the licence expires or is stopped, the app stays open and returns to Demo; nothing is deleted. Details: <a href=\"termeni.html#en\">Terms of use</a>.",
       "lim.eyebrow": "Trust and limits", "lim.title": "What is tested, and what isn't yet", "lim.lead": "DataMover lowers the risk of copying, it doesn't remove it. Keep the card unformatted until you have checked your copies.",
       "lim.ok.t": "Verified by automated tests",
       "lim.ok.1": "Copying to two destinations with identical checksums on macOS (APFS, exFAT) and Windows (NTFS)",
@@ -583,7 +592,7 @@
       "guide.eyebrow": "Documentation", "guide.title": "User guide", "guide.lead": "The PDF guide walks through installation, activation and the workflow, step by step. It is also included in the app.",
       "cta.title": "Download DataMover", "cta.lead": "Try it on a test card before a real shoot.",
       "f.home": "gordas.dev", "f.appterms": "DataMover terms", "f.terms": "Terms and Conditions", "f.privacy": "Privacy (GDPR)", "f.cookie": "Cookies",
-      "f.author": "DataMover · made by Cristi Gordaș, colorist and video editor · MIT license",
+      "f.author": "DataMover · GDC · proprietary software from version 2.18.1; versions up to 2.17.1 are under the MIT licence",
       "f.legal": "gordas.dev is a platform run by independent developers. The apps and resources are provided as is (AS IS), and the project is supported through optional contributions and donations."
     },
     es: {
@@ -597,7 +606,7 @@
       "hero.lead": "DataMover copia el material de la tarjeta a varios discos independientes al mismo tiempo. Cada archivo recibe su nombre final solo cuando el checksum de la copia coincide con el origen, y al terminar tienes informes para cada destino.",
       "dl.mac": "Descargar para macOS", "dl.mac.note": "DMG · Apple Silicon · macOS 14+ · firmado con Developer ID y notarizado por Apple",
       "dl.win": "Descargar para Windows", "dl.win.note": "ZIP con instalador · Windows 11 x64 · firma autofirmada: SmartScreen puede avisar",
-      "meta.version": "Versión", "meta.trial": "7 días totalmente funcional, sin cuenta", "meta.how": "Cómo instalar",
+      "meta.version": "Versión", "meta.demo": "Demo gratuito y permanente · 1 GB por transferencia", "hash.mac": "SHA-256 del DMG de macOS", "hash.win": "SHA-256 del ZIP de Windows", "hash.cert": "Certificado de Windows (huella SHA-1)", "hash.exe": "SHA-256 del instalador de Windows (dentro del ZIP)", "hash.cert256": "Certificado de Windows (huella SHA-256)", "meta.how": "Cómo instalar",
       "split.alt": "Esquema: un origen entra en el nodo de verificación y sale como dos copias independientes, cada una con la misma huella de checksum.",
       "split.card": "TARJETA", "split.verify": "una lectura · xxHash64", "split.copy1": "COPIA 1", "split.copy2": "COPIA 2", "split.match": "misma huella",
       "split.caption": "Origen → verificación → copias independientes. La huella verde aparece solo cuando la copia coincide con el origen.",
@@ -629,20 +638,20 @@
       "p6.t": "Paquete de diagnóstico anonimizado", "p6.p": "La aplicación mantiene un registro local rotativo y, cuando lo pides, exporta un archivo ZIP. Las rutas y los nombres se sustituyen por identificadores. No se envía nada automáticamente.",
       "inst.eyebrow": "Instalación y requisitos", "inst.title": "Instalación en cada plataforma",
       "inst.mac.sub": "DMG con paquete de instalación",
-      "inst.mac.1": "Abre el archivo DataMover.dmg descargado.", "inst.mac.2": "Haz doble clic en el paquete .pkg de la ventana que se abre. El instalador coloca la aplicación directamente en Aplicaciones.",
+      "inst.mac.1": "Abre el archivo DataMover-2.18.1.dmg descargado.", "inst.mac.2": "Haz doble clic en el paquete .pkg de la ventana que se abre. El instalador coloca la aplicación directamente en Aplicaciones.",
       "inst.mac.3": "Confirma con la contraseña de administrador del Mac cuando se te pida.", "inst.mac.4": "Abre DataMover desde Aplicaciones. Las actualizaciones aparecen dentro de la aplicación.",
       "req.os": "Sistema", "req.sign": "Firma",
       "req.mac.os": "macOS 14 o posterior, Apple Silicon", "req.mac.sign": "Developer ID (Team 8AR6XP8MG7), notarizado por Apple, aceptado por Gatekeeper",
       "inst.mac.note": "El paquete está notarizado por Apple, así que Gatekeeper lo abre sin pasos adicionales.",
-      "inst.win.sub": "ZIP con DataMoverSetup.exe",
-      "inst.win.1": "Extrae el archivo DataMover-WPF-Windows.zip.", "inst.win.2": "Ejecuta DataMoverSetup.exe y acepta el acuerdo de licencia.",
+      "inst.win.sub": "ZIP con DataMoverSetup-2.18.1.exe",
+      "inst.win.1": "Extrae el archivo DataMover-WPF-Windows-2.18.1.zip.", "inst.win.2": "Ejecuta DataMoverSetup-2.18.1.exe y acepta el acuerdo de licencia.",
       "inst.win.3": "La aplicación se instala en Archivos de programa, con acceso directo en el menú Inicio. El acceso directo en el Escritorio es opcional.",
       "inst.win.4": "Se desinstala desde Configuración → Aplicaciones. También elimina los ajustes, la licencia local y los registros de DataMover.",
       "req.win.os": "Windows 11, 64 bits (x64; en ARM64 mediante emulación)", "req.win.sign": "Certificado autofirmado, no un certificado Authenticode comercial",
       "inst.win.note": "Windows SmartScreen puede mostrar “Windows protegió tu PC” o “Editor desconocido”. El motivo: el instalador aún no está firmado con un certificado comercial. Si descargaste el archivo desde esta página, pulsa <strong>Más información</strong> → <strong>Ejecutar de todas formas</strong>.",
-      "act.title": "Prueba y activación", "act.sub": "Un código personal, vinculado a tu ordenador",
-      "act.1": "7 días totalmente funcional, sin cuenta y sin tarjeta.", "act.2": "Tras la prueba, la versión sin activar copia como máximo 2 GB por transferencia.",
-      "act.3": "La activación está ligada al ID del ordenador y se obtiene con una donación para el desarrollo. El importe actual aparece en la aplicación. Escríbenos por <a href=\"https://wa.me/34643109970?text=Hola!%20Quiero%20activar%20DataMover.\" rel=\"noopener\" target=\"_blank\">WhatsApp</a>.",
+      "act.title": "Demo y licencia", "act.sub": "Gratuito y permanente; licencia personal vinculada a tu ordenador",
+      "act.1": "<strong>Demo permanente, sin periodo de prueba:</strong> todas las funciones, pero cada transferencia nueva puede tener como máximo 1 GB (1.000.000.000 de bytes). Sin límite de tiempo y sin cuenta.", "act.2": "Una licencia de unas horas, días, meses, un año o sin caducidad, obtenida mediante una donación para el desarrollo o concedida gratuitamente (premios, concursos, eventos, colaboraciones, pruebas, educación).",
+      "act.3": "Cómo solicitarla: en la aplicación, <strong>Licencia y activación</strong> → eliges una oferta (opcional) → <strong>Preparar solicitud</strong> → la envías tú por <a href=\"https://wa.me/34643109970?text=Hola!%20Quiero%20activar%20DataMover.\" rel=\"noopener\" target=\"_blank\">WhatsApp</a> o correo → recibes la licencia, la pegas o la importas y pulsas <strong>Activar</strong>.", "act.4": "La activación se confirma en línea con datos técnicos mínimos (nunca tus archivos ni proyectos); después la aplicación también puede funcionar sin internet, dentro de un permiso sin conexión.", "act.5": "Cuando la licencia caduca o se detiene, la aplicación sigue abierta y vuelve a Demo; no se borra nada. Detalles: <a href=\"termeni.html#es\">Términos de uso</a>.",
       "lim.eyebrow": "Confianza y límites", "lim.title": "Qué está probado y qué todavía no", "lim.lead": "DataMover reduce el riesgo al copiar, pero no lo elimina. No formatees la tarjeta hasta haber comprobado tus copias.",
       "lim.ok.t": "Verificado con pruebas automáticas",
       "lim.ok.1": "Copia a dos destinos con checksum idéntico en macOS (APFS, exFAT) y Windows (NTFS)",
@@ -656,7 +665,7 @@
       "guide.eyebrow": "Documentación", "guide.title": "Guía de uso", "guide.lead": "La guía en PDF explica la instalación, la activación y el flujo de trabajo, paso a paso. También está incluida en la aplicación.",
       "cta.title": "Descarga DataMover", "cta.lead": "Pruébalo con una tarjeta de prueba antes de un rodaje real.",
       "f.home": "gordas.dev", "f.appterms": "Términos de DataMover", "f.terms": "Términos y condiciones", "f.privacy": "Privacidad (RGPD)", "f.cookie": "Cookies",
-      "f.author": "DataMover · creado por Cristi Gordaș, colorista y editor de vídeo · licencia MIT",
+      "f.author": "DataMover · GDC · software propietario desde la versión 2.18.1; las versiones hasta la 2.17.1 están bajo la licencia MIT",
       "f.legal": "gordas.dev es una plataforma gestionada por desarrolladores independientes. Las aplicaciones y los recursos se ofrecen tal cual (AS IS), y el proyecto se sostiene con contribuciones opcionales y donaciones."
     }
   };
