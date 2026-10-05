@@ -216,7 +216,7 @@
   <div class="wrap bar">
     <a class="brand" href="#top" aria-label="DataMover">
       <img src="img/2.16/icon-a.svg" width="30" height="30" alt="">
-      <span>DataMover <small id="ver-badge">2.17.1</small></span>
+      <span>DataMover <small id="ver-badge">2.18.1</small></span>
     </a>
     <nav class="links" aria-label="Secțiuni" data-i18n-aria="nav.label">
       <a href="#flux" data-i18n="nav.flow">Flux</a>
@@ -252,7 +252,7 @@
       </div>
       <p class="meta-row"><span><span data-i18n="meta.version">Versiunea</span> <span class="mono" id="ver-text">2.18.1</span></span><span data-i18n="meta.demo">Demo gratuit permanent · 1 GB per transfer</span><a href="#instalare" data-i18n="meta.how">Cum se instalează</a></p>
       <p class="meta-row hashes" style="flex-direction:column;align-items:flex-start;gap:4px;font-size:12px;overflow-wrap:anywhere">
-        <span><span data-i18n="hash.mac">SHA-256 DMG macOS</span>: <span class="mono">2b36636fc5ee989405a3cd022b32f04f4ef3d604441ba45c030412a2cdfe7462</span></span>
+        <span><span data-i18n="hash.mac">SHA-256 DMG macOS</span>: <span class="mono">62d419d6865d847acc7c42078b0478641e9cf35231f05a2f12d13375d3778bf5</span></span>
         <span><span data-i18n="hash.win">SHA-256 ZIP Windows</span>: <span class="mono">1e33b3f55da129fd1c400174c6482c2d1f5744e37839cb28a1fe5c04e50f15c9</span></span>
         <span><span data-i18n="hash.exe">SHA-256 installer Windows (în ZIP)</span>: <span class="mono">6e8989ca339fe2cbffbcff9aef60f977e1c90aac077a39cb3c2d4c011111ad01</span></span>
         <span><span data-i18n="hash.cert">Certificat Windows (amprentă SHA-1)</span>: <span class="mono">302C942ED83EDE43965C0CBAB368DC08936A2472</span></span>
@@ -419,6 +419,7 @@
           <dt data-i18n="req.sign">Semnătură</dt><dd data-i18n="req.win.sign">Certificat self-signed, nu certificat comercial Authenticode</dd>
         </dl>
         <p class="note" data-i18n-html="inst.win.note">Windows SmartScreen poate afișa „Windows a protejat PC-ul” sau „Editor necunoscut”. Motivul: installerul nu e semnat încă cu un certificat comercial. Dacă ai descărcat fișierul de pe această pagină, apasă <strong>Mai multe informații</strong> → <strong>Rulați oricum</strong>.</p>
+        <p class="note" data-i18n="inst.win.upg">Ai deja DataMover 2.17.1? Poți actualiza din aplicație (descarcă installerul) sau poți rula manual installerul 2.18.1 peste versiunea instalată; setările și datele tale se păstrează. Installerul 2.18.1 are o semnătură self-signed nouă („GDC (self-signed)”), deci Windows poate afișa avertismentul de mai sus.</p>
       </div>
     </div>
     <div class="box" style="margin-top:16px">
@@ -575,6 +576,7 @@
       "inst.win.3": "The app is installed in Program Files, with a Start menu shortcut. The Desktop shortcut is optional.",
       "inst.win.4": "Uninstall from Settings → Apps. This also removes DataMover's settings, local license and logs.",
       "req.win.os": "Windows 11, 64-bit (x64; ARM64 through emulation)", "req.win.sign": "Self-signed certificate, not a commercial Authenticode certificate",
+      "inst.win.upg": "Already running DataMover 2.17.1? You can update from inside the app (it downloads the installer) or run the 2.18.1 installer manually over the installed version; your settings and data are kept. The 2.18.1 installer carries a new self-signed signature (“GDC (self-signed)”), so Windows may show the warning above.",
       "inst.win.note": "Windows SmartScreen may show “Windows protected your PC” or “Unknown publisher”. The reason: the installer isn't signed with a commercial certificate yet. If you downloaded the file from this page, click <strong>More info</strong> → <strong>Run anyway</strong>.",
       "act.title": "Demo and licence", "act.sub": "Free and permanent; a personal licence tied to your computer",
       "act.1": "<strong>Permanent Demo, no trial period:</strong> every feature, but each new transfer can be at most 1 GB (1,000,000,000 bytes). No time limit, no account.", "act.2": "A licence for a few hours, days, months, one year or no expiry, obtained through a development donation or granted free of charge (prizes, contests, events, collaborations, testing, education).",
@@ -648,6 +650,7 @@
       "inst.win.3": "La aplicación se instala en Archivos de programa, con acceso directo en el menú Inicio. El acceso directo en el Escritorio es opcional.",
       "inst.win.4": "Se desinstala desde Configuración → Aplicaciones. También elimina los ajustes, la licencia local y los registros de DataMover.",
       "req.win.os": "Windows 11, 64 bits (x64; en ARM64 mediante emulación)", "req.win.sign": "Certificado autofirmado, no un certificado Authenticode comercial",
+      "inst.win.upg": "¿Ya usas DataMover 2.17.1? Puedes actualizar desde la propia aplicación (descarga el instalador) o ejecutar manualmente el instalador 2.18.1 sobre la versión instalada; tus ajustes y datos se conservan. El instalador 2.18.1 lleva una firma self-signed nueva («GDC (self-signed)»), por lo que Windows puede mostrar el aviso anterior.",
       "inst.win.note": "Windows SmartScreen puede mostrar “Windows protegió tu PC” o “Editor desconocido”. El motivo: el instalador aún no está firmado con un certificado comercial. Si descargaste el archivo desde esta página, pulsa <strong>Más información</strong> → <strong>Ejecutar de todas formas</strong>.",
       "act.title": "Demo y licencia", "act.sub": "Gratuito y permanente; licencia personal vinculada a tu ordenador",
       "act.1": "<strong>Demo permanente, sin periodo de prueba:</strong> todas las funciones, pero cada transferencia nueva puede tener como máximo 1 GB (1.000.000.000 de bytes). Sin límite de tiempo y sin cuenta.", "act.2": "Una licencia de unas horas, días, meses, un año o sin caducidad, obtenida mediante una donación para el desarrollo o concedida gratuitamente (premios, concursos, eventos, colaboraciones, pruebas, educación).",
