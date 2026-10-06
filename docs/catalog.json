@@ -34,7 +34,8 @@
     {
       "access" : {
         "group" : "gdc",
-        "kind" : "trial",
+        "kind" : "free",
+        "note" : "2.0.0 · Demo gratuit: sesiuni de 10 minute de utilizare activă, apoi 48 de ore. Licență prin donație sau acordată gratuit.",
         "tags" : [
           "Utilitare"
         ]
@@ -42,7 +43,6 @@
       "coverImage" : "covers/CursorPro GDC.png?v=2fffe981",
       "id" : "CursorPro GDC",
       "name" : "CursorPro GDC",
-      "pricingProductID" : "cursorpro",
       "supportedOS" : "crossPlatform",
       "url" : "https://gordas.dev/cursorpro-gdc/",
       "youtubeURL" : "https://www.youtube.com/@cristigordas"
