@@ -1,385 +1,213 @@
 <!DOCTYPE html>
-<html lang="ro">
+<html lang="ro" data-theme-pref="auto">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script>
-  if (location.hostname === "gordasgdc.github.io") {
-    location.replace("https://gordas.dev/cursorpro-gdc/" + location.search + location.hash);
-  }
-</script>
-<title>CursorPro GDC</title>
-<meta name="description" content="CursorPro GDC — Halo, Spotlight, Desen și Zoom live pentru prezentări și cursuri, pe Mac și Windows. Trial gratuit de 3 zile.">
-<link rel="icon" href="data:,">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CursorPro GDC — cursorul tău, văzut de toată sala</title>
+<meta name="description" content="Halo în jurul cursorului, spotlight, lupă cu pixeli reali și desen peste orice aplicație, pe Mac și Windows. Demo gratuit: 10 minute de utilizare activă.">
+<link rel="icon" type="image/png" href="assets/favicon.png">
 <style>
-  :root{
-    --bg:#0a0912;
-    --bg-2:#120f1e;
-    --panel:#171325;
-    --panel-2:#1d1830;
-    --border:#2b2440;
-    --text:#f1eef9;
-    --muted:#a49bc4;
-    --faint:#6b6390;
-    --accent:#f0c250;
-    --accent-ink:#231704;
-    --accent-dim:#8a6b2c;
-    --violet:#7a4ee0;
-    --violet-2:#a06bff;
-    --mono: 'IBM Plex Mono', ui-monospace, monospace;
-    --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  }
-  *{ box-sizing:border-box; margin:0; padding:0; }
-  html{ scroll-behavior:smooth; }
-  body{
-    background:
-      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(122,78,224,.35), transparent 60%),
-      radial-gradient(ellipse 700px 500px at 100% 10%, rgba(240,194,80,.12), transparent 55%),
-      var(--bg);
-    color:var(--text); font-family:var(--sans);
-    line-height:1.6; -webkit-font-smoothing:antialiased;
-  }
-  a{ color:inherit; }
-  img,svg{ display:block; max-width:100%; }
-  .wrap{ max-width:1080px; margin:0 auto; padding:0 24px; }
-  ::selection{ background:var(--accent); color:var(--accent-ink); }
-
-  header{
-    position:sticky; top:0; z-index:50;
-    background:rgba(10,9,18,.82); backdrop-filter:blur(12px);
-    border-bottom:1px solid var(--border);
-  }
-  .nav{ display:flex; align-items:center; justify-content:space-between; padding:16px 24px; max-width:1080px; margin:0 auto; }
-  .brand{ display:flex; align-items:center; gap:10px; font-family:var(--mono); font-weight:700; font-size:15px; letter-spacing:.02em; }
-  .brand .mark{ width:28px; height:28px; border-radius:8px; background:linear-gradient(145deg,var(--violet-2),var(--violet)); display:flex; align-items:center; justify-content:center; box-shadow:0 0 0 1px rgba(255,255,255,.08) inset; }
-  .brand .mark svg{ width:16px; height:16px; }
-  .nav-links{ display:flex; align-items:center; gap:26px; }
-  .nav-links a{ font-size:13.5px; color:var(--muted); text-decoration:none; transition:color .15s ease; }
-  .nav-links a:hover{ color:var(--text); }
-  .nav-cta{
-    font-family:var(--mono); font-size:12.5px; font-weight:600; color:var(--accent-ink);
-    background:var(--accent); padding:9px 16px; border-radius:8px; text-decoration:none; white-space:nowrap;
-  }
-  @media (max-width:760px){ .nav-links a:not(.nav-cta){ display:none; } }
-
-  .hero{ padding:96px 0 70px; position:relative; overflow:hidden; }
-  .hero-grid{ display:grid; grid-template-columns:1.05fr .95fr; gap:56px; align-items:center; }
-  @media (max-width:860px){ .hero-grid{ grid-template-columns:1fr; } }
-  .eyebrow{
-    font-family:var(--mono); font-size:12px; font-weight:600; color:var(--accent);
-    letter-spacing:.12em; text-transform:uppercase; margin-bottom:18px; display:flex; align-items:center; gap:8px;
-  }
-  .eyebrow::before{ content:''; width:16px; height:1px; background:var(--accent); }
-  h1{
-    font-family:var(--mono); font-size:clamp(32px,5vw,50px); font-weight:700; line-height:1.1;
-    letter-spacing:-.01em; margin-bottom:20px;
-  }
-  h1 .accent{ background:linear-gradient(135deg,var(--accent),var(--violet-2)); -webkit-background-clip:text; background-clip:text; color:transparent; }
-  .hero p.lead{ font-size:16.5px; color:var(--muted); max-width:48ch; margin-bottom:30px; }
-  .hero-actions{ display:flex; gap:12px; flex-wrap:wrap; margin-bottom:26px; align-items:center; }
-  .os-downloads{ display:flex; gap:12px; flex-wrap:wrap; }
-  .os-btn-soon{ position:relative; opacity:.8; }
-  .os-btn-soon:hover{ opacity:1; border-color:var(--violet-2); }
-  .soon-badge{
-    font-family:var(--mono); font-size:9.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
-    background:var(--violet); color:#fff; padding:2px 6px; border-radius:5px; margin-left:2px;
-  }
-  .btn{
-    font-family:var(--mono); font-size:13.5px; font-weight:600; padding:14px 24px; border-radius:9px;
-    text-decoration:none; display:inline-flex; align-items:center; gap:8px; transition:all .18s ease; cursor:pointer; border:1px solid transparent;
-  }
-  .btn-primary{ background:var(--accent); color:var(--accent-ink); }
-  .btn-primary:hover{ background:#f7cf74; transform:translateY(-1px); box-shadow:0 10px 30px -8px rgba(240,194,80,.5); }
-  .btn-ghost{ background:var(--panel); color:var(--text); border-color:var(--border); }
-  .btn-ghost:hover{ border-color:var(--violet-2); }
-  .hero-meta{ display:flex; gap:18px; flex-wrap:wrap; font-family:var(--mono); font-size:12px; color:var(--faint); }
-  .hero-meta span{ display:flex; align-items:center; gap:6px; }
-  .dot{ width:6px; height:6px; border-radius:50%; background:#5fd98a; }
-
-  .loupe-demo{
-    background:var(--panel); border:1px solid var(--border); border-radius:16px;
-    padding:28px; box-shadow:0 40px 80px -30px rgba(0,0,0,.7); position:relative; overflow:hidden;
-  }
-  .loupe-demo .tt-bar{ display:flex; gap:6px; margin-bottom:20px; }
-  .tt-bar span{ width:9px; height:9px; border-radius:50%; background:var(--border); }
-  .demo-canvas{ position:relative; height:260px; border-radius:10px; background:linear-gradient(160deg,#1a1530,#0e0c18); overflow:hidden; }
-  .demo-line{ position:absolute; left:24px; right:24px; height:8px; border-radius:4px; background:rgba(255,255,255,.06); }
-  .demo-line.l1{ top:36px; width:60%; }
-  .demo-line.l2{ top:58px; width:40%; }
-  .demo-line.l3{ top:110px; width:75%; }
-  .demo-line.l4{ top:132px; width:30%; }
-  .halo-ring{
-    position:absolute; width:64px; height:64px; border-radius:50%;
-    border:3px solid var(--accent); box-shadow:0 0 24px 4px rgba(240,194,80,.5);
-    top:150px; left:150px; animation:haloMove 5s ease-in-out infinite;
-  }
-  @keyframes haloMove{
-    0%,100%{ top:150px; left:150px; }
-    30%{ top:70px; left:200px; }
-    60%{ top:170px; left:60px; }
-  }
-  .spot-mask{
-    position:absolute; inset:0; background:rgba(6,5,12,.78);
-    -webkit-mask: radial-gradient(circle 70px at 60% 40%, transparent 68px, black 70px);
-    mask: radial-gradient(circle 70px at 60% 40%, transparent 68px, black 70px);
-    opacity:0; animation:spotFade 5s ease-in-out infinite; animation-delay:.2s;
-  }
-  @keyframes spotFade{ 0%,20%{opacity:0;} 30%,55%{opacity:1;} 65%,100%{opacity:0;} }
-
-  .reveal{ opacity:0; transform:translateY(16px); transition:opacity .6s ease, transform .6s ease; }
-  .reveal.in{ opacity:1; transform:translateY(0); }
-
-  section{ padding:68px 0; border-top:1px solid var(--border); }
-  .section-head{ margin-bottom:38px; max-width:60ch; }
-  .section-tag{ font-family:var(--mono); font-size:11.5px; color:var(--accent); letter-spacing:.1em; text-transform:uppercase; margin-bottom:10px; }
-  h2{ font-family:var(--mono); font-size:clamp(22px,3vw,30px); font-weight:700; margin-bottom:10px; letter-spacing:-.01em; }
-  section > .wrap > p.section-desc{ color:var(--muted); font-size:15px; max-width:60ch; }
-
-  .feature-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:18px; margin-top:36px; }
-  @media (max-width:700px){ .feature-grid{ grid-template-columns:1fr; } }
-  .feature-card{
-    background:var(--panel); border:1px solid var(--border); border-radius:14px; padding:26px;
-    transition:border-color .2s ease, transform .2s ease;
-  }
-  .feature-card:hover{ border-color:var(--violet-2); transform:translateY(-2px); }
-  .feature-icon{
-    width:44px; height:44px; border-radius:11px; display:flex; align-items:center; justify-content:center;
-    background:linear-gradient(145deg,var(--violet-2),var(--violet)); margin-bottom:16px; font-size:20px;
-  }
-  .feature-card h3{ font-size:16.5px; font-weight:700; margin-bottom:8px; }
-  .feature-card p{ font-size:14px; color:var(--muted); }
-
-  .steps{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-top:36px; counter-reset:step; }
-  @media (max-width:760px){ .steps{ grid-template-columns:1fr; } }
-  .step{ position:relative; padding-left:44px; }
-  .step::before{
-    counter-increment:step; content:counter(step);
-    position:absolute; left:0; top:0; width:30px; height:30px; border-radius:50%;
-    background:var(--panel-2); border:1px solid var(--border); color:var(--accent);
-    font-family:var(--mono); font-weight:700; font-size:13px; display:flex; align-items:center; justify-content:center;
-  }
-  .step h4{ font-size:15px; font-weight:700; margin-bottom:6px; }
-  .step p{ font-size:13.5px; color:var(--muted); }
-
-  .screens-grid{ display:grid; grid-template-columns:1fr 1fr; gap:20px; }
-  @media (max-width:760px){ .screens-grid{ grid-template-columns:1fr; } }
-  .screen-card{
-    background:var(--panel); border:1px solid var(--border); border-radius:14px;
-    overflow:hidden; box-shadow:0 24px 50px -24px rgba(0,0,0,.6);
-  }
-  .screen-card img{ width:100%; display:block; }
-  .screen-card figcaption{ padding:14px 18px; font-size:12.5px; color:var(--muted); line-height:1.5; }
-
-  .price-card{
-    margin-top:36px; background:linear-gradient(150deg,var(--panel-2),var(--panel));
-    border:1px solid var(--border); border-radius:18px; padding:40px; display:flex; align-items:center; justify-content:space-between; gap:32px; flex-wrap:wrap;
-  }
-  .price-tag{ font-family:var(--mono); font-size:44px; font-weight:700; color:var(--accent); }
-  .price-tag sub{ font-size:14px; color:var(--muted); font-weight:500; }
-  .price-note{ font-size:13.5px; color:var(--muted); margin-top:4px; }
-
-  footer{ border-top:1px solid var(--border); padding:36px 0; }
-  .footer-row{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; font-size:13px; color:var(--faint); }
-  .footer-row a{ color:var(--muted); text-decoration:none; }
-  .footer-row a:hover{ color:var(--text); }
+:root{
+  --bg:#f6f7f9; --bg2:#ffffff; --ink:#14161a; --ink2:#565b65; --ink3:#666b76; --amber:#f4a100; --amber-hi:#ffc53d; --amber-ink:#8f5600; --on-amber:#402600;
+  --panel:rgba(255,255,255,.78); --stroke:rgba(0,0,0,.08); --hair:rgba(0,0,0,.08); --shadow:0 1px 1px rgba(20,26,41,.05),0 22px 48px rgba(20,26,41,.12);
+  --radius:16px; --maxw:1120px;
+  --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI Variable Text","Segoe UI",system-ui,Roboto,sans-serif; --mono:ui-monospace,"SF Mono","Cascadia Mono",Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){ --bg:#0e0f12; --bg2:#15171b; --ink:#f2f3f5; --ink2:#aeb3bd; --ink3:#848892; --amber:#ffb72e; --amber-hi:#ffd36b; --amber-ink:#ffc53d; --panel:rgba(255,255,255,.06); --stroke:rgba(255,255,255,.10); --hair:rgba(255,255,255,.10); --shadow:0 1px 1px rgba(0,0,0,.4),0 24px 56px rgba(0,0,0,.55); } }
+:root[data-theme="dark"]{ --bg:#0e0f12; --bg2:#15171b; --ink:#f2f3f5; --ink2:#aeb3bd; --ink3:#848892; --amber:#ffb72e; --amber-hi:#ffd36b; --amber-ink:#ffc53d; --panel:rgba(255,255,255,.06); --stroke:rgba(255,255,255,.10); --hair:rgba(255,255,255,.10); --shadow:0 1px 1px rgba(0,0,0,.4),0 24px 56px rgba(0,0,0,.55); }
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(900px 500px at 12% -8%,rgba(255,255,255,.9),transparent 60%),radial-gradient(700px 500px at 100% 0,rgba(244,161,0,.10),transparent 60%)}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) body::before{background:radial-gradient(900px 500px at 12% -8%,rgba(255,255,255,.07),transparent 60%),radial-gradient(700px 500px at 100% 0,rgba(255,183,46,.08),transparent 60%)} }
+a{color:inherit} img{display:block;max-width:100%;height:auto}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 20px}
+.ic{width:1.25em;height:1.25em;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex:none}
+header{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:saturate(1.4) blur(14px);border-bottom:1px solid var(--hair)}
+.nav{display:flex;align-items:center;gap:20px;height:60px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:650;letter-spacing:-.01em;text-decoration:none}
+.brand img{width:30px;height:30px;border-radius:8px}
+.nav-links{display:flex;gap:22px;margin-left:auto}
+.nav-links a{font-size:14px;color:var(--ink2);text-decoration:none} .nav-links a:hover{color:var(--ink)}
+.langs{display:flex;gap:2px;padding:2px;border-radius:999px;background:var(--hair)}
+.langs button{border:0;background:transparent;color:var(--ink2);font:600 12px var(--sans);padding:5px 10px;border-radius:999px;cursor:pointer}
+.langs button[aria-pressed="true"]{background:var(--bg2);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.18)}
+.btn{display:inline-flex;align-items:center;gap:9px;height:46px;padding:0 22px;border-radius:999px;font:600 15px var(--sans);text-decoration:none;border:1px solid var(--stroke);background:var(--bg2);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.btn.primary{background:linear-gradient(180deg,var(--amber-hi),var(--amber));color:var(--on-amber);border-color:rgba(0,0,0,.12);box-shadow:0 8px 22px color-mix(in srgb,var(--amber) 38%,transparent)}
+.skip{position:absolute;left:12px;top:-60px;z-index:50;padding:10px 16px;border-radius:10px;background:var(--bg2);color:var(--ink);border:2px solid var(--amber);font:600 14px var(--sans)} .skip:focus{top:10px}
+.btn:focus-visible,.langs button:focus-visible,a:focus-visible{outline:2px solid var(--amber);outline-offset:3px}
+.hero{padding-top:72px;padding-bottom:40px;display:grid;grid-template-columns:1.02fr 1fr;gap:48px;align-items:center}
+h1{font-size:clamp(36px,5.4vw,60px);line-height:1.04;letter-spacing:-.035em;font-weight:720}
+.lead{margin-top:20px;font-size:clamp(17px,2vw,20px);color:var(--ink2);max-width:34em}
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.note{margin-top:16px;font-size:13px;color:var(--ink3)}
+.shots{position:relative;min-height:340px}
+.shot img{border-radius:12px;box-shadow:var(--shadow);border:1px solid var(--stroke)}
+.shot-mac{width:94%}
+.shot-win{position:absolute;right:-2%;bottom:-34px;width:62%}
+section{padding:64px 0}
+h2{font-size:clamp(26px,3.4vw,38px);line-height:1.12;letter-spacing:-.025em;font-weight:700;max-width:22em}
+.tool{display:grid;grid-template-columns:1fr 1.15fr;gap:48px;align-items:center;margin-top:52px}
+.tool.flip .tool-text{order:2}
+.tool-ic{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;color:var(--amber-ink);background:color-mix(in srgb,var(--amber) 16%,transparent);font-size:22px}
+.tool h3{margin-top:16px;font-size:24px;letter-spacing:-.02em}
+.tool p{margin-top:8px;color:var(--ink2);max-width:30em}
+.tool-fig img{border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--stroke)}
+.more{display:grid;grid-template-columns:1fr 1fr;gap:0 48px;margin-top:56px;border-top:1px solid var(--hair)}
+.more div{padding:22px 0;border-bottom:1px solid var(--hair);display:flex;gap:14px}
+.more h3{font-size:17px} .more p{color:var(--ink2);font-size:15px;margin-top:4px} .more .ic{margin-top:3px;color:var(--amber-ink);font-size:20px}
+.keys{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+.key{display:inline-flex;align-items:center;gap:10px;padding:10px 16px;border-radius:12px;background:var(--panel);border:1px solid var(--stroke);box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.key kbd{font:600 13px var(--mono);padding:3px 9px;border-radius:7px;background:var(--bg2);border:1px solid var(--stroke);box-shadow:0 1px 0 var(--hair)}
+.os{margin-top:12px;font-size:13px;color:var(--ink3);font-family:var(--mono)}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:0 40px;margin-top:36px}
+.steps div{padding-top:20px;border-top:2px solid var(--amber)}
+.steps h3{font-size:18px;display:flex;gap:10px;align-items:center} .steps .ic{color:var(--amber-ink)}
+.steps p{color:var(--ink2);font-size:15px;margin-top:8px}
+.callout{margin-top:34px;padding:18px 22px;border-radius:14px;background:var(--panel);border:1px solid var(--stroke);color:var(--ink2);font-size:15px}
+.dl{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:34px}
+.dl>div{padding:26px;border-radius:var(--radius);background:var(--panel);border:1px solid var(--stroke);box-shadow:var(--shadow)}
+.dl h3{display:flex;gap:10px;align-items:center;font-size:20px} .dl p{margin:10px 0 20px;color:var(--ink2);font-size:15px}
+.dl .ver{font:500 12px var(--mono);color:var(--ink3);margin-top:12px}
+.alt{margin-top:8px;font-size:13px} .alt a,.note a{color:var(--ink2)}
+.guide{margin-top:14px;display:inline-flex;gap:8px;align-items:center;color:var(--ink2);font-size:14px}
+details{border-top:1px solid var(--hair);padding:16px 0} details:last-of-type{border-bottom:1px solid var(--hair)}
+summary{cursor:pointer;font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:12px} summary::-webkit-details-marker{display:none}
+summary::after{content:"+";color:var(--amber-ink);font-weight:700} details[open] summary::after{content:"–"}
+details p{margin-top:10px;color:var(--ink2);max-width:46em}
+footer{padding:40px 0 56px;border-top:1px solid var(--hair);color:var(--ink3);font-size:13px}
+footer .links{display:flex;flex-wrap:wrap;gap:18px;margin-bottom:12px} footer a{color:var(--ink2)}
+@media (max-width:860px){
+  .hero{grid-template-columns:1fr;padding-top:40px} .shots{min-height:0;margin-bottom:34px} .shot-win{position:relative;right:auto;bottom:auto;width:78%;margin:-26px 0 0 auto}
+  .tool,.tool.flip{grid-template-columns:1fr;gap:22px} .tool.flip .tool-text{order:0}
+  .more,.steps,.dl{grid-template-columns:1fr} .steps{gap:24px}
+  .nav-links{display:none} .langs{margin-left:auto}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
 </head>
 <body>
-
-<header>
-  <div class="nav">
-    <div class="brand">
-      <span class="mark">
-        <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="#fff" stroke-width="2"/><circle cx="12" cy="12" r="2" fill="#fff"/></svg>
-      </span>
-      CursorPro GDC
+<a class="skip" href="#top" data-i18n="skip">Sari la conținut</a>
+<svg width="0" height="0" style="display:none" aria-hidden="true"><defs>
+<symbol id="i-halo" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2.2"/></symbol>
+<symbol id="i-spot" viewBox="0 0 24 24"><path d="M8 3h8l-1.5 6h-5z"/><path d="M10 9v12h4V9"/></symbol>
+<symbol id="i-zoom" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l5 5M11 8v6M8 11h6"/></symbol>
+<symbol id="i-draw" viewBox="0 0 24 24"><path d="M4 20l1-4L16 5l3 3L8 19z"/><path d="M14 7l3 3"/></symbol>
+<symbol id="i-keys" viewBox="0 0 24 24"><path d="M9 9v12l3-3 2.5 5 2-1-2.5-5H18z"/><path d="M6 6a6 6 0 0 1 12 0"/></symbol>
+<symbol id="i-apple" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="11" rx="1.5"/><path d="M2 19.500h20"/></symbol>
+<symbol id="i-win" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M8 20h8M12 16v4"/></symbol>
+<symbol id="i-doc" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+<symbol id="i-pause" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M10 9v6M14 9v6"/></symbol>
+<symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="M11 12L20 3M16 7l3 3"/></symbol>
+</defs></svg>
+<header><div class="wrap nav">
+  <a class="brand" href="#top"><img src="assets/favicon.png" alt="" width="30" height="30"><span>CursorPro GDC</span></a>
+  <nav class="nav-links" aria-label="Principal"><a href="#tools" data-i18n="nav_tools">Funcții</a><a href="#how" data-i18n="nav_how">Cum merge</a><a href="#demo" data-i18n="nav_demo">Demo și licență</a><a href="#download" data-i18n="nav_dl">Descărcare</a><a href="#faq" data-i18n="nav_help">Ajutor</a></nav>
+  <div class="langs" role="group" aria-label="Language"><button data-lang="ro" aria-pressed="true">RO</button><button data-lang="en" aria-pressed="false">EN</button><button data-lang="es" aria-pressed="false">ES</button></div>
+</div></header>
+<main id="top">
+<div class="wrap hero">
+  <div>
+    <h1 data-i18n="h1">Cursorul tău, văzut de toată sala.</h1>
+    <p class="lead" data-i18n="lead">CursorPro GDC pune un halo în jurul cursorului, întunecă tot ce nu contează, mărește exact unde arăți și te lasă să desenezi peste orice aplicație. Pe Mac și pe Windows.</p>
+    <div class="cta">
+      <a class="btn primary" href="#download-mac"><svg class="ic" aria-hidden="true"><use href="#i-apple"/></svg><span data-i18n="dl_mac">Descarcă pentru Mac</span></a>
+      <a class="btn" href="#download-win"><svg class="ic" aria-hidden="true"><use href="#i-win"/></svg><span data-i18n="dl_win">Descarcă pentru Windows</span></a>
     </div>
-    <div class="nav-links">
-      <a href="#features">Funcții</a>
-      <a href="#how">Cum funcționează</a>
-      <a href="#price">Donație</a>
-      <a class="nav-cta" href="https://github.com/gordasgdc/cursorpro-gdc/releases/latest/download/CursorProGDC-Mac.zip">Descarcă</a>
-    </div>
+    <p class="note" data-i18n="hero_note">Demo gratuit: 10 minute de utilizare activă. macOS 14 sau mai nou · Windows 10 / 11</p>
   </div>
-</header>
-
-<section class="hero">
-  <div class="wrap hero-grid">
-    <div>
-      <div class="eyebrow">macOS · Windows</div>
-      <h1>Arată exact ce vrei<br>să vadă <span class="accent">studenții tăi</span>.</h1>
-      <p class="lead">Halo pe cursor, spotlight care întunecă restul ecranului, desen live peste orice aplicație și o lupă care mărește exact zona de care ai nevoie — toate dintr-o singură aplicație ușoară, nativă pe Mac și Windows.</p>
-      <div class="hero-actions">
-        <div class="os-downloads" id="os-downloads">
-          <a class="btn btn-primary os-btn" id="dl-mac" href="https://github.com/gordasgdc/cursorpro-gdc/releases/latest/download/CursorProGDC-Mac.zip">⬇ Descarcă pentru Mac</a>
-          <a class="btn btn-ghost os-btn os-btn-soon" id="dl-win" href="https://github.com/gordasgdc/cursorpro-gdc-win/releases/latest/download/CursorProGDCSetup.exe">⬇ Descarcă pentru Windows<span class="soon-badge">preview</span></a>
-        </div>
-        <a class="btn btn-ghost" href="#how">Vezi cum funcționează</a>
-        <a class="btn btn-ghost" href="https://github.com/gordasgdc/cursorpro-gdc/releases/latest/download/Instructiuni-CursorProGDC.pdf">📄 Instrucțiuni (PDF)</a>
-      </div>
-      <div class="hero-meta">
-        <span><span class="dot"></span> Trial 3 zile, fără card</span>
-        <span><span class="dot"></span> Nativ Apple Silicon</span>
-        <span><span class="dot"></span> Română · English · Español</span>
-      </div>
-    </div>
-    <div class="loupe-demo reveal">
-      <div class="tt-bar"><span></span><span></span><span></span></div>
-      <div class="demo-canvas">
-        <div class="demo-line l1"></div>
-        <div class="demo-line l2"></div>
-        <div class="demo-line l3"></div>
-        <div class="demo-line l4"></div>
-        <div class="spot-mask"></div>
-        <div class="halo-ring"></div>
-      </div>
-    </div>
+  <div class="shots">
+    <figure class="shot shot-mac"><img data-shot="mac" src="assets/mac-halo-ro.webp" width="1000" height="702" alt="Fereastra de preferințe CursorPro GDC pe macOS" data-i18n-alt="alt_mac"></figure>
+    <figure class="shot shot-win"><img data-shot="win" src="assets/win-halo-ro.webp" width="1000" height="753" alt="Fereastra de preferințe CursorPro GDC pe Windows" data-i18n-alt="alt_win"></figure>
   </div>
-</section>
+</div>
 
-<section id="features">
-  <div class="wrap">
-    <div class="section-head reveal">
-      <div class="section-tag">Funcții</div>
-      <h2>Patru unelte, o singură tastă apăsată</h2>
-      <p class="section-desc">Fiecare mod se activează ținând o tastă — nimic nu rămâne pornit din greșeală în timpul unei prezentări live.</p>
-    </div>
-    <div class="feature-grid">
-      <div class="feature-card reveal">
-        <div class="feature-icon">◎</div>
-        <h3>Halo cursor</h3>
-        <p>Un cerc vizibil în jurul cursorului, ca publicul să-l urmărească ușor pe ecran proiectat sau distribuit. Stil, culoare și mărime — toate reglabile.</p>
-      </div>
-      <div class="feature-card reveal">
-        <div class="feature-icon">◑</div>
-        <h3>Spotlight</h3>
-        <p>Întunecă tot ecranul, mai puțin un cerc luminos în jurul cursorului — perfect ca să atragi atenția exact acolo unde vorbești.</p>
-      </div>
-      <div class="feature-card reveal">
-        <div class="feature-icon">✎</div>
-        <h3>Desen live</h3>
-        <p>Liber, săgeți, cercuri sau cadre de selecție, peste orice aplicație — fiecare unealtă cu propria tastă rapidă, reconfigurabilă.</p>
-      </div>
-      <div class="feature-card reveal">
-        <div class="feature-icon">🔍</div>
-        <h3>Zoom live</h3>
-        <p>O lupă rotundă care mărește live zona din jurul cursorului — arată clar detalii mici, fără să dai zoom în aplicația prezentată.</p>
-      </div>
-    </div>
+<section id="tools"><div class="wrap">
+  <h2 data-i18n="tools_t">Cinci unelte, o singură idee: publicul să urmărească fără efort.</h2>
+  <article class="tool">
+  <div class="tool-text"><div class="tool-ic"><svg class="ic" aria-hidden="true"><use href="#i-halo"/></svg></div><h3 data-i18n="t_halo">Halo</h3><p data-i18n="t_halo_d">Un inel luminos în jurul cursorului, în trei stiluri, cu mărime, grosime și culoare reglabile. Se vede pe orice fundal, de la alb la negru.</p></div>
+  <figure class="tool-fig"><img src="assets/ov-halo.webp" width="900" height="592" loading="lazy" alt="Halo galben în jurul cursorului peste un grafic" data-i18n-alt="alt_halo"></figure>
+</article>
+<article class="tool flip">
+  <div class="tool-text"><div class="tool-ic"><svg class="ic" aria-hidden="true"><use href="#i-spot"/></svg></div><h3 data-i18n="t_spot">Spotlight</h3><p data-i18n="t_spot_d">Ții o tastă și tot ecranul se întunecă, în afară de zona din jurul cursorului. Eliberezi tasta și totul revine.</p></div>
+  <figure class="tool-fig"><img src="assets/ov-spotlight.webp" width="900" height="592" loading="lazy" alt="Spotlight: ecranul întunecat, cu lumină în jurul cursorului" data-i18n-alt="alt_spot"></figure>
+</article>
+<article class="tool">
+  <div class="tool-text"><div class="tool-ic"><svg class="ic" aria-hidden="true"><use href="#i-zoom"/></svg></div><h3 data-i18n="t_zoom">Lupă</h3><p data-i18n="t_zoom_d">O lupă rotundă cu pixeli reali, centrată exact pe vârful cursorului. Rotița schimbă mărirea din mers, iar un cadru poate fi înghețat ca să arăți calm un detaliu.</p></div>
+  <figure class="tool-fig"><img src="assets/ov-zoom.webp" width="900" height="592" loading="lazy" alt="Lupă rotundă care mărește un grafic" data-i18n-alt="alt_zoom"></figure>
+</article>
+  <div class="more">
+    <div><svg class="ic" aria-hidden="true"><use href="#i-draw"/></svg><span><h3 data-i18n="t_draw">Desen</h3><p data-i18n="t_draw_d">Mână liberă, săgeată, elipsă sau dreptunghi, direct peste aplicația deschisă. La o comandă, desenul dispare.</p></span></div>
+    <div><svg class="ic" aria-hidden="true"><use href="#i-keys"/></svg><span><h3 data-i18n="t_keys">Clicuri și taste</h3><p data-i18n="t_keys_d">Fiecare clic lasă un inel colorat, iar combinațiile de taste apar pe ecran, ca publicul să înțeleagă ce apeși.</p></span></div>
   </div>
-</section>
+</div></section>
 
-<section id="how">
-  <div class="wrap">
-    <div class="section-head reveal">
-      <div class="section-tag">Instalare</div>
-      <h2>Gata de folosit în două minute</h2>
-      <p id="win-guide-note" style="display:none;margin-top:8px;color:var(--muted);font-size:13.5px;">Pașii de mai jos sunt pentru macOS. Versiunea Windows e încă în <b>preview timpuriu</b> — doar iconița din tray și Licența funcționează momentan; Halo, Spotlight, Desen, Zoom și Efectele de Clic urmează în build-urile viitoare.</p>
-    </div>
-    <div class="steps">
-      <div class="step reveal">
-        <h4>Descarcă și deschide</h4>
-        <p>Descarcă arhiva .zip, dezarhiveaz-o, apoi dublu-click pe CursorProGDC.pkg — aplicație semnată și verificată oficial de Apple, fără avertismente.</p>
-      </div>
-      <div class="step reveal">
-        <h4>Acordă permisiunile</h4>
-        <p>La prima pornire, macOS cere Accesibilitate și Înregistrare Ecran — necesare ca aplicația să funcționeze pe tot ecranul.</p>
-      </div>
-      <div class="step reveal">
-        <h4>Folosește 3 zile gratuit</h4>
-        <p>Trial-ul pornește automat. Toate funcțiile sunt active — activezi o licență direct din Preferințe, oricând vrei.</p>
-      </div>
-    </div>
+<section id="how"><div class="wrap">
+  <h2 data-i18n="how_t">Ții o tastă. Funcția pornește. Eliberezi, dispare.</h2>
+  <p class="lead" data-i18n="how_d">Nimic nu rămâne pornit din greșeală. Tastele se pot schimba oricând din aplicație.</p>
+  <div class="keys"><span class="key"><kbd>Shift</kbd><span data-i18n="k_zoom">Lupă</span></span><span class="key"><kbd>Ctrl</kbd><span data-i18n="k_spot">Spotlight</span></span><span class="key"><kbd>Alt</kbd><span data-i18n="k_draw">Desen</span></span></div>
+  <p class="os"><span data-i18n="mac_keys">Pe Mac: ⇧ · ⌃ · ⌥</span> &nbsp;·&nbsp; <span data-i18n="win_keys">Pe Windows: Shift · Ctrl · Alt</span></p>
+</div></section>
+
+<section id="demo"><div class="wrap">
+  <h2 data-i18n="demo_t">Demo gratuit, apoi licență emisă manual.</h2>
+  <div class="steps">
+    <div><h3><svg class="ic" aria-hidden="true"><use href="#i-clock"/></svg><span data-i18n="demo1_t">10 minute de utilizare activă</span></h3><p data-i18n="demo1_d">Timpul curge doar cât o funcție e efectiv în folosință, nu cât aplicația stă deschisă în bara de meniu sau în tray.</p></div>
+    <div><h3><svg class="ic" aria-hidden="true"><use href="#i-pause"/></svg><span data-i18n="demo2_t">Apoi, o pauză de 48 de ore</span></h3><p data-i18n="demo2_d">Când Demo se termină, funcțiile se opresc, dar aplicația rămâne deschisă iar setările tale se păstrează. Următoarea sesiune Demo se deschide singură.</p></div>
+    <div><h3><svg class="ic" aria-hidden="true"><use href="#i-key"/></svg><span data-i18n="demo3_t">Licență pentru acces complet</span></h3><p data-i18n="demo3_d">O licență se emite după o donație de susținere sau ca acces gratuit (premiu, cadou, colaborare), pentru o zi, o lună, trei luni, un an sau fără limită de timp. O ceri din aplicație, în tab-ul Licență, prin WhatsApp sau e-mail.</p></div>
   </div>
-</section>
+  <p class="callout" data-i18n="demo_note">Susținerea proiectului este opțională și se face prin donație. Aplicația nu trimite nimic fără acțiunea ta.</p>
+</div></section>
 
-<section id="screens">
-  <div class="wrap">
-    <div class="section-head reveal">
-      <div class="section-tag">Interfață</div>
-      <h2>Fiecare funcție, reglabilă din Preferințe</h2>
-    </div>
-    <div class="screens-grid">
-      <figure class="screen-card reveal">
-        <img src="screenshots/general.png" alt="Preferințe → General, cu preseturi rapide de focus" loading="lazy">
-        <figcaption>Preseturi rapide de focus — Tutorial, Studio Întunecat, Prezentator Contrast, Minimalist.</figcaption>
-      </figure>
-      <figure class="screen-card reveal">
-        <img src="screenshots/zoom.png" alt="Preferințe → Zoom, cu scară fină și inspector de culoare" loading="lazy">
-        <figcaption>Lupă cu scară continuă 1.1x–12x, blocare cadru și inspector de culoare HEX/RGB/Display P3.</figcaption>
-      </figure>
-    </div>
+<section id="download"><div class="wrap">
+  <h2 data-i18n="dl_t">Descărcare</h2>
+  <p class="lead" data-i18n="dl_d">Două pachete separate, câte unul pentru fiecare sistem. Fiecare are propriul Demo și propria licență.</p>
+  <div class="dl">
+    <div id="download-mac"><h3><svg class="ic" aria-hidden="true"><use href="#i-apple"/></svg><span data-i18n="dl_mac_t">CursorPro GDC pentru Mac</span></h3><p data-i18n="dl_mac_d">Imagine .dmg semnată și notarizată de Apple. macOS 14 sau mai nou, procesor Apple sau Intel.</p>
+      <a class="btn primary" href="https://github.com/gordasgdc/cursorpro-gdc/releases/latest/download/CursorProGDC-2.0.0.dmg" data-version-link="mac"><svg class="ic" aria-hidden="true"><use href="#i-apple"/></svg><span data-i18n="dl_mac">Descarcă pentru Mac</span></a>
+      <p class="ver"><span data-i18n="ver">Versiunea</span> 2.0.0 · CursorProGDC-2.0.0.dmg</p>
+      <p class="alt"><a href="https://github.com/gordasgdc/cursorpro-gdc/releases/latest/download/CursorProGDC-2.0.0.pkg" data-i18n="dl_pkg">Instalator .pkg</a> · <a href="https://github.com/gordasgdc/cursorpro-gdc/releases/latest/download/CursorProGDC.dmg" data-i18n="dl_stable">Link fix, mereu ultima versiune</a></p>
+      <a class="guide" href="ghid/Instructiuni-CursorProGDC-Mac-2.0.0.pdf"><svg class="ic" aria-hidden="true"><use href="#i-doc"/></svg><span data-i18n="dl_guide_mac">Ghid de utilizare Mac (PDF)</span></a></div>
+    <div id="download-win"><h3><svg class="ic" aria-hidden="true"><use href="#i-win"/></svg><span data-i18n="dl_win_t">CursorPro GDC pentru Windows</span></h3><p data-i18n="dl_win_d">Program de instalare pentru Windows 10 și 11. În această perioadă este semnat cu un certificat intern GDC, deci Windows poate afișa o avertizare la prima rulare.</p>
+      <a class="btn primary" href="https://github.com/gordasgdc/cursorpro-gdc-win/releases/latest/download/CursorProGDCSetup-2.0.0.exe" data-version-link="win"><svg class="ic" aria-hidden="true"><use href="#i-win"/></svg><span data-i18n="dl_win">Descarcă pentru Windows</span></a>
+      <p class="ver"><span data-i18n="ver">Versiunea</span> 2.0.0 · CursorProGDCSetup-2.0.0.exe</p>
+      <p class="alt"><a href="https://github.com/gordasgdc/cursorpro-gdc-win/releases/latest/download/CursorProGDCSetup.exe" data-i18n="dl_stable">Link fix, mereu ultima versiune</a></p>
+      <a class="guide" href="ghid/Instructiuni-CursorProGDC-Windows-2.0.0.pdf"><svg class="ic" aria-hidden="true"><use href="#i-doc"/></svg><span data-i18n="dl_guide_win">Ghid de utilizare Windows (PDF)</span></a></div>
   </div>
-</section>
+  <p class="note"><span data-i18n="old_note">Versiunile pentru Mac până la 1.5.0 au fost publicate cu sursă deschisă, sub licența MIT, și rămân disponibile în depozitul public.</span> <a href="https://github.com/gordasgdc/cursorpro-gdc" rel="noopener" data-i18n="old_link">Versiuni anterioare (MIT)</a></p>
+</div></section>
 
-<section id="price">
-  <div class="wrap">
-    <div class="section-head reveal">
-      <div class="section-tag">Susține dezvoltarea</div>
-      <h2>Simplu, o donație unică</h2>
-    </div>
-    <div class="price-card reveal">
-      <div>
-        <div class="price-tag">Donație unică</div>
-        <div class="price-note">Suma exactă (poate include oferte temporare) apare direct în aplicație, la fereastra de Activare. Fără abonament. Actualizări gratuite. Funcționează pe orice Mac Apple Silicon.</div>
-      </div>
-      <a class="btn btn-primary" id="whatsapp-buy-btn" href="#">💬 Scrie-mi pe WhatsApp</a>
-    </div>
+<section id="faq"><div class="wrap">
+  <h2 data-i18n="faq_t">Întrebări frecvente</h2>
+  <div style="margin-top:28px">
+    <details><summary><span data-i18n="q1">De ce cere permisiuni pe Mac?</span></summary><p data-i18n="a1">Accesibilitatea ține evidența tastelor apăsate (halo, spotlight, desen), iar Înregistrarea ecranului este necesară doar pentru lupă, ca să poată mări zona din jurul cursorului. Aplicația nu salvează și nu trimite conținutul ecranului.</p></details>
+    <details><summary><span data-i18n="q2">Merge cu mai multe monitoare?</span></summary><p data-i18n="a2">Da. Fiecare ecran are propriul strat transparent, iar lupa se oprește la marginea ecranului în loc să iasă din el.</p></details>
+    <details><summary><span data-i18n="q3">Ce se întâmplă când se termină Demo?</span></summary><p data-i18n="a3">Funcțiile se opresc în siguranță, aplicația rămâne deschisă, iar setările nu se șterg. După 48 de ore se deschide o nouă sesiune Demo, sau poți cere o licență.</p></details>
+    <details><summary><span data-i18n="q4">Cum o dezinstalez?</span></summary><p data-i18n="a4">Pe Mac, din aplicație: Ajutor, Dezinstalare. Pe Windows, din Setări, Aplicații. Starea perioadei Demo rămâne pe calculator, ca la orice reinstalare.</p></details>
+    <details><summary><span data-i18n="q5">Cum obțin o licență?</span></summary><p data-i18n="a5">În aplicație, în tab-ul Licență, alegi o ofertă (opțional) și pregătești cererea. Aplicația îți arată mesajul, iar tu decizi dacă îl trimiți, pe WhatsApp sau e-mail. Dacă licența vine după o donație, ți-o generăm după ce confirmăm manual donația; dacă este acordată gratuit, o primești fără donație. O copiezi sau o imporți în aplicație și se activează.</p></details>
+    <details><summary><span data-i18n="q6">Ce date pleacă din aplicație?</span></summary><p data-i18n="a6">La activare și reînnoire pleacă doar date tehnice minime: licența, identificatorul calculatorului, cheia publică a aplicației, platforma, ora și un număr aleator. Nu trimitem și nu înregistrăm ce e pe ecran, tastele apăsate, mișcările mouse-ului, fișiere, nume de ferestre sau parole. Detaliile sunt în termenii de utilizare, secțiunea „Datele tale”.</p></details>
   </div>
-</section>
-
-<footer>
-  <div class="wrap footer-row">
-    <span>© 2026 GDC / Gordas. Toate drepturile rezervate.</span>
-    <span>
-      <a href="https://github.com/gordasgdc/cursorpro-gdc">GitHub</a> ·
-      <a href="https://github.com/gordasgdc/cursorpro-gdc/releases/latest">Toate versiunile</a> ·
-      <a href="https://gordas.dev/termeni">Termeni și Condiții</a> ·
-      <a href="https://gordas.dev/confidentialitate">Politică de Confidențialitate (GDPR)</a> ·
-      <a href="https://gordas.dev/cookie">Cookie-uri</a> ·
-      <a href="mailto:academiagdc@gmail.com">Contact</a>
-    </span>
-  </div>
-  <div class="wrap" style="margin-top:8px;font-size:11px;opacity:.75;text-align:center;">gordas.dev este o platformă administrată de dezvoltatori independenți. Aplicațiile și resursele sunt furnizate ca atare (AS IS), iar susținerea proiectului se bazează pe contribuții opționale de sprijin și donații.</div>
-</footer>
-
+</div></section>
+</main>
+<footer><div class="wrap">
+  <div class="links"><a href="termeni/" data-i18n="foot_cp_terms">Termenii CursorPro 2.0.0</a><a href="licente-open-source/" data-i18n="foot_oss">Notificări open source</a><a href="https://gordas.dev/termeni" data-i18n="foot_terms">Termeni și condiții</a><a href="https://gordas.dev/confidentialitate" data-i18n="foot_priv">Confidențialitate</a><a href="https://gordas.dev/cookie" data-i18n="foot_cookie">Cookie-uri</a><a href="mailto:academiagdc@gmail.com" data-i18n="foot_contact">Contact</a></div>
+  <p data-i18n="foot_note">gordas.dev este o platformă administrată de dezvoltatori independenți. Aplicațiile și resursele sunt furnizate ca atare (AS IS), iar susținerea proiectului se bazează pe contribuții opționale de sprijin și donații.</p>
+</div></footer>
 <script>
-  const revealEls = document.querySelectorAll('.reveal');
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
-  }, { threshold: .15 });
-  revealEls.forEach(el => io.observe(el));
-
-  // Numarul de WhatsApp nu e scris in clar in HTML — reconstruit din
-  // bucati la incarcarea paginii, ca sa nu fie usor de extras de
-  // crawlere automate care aduna numere pentru spam.
-  const waParts = ['34', '643', '109', '970'];
-  const waNumber = waParts.join('');
-  const waText = encodeURIComponent('Salut! Vreau să cumpăr o licență CursorPro GDC.');
-  const waBtn = document.getElementById('whatsapp-buy-btn');
-  if (waBtn) waBtn.href = `https://wa.me/${waNumber}?text=${waText}`;
-
-  // Detectie OS (User-Agent) — evidentiaza butonul de descarcare potrivit
-  // vizitatorului. Windows nu are inca un release public (client nativ in
-  // lucru, vezi CHANGELOG.md din cursorpro-gdc-win) — butonul lui ramane
-  // marcat "in curand" si trimite la repo, NICIODATA la un fisier care nu
-  // exista (Regula 9, CLAUDE.md: niciun link public catre un download
-  // presupus, doar verificat).
-  const ua = navigator.userAgent || '';
-  const isWindows = /Windows/i.test(ua);
-  const dlMac = document.getElementById('dl-mac');
-  const dlWin = document.getElementById('dl-win');
-  const winNote = document.getElementById('win-guide-note');
-  if (isWindows && dlMac && dlWin) {
-    dlMac.classList.remove('btn-primary');
-    dlMac.classList.add('btn-ghost');
-    dlWin.classList.remove('btn-ghost');
-    dlWin.classList.add('btn-primary');
-    if (winNote) winNote.style.display = 'block';
-  }
+const T = {"ro": {"lang": "ro", "title": "CursorPro GDC — cursorul tău, văzut de toată sala", "desc": "Halo în jurul cursorului, spotlight, lupă cu pixeli reali și desen peste orice aplicație, pe Mac și Windows. Demo gratuit: 10 minute de utilizare activă.", "nav_tools": "Funcții", "nav_how": "Cum merge", "nav_demo": "Demo și licență", "nav_dl": "Descărcare", "h1": "Cursorul tău, văzut de toată sala.", "lead": "CursorPro GDC pune un halo în jurul cursorului, întunecă tot ce nu contează, mărește exact unde arăți și te lasă să desenezi peste orice aplicație. Pe Mac și pe Windows.", "dl_mac": "Descarcă pentru Mac", "dl_win": "Descarcă pentru Windows", "hero_note": "Demo gratuit: 10 minute de utilizare activă. macOS 14 sau mai nou · Windows 10 / 11", "tools_t": "Cinci unelte, o singură idee: publicul să urmărească fără efort.", "t_halo": "Halo", "t_halo_d": "Un inel luminos în jurul cursorului, în trei stiluri, cu mărime, grosime și culoare reglabile. Se vede pe orice fundal, de la alb la negru.", "t_spot": "Spotlight", "t_spot_d": "Ții o tastă și tot ecranul se întunecă, în afară de zona din jurul cursorului. Eliberezi tasta și totul revine.", "t_zoom": "Lupă", "t_zoom_d": "O lupă rotundă cu pixeli reali, centrată exact pe vârful cursorului. Rotița schimbă mărirea din mers, iar un cadru poate fi înghețat ca să arăți calm un detaliu.", "t_draw": "Desen", "t_draw_d": "Mână liberă, săgeată, elipsă sau dreptunghi, direct peste aplicația deschisă. La o comandă, desenul dispare.", "t_keys": "Clicuri și taste", "t_keys_d": "Fiecare clic lasă un inel colorat, iar combinațiile de taste apar pe ecran, ca publicul să înțeleagă ce apeși.", "how_t": "Ții o tastă. Funcția pornește. Eliberezi, dispare.", "how_d": "Nimic nu rămâne pornit din greșeală. Tastele se pot schimba oricând din aplicație.", "k_zoom": "Lupă", "k_spot": "Spotlight", "k_draw": "Desen", "mac_keys": "Pe Mac: ⇧ · ⌃ · ⌥", "win_keys": "Pe Windows: Shift · Ctrl · Alt", "demo_t": "Demo gratuit, apoi licență emisă manual.", "demo1_t": "10 minute de utilizare activă", "demo1_d": "Timpul curge doar cât o funcție e efectiv în folosință, nu cât aplicația stă deschisă în bara de meniu sau în tray.", "demo2_t": "Apoi, o pauză de 48 de ore", "demo2_d": "Când Demo se termină, funcțiile se opresc, dar aplicația rămâne deschisă iar setările tale se păstrează. Următoarea sesiune Demo se deschide singură.", "demo3_t": "Licență pentru acces complet", "demo3_d": "O licență se emite după o donație de susținere sau ca acces gratuit (premiu, cadou, colaborare), pentru o zi, o lună, trei luni, un an sau fără limită de timp. O ceri din aplicație, în tab-ul Licență, prin WhatsApp sau e-mail.", "demo_note": "Susținerea proiectului este opțională și se face prin donație. Aplicația nu trimite nimic fără acțiunea ta.", "dl_t": "Descărcare", "dl_d": "Două pachete separate, câte unul pentru fiecare sistem. Fiecare are propriul Demo și propria licență.", "dl_mac_t": "CursorPro GDC pentru Mac", "dl_mac_d": "Imagine .dmg semnată și notarizată de Apple. macOS 14 sau mai nou, procesor Apple sau Intel.", "dl_win_t": "CursorPro GDC pentru Windows", "dl_win_d": "Program de instalare pentru Windows 10 și 11. În această perioadă este semnat cu un certificat intern GDC, deci Windows poate afișa o avertizare la prima rulare.", "dl_guide": "Ghid de utilizare (PDF)", "ver": "Versiunea", "faq_t": "Întrebări frecvente", "q1": "De ce cere permisiuni pe Mac?", "a1": "Accesibilitatea ține evidența tastelor apăsate (halo, spotlight, desen), iar Înregistrarea ecranului este necesară doar pentru lupă, ca să poată mări zona din jurul cursorului. Aplicația nu salvează și nu trimite conținutul ecranului.", "q2": "Merge cu mai multe monitoare?", "a2": "Da. Fiecare ecran are propriul strat transparent, iar lupa se oprește la marginea ecranului în loc să iasă din el.", "q3": "Ce se întâmplă când se termină Demo?", "a3": "Funcțiile se opresc în siguranță, aplicația rămâne deschisă, iar setările nu se șterg. După 48 de ore se deschide o nouă sesiune Demo, sau poți cere o licență.", "q4": "Cum o dezinstalez?", "a4": "Pe Mac, din aplicație: Ajutor, Dezinstalare. Pe Windows, din Setări, Aplicații. Starea perioadei Demo rămâne pe calculator, ca la orice reinstalare.", "foot_note": "gordas.dev este o platformă administrată de dezvoltatori independenți. Aplicațiile și resursele sunt furnizate ca atare (AS IS), iar susținerea proiectului se bazează pe contribuții opționale de sprijin și donații.", "skip": "Sari la conținut", "nav_help": "Ajutor", "dl_pkg": "Instalator .pkg", "dl_stable": "Link fix, mereu ultima versiune", "dl_guide_mac": "Ghid de utilizare Mac (PDF)", "dl_guide_win": "Ghid de utilizare Windows (PDF)", "old_note": "Versiunile pentru Mac până la 1.5.0 au fost publicate cu sursă deschisă, sub licența MIT, și rămân disponibile în depozitul public.", "old_link": "Versiuni anterioare (MIT)", "q5": "Cum obțin o licență?", "a5": "În aplicație, în tab-ul Licență, alegi o ofertă (opțional) și pregătești cererea. Aplicația îți arată mesajul, iar tu decizi dacă îl trimiți, pe WhatsApp sau e-mail. Dacă licența vine după o donație, ți-o generăm după ce confirmăm manual donația; dacă este acordată gratuit, o primești fără donație. O copiezi sau o imporți în aplicație și se activează.", "q6": "Ce date pleacă din aplicație?", "a6": "La activare și reînnoire pleacă doar date tehnice minime: licența, identificatorul calculatorului, cheia publică a aplicației, platforma, ora și un număr aleator. Nu trimitem și nu înregistrăm ce e pe ecran, tastele apăsate, mișcările mouse-ului, fișiere, nume de ferestre sau parole. Detaliile sunt în termenii de utilizare, secțiunea „Datele tale”.", "foot_cp_terms": "Termenii CursorPro 2.0.0", "foot_oss": "Notificări open source", "foot_terms": "Termeni și condiții", "foot_priv": "Confidențialitate", "foot_cookie": "Cookie-uri", "foot_contact": "Contact", "alt_mac": "Fereastra de preferințe CursorPro GDC pe macOS", "alt_win": "Fereastra de preferințe CursorPro GDC pe Windows", "alt_halo": "Halo galben în jurul cursorului peste un grafic", "alt_spot": "Spotlight: ecranul întunecat, cu lumină în jurul cursorului", "alt_zoom": "Lupă rotundă care mărește un grafic"}, "en": {"lang": "en", "title": "CursorPro GDC — your cursor, seen by the whole room", "desc": "A halo around the cursor, spotlight, a real-pixel magnifier and drawing over any app, on Mac and Windows. Free Demo: 10 minutes of active use.", "nav_tools": "Features", "nav_how": "How it works", "nav_demo": "Demo and licence", "nav_dl": "Download", "h1": "Your cursor, seen by the whole room.", "lead": "CursorPro GDC puts a halo around your cursor, dims everything that doesn't matter, magnifies exactly where you point and lets you draw over any app. On Mac and on Windows.", "dl_mac": "Download for Mac", "dl_win": "Download for Windows", "hero_note": "Free Demo: 10 minutes of active use. macOS 14 or later · Windows 10 / 11", "tools_t": "Five tools, one idea: let the audience follow without effort.", "t_halo": "Halo", "t_halo_d": "A luminous ring around the cursor in three styles, with adjustable size, thickness and color. It shows on any background, from white to black.", "t_spot": "Spotlight", "t_spot_d": "Hold a key and the whole screen dims except the area around the cursor. Release the key and everything returns.", "t_zoom": "Magnifier", "t_zoom_d": "A round magnifier with real pixels, centred exactly on the cursor tip. The wheel changes the zoom on the fly, and a frame can be frozen so you can calmly point at a detail.", "t_draw": "Draw", "t_draw_d": "Freehand, arrow, ellipse or rectangle, right over the open app. One command and the drawing is gone.", "t_keys": "Clicks and keys", "t_keys_d": "Every click leaves a colored ring, and key combinations appear on screen so the audience understands what you press.", "how_t": "Hold a key. The tool starts. Release, it's gone.", "how_d": "Nothing stays on by mistake. The keys can be changed any time from the app.", "k_zoom": "Magnifier", "k_spot": "Spotlight", "k_draw": "Draw", "mac_keys": "On Mac: ⇧ · ⌃ · ⌥", "win_keys": "On Windows: Shift · Ctrl · Alt", "demo_t": "Free Demo, then a manually issued licence.", "demo1_t": "10 minutes of active use", "demo1_d": "Time only runs while a tool is actually in use, not while the app sits in the menu bar or the tray.", "demo2_t": "Then a 48-hour pause", "demo2_d": "When the Demo ends the tools stop, but the app stays open and your settings are kept. The next Demo session opens by itself.", "demo3_t": "A licence for full access", "demo3_d": "A licence is issued after a supporting donation or as free access (prize, gift, collaboration), for one day, one month, three months, one year or with no time limit. You request it from the app, in the Licence tab, by WhatsApp or e-mail.", "demo_note": "Supporting the project is optional and done by donation. The app sends nothing without your action.", "dl_t": "Download", "dl_d": "Two separate packages, one per system. Each has its own Demo and its own licence.", "dl_mac_t": "CursorPro GDC for Mac", "dl_mac_d": "A .dmg image signed and notarized by Apple. macOS 14 or later, Apple or Intel processor.", "dl_win_t": "CursorPro GDC for Windows", "dl_win_d": "Installer for Windows 10 and 11. For now it is signed with an internal GDC certificate, so Windows may show a warning the first time you run it.", "dl_guide": "User guide (PDF)", "ver": "Version", "faq_t": "Frequently asked questions", "q1": "Why does it ask for permissions on Mac?", "a1": "Accessibility tracks the keys held down (halo, spotlight, draw), and Screen Recording is needed only for the magnifier, so it can enlarge the area around the cursor. The app does not store or send screen content.", "q2": "Does it work with several monitors?", "a2": "Yes. Each screen has its own transparent layer, and the magnifier stops at the screen edge instead of leaving it.", "q3": "What happens when the Demo ends?", "a3": "The tools stop safely, the app stays open and your settings are not deleted. After 48 hours a new Demo session opens, or you can request a licence.", "q4": "How do I uninstall it?", "a4": "On Mac, from the app: Help, Uninstall. On Windows, from Settings, Apps. The Demo period state stays on the computer, as on any reinstall.", "foot_note": "gordas.dev is a platform run by independent developers. Apps and resources are provided as is (AS IS), and support for the project relies on optional contributions and donations.", "skip": "Skip to content", "nav_help": "Help", "dl_pkg": ".pkg installer", "dl_stable": "Fixed link, always the latest version", "dl_guide_mac": "Mac user guide (PDF)", "dl_guide_win": "Windows user guide (PDF)", "old_note": "Mac versions up to 1.5.0 were published with source code under the MIT licence and remain available in the public repository.", "old_link": "Earlier versions (MIT)", "q5": "How do I get a licence?", "a5": "In the app, in the Licence tab, you pick an offer (optional) and prepare the request. The app shows you the message and you decide whether to send it, by WhatsApp or e-mail. If the licence comes after a donation, we generate it once we have manually confirmed the donation; if it is granted for free, you receive it without a donation. You copy or import it into the app and it activates.", "q6": "What data leaves the app?", "a6": "At activation and renewal only minimal technical data is sent: the licence, the computer identifier, the app's public key, the platform, the time and a random number. We do not send or record what is on your screen, the keys you press, mouse movements, files, window names or passwords. The details are in the terms of use, section “Your data”.", "foot_cp_terms": "CursorPro 2.0.0 terms", "foot_oss": "Open source notices", "foot_terms": "Terms and conditions", "foot_priv": "Privacy", "foot_cookie": "Cookies", "foot_contact": "Contact", "alt_mac": "CursorPro GDC preferences window on macOS", "alt_win": "CursorPro GDC preferences window on Windows", "alt_halo": "A yellow halo around the cursor over a chart", "alt_spot": "Spotlight: the screen dimmed with light around the cursor", "alt_zoom": "A round magnifier enlarging a chart"}, "es": {"lang": "es", "title": "CursorPro GDC — tu cursor, visto por toda la sala", "desc": "Un halo alrededor del cursor, foco, lupa de píxeles reales y dibujo sobre cualquier app, en Mac y Windows. Demo gratuita: 10 minutos de uso activo.", "nav_tools": "Funciones", "nav_how": "Cómo funciona", "nav_demo": "Demo y licencia", "nav_dl": "Descarga", "h1": "Tu cursor, visto por toda la sala.", "lead": "CursorPro GDC pone un halo alrededor del cursor, oscurece lo que no importa, amplía justo donde señalas y te deja dibujar sobre cualquier app. En Mac y en Windows.", "dl_mac": "Descargar para Mac", "dl_win": "Descargar para Windows", "hero_note": "Demo gratuita: 10 minutos de uso activo. macOS 14 o posterior · Windows 10 / 11", "tools_t": "Cinco herramientas, una idea: que el público siga sin esfuerzo.", "t_halo": "Halo", "t_halo_d": "Un anillo luminoso alrededor del cursor en tres estilos, con tamaño, grosor y color ajustables. Se ve sobre cualquier fondo, del blanco al negro.", "t_spot": "Foco", "t_spot_d": "Mantienes una tecla y toda la pantalla se oscurece salvo la zona alrededor del cursor. Sueltas la tecla y todo vuelve.", "t_zoom": "Lupa", "t_zoom_d": "Una lupa redonda con píxeles reales, centrada justo en la punta del cursor. La rueda cambia el zoom al vuelo y un cuadro se puede congelar para señalar un detalle con calma.", "t_draw": "Dibujo", "t_draw_d": "Mano alzada, flecha, elipse o rectángulo, directamente sobre la app abierta. Con un comando, el dibujo desaparece.", "t_keys": "Clics y teclas", "t_keys_d": "Cada clic deja un anillo de color y las combinaciones de teclas aparecen en pantalla para que el público entienda qué pulsas.", "how_t": "Mantienes una tecla. La función arranca. Sueltas y desaparece.", "how_d": "Nada queda activado por error. Las teclas se pueden cambiar cuando quieras desde la app.", "k_zoom": "Lupa", "k_spot": "Foco", "k_draw": "Dibujo", "mac_keys": "En Mac: ⇧ · ⌃ · ⌥", "win_keys": "En Windows: Shift · Ctrl · Alt", "demo_t": "Demo gratuita y luego una licencia emitida manualmente.", "demo1_t": "10 minutos de uso activo", "demo1_d": "El tiempo solo corre mientras una función se usa de verdad, no mientras la app está en la barra de menús o en la bandeja.", "demo2_t": "Después, una pausa de 48 horas", "demo2_d": "Al terminar la Demo las funciones se detienen, pero la app sigue abierta y tus ajustes se conservan. La siguiente sesión Demo se abre sola.", "demo3_t": "Una licencia para el acceso completo", "demo3_d": "Una licencia se emite tras una donación de apoyo o como acceso gratuito (premio, regalo, colaboración), por un día, un mes, tres meses, un año o sin límite de tiempo. La pides desde la app, en la pestaña Licencia, por WhatsApp o correo.", "demo_note": "Apoyar el proyecto es opcional y se hace mediante donación. La app no envía nada sin tu acción.", "dl_t": "Descarga", "dl_d": "Dos paquetes separados, uno por sistema. Cada uno tiene su propia Demo y su propia licencia.", "dl_mac_t": "CursorPro GDC para Mac", "dl_mac_d": "Imagen .dmg firmada y notarizada por Apple. macOS 14 o posterior, procesador Apple o Intel.", "dl_win_t": "CursorPro GDC para Windows", "dl_win_d": "Instalador para Windows 10 y 11. Por ahora está firmado con un certificado interno de GDC, así que Windows puede mostrar un aviso la primera vez.", "dl_guide": "Guía de uso (PDF)", "ver": "Versión", "faq_t": "Preguntas frecuentes", "q1": "¿Por qué pide permisos en Mac?", "a1": "Accesibilidad sigue las teclas pulsadas (halo, foco, dibujo) y Grabación de pantalla solo hace falta para la lupa, para poder ampliar la zona alrededor del cursor. La app no guarda ni envía el contenido de la pantalla.", "q2": "¿Funciona con varios monitores?", "a2": "Sí. Cada pantalla tiene su propia capa transparente y la lupa se detiene en el borde de la pantalla en lugar de salirse.", "q3": "¿Qué pasa cuando termina la Demo?", "a3": "Las funciones se detienen con seguridad, la app sigue abierta y tus ajustes no se borran. A las 48 horas se abre una nueva sesión Demo, o puedes pedir una licencia.", "q4": "¿Cómo la desinstalo?", "a4": "En Mac, desde la app: Ayuda, Desinstalación. En Windows, desde Configuración, Aplicaciones. El estado del periodo Demo permanece en el equipo, como en cualquier reinstalación.", "foot_note": "gordas.dev es una plataforma administrada por desarrolladores independientes. Las aplicaciones y recursos se ofrecen tal cual (AS IS) y el apoyo al proyecto se basa en contribuciones opcionales y donaciones.", "skip": "Saltar al contenido", "nav_help": "Ayuda", "dl_pkg": "Instalador .pkg", "dl_stable": "Enlace fijo, siempre la última versión", "dl_guide_mac": "Guía de uso para Mac (PDF)", "dl_guide_win": "Guía de uso para Windows (PDF)", "old_note": "Las versiones para Mac hasta la 1.5.0 se publicaron con código abierto bajo la licencia MIT y siguen disponibles en el repositorio público.", "old_link": "Versiones anteriores (MIT)", "q5": "¿Cómo obtengo una licencia?", "a5": "En la app, en la pestaña Licencia, eliges una oferta (opcional) y preparas la solicitud. La app te muestra el mensaje y tú decides si lo envías, por WhatsApp o correo. Si la licencia llega tras una donación, la generamos cuando confirmamos manualmente la donación; si se concede gratis, la recibes sin donación. La copias o la importas en la app y se activa.", "q6": "¿Qué datos salen de la app?", "a6": "En la activación y la renovación solo salen datos técnicos mínimos: la licencia, el identificador del equipo, la clave pública de la app, la plataforma, la hora y un número aleatorio. No enviamos ni registramos lo que hay en tu pantalla, las teclas que pulsas, los movimientos del ratón, archivos, nombres de ventanas ni contraseñas. Los detalles están en los términos de uso, sección «Tus datos».", "foot_cp_terms": "Términos de CursorPro 2.0.0", "foot_oss": "Avisos de código abierto", "foot_terms": "Términos y condiciones", "foot_priv": "Privacidad", "foot_cookie": "Cookies", "foot_contact": "Contacto", "alt_mac": "Ventana de preferencias de CursorPro GDC en macOS", "alt_win": "Ventana de preferencias de CursorPro GDC en Windows", "alt_halo": "Un halo amarillo alrededor del cursor sobre un gráfico", "alt_spot": "Foco: pantalla oscurecida con luz alrededor del cursor", "alt_zoom": "Una lupa redonda que amplía un gráfico"}};
+function apply(lang){
+  const t = T[lang] || T.ro; document.documentElement.lang = lang;
+  document.title = t.title; document.querySelector('meta[name=description]').setAttribute('content', t.desc);
+  document.querySelectorAll('[data-i18n]').forEach(e => { const v = t[e.dataset.i18n]; if (v !== undefined) e.textContent = v; });
+  document.querySelectorAll('[data-i18n-alt]').forEach(e => { const v = t[e.dataset.i18nAlt]; if (v !== undefined) e.alt = v; });
+  document.querySelectorAll('img[data-shot]').forEach(e => { e.src = 'assets/' + e.dataset.shot + '-halo-' + lang + '.webp'; });
+  document.querySelectorAll('.langs button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
+  try { localStorage.setItem('cp-lang', lang); } catch (e) {}
+}
+document.querySelectorAll('.langs button').forEach(b => b.addEventListener('click', () => apply(b.dataset.lang)));
+let start = 'ro'; try { start = localStorage.getItem('cp-lang') || ((navigator.language||'ro').slice(0,2)); } catch (e) {}
+if (!T[start]) start = 'ro'; const q = new URLSearchParams(location.search).get('lang'); apply(T[q] ? q : start);
 </script>
-
 </body>
 </html>

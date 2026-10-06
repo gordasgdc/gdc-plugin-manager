@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="ro" data-theme-pref="auto">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Termeni de utilizare — CursorPro GDC</title>
+<meta name="robots" content="index,follow">
+<link rel="icon" type="image/png" href="../assets/favicon.png">
+<style>
+:root{
+  --bg:#f6f7f9; --bg2:#ffffff; --ink:#14161a; --ink2:#565b65; --ink3:#666b76; --amber:#f4a100; --amber-hi:#ffc53d; --amber-ink:#8f5600; --on-amber:#402600;
+  --panel:rgba(255,255,255,.78); --stroke:rgba(0,0,0,.08); --hair:rgba(0,0,0,.08); --shadow:0 1px 1px rgba(20,26,41,.05),0 22px 48px rgba(20,26,41,.12);
+  --radius:16px; --maxw:1120px;
+  --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI Variable Text","Segoe UI",system-ui,Roboto,sans-serif; --mono:ui-monospace,"SF Mono","Cascadia Mono",Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){ --bg:#0e0f12; --bg2:#15171b; --ink:#f2f3f5; --ink2:#aeb3bd; --ink3:#848892; --amber:#ffb72e; --amber-hi:#ffd36b; --amber-ink:#ffc53d; --panel:rgba(255,255,255,.06); --stroke:rgba(255,255,255,.10); --hair:rgba(255,255,255,.10); --shadow:0 1px 1px rgba(0,0,0,.4),0 24px 56px rgba(0,0,0,.55); } }
+:root[data-theme="dark"]{ --bg:#0e0f12; --bg2:#15171b; --ink:#f2f3f5; --ink2:#aeb3bd; --ink3:#848892; --amber:#ffb72e; --amber-hi:#ffd36b; --amber-ink:#ffc53d; --panel:rgba(255,255,255,.06); --stroke:rgba(255,255,255,.10); --hair:rgba(255,255,255,.10); --shadow:0 1px 1px rgba(0,0,0,.4),0 24px 56px rgba(0,0,0,.55); }
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(900px 500px at 12% -8%,rgba(255,255,255,.9),transparent 60%),radial-gradient(700px 500px at 100% 0,rgba(244,161,0,.10),transparent 60%)}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) body::before{background:radial-gradient(900px 500px at 12% -8%,rgba(255,255,255,.07),transparent 60%),radial-gradient(700px 500px at 100% 0,rgba(255,183,46,.08),transparent 60%)} }
+a{color:inherit} img{display:block;max-width:100%;height:auto}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 20px}
+.ic{width:1.25em;height:1.25em;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex:none}
+header{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:saturate(1.4) blur(14px);border-bottom:1px solid var(--hair)}
+.nav{display:flex;align-items:center;gap:20px;height:60px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:650;letter-spacing:-.01em;text-decoration:none}
+.brand img{width:30px;height:30px;border-radius:8px}
+.nav-links{display:flex;gap:22px;margin-left:auto}
+.nav-links a{font-size:14px;color:var(--ink2);text-decoration:none} .nav-links a:hover{color:var(--ink)}
+.langs{display:flex;gap:2px;padding:2px;border-radius:999px;background:var(--hair)}
+.langs button{border:0;background:transparent;color:var(--ink2);font:600 12px var(--sans);padding:5px 10px;border-radius:999px;cursor:pointer}
+.langs button[aria-pressed="true"]{background:var(--bg2);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.18)}
+.btn{display:inline-flex;align-items:center;gap:9px;height:46px;padding:0 22px;border-radius:999px;font:600 15px var(--sans);text-decoration:none;border:1px solid var(--stroke);background:var(--bg2);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.btn.primary{background:linear-gradient(180deg,var(--amber-hi),var(--amber));color:var(--on-amber);border-color:rgba(0,0,0,.12);box-shadow:0 8px 22px color-mix(in srgb,var(--amber) 38%,transparent)}
+.skip{position:absolute;left:12px;top:-60px;z-index:50;padding:10px 16px;border-radius:10px;background:var(--bg2);color:var(--ink);border:2px solid var(--amber);font:600 14px var(--sans)} .skip:focus{top:10px}
+.btn:focus-visible,.langs button:focus-visible,a:focus-visible{outline:2px solid var(--amber);outline-offset:3px}
+.hero{padding-top:72px;padding-bottom:40px;display:grid;grid-template-columns:1.02fr 1fr;gap:48px;align-items:center}
+h1{font-size:clamp(36px,5.4vw,60px);line-height:1.04;letter-spacing:-.035em;font-weight:720}
+.lead{margin-top:20px;font-size:clamp(17px,2vw,20px);color:var(--ink2);max-width:34em}
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.note{margin-top:16px;font-size:13px;color:var(--ink3)}
+.shots{position:relative;min-height:340px}
+.shot img{border-radius:12px;box-shadow:var(--shadow);border:1px solid var(--stroke)}
+.shot-mac{width:94%}
+.shot-win{position:absolute;right:-2%;bottom:-34px;width:62%}
+section{padding:64px 0}
+h2{font-size:clamp(26px,3.4vw,38px);line-height:1.12;letter-spacing:-.025em;font-weight:700;max-width:22em}
+.tool{display:grid;grid-template-columns:1fr 1.15fr;gap:48px;align-items:center;margin-top:52px}
+.tool.flip .tool-text{order:2}
+.tool-ic{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;color:var(--amber-ink);background:color-mix(in srgb,var(--amber) 16%,transparent);font-size:22px}
+.tool h3{margin-top:16px;font-size:24px;letter-spacing:-.02em}
+.tool p{margin-top:8px;color:var(--ink2);max-width:30em}
+.tool-fig img{border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--stroke)}
+.more{display:grid;grid-template-columns:1fr 1fr;gap:0 48px;margin-top:56px;border-top:1px solid var(--hair)}
+.more div{padding:22px 0;border-bottom:1px solid var(--hair);display:flex;gap:14px}
+.more h3{font-size:17px} .more p{color:var(--ink2);font-size:15px;margin-top:4px} .more .ic{margin-top:3px;color:var(--amber-ink);font-size:20px}
+.keys{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+.key{display:inline-flex;align-items:center;gap:10px;padding:10px 16px;border-radius:12px;background:var(--panel);border:1px solid var(--stroke);box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.key kbd{font:600 13px var(--mono);padding:3px 9px;border-radius:7px;background:var(--bg2);border:1px solid var(--stroke);box-shadow:0 1px 0 var(--hair)}
+.os{margin-top:12px;font-size:13px;color:var(--ink3);font-family:var(--mono)}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:0 40px;margin-top:36px}
+.steps div{padding-top:20px;border-top:2px solid var(--amber)}
+.steps h3{font-size:18px;display:flex;gap:10px;align-items:center} .steps .ic{color:var(--amber-ink)}
+.steps p{color:var(--ink2);font-size:15px;margin-top:8px}
+.callout{margin-top:34px;padding:18px 22px;border-radius:14px;background:var(--panel);border:1px solid var(--stroke);color:var(--ink2);font-size:15px}
+.dl{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:34px}
+.dl>div{padding:26px;border-radius:var(--radius);background:var(--panel);border:1px solid var(--stroke);box-shadow:var(--shadow)}
+.dl h3{display:flex;gap:10px;align-items:center;font-size:20px} .dl p{margin:10px 0 20px;color:var(--ink2);font-size:15px}
+.dl .ver{font:500 12px var(--mono);color:var(--ink3);margin-top:12px}
+.alt{margin-top:8px;font-size:13px} .alt a,.note a{color:var(--ink2)}
+.guide{margin-top:14px;display:inline-flex;gap:8px;align-items:center;color:var(--ink2);font-size:14px}
+details{border-top:1px solid var(--hair);padding:16px 0} details:last-of-type{border-bottom:1px solid var(--hair)}
+summary{cursor:pointer;font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:12px} summary::-webkit-details-marker{display:none}
+summary::after{content:"+";color:var(--amber-ink);font-weight:700} details[open] summary::after{content:"–"}
+details p{margin-top:10px;color:var(--ink2);max-width:46em}
+footer{padding:40px 0 56px;border-top:1px solid var(--hair);color:var(--ink3);font-size:13px}
+footer .links{display:flex;flex-wrap:wrap;gap:18px;margin-bottom:12px} footer a{color:var(--ink2)}
+@media (max-width:860px){
+  .hero{grid-template-columns:1fr;padding-top:40px} .shots{min-height:0;margin-bottom:34px} .shot-win{position:relative;right:auto;bottom:auto;width:78%;margin:-26px 0 0 auto}
+  .tool,.tool.flip{grid-template-columns:1fr;gap:22px} .tool.flip .tool-text{order:0}
+  .more,.steps,.dl{grid-template-columns:1fr} .steps{gap:24px}
+  .nav-links{display:none} .langs{margin-left:auto}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+.prose{max-width:760px;margin:0 auto;padding:44px 20px 24px}
+.prose h1{font-size:clamp(28px,4vw,40px);line-height:1.1;letter-spacing:-.03em;margin-bottom:6px}
+.prose h2{font-size:22px;margin:34px 0 10px;letter-spacing:-.015em;max-width:none}
+.prose h3{font-size:17px;margin:22px 0 6px}
+.prose p,.prose li{color:var(--ink2);font-size:16px;line-height:1.65}
+.prose p{margin:10px 0} .prose ol,.prose ul{margin:10px 0 10px 1.3em} .prose li{margin:6px 0} .prose strong{color:var(--ink)}
+.prose a{color:var(--amber-ink);overflow-wrap:anywhere}
+.prose code{font-family:var(--mono);font-size:.9em}
+.back{display:inline-flex;gap:6px;align-items:center;margin-bottom:14px;font-size:14px;color:var(--ink2);text-decoration:none}
+.tablewrap{overflow-x:auto;margin:14px 0;border:1px solid var(--hair);border-radius:12px}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:14px}
+th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--hair);color:var(--ink2)} th{color:var(--ink);font-weight:650}
+tr:last-child td{border-bottom:0}
+article[hidden]{display:none}
+.lic-file{margin:26px 0;padding:16px 18px;border-radius:14px;background:var(--panel);border:1px solid var(--stroke);font-size:15px}
+</style>
+</head>
+<body>
+<a class="skip" href="#top" id="skip">Sari la conținut</a>
+<header><div class="wrap nav">
+  <a class="brand" href="../"><img src="../assets/favicon.png" alt="" width="30" height="30"><span>CursorPro GDC</span></a>
+  <div class="langs" role="group" aria-label="Language"><button data-lang="ro" aria-pressed="true">RO</button><button data-lang="en" aria-pressed="false">EN</button><button data-lang="es" aria-pressed="false">ES</button></div>
+</div></header>
+<main class="prose" id="top">
+<a class="back" href="../">← CursorPro GDC</a>
+<article data-lang="ro" lang="ro">
+<h1>CursorPro GDC — Termeni de utilizare și licență</h1>
+<p>Versiunea termenilor 1.0 · pentru CursorPro GDC 2.0.0 (macOS și Windows)</p>
+<h2>Pe scurt</h2>
+<ol>
+<li>CursorPro GDC funcționează gratuit în modul <strong>Demo</strong>: toate funcțiile, în sesiuni de <strong>10 minute</strong> de utilizare activă. După ce o sesiune a fost consumată, următoarea e disponibilă după <strong>48 de ore</strong>. Nu există perioadă de încercare.</li>
+<li>Timpul Demo curge <strong>doar cât folosești efectiv o funcție</strong> (Spotlight, Lupă, Desen, efectele de clic, tastele afișate sau halo-ul cât interacționezi). Aplicația pornită și lăsată în bara de meniu sau în tray, fără interacțiune, nu consumă timp. Prima sesiune începe la prima utilizare reală.</li>
+<li>O <strong>licență</strong> elimină limitele Demo pentru perioada ei: o zi, o lună, trei luni, un an, altă perioadă sau <strong>fără expirare (lifetime)</strong>.</li>
+<li>Licența se poate obține prin <strong>donație</strong> confirmată de noi sau poate fi <strong>acordată gratuit</strong> (premiu, concurs, eveniment, colaborare, testare, educație, presă, cadou sau alt caz aprobat). Donația nu e o condiție tehnică, iar o licență gratuită nu este o donație.</li>
+<li>Licența e <strong>personală</strong> și legată de <strong>calculatorul</strong> pe care o activezi. Nu o dai mai departe.</li>
+<li>Când Demo se epuizează sau licența expiră, este oprită ori dezactivată, <strong>funcțiile se opresc în siguranță, iar aplicația rămâne deschisă</strong>. Nu ți se șterge nicio setare, niciun preset și nicio altă informație.</li>
+<li>Activarea unei licențe se confirmă online, trimițând <strong>doar date tehnice minime</strong>. Nu trimitem și nu înregistrăm ce apare pe ecranul tău, tastele apăsate, mișcările mouse-ului, fișierele, numele ferestrelor sau parolele.</li>
+<li>După activare, aplicația poate lucra și <strong>fără internet</strong>, în limita unui permis offline semnat, care nu poate depăși valabilitatea licenței.</li>
+<li>Aplicația macOS până la versiunea <strong>1.5.0</strong> a fost publicată cu codul sursă sub licența <strong>MIT</strong> și rămâne sub MIT. De la <strong>2.0.0</strong> CursorPro GDC este <strong>proprietar</strong>.</li>
+<li>Acești termeni <strong>nu îți iau niciun drept</strong> pe care ți-l dă legea.</li>
+</ol>
+<h2>1. Cine suntem și ce acoperă termenii</h2>
+<p>CursorPro GDC este dezvoltat de <strong>GDC</strong> („noi”), un dezvoltator individual care publică sub marca GDC. Nu suntem o societate comercială. Ne poți contacta prin WhatsApp sau e-mail, la datele afișate în aplicație (Licență) și pe pagina <a href="https://gordas.dev/cursorpro-gdc/" rel="noopener">https://gordas.dev/cursorpro-gdc/</a>.</p>
+<p>Termenii se aplică aplicației CursorPro GDC începând cu <strong>versiunea 2.0.0</strong>, pe macOS și pe Windows, inclusiv actualizărilor ei. Versiunile macOS până la <strong>1.5.0 inclusiv</strong> au fost publicate cu codul sursă sub licența MIT și rămân sub licența MIT; versiunile Windows publicate anterior (până la 1.4.5) rămân cu condițiile cu care au fost publicate. Acești termeni nu le schimbă.</p>
+<h2>2. Modul Demo</h2>
+<ul>
+<li>Demo e gratuit și nu expiră. Aplicația se deschide normal și toate funcțiile sunt disponibile, în sesiuni de <strong>10 minute</strong> de utilizare activă.</li>
+<li><strong>Utilizare activă</strong> înseamnă că cel puțin o funcție e efectiv în folosință: un mod ținut apăsat (Spotlight, Lupă, Desen), un efect vizibil (inelul de clic, insigna cu tastele) sau halo-ul vizibil cât timp interacționezi (mișcare, clic, tastă) în ultimele 5 secunde. Cât timp aplicația stă deschisă fără interacțiune, timpul nu curge.</li>
+<li>La epuizarea celor 10 minute, funcțiile se opresc. <strong>Următoarea sesiune e disponibilă la 48 de ore după epuizare.</strong> Aplicația îți arată când.</li>
+<li>Starea Demo e păstrată protejat pe calculatorul tău (în Keychain pe macOS, protejată de Windows pe Windows). <strong>Repornirea aplicației sau a calculatorului, reinstalarea și ștergerea setărilor nu o resetează</strong>, iar dacă dai ceasul înapoi nu primești timp în plus.</li>
+<li>Nu există și nu va exista o perioadă de încercare („Trial”) pentru CursorPro GDC.</li>
+</ul>
+<h2>3. Licența</h2>
+<ul>
+<li>Licența este un <strong>drept personal de a folosi</strong> aplicația. Nu e exclusivă, nu se transferă și nu se închiriază.</li>
+<li>E legată de <strong>cheia criptografică a aplicației de pe calculatorul tău</strong>; identificatorul calculatorului este doar o amprentă ajutătoare. Numărul de calculatoare e cel din acordarea primită.</li>
+<li><strong>Durata</strong> poate fi de o zi, o lună, trei luni, un an, o altă perioadă stabilită sau <strong>lifetime</strong>. „Lifetime” înseamnă că licența nu are dată de expirare; <strong>nu</strong> este o promisiune că aplicația va fi dezvoltată, întreținută sau compatibilă pentru totdeauna.</li>
+<li>Licența îți dă drepturile din oferta sau acordarea ei. Mesajul tău de cerere nu poate schimba durata, numărul de calculatoare sau drepturile.</li>
+<li>Codurile de activare din versiunile mai vechi (până la 1.5.0 pe macOS, 1.4.5 pe Windows) nu sunt recunoscute de versiunea 2.0.0; dacă ai unul, poți cere o licență nouă.</li>
+<li>Aplicația, codul ei, designul și numele rămân ale noastre.</li>
+</ul>
+<h2>4. Cum obții o licență</h2>
+<ol>
+<li>În aplicație deschizi „Licență”, poți alege o ofertă (opțional) și pregătești cererea.</li>
+<li>Aplicația îți arată mesajul de cerere; <strong>tu decizi</strong> dacă îl trimiți, prin WhatsApp sau e-mail. Aplicația nu trimite nimic în locul tău.</li>
+<li>Răspundem. Dacă licența se obține prin <strong>donație</strong>, îți comunicăm cum poți dona; <strong>după ce confirmăm manual donația</strong>, generăm licența și ți-o trimitem. Dacă licența se <strong>acordă gratuit</strong>, ți-o trimitem fără donație.</li>
+<li>Copiezi sau imporți licența în aplicație. Aplicația o verifică pe calculatorul tău și o activează.</li>
+</ol>
+<ul>
+<li><strong>Licențe gratuite.</strong> Putem acorda licențe fără donație: premii, concursuri, evenimente, colaborări, testare, educație, presă, cadouri sau alte cazuri. Valoarea lor financiară este zero; ele nu se înregistrează ca donații. Motivul acordării nu îți este atribuit ca acuzație.</li>
+<li><strong>Dacă nu primești licența</strong> după ce donația a fost confirmată, scrie-ne; rezolvăm prin trimiterea licenței sau prin returnarea donației.</li>
+</ul>
+<h2>5. Ofertele de donație</h2>
+<ul>
+<li>Fiecare ofertă arată, înainte de donație: suma, durata licenței, numărul de calculatoare, perioada de lucru fără internet și funcțiile incluse. <strong>Nu există o sumă fixă generală</strong>: fiecare ofertă își are propria sumă.</li>
+<li>Ofertele sunt publicate într-o <strong>listă semnată</strong> de noi; aplicația o folosește doar pentru afișare. Fără o listă validă, aplicația nu afișează nicio sumă.</li>
+<li><strong>Disponibilitatea unei oferte nu e durata licenței.</strong> O ofertă poate fi disponibilă 24 de ore (de exemplu într-o perioadă promoțională) și să activeze o licență de un an sau lifetime.</li>
+<li>Dacă trimiți cererea cât timp oferta e disponibilă, condițiile ei se păstrează pentru perioada de finalizare indicată în ofertă. Ofertele se pot schimba, dar o schimbare nu afectează licențele deja emise.</li>
+</ul>
+<h2>6. Activare, verificare și funcționare fără internet</h2>
+<ul>
+<li><strong>Verificare locală.</strong> Aplicația verifică pe calculatorul tău semnătura licenței, produsul, calculatorul, cheia dispozitivului și perioada.</li>
+<li><strong>Confirmare online.</strong> Aplicația confirmă activarea la serverul nostru. Trimite doar: licența (care conține identificatorii ei), identificatorul calculatorului, cheia publică a dispozitivului, platforma (macOS sau Windows), ora ceasului și un număr aleator unic (pentru protecție la repetarea cererii). Serverul vede, tehnic, și adresa IP a conexiunii.</li>
+<li><strong>Permis offline.</strong> În urma confirmării, serverul emite un permis offline semnat. Cu el, aplicația funcționează fără internet până la expirarea permisului sau a licenței, <strong>oricare vine prima</strong>. Aplicația îl reînnoiește automat când are conexiune.</li>
+<li><strong>Fără confirmare online.</strong> O licență validă local funcționează fără internet doar în fereastra inițială fixată la emiterea ei. Dacă aceasta se încheie fără confirmare, aplicația rămâne în Demo până la următoarea conexiune. Dacă activarea nu poate fi confirmată, nu o prezentăm drept activată.</li>
+<li><strong>Ceasul.</strong> Dacă dai ceasul calculatorului înapoi, o licență expirată sau oprită nu se reactivează.</li>
+<li>Revocarea sau dezactivarea unei licențe devine efectivă la următoarea verificare online reușită sau, la calculatoarele care rămân offline, cel mai târziu la expirarea permisului offline.</li>
+</ul>
+<h2>7. Când Demo se epuizează sau licența expiră, este oprită ori dezactivată</h2>
+<ul>
+<li>Aplicația <strong>rămâne deschisă</strong>. Funcțiile se opresc în siguranță: dacă una era în uz (de exemplu lupa ținută apăsată), se oprește și dispare de pe ecran, fără să afecteze celelalte programe.</li>
+<li><strong>Nu se șterg</strong> setări, preseturi, scurtături sau alte informații. Când Demo e din nou disponibil sau când activezi o licență, totul funcționează imediat cu aceleași setări.</li>
+<li>Când licența expiră sau este oprită, aplicația revine în Demo, cu regulile din secțiunea 2.</li>
+<li>Putem opri o licență dacă a fost obținută prin fraudă, dacă donația a fost anulată, contestată sau returnată, sau dacă acești termeni sunt încălcați grav (de exemplu prin redistribuire). Putem dezactiva un calculator la cererea ta sau pentru a elibera un loc.</li>
+<li>Poți elibera tu calculatorul din aplicație („Elimină de pe acest calculator”); licența rămâne salvată și o poți reimporta.</li>
+</ul>
+<h2>8. Ce nu ai voie să faci</h2>
+<ul>
+<li>Să redistribui (inclusiv contra cost), să închiriezi sau să împrumuți aplicația, licența sau fișierele de activare.</li>
+<li>Să folosești aplicația pe calculatoare care nu sunt acoperite de licența ta.</li>
+<li>Să ocolești sau să falsifici activarea, limitele Demo, verificarea actualizărilor sau identificarea calculatorului.</li>
+<li>Să decompilezi sau să modifici aplicația, cu excepția cazurilor permise expres de lege.</li>
+</ul>
+<h2>9. Datele tale</h2>
+<p><strong>Rămân pe calculatorul tău și nu ne sunt trimise:</strong> ce apare pe ecran (inclusiv în lupă), tastele afișate, mișcările și clicurile mouse-ului, fișierele și numele lor, numele ferestrelor, setările, preseturile, jurnalul aplicației și parolele. Aceste informații se procesează doar în memorie, pentru a desena efectele; nu se înregistrează și nu se salvează. Jurnalul și exportul de diagnostic se creează doar la cererea ta, cu date personale mascate, nu conțin tastele apăsate sau conținutul ecranului și nu se încarcă automat.</p>
+<p><strong>Păstrate local, protejat:</strong> starea Demo, starea licenței, cheia dispozitivului, permisul offline și pragul de timp (în Keychain pe macOS, protejate de Windows pe Windows).</p>
+<p><strong>Către noi, la activare și reînnoire:</strong> datele tehnice minime din secțiunea 6, plus adresa IP vizibilă tehnic.</p>
+<p><strong>Prin mesajul de cerere pe care îl trimiți tu</strong> (WhatsApp sau e-mail): identificatorul cererii, produsul, platforma, versiunea aplicației, identificatorul calculatorului, cheia publică a dispozitivului, oferta aleasă și, doar dacă le adaugi tu, numele și contactul. WhatsApp și serviciul de e-mail prelucrează mesajele după regulile lor.</p>
+<p><strong>Evidența noastră privată</strong> (pentru administrarea licenței): un nume de lucru și contactul tău, produsul, oferta și versiunea ei, felul acordării (donație sau gratuit, cu un motiv intern), durata, identificatorul calculatorului și cheia publică a dispozitivului, data emiterii, data activării confirmate și ultima confirmare online, precum și istoricul administrativ. <strong>Nu păstrăm date de card.</strong> Păstrăm datele cât e necesar pentru administrarea licenței și pentru obligațiile legale.</p>
+<p><strong>Actualizări și oferte:</strong> aplicația descarcă de pe gordas.dev (și, ca rezervă, de pe GitHub) fișierul semnat care anunță actualizările, pachetul de actualizare și lista semnată de oferte. Acești furnizori văd adresa ta IP, ca la orice descărcare.</p>
+<p>Drepturile tale (acces, rectificare, ștergere, restricționare, portabilitate, opoziție) și detaliile sunt în Politica de confidențialitate: <a href="https://gordas.dev/confidentialitate" rel="noopener">https://gordas.dev/confidentialitate</a></p>
+<h2>10. Permisiuni de sistem</h2>
+<p>Pentru a funcționa, CursorPro GDC cere permisiuni ale sistemului: pe macOS <strong>Accesibilitate</strong> (pentru a ști când ții apăsată o tastă-modificator, ca să arate tastele și să pornească efectele) și <strong>Înregistrare ecran</strong> (pentru lupă); pe Windows, citirea globală a mouse-ului și a tastaturii. Le folosește doar local, doar pentru funcțiile pe care le vezi, și nu transmite nimic din ele. Poți retrage oricând permisiunile din setările sistemului; funcțiile care depind de ele se opresc.</p>
+<h2>11. Actualizări</h2>
+<p>O actualizare se instalează numai după ce semnătura ei și pachetul descărcat sunt verificate, și numai cu acordul tău. O licență cu durată limitată îți dă acces la versiunile oficiale compatibile cât timp e valabilă; o actualizare nu prelungește licența și nu resetează Demo.</p>
+<h2>12. Garanție și răspundere</h2>
+<p>În limitele permise de lege, aplicația e furnizată <strong>așa cum este</strong> („as is”). Nu răspundem pentru pierderi indirecte, pentru neajunsuri cauzate de efectele afișate peste alte programe sau pentru pierderi de date care puteau fi evitate printr-o copie de siguranță. Aceste limite nu se aplică acolo unde legea interzice limitarea răspunderii.</p>
+<h2>13. Componente de la alți autori și versiunile MIT</h2>
+<p>Componentele scrise de alți autori sunt folosite sub licențele lor, păstrate în documentul „Open Source Notices”, disponibil în aplicație și în pachetul de instalare; ele se aplică doar acelor componente. Codul CursorPro GDC pentru macOS publicat până la 1.5.0 rămâne sub MIT, în repozitoriul public al versiunilor respective.</p>
+<h2>14. Drepturile tale legale</h2>
+<p>Acești termeni nu îți limitează și nu îți anulează drepturile obligatorii pe care ți le dă legea locului în care locuiești, inclusiv cele privind conținutul digital și protecția consumatorului.</p>
+<h2>15. Modificarea termenilor</h2>
+<p>Dacă termenii se schimbă, publicăm versiunea nouă cu data ei. O schimbare nu afectează licențele deja emise, în măsura în care legea nu cere altfel.</p>
+<h2>16. Legea aplicabilă</h2>
+<p>Se aplică legea din țara în care locuiești, în măsura în care normele ei obligatorii de protecție a consumatorului o cer. În rest, se aplică legea locului de reședință al dezvoltatorului individual care publică sub marca GDC.</p>
+</article>
+<article data-lang="en" lang="en">
+<h1>CursorPro GDC — Terms of use and license</h1>
+<p>Terms version 1.0 · for CursorPro GDC 2.0.0 (macOS and Windows)</p>
+<h2>In short</h2>
+<ol>
+<li>CursorPro GDC works for free in <strong>Demo</strong> mode: every feature, in sessions of <strong>10 minutes</strong> of active use. Once a session has been used up, the next one becomes available after <strong>48 hours</strong>. There is no trial period.</li>
+<li>Demo time runs <strong>only while you are actually using a feature</strong> (Spotlight, Loupe, Draw, click effects, displayed keys, or the halo while you interact). The app sitting in the menu bar or tray with no interaction does not use any time. The first session starts at the first real use.</li>
+<li>A <strong>license</strong> removes the Demo limits for its period: one day, one month, three months, one year, another period, or <strong>no expiry (lifetime)</strong>.</li>
+<li>A license can be obtained through a <strong>donation</strong> that we confirm, or it can be <strong>granted for free</strong> (prize, contest, event, collaboration, testing, education, press, gift or another approved case). A donation is not a technical condition, and a free license is not a donation.</li>
+<li>The license is <strong>personal</strong> and tied to the <strong>computer</strong> where you activate it. Do not pass it on.</li>
+<li>When Demo is used up or the license expires, is stopped or is deactivated, <strong>features stop safely and the app stays open</strong>. None of your settings, presets or other information is deleted.</li>
+<li>Activating a license is confirmed online by sending <strong>only minimal technical data</strong>. We do not send or record what is on your screen, the keys you press, mouse movements, files, window names or passwords.</li>
+<li>After activation the app can also work <strong>without internet</strong>, within a signed offline permit that cannot exceed the license validity.</li>
+<li>The macOS app up to version <strong>1.5.0</strong> was published with source code under the <strong>MIT</strong> license and remains under MIT. From <strong>2.0.0</strong> CursorPro GDC is <strong>proprietary</strong>.</li>
+<li>These terms <strong>do not take away any right</strong> that the law gives you.</li>
+</ol>
+<h2>1. Who we are and what the terms cover</h2>
+<p>CursorPro GDC is developed by <strong>GDC</strong> ("we"), an individual developer publishing under the GDC brand. We are not a company. You can reach us by WhatsApp or e-mail, at the details shown in the app (License) and on <a href="https://gordas.dev/cursorpro-gdc/" rel="noopener">https://gordas.dev/cursorpro-gdc/</a>.</p>
+<p>The terms apply to the CursorPro GDC app starting with <strong>version 2.0.0</strong>, on macOS and Windows, including its updates. macOS versions up to and including <strong>1.5.0</strong> were published with source code under the MIT license and remain under the MIT license; Windows versions published earlier (up to 1.4.5) remain under the conditions they were published with. These terms do not change them.</p>
+<h2>2. Demo mode</h2>
+<ul>
+<li>Demo is free and does not expire. The app opens normally and every feature is available, in sessions of <strong>10 minutes</strong> of active use.</li>
+<li><strong>Active use</strong> means at least one feature is actually in use: a mode held down (Spotlight, Loupe, Draw), a visible effect (click ring, key badge), or the halo visible while you interact (movement, click, key) within the last 5 seconds. While the app stays open without interaction, time does not run.</li>
+<li>When the 10 minutes are used up, the features stop. <strong>The next session is available 48 hours after the session was used up.</strong> The app shows you when.</li>
+<li>The Demo state is kept protected on your computer (in the Keychain on macOS, protected by Windows on Windows). <strong>Restarting the app or the computer, reinstalling and deleting the settings do not reset it</strong>, and setting the clock back does not give you extra time.</li>
+<li>There is no trial period for CursorPro GDC, and there will not be one.</li>
+</ul>
+<h2>3. The license</h2>
+<ul>
+<li>The license is a <strong>personal right to use</strong> the app. It is not exclusive, cannot be transferred and cannot be rented out.</li>
+<li>It is tied to the <strong>cryptographic key of the app on your computer</strong>; the computer identifier is only a helper fingerprint. The number of computers is the one in the grant you received.</li>
+<li>The <strong>duration</strong> can be one day, one month, three months, one year, another agreed period or <strong>lifetime</strong>. "Lifetime" means the license has no expiry date; it is <strong>not</strong> a promise that the app will be developed, maintained or compatible forever.</li>
+<li>The license gives you the rights of its offer or grant. Your request message cannot change the duration, the number of computers or the rights.</li>
+<li>Activation codes from older versions (up to 1.5.0 on macOS, 1.4.5 on Windows) are not recognized by version 2.0.0; if you have one, you can ask for a new license.</li>
+<li>The app, its code, design and name remain ours.</li>
+</ul>
+<h2>4. How to get a license</h2>
+<ol>
+<li>In the app you open "License", you can pick an offer (optional) and prepare the request.</li>
+<li>The app shows you the request message; <strong>you decide</strong> whether to send it, by WhatsApp or e-mail. The app sends nothing on your behalf.</li>
+<li>We reply. If the license is obtained through a <strong>donation</strong>, we tell you how you can donate; <strong>after we manually confirm the donation</strong>, we generate the license and send it to you. If the license is <strong>granted for free</strong>, we send it without a donation.</li>
+<li>You copy or import the license into the app. The app verifies it on your computer and activates it.</li>
+</ol>
+<ul>
+<li><strong>Free licenses.</strong> We may grant licenses without a donation: prizes, contests, events, collaborations, testing, education, press, gifts or other cases. Their financial value is zero; they are not recorded as donations. The reason for the grant is not attributed to you as an accusation.</li>
+<li><strong>If you do not receive the license</strong> after the donation was confirmed, write to us; we fix it by sending the license or by returning the donation.</li>
+</ul>
+<h2>5. Donation offers</h2>
+<ul>
+<li>Each offer shows, before the donation: the amount, the license duration, the number of computers, the offline working period and the included features. <strong>There is no general fixed amount</strong>: each offer has its own amount.</li>
+<li>Offers are published in a <strong>list signed by us</strong>; the app uses it for display only. Without a valid list, the app shows no amount.</li>
+<li><strong>The availability of an offer is not the license duration.</strong> An offer may be available for 24 hours (for example during a promotional period) and activate a one-year or lifetime license.</li>
+<li>If you send the request while the offer is available, its conditions are kept for the completion period stated in the offer. Offers may change, but a change does not affect licenses already issued.</li>
+</ul>
+<h2>6. Activation, verification and working without internet</h2>
+<ul>
+<li><strong>Local verification.</strong> The app verifies on your computer the license signature, the product, the computer, the device key and the period.</li>
+<li><strong>Online confirmation.</strong> The app confirms the activation with our server. It sends only: the license (which contains its identifiers), the computer identifier, the device public key, the platform (macOS or Windows), the clock time and a unique random number (protection against request replay). The server also technically sees the IP address of the connection.</li>
+<li><strong>Offline permit.</strong> After confirmation, the server issues a signed offline permit. With it the app works without internet until the permit or the license expires, <strong>whichever comes first</strong>. The app renews it automatically when it has a connection.</li>
+<li><strong>Without online confirmation.</strong> A locally valid license works without internet only for the initial window fixed when it was issued. If that ends without confirmation, the app stays in Demo until the next connection. If the activation cannot be confirmed, we do not present it as activated.</li>
+<li><strong>The clock.</strong> If you set the computer clock back, an expired or stopped license does not become active again.</li>
+<li>Revocation or deactivation of a license takes effect at the next successful online check or, on computers that stay offline, at the latest when the offline permit expires.</li>
+</ul>
+<h2>7. When Demo is used up or the license expires, is stopped or is deactivated</h2>
+<ul>
+<li>The app <strong>stays open</strong>. Features stop safely: if one was in use (for example the loupe held down), it stops and disappears from the screen without affecting other programs.</li>
+<li><strong>Nothing is deleted</strong>: settings, presets, shortcuts or other information stay. When Demo becomes available again or when you activate a license, everything works immediately with the same settings.</li>
+<li>When a license expires or is stopped, the app returns to Demo, under the rules of section 2.</li>
+<li>We may stop a license if it was obtained by fraud, if the donation was cancelled, disputed or returned, or if these terms are seriously breached (for example by redistribution). We may deactivate a computer at your request or to free a seat.</li>
+<li>You can free the computer yourself from the app ("Remove from this computer"); the license stays saved and you can import it again.</li>
+</ul>
+<h2>8. What you must not do</h2>
+<ul>
+<li>Redistribute (including for a fee), rent or lend the app, the license or the activation files.</li>
+<li>Use the app on computers not covered by your license.</li>
+<li>Bypass or forge the activation, the Demo limits, the update verification or the computer identification.</li>
+<li>Decompile or modify the app, except where the law expressly allows it.</li>
+</ul>
+<h2>9. Your data</h2>
+<p><strong>They stay on your computer and are not sent to us:</strong> what is on your screen (including in the loupe), the displayed keys, mouse movements and clicks, files and their names, window names, settings, presets, the app log and passwords. This information is processed in memory only, to draw the effects; it is not recorded or saved. The log and the diagnostic export are created only at your request, with personal data masked, contain neither the keys you pressed nor the screen content, and are not uploaded automatically.</p>
+<p><strong>Kept locally, protected:</strong> the Demo state, the license state, the device key, the offline permit and the time threshold (in the Keychain on macOS, protected by Windows on Windows).</p>
+<p><strong>To us, at activation and renewal:</strong> the minimal technical data in section 6, plus the technically visible IP address.</p>
+<p><strong>Through the request message you send yourself</strong> (WhatsApp or e-mail): the request identifier, the product, the platform, the app version, the computer identifier, the device public key, the chosen offer and, only if you add them, your name and contact. WhatsApp and the e-mail service process messages under their own rules.</p>
+<p><strong>Our private records</strong> (for license administration): a working name and your contact, the product, the offer and its version, the kind of grant (donation or free, with an internal reason), the duration, the computer identifier and the device public key, the issue date, the confirmed activation date and the last online confirmation, and the administrative history. <strong>We do not keep card data.</strong> We keep data as long as needed for license administration and legal obligations.</p>
+<p><strong>Updates and offers:</strong> the app downloads from gordas.dev (and, as a fallback, from GitHub) the signed file announcing updates, the update package and the signed list of offers. These providers see your IP address, as with any download.</p>
+<p>Your rights (access, rectification, erasure, restriction, portability, objection) and the details are in the Privacy Policy: <a href="https://gordas.dev/confidentialitate" rel="noopener">https://gordas.dev/confidentialitate</a></p>
+<h2>10. System permissions</h2>
+<p>To work, CursorPro GDC asks for system permissions: on macOS <strong>Accessibility</strong> (to know when a modifier key is held, to show keys and start effects) and <strong>Screen Recording</strong> (for the loupe); on Windows, global reading of the mouse and keyboard. It uses them only locally, only for the features you see, and transmits nothing from them. You can withdraw the permissions at any time in the system settings; the features that depend on them stop.</p>
+<h2>11. Updates</h2>
+<p>An update is installed only after its signature and the downloaded package are verified, and only with your consent. A limited-duration license gives you access to compatible official versions while it is valid; an update does not extend the license and does not reset Demo.</p>
+<h2>12. Warranty and liability</h2>
+<p>To the extent permitted by law, the app is provided <strong>as is</strong>. We are not liable for indirect losses, for inconvenience caused by effects displayed over other programs, or for data loss that could have been avoided with a backup. These limits do not apply where the law forbids limiting liability.</p>
+<h2>13. Third-party components and the MIT versions</h2>
+<p>Components written by other authors are used under their own licenses, kept in the "Open Source Notices" document, available in the app and in the installation package; they apply only to those components. The CursorPro GDC code for macOS published up to 1.5.0 remains under MIT, in the public repository of those versions.</p>
+<h2>14. Your legal rights</h2>
+<p>These terms do not limit or cancel the mandatory rights that the law of the place where you live gives you, including those on digital content and consumer protection.</p>
+<h2>15. Changes to the terms</h2>
+<p>If the terms change, we publish the new version with its date. A change does not affect licenses already issued, unless the law requires otherwise.</p>
+<h2>16. Governing law</h2>
+<p>The law of the country where you live applies, to the extent its mandatory consumer-protection rules require it. Otherwise, the law of the place of residence of the individual developer publishing under the GDC brand applies.</p>
+</article>
+<article data-lang="es" lang="es">
+<h1>CursorPro GDC — Términos de uso y licencia</h1>
+<p>Versión de los términos 1.0 · para CursorPro GDC 2.0.0 (macOS y Windows)</p>
+<h2>En resumen</h2>
+<ol>
+<li>CursorPro GDC funciona gratis en modo <strong>Demo</strong>: todas las funciones, en sesiones de <strong>10 minutos</strong> de uso activo. Cuando se agota una sesión, la siguiente queda disponible a las <strong>48 horas</strong>. No existe periodo de prueba.</li>
+<li>El tiempo de Demo corre <strong>solo mientras usas realmente una función</strong> (Spotlight, Lupa, Dibujo, efectos de clic, teclas mostradas o el halo mientras interactúas). La aplicación abierta en la barra de menús o en la bandeja, sin interacción, no consume tiempo. La primera sesión empieza con el primer uso real.</li>
+<li>Una <strong>licencia</strong> elimina los límites de Demo durante su periodo: un día, un mes, tres meses, un año, otro periodo o <strong>sin caducidad (lifetime)</strong>.</li>
+<li>La licencia se puede obtener mediante una <strong>donación</strong> que confirmamos, o puede <strong>concederse gratis</strong> (premio, concurso, evento, colaboración, pruebas, educación, prensa, regalo u otro caso aprobado). La donación no es una condición técnica, y una licencia gratuita no es una donación.</li>
+<li>La licencia es <strong>personal</strong> y está vinculada al <strong>ordenador</strong> en el que la activas. No la cedas.</li>
+<li>Cuando Demo se agota o la licencia caduca, se detiene o se desactiva, <strong>las funciones se detienen de forma segura y la aplicación sigue abierta</strong>. No se borra ningún ajuste, ningún preset ni ninguna otra información.</li>
+<li>La activación de una licencia se confirma en línea enviando <strong>solo datos técnicos mínimos</strong>. No enviamos ni registramos lo que aparece en tu pantalla, las teclas que pulsas, los movimientos del ratón, los archivos, los nombres de ventanas ni las contraseñas.</li>
+<li>Tras la activación, la aplicación también puede funcionar <strong>sin internet</strong>, dentro de un permiso sin conexión firmado, que no puede superar la validez de la licencia.</li>
+<li>La aplicación de macOS hasta la versión <strong>1.5.0</strong> se publicó con el código fuente bajo la licencia <strong>MIT</strong> y sigue bajo MIT. Desde la <strong>2.0.0</strong>, CursorPro GDC es <strong>propietaria</strong>.</li>
+<li>Estos términos <strong>no te quitan ningún derecho</strong> que te otorgue la ley.</li>
+</ol>
+<h2>1. Quiénes somos y qué cubren los términos</h2>
+<p>CursorPro GDC la desarrolla <strong>GDC</strong> («nosotros»), un desarrollador individual que publica bajo la marca GDC. No somos una sociedad mercantil. Puedes contactarnos por WhatsApp o correo electrónico, en los datos que se muestran en la aplicación (Licencia) y en <a href="https://gordas.dev/cursorpro-gdc/" rel="noopener">https://gordas.dev/cursorpro-gdc/</a>.</p>
+<p>Los términos se aplican a la aplicación CursorPro GDC a partir de la <strong>versión 2.0.0</strong>, en macOS y Windows, incluidas sus actualizaciones. Las versiones de macOS hasta la <strong>1.5.0 inclusive</strong> se publicaron con el código fuente bajo la licencia MIT y siguen bajo la licencia MIT; las versiones de Windows publicadas antes (hasta la 1.4.5) siguen con las condiciones con las que se publicaron. Estos términos no las cambian.</p>
+<h2>2. Modo Demo</h2>
+<ul>
+<li>Demo es gratis y no caduca. La aplicación se abre con normalidad y todas las funciones están disponibles, en sesiones de <strong>10 minutos</strong> de uso activo.</li>
+<li><strong>Uso activo</strong> significa que al menos una función está realmente en uso: un modo mantenido pulsado (Spotlight, Lupa, Dibujo), un efecto visible (anillo de clic, insignia de teclas) o el halo visible mientras interactúas (movimiento, clic, tecla) en los últimos 5 segundos. Mientras la aplicación permanece abierta sin interacción, el tiempo no corre.</li>
+<li>Al agotarse los 10 minutos, las funciones se detienen. <strong>La siguiente sesión está disponible a las 48 horas de haberse agotado.</strong> La aplicación te muestra cuándo.</li>
+<li>El estado de Demo se guarda protegido en tu ordenador (en el llavero en macOS, protegido por Windows en Windows). <strong>Reiniciar la aplicación o el ordenador, reinstalar y borrar los ajustes no lo reinician</strong>, y si atrasas el reloj no obtienes tiempo extra.</li>
+<li>No existe ni existirá un periodo de prueba para CursorPro GDC.</li>
+</ul>
+<h2>3. La licencia</h2>
+<ul>
+<li>La licencia es un <strong>derecho personal de uso</strong> de la aplicación. No es exclusiva, no se transfiere y no se alquila.</li>
+<li>Está vinculada a la <strong>clave criptográfica de la aplicación en tu ordenador</strong>; el identificador del ordenador es solo una huella auxiliar. El número de ordenadores es el de la concesión recibida.</li>
+<li>La <strong>duración</strong> puede ser de un día, un mes, tres meses, un año, otro periodo acordado o <strong>lifetime</strong>. «Lifetime» significa que la licencia no tiene fecha de caducidad; <strong>no</strong> es una promesa de que la aplicación se desarrolle, mantenga o sea compatible para siempre.</li>
+<li>La licencia te da los derechos de su oferta o concesión. Tu mensaje de solicitud no puede cambiar la duración, el número de ordenadores ni los derechos.</li>
+<li>Los códigos de activación de versiones anteriores (hasta la 1.5.0 en macOS, 1.4.5 en Windows) no los reconoce la versión 2.0.0; si tienes uno, puedes pedir una licencia nueva.</li>
+<li>La aplicación, su código, su diseño y su nombre siguen siendo nuestros.</li>
+</ul>
+<h2>4. Cómo obtener una licencia</h2>
+<ol>
+<li>En la aplicación abres «Licencia», puedes elegir una oferta (opcional) y preparar la solicitud.</li>
+<li>La aplicación te muestra el mensaje de solicitud; <strong>tú decides</strong> si lo envías, por WhatsApp o correo electrónico. La aplicación no envía nada en tu nombre.</li>
+<li>Respondemos. Si la licencia se obtiene mediante <strong>donación</strong>, te indicamos cómo puedes donar; <strong>tras confirmar manualmente la donación</strong>, generamos la licencia y te la enviamos. Si la licencia se <strong>concede gratis</strong>, te la enviamos sin donación.</li>
+<li>Copias o importas la licencia en la aplicación. La aplicación la verifica en tu ordenador y la activa.</li>
+</ol>
+<ul>
+<li><strong>Licencias gratuitas.</strong> Podemos conceder licencias sin donación: premios, concursos, eventos, colaboraciones, pruebas, educación, prensa, regalos u otros casos. Su valor económico es cero; no se registran como donaciones. El motivo de la concesión no se te atribuye como una acusación.</li>
+<li><strong>Si no recibes la licencia</strong> después de confirmada la donación, escríbenos; lo resolvemos enviando la licencia o devolviendo la donación.</li>
+</ul>
+<h2>5. Ofertas de donación</h2>
+<ul>
+<li>Cada oferta muestra, antes de la donación: la cantidad, la duración de la licencia, el número de ordenadores, el periodo de trabajo sin internet y las funciones incluidas. <strong>No existe una cantidad fija general</strong>: cada oferta tiene la suya.</li>
+<li>Las ofertas se publican en una <strong>lista firmada</strong> por nosotros; la aplicación la usa solo para mostrarlas. Sin una lista válida, la aplicación no muestra ninguna cantidad.</li>
+<li><strong>La disponibilidad de una oferta no es la duración de la licencia.</strong> Una oferta puede estar disponible 24 horas (por ejemplo en un periodo promocional) y activar una licencia de un año o lifetime.</li>
+<li>Si envías la solicitud mientras la oferta está disponible, sus condiciones se mantienen durante el plazo de finalización indicado en la oferta. Las ofertas pueden cambiar, pero un cambio no afecta a las licencias ya emitidas.</li>
+</ul>
+<h2>6. Activación, verificación y funcionamiento sin internet</h2>
+<ul>
+<li><strong>Verificación local.</strong> La aplicación verifica en tu ordenador la firma de la licencia, el producto, el ordenador, la clave del dispositivo y el periodo.</li>
+<li><strong>Confirmación en línea.</strong> La aplicación confirma la activación en nuestro servidor. Envía solo: la licencia (que contiene sus identificadores), el identificador del ordenador, la clave pública del dispositivo, la plataforma (macOS o Windows), la hora del reloj y un número aleatorio único (protección contra la repetición de la solicitud). El servidor ve, técnicamente, también la dirección IP de la conexión.</li>
+<li><strong>Permiso sin conexión.</strong> Tras la confirmación, el servidor emite un permiso sin conexión firmado. Con él, la aplicación funciona sin internet hasta que caduque el permiso o la licencia, <strong>lo que ocurra primero</strong>. La aplicación lo renueva automáticamente cuando tiene conexión.</li>
+<li><strong>Sin confirmación en línea.</strong> Una licencia válida localmente funciona sin internet solo durante la ventana inicial fijada al emitirla. Si termina sin confirmación, la aplicación queda en Demo hasta la siguiente conexión. Si la activación no puede confirmarse, no la presentamos como activada.</li>
+<li><strong>El reloj.</strong> Si atrasas el reloj del ordenador, una licencia caducada o detenida no se reactiva.</li>
+<li>La revocación o desactivación de una licencia surte efecto en la siguiente verificación en línea correcta o, en los ordenadores que permanecen sin conexión, como máximo al caducar el permiso sin conexión.</li>
+</ul>
+<h2>7. Cuando Demo se agota o la licencia caduca, se detiene o se desactiva</h2>
+<ul>
+<li>La aplicación <strong>sigue abierta</strong>. Las funciones se detienen de forma segura: si una estaba en uso (por ejemplo la lupa mantenida pulsada), se detiene y desaparece de la pantalla sin afectar a otros programas.</li>
+<li><strong>No se borra nada</strong>: ajustes, presets, atajos u otra información permanecen. Cuando Demo vuelve a estar disponible o cuando activas una licencia, todo funciona de inmediato con los mismos ajustes.</li>
+<li>Cuando una licencia caduca o se detiene, la aplicación vuelve a Demo, con las reglas de la sección 2.</li>
+<li>Podemos detener una licencia si se obtuvo mediante fraude, si la donación se canceló, se disputó o se devolvió, o si se incumplen gravemente estos términos (por ejemplo, por redistribución). Podemos desactivar un ordenador a petición tuya o para liberar un puesto.</li>
+<li>Tú mismo puedes liberar el ordenador desde la aplicación («Quitar de este ordenador»); la licencia queda guardada y puedes importarla de nuevo.</li>
+</ul>
+<h2>8. Lo que no puedes hacer</h2>
+<ul>
+<li>Redistribuir (incluso a cambio de dinero), alquilar o prestar la aplicación, la licencia o los archivos de activación.</li>
+<li>Usar la aplicación en ordenadores no cubiertos por tu licencia.</li>
+<li>Eludir o falsificar la activación, los límites de Demo, la verificación de actualizaciones o la identificación del ordenador.</li>
+<li>Descompilar o modificar la aplicación, salvo en los casos que la ley permita expresamente.</li>
+</ul>
+<h2>9. Tus datos</h2>
+<p><strong>Permanecen en tu ordenador y no se nos envían:</strong> lo que aparece en la pantalla (también en la lupa), las teclas mostradas, los movimientos y clics del ratón, los archivos y sus nombres, los nombres de ventanas, los ajustes, los presets, el registro de la aplicación y las contraseñas. Esta información se procesa solo en memoria, para dibujar los efectos; no se graba ni se guarda. El registro y la exportación de diagnóstico se crean solo a petición tuya, con los datos personales enmascarados, no contienen las teclas pulsadas ni el contenido de la pantalla y no se suben automáticamente.</p>
+<p><strong>Guardados localmente, protegidos:</strong> el estado de Demo, el estado de la licencia, la clave del dispositivo, el permiso sin conexión y el umbral de tiempo (en el llavero en macOS, protegidos por Windows en Windows).</p>
+<p><strong>Hacia nosotros, en la activación y la renovación:</strong> los datos técnicos mínimos de la sección 6, más la dirección IP técnicamente visible.</p>
+<p><strong>Mediante el mensaje de solicitud que envías tú</strong> (WhatsApp o correo electrónico): el identificador de la solicitud, el producto, la plataforma, la versión de la aplicación, el identificador del ordenador, la clave pública del dispositivo, la oferta elegida y, solo si los añades tú, tu nombre y contacto. WhatsApp y el servicio de correo tratan los mensajes según sus propias reglas.</p>
+<p><strong>Nuestro registro privado</strong> (para administrar la licencia): un nombre de trabajo y tu contacto, el producto, la oferta y su versión, el tipo de concesión (donación o gratuita, con un motivo interno), la duración, el identificador del ordenador y la clave pública del dispositivo, la fecha de emisión, la fecha de activación confirmada y la última confirmación en línea, así como el historial administrativo. <strong>No guardamos datos de tarjeta.</strong> Conservamos los datos mientras sea necesario para administrar la licencia y cumplir obligaciones legales.</p>
+<p><strong>Actualizaciones y ofertas:</strong> la aplicación descarga desde gordas.dev (y, como respaldo, desde GitHub) el archivo firmado que anuncia las actualizaciones, el paquete de actualización y la lista firmada de ofertas. Estos proveedores ven tu dirección IP, como en cualquier descarga.</p>
+<p>Tus derechos (acceso, rectificación, supresión, limitación, portabilidad, oposición) y los detalles están en la Política de privacidad: <a href="https://gordas.dev/confidentialitate" rel="noopener">https://gordas.dev/confidentialitate</a></p>
+<h2>10. Permisos del sistema</h2>
+<p>Para funcionar, CursorPro GDC pide permisos del sistema: en macOS <strong>Accesibilidad</strong> (para saber cuándo mantienes pulsada una tecla modificadora, mostrar las teclas e iniciar los efectos) y <strong>Grabación de pantalla</strong> (para la lupa); en Windows, la lectura global del ratón y del teclado. Los usa solo de forma local, solo para las funciones que ves, y no transmite nada de ellos. Puedes retirar los permisos en cualquier momento en los ajustes del sistema; las funciones que dependen de ellos se detienen.</p>
+<h2>11. Actualizaciones</h2>
+<p>Una actualización se instala solo después de verificar su firma y el paquete descargado, y solo con tu consentimiento. Una licencia de duración limitada te da acceso a las versiones oficiales compatibles mientras es válida; una actualización no prolonga la licencia ni reinicia Demo.</p>
+<h2>12. Garantía y responsabilidad</h2>
+<p>En los límites que permita la ley, la aplicación se suministra <strong>tal cual</strong> («as is»). No respondemos por pérdidas indirectas, por inconvenientes causados por los efectos mostrados sobre otros programas ni por pérdidas de datos que podrían haberse evitado con una copia de seguridad. Estos límites no se aplican donde la ley prohíba limitar la responsabilidad.</p>
+<h2>13. Componentes de otros autores y versiones MIT</h2>
+<p>Los componentes escritos por otros autores se usan bajo sus licencias, conservadas en el documento «Open Source Notices», disponible en la aplicación y en el paquete de instalación; se aplican solo a esos componentes. El código de CursorPro GDC para macOS publicado hasta la 1.5.0 sigue bajo MIT, en el repositorio público de esas versiones.</p>
+<h2>14. Tus derechos legales</h2>
+<p>Estos términos no limitan ni anulan los derechos obligatorios que te otorga la ley del lugar donde resides, incluidos los relativos a contenidos digitales y a la protección del consumidor.</p>
+<h2>15. Modificación de los términos</h2>
+<p>Si los términos cambian, publicamos la versión nueva con su fecha. Un cambio no afecta a las licencias ya emitidas, salvo que la ley exija otra cosa.</p>
+<h2>16. Ley aplicable</h2>
+<p>Se aplica la ley del país en el que resides, en la medida en que sus normas imperativas de protección del consumidor lo exijan. En lo demás, se aplica la ley del lugar de residencia del desarrollador individual que publica bajo la marca GDC.</p>
+</article>
+</main>
+<footer><div class="wrap">
+  <div class="links"><a href="../">CursorPro GDC</a><a href="https://gordas.dev/confidentialitate">Confidențialitate / Privacy / Privacidad</a><a href="https://gordas.dev/cookie">Cookie-uri / Cookies</a><a href="mailto:academiagdc@gmail.com">Contact</a></div>
+</div></footer>
+<script>
+const TITLES = {"ro": "Termeni de utilizare — CursorPro GDC", "en": "Terms of use — CursorPro GDC", "es": "Términos de uso — CursorPro GDC"};
+
+function apply(lang){
+  document.documentElement.lang = lang;
+  document.querySelectorAll('article[data-lang]').forEach(a => { a.hidden = a.dataset.lang !== lang; });
+  document.querySelectorAll('.langs button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
+  const t = TITLES[lang]; if (t) document.title = t;
+  const sk = document.getElementById('skip'); if (sk) sk.textContent = {ro:'Sari la conținut',en:'Skip to content',es:'Saltar al contenido'}[lang];
+  try { localStorage.setItem('cp-lang', lang); } catch (e) {}
+}
+document.querySelectorAll('.langs button').forEach(b => b.addEventListener('click', () => apply(b.dataset.lang)));
+let start = 'ro'; try { start = localStorage.getItem('cp-lang') || ((navigator.language || 'ro').slice(0, 2)); } catch (e) {}
+if (!['ro','en','es'].includes(start)) start = 'ro';
+const q = new URLSearchParams(location.search).get('lang'); apply(['ro','en','es'].includes(q) ? q : start);
+</script>
+</body>
+</html>

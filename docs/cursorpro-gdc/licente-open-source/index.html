@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ro" data-theme-pref="auto">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Notificări open source — CursorPro GDC</title>
+<meta name="robots" content="index,follow">
+<link rel="icon" type="image/png" href="../assets/favicon.png">
+<style>
+:root{
+  --bg:#f6f7f9; --bg2:#ffffff; --ink:#14161a; --ink2:#565b65; --ink3:#666b76; --amber:#f4a100; --amber-hi:#ffc53d; --amber-ink:#8f5600; --on-amber:#402600;
+  --panel:rgba(255,255,255,.78); --stroke:rgba(0,0,0,.08); --hair:rgba(0,0,0,.08); --shadow:0 1px 1px rgba(20,26,41,.05),0 22px 48px rgba(20,26,41,.12);
+  --radius:16px; --maxw:1120px;
+  --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI Variable Text","Segoe UI",system-ui,Roboto,sans-serif; --mono:ui-monospace,"SF Mono","Cascadia Mono",Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){ --bg:#0e0f12; --bg2:#15171b; --ink:#f2f3f5; --ink2:#aeb3bd; --ink3:#848892; --amber:#ffb72e; --amber-hi:#ffd36b; --amber-ink:#ffc53d; --panel:rgba(255,255,255,.06); --stroke:rgba(255,255,255,.10); --hair:rgba(255,255,255,.10); --shadow:0 1px 1px rgba(0,0,0,.4),0 24px 56px rgba(0,0,0,.55); } }
+:root[data-theme="dark"]{ --bg:#0e0f12; --bg2:#15171b; --ink:#f2f3f5; --ink2:#aeb3bd; --ink3:#848892; --amber:#ffb72e; --amber-hi:#ffd36b; --amber-ink:#ffc53d; --panel:rgba(255,255,255,.06); --stroke:rgba(255,255,255,.10); --hair:rgba(255,255,255,.10); --shadow:0 1px 1px rgba(0,0,0,.4),0 24px 56px rgba(0,0,0,.55); }
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(900px 500px at 12% -8%,rgba(255,255,255,.9),transparent 60%),radial-gradient(700px 500px at 100% 0,rgba(244,161,0,.10),transparent 60%)}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) body::before{background:radial-gradient(900px 500px at 12% -8%,rgba(255,255,255,.07),transparent 60%),radial-gradient(700px 500px at 100% 0,rgba(255,183,46,.08),transparent 60%)} }
+a{color:inherit} img{display:block;max-width:100%;height:auto}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 20px}
+.ic{width:1.25em;height:1.25em;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex:none}
+header{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:saturate(1.4) blur(14px);border-bottom:1px solid var(--hair)}
+.nav{display:flex;align-items:center;gap:20px;height:60px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:650;letter-spacing:-.01em;text-decoration:none}
+.brand img{width:30px;height:30px;border-radius:8px}
+.nav-links{display:flex;gap:22px;margin-left:auto}
+.nav-links a{font-size:14px;color:var(--ink2);text-decoration:none} .nav-links a:hover{color:var(--ink)}
+.langs{display:flex;gap:2px;padding:2px;border-radius:999px;background:var(--hair)}
+.langs button{border:0;background:transparent;color:var(--ink2);font:600 12px var(--sans);padding:5px 10px;border-radius:999px;cursor:pointer}
+.langs button[aria-pressed="true"]{background:var(--bg2);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.18)}
+.btn{display:inline-flex;align-items:center;gap:9px;height:46px;padding:0 22px;border-radius:999px;font:600 15px var(--sans);text-decoration:none;border:1px solid var(--stroke);background:var(--bg2);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.btn.primary{background:linear-gradient(180deg,var(--amber-hi),var(--amber));color:var(--on-amber);border-color:rgba(0,0,0,.12);box-shadow:0 8px 22px color-mix(in srgb,var(--amber) 38%,transparent)}
+.skip{position:absolute;left:12px;top:-60px;z-index:50;padding:10px 16px;border-radius:10px;background:var(--bg2);color:var(--ink);border:2px solid var(--amber);font:600 14px var(--sans)} .skip:focus{top:10px}
+.btn:focus-visible,.langs button:focus-visible,a:focus-visible{outline:2px solid var(--amber);outline-offset:3px}
+.hero{padding-top:72px;padding-bottom:40px;display:grid;grid-template-columns:1.02fr 1fr;gap:48px;align-items:center}
+h1{font-size:clamp(36px,5.4vw,60px);line-height:1.04;letter-spacing:-.035em;font-weight:720}
+.lead{margin-top:20px;font-size:clamp(17px,2vw,20px);color:var(--ink2);max-width:34em}
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.note{margin-top:16px;font-size:13px;color:var(--ink3)}
+.shots{position:relative;min-height:340px}
+.shot img{border-radius:12px;box-shadow:var(--shadow);border:1px solid var(--stroke)}
+.shot-mac{width:94%}
+.shot-win{position:absolute;right:-2%;bottom:-34px;width:62%}
+section{padding:64px 0}
+h2{font-size:clamp(26px,3.4vw,38px);line-height:1.12;letter-spacing:-.025em;font-weight:700;max-width:22em}
+.tool{display:grid;grid-template-columns:1fr 1.15fr;gap:48px;align-items:center;margin-top:52px}
+.tool.flip .tool-text{order:2}
+.tool-ic{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;color:var(--amber-ink);background:color-mix(in srgb,var(--amber) 16%,transparent);font-size:22px}
+.tool h3{margin-top:16px;font-size:24px;letter-spacing:-.02em}
+.tool p{margin-top:8px;color:var(--ink2);max-width:30em}
+.tool-fig img{border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--stroke)}
+.more{display:grid;grid-template-columns:1fr 1fr;gap:0 48px;margin-top:56px;border-top:1px solid var(--hair)}
+.more div{padding:22px 0;border-bottom:1px solid var(--hair);display:flex;gap:14px}
+.more h3{font-size:17px} .more p{color:var(--ink2);font-size:15px;margin-top:4px} .more .ic{margin-top:3px;color:var(--amber-ink);font-size:20px}
+.keys{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+.key{display:inline-flex;align-items:center;gap:10px;padding:10px 16px;border-radius:12px;background:var(--panel);border:1px solid var(--stroke);box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.key kbd{font:600 13px var(--mono);padding:3px 9px;border-radius:7px;background:var(--bg2);border:1px solid var(--stroke);box-shadow:0 1px 0 var(--hair)}
+.os{margin-top:12px;font-size:13px;color:var(--ink3);font-family:var(--mono)}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:0 40px;margin-top:36px}
+.steps div{padding-top:20px;border-top:2px solid var(--amber)}
+.steps h3{font-size:18px;display:flex;gap:10px;align-items:center} .steps .ic{color:var(--amber-ink)}
+.steps p{color:var(--ink2);font-size:15px;margin-top:8px}
+.callout{margin-top:34px;padding:18px 22px;border-radius:14px;background:var(--panel);border:1px solid var(--stroke);color:var(--ink2);font-size:15px}
+.dl{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:34px}
+.dl>div{padding:26px;border-radius:var(--radius);background:var(--panel);border:1px solid var(--stroke);box-shadow:var(--shadow)}
+.dl h3{display:flex;gap:10px;align-items:center;font-size:20px} .dl p{margin:10px 0 20px;color:var(--ink2);font-size:15px}
+.dl .ver{font:500 12px var(--mono);color:var(--ink3);margin-top:12px}
+.alt{margin-top:8px;font-size:13px} .alt a,.note a{color:var(--ink2)}
+.guide{margin-top:14px;display:inline-flex;gap:8px;align-items:center;color:var(--ink2);font-size:14px}
+details{border-top:1px solid var(--hair);padding:16px 0} details:last-of-type{border-bottom:1px solid var(--hair)}
+summary{cursor:pointer;font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:12px} summary::-webkit-details-marker{display:none}
+summary::after{content:"+";color:var(--amber-ink);font-weight:700} details[open] summary::after{content:"–"}
+details p{margin-top:10px;color:var(--ink2);max-width:46em}
+footer{padding:40px 0 56px;border-top:1px solid var(--hair);color:var(--ink3);font-size:13px}
+footer .links{display:flex;flex-wrap:wrap;gap:18px;margin-bottom:12px} footer a{color:var(--ink2)}
+@media (max-width:860px){
+  .hero{grid-template-columns:1fr;padding-top:40px} .shots{min-height:0;margin-bottom:34px} .shot-win{position:relative;right:auto;bottom:auto;width:78%;margin:-26px 0 0 auto}
+  .tool,.tool.flip{grid-template-columns:1fr;gap:22px} .tool.flip .tool-text{order:0}
+  .more,.steps,.dl{grid-template-columns:1fr} .steps{gap:24px}
+  .nav-links{display:none} .langs{margin-left:auto}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+.prose{max-width:760px;margin:0 auto;padding:44px 20px 24px}
+.prose h1{font-size:clamp(28px,4vw,40px);line-height:1.1;letter-spacing:-.03em;margin-bottom:6px}
+.prose h2{font-size:22px;margin:34px 0 10px;letter-spacing:-.015em;max-width:none}
+.prose h3{font-size:17px;margin:22px 0 6px}
+.prose p,.prose li{color:var(--ink2);font-size:16px;line-height:1.65}
+.prose p{margin:10px 0} .prose ol,.prose ul{margin:10px 0 10px 1.3em} .prose li{margin:6px 0} .prose strong{color:var(--ink)}
+.prose a{color:var(--amber-ink);overflow-wrap:anywhere}
+.prose code{font-family:var(--mono);font-size:.9em}
+.back{display:inline-flex;gap:6px;align-items:center;margin-bottom:14px;font-size:14px;color:var(--ink2);text-decoration:none}
+.tablewrap{overflow-x:auto;margin:14px 0;border:1px solid var(--hair);border-radius:12px}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:14px}
+th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--hair);color:var(--ink2)} th{color:var(--ink);font-weight:650}
+tr:last-child td{border-bottom:0}
+article[hidden]{display:none}
+.lic-file{margin:26px 0;padding:16px 18px;border-radius:14px;background:var(--panel);border:1px solid var(--stroke);font-size:15px}
+p[data-lang-only][hidden]{display:none}</style>
+</head>
+<body>
+<a class="skip" href="#top" id="skip">Sari la conținut</a>
+<header><div class="wrap nav">
+  <a class="brand" href="../"><img src="../assets/favicon.png" alt="" width="30" height="30"><span>CursorPro GDC</span></a>
+  <div class="langs" role="group" aria-label="Language"><button data-lang="ro" aria-pressed="true">RO</button><button data-lang="en" aria-pressed="false">EN</button><button data-lang="es" aria-pressed="false">ES</button></div>
+</div></header>
+<main class="prose" id="top">
+<a class="back" href="../">← CursorPro GDC</a>
+<h1>CursorPro GDC — Open Source Notices</h1>
+<p>Română · English · Español. The full texts of the licences are the original English texts, as the licences require, and appear once, at the end of the Windows document. / Textele integrale ale licențelor sunt cele originale, în engleză, așa cum le cer licențele, și apar o singură dată, la finalul documentului Windows. / Los textos completos de las licencias son los originales en inglés, como exigen las licencias, y aparecen una sola vez, al final del documento de Windows.</p>
+<p>Collected automatically at build time from the packages' own licence files (<code>tools/collect-notices.py</code>, in <code>legal/third-party/windows/</code>, with manifest and hashes); never transcribed by hand.</p>
+<article data-lang="ro" lang="ro">
+<h4>Despre acest document</h4>
+<p>CursorPro GDC (de la versiunea 2.0.0) este software proprietar. Termenii lui sunt în documentul „Termeni de utilizare și licență”. Unele componente scrise de alți autori sunt folosite sub licențele lor. Licențele acestea se aplică doar acelor componente. Notificările de mai jos sunt păstrate așa cum o cer licențele respective.</p>
+<p>Versiunile macOS ale aplicației până la 1.5.0 inclusiv au fost publicate ca sursă deschisă sub licența MIT și rămân sub această licență: <a href="https://github.com/gordasgdc/cursorpro-gdc" rel="noopener">https://github.com/gordasgdc/cursorpro-gdc</a> (tag-urile până la v1.5.0). Versiunile Windows publicate anterior (până la 1.4.5) rămân cu condițiile cu care au fost publicate.</p>
+<h4>macOS (CursorPro GDC 2.0.0)</h4>
+<p>Pachetul macOS conține doar codul CursorPro GDC și biblioteca GDC Commercial Core (ambele proprietare, GDC). Nu conține biblioteci open-source ale altor autori. Funcțiile sistemului (Apple: AppKit, SwiftUI, ScreenCaptureKit, CryptoKit, Security) sunt folosite din macOS și nu sunt incluse în pachet. Pictogramele din interfață sunt desenate de GDC sau sunt simboluri de sistem furnizate de macOS.</p>
+<h4>Windows (CursorPro GDC 2.0.0)</h4>
+<p>Aplicația Windows este livrată cu runtime-ul .NET inclus. Bibliotecile incluse în build, cu versiunile actuale, sunt în tabelul de mai jos. Textele integrale ale acestor licențe și ale notificărilor lor (inclusiv notificările componentelor terțe ale runtime-ului .NET) urmează la finalul documentului „Open Source Notices” din pachetul Windows.</p>
+<h4>Ce nu se folosește</h4>
+<p>Nu se folosesc fonturi, imagini, sunete sau pictograme de la alți autori în afara celor de sistem. Nu se folosesc SDK-uri de analiză, reclame sau urmărire.</p>
+</article>
+<article data-lang="en" lang="en">
+<h4>About this document</h4>
+<p>CursorPro GDC (from version 2.0.0) is proprietary software. Its terms are in the document "Terms of use and license". Some components written by other authors are used under their own licences. Those licences apply only to those components. The notices below are kept as the respective licences require.</p>
+<p>The macOS versions of the app up to and including 1.5.0 were published as open source under the MIT licence and remain under it: <a href="https://github.com/gordasgdc/cursorpro-gdc" rel="noopener">https://github.com/gordasgdc/cursorpro-gdc</a> (tags up to v1.5.0). Windows versions published earlier (up to 1.4.5) remain under the conditions they were published with.</p>
+<h4>macOS (CursorPro GDC 2.0.0)</h4>
+<p>The macOS package contains only the CursorPro GDC code and the GDC Commercial Core library (both proprietary, GDC). It contains no open-source libraries by other authors. System features (Apple: AppKit, SwiftUI, ScreenCaptureKit, CryptoKit, Security) are used from macOS and are not included in the package. The interface icons are drawn by GDC or are system symbols provided by macOS.</p>
+<h4>Windows (CursorPro GDC 2.0.0)</h4>
+<p>The Windows app ships with the .NET runtime included. The libraries included in the build, with their current versions, are in the table below. The full texts of these licences and of their notices (including the notices of the third-party components of the .NET runtime) follow at the end of the "Open Source Notices" document in the Windows package.</p>
+<h4>What is not used</h4>
+<p>No fonts, images, sounds or icons by other authors are used apart from system ones. No analytics, advertising or tracking SDKs are used.</p>
+</article>
+<article data-lang="es" lang="es">
+<h4>Acerca de este documento</h4>
+<p>CursorPro GDC (desde la versión 2.0.0) es software propietario. Sus términos están en el documento «Términos de uso y licencia». Algunos componentes escritos por otros autores se usan bajo sus propias licencias. Esas licencias se aplican solo a esos componentes. Los avisos de abajo se conservan tal como lo exigen las licencias respectivas.</p>
+<p>Las versiones de macOS de la aplicación hasta la 1.5.0 inclusive se publicaron como código abierto bajo la licencia MIT y siguen bajo ella: <a href="https://github.com/gordasgdc/cursorpro-gdc" rel="noopener">https://github.com/gordasgdc/cursorpro-gdc</a> (etiquetas hasta v1.5.0). Las versiones de Windows publicadas antes (hasta la 1.4.5) siguen con las condiciones con las que se publicaron.</p>
+<h4>macOS (CursorPro GDC 2.0.0)</h4>
+<p>El paquete de macOS contiene solo el código de CursorPro GDC y la biblioteca GDC Commercial Core (ambos propietarios, GDC). No contiene bibliotecas de código abierto de otros autores. Las funciones del sistema (Apple: AppKit, SwiftUI, ScreenCaptureKit, CryptoKit, Security) se usan desde macOS y no se incluyen en el paquete. Los iconos de la interfaz los dibuja GDC o son símbolos del sistema que ofrece macOS.</p>
+<h4>Windows (CursorPro GDC 2.0.0)</h4>
+<p>La aplicación de Windows se entrega con el runtime de .NET incluido. Las bibliotecas incluidas en la compilación, con sus versiones actuales, están en la tabla de abajo. Los textos completos de estas licencias y de sus avisos (incluidos los avisos de los componentes de terceros del runtime de .NET) siguen al final del documento «Open Source Notices» del paquete de Windows.</p>
+<h4>Qué no se usa</h4>
+<p>No se usan fuentes, imágenes, sonidos ni iconos de otros autores aparte de los del sistema. No se usan SDK de analítica, publicidad ni seguimiento.</p>
+</article>
+<h2>Windows — components / componente / componentes</h2>
+<div class="tablewrap"><table><thead><tr><th>Component</th><th>Version</th><th>Licence</th><th>Author</th></tr></thead><tbody><tr><td>.NET Runtime (Microsoft.NETCore.App)</td><td>8.0.30</td><td>MIT</td><td>Microsoft and .NET Foundation</td></tr><tr><td>WPF and Windows Forms (Microsoft.WindowsDesktop.App)</td><td>8.0.30</td><td>MIT</td><td>Microsoft and .NET Foundation</td></tr><tr><td>BouncyCastle.Cryptography</td><td>2.4.0</td><td>MIT (Bouncy Castle License)</td><td>Legion of the Bouncy Castle Inc.</td></tr><tr><td>CommunityToolkit.Mvvm</td><td>8.2.2</td><td>MIT</td><td>.NET Foundation and contributors</td></tr><tr><td>System.Management</td><td>8.0.0</td><td>MIT</td><td>Microsoft and .NET Foundation</td></tr><tr><td>System.CodeDom</td><td>8.0.0</td><td>MIT</td><td>Microsoft and .NET Foundation</td></tr><tr><td>System.Security.Cryptography.ProtectedData</td><td>8.0.0</td><td>MIT</td><td>Microsoft and .NET Foundation</td></tr></tbody></table></div>
+<p class="lic-file" data-lang-only="ro"><a href="OpenSourceNotices-Windows-2.0.0.txt">Textele integrale ale licențelor (Windows, în engleză, ca în licențele originale)</a></p><p class="lic-file" data-lang-only="en"><a href="OpenSourceNotices-Windows-2.0.0.txt">Full licence texts (Windows, in English as in the original licences)</a></p><p class="lic-file" data-lang-only="es"><a href="OpenSourceNotices-Windows-2.0.0.txt">Textos completos de las licencias (Windows, en inglés como en las licencias originales)</a></p>
+</main>
+<footer><div class="wrap">
+  <div class="links"><a href="../">CursorPro GDC</a><a href="https://gordas.dev/confidentialitate">Confidențialitate / Privacy / Privacidad</a><a href="https://gordas.dev/cookie">Cookie-uri / Cookies</a><a href="mailto:academiagdc@gmail.com">Contact</a></div>
+</div></footer>
+<script>
+const TITLES = {"ro": "Notificări open source — CursorPro GDC", "en": "Open source notices — CursorPro GDC", "es": "Avisos de código abierto — CursorPro GDC"};
+
+function apply(lang){
+  document.documentElement.lang = lang;
+  document.querySelectorAll('article[data-lang]').forEach(a => { a.hidden = a.dataset.lang !== lang; });
+  document.querySelectorAll('[data-lang-only]').forEach(a => { a.hidden = a.dataset.langOnly !== lang; });
+  document.querySelectorAll('.langs button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
+  const t = TITLES[lang]; if (t) document.title = t;
+  const sk = document.getElementById('skip'); if (sk) sk.textContent = {ro:'Sari la conținut',en:'Skip to content',es:'Saltar al contenido'}[lang];
+  try { localStorage.setItem('cp-lang', lang); } catch (e) {}
+}
+document.querySelectorAll('.langs button').forEach(b => b.addEventListener('click', () => apply(b.dataset.lang)));
+let start = 'ro'; try { start = localStorage.getItem('cp-lang') || ((navigator.language || 'ro').slice(0, 2)); } catch (e) {}
+if (!['ro','en','es'].includes(start)) start = 'ro';
+const q = new URLSearchParams(location.search).get('lang'); apply(['ro','en','es'].includes(q) ? q : start);
+</script>
+</body>
+</html>
