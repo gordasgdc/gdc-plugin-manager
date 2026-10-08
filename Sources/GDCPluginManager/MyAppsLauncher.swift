@@ -75,6 +75,11 @@ let knownGDCApps: [MyAppEntry] = [
     // manual ca "scurtătură personalizată" (exact regula pe care Cristi a
     // cerut-o: doar aplicațiile EXTERNE ajung acolo, ale noastre apar
     // automat la instalare).
+    // 2026-10-08: GDC STYLE Client (aplicația PUBLICĂ, gratuită; bundle ID `dev.gordas.GDCStyleClient`) — separată de GDC STYLE Lab (instrument de dezvoltare, `dev.gordas.GDCLUTLab`,
+    // care NU apare aici). Versiunea publicată vine din propriul canal `gdc-style-client/update.json` (nu din GitHub Releases); iconița și versiunea instalată se citesc de pe disc.
+    MyAppEntry(id: "gdc-style-client", name: "GDC STYLE Client", bundleIdentifier: "dev.gordas.GDCStyleClient",
+               iconSymbol: "paintpalette", tint: .orange,
+               versionSource: .updateJSON(url: URL(string: "https://gordas.dev/gdc-style-client/update.json")!)),
     MyAppEntry(id: "cgconvertor", name: "CGConvertor", bundleIdentifier: "com.cristigordas.CGConvertor",
                iconSymbol: "film.stack", tint: .purple,
                versionSource: .githubReleases(repo: "gordasgdc/CGConvertor")),
