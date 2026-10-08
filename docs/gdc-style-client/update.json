@@ -1,9 +1,9 @@
 {
-  "version": "2.0.5",
-  "app_version": "2.0.5",
-  "changes": "Pachetele de licențe se afișează corect: fiecare licență e valabilă pentru un singur Mac, iar un pachet de trei înseamnă trei licențe distincte, câte una pentru fiecare Mac. Fiecare Mac își trimite propria cerere. Ofertele se văd doar în aplicație, când soliciți o licență.",
+  "version": "2.1.0",
+  "app_version": "2.1.0",
+  "changes": "Nou: GDC DRT — transformare de ieșire spre Rec.709 Gamma 2.4, cu trei profile (Natural, Asiatic, 2383 Inspired) pentru ACES, DaVinci Intermediate, ARRI LogC3 și ARRI LogC4, într-o secțiune nouă, Output Transforms. Limba aplicației se alege din Setări › Aspect (Sistem, Română, English, Español) și se schimbă imediat. Lângă numărul versiunii, în bara laterală, apare controlul de actualizare. Licențele și instrumentele instalate rămân neschimbate.",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.0.5.dmg"
+    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.1.0.dmg"
   },
   "mandatory": false
 }
