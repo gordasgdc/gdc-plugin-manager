@@ -1,9 +1,9 @@
 {
-  "version": "2.0.4",
-  "app_version": "2.0.4",
-  "changes": "GDC STYLE Client 2.0: aplicație gratuită care instalează în DaVinci Resolve cinci instrumente — Exposure + Balance, Color, Look, Skin și Film — și lanțul Film Look, în etape, pentru pipeline-ul proiectului tău (ACES, DaVinci, ARRI LogC3 sau ARRI LogC4). Instalezi Demo imediat; versiunea completă se instalează după o licență, cerută din aplicație. Dacă licența expiră, instrumentele revin singure la Demo, fără să-ți atingă nodurile sau proiectul. Ghid în română, engleză și spaniolă.",
+  "version": "2.0.5",
+  "app_version": "2.0.5",
+  "changes": "Pachetele de licențe se afișează corect: fiecare licență e valabilă pentru un singur Mac, iar un pachet de trei înseamnă trei licențe distincte, câte una pentru fiecare Mac. Fiecare Mac își trimite propria cerere. Ofertele se văd doar în aplicație, când soliciți o licență.",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.0.4.dmg"
+    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.0.5.dmg"
   },
   "mandatory": false
 }
