@@ -164,6 +164,22 @@
     {
       "access" : {
         "group" : "gdc",
+        "kind" : "free",
+        "note" : "Aplicație gratuită: instalează variantele Demo. Licența Full se solicită din aplicație.",
+        "tags" : [
+
+        ]
+      },
+      "coverImage" : "covers/GDC STYLE Client.png?v=c8db8764",
+      "downloadURL" : "https://gordas.dev/gdc-style-client/GDCStyleClient.dmg",
+      "id" : "gdc-style-client",
+      "name" : "GDC STYLE Client",
+      "supportedOS" : "macOS",
+      "url" : "https://gordas.dev/gdc-style-client/"
+    },
+    {
+      "access" : {
+        "group" : "gdc",
         "note" : "Donație · licență legată de Mac (Machine ID)",
         "referencePriceEUR" : 6700,
         "tags" : [
@@ -562,5 +578,5 @@
       "youtubeURL" : "https://www.youtube.com/watch?v=dnkUIGXIzIM"
     }
   ],
-  "updatedAt" : "2026-09-30"
+  "updatedAt" : "2026-10-08"
 }
