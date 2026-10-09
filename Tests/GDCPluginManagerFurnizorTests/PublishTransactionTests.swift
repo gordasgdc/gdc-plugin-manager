@@ -63,30 +63,32 @@ final class PublishTransactionTests: XCTestCase {
         SHA256.hash(data: Data(text.utf8)).map { String(format: "%02x", $0) }.joined()
     }
 
-    /// Șabloanele vin din catalogul real (docs/catalog.json al repo-ului), ca decodarea să fie cea reală.
+    /// Catalogul real (docs/catalog.json) e doar baza structurală a sămânței (celelalte colecții). Elementele de test
+    /// NU se iau din el: conținutul lui se schimbă la fiecare publicare (ex. `items` e gol), iar `[0]` pe o colecție
+    /// goală oprea tot procesul de test (`Fatal error`, nu doar un test eșuat).
     private func realCatalog() throws -> [String: Any] {
         let url = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
             .appendingPathComponent("docs/catalog.json")
         return try JSONSerialization.jsonObject(with: Data(contentsOf: url)) as! [String: Any]
     }
 
+    /// Element de catalog autonom: doar cheile obligatorii ale `PluginItem`.
     private func itemJSON(id: String, version: String, files: [(String, String)]) throws -> [String: Any] {
-        var item = (try realCatalog()["items"] as! [[String: Any]])[0]
-        item["id"] = id; item["name"] = "Test \(id)"; item["version"] = version
-        item["type"] = "lut"
-        item.removeValue(forKey: "coverImage"); item.removeValue(forKey: "bundleFolderName")
-        item["files"] = files.map { ["path": $0.0, "sha256": $0.1, "repo": "files"] }
-        return item
+        [
+            "id": id, "name": "Test \(id)", "type": "lut", "description": "test", "version": version, "priceEUR": 0,
+            "files": files.map { ["path": $0.0, "sha256": $0.1, "repo": "files"] },
+        ]
     }
 
     private func seedCatalog() throws -> String {
         var cat = try realCatalog()
         cat["items"] = [try itemJSON(id: "prod-a", version: "1.0.0", files: [("prod-a/1.0.0/x.cube", sha("LUT x"))])]
-        var res = (cat["downloadableResources"] as! [[String: Any]])[0]
-        res["id"] = "res-r"; res["name"] = "Resursa R"
-        res.removeValue(forKey: "coverImage"); res.removeValue(forKey: "filePath"); res.removeValue(forKey: "fileSHA256")
-        res["fileRepo"] = "files"
-        res["files"] = [["path": "prod-a/1.0.0/x.cube", "sha256": sha("LUT x"), "repo": "files"]]
+        // Resursă descărcabilă autonomă (cheile obligatorii ale `DownloadableResource`), care partajează fișierul lui prod-a.
+        let res: [String: Any] = [
+            "id": "res-r", "name": "Resursa R", "description": "test", "category": "lut", "url": "https://example.com/res-r",
+            "fileRepo": "files",
+            "files": [["path": "prod-a/1.0.0/x.cube", "sha256": sha("LUT x"), "repo": "files"]],
+        ]
         cat["downloadableResources"] = [res]
         let data = try JSONSerialization.data(withJSONObject: cat, options: [.prettyPrinted, .sortedKeys])
         return String(decoding: data, as: UTF8.self)

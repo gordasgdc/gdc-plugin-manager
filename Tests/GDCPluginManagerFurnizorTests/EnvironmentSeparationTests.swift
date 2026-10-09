@@ -55,12 +55,13 @@ final class EnvironmentSeparationTests: XCTestCase {
         return try String(contentsOf: url, encoding: .utf8)
     }
 
+    /// Element de catalog autonom (doar cheile obligatorii ale `PluginItem`): testul nu depinde de conținutul
+    /// `docs/catalog.json` real, care poate fi gol (`"items": []`) — pe runnerul CI `removeFirst()` pe el cădea.
     private func item(_ id: String, file: PublishTransaction.FileRef) throws -> PluginItem {
-        var obj = (try JSONSerialization.jsonObject(with: Data(try realCatalogText().utf8)) as! [String: Any])["items"] as! [[String: Any]]
-        var o = obj.removeFirst()
-        o["id"] = id; o["name"] = id; o["version"] = "0.0.1"; o["type"] = "lut"
-        o.removeValue(forKey: "coverImage"); o.removeValue(forKey: "bundleFolderName")
-        o["files"] = [["path": file.path, "sha256": file.sha256, "repo": file.repoKey]]
+        let o: [String: Any] = [
+            "id": id, "name": id, "type": "lut", "description": "test", "version": "0.0.1", "priceEUR": 0,
+            "files": [["path": file.path, "sha256": file.sha256, "repo": file.repoKey]],
+        ]
         return try JSONDecoder().decode(PluginItem.self, from: JSONSerialization.data(withJSONObject: o))
     }
 
