@@ -1,5 +1,10 @@
 # Changelog — GDC Plugin Manager
 
+## v1.40.1 Client (2026-10-09) — GDC STYLE Client în „Aplicațiile mele”
+- „Aplicațiile mele” arată acum GDC STYLE Client: pornește aplicația instalată (recunoscută după `dev.gordas.GDCStyleClient`), arată versiunea instalată și semnalează „Actualizare disponibilă” când canalul public `https://gordas.dev/gdc-style-client/update.json` anunță o versiune mai nouă. Dacă nu e instalată, cardul rămâne estompat; descărcarea e în catalog (`https://gordas.dev/gdc-style-client/`).
+- Test de contract nou (`MyAppsStyleClientTests`): intrarea, bundle ID-ul, sursa de versiune și pagina din catalog.
+- Fără alte modificări de comportament; secțiunea Windows din `update.json` rămâne neatinsă.
+
 ## v1.39.4 (nelansat, pregătit 2026-09-25) — Descărcări autorizate, actualizare sigură
 - Instalatorul nu mai instalează o versiune mai veche peste una mai nouă și, în acest caz, lasă aplicația existentă neatinsă.
 
