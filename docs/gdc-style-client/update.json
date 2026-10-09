@@ -1,9 +1,9 @@
 {
-  "version": "2.1.0",
-  "app_version": "2.1.0",
-  "changes": "Nou: GDC DRT — transformare de ieșire spre Rec.709 Gamma 2.4, cu trei profile (Natural, Asiatic, 2383 Inspired) pentru ACES, DaVinci Intermediate, ARRI LogC3 și ARRI LogC4, într-o secțiune nouă, Output Transforms. Limba aplicației se alege din Setări › Aspect (Sistem, Română, English, Español) și se schimbă imediat. Lângă numărul versiunii, în bara laterală, apare controlul de actualizare. Licențele și instrumentele instalate rămân neschimbate.",
+  "version": "2.2.0",
+  "app_version": "2.2.0",
+  "changes": "Nou: GDC Highlights + Gamut — trei unelte într-un singur plugin OpenFX, în ordinea de lucru: Path to White (culorile foarte luminoase se duc natural spre alb), Gamut Compression (culorile prea saturate se strâng în gamă fără schimbări de nuanță) și Highlight Roll-off (luminile se rotunjesc fără tăiere). Funcționează pe ACES, DaVinci Intermediate, ARRI LogC3 și ARRI LogC4. Apare în secțiunea Instrumente ca Demo gratuit; versiunea completă se instalează după o licență, iar la expirare sau revocare revine la Demo fără să piardă nodul sau valorile. Celelalte instrumente, Film Look și GDC DRT rămân neschimbate.",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.1.0.dmg"
+    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.2.0.dmg"
   },
   "mandatory": false
 }
