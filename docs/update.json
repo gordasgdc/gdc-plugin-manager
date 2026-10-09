@@ -10,14 +10,14 @@
   "mandatory": false,
   "min_version": "1.0.0",
   "mac": {
-    "version": "1.40.0",
-    "release_date": "2026-09-26",
-    "changes": "Interfață reîmprospătată: carduri noi, ecrane clare de încărcare și eroare, avertismente unificate. Starea fiecărui produs e afișată limpede. Suport pentru bannere promoționale.",
+    "version": "1.40.1",
+    "release_date": "2026-10-09",
+    "changes": "GDC STYLE Client apare acum în „Aplicațiile mele”: îl pornești de acolo și vezi dacă există o versiune nouă. Restul aplicației rămâne neschimbat.",
     "download_url": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Mac.zip",
     "mandatory": false,
     "min_version": "1.0.0",
-    "download_url_dmg": "https://github.com/gordasgdc/gdc-plugin-manager/releases/download/v1.40.0/GDCPluginManager-1.40.0.dmg",
-    "sha256": "7478b480c66cda44dd59c8bb11f1f86caaed1e9cc01c41bd65d341ff602b717f"
+    "download_url_dmg": "https://github.com/gordasgdc/gdc-plugin-manager/releases/download/v1.40.1/GDCPluginManager-1.40.1.dmg",
+    "sha256": "24bbdd50172a22dcd2fe65105eda9c4b8311e8041e4b6f66d68a121bea0f8c8d"
   },
   "windows": {
     "version": "1.38.2",
