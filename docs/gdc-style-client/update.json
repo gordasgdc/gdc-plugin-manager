@@ -1,9 +1,9 @@
 {
-  "version": "2.3.1",
-  "app_version": "2.3.1",
-  "changes": "Nou: lanțul complet al culorii se construiește acum direct din aplicație. Pagina Pipeline arată, în ordine, de la camera clipului până la ecran, cine face fiecare transformare (Resolve sau GDC), ce se instalează și ce să nu duplici, iar verificarea refuză lanțurile cu transformări duble sau puse în ordine greșită. GDC Input Transform și GDC Linear to Log sunt componente gratuite, fără licență, care se instalează cu aceeași confirmare ca instrumentele. Documentație nouă în aplicație, pe pagina Documentație: ghidul de lucru și manualul tehnic, în română, engleză și spaniolă. GDC Optics 1.0.1: cele șapte filtre au denumiri descriptive GDC; proiectele existente se deschid la fel, cu aceleași valori.",
+  "version": "2.3.2",
+  "app_version": "2.3.2",
+  "changes": "Reparat: pagina Pipeline nu mai cere reinstalări inutile pentru GDC Input Transform și GDC Linear to Log — sunt componente gratuite și, odată instalate, rămân marcate ca instalate, fără parola de administrator cerută în zadar. Nou: numele, e-mailul și numele calculatorului din cererea de licență se rețin pe acest Mac; le poți edita sau șterge oricând din formular. Documentația din aplicație este actualizată pentru 2.3.2. Licențele existente și nodurile din proiectele tale rămân neschimbate.",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.3.1.dmg"
+    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.3.2.dmg"
   },
   "mandatory": false
 }
