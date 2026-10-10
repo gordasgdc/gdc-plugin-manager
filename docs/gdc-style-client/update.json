@@ -1,9 +1,9 @@
 {
-  "version": "2.3.0",
-  "app_version": "2.3.0",
-  "changes": "Nou: GDC Optics — difuzia filtrului din fața obiectivului și strălucirea luminilor (bloom), într-un singur plugin OpenFX, în lumină scene-linear. Alegi unul din cele șapte filtre de difuzie și treapta lui, apoi, dacă vrei, adaugi strălucirea luminilor puternice; cu valorile implicite imaginea rămâne neschimbată. Funcționează pe ACES, DaVinci Intermediate, ARRI LogC3 și ARRI LogC4 (doar macOS). Apare în secțiunea Instrumente ca Demo gratuit; versiunea completă se instalează după o licență, iar la expirare sau revocare revine la Demo fără să piardă nodul sau valorile. Celelalte instrumente, Highlights + Gamut, Film Look și GDC DRT rămân neschimbate.",
+  "version": "2.3.1",
+  "app_version": "2.3.1",
+  "changes": "Nou: lanțul complet al culorii se construiește acum direct din aplicație. Pagina Pipeline arată, în ordine, de la camera clipului până la ecran, cine face fiecare transformare (Resolve sau GDC), ce se instalează și ce să nu duplici, iar verificarea refuză lanțurile cu transformări duble sau puse în ordine greșită. GDC Input Transform și GDC Linear to Log sunt componente gratuite, fără licență, care se instalează cu aceeași confirmare ca instrumentele. Documentație nouă în aplicație, pe pagina Documentație: ghidul de lucru și manualul tehnic, în română, engleză și spaniolă. GDC Optics 1.0.1: cele șapte filtre au denumiri descriptive GDC; proiectele existente se deschid la fel, cu aceleași valori.",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.3.0.dmg"
+    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.3.1.dmg"
   },
   "mandatory": false
 }
