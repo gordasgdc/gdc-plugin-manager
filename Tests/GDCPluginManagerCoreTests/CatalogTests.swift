@@ -76,6 +76,59 @@ final class CatalogTests: XCTestCase {
         XCTAssertEqual(a.items.map(\.id), fileOrder, "ordinea produselor trebuie să fie cea din fișier")
     }
 
+    // MARK: - Regulile catalogului ca funcție pură + dovada că verificarea chiar prinde defecte
+
+    /// Aceleași reguli pe care le aplică testele catalogului real, aplicabile și pe fixture-uri: un catalog real FĂRĂ produse (stare validă) face testele de mai sus să treacă
+    /// pe o colecție goală, deci nu dovedesc nimic despre reguli — `testCatalogRulesHaveTeeth` le demonstrează pe fixture-uri cu defecte cunoscute.
+    private func catalogProblems(_ catalog: Catalog) -> [String] {
+        var out: [String] = []
+        let products = catalog.items + catalog.scriptItems
+        if products.contains(where: { $0.type == .unknown }) { out.append("tip de produs necunoscut") }
+        let ids = products.map(\.id)
+        if ids.count != Set(ids).count { out.append("ID-uri de produs duplicate") }
+        let hex = CharacterSet(charactersIn: "0123456789abcdef")
+        for product in products {
+            if product.files.isEmpty { out.append("\(product.id): fără fișiere") }
+            if product.version.range(of: #"^\d+(\.\d+){1,3}$"#, options: .regularExpression) == nil { out.append("\(product.id): versiune invalidă") }
+            var paths = Set<String>()
+            for file in product.files {
+                if file.sha256.count != 64 { out.append("\(product.id): SHA-256 cu lungime greșită") }
+                if !file.sha256.unicodeScalars.allSatisfy(hex.contains) { out.append("\(product.id): SHA-256 nu e hex minuscul") }
+                if file.path.hasPrefix("/") || file.path.split(separator: "/").contains("..") { out.append("\(product.id): cale nesigură") }
+                if !paths.insert(file.path).inserted { out.append("\(product.id): cale duplicată") }
+                if let repo = file.repo, !["files", "pdfs", "scripts"].contains(repo) { out.append("\(product.id): repo necunoscut") }
+            }
+            for raw in [product.youtubeURL, product.purchaseURL, product.demoURL].compactMap({ $0 }) where !raw.isEmpty && URL(string: raw)?.scheme != "https" { out.append("\(product.id): URL non-https") }
+        }
+        return out
+    }
+
+    func testRealCatalogFollowsTheRules() throws {
+        let catalog = try JSONDecoder().decode(Catalog.self, from: try realCatalogData())
+        XCTAssertEqual(catalogProblems(catalog), [])
+        if (catalog.items + catalog.scriptItems).isEmpty {
+            throw XCTSkip("catalogul publicat nu are produse: regulile nu sunt exersate pe el; vezi testCatalogRulesHaveTeeth (fixture-uri cu defecte)")
+        }
+    }
+
+    func testCatalogRulesHaveTeeth() throws {
+        XCTAssertEqual(catalogProblems(try decode(#"{"items": [\#(item())]}"#)), [], "fixture-ul corect nu are probleme")
+        let sha = String(repeating: "a", count: 64)
+        let defects: [(String, String)] = [
+            ("tip necunoscut", #"{"items": [\#(item(type: "tip-inventat"))]}"#),
+            ("ID-uri duplicate", #"{"items": [\#(item(id: "dup")), \#(item(id: "dup"))]}"#),
+            ("SHA-256 scurt", #"{"items": [\#(item().replacingOccurrences(of: sha, with: String(sha.dropLast())))]}"#),
+            ("SHA-256 nehex", #"{"items": [\#(item().replacingOccurrences(of: sha, with: String(repeating: "Z", count: 64)))]}"#),
+            ("cale nesigură", #"{"items": [\#(item().replacingOccurrences(of: "p1/1.0.0/a.dctl", with: "../a.dctl"))]}"#),
+            ("fără fișiere", #"{"items": [\#(item().replacingOccurrences(of: #""files": [{"path": "p1/1.0.0/a.dctl", "sha256": "\#(sha)", "repo": "files"}]"#, with: #""files": []"#))]}"#),
+            ("versiune invalidă", #"{"items": [\#(item().replacingOccurrences(of: #""version": "1.0.0""#, with: #""version": "v-ceva""#))]}"#),
+            ("URL non-https", #"{"items": [\#(item(#", "demoURL": "http://exemplu.test/demo""#))]}"#),
+        ]
+        for (name, json) in defects {
+            XCTAssertFalse(catalogProblems(try decode(json)).isEmpty, "verificarea nu a prins defectul: \(name)")
+        }
+    }
+
     // MARK: - Compatibilitate și intrări invalide
 
     func testEmptyAndMinimalCatalog() throws {
