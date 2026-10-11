@@ -1,9 +1,9 @@
 {
-  "version": "2.3.2",
-  "app_version": "2.3.2",
-  "changes": "Reparat: pagina Pipeline nu mai cere reinstalări inutile pentru GDC Input Transform și GDC Linear to Log — sunt componente gratuite și, odată instalate, rămân marcate ca instalate, fără parola de administrator cerută în zadar. Nou: numele, e-mailul și numele calculatorului din cererea de licență se rețin pe acest Mac; le poți edita sau șterge oricând din formular. Documentația din aplicație este actualizată pentru 2.3.2. Licențele existente și nodurile din proiectele tale rămân neschimbate.",
+  "version": "2.3.3",
+  "app_version": "2.3.3",
+  "changes": "GDC Input Transform și GDC Linear to Log apar acum în pagina „Instrumente”, sub „Componente de pipeline”, ca produse licențiabile: disponibile în ediția Demo, fără licență, cu filigran; cu o licență valabilă se instalează ediția Full, iar la expirare sau retragere revin la Demo, fără să-ți strice nodurile din Resolve. Pagina „Pipeline” trimite la ele prin „Vezi în Instrumente”. Textele și documentația din aplicație (RO/EN/ES) sunt actualizate. Licențele existente și proiectele tale rămân neschimbate.",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.3.2.dmg"
+    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.3.3.dmg"
   },
   "mandatory": false
 }
