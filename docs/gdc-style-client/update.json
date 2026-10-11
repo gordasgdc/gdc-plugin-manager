@@ -1,9 +1,9 @@
 {
-  "version": "2.3.3",
-  "app_version": "2.3.3",
-  "changes": "GDC Input Transform și GDC Linear to Log apar acum în pagina „Instrumente”, sub „Componente de pipeline”, ca produse licențiabile: disponibile în ediția Demo, fără licență, cu filigran; cu o licență valabilă se instalează ediția Full, iar la expirare sau retragere revin la Demo, fără să-ți strice nodurile din Resolve. Pagina „Pipeline” trimite la ele prin „Vezi în Instrumente”. Textele și documentația din aplicație (RO/EN/ES) sunt actualizate. Licențele existente și proiectele tale rămân neschimbate.",
+  "version": "2.3.4",
+  "app_version": "2.3.4",
+  "changes": "Pagina nouă „AI Ready”: creează și validează rețete GDC STYLE cu Claude, ChatGPT, Gemini sau alți agenți compatibili; aplicarea în DaVinci Resolve rămâne sub controlul tău. Din aplicație instalezi skill-ul pentru Claude Code sau Codex (ți se arată folderul exact și se păstrează o copie a ce se înlocuiește) sau exporți kitul universal pentru ChatGPT, Gemini și alți agenți. Kitul se poate descărca și de pe pagina Clientului. Instalarea în masă a pachetelor Full e mai robustă: toate pachetele permise se autorizează împreună, cele deja verificate nu se mai descarcă la o reluare, iar o limitare temporară a serverului nu mai pare o problemă de licență. Ghidul profesional și manualul tehnic (RO/EN/ES) descriu AI Ready.",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.3.3.dmg"
+    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.3.4.dmg"
   },
   "mandatory": false
 }
