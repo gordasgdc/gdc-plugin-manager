@@ -1,9 +1,9 @@
 {
-  "version": "2.3.4",
-  "app_version": "2.3.4",
-  "changes": "Pagina nouă „AI Ready”: creează și validează rețete GDC STYLE cu Claude, ChatGPT, Gemini sau alți agenți compatibili; aplicarea în DaVinci Resolve rămâne sub controlul tău. Din aplicație instalezi skill-ul pentru Claude Code sau Codex (ți se arată folderul exact și se păstrează o copie a ce se înlocuiește) sau exporți kitul universal pentru ChatGPT, Gemini și alți agenți. Kitul se poate descărca și de pe pagina Clientului. Instalarea în masă a pachetelor Full e mai robustă: toate pachetele permise se autorizează împreună, cele deja verificate nu se mai descarcă la o reluare, iar o limitare temporară a serverului nu mai pare o problemă de licență. Ghidul profesional și manualul tehnic (RO/EN/ES) descriu AI Ready.",
+  "version": "2.3.5",
+  "app_version": "2.3.5",
+  "changes": "Documentația din aplicație (Ghidul profesional și Manualul tehnic, în română, engleză și spaniolă) se deschide din pagina Documentație în fiecare instalare: butoanele nu mai pot rămâne inactive din cauza unor fișiere de altă versiune. Dacă un document lipsește, pagina o spune clar și te îndrumă să reinstalezi aplicația.",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.3.4.dmg"
+    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.3.5.dmg"
   },
   "mandatory": false
 }
