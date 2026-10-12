@@ -1,9 +1,9 @@
 {
-  "version": "2.3.5",
-  "app_version": "2.3.5",
-  "changes": "Documentația din aplicație (Ghidul profesional și Manualul tehnic, în română, engleză și spaniolă) se deschide din pagina Documentație în fiecare instalare: butoanele nu mai pot rămâne inactive din cauza unor fișiere de altă versiune. Dacă un document lipsește, pagina o spune clar și te îndrumă să reinstalezi aplicația.",
+  "version": "2.4.0",
+  "app_version": "2.4.0",
+  "changes": "Nou: GDC Tone — Lift / Gamma / Gain, roți pe zone, ASC CDL și Contrast cu pivot într-un singur instrument. Zonele și pivotul se dau în stopuri față de gri 18%, deci același reglaj lucrează pe aceeași parte a imaginii pe ACES, DaVinci Intermediate, ARRI LogC3 și ARRI LogC4. Nou în listă: GDC Saturation + Hue (saturație și rotire de nuanță, aceeași luminozitate). Exposure + Balance primește grupul Channel Mix (matrice 3×3, cu opțiunea de a păstra griurile neutre). Pagina Documentație arată acum curba fiecărui pipeline în stopuri față de gri 18%. Ediția Demo funcționează fără licență, cu filigran; ediția Full se instalează după o licență.",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.3.5.dmg"
+    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.4.0.dmg"
   },
   "mandatory": false
 }
