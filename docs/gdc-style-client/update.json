@@ -1,9 +1,9 @@
 {
-  "version": "2.5.0",
-  "app_version": "2.5.0",
-  "changes": "Nou: pagina „Stream Deck & PowerGrades” — instalezi din aplicație pluginul Stream Deck GDC STYLE, profilul „GDC STYLE XL” și cele opt PowerGrade-uri (patru Demo, patru Full) în Galeria DaVinci Resolve, pentru ACES, DaVinci, ARRI LogC3 și ARRI LogC4. PowerGrade-urile Full se pot instala oricând; nodurile lor arată filigran până când licența ta acoperă instrumentele. Nou în Exposure + Balance 1.5.0: butonul „Link to Stream Deck” — legi nodul din Resolve de tastele Stream Deck XL și reglezi expunerea direct de pe dispozitiv. Profilurile din Optics, Film și DRT au denumiri GDC proprii și o scurtă descriere în română, engleză și spaniolă. Verificat pe Stream Deck XL (macOS); modelele Standard și Plus nu sunt verificate. Ediția Demo funcționează fără licență, cu filigran; ediția Full se instalează după o licență valabilă.",
+  "version": "2.6.0",
+  "app_version": "2.6.0",
+  "changes": "Nou: GDC Cinema Style — biblioteca creativă de 86 de stiluri de film, cu numele lor originale, pe patru straturi, cu textură de film opțională (softness, halație, grăunte), implicit oprită; pentru ACES, DaVinci, ARRI LogC3 și ARRI LogC4, doar pe macOS (Metal). Numele producătorilor identifică doar referința creativă; GDC nu este afiliat cu acei producători și nu este susținut de ei. Nou: opt PowerGrade-uri GDC Cinema Style (patru Demo, patru Full) în pagina „Stream Deck & PowerGrades”. Toate PowerGrade-urile și integrarea Stream Deck sunt gratuite și publice: se instalează fără licență. GDC Input Transform 1.2.0 primește șapte camere noi, GDC Film 1.2.0 are bife pentru softness, halație și grăunte, iar documentația RO/EN/ES conține ghidul GDC Cinema Style. Ediția Demo funcționează fără licență, cu filigran; ediția Full se instalează după o licență valabilă.",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.5.0.dmg"
+    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.6.0.dmg"
   },
   "mandatory": false
 }
