@@ -1,9 +1,9 @@
 {
-  "version": "2.7.0",
-  "app_version": "2.7.0",
-  "changes": "Nou: GDC Skin Retouch, un instrument propriu care curăță pielea doar acolo unde indici cu o mască și lasă restul cadrului neatins (ACES / ACEScct · AP1, macOS). Intrare opțională de mască la instrumentele Skin, Film și Cinema Style, plus «Even out scale: Local». Input Transform: intrări Rec.709 gamma 2.2 / 2.4 și sRGB; Output Transform: ieșiri display-referred. Documentație nouă RO/EN/ES: ghidul coloristului, manualul tehnic și ghidul Skin Retouch.",
+  "version": "2.7.1",
+  "app_version": "2.7.1",
+  "changes": "Corectat: instalarea versiunii Full a lui GDC Skin Retouch (individual sau în lot) nu mai este respinsă. Pagina GDC STYLE Client este acum centrată corect pe ecrane foarte late.",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.7.0.dmg"
+    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.7.1.dmg"
   },
   "mandatory": false
 }
