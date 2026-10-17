@@ -1,9 +1,9 @@
 {
-  "version": "2.7.1",
-  "app_version": "2.7.1",
-  "changes": "Corectat: instalarea versiunii Full a lui GDC Skin Retouch (individual sau în lot) nu mai este respinsă. Pagina GDC STYLE Client este acum centrată corect pe ecrane foarte late.",
+  "version": "2.9.0",
+  "app_version": "2.9.0",
+  "changes": "Nou: GDC Skin Retouch funcționează acum pe toate cele patru profiluri (ACES, DaVinci, ARRI LogC3, ARRI LogC4). Instrumentele au vizualizările Exposure Map și Saturation Map, iar GDC DRT are diagnostic pe codul de afișare. Panoul „Gestionează…” permite instalarea și scoaterea pachetelor în lot, cu o singură confirmare.",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.7.1.dmg"
+    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.9.0.dmg"
   },
   "mandatory": false
 }
