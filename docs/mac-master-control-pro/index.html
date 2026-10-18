@@ -4,316 +4,290 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Master Control Studio Pro</title>
-<meta name="description" content="Master Control Studio Pro — Mod Randare universal, Analiză Disc instantă, Cloud Manager universal, tuning sistem, Rosetta Inspector. Nativ SwiftUI pentru Apple Silicon.">
+<meta name="description" content="Master Control Studio Pro — vezi ce ocupă spațiul pe disc, revizuiește și mută recuperabil în Coș. Nativ pe macOS și Windows. RO / EN / ES.">
 <link rel="icon" type="image/x-icon" href="favicon.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  /* Aceeasi paleta de baza ca gordas.dev, accent amber/cupru propriu
-     brandului (Regula 16 — design Web "Shift", compact, fara gol imens). */
-  :root{
-    --bg:#14161A; --bg-2:#101216; --panel:#1A1D22; --panel-2:#20232A;
-    --border:#2B2F36; --text:#EDEFF2; --muted:#93989F; --faint:#5C6169;
-    --accent:#D98A3D; --accent-ink:#1A1108; --accent-dim:#A9631E;
-    --violet:#C97C2E; --violet-2:#F2B766;
-    --mono:'IBM Plex Mono', ui-monospace, monospace;
-    --sans:'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  :root{ --paper:#f9faf7; --ink:#172b2c; --muted:#546561; --accent:#246a61; --accent-ink:#fff; --line:#d9dfd6; --card:#ffffff; --mint:#e4eee8; --warm:#e8dfd2; --deep:#183e39; --good:#1b7a5a; }
+  *{ box-sizing:border-box; margin:0; padding:0; } html{ scroll-behavior:smooth; }
+  body{ background:var(--paper); color:var(--ink); font:17px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Inter,sans-serif; -webkit-font-smoothing:antialiased; }
+  a{ color:inherit; text-decoration:none; } img{ display:block; max-width:100%; } button{ font:inherit; cursor:pointer; }
+  a:focus-visible,button:focus-visible{ outline:3px solid var(--accent); outline-offset:4px; }
+  .wrap{ width:min(1240px,calc(100% - 64px)); margin:0 auto; }
+  nav{ display:flex; align-items:center; justify-content:space-between; gap:12px; height:72px; padding:0 22px; margin:18px auto 0; width:min(1240px,calc(100% - 64px)); border:1px solid var(--line); border-radius:100px; background:#fffffff2; box-shadow:0 8px 22px #12372d0d; position:sticky; top:12px; z-index:50; backdrop-filter:blur(10px); }
+  .brand{ display:flex; align-items:center; gap:10px; font-weight:650; letter-spacing:-.4px; font-size:17px; } .brand img{ width:30px; height:30px; border-radius:8px; }
+  .tools{ display:flex; align-items:center; gap:16px; }
+  .lang button{ background:none; border:1px solid var(--line); color:var(--muted); font:600 12px ui-monospace,monospace; padding:5px 9px; }
+  .lang button:first-child{ border-radius:99px 0 0 99px; } .lang button:last-child{ border-radius:0 99px 99px 0; }
+  .lang button[aria-pressed="true"]{ background:var(--accent); color:#fff; border-color:var(--accent); }
+  .back-link{ font-size:13px; color:var(--muted); border-bottom:1px solid currentColor; }
+  .eyebrow{ text-transform:uppercase; letter-spacing:.18em; font-size:11px; font-weight:650; color:#35564f; }
+  .hero{ position:relative; min-height:700px; margin-top:22px; border-radius:30px; overflow:hidden; background:#e2efea url('img/hero-studio-glass.webp') center/cover no-repeat; padding:68px 64px 48px; isolation:isolate; display:flex; }
+  .hero:before{ content:''; position:absolute; inset:0; background:linear-gradient(90deg,#edf5edf2 0%,#edf5edd9 27%,#edf5ed66 47%,transparent 64%); z-index:-1; }
+  .hero .copy{ width:54%; align-self:center; }
+  .hero h1{ font-size:clamp(58px,7vw,104px); font-weight:500; line-height:.96; letter-spacing:-.06em; margin:24px 0; }
+  .hero h1 em{ font-style:normal; color:var(--accent); }
+  .hero .intro{ max-width:420px; color:#36534b; font-size:18px; line-height:1.65; }
+  .actions{ display:flex; align-items:center; gap:14px; margin-top:30px; flex-wrap:wrap; }
+  .btn{ display:inline-flex; align-items:center; gap:10px; font-size:14px; font-weight:600; padding:14px 24px; border-radius:100px; white-space:nowrap; }
+  .btn svg{ width:15px; height:15px; }
+  .btn-primary{ background:var(--accent); color:#fff; box-shadow:0 8px 18px #17483c22; } .btn-primary:hover{ background:#1b574f; }
+  .btn-ghost{ background:#ffffffb0; border:1px solid #23473b44; } .btn-ghost:hover{ background:#fff; }
+  .hero .micro{ font-size:12.5px; color:#35564f; margin-top:18px; max-width:430px; }
+  .hero .credit{ position:absolute; right:20px; bottom:14px; font-size:9.5px; color:#23473b; background:#ffffffc9; padding:4px 9px; border-radius:15px; }
+  .hero .osnote{ font-size:12px; color:#35564f; margin-top:8px; min-height:1em; }
+  section{ padding:80px 0 20px; }
+  .head{ display:grid; grid-template-columns:1fr 1fr; align-items:end; gap:50px; margin-bottom:34px; }
+  h2{ font-size:clamp(34px,4.2vw,58px); font-weight:450; line-height:1.08; letter-spacing:-.05em; margin:14px 0; }
+  .head p{ color:var(--muted); max-width:470px; font-size:17px; }
+  .stagebox{ background:linear-gradient(130deg,#d2e7df,#e4eaf3); border-radius:30px; padding:44px 48px 0; overflow:hidden; }
+  .tabs{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px; }
+  .tabs button{ background:#ffffffa8; color:var(--muted); border:1px solid #23473b30; border-radius:99px; font-size:13px; font-weight:600; padding:8px 16px; }
+  .tabs button[aria-pressed="true"]{ background:var(--ink); color:#fff; border-color:var(--ink); }
+  .shot{ background:#fff; border-radius:14px 14px 0 0; overflow:hidden; box-shadow:0 10px 45px #18372c25; }
+  .shot img{ width:100%; height:auto; } .shot figcaption{ display:none; }
+  .thumbs{ display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:10px; padding:14px 0 18px; }
+  .thumbs button{ background:#ffffff90; border:1px solid #23473b25; border-radius:10px; padding:6px; color:var(--muted); font-size:12px; }
+  .thumbs button[aria-pressed="true"]{ border-color:var(--accent); background:#fff; color:var(--ink); }
+  .thumbs img{ border-radius:6px; margin-bottom:5px; }
+  .caption{ font-size:11.5px; color:var(--muted); margin:12px 4px 0; }
+  .grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:16px; }
+  .card{ background:var(--card); border:1px solid var(--line); border-radius:20px; padding:24px; }
+  .card h3{ font-size:17px; font-weight:600; margin-bottom:6px; letter-spacing:-.2px; } .card p{ font-size:14px; color:var(--muted); }
+  .chips{ display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
+  .chip{ font-size:12px; font-weight:600; padding:3px 10px; border-radius:99px; border:1px solid var(--line); color:var(--muted); }
+  .chip.g{ color:var(--good); border-color:#1b7a5a55; background:#e6f3ec; }
+  .dark{ background:var(--deep); color:#f1f6f2; border-radius:30px; padding:70px 56px; margin-top:80px; }
+  .dark h2{ color:#f4f8f4; } .dark .lead{ color:#c3d6cb; max-width:620px; margin-bottom:26px; } .dark .eyebrow{ color:#a9c6b8; }
+  .dark .card{ background:#ffffff10; border-color:#ffffff22; } .dark .card p{ color:#c3d6cb; } .dark .card h3{ color:#fff; }
+  .tablewrap{ overflow-x:auto; background:var(--card); border:1px solid var(--line); border-radius:20px; }
+  table{ width:100%; border-collapse:collapse; font-size:14px; } th,td{ text-align:left; padding:12px 16px; border-bottom:1px solid var(--line); } tr:last-child th,tr:last-child td{ border-bottom:0; } th{ color:var(--muted); font-weight:600; }
+  .offers{ display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:14px; max-width:780px; margin:0 0 22px; }
+  .offer{ background:var(--card); border:1px solid var(--line); border-radius:20px; padding:22px; } .offer .amt{ font-size:40px; font-weight:450; letter-spacing:-1.5px; color:var(--accent); } .offer small{ color:var(--muted); font-size:13px; }
+  .limits{ max-width:780px; font-size:14px; color:var(--muted); } .limits li{ margin:7px 0 7px 18px; }
+  .note{ font-size:13px; color:var(--muted); margin-top:14px; max-width:760px; }
+  .lead{ color:var(--muted); max-width:700px; font-size:16px; margin-bottom:22px; }
+  footer{ border-top:1px solid var(--line); margin-top:80px; padding:30px 24px; text-align:center; font-size:12.5px; color:var(--muted); }
+  footer a{ border-bottom:1px solid transparent; } footer a:hover{ border-color:currentColor; } footer .legal{ margin-top:8px; display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
+  @media(max-width:850px){
+    .wrap,nav{ width:calc(100% - 32px); } nav{ height:62px; padding:0 14px; margin-top:12px; } .brand span{ display:none; } .back-link{ display:none; }
+    .hero{ min-height:880px; padding:44px 24px 330px; background-size:auto 650px; background-position:70% 100%; background-image:url('img/hero-studio-glass-1200.webp'); background-color:#e5efe9; border-radius:23px; }
+    .hero:before{ background:linear-gradient(#edf5ed 0%,#edf5ed 52%,#edf5ed55 66%,transparent 78%); }
+    .hero .copy{ width:100%; } .hero h1{ font-size:clamp(50px,15vw,76px); } .hero .credit{ right:12px; bottom:10px; font-size:8px; }
+    .head{ grid-template-columns:1fr; gap:6px; } .stagebox{ padding:18px 16px 0; border-radius:20px; } .dark{ padding:44px 22px; border-radius:22px; } section{ padding-top:56px; }
   }
-  *{ box-sizing:border-box; margin:0; padding:0; }
-  html{ scroll-behavior:smooth; }
-  body{
-    background:
-      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(217,138,61,.20), transparent 60%),
-      radial-gradient(ellipse 700px 500px at 100% 10%, rgba(242,183,102,.14), transparent 55%),
-      var(--bg);
-    color:var(--text); font-family:var(--sans); line-height:1.6;
-    -webkit-font-smoothing:antialiased;
-  }
-  a{ color:inherit; }
-  img{ display:block; max-width:100%; }
-  .wrap{ max-width:1080px; margin:0 auto; padding:0 24px; }
-  ::selection{ background:var(--accent); color:var(--accent-ink); }
-
-  header{ position:sticky; top:0; z-index:50; background:rgba(20,22,26,.82); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); }
-  .header-inner{ display:flex; align-items:center; justify-content:space-between; padding:14px 24px; max-width:1080px; margin:0 auto; }
-  .brand{ display:flex; align-items:center; gap:10px; font-family:var(--mono); font-weight:700; font-size:15px; }
-  .brand .badge{ width:28px; height:28px; border-radius:8px; background:var(--accent); color:var(--accent-ink); display:flex; align-items:center; justify-content:center; }
-  .brand .badge svg{ width:16px; height:16px; }
-  .btn svg{ width:15px; height:15px; flex-shrink:0; }
-  h2 svg{ width:22px; height:22px; vertical-align:-5px; color:var(--accent); margin-right:4px; }
-  .back-link{ font-size:13px; color:var(--muted); text-decoration:none; }
-  .back-link:hover{ color:var(--text); }
-
-  .hero{ padding:64px 0 44px; text-align:center; }
-  .hero .badge-lg{ width:96px; height:96px; border-radius:22px; margin:0 auto 26px; background:var(--accent); color:var(--accent-ink); display:flex; align-items:center; justify-content:center; box-shadow:0 20px 60px rgba(0,0,0,.4); }
-  .hero .badge-lg svg{ width:44px; height:44px; }
-  .hero h1{ font-size:42px; font-weight:800; letter-spacing:-.02em; margin-bottom:14px; }
-  .hero p.tagline{ font-size:17px; color:var(--muted); max-width:600px; margin:0 auto 30px; }
-
-  .btn{ display:inline-flex; align-items:center; gap:8px; font-family:var(--mono); font-size:13.5px; font-weight:600; padding:12px 22px; border-radius:9px; text-decoration:none; white-space:nowrap; }
-  .btn-primary{ background:var(--accent); color:var(--accent-ink); }
-  .btn-primary:hover{ background:var(--violet-2); }
-  .btn-ghost{ border:1px solid var(--border); color:var(--text); }
-  .btn-ghost:hover{ border-color:var(--accent); }
-  .btn-row{ display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
-
-  .beta-note{ max-width:640px; margin:20px auto 0; font-size:13px; line-height:1.6; color:var(--faint); }
-  .btn .ver{ opacity:.75; font-weight:400; font-size:11.5px; }
-  .btn.is-secondary-os{ opacity:.72; }
-  .os-note{ font-size:11.5px; color:var(--faint); margin-top:10px; }
-
-  section{ padding:48px 0; border-top:1px solid var(--border); }
-  section h2{ font-size:24px; font-weight:800; margin-bottom:28px; text-align:center; }
-
-  .features{ display:grid; grid-template-columns:repeat(auto-fit, minmax(230px, 1fr)); gap:18px; }
-  .feature{ background:var(--panel); border:1px solid var(--border); border-radius:14px; padding:20px; }
-  .feature .icon{ margin-bottom:10px; color:var(--accent); }
-  .feature .icon svg{ width:26px; height:26px; display:block; }
-  .feature h3{ font-size:15px; font-weight:700; margin-bottom:6px; }
-  .feature p{ font-size:13px; color:var(--muted); line-height:1.55; }
-
-  .pricing{ max-width:520px; margin:0 auto; background:var(--panel); border:1px solid var(--border); border-radius:18px; padding:32px; text-align:center; }
-  .pricing .price{ font-family:var(--mono); font-size:48px; font-weight:700; color:var(--accent); margin:12px 0 4px; }
-  .pricing .price small{ font-size:15px; color:var(--muted); font-weight:500; }
-  .pricing ul{ list-style:none; text-align:left; margin:22px 0; padding:0; }
-  .pricing li{ font-size:13px; color:var(--muted); padding:5px 0; padding-left:22px; position:relative; }
-  .pricing li::before{ content:"✓"; position:absolute; left:0; color:var(--accent); font-weight:700; }
-  .pricing .promo-note{ margin-top:18px; font-size:12px; line-height:1.6; color:var(--faint); text-align:left; background:var(--panel-2); border-radius:8px; padding:12px 14px; }
-
-  .req{ font-size:13px; color:var(--muted); text-align:center; }
-  .req code{ font-family:var(--mono); background:var(--panel-2); border-radius:4px; padding:1px 6px; }
-
-  footer{ border-top:1px solid var(--border); padding:28px 24px; text-align:center; font-size:12.5px; color:var(--faint); }
-  footer a{ color:var(--muted); text-decoration:none; }
-  footer a:hover{ color:var(--text); }
-  footer .legal{ margin-top:8px; display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
 </style>
 </head>
 <body>
+<svg style="display:none" aria-hidden="true"><defs>
+  <symbol id="i-dl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="3" x2="12" y2="15"/><polyline points="7,10 12,15 17,10"/><line x1="4" y1="20" x2="20" y2="20"/></symbol>
+</defs></svg>
 
-<!-- Sprite de iconite SVG, monocrome, tip contur — inlocuieste emoji-urile
-     colorate cu acelasi limbaj vizual simplu, profesional, folosit deja in
-     aplicatie (SF Symbols). Fiecare <symbol> e refolosit prin <use>. -->
-<svg style="display:none" aria-hidden="true">
-  <defs>
-    <symbol id="icon-gear" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
-      <circle cx="12" cy="12" r="5.5"/>
-      <circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/>
-      <line x1="19" y1="12" x2="21.3" y2="12"/>
-      <line x1="16.95" y1="16.95" x2="18.5" y2="18.5"/>
-      <line x1="12" y1="19" x2="12" y2="21.3"/>
-      <line x1="7.05" y1="16.95" x2="5.5" y2="18.5"/>
-      <line x1="5" y1="12" x2="2.7" y2="12"/>
-      <line x1="7.05" y1="7.05" x2="5.5" y2="5.5"/>
-      <line x1="12" y1="5" x2="12" y2="2.7"/>
-      <line x1="16.95" y1="7.05" x2="18.5" y2="5.5"/>
-    </symbol>
-    <symbol id="icon-zap" viewBox="0 0 24 24" fill="currentColor" stroke="none">
-      <polygon points="13,2 5,14 11,14 10,22 19,10 13,10"/>
-    </symbol>
-    <symbol id="icon-piechart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="12" r="9"/>
-      <path d="M12 3 A9 9 0 0 1 21 12 L12 12 Z" fill="currentColor" stroke="none"/>
-    </symbol>
-    <symbol id="icon-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
-      <circle cx="12" cy="12" r="9"/>
-      <ellipse cx="12" cy="12" rx="4" ry="9"/>
-      <line x1="3" y1="12" x2="21" y2="12"/>
-    </symbol>
-    <symbol id="icon-cloud" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M7 18h10a4 4 0 0 0 .5-7.97A5.5 5.5 0 0 0 7.1 8.5 4.5 4.5 0 0 0 7 18z"/>
-    </symbol>
-    <symbol id="icon-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-      <line x1="4" y1="7" x2="20" y2="7"/>
-      <path d="M6 7l1 13a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-13"/>
-      <line x1="9" y1="4" x2="15" y2="4"/>
-      <line x1="9" y1="4" x2="9" y2="7"/>
-      <line x1="15" y1="4" x2="15" y2="7"/>
-      <line x1="10" y1="11" x2="10" y2="17"/>
-      <line x1="14" y1="11" x2="14" y2="17"/>
-    </symbol>
-    <symbol id="icon-wrench" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M6.5 17.5 15 9"/>
-      <path d="M19 4a4 4 0 0 1-5.5 5.5L6 17l-2 2 2 2 2-2 7.5-7.5A4 4 0 0 1 19 4z"/>
-    </symbol>
-    <symbol id="icon-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M12 3l7 3v6c0 4.5-3 7.7-7 9-4-1.3-7-4.5-7-9V6z"/>
-      <polyline points="9,12 11,14 15,10"/>
-    </symbol>
-    <symbol id="icon-cpu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="6" y="6" width="12" height="12" rx="1.5"/>
-      <rect x="9" y="9" width="6" height="6" rx="1"/>
-      <line x1="12" y1="1.5" x2="12" y2="4"/>
-      <line x1="12" y1="20" x2="12" y2="22.5"/>
-      <line x1="1.5" y1="12" x2="4" y2="12"/>
-      <line x1="20" y1="12" x2="22.5" y2="12"/>
-    </symbol>
-    <symbol id="icon-box" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M12 3 20 7.5 V16.5 L12 21 4 16.5 V7.5 Z"/>
-      <polyline points="4,7.5 12,12 20,7.5"/>
-      <line x1="12" y1="12" x2="12" y2="21"/>
-    </symbol>
-    <symbol id="icon-harddrive" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-      <line x1="3" y1="12" x2="21" y2="12"/>
-      <path d="M5.5 5h13L21 12v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-6z"/>
-      <circle cx="7" cy="16" r="0.6" fill="currentColor" stroke="none"/>
-      <line x1="11" y1="16" x2="13" y2="16"/>
-    </symbol>
-    <symbol id="icon-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M12 21s7-6.5 7-12a7 7 0 0 0-14 0c0 5.5 7 12 7 12z"/>
-      <circle cx="12" cy="9" r="2.4"/>
-    </symbol>
-    <symbol id="icon-bars" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-      <line x1="5" y1="19" x2="5" y2="13"/>
-      <line x1="12" y1="19" x2="12" y2="7"/>
-      <line x1="19" y1="19" x2="19" y2="10"/>
-    </symbol>
-    <symbol id="icon-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-      <circle cx="10.5" cy="10.5" r="6.5"/>
-      <line x1="15.5" y1="15.5" x2="21" y2="21"/>
-    </symbol>
-    <symbol id="icon-updown" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <line x1="8" y1="4" x2="8" y2="16"/>
-      <polyline points="4.5,7.5 8,4 11.5,7.5"/>
-      <line x1="16" y1="20" x2="16" y2="8"/>
-      <polyline points="12.5,16.5 16,20 19.5,16.5"/>
-    </symbol>
-    <symbol id="icon-sync" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M20 11A8 8 0 0 0 6.3 6.3L4 8.5"/>
-      <polyline points="4,4 4,8.5 8.5,8.5"/>
-      <path d="M4 13a8 8 0 0 0 13.7 4.7L20 15.5"/>
-      <polyline points="20,20 20,15.5 15.5,15.5"/>
-    </symbol>
-    <symbol id="icon-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <line x1="12" y1="3" x2="12" y2="15"/>
-      <polyline points="7,10 12,15 17,10"/>
-      <line x1="4" y1="20" x2="20" y2="20"/>
-    </symbol>
-  </defs>
-</svg>
-
-<header>
-  <div class="header-inner">
-    <div class="brand"><span class="badge"><svg><use href="#icon-gear"/></svg></span> Master Control Studio Pro</div>
-    <a class="back-link" href="/">← gordas.dev</a>
+<nav aria-label="Master Control Studio Pro">
+  <a class="brand" href="#"><img src="img/icon.png" alt="" width="30" height="30"><span>Master Control Studio Pro</span></a>
+  <div class="tools">
+    <div class="lang" role="group" aria-label="Language"><button data-l="ro">RO</button><button data-l="en">EN</button><button data-l="es">ES</button></div>
+    <a class="back-link" href="/" data-i="back">← gordas.dev</a>
   </div>
+</nav>
+
+<div class="wrap">
+<header class="hero">
+  <div class="copy">
+    <span class="eyebrow" data-i="eyebrow"></span>
+    <h1><span data-i="h1a"></span><br><span data-i="h1b"></span><br><em data-i="h1c"></em></h1>
+    <p class="intro" data-i="tagline"></p>
+    <div class="actions">
+      <a id="btn-mac" class="btn btn-primary" href="https://github.com/gordasgdc/mac-master-control-pro/releases/latest"><svg><use href="#i-dl"/></svg><span data-i="dlmac"></span></a>
+      <a id="btn-win" class="btn btn-ghost" href="https://github.com/gordasgdc/mac-master-control-pro-win/releases/latest"><svg><use href="#i-dl"/></svg><span data-i="dlwin"></span></a>
+    </div>
+    <p class="osnote" id="os-note"></p>
+    <p class="micro" data-i="heronote"></p>
+  </div>
+  <span class="credit" data-i="credit"></span>
 </header>
-
-<div class="hero wrap">
-  <div class="badge-lg"><svg><use href="#icon-gear"/></svg></div>
-  <h1>Master Control Studio Pro</h1>
-  <p class="tagline">Optimizare de sistem, montare Cloud universală, analiză de disc și pregătire pentru viitoarele versiuni de macOS — un singur panou nativ pentru tot ce faci acum din Terminal.</p>
-  <div class="btn-row">
-    <a id="btn-mac" class="btn btn-primary" href="https://github.com/gordasgdc/mac-master-control-pro/releases/latest/download/MacMasterControlPro-Mac.zip"><svg><use href="#icon-download"/></svg> Descarcă pentru Mac <span class="ver" id="ver-mac"></span></a>
-    <a id="btn-win" class="btn btn-primary" href="https://github.com/gordasgdc/mac-master-control-pro-win/releases/latest/download/MacMasterControlProSetup.exe"><svg><use href="#icon-download"/></svg> Descarcă pentru Windows <span class="ver" id="ver-win"></span></a>
-  </div>
-  <p class="os-note" id="os-note"></p>
-  <div class="btn-row" style="margin-top:10px;">
-    <a class="btn btn-ghost" href="#pricing">Vezi licența</a>
-  </div>
-  <p class="beta-note">Trial nelimitat: analizele și scanările sunt complet libere. Doar acțiunile care modifică sistemul (curățare, tuning, montare Cloud, eliminare Rosetta) cer licența Lifetime.</p>
 </div>
 
-<section class="wrap">
-  <h2>Module</h2>
-  <div class="features">
-    <div class="feature"><div class="icon"><svg><use href="#icon-zap"/></svg></div><h3>Mod Randare</h3><p>Un click pune pe pauză Time Machine și indexarea Spotlight, apoi ridică prioritatea aplicației care randează — recunoaște automat DaVinci Resolve, Final Cut Pro, Premiere Pro, Media Encoder, After Effects, Logic Pro și altele, oricâte rulează simultan.</p></div>
-    <div class="feature"><div class="icon"><svg><use href="#icon-piechart"/></svg></div><h3>Analiză Disc</h3><p>Indexare completă, o singură dată — apoi navigarea în orice subfolder e instantă, gen DaisyDisk. Vezi exact ce ocupă spațiul, oricât de adânc, fără nicio rescanare.</p></div>
-    <div class="feature"><div class="icon"><svg><use href="#icon-globe"/></svg></div><h3>Rețea & TCP Tuning</h3><p>Forțare 1 Gbps Full-Duplex, DNS Cloudflare/Google, buffere kernel 1MB, la un click.</p></div>
-    <div class="feature"><div class="icon"><svg><use href="#icon-cloud"/></svg></div><h3>Cloud Manager Universal</h3><p>Google Drive, Dropbox, OneDrive, pCloud, Degoo, Mega, S3, WebDAV, SFTP/NAS — montate ca disc, cu upload/download/sincronizare integrate. Detalii mai jos.</p></div>
-    <div class="feature"><div class="icon"><svg><use href="#icon-trash"/></svg></div><h3>Curățare & RAM</h3><p>Cache DaVinci Resolve, Adobe, Xcode DerivedData, Time Machine Snapshots, purjare RAM + flush DNS.</p></div>
-    <div class="feature"><div class="icon"><svg><use href="#icon-wrench"/></svg></div><h3>Tweak-uri Sistem</h3><p>Finder avansat, blocare .DS_Store pe USB/NAS, Touch ID pentru sudo, Spotlight Shield pe orice disc extern sau folder ales.</p></div>
-    <div class="feature"><div class="icon"><svg><use href="#icon-shield"/></svg></div><h3>Backup & Securitate</h3><p>Backup al bazei de date de proiecte DaVinci Resolve, notificare la final de randare (inclusiv pe email), plus verificare dintr-o privire a FileVault, Firewall, Gatekeeper și XProtect.</p></div>
-    <div class="feature"><div class="icon"><svg><use href="#icon-cpu"/></svg></div><h3>Rosetta 2 Inspector</h3><p>Scanează /Applications pentru cod Intel, verifică starea Rosetta, elimină mediul de traducere când nu mai e nevoie.</p></div>
-    <div class="feature"><div class="icon"><svg><use href="#icon-box"/></svg></div><h3>Dependency Auto-Installer</h3><p>Detectează Homebrew/Rclone/macFUSE și le instalează cu un click, fără Terminal.</p></div>
+<section class="wrap" id="screens">
+  <div class="head"><div><span class="eyebrow" data-i="eb_screens"></span><h2 data-i="h_screens"></h2></div><p data-i="l_screens"></p></div>
+  <div class="stagebox">
+    <div class="tabs" role="group"><button id="tab-mac" data-p="mac">macOS</button><button id="tab-win" data-p="win">Windows</button><span style="flex:1"></span><button id="th-light" data-t="light" data-i="th_light"></button><button id="th-dark" data-t="dark" data-i="th_dark"></button></div>
+    <figure class="shot"><img id="bigshot" src="" alt="" width="1387" height="868"><figcaption id="cap"></figcaption></figure>
   </div>
+  <div class="thumbs" id="thumbs"></div>
+  <p class="caption" id="cap2"></p>
 </section>
 
-<section class="wrap" id="cloud-manager">
-  <h2><svg><use href="#icon-cloud"/></svg> Cloud Manager — motor Rclone, interfață 100% nativă</h2>
-  <p class="req" style="margin-bottom:16px;">Sub capotă rulează <a href="https://rclone.org" target="_blank" rel="noopener">Rclone</a> — motorul open-source de sincronizare cloud folosit de zeci de mii de proiecte — dar TU nu vezi niciodată linie de comandă. Totul e vizual, în stilul dark/amber al aplicației.</p>
-  <div class="features">
-    <div class="feature"><div class="icon"><svg><use href="#icon-harddrive"/></svg></div><h3>Montare ca disc real</h3><p>Orice cont cloud apare ca un folder pe care îl deschizi direct în Finder/Explorer — copiezi, muți, redenumești, exact ca pe un disc extern.</p></div>
-    <div class="feature"><div class="icon"><svg><use href="#icon-pin"/></svg></div><h3>Locație de montare la alegere</h3><p>SSD intern mic? Montezi pe orice disc extern Thunderbolt/USB-C — nu mai ocupi spațiu pe unitatea principală.</p></div>
-    <div class="feature"><div class="icon"><svg><use href="#icon-bars"/></svg></div><h3>Statistici live de transfer</h3><p>Viteză, bytes transferați, transferuri active — actualizate la 2 secunde, direct sub numele contului.</p></div>
-    <div class="feature"><div class="icon"><svg><use href="#icon-search"/></svg></div><h3>Explorare fără montare</h3><p>Răsfoiești conținutul unui cont cloud instant, fără să-l montezi — ideal pentru o verificare rapidă.</p></div>
-    <div class="feature"><div class="icon"><svg><use href="#icon-updown"/></svg></div><h3>Upload / Download direct</h3><p>Încarci sau descarci fișiere și foldere întregi din aplicație, cu progres live, fără să deschizi pagina web a providerului.</p></div>
-    <div class="feature"><div class="icon"><svg><use href="#icon-sync"/></svg></div><h3>Sincronizare inteligentă</h3><p>Un folder local ↔ cloud, în orice direcție. Implicit non-distructiv (doar adaugă/actualizează) — oglindă exactă doar dacă bifezi explicit.</p></div>
+<section class="wrap"><div class="dark">
+  <span class="eyebrow" data-i="eb_safe"></span><h2 data-i="h_safe"></h2>
+  <p class="lead" data-i="l_safe"></p>
+  <div class="grid">
+    <div class="card"><h3 data-i="c1t"></h3><p data-i="c1p"></p><div class="chips"><span class="chip g" data-i="chip_reg"></span><span class="chip" data-i="chip_dup"></span><span class="chip" data-i="chip_prot"></span></div></div>
+    <div class="card"><h3 data-i="c2t"></h3><p data-i="c2p"></p></div>
+    <div class="card"><h3 data-i="c3t"></h3><p data-i="c3p"></p></div>
+    <div class="card"><h3 data-i="c4t"></h3><p data-i="c4p"></p></div>
+    <div class="card"><h3 data-i="c5t"></h3><p data-i="c5p"></p></div>
+    <div class="card"><h3 data-i="c6t"></h3><p data-i="c6p"></p></div>
   </div>
-</section>
-
-<section class="wrap" id="pricing">
-  <h2>Licență</h2>
-  <div class="pricing">
-    <div>Susținere Lifetime</div>
-    <div class="price">Donație unică</div>
-    <ul>
-      <li>Toate modulele deblocate definitiv</li>
-      <li>Actualizări gratuite pe viață</li>
-      <li>Licențiat pe Machine ID, sincronizat cu GDC Plugin Manager</li>
-    </ul>
-    <a class="btn btn-primary" href="https://gordas.dev/gdc-plugin-manager/">Donează din GDC Plugin Manager</a>
-    <p class="promo-note">Suma exactă (poate include oferte temporare) apare direct în aplicație, la fereastra de Activare — disponibilă și direct din aplicație (modul „Setări → Licență”), fără să părăsești fereastra.</p>
-  </div>
-</section>
+</div></section>
 
 <section class="wrap">
-  <h2>Cerințe</h2>
-  <p class="req">macOS 14+ · Apple Silicon sau Intel · pentru Cloud Manager necesită <code>rclone</code> + <code>macFUSE</code> (instalate automat din aplicație)</p>
-  <p class="req" style="margin-top:8px;">Windows 10/11 (x64) · pentru Cloud Manager necesită <code>rclone</code> + <code>WinFSP</code> (instalate automat din aplicație)</p>
+  <h2 data-i="h_modules"></h2>
+  <div class="grid">
+    <div class="card"><h3 data-i="m1t"></h3><p data-i="m1p"></p></div>
+    <div class="card"><h3 data-i="m2t"></h3><p data-i="m2p"></p></div>
+    <div class="card"><h3 data-i="m3t"></h3><p data-i="m3p"></p></div>
+    <div class="card"><h3 data-i="m4t"></h3><p data-i="m4p"></p></div>
+  </div>
+</section>
+
+<section class="wrap" id="platforms">
+  <h2 data-i="h_plat"></h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th></th><th>macOS</th><th>Windows</th></tr></thead>
+    <tbody id="plat-rows"></tbody>
+  </table></div>
+</section>
+
+<section class="wrap" id="licence">
+  <h2 data-i="h_lic"></h2>
+  <p class="lead" data-i="l_lic"></p>
+  <div class="offers">
+    <div class="offer"><div class="amt">5 €</div><small data-i="o1"></small></div>
+    <div class="offer"><div class="amt">10 €</div><small data-i="o2"></small></div>
+    <div class="offer"><div class="amt">15 €</div><small data-i="o3"></small></div>
+  </div>
+  <ul class="limits">
+    <li data-i="lim1"></li><li data-i="lim2"></li><li data-i="lim3"></li><li data-i="lim4"></li><li data-i="lim5"></li>
+  </ul>
+  <p class="note" data-i="licnote"></p>
+</section>
+
+<section class="wrap" id="limits">
+  <h2 data-i="h_lim"></h2>
+  <ul class="limits"><li data-i="x1"></li><li data-i="x2"></li><li data-i="x3"></li><li data-i="x4"></li></ul>
+</section>
+
+<section class="wrap">
+  <h2 data-i="h_req"></h2>
+  <p class="lead" data-i="req1"></p><p class="lead" data-i="req2"></p>
 </section>
 
 <footer>
-  <a href="https://github.com/gordasgdc/mac-master-control-pro">GitHub</a> ·
-  <a href="/">Restul aplicațiilor GDC</a>
-  <div class="legal">
-    <a href="https://gordas.dev/termeni">Termeni</a> ·
-    <a href="https://gordas.dev/confidentialitate">Confidențialitate</a> ·
-    <a href="https://gordas.dev/cookie">Cookie-uri</a>
-  </div>
-  <p style="max-width:520px;margin:12px auto 0;">gordas.dev este o platformă administrată de dezvoltatori independenți. Aplicațiile și resursele sunt furnizate ca atare (AS IS), iar susținerea proiectului se bazează pe contribuții opționale de sprijin și donații.</p>
-  <div style="margin-top:10px;">© <span id="year"></span> GDC / Cristi Gordas. Toate drepturile rezervate.</div>
+  <a href="https://github.com/gordasgdc/mac-master-control-pro">GitHub macOS</a> · <a href="https://github.com/gordasgdc/mac-master-control-pro-win">GitHub Windows</a> · <a href="/" data-i="others"></a>
+  <div class="legal"><a href="https://gordas.dev/termeni">Termeni</a> · <a href="https://gordas.dev/confidentialitate">Confidențialitate</a> · <a href="https://gordas.dev/cookie">Cookie-uri</a></div>
+  <p style="max-width:560px;margin:12px auto 0;" data-i="legal"></p>
+  <div style="margin-top:10px;">© <span id="year"></span> GDC / Cristi Gordas.</div>
 </footer>
+
 <script>
-document.getElementById('year').textContent = new Date().getFullYear();
-
-// Sincronizare automata cu ultimul release GitHub (Mac + Windows) — nu
-// mai trebuie editat manual numarul de versiune de pe pagina la fiecare
-// lansare. API public, neautentificat (rate-limit generos pt. o pagina
-// statica). Link-urile de download raman oricum `releases/latest/
-// download/...`, care se rezolva automat la binarul curent chiar si daca
-// acest fetch esueaza — degradare eleganta, fara sa strice butoanele.
-async function syncRelease(repo, verElId) {
-  try {
-    const res = await fetch(`https://api.github.com/repos/${repo}/releases/latest`, {
-      headers: { Accept: 'application/vnd.github+json' },
-    });
-    if (!res.ok) return;
-    const data = await res.json();
-    const tag = (data.tag_name || '').replace(/^v/, '');
-    if (tag) document.getElementById(verElId).textContent = `v${tag}`;
-  } catch (e) { /* pagina ramane corecta si fara asta */ }
+const T = {
+ro:{eyebrow:"Ordine în spațiul tău de lucru", h1a:"Fă loc.", h1b:"Pentru ce", h1c:"urmează.", credit:"Ilustrație originală · concept de prezentare", eb_screens:"Din aplicația reală", eb_safe:"Revizuiești, apoi confirmi", th_light:"Luminos", th_dark:"Întunecat", back:"← gordas.dev", tagline:"Vezi ce ocupă spațiul pe disc, revizuiește și mută recuperabil în Coș — plus tot ce mai ai nevoie la o stație de montaj: Mod Randare reversibil, curățare, duplicate, cloud, securitate. Nativ pe macOS și Windows.",
+ dlmac:"Descarcă pentru macOS", dlwin:"Descarcă pentru Windows", heronote:"Fără cont. Demo complet: 10 minute de utilizare activă, apoi următoarea sesiune după 48 de ore. Codul sursă al ediției comunitare este MIT.",
+ h_screens:"Din aplicația reală", l_screens:"Capturi făcute în aplicațiile reale (nu machete), pe volume demonstrative cu date sintetice. Se adaptează la limba și tema ta.",
+ h_safe:"Construit să nu strice nimic", l_safe:"Un grafic radial proporțional, o listă scurtă, selecție vizibilă și o singură acțiune principală. Ștergerea e DOAR mutare recuperabilă.",
+ c1t:"Stări explicite", c1p:"Regenerabil, duplicat verificat și protejat sunt separate prin formă și text, nu doar culoare. Fără regulă verificată = nu intră în totalul recuperabil.", chip_reg:"Regenerabil", chip_dup:"Duplicat verificat", chip_prot:"Protejat",
+ c2t:"Fără dublă numărare", c2p:"Totalul recuperabil se calculează din reguli: un duplicat dintr-un folder regenerabil se numără o singură dată.",
+ c3t:"Revizuire înainte de Coș", c3p:"Vezi exact ce se mută, ce e exclus automat (backup-uri de dispozitiv, foldere de sistem, aplicații, foldere personale întregi) și ce ai confirmat explicit.",
+ c4t:"Scanare corectă și rapidă", c4p:"Detectează creșteri și rescrieri în loc, la orice adâncime; anulare imediată; volum deconectat sau înlocuit nu folosește cache vechi.",
+ c5t:"Date locale, izolate", c5p:"Jurnal local redactat, export de diagnostic fără parole sau chei, parole în Keychain / DPAPI. Expirarea probei nu șterge setările sau conturile tale.",
+ c6t:"Mod Randare reversibil", c6p:"Oprește temporar indexarea și copiile de fundal; starea exactă se salvează înainte și se restaurează la dezactivare sau după o închidere forțată.",
+ h_modules:"Și restul trusei", m1t:"Curățare & RAM", m1p:"Cache-uri regenerabile; datele personale se mută în Coș, nu se șterg definitiv.", m2t:"Duplicate", m2p:"Comparație pe conținut (SHA-256), nu pe nume sau dată.",
+ m3t:"Cloud Manager", m3p:"Conturi montate ca disc, explorare, upload/download și sincronizare (motor rclone).", m4t:"DaVinci Resolve", m4p:"Notificare la final de randare, audit Media Pool, backup bază de date, sincronizare LUT/Fusion.",
+ h_plat:"macOS și Windows — diferențe",
+ h_lic:"Licență și donații", l_lic:"Aplicația rulează în Demo fără cont. Ediția oficială primește o licență semnată în schimbul unei donații; lista de oferte este semnată și se citește în aplicație.",
+ o1:"1 lună", o2:"3 luni", o3:"1 an",
+ lim1:"O licență este valabilă pe UN singur calculator, fie Mac, fie Windows.", lim2:"Mutarea pe alt calculator: ne scrii, iar dreptul vechi este retras și primești o licență nouă pentru noul calculator — fără a crește limita.", lim3:"Demo: 10 minute de utilizare activă; următoarea sesiune după 48 de ore de la epuizare.", lim4:"Ofertele valabile sunt cele din lista semnată afișată în aplicație.", lim5:"Susținerea se face prin donație; licența se trimite după confirmare.",
+ licnote:"Ediția comunitară (cod sursă MIT) nu are activare: rămâne în Demo.",
+ h_lim:"Limite cunoscute", x1:"Legăturile fizice (hard links) se numără per legătură; clonele APFS nu se disting prin spațiu alocat.", x2:"Windows nu grupează fișierele mici în lista de analiză; pe macOS se grupează.", x3:"Fișierele doar-în-cloud nu se descarcă pentru a fi măsurate.", x4:"Pe Windows ARM aplicația x64 rulează prin emulare.",
+ h_req:"Cerințe", req1:"macOS 14+ · Apple Silicon sau Intel · Cloud Manager folosește rclone + macFUSE (instalate la cerere).", req2:"Windows 10/11 · build x64 · Cloud Manager folosește rclone + WinFsp (instalate la cerere).",
+ others:"Restul aplicațiilor GDC", legal:"gordas.dev este o platformă administrată de dezvoltatori independenți. Aplicațiile sunt furnizate ca atare (AS IS); susținerea proiectului se face prin donații opționale.",
+ note_win:"Am detectat Windows — pentru Mac apasă celălalt buton.", note_mac:"Am detectat macOS — pentru Windows apasă celălalt buton.",
+ shots:{home:"Acasă", map:"Hartă", selection:"Selecție", review:"Revizuire", advanced:"Tabel avansat", settings:"Setări"},
+ plat:[["Coș","Coș (Trash)","Coșul de reciclare"],["Mod Randare","Time Machine + Spotlight","Windows Search + File History"],["Secrete","Keychain","DPAPI"],["Instrumente specifice","Inspector Rosetta","Verificări BitLocker / Defender"],["Fișiere mici","Grupate în listă","Listate separat"]]},
+en:{eyebrow:"Order in your workspace", h1a:"Make room.", h1b:"For what", h1c:"comes next.", credit:"Original illustration · presentation concept", eb_screens:"From the real app", eb_safe:"Review, then confirm", th_light:"Light", th_dark:"Dark", back:"← gordas.dev", tagline:"See what takes up disk space, review it and move it to the Trash recoverably — plus the rest of an editing workstation's toolkit: reversible Render Mode, cleanup, duplicates, cloud, security. Native on macOS and Windows.",
+ dlmac:"Download for macOS", dlwin:"Download for Windows", heronote:"No account. Full demo: 10 minutes of active use, then the next session after 48 hours. The community edition's source code is MIT.",
+ h_screens:"From the real app", l_screens:"Captures from the real applications (not mockups), on demonstration volumes with synthetic data. They follow your language and theme.",
+ h_safe:"Built not to break anything", l_safe:"A proportional radial chart, a short list, visible selection and one main action. Deleting is ONLY a recoverable move.",
+ c1t:"Explicit states", c1p:"Regenerable, verified duplicate and protected are told apart by shape and text, not colour alone. No verified rule = not counted as recoverable.", chip_reg:"Regenerable", chip_dup:"Verified duplicate", chip_prot:"Protected",
+ c2t:"No double counting", c2p:"The recoverable total is computed from rules: a duplicate inside a regenerable folder is counted once.",
+ c3t:"Review before the Trash", c3p:"See exactly what moves, what is excluded automatically (device backups, system folders, apps, whole personal folders) and what you confirmed explicitly.",
+ c4t:"Correct and fast scanning", c4p:"Detects growth and in-place rewrites at any depth; instant cancel; a disconnected or replaced volume never reuses a stale cache.",
+ c5t:"Local, isolated data", c5p:"Redacted local log, diagnostic export without passwords or keys, passwords in Keychain / DPAPI. The trial ending never deletes your settings or accounts.",
+ c6t:"Reversible Render Mode", c6p:"Temporarily pauses indexing and background backups; the exact state is saved first and restored on disable or after a forced quit.",
+ h_modules:"And the rest of the kit", m1t:"Cleanup & RAM", m1p:"Regenerable caches; personal data goes to the Trash, never a permanent delete.", m2t:"Duplicates", m2p:"Content comparison (SHA-256), not name or date.",
+ m3t:"Cloud Manager", m3p:"Accounts mounted as drives, browsing, upload/download and sync (rclone engine).", m4t:"DaVinci Resolve", m4p:"Render-finished notification, Media Pool audit, database backup, LUT/Fusion sync.",
+ h_plat:"macOS and Windows — differences",
+ h_lic:"Licence and donations", l_lic:"The app runs in Demo with no account. The official edition receives a signed licence in return for a donation; the offer list is signed and read in the app.",
+ o1:"1 month", o2:"3 months", o3:"1 year",
+ lim1:"One licence is valid on ONE computer, either a Mac or a Windows PC.", lim2:"Moving to another computer: write to us; the old right is withdrawn and a new licence is issued for the new computer — the limit does not increase.", lim3:"Demo: 10 minutes of active use; the next session after 48 hours from exhaustion.", lim4:"Valid offers are those in the signed list shown in the app.", lim5:"Support is a donation; the licence is sent after confirmation.",
+ licnote:"The community edition (MIT source) has no activation: it stays in Demo.",
+ h_lim:"Known limits", x1:"Hard links are counted per link; APFS clones are not told apart by allocated space.", x2:"Windows does not group small files in the analysis list; macOS does.", x3:"Cloud-only files are not downloaded to be measured.", x4:"On Windows ARM the x64 app runs through emulation.",
+ h_req:"Requirements", req1:"macOS 14+ · Apple silicon or Intel · Cloud Manager uses rclone + macFUSE (installed on demand).", req2:"Windows 10/11 · x64 build · Cloud Manager uses rclone + WinFsp (installed on demand).",
+ others:"Other GDC apps", legal:"gordas.dev is a platform run by independent developers. The apps are provided AS IS; supporting the project is through optional donations.",
+ note_win:"Windows detected — for Mac press the other button.", note_mac:"macOS detected — for Windows press the other button.",
+ shots:{home:"Home", map:"Map", selection:"Selection", review:"Review", advanced:"Advanced table", settings:"Settings"},
+ plat:[["Trash","Trash","Recycle Bin"],["Render Mode","Time Machine + Spotlight","Windows Search + File History"],["Secrets","Keychain","DPAPI"],["Platform tools","Rosetta Inspector","BitLocker / Defender checks"],["Small files","Grouped in the list","Listed separately"]]},
+es:{eyebrow:"Orden en tu espacio de trabajo", h1a:"Haz sitio.", h1b:"Para lo que", h1c:"viene.", credit:"Ilustración original · concepto de presentación", eb_screens:"De la app real", eb_safe:"Revisas y luego confirmas", th_light:"Claro", th_dark:"Oscuro", back:"← gordas.dev", tagline:"Mira qué ocupa espacio en el disco, revísalo y muévelo a la Papelera de forma recuperable, además del resto del kit de una estación de montaje: modo de renderizado reversible, limpieza, duplicados, nube, seguridad. Nativo en macOS y Windows.",
+ dlmac:"Descargar para macOS", dlwin:"Descargar para Windows", heronote:"Sin cuenta. Demo completa: 10 minutos de uso activo y la siguiente sesión tras 48 horas. El código fuente de la edición comunitaria es MIT.",
+ h_screens:"De la app real", l_screens:"Capturas de las aplicaciones reales (no maquetas), sobre volúmenes de demostración con datos sintéticos. Siguen tu idioma y tu tema.",
+ h_safe:"Hecho para no romper nada", l_safe:"Un gráfico radial proporcional, una lista corta, selección visible y una acción principal. Borrar es SOLO un movimiento recuperable.",
+ c1t:"Estados explícitos", c1p:"Regenerable, duplicado verificado y protegido se distinguen por forma y texto, no solo por color. Sin regla verificada = no cuenta como recuperable.", chip_reg:"Regenerable", chip_dup:"Duplicado verificado", chip_prot:"Protegido",
+ c2t:"Sin doble recuento", c2p:"El total recuperable se calcula con reglas: un duplicado dentro de una carpeta regenerable se cuenta una vez.",
+ c3t:"Revisión antes de la Papelera", c3p:"Ves exactamente qué se mueve, qué se excluye automáticamente (copias de dispositivos, carpetas del sistema, apps, carpetas personales enteras) y qué confirmaste.",
+ c4t:"Análisis correcto y rápido", c4p:"Detecta crecimientos y reescrituras en el sitio a cualquier profundidad; cancelación inmediata; un volumen desconectado o sustituido nunca reutiliza una caché obsoleta.",
+ c5t:"Datos locales y aislados", c5p:"Registro local redactado, exportación de diagnóstico sin contraseñas ni claves, contraseñas en Keychain / DPAPI. El fin de la prueba nunca borra tus ajustes ni cuentas.",
+ c6t:"Modo de renderizado reversible", c6p:"Pausa temporalmente la indexación y las copias en segundo plano; el estado exacto se guarda antes y se restaura al desactivar o tras un cierre forzado.",
+ h_modules:"Y el resto del kit", m1t:"Limpieza y RAM", m1p:"Cachés regenerables; los datos personales van a la Papelera, nunca se borran definitivamente.", m2t:"Duplicados", m2p:"Comparación de contenido (SHA-256), no de nombre ni fecha.",
+ m3t:"Gestor Cloud", m3p:"Cuentas montadas como disco, exploración, subida/descarga y sincronización (motor rclone).", m4t:"DaVinci Resolve", m4p:"Aviso al terminar el render, auditoría del Media Pool, copia de la base de datos, sincronización de LUT/Fusion.",
+ h_plat:"macOS y Windows — diferencias",
+ h_lic:"Licencia y donaciones", l_lic:"La app funciona en Demo sin cuenta. La edición oficial recibe una licencia firmada a cambio de una donación; la lista de ofertas está firmada y se lee en la app.",
+ o1:"1 mes", o2:"3 meses", o3:"1 año",
+ lim1:"Una licencia vale en UN solo equipo, sea Mac o Windows.", lim2:"Para pasar a otro equipo: escríbenos; el derecho anterior se retira y se emite una licencia nueva para el nuevo equipo; el límite no aumenta.", lim3:"Demo: 10 minutos de uso activo; la siguiente sesión tras 48 horas desde que se agota.", lim4:"Las ofertas válidas son las de la lista firmada que muestra la app.", lim5:"El apoyo es una donación; la licencia se envía tras confirmarla.",
+ licnote:"La edición comunitaria (código MIT) no tiene activación: se queda en Demo.",
+ h_lim:"Límites conocidos", x1:"Los enlaces físicos se cuentan por enlace; los clones de APFS no se distinguen por el espacio asignado.", x2:"Windows no agrupa los archivos pequeños en la lista del análisis; macOS sí.", x3:"Los archivos solo en la nube no se descargan para medirlos.", x4:"En Windows ARM la app x64 se ejecuta mediante emulación.",
+ h_req:"Requisitos", req1:"macOS 14+ · Apple silicon o Intel · Gestor Cloud usa rclone + macFUSE (se instalan a petición).", req2:"Windows 10/11 · compilación x64 · Gestor Cloud usa rclone + WinFsp (se instalan a petición).",
+ others:"Otras apps de GDC", legal:"gordas.dev es una plataforma gestionada por desarrolladores independientes. Las apps se ofrecen tal cual (AS IS); el apoyo al proyecto es mediante donaciones opcionales.",
+ note_win:"Windows detectado: para Mac pulsa el otro botón.", note_mac:"macOS detectado: para Windows pulsa el otro botón.",
+ shots:{home:"Panel", map:"Mapa", selection:"Selección", review:"Revisión", advanced:"Tabla avanzada", settings:"Ajustes"},
+ plat:[["Papelera","Papelera","Papelera de reciclaje"],["Modo de renderizado","Time Machine + Spotlight","Windows Search + Historial de archivos"],["Secretos","Keychain","DPAPI"],["Herramientas propias","Inspector Rosetta","Comprobaciones de BitLocker / Defender"],["Archivos pequeños","Agrupados en la lista","Listados por separado"]]}
+};
+// Capturi disponibile: platforma-limba-tema-captura
+const HAVE = new Set([
+ ...['home','map','selection','review'].flatMap(s=>['en-light','es-light','ro-light','en-dark'].map(c=>`mac-${c}-${s}`)),
+ 'mac-en-light-advanced','mac-en-light-settings',
+ ...['home','map','selection','review','advanced','settings'].flatMap(s=>['en-light','es-light','ro-light','en-dark'].map(c=>`win-${c}-${s}`))
+]);
+const SHOTS = ['home','map','selection','review','advanced','settings'];
+let lang = (localStorage.getItem('mcsp-lang') || (navigator.language||'ro').slice(0,2));
+if (!T[lang]) lang='en';
+let plat = /Windows/i.test(navigator.userAgent) ? 'win' : 'mac';
+let shot = 'map';
+let theme='light';
+function src(p,l,th,s){ const ids=[`${p}-${l}-${th}-${s}`,`${p}-${l}-light-${s}`,`${p}-en-${th}-${s}`,`${p}-en-light-${s}`]; const k=ids.find(i=>HAVE.has(i)); return k?`img/${k}.${p==='win'?'webp':'jpg'}`:null; }
+function render(){
+  const t=T[lang]; document.documentElement.lang=lang;
+  document.querySelectorAll('[data-i]').forEach(e=>{ const v=t[e.dataset.i]; if(v!==undefined) e.textContent=v; });
+  document.querySelectorAll('.lang button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===lang));
+  document.getElementById('tab-mac').setAttribute('aria-pressed',plat==='mac'); document.getElementById('tab-win').setAttribute('aria-pressed',plat==='win');
+  const th=theme; const th_ids=document.getElementById('thumbs'); th_ids.innerHTML='';
+  SHOTS.forEach(s=>{ const u=src(plat,lang,th,s); if(!u) return; const b=document.createElement('button'); b.setAttribute('aria-pressed',s===shot); b.innerHTML=`<img src="${u}" alt="" loading="lazy" width="320" height="200"><span>${t.shots[s]}</span>`; b.onclick=()=>{shot=s;render();}; th_ids.appendChild(b); });
+  let u=src(plat,lang,th,shot) || src(plat,lang,th,'map'); const big=document.getElementById('bigshot'); if(u){ big.src=u; big.alt=`${plat==='mac'?'macOS':'Windows'} — ${t.shots[shot]}`; }
+  document.getElementById('cap2').textContent=`${plat==='mac'?'macOS':'Windows'} · ${t.shots[shot]}`;
+  document.getElementById('th-light').setAttribute('aria-pressed',theme==='light'); document.getElementById('th-dark').setAttribute('aria-pressed',theme==='dark');
+  document.getElementById('plat-rows').innerHTML=t.plat.map(r=>`<tr><th>${r[0]}</th><td>${r[1]}</td><td>${r[2]}</td></tr>`).join('');
+  const note=document.getElementById('os-note'); const ua=navigator.userAgent||''; note.textContent=/Windows/i.test(ua)?t.note_win:/Macintosh|Mac OS X/i.test(ua)?t.note_mac:'';
 }
-syncRelease('gordasgdc/mac-master-control-pro', 'ver-mac');
-syncRelease('gordasgdc/mac-master-control-pro-win', 'ver-win');
-
-// Detectare OS — evidentiaza butonul relevant ca principal, pastreaza
-// pe celalalt vizibil (nu ascuns) pentru descarcare manuala oricand.
-(function () {
-  const ua = navigator.userAgent || '';
-  const isWindows = /Windows/i.test(ua);
-  const isMac = /Macintosh|Mac OS X/i.test(ua);
-  const btnMac = document.getElementById('btn-mac');
-  const btnWin = document.getElementById('btn-win');
-  const note = document.getElementById('os-note');
-  if (isWindows) {
-    btnMac.classList.add('is-secondary-os');
-    note.textContent = 'Am detectat Windows — dacă folosești un Mac, apasă celălalt buton.';
-  } else if (isMac) {
-    btnWin.classList.add('is-secondary-os');
-    note.textContent = 'Am detectat macOS — dacă folosești Windows, apasă celălalt buton.';
-  }
-})();
+document.querySelectorAll('.lang button').forEach(b=>b.onclick=()=>{lang=b.dataset.l;try{localStorage.setItem('mcsp-lang',lang)}catch(e){}render();});
+document.querySelectorAll('.tabs button[data-p]').forEach(b=>b.onclick=()=>{plat=b.dataset.p;render();});
+document.querySelectorAll('.tabs button[data-t]').forEach(b=>b.onclick=()=>{theme=b.dataset.t;render();});
+document.getElementById('year').textContent=new Date().getFullYear();
+render();
+// Linkuri de descarcare: ultimul release, nume cu versiune (Regula 41); degradare gratioasa la pagina release-ului.
+async function link(repo,id,re){ try{ const r=await fetch(`https://api.github.com/repos/${repo}/releases/latest`); if(!r.ok) return; const d=await r.json(); const a=(d.assets||[]).find(x=>re.test(x.name)); if(a) document.getElementById(id).href=a.browser_download_url; }catch(e){} }
+link('gordasgdc/mac-master-control-pro','btn-mac',/^MasterControlStudioPro-[0-9.]+\.dmg$/);
+link('gordasgdc/mac-master-control-pro-win','btn-win',/^MasterControlStudioPro-[0-9.]+-Setup\.exe$/);
 </script>
 </body>
 </html>
