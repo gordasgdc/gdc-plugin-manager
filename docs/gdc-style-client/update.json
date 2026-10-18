@@ -1,9 +1,9 @@
 {
-  "version": "2.9.1",
-  "app_version": "2.9.1",
-  "changes": "Documentație corectată și completată: ghidul coloristului Skin Retouch are versiunile corecte și pagini noi despre pipeline-uri, diagnostice și instalarea selectivă; pipeline-urile ACES, DaVinci, ARRI LogC3 și ARRI LogC4 sunt identificate uniform în documente și pe pagina Clientului. Instrumentele nu se schimbă.",
+  "version": "2.10.0",
+  "app_version": "2.10.0",
+  "changes": "GDC Skin: «Even out scale → Local» este acum disponibil pe toate cele patru pipeline-uri (ACES, DaVinci, ARRI LogC3, ARRI LogC4). Implicit rămâne Global, deci proiectele existente nu se schimbă. Documentația și ghidurile (RO/EN/ES) sunt actualizate.",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.9.1.dmg"
+    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.10.0.dmg"
   },
   "mandatory": false
 }
