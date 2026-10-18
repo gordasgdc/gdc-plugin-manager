@@ -1,19 +1,19 @@
 {
-  "version": "1.19.0",
-  "release_date": "2026-10-18",
-  "changes": "Aspect nou Studio Glass, analiză de disc cu hartă interactivă și revizuire înainte de Coș, scanare corectă și anulabilă, Demo de 10 minute de utilizare activă, activare cu licență semnată (un singur calculator per licență), interfață completă în română, engleză și spaniolă.",
+  "version": "1.19.1",
+  "release_date": "2026-10-19",
+  "changes": "Oferte selectabile în aplicație, o singură autorizare pentru acțiunile privilegiate, spațiu alocat corect în analiza de disc și explicații pentru elementele neanalizate.",
   "download_url": {
     "mac": "https://github.com/gordasgdc/mac-master-control-pro/releases/latest/download/MasterControlStudioPro.dmg",
     "windows": "https://github.com/gordasgdc/mac-master-control-pro-win/releases/latest/download/MacMasterControlProSetup.exe"
   },
   "mac": {
-    "version": "2.34.0",
-    "release_date": "2026-10-18",
+    "version": "2.34.1",
+    "release_date": "2026-10-19",
     "download_url": "https://github.com/gordasgdc/mac-master-control-pro/releases/latest/download/MasterControlStudioPro.dmg"
   },
   "windows": {
-    "version": "1.19.0",
-    "release_date": "2026-10-18",
+    "version": "1.19.1",
+    "release_date": "2026-10-19",
     "download_url": "https://github.com/gordasgdc/mac-master-control-pro-win/releases/latest/download/MacMasterControlProSetup.exe"
   },
   "mandatory": false,

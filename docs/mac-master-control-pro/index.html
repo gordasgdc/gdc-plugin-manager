@@ -99,8 +99,8 @@
     <h1><span data-i="h1a"></span><br><span data-i="h1b"></span><br><em data-i="h1c"></em></h1>
     <p class="intro" data-i="tagline"></p>
     <div class="actions">
-      <a id="btn-mac" class="btn btn-primary" href="https://github.com/gordasgdc/mac-master-control-pro/releases/latest"><svg><use href="#i-dl"/></svg><span data-i="dlmac"></span></a>
-      <a id="btn-win" class="btn btn-ghost" href="https://github.com/gordasgdc/mac-master-control-pro-win/releases/latest"><svg><use href="#i-dl"/></svg><span data-i="dlwin"></span></a>
+      <a id="btn-mac" class="btn btn-primary" href="https://github.com/gordasgdc/mac-master-control-pro/releases/latest/download/MasterControlStudioPro.dmg"><svg><use href="#i-dl"/></svg><span data-i="dlmac"></span></a>
+      <a id="btn-win" class="btn btn-ghost" href="https://github.com/gordasgdc/mac-master-control-pro-win/releases/latest/download/MacMasterControlProSetup.exe"><svg><use href="#i-dl"/></svg><span data-i="dlwin"></span></a>
     </div>
     <p class="osnote" id="os-note"></p>
     <p class="micro" data-i="heronote"></p>
@@ -153,15 +153,6 @@
 <section class="wrap" id="licence">
   <h2 data-i="h_lic"></h2>
   <p class="lead" data-i="l_lic"></p>
-  <div class="offers">
-    <div class="offer"><div class="amt">5 €</div><small data-i="o1"></small></div>
-    <div class="offer"><div class="amt">10 €</div><small data-i="o2"></small></div>
-    <div class="offer"><div class="amt">15 €</div><small data-i="o3"></small></div>
-  </div>
-  <ul class="limits">
-    <li data-i="lim1"></li><li data-i="lim2"></li><li data-i="lim3"></li><li data-i="lim4"></li><li data-i="lim5"></li>
-  </ul>
-  <p class="note" data-i="licnote"></p>
 </section>
 
 <section class="wrap" id="limits">
@@ -175,7 +166,7 @@
 </section>
 
 <footer>
-  <a href="https://github.com/gordasgdc/mac-master-control-pro">GitHub macOS</a> · <a href="https://github.com/gordasgdc/mac-master-control-pro-win">GitHub Windows</a> · <a href="/" data-i="others"></a>
+  <a href="/" data-i="others"></a>
   <div class="legal"><a href="https://gordas.dev/termeni">Termeni</a> · <a href="https://gordas.dev/confidentialitate">Confidențialitate</a> · <a href="https://gordas.dev/cookie">Cookie-uri</a></div>
   <p style="max-width:560px;margin:12px auto 0;" data-i="legal"></p>
   <div style="margin-top:10px;">© <span id="year"></span> GDC / Cristi Gordas.</div>
@@ -196,10 +187,7 @@ ro:{eyebrow:"Ordine în spațiul tău de lucru", h1a:"Fă loc.", h1b:"Pentru ce"
  h_modules:"Și restul trusei", m1t:"Curățare & RAM", m1p:"Cache-uri regenerabile; datele personale se mută în Coș, nu se șterg definitiv.", m2t:"Duplicate", m2p:"Comparație pe conținut (SHA-256), nu pe nume sau dată.",
  m3t:"Cloud Manager", m3p:"Conturi montate ca disc, explorare, upload/download și sincronizare (motor rclone).", m4t:"DaVinci Resolve", m4p:"Notificare la final de randare, audit Media Pool, backup bază de date, sincronizare LUT/Fusion.",
  h_plat:"macOS și Windows — diferențe",
- h_lic:"Licență și donații", l_lic:"Aplicația rulează în Demo fără cont. Ediția oficială primește o licență semnată în schimbul unei donații; lista de oferte este semnată și se citește în aplicație.",
- o1:"1 lună", o2:"3 luni", o3:"1 an",
- lim1:"O licență este valabilă pe UN singur calculator, fie Mac, fie Windows.", lim2:"Mutarea pe alt calculator: ne scrii, iar dreptul vechi este retras și primești o licență nouă pentru noul calculator — fără a crește limita.", lim3:"Demo: 10 minute de utilizare activă; următoarea sesiune după 48 de ore de la epuizare.", lim4:"Ofertele valabile sunt cele din lista semnată afișată în aplicație.", lim5:"Susținerea se face prin donație; licența se trimite după confirmare.",
- licnote:"Ediția comunitară (cod sursă MIT) nu are activare: rămâne în Demo.",
+ h_lic:"Licență", l_lic:"Ofertele și activarea licenței sunt disponibile în aplicație.",
  h_lim:"Limite cunoscute", x1:"Legăturile fizice (hard links) se numără per legătură; clonele APFS nu se disting prin spațiu alocat.", x2:"Windows nu grupează fișierele mici în lista de analiză; pe macOS se grupează.", x3:"Fișierele doar-în-cloud nu se descarcă pentru a fi măsurate.", x4:"Pe Windows ARM aplicația x64 rulează prin emulare.",
  h_req:"Cerințe", req1:"macOS 14+ · Apple Silicon sau Intel · Cloud Manager folosește rclone + macFUSE (instalate la cerere).", req2:"Windows 10/11 · build x64 · Cloud Manager folosește rclone + WinFsp (instalate la cerere).",
  others:"Restul aplicațiilor GDC", legal:"gordas.dev este o platformă administrată de dezvoltatori independenți. Aplicațiile sunt furnizate ca atare (AS IS); susținerea proiectului se face prin donații opționale.",
@@ -219,10 +207,7 @@ en:{eyebrow:"Order in your workspace", h1a:"Make room.", h1b:"For what", h1c:"co
  h_modules:"And the rest of the kit", m1t:"Cleanup & RAM", m1p:"Regenerable caches; personal data goes to the Trash, never a permanent delete.", m2t:"Duplicates", m2p:"Content comparison (SHA-256), not name or date.",
  m3t:"Cloud Manager", m3p:"Accounts mounted as drives, browsing, upload/download and sync (rclone engine).", m4t:"DaVinci Resolve", m4p:"Render-finished notification, Media Pool audit, database backup, LUT/Fusion sync.",
  h_plat:"macOS and Windows — differences",
- h_lic:"Licence and donations", l_lic:"The app runs in Demo with no account. The official edition receives a signed licence in return for a donation; the offer list is signed and read in the app.",
- o1:"1 month", o2:"3 months", o3:"1 year",
- lim1:"One licence is valid on ONE computer, either a Mac or a Windows PC.", lim2:"Moving to another computer: write to us; the old right is withdrawn and a new licence is issued for the new computer — the limit does not increase.", lim3:"Demo: 10 minutes of active use; the next session after 48 hours from exhaustion.", lim4:"Valid offers are those in the signed list shown in the app.", lim5:"Support is a donation; the licence is sent after confirmation.",
- licnote:"The community edition (MIT source) has no activation: it stays in Demo.",
+ h_lic:"Licence", l_lic:"Offers and licence activation are available in the app.",
  h_lim:"Known limits", x1:"Hard links are counted per link; APFS clones are not told apart by allocated space.", x2:"Windows does not group small files in the analysis list; macOS does.", x3:"Cloud-only files are not downloaded to be measured.", x4:"On Windows ARM the x64 app runs through emulation.",
  h_req:"Requirements", req1:"macOS 14+ · Apple silicon or Intel · Cloud Manager uses rclone + macFUSE (installed on demand).", req2:"Windows 10/11 · x64 build · Cloud Manager uses rclone + WinFsp (installed on demand).",
  others:"Other GDC apps", legal:"gordas.dev is a platform run by independent developers. The apps are provided AS IS; supporting the project is through optional donations.",
@@ -242,10 +227,7 @@ es:{eyebrow:"Orden en tu espacio de trabajo", h1a:"Haz sitio.", h1b:"Para lo que
  h_modules:"Y el resto del kit", m1t:"Limpieza y RAM", m1p:"Cachés regenerables; los datos personales van a la Papelera, nunca se borran definitivamente.", m2t:"Duplicados", m2p:"Comparación de contenido (SHA-256), no de nombre ni fecha.",
  m3t:"Gestor Cloud", m3p:"Cuentas montadas como disco, exploración, subida/descarga y sincronización (motor rclone).", m4t:"DaVinci Resolve", m4p:"Aviso al terminar el render, auditoría del Media Pool, copia de la base de datos, sincronización de LUT/Fusion.",
  h_plat:"macOS y Windows — diferencias",
- h_lic:"Licencia y donaciones", l_lic:"La app funciona en Demo sin cuenta. La edición oficial recibe una licencia firmada a cambio de una donación; la lista de ofertas está firmada y se lee en la app.",
- o1:"1 mes", o2:"3 meses", o3:"1 año",
- lim1:"Una licencia vale en UN solo equipo, sea Mac o Windows.", lim2:"Para pasar a otro equipo: escríbenos; el derecho anterior se retira y se emite una licencia nueva para el nuevo equipo; el límite no aumenta.", lim3:"Demo: 10 minutos de uso activo; la siguiente sesión tras 48 horas desde que se agota.", lim4:"Las ofertas válidas son las de la lista firmada que muestra la app.", lim5:"El apoyo es una donación; la licencia se envía tras confirmarla.",
- licnote:"La edición comunitaria (código MIT) no tiene activación: se queda en Demo.",
+ h_lic:"Licencia", l_lic:"Las ofertas y la activación de la licencia están disponibles en la aplicación.",
  h_lim:"Límites conocidos", x1:"Los enlaces físicos se cuentan por enlace; los clones de APFS no se distinguen por el espacio asignado.", x2:"Windows no agrupa los archivos pequeños en la lista del análisis; macOS sí.", x3:"Los archivos solo en la nube no se descargan para medirlos.", x4:"En Windows ARM la app x64 se ejecuta mediante emulación.",
  h_req:"Requisitos", req1:"macOS 14+ · Apple silicon o Intel · Gestor Cloud usa rclone + macFUSE (se instalan a petición).", req2:"Windows 10/11 · compilación x64 · Gestor Cloud usa rclone + WinFsp (se instalan a petición).",
  others:"Otras apps de GDC", legal:"gordas.dev es una plataforma gestionada por desarrolladores independientes. Las apps se ofrecen tal cual (AS IS); el apoyo al proyecto es mediante donaciones opcionales.",
