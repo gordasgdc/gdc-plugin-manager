@@ -180,23 +180,6 @@
     {
       "access" : {
         "group" : "gdc",
-        "note" : "Donație · licență legată de Mac (Machine ID)",
-        "referencePriceEUR" : 6700,
-        "tags" : [
-          "Developer"
-        ]
-      },
-      "coverImage" : "covers/GDC STYLE Lab.png?v=4990453c",
-      "downloadURL" : "https://gordas.dev/gdc-style-lab/GDCStyleLab.dmg",
-      "id" : "gdc-lut-lab",
-      "name" : "GDC STYLE Lab",
-      "pricingProductID" : "gdc-lut-lab",
-      "supportedOS" : "macOS",
-      "url" : "https://gordas.dev/gdc-style-lab/"
-    },
-    {
-      "access" : {
-        "group" : "gdc",
         "kind" : "trial",
         "tags" : [
 
@@ -571,5 +554,5 @@
       "youtubeURL" : "https://www.youtube.com/watch?v=dnkUIGXIzIM"
     }
   ],
-  "updatedAt" : "2026-10-09"
+  "updatedAt" : "2026-10-20"
 }
