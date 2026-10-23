@@ -53,7 +53,7 @@
       ]
     },
     "mac-master-control-pro" : {
-      "basePrice" : 42,
+      "basePrice" : 0,
       "currency" : "EUR",
       "name" : "Master Control Studio Pro",
       "promoSchedule" : [
@@ -75,5 +75,5 @@
       ]
     }
   },
-  "updatedAt" : "2026-09-28"
+  "updatedAt" : "2026-10-23"
 }
