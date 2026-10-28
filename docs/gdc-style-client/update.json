@@ -1,9 +1,9 @@
 {
-  "version": "2.11.1",
-  "app_version": "2.11.1",
-  "changes": "Corecție: cele zece instrumente OpenFX (Color Rescue, Edge Treatment, Grain by Exposure, Light Balance, Local Contrast, Image Inspector, Texture Inspector, Chart Match, Chart Reference, Chart Inspector) fac acum parte din pachetele GDC STYLE ca toate celelalte: o licență care include și produsele viitoare le acoperă și se instalează în varianta Full, iar o selecție individuală sau o listă de produse rămâne limitată la ce conține. Fără drept valid, instrumentele rămân în Demo, cu filigran. Pachetele celor zece instrumente primesc versiuni noi; proiectele existente rămân compatibile.",
+  "version": "2.11.2",
+  "app_version": "2.11.2",
+  "changes": "Trei instrumente noi (Detail Scales, Look Builder, Product Lock), în total treisprezece instrumente OpenFX în Client, cu manual în română, engleză și spaniolă pentru fiecare. Chart Lab înțelege acum camerele Canon Log/2/3, Nikon N-Log, Sony S-Log2, DaVinci Wide Gamut/Intermediate și Blackmagic Film Gen5/Gen4 (Gen4 empiric). Vederea Skin Selection în modulele Exposure & Balance, Saturation & Hue, Tone, Color, Look, Film și Cinema Style. Setul de PowerGrade-uri „Instrumente” (80 de grade-uri) se instalează din pagina „Stream Deck & PowerGrades” din aplicație. Funcțiile temporale din Product Lock sunt experimentale.",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.11.1.dmg"
+    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.11.2.dmg"
   },
   "mandatory": false
 }
