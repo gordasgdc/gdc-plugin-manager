@@ -63,7 +63,7 @@
 <header>
   <div class="header-inner">
     <a class="back-link" href="/">← gordas.dev</a>
-    <span class="updated">Actualizat: 27 august 2026</span>
+    <span class="updated">Actualizat: 29 octombrie 2026</span>
   </div>
 </header>
 
@@ -83,16 +83,22 @@
   <table>
     <tr><th>Tip de date</th><th>Scop</th><th>Cum se colectează</th></tr>
     <tr><td>Adresă de email</td><td>Activare/gestionare licență, comunicare suport (ex. prin WhatsApp/email la cerere)</td><td>Introdusă voluntar de tine, la activare sau contact</td></tr>
+    <tr><td>Nume și adresă de e-mail din cererea de licență (CursorPro GDC, DataMover)</td><td>Administrarea cererii, emiterea și livrarea licenței, contactul despre cerere</td><td>Scrise de tine în aplicație; trimise doar când apeși „Trimite cererea”. Adresa nu se verifică printr-un cod</td></tr>
+    <tr><td>Date tehnice ale cererii de licență (CursorPro GDC, DataMover): identificatorul cererii, produsul, oferta aleasă (identificator, versiune, numărul listei de oferte), limba, platforma, versiunea aplicației, Machine ID, cheia publică a dispozitivului, ora și un număr aleator</td><td>Legarea cererii și a licenței de calculatorul tău, protecție la repetarea cererii</td><td>Generate de aplicație și trimise împreună cu cererea, semnate cu cheia dispozitivului; la „Verifică aprobarea” se trimite din nou identificatorul cererii, cu o semnătură nouă a aceluiași dispozitiv</td></tr>
+    <tr><td>Licența semnată, la livrarea online</td><td>Preluarea licenței de aplicația ta, fără cod de copiat</td><td>Emisă de noi după confirmarea manuală a donației (sau acordată gratuit); păstrată în evidența cererii</td></tr>
     <tr><td>Machine ID (identificator de mașină)</td><td>Legarea licenței de un dispozitiv, prevenirea folosirii neautorizate</td><td>Generat local, automat, de aplicație — nu identifică personal, direct, o persoană</td></tr>
     <tr><td>Preferințe locale (temă, limbă, filtre)</td><td>Funcționarea corectă a aplicației/site-ului</td><td>Stocate local pe dispozitivul tău (vezi și Politica de Cookies)</td></tr>
     <tr><td>Jurnale tehnice de server (IP, user-agent)</td><td>Funcționare standard hosting (GitHub Pages), securitate</td><td>Generate automat de infrastructura de găzduire, nu de noi direct</td></tr>
+    <tr><td>Adresa IP la cererile către serverul de licențe</td><td>Funcționarea și securitatea serverului</td><td>Văzută tehnic de server și de infrastructura Supabase; nu o înregistrăm în evidența cererii sau a licenței</td></tr>
     <tr><td>Rapoarte automate de eroare</td><td>Detectarea și repararea defectelor aplicației</td><td>Trimise automat de aplicație doar când apare o eroare: tipul erorii, versiunea aplicației, sistemul de operare, limba și tema alese. NU conțin adresa ta IP, numele tău de utilizator, fișierele tale sau conținutul lor</td></tr>
   </table>
 
   <h2>3. Unde sunt stocate datele</h2>
   <ul>
     <li><strong>Local, pe dispozitivul tău</strong> — majoritatea datelor (preferințe, cache catalog, fișier de licență) nu părăsesc niciodată calculatorul tău.</li>
-    <li><strong>Supabase</strong> (bază de date folosită pentru gestionarea licențelor și revocări) — stochează Machine ID, produsul licențiat și, dacă l-ai furnizat, emailul asociat.</li>
+    <li><strong>Supabase</strong> (bază de date folosită pentru gestionarea licențelor, a cererilor de licență și a revocărilor; proiect în regiunea <strong>eu-central-1 (Frankfurt, UE)</strong>) — stochează Machine ID, cheia publică a dispozitivului, produsul și oferta, cererile de licență (inclusiv numele și adresa de e-mail pe care le-ai scris), licențele emise și istoricul administrativ. Funcțiile serverului (Supabase Edge Functions) rulează, în mod implicit, în regiunea Supabase cea mai apropiată de cel care face cererea, care poate fi în afara UE. Supabase păstrează și propriile jurnale tehnice ale platformei, după regulile serviciului.</li>
+    <li><strong>WhatsApp (Meta) și e-mail (Gmail, Google)</strong> — doar dacă alegi să ne scrii. Mesajul pregătit de aplicație conține identificatorul cererii, datele tehnice, oferta aleasă și, dacă ai completat cererea în aplicație, numele și adresa de e-mail. Acești furnizori prelucrează mesajele după regulile lor.</li>
+    <li><strong>Calculatorul dezvoltatorului</strong> (aplicația privată de administrare) — o copie a licențelor emise, notițe de administrare și jurnalul aplicației, care poate conține numele clienților.</li>
     <li><strong>Sentry</strong> (serviciu de raportare a erorilor, <strong>regiunea Uniunea Europeană</strong>) — primește rapoartele automate de eroare descrise mai sus. Nu primește adrese IP, nume de utilizator, Machine ID sau conținutul fișierelor tale. Rapoartele se păstrează 90 de zile, apoi se șterg automat.</li>
     <li><strong>GitHub</strong> — găzduiește catalogul public de produse (fără date personale) și, pentru istoricul intern de vânzări al dezvoltatorului, date minime necesare gestionării licențelor deja acordate.</li>
   </ul>
@@ -102,6 +108,8 @@
 
   <h2>5. Cât timp păstrăm datele</h2>
   <p>Datele legate de o licență activă se păstrează cât timp licența e valabilă sau cât timp e nevoie pentru suport/istoricul de susținere financiară. Poți solicita oricând ștergerea lor (vezi secțiunea 6), cu mențiunea că ștergerea unui Machine ID dintr-o licență activă poate dezactiva accesul la produsul respectiv.</p>
+  <p><strong>Cererile de licență trimise din CursorPro GDC și DataMover</strong> care nu ajung la o licență se șterg manual, o dată pe lună: cele fără răspuns după 90 de zile fără modificări (deci în cel mult 4 luni), cele respinse după 30 de zile (deci în cel mult 2 luni). Nu există ștergere automată. Cererile pentru care s-a emis o licență rămân în evidența licenței, păstrată ca în paragraful de mai sus. „Renunță la cerere” din aplicație șterge doar copia de pe calculatorul tău; cererea deja trimisă rămâne la noi până la ștergerea ei sau până o ceri. Evidența licențelor CursorPro GDC și DataMover expirate sau revocate și istoricul administrativ (identificatorii tehnici ai cererilor și licențelor și notele noastre; numele și adresa de e-mail din cerere nu sunt copiate acolo) nu se șterg automat. Cel puțin o dată pe an verificăm dacă păstrarea lor mai este necesară pentru administrarea licențelor, pentru suport sau pentru obligații legale și consemnăm datele care nu mai sunt necesare. Pe acestea le eliminăm manual, din aplicația de administrare, fără să afectăm licența și legăturile dintre înregistrări: numele, adresa de e-mail, eticheta calculatorului și notele din cererea respectivă, precum și numele (înlocuit cu o etichetă neutră), datele de contact și notele clientului. Rămân identificatorii tehnici (identificatorii cererii și ai licenței, Machine ID, cheia publică a dispozitivului), textul licenței semnate, care permite livrarea și recuperarea ei, și istoricul administrativ, fiindcă sistemul de licențe are nevoie de ele. Copiile de siguranță anterioare mai conțin datele eliminate până la ștergerea lor, după regula de mai jos.</p>
+  <p>Copiile de siguranță ale serverului de licențe le facem înaintea schimbărilor de pe server și le păstrăm pe un disc separat cât sunt necesare pentru revenire: o copie se șterge manual numai după ce schimbarea pentru care a fost făcută a fost validată și am evaluat că revenirea la starea anterioară nu mai este necesară.</p>
 
   <h2>6. Drepturile tale (GDPR)</h2>
   <p>Ai dreptul să soliciți, oricând, prin contactul de mai jos:</p>
