@@ -73,13 +73,13 @@
       "access" : {
         "group" : "gdc",
         "kind" : "trial",
-        "note" : "2.18.1 · Demo gratuit permanent (1 GB per transfer). Licență prin donație sau acordată gratuit.",
+        "note" : "2.19.0 · Demo gratuit permanent (1 GB per transfer). Licență prin donație sau acordată gratuit.",
         "tags" : [
 
         ]
       },
       "coverImage" : "covers/DataMover.png?v=95a6c88d",
-      "downloadURL" : "https://gordas.dev/datamover/downloads/DataMover-2.18.1.dmg",
+      "downloadURL" : "https://gordas.dev/datamover/downloads/DataMover-2.19.0.dmg",
       "id" : "DataMover",
       "name" : "DataMover",
       "supportedOS" : "crossPlatform",

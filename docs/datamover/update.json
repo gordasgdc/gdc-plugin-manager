@@ -1,7 +1,7 @@
 {
-  "version": "2.18.1",
-  "release_date": "2026-10-05",
-  "changes": "DataMover rămâne gratuit în modul Demo (cel mult 1 GB per transfer, fără limită de timp, fără perioadă de probă). Licențele personale, pe câteva ore până la fără expirare, se obțin prin donație sau se acordă gratuit; activarea se confirmă online cu date tehnice minime. Când o licență expiră, aplicația revine în Demo și nu se șterge nimic. Termeni de utilizare și Open Source Notices, în aplicație.",
+  "version": "2.19.0",
+  "release_date": "2026-10-29",
+  "changes": "Licența se poate cere acum direct din aplicație: alegi oferta din lista publicată, scrii numele și adresa de e-mail și trimiți cererea; după aprobare, «Verifică aprobarea» preia și activează licența singură, fără cod de copiat. DataMover rămâne gratuit în modul Demo (cel mult 1 GB per transfer). Termenii și ghidurile au fost actualizate.",
   "download_url": {
     "windows": "https://github.com/gordasgdc/datamover/releases/latest/download/DataMover-Windows.zip",
     "mac": "https://github.com/gordasgdc/datamover/releases/latest/download/DataMover.pkg",
