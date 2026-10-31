@@ -1,0 +1,10 @@
+{
+  "version": "1.0.0",
+  "app_version": "1.0.0",
+  "build": 167,
+  "changes": {"ro": "Prima versiune publică: înregistrare ecran, fereastră, cameră și sunet; editor cu piste; export fără recodare, comprimat, ProRes și secvență de cadre.", "en": "First public release: screen, window, camera and audio recording; track-based editor; export without re-encoding, compressed, ProRes and frame sequence.", "es": "Primera versión pública: grabación de pantalla, ventana, cámara y audio; editor con pistas; exportación sin recodificar, comprimida, ProRes y secuencia de fotogramas."},
+  "download_url": {"mac": "https://github.com/gordasgdc/sadrog/releases/download/v1.0.0/SADROG-1.0.0.dmg"},
+  "sha256": "d953a3f45c17fff60998db18d35965506d6212bc7200ea19a70be35395bb7f50",
+  "size": 4694682,
+  "mandatory": false
+}
