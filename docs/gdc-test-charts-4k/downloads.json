@@ -1,0 +1,170 @@
+{
+ "name": "GDC Test Charts 4K",
+ "version": "1.0.0",
+ "tag": "v1.0.0",
+ "release": "https://github.com/gordasgdc/gdc-test-charts-4k/releases/tag/v1.0.0",
+ "packages": [
+  {
+   "file": "gdc-test-charts-4k-1.0.0-docs-metadata.zip",
+   "bytes": 16506691,
+   "sha256": "2d9990e847e515c6e7581a2364b7259b714c7984576554801894ce7d774eb032",
+   "url": "https://github.com/gordasgdc/gdc-test-charts-4k/releases/download/v1.0.0/gdc-test-charts-4k-1.0.0-docs-metadata.zip"
+  },
+  {
+   "file": "gdc-test-charts-4k-1.0.0-complete-part1of3.zip",
+   "bytes": 1061438954,
+   "sha256": "5e738c6bdb6fac3d2d7df0b1945c2a80f68e495920d0675d9c3afa6872bfa1d1",
+   "url": "https://github.com/gordasgdc/gdc-test-charts-4k/releases/download/v1.0.0/gdc-test-charts-4k-1.0.0-complete-part1of3.zip"
+  },
+  {
+   "file": "gdc-test-charts-4k-1.0.0-complete-part2of3.zip",
+   "bytes": 1061777223,
+   "sha256": "aa25aac29951695fa1195508cd69f6946dfbe3dae3b5dd38a7bdc1a0b9084fe1",
+   "url": "https://github.com/gordasgdc/gdc-test-charts-4k/releases/download/v1.0.0/gdc-test-charts-4k-1.0.0-complete-part2of3.zip"
+  },
+  {
+   "file": "gdc-test-charts-4k-1.0.0-complete-part3of3.zip",
+   "bytes": 931101462,
+   "sha256": "f8746434b2cca31315bcea331c29a40be9255dea176503a412ff3ab6a4c70075",
+   "url": "https://github.com/gordasgdc/gdc-test-charts-4k/releases/download/v1.0.0/gdc-test-charts-4k-1.0.0-complete-part3of3.zip"
+  },
+  {
+   "file": "gdc-test-charts-4k-1.0.0-config-aces2065_ap0_lin.zip",
+   "bytes": 131099983,
+   "sha256": "7c2aedf77a363146e09a39a953822f9d71c634c069a1385bf13186160e8b9a58",
+   "url": "https://github.com/gordasgdc/gdc-test-charts-4k/releases/download/v1.0.0/gdc-test-charts-4k-1.0.0-config-aces2065_ap0_lin.zip"
+  },
+  {
+   "file": "gdc-test-charts-4k-1.0.0-config-acescct_ap1.zip",
+   "bytes": 132581764,
+   "sha256": "64129a6c5ada976c8719e414ec75d9d7346b3ecd263c1f61ca15c95a86293793",
+   "url": "https://github.com/gordasgdc/gdc-test-charts-4k/releases/download/v1.0.0/gdc-test-charts-4k-1.0.0-config-acescct_ap1.zip"
+  },
+  {
+   "file": "gdc-test-charts-4k-1.0.0-config-acescg_ap1_lin.zip",
+   "bytes": 130806271,
+   "sha256": "d1e3d83e4b4d961c5599df0e1f1e568f0cd6d57816186d6361a621ad1bce7fd1",
+   "url": "https://github.com/gordasgdc/gdc-test-charts-4k/releases/download/v1.0.0/gdc-test-charts-4k-1.0.0-config-acescg_ap1_lin.zip"
+  },
+  {
+   "file": "gdc-test-charts-4k-1.0.0-config-apple_log_rec2020.zip",
+   "bytes": 132190363,
+   "sha256": "7649cb38ca141254a96ed69fa984edb1df8297bbf9a397d7f5dd13b8589fdf74",
+   "url": "https://github.com/gordasgdc/gdc-test-charts-4k/releases/download/v1.0.0/gdc-test-charts-4k-1.0.0-config-apple_log_rec2020.zip"
+  },
+  {
+   "file": "gdc-test-charts-4k-1.0.0-config-arri_awg3_logc3_ei800.zip",
+   "bytes": 133369078,
+   "sha256": "c7115a2b8c84eeed7f7089492a7a600c31f77fccd4104bf2a551766215c24c94",
+   "url": "https://github.com/gordasgdc/gdc-test-charts-4k/releases/download/v1.0.0/gdc-test-charts-4k-1.0.0-config-arri_awg3_logc3_ei800.zip"
+  },
+  {
+   "file": "gdc-test-charts-4k-1.0.0-config-arri_awg4_logc4.zip",
+   "bytes": 131507260,
+   "sha256": "a04cd0e240ec9a9b1f2c1799e53f6035bd105270f6552535c091a66afe902b4a",
+   "url": "https://github.com/gordasgdc/gdc-test-charts-4k/releases/download/v1.0.0/gdc-test-charts-4k-1.0.0-config-arri_awg4_logc4.zip"
+  },
+  {
+   "file": "gdc-test-charts-4k-1.0.0-config-bmd_widegamut_gen4_filmgen4.zip",
+   "bytes": 133988065,
+   "sha256": "8daf1b98e53a49f585709f5d8e30971bb8528cdc7aacde77781117d24d2b99a0",
+   "url": "https://github.com/gordasgdc/gdc-test-charts-4k/releases/download/v1.0.0/gdc-test-charts-4k-1.0.0-config-bmd_widegamut_gen4_filmgen4.zip"
+  },
+  {
+   "file": "gdc-test-charts-4k-1.0.0-config-bmd_widegamut_gen5_filmgen5.zip",
+   "bytes": 132777116,
+   "sha256": "0312076377591cc2a32192210d58759767ba0d46c3539505342f82a5ce64a6fe",
+   "url": "https://github.com/gordasgdc/gdc-test-charts-4k/releases/download/v1.0.0/gdc-test-charts-4k-1.0.0-config-bmd_widegamut_gen5_filmgen5.zip"
+  },
+  {
+   "file": "gdc-test-charts-4k-1.0.0-config-canon_cinemagamut_clog1.zip",
+   "bytes": 132857862,
+   "sha256": "ec308cbf9c5981ccdddefe5825b0b3a97736f2f87fd397a9f5d93007f482c53c",
+   "url": "https://github.com/gordasgdc/gdc-test-charts-4k/releases/download/v1.0.0/gdc-test-charts-4k-1.0.0-config-canon_cinemagamut_clog1.zip"
+  },
+  {
+   "file": "gdc-test-charts-4k-1.0.0-config-canon_cinemagamut_clog2.zip",
+   "bytes": 133169481,
+   "sha256": "232a677e6f2d786b4aa62767f74e7166efe7293cf6688035cff26e4259a0d4e9",
+   "url": "https://github.com/gordasgdc/gdc-test-charts-4k/releases/download/v1.0.0/gdc-test-charts-4k-1.0.0-config-canon_cinemagamut_clog2.zip"
+  },
+  {
+   "file": "gdc-test-charts-4k-1.0.0-config-canon_cinemagamut_clog3.zip",
+   "bytes": 132668813,
+   "sha256": "cde5b74e2bb9c1bfd608242afc5ae43159813bf018880b3c9fa746d41bd13327",
+   "url": "https://github.com/gordasgdc/gdc-test-charts-4k/releases/download/v1.0.0/gdc-test-charts-4k-1.0.0-config-canon_cinemagamut_clog3.zip"
+  },
+  {
+   "file": "gdc-test-charts-4k-1.0.0-config-dji_dgamut_dlog.zip",
+   "bytes": 133386652,
+   "sha256": "e8b533cd2eac170717c8bcf0594ebfaf0c07575950cdab39196609c9133e012d",
+   "url": "https://github.com/gordasgdc/gdc-test-charts-4k/releases/download/v1.0.0/gdc-test-charts-4k-1.0.0-config-dji_dgamut_dlog.zip"
+  },
+  {
+   "file": "gdc-test-charts-4k-1.0.0-config-dwg_davinci_intermediate.zip",
+   "bytes": 133358402,
+   "sha256": "125c4210c18e712967d5c99a555741eab79578bd850560b930d15ce690124544",
+   "url": "https://github.com/gordasgdc/gdc-test-charts-4k/releases/download/v1.0.0/gdc-test-charts-4k-1.0.0-config-dwg_davinci_intermediate.zip"
+  },
+  {
+   "file": "gdc-test-charts-4k-1.0.0-config-filmlight_egamut_tlog.zip",
+   "bytes": 132813734,
+   "sha256": "5eacc772b9684afcb09d9aa04f46d14e329ae66fe91e62402911c69f6d446027",
+   "url": "https://github.com/gordasgdc/gdc-test-charts-4k/releases/download/v1.0.0/gdc-test-charts-4k-1.0.0-config-filmlight_egamut_tlog.zip"
+  },
+  {
+   "file": "gdc-test-charts-4k-1.0.0-config-fujifilm_fgamut_flog.zip",
+   "bytes": 133521530,
+   "sha256": "f21aef0eecddefb1874eb3743538c88126b3ab2750e21a744bb65abae279f5ca",
+   "url": "https://github.com/gordasgdc/gdc-test-charts-4k/releases/download/v1.0.0/gdc-test-charts-4k-1.0.0-config-fujifilm_fgamut_flog.zip"
+  },
+  {
+   "file": "gdc-test-charts-4k-1.0.0-config-fujifilm_fgamut_flog2.zip",
+   "bytes": 133378815,
+   "sha256": "317eadc66e5838214928efc6a801b9f4b4187c71facbde6f1aa2574a6379a5eb",
+   "url": "https://github.com/gordasgdc/gdc-test-charts-4k/releases/download/v1.0.0/gdc-test-charts-4k-1.0.0-config-fujifilm_fgamut_flog2.zip"
+  },
+  {
+   "file": "gdc-test-charts-4k-1.0.0-config-fujifilm_fgamutc_flog2c.zip",
+   "bytes": 132454525,
+   "sha256": "e03a42022b2d74c8d0bac827f0f68d5e4e228b97cbd335f1fd7ba1710e14ffd2",
+   "url": "https://github.com/gordasgdc/gdc-test-charts-4k/releases/download/v1.0.0/gdc-test-charts-4k-1.0.0-config-fujifilm_fgamutc_flog2c.zip"
+  },
+  {
+   "file": "gdc-test-charts-4k-1.0.0-config-gopro_rec2020_gplog2.zip",
+   "bytes": 132514010,
+   "sha256": "23d23f475bd1b2ec321bde135531ece8de0dfdf3c3dda400d6996ed613fcb371",
+   "url": "https://github.com/gordasgdc/gdc-test-charts-4k/releases/download/v1.0.0/gdc-test-charts-4k-1.0.0-config-gopro_rec2020_gplog2.zip"
+  },
+  {
+   "file": "gdc-test-charts-4k-1.0.0-config-nikon_ngamut_nlog.zip",
+   "bytes": 133506432,
+   "sha256": "6ec6e49f984a5e3612c82ab2d4c043910ea764d56992cd5332c64375031dad9a",
+   "url": "https://github.com/gordasgdc/gdc-test-charts-4k/releases/download/v1.0.0/gdc-test-charts-4k-1.0.0-config-nikon_ngamut_nlog.zip"
+  },
+  {
+   "file": "gdc-test-charts-4k-1.0.0-config-panasonic_vgamut_vlog.zip",
+   "bytes": 132621988,
+   "sha256": "491b233d320e21ee13118f2d2fdba0153938b7fd5bd9a685aa27b3c169cd0f35",
+   "url": "https://github.com/gordasgdc/gdc-test-charts-4k/releases/download/v1.0.0/gdc-test-charts-4k-1.0.0-config-panasonic_vgamut_vlog.zip"
+  },
+  {
+   "file": "gdc-test-charts-4k-1.0.0-config-red_rwg_log3g10.zip",
+   "bytes": 132851076,
+   "sha256": "eaef79468ac1b9cbc1382506907865527c38e6ebe844d0e425fe68fea9c282ff",
+   "url": "https://github.com/gordasgdc/gdc-test-charts-4k/releases/download/v1.0.0/gdc-test-charts-4k-1.0.0-config-red_rwg_log3g10.zip"
+  },
+  {
+   "file": "gdc-test-charts-4k-1.0.0-config-sony_sgamut3_slog3.zip",
+   "bytes": 133480491,
+   "sha256": "a00e4f50448308e7bf1dfddb46661193d9a0a02886785dd3857ec108794c18ca",
+   "url": "https://github.com/gordasgdc/gdc-test-charts-4k/releases/download/v1.0.0/gdc-test-charts-4k-1.0.0-config-sony_sgamut3_slog3.zip"
+  },
+  {
+   "file": "gdc-test-charts-4k-1.0.0-config-sony_sgamut3cine_slog3.zip",
+   "bytes": 133422779,
+   "sha256": "fb655ea3a34e9fdc9ac7d2ae7d9bee185651f36b97741cc812b3fc5d08aec7d2",
+   "url": "https://github.com/gordasgdc/gdc-test-charts-4k/releases/download/v1.0.0/gdc-test-charts-4k-1.0.0-config-sony_sgamut3cine_slog3.zip"
+  }
+ ]
+}

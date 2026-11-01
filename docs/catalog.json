@@ -322,6 +322,19 @@
   ],
   "educationalResources" : [
     {
+      "access" : {
+        "kind" : "free",
+        "tags" : [
+
+        ]
+      },
+      "description" : "575 de chart-uri EXR float32 3840×2160 în 23 de configurații colorimetrice, gratuite (CC BY 4.0), pentru a testa transformări de culoare, LUT-uri și OFX în DaVinci Resolve. Descărcare fără cont.",
+      "externalURL" : "https://gordas.dev/gdc-test-charts-4k/",
+      "id" : "gdc-test-charts-4k",
+      "kind" : "guide",
+      "name" : "GDC Test Charts 4K"
+    },
+    {
       "coverImage" : "covers/De la Zero la Conversie.jpg?v=4be3dda3",
       "description" : "Acum aproape doi ani, în decembrie 2023, profilul meu de Instagram era un dezastru.",
       "externalURL" : "https://axintefilms.com/product/emNb5yxm",
@@ -570,5 +583,5 @@
       "youtubeURL" : "https://www.youtube.com/watch?v=dnkUIGXIzIM"
     }
   ],
-  "updatedAt" : "2026-11-01"
+  "updatedAt" : "2026-11-02"
 }
