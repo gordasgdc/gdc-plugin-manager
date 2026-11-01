@@ -72,5 +72,15 @@ if __name__ == "__main__":
                 print("DIFERĂ:", rel); bad = 1
         else:
             open(p, "wb").write(data); print("scris", rel, len(data))
-    print("versiune-brand", version(files))
+    v = version(files)
+    if "--check" in sys.argv:
+        # paginile platformei trebuie să refere logo/favicon cu versiunea reală, fără șabloane nerezolvate
+        for rel in ("index.html", "en/index.html", "es/index.html"):
+            t = open(os.path.join(DOCS, rel), encoding="utf8").read()
+            for need in ("/favicon.ico?v=" + v, "/favicon-32.png?v=" + v, "/apple-touch-icon.png?v=" + v, "/icons/icon-192.png?v=" + v, "/icons/icon-512.png?v=" + v):
+                if need not in t:
+                    print("LIPSEȘTE în", rel + ":", need); bad = 1
+            if "{bv}" in t:
+                print("ȘABLON nerezolvat în", rel); bad = 1
+    print("versiune-brand", v)
     sys.exit(bad)

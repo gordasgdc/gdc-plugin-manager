@@ -286,7 +286,7 @@ def render(lang, cat, upd):
     a(f'<!DOCTYPE html>\n<html lang="{lang}">\n<head>\n<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n'
       f'<title>{esc(t["title"])}</title>\n<meta name="description" content="{esc(t["desc"])}">\n<link rel="canonical" href="{BASE}{PATH[lang]}">{alts}\n'
       f'<meta property="og:title" content="{esc(t["title"])}"><meta property="og:description" content="{esc(t["desc"])}"><meta property="og:type" content="website"><meta property="og:url" content="{BASE}{PATH[lang]}">\n'
-      '<meta name="theme-color" content="#f4f1ea">\n<link rel="icon" type="image/x-icon" href="/favicon.ico?v={bv}"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v={bv}"><link rel="apple-touch-icon" href="/apple-touch-icon.png?v={bv}">\n'
+      f'<meta name="theme-color" content="#f4f1ea">\n<link rel="icon" type="image/x-icon" href="/favicon.ico?v={bv}"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v={bv}"><link rel="apple-touch-icon" href="/apple-touch-icon.png?v={bv}">\n'
       f'<meta property="og:image" content="{BASE}/icons/icon-512.png?v={bv}"><meta property="og:image:width" content="512"><meta property="og:image:height" content="512"><meta name="twitter:card" content="summary"><meta name="twitter:image" content="{BASE}/icons/icon-512.png?v={bv}">\n'
       '<link rel="manifest" href="/manifest.webmanifest">\n<link rel="preload" href="/assets/fonts/fraunces-600-latin.woff2" as="font" type="font/woff2" crossorigin>\n<link rel="stylesheet" href="/assets/platform.css">\n</head>\n<body>')
     a(f'<a class="skip" href="#main">{esc(t["skip"])}</a>')
