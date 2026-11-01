@@ -1,16 +1,16 @@
 {
-  "version": "1.2.1",
-  "app_version": "1.2.1",
-  "build": "174",
+  "version": "1.3.0",
+  "app_version": "1.3.0",
+  "build": "177",
   "changes": {
-    "ro": "Foarfeca taie acum toată selecția: cu mai multe elemente selectate, un clic pe unul dintre ele taie toate elementele selectate care traversează acel moment (video, cameră, sunet detașat, titluri), într-un singur pas de anulare; pistele blocate refuză tăierea întreagă, iar o linie comună și o etichetă arată ce se taie. Elementele selectate au un contur galben clar, vizibil în temele Dark și Light. A doua fereastră de plug-in nu se mai deschide exact peste prima. Manualele și pagina au fost actualizate.",
-    "en": "The Blade now cuts the whole selection: with several items selected, one click on one of them cuts every selected item that crosses that instant (video, camera, detached sound, titles) in a single Undo step; locked tracks refuse the whole cut, and a shared guide and a label show what will be cut. Selected items have a clear yellow outline, visible in the Dark and Light themes. A second plug-in window no longer opens exactly over the first. Manuals and page updated.",
-    "es": "La Cuchilla ahora corta toda la selección: con varios elementos seleccionados, un clic en uno de ellos corta todos los seleccionados que cruzan ese instante (vídeo, cámara, sonido separado, títulos) en un solo paso de deshacer; las pistas bloqueadas rechazan el corte completo, y una guía común y una etiqueta muestran lo que se cortará. Los elementos seleccionados tienen un contorno amarillo claro, visible en los temas Dark y Light. La segunda ventana de plug-in ya no se abre exactamente encima de la primera. Manuales y página actualizados."
+    "ro": "Ecranul de înregistrare a fost refăcut: fiecare sursă (ecran, cameră, microfon) are cardul ei cu setările reale, iar «Adaugă sursă» și butonul rubiniu «Începe înregistrarea» stau într-un subsol mereu vizibil, cu folderul și numărătoarea alături. Camera are un meniu Format (Automat sau un format anume) cu modul curent alături și o previzualizare la cerere care explică fiecare stare, fără să pornească înregistrarea. Microfonul și interfețele audio au un indicator de nivel la cerere, cu dBFS și canalele alese. Dimensiunea capturii apare pe card, cu «Detalii rezoluție» la un clic distanță. Manualele și pagina au fost actualizate, cu capturi noi.",
+    "en": "The recording screen has been redesigned: each source (screen, camera, microphone) has its own card with its real settings, and “Add source” and the ruby “Start recording” button sit in a footer that always stays visible, with the folder and countdown beside it. The camera has a Format menu (Automatic or a specific format) with the current mode beside it and an on-demand preview that explains each state without starting the recording. The microphone and audio interfaces have an on-demand input level meter with dBFS and the selected channels. The capture size is shown on the card, with “Resolution details” one click away. Manuals and page updated, with new screenshots.",
+    "es": "La pantalla de grabación se ha rediseñado: cada fuente (pantalla, cámara, micrófono) tiene su tarjeta con sus ajustes reales, y «Añadir fuente» y el botón rubí «Iniciar grabación» están en un pie siempre visible, con la carpeta y la cuenta atrás al lado. La cámara tiene un menú Formato (Automático o un formato concreto) con el modo actual al lado y una vista previa a petición que explica cada estado sin iniciar la grabación. El micrófono y las interfaces de audio tienen un indicador de nivel a petición, con dBFS y los canales elegidos. El tamaño de la captura aparece en la tarjeta, con «Detalles de resolución» a un clic. Manuales y página actualizados, con capturas nuevas."
   },
   "download_url": {
-    "mac": "https://github.com/gordasgdc/sadrog/releases/download/v1.2.1/SADROG-1.2.1.dmg"
+    "mac": "https://github.com/gordasgdc/sadrog/releases/download/v1.3.0/SADROG-1.3.0.dmg"
   },
-  "sha256": "ecb3bcd12a8dd7d4b49a983e2651837371908d57963703ce0aa59e5b268c623d",
-  "size": 5888139,
+  "sha256": "42923ea78c47daa99973532bc2a3ce7d5148c399d26f7821fd8981fd7c6080a9",
+  "size": 6069018,
   "mandatory": false
 }
