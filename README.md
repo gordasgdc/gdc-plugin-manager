@@ -1,51 +1,59 @@
 # GDC Plugin Manager
 
-A native **macOS-only** (Apple Silicon) app that installs, updates, and removes
-Cristi Gordas' (GDC) own DCTL, LUT, and Fuse products for DaVinci Resolve with
-one click — instead of manually copying files into DaVinci Resolve's plugin
-folders.
+The free app for finding, installing, opening and updating GDC products:
+plugins for DaVinci Resolve (DCTL, LUT, Fuse, OFX, PowerGrade, scripts) and
+standalone apps. A native app for **macOS 14+ (Apple Silicon)**, with a separate
+**Windows (64-bit)** client. Site: <https://gordas.dev/>
 
-**The app itself is free.** Browsing the catalog costs nothing — you only pay
-for the individual products you actually want, each bought and licensed
-separately.
+**The app itself is free** and needs no account. Products that need a licence
+are activated separately, through a donation or a granted right; a licence for
+one product never unlocks another.
 
-Built with Swift/SwiftUI, in the same family as
-[CursorPro GDC](https://github.com/gordasgdc/cursorpro-gdc) and
-[GDC License Manager](https://github.com/gordasgdc/gdc-license-manager).
-
-Romanian / English / Spanish interface.
+Interface and site in Romanian, English and Spanish:
+<https://gordas.dev/> · <https://gordas.dev/en/> · <https://gordas.dev/es/>
 
 ## What it does
 
-- Fetches a catalog of GDC's DCTL/LUT/Fuse products for DaVinci Resolve, with
-  a price on each.
-- Installs the selected (purchased) product straight into the folder DaVinci
-  Resolve reads at launch (asking for the admin password only if a direct
-  write is refused).
-- Tracks installed versions and offers one-click updates.
-- Warns before installing/removing while DaVinci Resolve is open, since
-  Resolve only loads plugins at startup.
-- Checks for app updates automatically and shows a banner when a newer
-  version is available.
+- Fetches the public catalog of GDC products, with filters by system and access.
+- **Plugins:** installs them straight into the folder DaVinci Resolve reads at
+  launch (asking for the admin password only if a direct write is refused),
+  tracks installed versions and offers one-click updates. It warns before
+  installing or removing while DaVinci Resolve is open.
+- **Apps:** lists them with their download page. On Mac, *My Apps* recognises
+  GDC apps already on disk — including ones installed without the Manager — by
+  bundle identity and Apple signature (not by folder name), shows the installed
+  version and whether the app is running, and flags a newer version. *Update*
+  opens the product page; a running app is never replaced. Installed does not
+  mean activated, and the Manager does not uninstall apps it did not install.
+- Checks for Manager updates automatically and shows a banner when one exists.
 
 ## Download
 
-Get the latest build from [Releases](../../releases/latest) — free, no
-account, no trial. Each product's price and a "Buy" button (opens WhatsApp)
-are shown on its own card in the catalog; a purchased product's license code
-is pasted into the app's **License** page to unlock installing/updating that
-one product.
+Get the latest build from [Releases](../../releases/latest) or from
+<https://gordas.dev/>. Mac: `GDCPluginManager-Mac.dmg`. Windows:
+`GDCPluginManager-Windows.zip`. Free, no account.
+
+## Resumen (ES) · Rezumat (RO)
+
+- **ES:** aplicación gratuita para encontrar, instalar, abrir y actualizar los
+  productos GDC. En Mac, *Mis aplicaciones* reconoce las aplicaciones GDC ya
+  instaladas (también las instaladas sin el Manager). Sitio:
+  <https://gordas.dev/es/>
+- **RO:** aplicația gratuită prin care găsești, instalezi, deschizi și
+  actualizezi produsele GDC. Pe Mac, *Aplicațiile mele* recunoaște aplicațiile
+  GDC deja instalate (și cele instalate fără Manager). Site:
+  <https://gordas.dev/>
 
 ## License
 
-The app is free forever. Each product requires its own one-time, per-computer
-license (see the **License** page in the app) — buying one product does not
+The app is free. Each licensed product has its own licence, tied to one
+computer (see the **License** page in the app); activating one product does not
 unlock any other. Already-installed products keep working in DaVinci Resolve
-regardless of license state.
+regardless of licence state.
 
 Source code in this repository is provided under the MIT license (see
-[LICENSE](LICENSE)) — it's open for review; the app's own terms for buying and
-activating individual products are in
+[LICENSE](LICENSE)) — it's open for review; the app's own terms for activating
+individual products are in
 [installer/License.txt](installer/License.txt).
 
 ## Repository layout

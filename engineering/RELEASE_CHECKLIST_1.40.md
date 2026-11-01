@@ -58,3 +58,5 @@ Testul real de actualizare Windows public → candidat nu se poate face izolat �
 - Furnizor 1.53.0 instalat local (semnat, fără token). La prima pornire: „Continuă în PRODUCȚIE”.
 - Rămân: Mac P2 (actualizare reală 1.39.4 → 1.40.0 pe un Mac de client — Mac-ul de dezvoltare a primit 1.40.0 din build);
   revocarea PAT-ului vechi (după migrare). Ramura `ci-test-1.38.1` ștearsă.
+
+- Integrarea în platformă a produselor (catalog, detectare, pagină, verificare live): vezi `engineering/PRODUCT_PLATFORM_INTEGRATION.md`.

@@ -1,0 +1,20 @@
+{
+  "_": "Produse care au declarat integrarea în platformă. Se adaugă o intrare la integrarea unui produs nou; nu se completează retroactiv.",
+  "products": [
+    {
+      "id": "sadrog",
+      "name": "SADROG",
+      "os": "macOS",
+      "page": "https://gordas.dev/sadrog/",
+      "download": "https://github.com/gordasgdc/sadrog/releases/latest/download/SADROG.dmg",
+      "manifest": "https://gordas.dev/sadrog/update.json",
+      "noPricingProductID": true,
+      "noPublicPrice": true,
+      "detect": {
+        "bundle id": "dev.gordas.sadrog",
+        "Team ID": "8AR6XP8MG7",
+        "manifest": "https://gordas.dev/sadrog/update.json"
+      }
+    }
+  ]
+}

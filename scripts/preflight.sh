@@ -25,6 +25,7 @@ else
   has '^(Sources/GDCPluginManagerFurnizor|Tests/GDCPluginManagerFurnizorTests)' && run teste-furnizor swift test --filter GDCPluginManagerFurnizorTests
   has 'PromoBanner|LaunchBanner' && run teste-bannere swift test --filter 'PromoBannerTests|BannerImageProcessorTests'
 fi
+has '^(docs/(catalog\.json|covers/|index\.html|en/|es/)|scripts/(product-integration|verify_product_integration)|Sources/GDCPluginManager/MyAppsLauncher)' && run integrare-produse python3 scripts/verify_product_integration.py
 has '^Sources/(GDCPluginManager|GDCPluginManagerFurnizor)/' && run literale-design scripts/audit-design-literals.sh
 has '\.swift$' && run culori-tema ~/Developer/_gdc-tools/audit-theme-colors.sh
 has '^Sources/GDCPluginManagerFurnizor/|PrivateCatalogAuth|Package.swift' && run token-vechi scripts/verify-no-legacy-token.sh

@@ -10,14 +10,14 @@
   "mandatory": false,
   "min_version": "1.0.0",
   "mac": {
-    "version": "1.40.1",
-    "release_date": "2026-10-09",
-    "changes": "GDC STYLE Client apare acum în „Aplicațiile mele”: îl pornești de acolo și vezi dacă există o versiune nouă. Restul aplicației rămâne neschimbat.",
+    "version": "1.41.0",
+    "release_date": "2026-11-01",
+    "changes": "SADROG apare în catalog și în „Aplicațiile mele”: îl recunoaște chiar dacă l-ai instalat direct, cu versiunea instalată și semnalarea unei versiuni noi. Restul aplicației rămâne neschimbat.",
     "download_url": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Mac.zip",
     "mandatory": false,
     "min_version": "1.0.0",
-    "download_url_dmg": "https://github.com/gordasgdc/gdc-plugin-manager/releases/download/v1.40.1/GDCPluginManager-1.40.1.dmg",
-    "sha256": "24bbdd50172a22dcd2fe65105eda9c4b8311e8041e4b6f66d68a121bea0f8c8d"
+    "download_url_dmg": "https://github.com/gordasgdc/gdc-plugin-manager/releases/download/v1.41.0/GDCPluginManager-1.41.0.dmg",
+    "sha256": "f563b89032feb86a105c3c31d166ecde9cd6152009b8fc6e1ff56b22f2bb2923"
   },
   "windows": {
     "version": "1.38.3",
