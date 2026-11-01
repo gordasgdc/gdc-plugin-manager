@@ -1,5 +1,11 @@
 # Changelog — GDC Plugin Manager
 
+## v1.41.1 Client (2026-11-01) — „Aplicațiile mele”: acțiunea de actualizare spune ce face
+- Pentru o aplicație găsită pe disc (de exemplu SADROG), butonul de actualizare se numește acum „Deschide pagina de actualizare…” (RO/EN/ES): deschide pagina produsului, de unde descarci versiunea nouă; Managerul nu instalează și nu înlocuiește aplicația.
+- Insigna „Actualizare” apare doar când versiunea instalată (citită din aplicație) este mai veche decât cea publicată; dacă versiunea instalată sau manifestul nu pot fi citite, nu se afișează nicio actualizare.
+- Detectarea SADROG cere Manager 1.41.0 sau mai nou; reîmprospătarea catalogului nu o adaugă în versiunile mai vechi.
+- Teste noi: `ExternalAppUpdateStateTests`.
+
 ## v1.41.0 Client (2026-11-01) — SADROG în catalog și în „Aplicațiile mele”
 - Catalog: SADROG (captură și montaj video, doar macOS) apare în Aplicații, cu pagină, descărcare și evaluare de 5 zile; nu este plugin.
 - „Aplicațiile mele” recunoaște SADROG chiar dacă l-ai instalat direct din DMG, fără Manager: după identitatea aplicației și semnătura Apple (GDC), nu după numele folderului. Arată versiunea instalată, dacă rulează acum și, când există o versiune nouă, butonul „Actualizează” (deschide pagina produsului; Managerul nu înlocuiește o aplicație deschisă).

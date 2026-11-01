@@ -279,9 +279,7 @@ final class MyAppsStore: NSObject, ObservableObject {
             guard let latest else { return }
             var status = statuses[app.id] ?? Status(isInstalled: true, installedVersion: installedVersion, appPath: appURL.path, isRunning: running)
             status.latestVersion = latest
-            if let installedVersion {
-                status.hasUpdate = Self.isNewer(latest, than: installedVersion)
-            }
+            status.hasUpdate = ExternalAppUpdateState.evaluate(installed: installedVersion, published: latest, isNewer: Self.isNewer) == .updateAvailable
             statuses[app.id] = status
         }
     }
@@ -464,7 +462,7 @@ private struct MyAppCard: View {
             }
             Spacer(minLength: 0)
             if status.isInstalled {
-                HStack {
+                VStack(alignment: .leading, spacing: GDCTokens.Space.s) {
                     Button(L.t("myApps.open")) { MyAppsStore.shared.launch(app) }
                     if status.hasUpdate, let page = app.pageURL {
                         Button(L.t("myApps.update")) { NSWorkspace.shared.open(page) }

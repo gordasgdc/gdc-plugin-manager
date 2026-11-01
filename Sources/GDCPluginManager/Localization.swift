@@ -252,7 +252,7 @@ enum L {
         "myApps.notInstalled": [.ro: "Neinstalat pe acest Mac", .en: "Not installed on this Mac", .es: "No instalado en este Mac"],
         "myApps.updateAvailable": [.ro: "ACTUALIZARE", .en: "UPDATE", .es: "ACTUALIZAR"],
         "myApps.running": [.ro: "rulează", .en: "running", .es: "en ejecución"],
-        "myApps.update": [.ro: "Actualizează", .en: "Update", .es: "Actualizar"],
+        "myApps.update": [.ro: "Deschide pagina de actualizare…", .en: "Open update page…", .es: "Abrir página de actualización…"],
         "myApps.updateHelp": [.ro: "Deschide pagina produsului, de unde descarci versiunea nouă. Managerul nu înlocuiește aplicația.", .en: "Opens the product page, where you download the new version. The Manager does not replace the app.", .es: "Abre la página del producto, donde descargas la versión nueva. El Manager no sustituye la aplicación."],
         "myApps.closeBeforeUpdate": [.ro: "Aplicația rulează acum. Închide-o înainte de a instala versiunea nouă.", .en: "The app is running. Quit it before installing the new version.", .es: "La aplicación está en ejecución. Ciérrala antes de instalar la versión nueva."],
         // Coperți de produs + preview mărit (vezi CoverImageViews.swift).
