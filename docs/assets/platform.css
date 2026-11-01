@@ -64,3 +64,5 @@ figure{margin:0}
 @media(max-width:860px){.hero .wrap,.intro,.split,.split.rev,.feat,.two{grid-template-columns:1fr;gap:28px}.split.rev .shot{order:0}.sec{padding-top:72px}.split{margin-bottom:64px}.cmp tbody th{width:auto;display:block;padding-bottom:0;border:0}.cmp tr{display:block;border-bottom:1px solid var(--line);padding:10px 0}.cmp td{display:block;width:auto;border:0;padding:4px 0}.cmp thead{display:none}.cmp td::before{content:attr(data-h);display:block;font-family:var(--serif);font-weight:600;color:var(--cu)}.prod a.row{grid-template-columns:48px minmax(0,1fr) 20px}.prod .o{grid-column:2}.prod .go{grid-row:1;grid-column:3}}
 @media(max-width:560px){body{font-size:16px}.wrap{padding:0 16px}.brand span{display:none}.steps{grid-template-columns:1fr}.steps li{border-right:0;margin-right:0;border-bottom:1px solid var(--line)}.feat{padding:22px}.bar{gap:8px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+
+.flogo{display:flex;align-items:center;gap:10px;font-family:var(--serif);font-weight:600;color:#fff;margin:0 0 14px}.flogo img{border-radius:50%}
