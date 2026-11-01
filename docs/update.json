@@ -10,14 +10,14 @@
   "mandatory": false,
   "min_version": "1.0.0",
   "mac": {
-    "version": "1.41.0",
-    "release_date": "2026-11-01",
-    "changes": "SADROG apare în catalog și în „Aplicațiile mele”: îl recunoaște chiar dacă l-ai instalat direct, cu versiunea instalată și semnalarea unei versiuni noi. Restul aplicației rămâne neschimbat.",
+    "version": "1.41.1",
+    "release_date": "2026-11-02",
+    "changes": "În „Aplicațiile mele”, acțiunea pentru o aplicație cu versiune nouă se numește „Deschide pagina de actualizare…” și deschide pagina produsului; Managerul nu înlocuiește aplicația. Insigna de actualizare apare doar din versiuni reale. Recunoașterea SADROG cere Manager 1.41.0 sau mai nou.",
     "download_url": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Mac.zip",
     "mandatory": false,
     "min_version": "1.0.0",
-    "download_url_dmg": "https://github.com/gordasgdc/gdc-plugin-manager/releases/download/v1.41.0/GDCPluginManager-1.41.0.dmg",
-    "sha256": "f563b89032feb86a105c3c31d166ecde9cd6152009b8fc6e1ff56b22f2bb2923"
+    "download_url_dmg": "https://github.com/gordasgdc/gdc-plugin-manager/releases/download/v1.41.1/GDCPluginManager-1.41.1.dmg",
+    "sha256": "d3938d86275941796e115ab5e3a24f629791c8f86c1a7b72fc5508d7ed148f7a"
   },
   "windows": {
     "version": "1.38.3",
