@@ -1,16 +1,16 @@
 {
-  "version": "1.1.0",
-  "app_version": "1.1.0",
-  "build": 170,
+  "version": "1.2.0",
+  "app_version": "1.2.0",
+  "build": 172,
   "changes": {
-    "ro": "Selecție dreptunghiulară în timeline (⇧/⌘ adaugă, Esc anulează), mutare și tăiere la cursor doar pentru elementele selectate, mutarea unui clip tăiat pe o pistă video, rânduri independente pentru titluri, încadrarea imaginii în cercul prezentatorului, lupă pentru evidențieri și explicații la trecerea mouse-ului peste butoane și unelte.",
-    "en": "Rectangle selection in the timeline (⇧/⌘ add, Esc cancels), move and cut at the playhead for the selected items only, moving a cut clip to a video track, independent rows for titles, framing the image inside the presenter circle, a lens for highlights, and hover explanations for buttons and tools.",
-    "es": "Selección con rectángulo en el timeline (⇧/⌘ añaden, Esc cancela), mover y cortar en el cursor solo los elementos seleccionados, mover un clip cortado a una pista de vídeo, filas independientes para los títulos, encuadrar la imagen en el círculo del presentador, lupa para resaltados y explicaciones al pasar el ratón por botones y herramientas."
+    "ro": "Mutarea împreună a elementelor selectate, inclusiv clipurile de pe pista principală: blocul de clipuri ajunge la cea mai apropiată limită, restul elementelor se mută cu aceeași distanță, sunetul detașat merge cu clipul, iar raportul în timp rămâne identic; o linie punctată arată destinația, iar o destinație imposibilă este explicată. Exportul comprimat nu mai poate rămâne blocat. Manualele și pagina au fost verificate din nou.",
+    "en": "Selected items now move together even when they include main-track clips: the clip block lands at the nearest boundary, other items shift by the same distance, detached sound travels with its clip and the timing between them stays identical; a dashed outline shows the destination and an impossible one is explained. The compressed export can no longer hang. Manuals and page re-checked.",
+    "es": "Los elementos seleccionados se mueven juntos también cuando incluyen clips de la pista principal: el bloque de clips cae en el límite más cercano, los demás elementos se desplazan la misma distancia, el sonido separado viaja con su clip y la relación temporal queda idéntica; un contorno discontinuo muestra el destino y uno imposible se explica. La exportación comprimida ya no puede quedarse colgada. Manuales y página revisados de nuevo."
   },
   "download_url": {
-    "mac": "https://github.com/gordasgdc/sadrog/releases/download/v1.1.0/SADROG-1.1.0.dmg"
+    "mac": "https://github.com/gordasgdc/sadrog/releases/download/v1.2.0/SADROG-1.2.0.dmg"
   },
-  "sha256": "91f39139fd328e9537f9f1a649833c7df57e554cf7fa33b6ba04606a42cc9105",
-  "size": 4811798,
+  "sha256": "86ac34712c3d316e3eaa12a62ae61347c95e3ad4a29e25d6e48ec2d1d5bc6871",
+  "size": 5885910,
   "mandatory": false
 }
