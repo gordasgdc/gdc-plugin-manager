@@ -1,16 +1,16 @@
 {
-  "version": "1.2.0",
-  "app_version": "1.2.0",
-  "build": 172,
+  "version": "1.2.1",
+  "app_version": "1.2.1",
+  "build": 174,
   "changes": {
-    "ro": "Mutarea împreună a elementelor selectate, inclusiv clipurile de pe pista principală: blocul de clipuri ajunge la cea mai apropiată limită, restul elementelor se mută cu aceeași distanță, sunetul detașat merge cu clipul, iar raportul în timp rămâne identic; o linie punctată arată destinația, iar o destinație imposibilă este explicată. Exportul comprimat nu mai poate rămâne blocat. Manualele și pagina au fost verificate din nou.",
-    "en": "Selected items now move together even when they include main-track clips: the clip block lands at the nearest boundary, other items shift by the same distance, detached sound travels with its clip and the timing between them stays identical; a dashed outline shows the destination and an impossible one is explained. The compressed export can no longer hang. Manuals and page re-checked.",
-    "es": "Los elementos seleccionados se mueven juntos también cuando incluyen clips de la pista principal: el bloque de clips cae en el límite más cercano, los demás elementos se desplazan la misma distancia, el sonido separado viaja con su clip y la relación temporal queda idéntica; un contorno discontinuo muestra el destino y uno imposible se explica. La exportación comprimida ya no puede quedarse colgada. Manuales y página revisados de nuevo."
+    "ro": "Foarfeca taie acum toată selecția: cu mai multe elemente selectate, un clic pe unul dintre ele taie toate elementele selectate care traversează acel moment (video, cameră, sunet detașat, titluri), într-un singur pas de anulare; pistele blocate refuză tăierea întreagă, iar o linie comună și o etichetă arată ce se taie. Elementele selectate au un contur galben clar, vizibil în temele Dark și Light. A doua fereastră de plug-in nu se mai deschide exact peste prima. Manualele și pagina au fost actualizate.",
+    "en": "The Blade now cuts the whole selection: with several items selected, one click on one of them cuts every selected item that crosses that instant (video, camera, detached sound, titles) in a single Undo step; locked tracks refuse the whole cut, and a shared guide and a label show what will be cut. Selected items have a clear yellow outline, visible in the Dark and Light themes. A second plug-in window no longer opens exactly over the first. Manuals and page updated.",
+    "es": "La Cuchilla ahora corta toda la selección: con varios elementos seleccionados, un clic en uno de ellos corta todos los seleccionados que cruzan ese instante (vídeo, cámara, sonido separado, títulos) en un solo paso de deshacer; las pistas bloqueadas rechazan el corte completo, y una guía común y una etiqueta muestran lo que se cortará. Los elementos seleccionados tienen un contorno amarillo claro, visible en los temas Dark y Light. La segunda ventana de plug-in ya no se abre exactamente encima de la primera. Manuales y página actualizados."
   },
   "download_url": {
-    "mac": "https://github.com/gordasgdc/sadrog/releases/download/v1.2.0/SADROG-1.2.0.dmg"
+    "mac": "https://github.com/gordasgdc/sadrog/releases/download/v1.2.1/SADROG-1.2.1.dmg"
   },
-  "sha256": "86ac34712c3d316e3eaa12a62ae61347c95e3ad4a29e25d6e48ec2d1d5bc6871",
-  "size": 5885910,
+  "sha256": "ecb3bcd12a8dd7d4b49a983e2651837371908d57963703ce0aa59e5b268c623d",
+  "size": 5888139,
   "mandatory": false
 }
