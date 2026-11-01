@@ -1,7 +1,7 @@
 {
   "version": "1.2.1",
   "app_version": "1.2.1",
-  "build": 174,
+  "build": "174",
   "changes": {
     "ro": "Foarfeca taie acum toată selecția: cu mai multe elemente selectate, un clic pe unul dintre ele taie toate elementele selectate care traversează acel moment (video, cameră, sunet detașat, titluri), într-un singur pas de anulare; pistele blocate refuză tăierea întreagă, iar o linie comună și o etichetă arată ce se taie. Elementele selectate au un contur galben clar, vizibil în temele Dark și Light. A doua fereastră de plug-in nu se mai deschide exact peste prima. Manualele și pagina au fost actualizate.",
     "en": "The Blade now cuts the whole selection: with several items selected, one click on one of them cuts every selected item that crosses that instant (video, camera, detached sound, titles) in a single Undo step; locked tracks refuse the whole cut, and a shared guide and a label show what will be cut. Selected items have a clear yellow outline, visible in the Dark and Light themes. A second plug-in window no longer opens exactly over the first. Manuals and page updated.",
