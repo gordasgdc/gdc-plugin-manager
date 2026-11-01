@@ -315,7 +315,7 @@ def render(lang, cat, upd):
         ci = x.get("coverImage") or ""
         cover = ci if ci.startswith("http") else ("/" + ci if ci else "")
         osl = t["os"].get(x.get("supportedOS", "crossPlatform"), "")
-        rowsp += (f'<a class="row" href="{esc(x["url"])}"><img src="{esc(cover)}" width="48" height="48" alt="" loading="lazy"><span class="n">{esc(x["name"])}</span>'
+        rowsp += (f'<a class="row" href="{esc(x["url"])}">' + (f'<img src="{esc(cover)}" width="48" height="48" alt="" loading="lazy">' if cover else '<span></span>') + f'<span class="n">{esc(x["name"])}</span>'
                   f'<span class="o">{esc(osl)}</span><span class="go" aria-hidden="true">→</span></a>')
     sp = {"ro": "/sadrog/", "en": "/sadrog/en/", "es": "/sadrog/es/"}[lang]
     a(f'<section class="sec" id="produse"><div class="wrap"><header class="head"><h2>{esc(t["prod_h"])}</h2><p class="lead">{esc(t["prod_lead"])}</p></header>'
