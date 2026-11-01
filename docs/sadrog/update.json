@@ -1,10 +1,16 @@
 {
-  "version": "1.0.2",
-  "app_version": "1.0.2",
-  "build": 169,
-  "changes": {"ro": "După detașarea sunetului unui clip, elementul audio separat își arată din nou controalele (volum, mute, efecte audio). Pistele au un mâner de mutare mai mare, iar tragerea unui element peste prima sau sub ultima pistă creează o pistă nouă.", "en": "After detaching a clip's sound, the separate audio item shows its controls again (volume, mute, audio effects). Tracks have a larger move handle, and dragging an item above the top track or below the last one creates a new track.", "es": "Tras separar el sonido de un clip, el elemento de audio separado vuelve a mostrar sus controles (volumen, silencio, efectos de audio). Las pistas tienen un asa de movimiento más grande y arrastrar un elemento por encima de la primera pista o por debajo de la última crea una pista nueva."},
-  "download_url": {"mac": "https://github.com/gordasgdc/sadrog/releases/download/v1.0.2/SADROG-1.0.2.dmg"},
-  "sha256": "8ba4e5e4c2566442985c0df323f92a5d0a81789642f5f665ca060ad704cf1c26",
-  "size": 4700414,
+  "version": "1.1.0",
+  "app_version": "1.1.0",
+  "build": 170,
+  "changes": {
+    "ro": "Selecție dreptunghiulară în timeline (⇧/⌘ adaugă, Esc anulează), mutare și tăiere la cursor doar pentru elementele selectate, mutarea unui clip tăiat pe o pistă video, rânduri independente pentru titluri, încadrarea imaginii în cercul prezentatorului, lupă pentru evidențieri și explicații la trecerea mouse-ului peste butoane și unelte.",
+    "en": "Rectangle selection in the timeline (⇧/⌘ add, Esc cancels), move and cut at the playhead for the selected items only, moving a cut clip to a video track, independent rows for titles, framing the image inside the presenter circle, a lens for highlights, and hover explanations for buttons and tools.",
+    "es": "Selección con rectángulo en el timeline (⇧/⌘ añaden, Esc cancela), mover y cortar en el cursor solo los elementos seleccionados, mover un clip cortado a una pista de vídeo, filas independientes para los títulos, encuadrar la imagen en el círculo del presentador, lupa para resaltados y explicaciones al pasar el ratón por botones y herramientas."
+  },
+  "download_url": {
+    "mac": "https://github.com/gordasgdc/sadrog/releases/download/v1.1.0/SADROG-1.1.0.dmg"
+  },
+  "sha256": "91f39139fd328e9537f9f1a649833c7df57e554cf7fa33b6ba04606a42cc9105",
+  "size": 4811798,
   "mandatory": false
 }
