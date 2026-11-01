@@ -1,10 +1,10 @@
 {
-  "version": "1.0.1",
-  "app_version": "1.0.1",
-  "build": 168,
-  "changes": {"ro": "Ajutor ▸ Manual de utilizare… (și în fereastra Despre) deschide manualul PDF în limba aleasă în SADROG.", "en": "Help ▸ User Manual… (also in the About window) opens the manual PDF in the language chosen in SADROG.", "es": "Ayuda ▸ Manual de usuario… (y en la ventana Acerca de) abre el manual PDF en el idioma elegido en SADROG."},
-  "download_url": {"mac": "https://github.com/gordasgdc/sadrog/releases/download/v1.0.1/SADROG-1.0.1.dmg"},
-  "sha256": "dbede87edcf2cbbc926fbb01d764a5af79ce0df746f4a345cba2fbb915615179",
-  "size": 4694913,
+  "version": "1.0.2",
+  "app_version": "1.0.2",
+  "build": 169,
+  "changes": {"ro": "După detașarea sunetului unui clip, elementul audio separat își arată din nou controalele (volum, mute, efecte audio). Pistele au un mâner de mutare mai mare, iar tragerea unui element peste prima sau sub ultima pistă creează o pistă nouă.", "en": "After detaching a clip's sound, the separate audio item shows its controls again (volume, mute, audio effects). Tracks have a larger move handle, and dragging an item above the top track or below the last one creates a new track.", "es": "Tras separar el sonido de un clip, el elemento de audio separado vuelve a mostrar sus controles (volumen, silencio, efectos de audio). Las pistas tienen un asa de movimiento más grande y arrastrar un elemento por encima de la primera pista o por debajo de la última crea una pista nueva."},
+  "download_url": {"mac": "https://github.com/gordasgdc/sadrog/releases/download/v1.0.2/SADROG-1.0.2.dmg"},
+  "sha256": "8ba4e5e4c2566442985c0df323f92a5d0a81789642f5f665ca060ad704cf1c26",
+  "size": 4700414,
   "mandatory": false
 }
