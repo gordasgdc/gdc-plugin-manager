@@ -47,6 +47,11 @@ struct MyAppEntry: Identifiable {
     let tint: Color
     let versionSource: VersionSource
     var installedVersionSource: InstalledVersionSource = .infoPlist
+    /// Team ID Apple așteptat. Când e setat, o copie cu același bundle ID dar semnătură invalidă sau alt Team ID
+    /// nu este recunoscută ca instalare (copii de test, bundle-uri modificate). `nil` = comportamentul vechi.
+    var teamIdentifier: String? = nil
+    /// Pagina produsului, deschisă de acțiunea „Actualizează" — Managerul nu înlocuiește aplicații instalate extern.
+    var pageURL: URL? = nil
 }
 
 /// Cele 4 aplicații GDC cu bundle .app real, lansabil direct pe Mac.
@@ -80,6 +85,12 @@ let knownGDCApps: [MyAppEntry] = [
     MyAppEntry(id: "gdc-style-client", name: "GDC STYLE Client", bundleIdentifier: "dev.gordas.GDCStyleClient",
                iconSymbol: "paintpalette", tint: .orange,
                versionSource: .updateJSON(url: URL(string: "https://gordas.dev/gdc-style-client/update.json")!)),
+    // 2026-11-01: SADROG (captură + editor, doar macOS). Instalat direct din DMG, fără Manager: recunoscut după bundle ID,
+    // verificat după Team ID. Versiunea publicată vine din `sadrog/update.json`. Instalat NU înseamnă activat.
+    MyAppEntry(id: "sadrog", name: "SADROG", bundleIdentifier: "dev.gordas.sadrog",
+               iconSymbol: "record.circle", tint: .red,
+               versionSource: .updateJSON(url: URL(string: "https://gordas.dev/sadrog/update.json")!),
+               teamIdentifier: "8AR6XP8MG7", pageURL: URL(string: "https://gordas.dev/sadrog/")),
     MyAppEntry(id: "cgconvertor", name: "CGConvertor", bundleIdentifier: "com.cristigordas.CGConvertor",
                iconSymbol: "film.stack", tint: .purple,
                versionSource: .githubReleases(repo: "gordasgdc/CGConvertor")),
@@ -124,6 +135,8 @@ final class MyAppsStore: NSObject, ObservableObject {
         /// REALA a aplicatiei (NSWorkspace), niciodata un simbol generic
         /// cand aplicatia chiar exista pe disc.
         var appPath: String?
+        /// Aplicația rulează chiar din copia detectată. Managerul nu o închide și nu o înlocuiește.
+        var isRunning = false
     }
 
     @Published private(set) var statuses: [String: Status] = [:]
@@ -141,6 +154,9 @@ final class MyAppsStore: NSObject, ObservableObject {
         NSWorkspace.shared.notificationCenter.addObserver(
             self, selector: #selector(handleAppLaunched),
             name: NSWorkspace.didLaunchApplicationNotification, object: nil)
+        NSWorkspace.shared.notificationCenter.addObserver(
+            self, selector: #selector(handleAppLaunched),
+            name: NSWorkspace.didTerminateApplicationNotification, object: nil)
         watchApplicationsFolders()
     }
 
@@ -231,29 +247,37 @@ final class MyAppsStore: NSObject, ObservableObject {
     /// deschiderea esueaza, desi aplicatia e instalata cuminte in
     /// /Applications. Alegem explicit copia din /Applications si cadem pe
     /// comportamentul vechi doar daca nu exista niciuna acolo.
-    private static func resolveAppURL(bundleIdentifier: String) -> URL? {
-        let candidates = NSWorkspace.shared.urlsForApplications(withBundleIdentifier: bundleIdentifier)
-        if let inApplications = candidates.first(where: { $0.path.hasPrefix("/Applications/") }) {
-            return inApplications
+    private static func resolveAppURL(for app: MyAppEntry) -> URL? {
+        let candidates = NSWorkspace.shared.urlsForApplications(withBundleIdentifier: app.bundleIdentifier)
+        guard let team = app.teamIdentifier else {
+            // Comportament neschimbat pentru intrările fără Team ID declarat.
+            if let inApplications = candidates.first(where: { $0.path.hasPrefix("/Applications/") }) { return inApplications }
+            // Un volum deconectat lasa in urma o cale care nu mai exista pe disc.
+            if let reachable = candidates.first(where: { FileManager.default.fileExists(atPath: $0.path) }) { return reachable }
+            return NSWorkspace.shared.urlForApplication(withBundleIdentifier: app.bundleIdentifier)
         }
-        // Un volum deconectat lasa in urma o cale care nu mai exista pe disc.
-        if let reachable = candidates.first(where: { FileManager.default.fileExists(atPath: $0.path) }) {
-            return reachable
-        }
-        return NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundleIdentifier)
+        return ExternalAppSelection.choose(from: candidates) { ExternalAppSignature.isValid(appURL: $0, teamIdentifier: team) }
     }
+
+    /// Procesul rulează chiar din această copie (nu dintr-o copie de test cu același bundle ID).
+    private static func isRunning(app: MyAppEntry, at appURL: URL) -> Bool {
+        NSRunningApplication.runningApplications(withBundleIdentifier: app.bundleIdentifier)
+            .contains { $0.bundleURL?.standardizedFileURL == appURL.standardizedFileURL }
+    }
+
     private func refresh(_ app: MyAppEntry) {
-        guard let appURL = Self.resolveAppURL(bundleIdentifier: app.bundleIdentifier) else {
+        guard let appURL = Self.resolveAppURL(for: app) else {
             statuses[app.id] = Status(isInstalled: false)
             return
         }
         let installedVersion = Self.readInstalledVersion(appURL: appURL, source: app.installedVersionSource)
-        statuses[app.id] = Status(isInstalled: true, installedVersion: installedVersion, appPath: appURL.path)
+        let running = Self.isRunning(app: app, at: appURL)
+        statuses[app.id] = Status(isInstalled: true, installedVersion: installedVersion, appPath: appURL.path, isRunning: running)
 
         Task {
             let latest = await fetchLatestVersion(app.versionSource)
             guard let latest else { return }
-            var status = statuses[app.id] ?? Status(isInstalled: true, installedVersion: installedVersion, appPath: appURL.path)
+            var status = statuses[app.id] ?? Status(isInstalled: true, installedVersion: installedVersion, appPath: appURL.path, isRunning: running)
             status.latestVersion = latest
             if let installedVersion {
                 status.hasUpdate = Self.isNewer(latest, than: installedVersion)
@@ -322,7 +346,7 @@ final class MyAppsStore: NSObject, ObservableObject {
     }
 
     func launch(_ app: MyAppEntry) {
-        guard let appURL = Self.resolveAppURL(bundleIdentifier: app.bundleIdentifier) else { return }
+        guard let appURL = Self.resolveAppURL(for: app) else { return }
         NSWorkspace.shared.open(appURL)
     }
 
@@ -436,11 +460,17 @@ private struct MyAppCard: View {
             }
             Text(app.name).font(.headline)
             if let v = status.installedVersion {
-                Text("v\(v)").font(.caption2).foregroundStyle(.tertiary)
+                Text("v\(v)" + (status.isRunning ? " · " + L.t("myApps.running") : "")).font(.caption2).foregroundStyle(.tertiary)
             }
             Spacer(minLength: 0)
             if status.isInstalled {
-                Button(L.t("myApps.open")) { MyAppsStore.shared.launch(app) }
+                HStack {
+                    Button(L.t("myApps.open")) { MyAppsStore.shared.launch(app) }
+                    if status.hasUpdate, let page = app.pageURL {
+                        Button(L.t("myApps.update")) { NSWorkspace.shared.open(page) }
+                            .help(status.isRunning ? L.t("myApps.closeBeforeUpdate") : L.t("myApps.updateHelp"))
+                    }
+                }
             } else {
                 Text(L.t("myApps.notInstalled")).font(.caption).foregroundStyle(.secondary)
             }

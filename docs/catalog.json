@@ -242,6 +242,22 @@
     {
       "access" : {
         "group" : "gdc",
+        "kind" : "trial",
+        "note" : "Evaluare de 5 zile, apoi licența se activează din aplicație. Doar macOS 15+, Apple Silicon.",
+        "tags" : [
+          "Utilitare"
+        ]
+      },
+      "coverImage" : "covers/SADROG.png?v=5d0b2751",
+      "downloadURL" : "https://github.com/gordasgdc/sadrog/releases/latest/download/SADROG.dmg",
+      "id" : "sadrog",
+      "name" : "SADROG",
+      "supportedOS" : "macOS",
+      "url" : "https://gordas.dev/sadrog/"
+    },
+    {
+      "access" : {
+        "group" : "gdc",
         "kind" : "free",
         "tags" : [
           "Utilitare"
@@ -554,5 +570,5 @@
       "youtubeURL" : "https://www.youtube.com/watch?v=dnkUIGXIzIM"
     }
   ],
-  "updatedAt" : "2026-10-20"
+  "updatedAt" : "2026-11-01"
 }

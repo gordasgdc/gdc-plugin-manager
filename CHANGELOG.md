@@ -1,5 +1,12 @@
 # Changelog — GDC Plugin Manager
 
+## v1.41.0 Client (2026-11-01) — SADROG în catalog și în „Aplicațiile mele”
+- Catalog: SADROG (captură și montaj video, doar macOS) apare în Aplicații, cu pagină, descărcare și evaluare de 5 zile; nu este plugin.
+- „Aplicațiile mele” recunoaște SADROG chiar dacă l-ai instalat direct din DMG, fără Manager: după identitatea aplicației și semnătura Apple (GDC), nu după numele folderului. Arată versiunea instalată, dacă rulează acum și, când există o versiune nouă, butonul „Actualizează” (deschide pagina produsului; Managerul nu înlocuiește o aplicație deschisă).
+- O copie de test, o imagine de disc montată sau un build de dezvoltare nu mai sunt luate drept instalarea ta. Instalat nu înseamnă activat: Managerul nu arată și nu schimbă licența SADROG.
+- Teste noi: alegerea copiei (`ExternalAppSelectionTests`) și contractul SADROG (`MyAppsSadrogTests`).
+- Fără alte modificări de comportament; secțiunea Windows din `update.json` rămâne neatinsă.
+
 ## v1.40.1 Client (2026-10-09) — GDC STYLE Client în „Aplicațiile mele”
 - „Aplicațiile mele” arată acum GDC STYLE Client: pornește aplicația instalată (recunoscută după `dev.gordas.GDCStyleClient`), arată versiunea instalată și semnalează „Actualizare disponibilă” când canalul public `https://gordas.dev/gdc-style-client/update.json` anunță o versiune mai nouă. Dacă nu e instalată, cardul rămâne estompat; descărcarea e în catalog (`https://gordas.dev/gdc-style-client/`).
 - Test de contract nou (`MyAppsStyleClientTests`): intrarea, bundle ID-ul, sursa de versiune și pagina din catalog.

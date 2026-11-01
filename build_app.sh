@@ -87,6 +87,16 @@ else
     fi
 fi
 
+# GDCPM_OUT_DIR=<folder>: pune aplicatia semnata acolo si se opreste — NU atinge /Applications si
+# NU inchide o instanta care ruleaza (build de verificare/release fara a inlocui aplicatia utilizatorului).
+if [ -n "${GDCPM_OUT_DIR:-}" ]; then
+    mkdir -p "$GDCPM_OUT_DIR"
+    rm -rf "$GDCPM_OUT_DIR/GDCPluginManager.app"
+    mv "$BUILD_OUT" "$GDCPM_OUT_DIR/GDCPluginManager.app"
+    echo "Built to $GDCPM_OUT_DIR/GDCPluginManager.app (neinstalata)"
+    exit 0
+fi
+
 INSTALLED="/Applications/GDCPluginManager.app"
 if [ -d "$INSTALLED" ]; then
     pkill -x GDCPluginManager 2>/dev/null || true
