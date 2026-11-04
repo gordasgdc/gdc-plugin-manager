@@ -1,16 +1,16 @@
 {
-  "version": "1.3.0",
-  "app_version": "1.3.0",
-  "build": "177",
+  "version": "1.5.0",
+  "app_version": "1.5.0",
+  "build": "200",
   "changes": {
-    "ro": "Ecranul de înregistrare a fost refăcut: fiecare sursă (ecran, cameră, microfon) are cardul ei cu setările reale, iar «Adaugă sursă» și butonul rubiniu «Începe înregistrarea» stau într-un subsol mereu vizibil, cu folderul și numărătoarea alături. Camera are un meniu Format (Automat sau un format anume) cu modul curent alături și o previzualizare la cerere care explică fiecare stare, fără să pornească înregistrarea. Microfonul și interfețele audio au un indicator de nivel la cerere, cu dBFS și canalele alese. Dimensiunea capturii apare pe card, cu «Detalii rezoluție» la un clic distanță. Manualele și pagina au fost actualizate, cu capturi noi.",
-    "en": "The recording screen has been redesigned: each source (screen, camera, microphone) has its own card with its real settings, and “Add source” and the ruby “Start recording” button sit in a footer that always stays visible, with the folder and countdown beside it. The camera has a Format menu (Automatic or a specific format) with the current mode beside it and an on-demand preview that explains each state without starting the recording. The microphone and audio interfaces have an on-demand input level meter with dBFS and the selected channels. The capture size is shown on the card, with “Resolution details” one click away. Manuals and page updated, with new screenshots.",
-    "es": "La pantalla de grabación se ha rediseñado: cada fuente (pantalla, cámara, micrófono) tiene su tarjeta con sus ajustes reales, y «Añadir fuente» y el botón rubí «Iniciar grabación» están en un pie siempre visible, con la carpeta y la cuenta atrás al lado. La cámara tiene un menú Formato (Automático o un formato concreto) con el modo actual al lado y una vista previa a petición que explica cada estado sin iniciar la grabación. El micrófono y las interfaces de audio tienen un indicador de nivel a petición, con dBFS y los canales elegidos. El tamaño de la captura aparece en la tarjeta, con «Detalles de resolución» a un clic. Manuales y página actualizados, con capturas nuevas."
+    "ro": "Inspector cu file exclusive (Video, Sunet, Timp, Cursor) și glisoare fine cu dublu-clic pentru revenire. Pe timeline: unealta Volum (puncte direct pe sunet), mânere pentru fade și curbura lui, încrucișare editabilă și o bandă de chei de animație sub clipul selectat. Comenzi rapide configurabile în Setări, cu căutare și avertizare la conflicte. Comenzi de tastă pe ecran, la cerere și oprite implicit: se păstrează doar combinațiile cu ⌘/⌃/⌥ și tastele de funcție, textul tastat se aruncă. Meniul Recente spune sincer când un fișier lipsește, iar la sfârșitul unei înregistrări apare o fereastră cu alegerile următoare. Manualele și pagina au fost actualizate.",
+    "en": "Inspector with exclusive tabs (Video, Sound, Time, Cursor) and fine sliders that reset on double-click. On the timeline: a Volume tool (points straight on the sound), handles for fades and their curvature, an editable crossfade and a keyframe band under the selected clip. Configurable shortcuts in Settings, with search and conflict warnings. Key commands on screen, opt-in and off by default: only ⌘/⌃/⌥ combinations and function keys are kept, typed text is discarded. The Recent menu says plainly when a file is missing, and a finished recording opens a sheet with the next choices. Manuals and page updated.",
+    "es": "Inspector con pestañas exclusivas (Vídeo, Sonido, Tiempo, Cursor) y deslizadores finos que vuelven al valor neutro con doble clic. En la línea de tiempo: herramienta Volumen (puntos directamente sobre el sonido), tiradores de fundido y su curvatura, fundido cruzado editable y una banda de claves bajo el clip seleccionado. Atajos configurables en Ajustes, con búsqueda y avisos de conflicto. Comandos de teclado en pantalla, a petición y desactivados por defecto: solo se guardan combinaciones con ⌘/⌃/⌥ y teclas de función, el texto escrito se descarta. El menú Recientes avisa con claridad cuando falta un archivo y, al terminar una grabación, aparece una hoja con las opciones siguientes. Manuales y página actualizados."
   },
   "download_url": {
-    "mac": "https://github.com/gordasgdc/sadrog/releases/download/v1.3.0/SADROG-1.3.0.dmg"
+    "mac": "https://github.com/gordasgdc/sadrog/releases/download/v1.5.0/SADROG-1.5.0.dmg"
   },
-  "sha256": "42923ea78c47daa99973532bc2a3ce7d5148c399d26f7821fd8981fd7c6080a9",
-  "size": 6069018,
+  "sha256": "7825d50545c5d11981364b918c127c32b8f7e0f38f0c438b03a71c561940b027",
+  "size": 6567569,
   "mandatory": false
 }
