@@ -1,9 +1,9 @@
 {
-  "version": "2.12.0",
-  "app_version": "2.12.0",
-  "changes": "Trei instrumente noi în Client: Camera Match, Region Match și Texture Match, care potrivesc camera, regiunile și textura cadrului cu o imagine de referință. Grade Tools Suite aduce în Client încă 11 instrumente (Skin Grade, Relight, Look Bank, Look Transfer, instrumentele de reparare și inspecție temporală, Delivery Inspector, Chain Doctor, Highlight Doctor și altele); cine are dreptul Full al suitei GDC STYLE le primește în Full, fără activare separată. Look Builder și Product Lock sunt gestionate din Client. Dacă ai deja un pachet OFX personal cu aceleași pluginuri, Clientul nu le instalează de două ori: îți explică situația, îl poți muta într-o copie de siguranță și îl poți restaura oricând. Manualele și ghidurile sunt actualizate în română, engleză și spaniolă.",
+  "version": "2.13.0",
+  "app_version": "2.13.0",
+  "changes": "Două instrumente noi în Client: ADX Input, care convertește scanări de film ADX10/ADX16 în ACES2065-1 (opțional ACEScg sau ACEScct) fără să aplice un look, și Hue Shaper, care remodelează nuanța, cromaticitatea și densitatea pe familii de culoare, pe nivel tonal sau pe o selecție, cu protecții pentru neutre. Noul View (analysis) arată Exposure Map, Saturation Map și Skin Selection pe rezultatul nodului în mai multe instrumente; Result rămâne implicit. Manuale și ghiduri actualizate în română, engleză și spaniolă.",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.12.0.dmg"
+    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.13.0.dmg"
   },
   "mandatory": false
 }
