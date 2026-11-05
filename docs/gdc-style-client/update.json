@@ -1,9 +1,9 @@
 {
-  "version": "2.13.0",
-  "app_version": "2.13.0",
-  "changes": "Două instrumente noi în Client: ADX Input, care convertește scanări de film ADX10/ADX16 în ACES2065-1 (opțional ACEScg sau ACEScct) fără să aplice un look, și Hue Shaper, care remodelează nuanța, cromaticitatea și densitatea pe familii de culoare, pe nivel tonal sau pe o selecție, cu protecții pentru neutre. Noul View (analysis) arată Exposure Map, Saturation Map și Skin Selection pe rezultatul nodului în mai multe instrumente; Result rămâne implicit. Manuale și ghiduri actualizate în română, engleză și spaniolă.",
+  "version": "2.14.0",
+  "app_version": "2.14.0",
+  "changes": "Instrument nou în Client: Virtual Density, care lucrează într-un domeniu de densitate pe material digital sau pe scanări ADX și revine la sursă sau la o ieșire aleasă; pe material digital densitatea este virtuală (o convenție GDC), nu o măsurare a densității de imprimare. Documentația ADX Input a fost completată.",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.13.0.dmg"
+    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.14.0.dmg"
   },
   "mandatory": false
 }
