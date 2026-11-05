@@ -1,9 +1,9 @@
 {
-  "version": "2.14.0",
-  "app_version": "2.14.0",
-  "changes": "Instrument nou în Client: Virtual Density, care lucrează într-un domeniu de densitate pe material digital sau pe scanări ADX și revine la sursă sau la o ieșire aleasă; pe material digital densitatea este virtuală (o convenție GDC), nu o măsurare a densității de imprimare. Documentația ADX Input a fost completată.",
+  "version": "2.15.0",
+  "app_version": "2.15.0",
+  "changes": "Instrument nou în Client: Digital Print. Trece materialul digital sau scanările ADX printr-un model de copie de film (curbă de print, lumini de imprimare, contrast) și livrează un rezultat print-referred în ACEScg liniar sau în altă ieșire aleasă; pentru afișare cere doar o conversie colorimetrică spre ecran, fără tone mapping suplimentar. Este un model GDC, nu o măsurare a unui print real. Documentația a fost completată.",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.14.0.dmg"
+    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.15.0.dmg"
   },
   "mandatory": false
 }
