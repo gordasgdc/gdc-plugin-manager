@@ -94,6 +94,8 @@ dialog#lb p{margin:8px 4px 0;font-size:14px;color:var(--on-dark-mut)}
  .kv{grid-template-columns:minmax(0,1fr);gap:4px}.kvs.sm .kv{grid-template-columns:minmax(0,1fr)}.brand span{display:none}}
 @media (max-width:480px){body{font-size:16.5px}.figs{grid-template-columns:minmax(0,1fr)}.facts{gap:10px 14px}.cta .btn.big{width:100%}.uses li{grid-template-columns:40px 1fr}.steps li{padding-left:50px}}
 
+@media (min-width:961px){.hero-g{align-items:start}.hero-g .hero-fig{margin-top:10px;position:sticky;top:84px}}
+.hero-fig img{aspect-ratio:2/1;height:auto}
 .warnbox{background:var(--dark);color:var(--on-dark);border-radius:var(--r);padding:22px 26px;margin:18px 0}.warnbox li{margin:8px 0}.warnbox strong{color:var(--acc-dark)}
 .ptab{width:100%;border-collapse:collapse;font-size:14.5px}.ptab th,.ptab td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}.ptab th{font-size:12.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--mut)}
 .tabw{overflow-x:auto;-webkit-overflow-scrolling:touch}.dlt{width:100%;border-collapse:collapse}.dlt td,.dlt th{padding:10px;border-bottom:1px solid var(--line);text-align:left;font-size:15px}.sha2{font-family:var(--mono);font-size:12px;word-break:break-all;color:var(--mut)}
