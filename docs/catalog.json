@@ -348,6 +348,19 @@
       "name" : "ETTR GDC"
     },
     {
+      "access" : {
+        "kind" : "free",
+        "tags" : [
+
+        ]
+      },
+      "description" : "112 LUT-uri .cube 33³ gratuite (CC BY 4.0), doar pentru monitorizare: imagine Rec.709 de diagnostic cu benzi pentru gri, referință tonală piele, umbre și alb de display; compensare 0 … −1,5 EV pe 28 de profiluri log. Descărcare fără cont.",
+      "externalURL" : "https://gordas.dev/zona-gdc/",
+      "id" : "zona-gdc",
+      "kind" : "guide",
+      "name" : "ZONA GDC"
+    },
+    {
       "coverImage" : "covers/De la Zero la Conversie.jpg?v=4be3dda3",
       "description" : "Acum aproape doi ani, în decembrie 2023, profilul meu de Instagram era un dezastru.",
       "externalURL" : "https://axintefilms.com/product/emNb5yxm",
