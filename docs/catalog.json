@@ -335,6 +335,19 @@
       "name" : "GDC Test Charts 4K"
     },
     {
+      "access" : {
+        "kind" : "free",
+        "tags" : [
+
+        ]
+      },
+      "description" : "224 LUT-uri .cube 33³ gratuite (GPL-3.0-or-later) pentru compensare de expunere −1 … −4 EV pe 29 de profiluri log: log la intrare = același log la ieșire. Descărcare fără cont.",
+      "externalURL" : "https://gordas.dev/ettr/",
+      "id" : "ettr-gdc",
+      "kind" : "guide",
+      "name" : "ETTR GDC"
+    },
+    {
       "coverImage" : "covers/De la Zero la Conversie.jpg?v=4be3dda3",
       "description" : "Acum aproape doi ani, în decembrie 2023, profilul meu de Instagram era un dezastru.",
       "externalURL" : "https://axintefilms.com/product/emNb5yxm",
