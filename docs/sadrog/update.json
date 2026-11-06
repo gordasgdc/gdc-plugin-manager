@@ -1,16 +1,16 @@
 {
-  "version": "1.5.0",
-  "app_version": "1.5.0",
-  "build": "200",
+  "version": "1.6.0",
+  "app_version": "1.6.0",
+  "build": "203",
   "changes": {
-    "ro": "Inspector cu file exclusive (Video, Sunet, Timp, Cursor) și glisoare fine cu dublu-clic pentru revenire. Pe timeline: unealta Volum (puncte direct pe sunet), mânere pentru fade și curbura lui, încrucișare editabilă și o bandă de chei de animație sub clipul selectat. Comenzi rapide configurabile în Setări, cu căutare și avertizare la conflicte. Comenzi de tastă pe ecran, la cerere și oprite implicit: se păstrează doar combinațiile cu ⌘/⌃/⌥ și tastele de funcție, textul tastat se aruncă. Meniul Recente spune sincer când un fișier lipsește, iar la sfârșitul unei înregistrări apare o fereastră cu alegerile următoare. Manualele și pagina au fost actualizate.",
-    "en": "Inspector with exclusive tabs (Video, Sound, Time, Cursor) and fine sliders that reset on double-click. On the timeline: a Volume tool (points straight on the sound), handles for fades and their curvature, an editable crossfade and a keyframe band under the selected clip. Configurable shortcuts in Settings, with search and conflict warnings. Key commands on screen, opt-in and off by default: only ⌘/⌃/⌥ combinations and function keys are kept, typed text is discarded. The Recent menu says plainly when a file is missing, and a finished recording opens a sheet with the next choices. Manuals and page updated.",
-    "es": "Inspector con pestañas exclusivas (Vídeo, Sonido, Tiempo, Cursor) y deslizadores finos que vuelven al valor neutro con doble clic. En la línea de tiempo: herramienta Volumen (puntos directamente sobre el sonido), tiradores de fundido y su curvatura, fundido cruzado editable y una banda de claves bajo el clip seleccionado. Atajos configurables en Ajustes, con búsqueda y avisos de conflicto. Comandos de teclado en pantalla, a petición y desactivados por defecto: solo se guardan combinaciones con ⌘/⌃/⌥ y teclas de función, el texto escrito se descarta. El menú Recientes avisa con claridad cuando falta un archivo y, al terminar una grabación, aparece una hoja con las opciones siguientes. Manuales y página actualizados."
+    "ro": "Exporturi mult mai mici: videoul comprimat se scrie acum implicit la calitate constantă, cu un cadru cheie la 5 s în loc de 1 s (pe tutoriale 4K: aproximativ 0,9–2 Mb/s în loc de 15–19, cu textul mic încă lizibil). În Export avansat apare selectorul Control: Calitate, Rată medie sau Mărime țintă (estimare într-o singură trecere, nu garanție), iar estimarea de mărime se arată ca interval. Presetare nouă: Tutorial / captură de ecran. Reparat: presetarea Compact 720p și nivelul mediu exportau 568×320 în loc de mărimea anunțată, iar o blocare rară la export. Manualele și pagina au fost actualizate.",
+    "en": "Much smaller exports: compressed video is now written at constant quality by default, with a key frame every 5 s instead of every 1 s (on 4K tutorials about 0.9–2 Mb/s instead of 15–19, with small text still readable). Advanced export has a Control selector: Quality, Average rate or Target size (a one-pass estimate, not a guarantee), and the size estimate is shown as a range. New preset: Tutorial / screen capture. Fixed: the Compact 720p preset and the medium level exported 568×320 instead of the announced size, and a rare export stall. Manuals and page updated.",
+    "es": "Exportaciones mucho más pequeñas: el vídeo comprimido se escribe ahora por defecto a calidad constante, con un fotograma clave cada 5 s en lugar de cada 1 s (en tutoriales 4K: unos 0,9–2 Mb/s en lugar de 15–19, con el texto pequeño aún legible). La exportación avanzada incluye el selector Control: Calidad, Tasa media o Tamaño objetivo (estimación en una pasada, no una garantía), y la estimación de tamaño se muestra como intervalo. Nuevo preajuste: Tutorial / captura de pantalla. Corregido: el preajuste Compacto 720p y el nivel medio exportaban 568×320 en lugar del tamaño anunciado, y un bloqueo poco frecuente al exportar. Manuales y página actualizados."
   },
   "download_url": {
-    "mac": "https://github.com/gordasgdc/sadrog/releases/download/v1.5.0/SADROG-1.5.0.dmg"
+    "mac": "https://github.com/gordasgdc/sadrog/releases/download/v1.6.0/SADROG-1.6.0.dmg"
   },
-  "sha256": "7825d50545c5d11981364b918c127c32b8f7e0f38f0c438b03a71c561940b027",
-  "size": 6567569,
+  "sha256": "1be36fcfe3e6b42aa197eac4be9948e94a5813e8014d3bd6468d688f3167c2c8",
+  "size": 6600991,
   "mandatory": false
 }
