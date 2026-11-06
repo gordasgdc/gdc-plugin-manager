@@ -1,9 +1,9 @@
 {
-  "version": "2.15.0",
-  "app_version": "2.15.0",
-  "changes": "Instrument nou în Client: Digital Print. Trece materialul digital sau scanările ADX printr-un model de copie de film (curbă de print, lumini de imprimare, contrast) și livrează un rezultat print-referred în ACEScg liniar sau în altă ieșire aleasă; pentru afișare cere doar o conversie colorimetrică spre ecran, fără tone mapping suplimentar. Este un model GDC, nu o măsurare a unui print real. Documentația a fost completată.",
+  "version": "2.16.0",
+  "app_version": "2.16.0",
+  "changes": "Instrument nou în Client: Optical Veil. Ia o parte din lumina zonelor strălucitoare și o împrăștie în jurul lor, cu energia conservată, în patru forme (Veil, Glow, Haze, Pearl), cu mărime proporțională cu înălțimea cadrului și vederi de control. Disponibil pe macOS. Documentația RO/EN/ES a fost completată, iar cuprinsul ghidurilor PDF arată acum toate instrumentele.",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.15.0.dmg"
+    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.16.0.dmg"
   },
   "mandatory": false
 }
