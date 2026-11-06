@@ -1,24 +1,24 @@
 {
  "name": "ETTR GDC",
- "version": "1.0.0",
- "tag": "v1.0.0",
- "release": "https://github.com/gordasgdc/ettr-gdc/releases/tag/v1.0.0",
- "license": "GPL-3.0-or-later",
+ "version": "1.0.1",
+ "tag": "v1.0.1",
+ "release": "https://github.com/gordasgdc/ettr-gdc/releases/tag/v1.0.1",
+ "license": "CC-BY-4.0",
  "packages": [
   {
-   "file": "ETTR_GDC-1.0.0-portable.zip",
+   "file": "ETTR_GDC-1.0.1-portable.zip",
    "kind": "portable",
-   "bytes": 20119720,
-   "sha256": "d82565b5e447d4ce572e555063dc19ffe98c9105a807b90873a6f82244304c51",
-   "url": "https://github.com/gordasgdc/ettr-gdc/releases/download/v1.0.0/ETTR_GDC-1.0.0-portable.zip"
+   "bytes": 20129930,
+   "sha256": "4619d0120e799aa642af99cc8e22b424733e79349351a933f8cb507fa4c1f810",
+   "url": "https://github.com/gordasgdc/ettr-gdc/releases/download/v1.0.1/ETTR_GDC-1.0.1-portable.zip"
   },
   {
-   "file": "ETTR_GDC-1.0.0-macOS-icons.zip",
+   "file": "ETTR_GDC-1.0.1-macOS-icons.zip",
    "kind": "macos",
-   "bytes": 32040305,
-   "sha256": "2593774c6572c52e57d394a1f5cad1b340ef0788d211739714ea30bcef3c2bc8",
-   "url": "https://github.com/gordasgdc/ettr-gdc/releases/download/v1.0.0/ETTR_GDC-1.0.0-macOS-icons.zip"
+   "bytes": 32037353,
+   "sha256": "b0723c38def833dcf1738da668965de8dca4170537ca63d6a5a43d180544753c",
+   "url": "https://github.com/gordasgdc/ettr-gdc/releases/download/v1.0.1/ETTR_GDC-1.0.1-macOS-icons.zip"
   }
  ],
- "checksums": "https://github.com/gordasgdc/ettr-gdc/releases/download/v1.0.0/SHA256SUMS.txt"
+ "checksums": "https://github.com/gordasgdc/ettr-gdc/releases/download/v1.0.1/SHA256SUMS.txt"
 }

@@ -341,7 +341,7 @@
 
         ]
       },
-      "description" : "224 LUT-uri .cube 33³ gratuite (GPL-3.0-or-later) pentru compensare de expunere −1 … −4 EV pe 29 de profiluri log: log la intrare = același log la ieșire. Descărcare fără cont.",
+      "description" : "224 LUT-uri .cube 33³ gratuite (CC BY 4.0) pentru compensare de expunere −1 … −4 EV pe 29 de profiluri log: log la intrare = același log la ieșire. Descărcare fără cont.",
       "externalURL" : "https://gordas.dev/ettr/",
       "id" : "ettr-gdc",
       "kind" : "guide",
