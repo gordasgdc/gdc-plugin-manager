@@ -354,7 +354,7 @@
 
         ]
       },
-      "description" : "112 LUT-uri .cube 33³ gratuite (CC BY 4.0), doar pentru monitorizare: imagine Rec.709 de diagnostic cu benzi pentru gri, referință tonală piele, umbre și alb de display; compensare 0 … −1,5 EV pe 28 de profiluri log. Descărcare fără cont.",
+      "description" : "112 LUT-uri .cube 33³ gratuite (CC BY 4.0), doar pentru monitorizare: hartă de expunere în fals-culori, o culoare pe treaptă față de grey 18%, calculată direct din semnalul log; compensare 0 … −1,5 EV pe 28 de profiluri log. Descărcare fără cont.",
       "externalURL" : "https://gordas.dev/zona-gdc/",
       "id" : "zona-gdc",
       "kind" : "guide",

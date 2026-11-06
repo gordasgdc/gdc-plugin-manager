@@ -1,24 +1,24 @@
 {
  "name": "ZONA GDC",
- "version": "1.0.0",
- "tag": "v1.0.0",
- "release": "https://github.com/gordasgdc/zona-gdc/releases/tag/v1.0.0",
+ "version": "2.0.0",
+ "tag": "v2.0.0",
+ "release": "https://github.com/gordasgdc/zona-gdc/releases/tag/v2.0.0",
  "license": "CC-BY-4.0",
  "packages": [
   {
-   "file": "ZONA_GDC-1.0.0-portable.zip",
+   "file": "ZONA_GDC-2.0.0-portable.zip",
    "kind": "portable",
-   "bytes": 16577424,
-   "sha256": "83fd1286789ee4534c1889e672ee67bd7068e7e02cd761fb11e133ea94201900",
-   "url": "https://github.com/gordasgdc/zona-gdc/releases/download/v1.0.0/ZONA_GDC-1.0.0-portable.zip"
+   "bytes": 36369436,
+   "sha256": "e8424e54be40c29e9c0cca178b9e485446c2acbcf294cea4e1251a2e4638e87e",
+   "url": "https://github.com/gordasgdc/zona-gdc/releases/download/v2.0.0/ZONA_GDC-2.0.0-portable.zip"
   },
   {
-   "file": "ZONA_GDC-1.0.0-macOS-icons.zip",
+   "file": "ZONA_GDC-2.0.0-macOS-icons.zip",
    "kind": "macos",
-   "bytes": 27930414,
-   "sha256": "a76a010136d3cf7999edde282cfefec4b4c5410a73362e456b0bca8f65abfe37",
-   "url": "https://github.com/gordasgdc/zona-gdc/releases/download/v1.0.0/ZONA_GDC-1.0.0-macOS-icons.zip"
+   "bytes": 47722426,
+   "sha256": "bcc0415cb907ff861e8ad5a5d68dc47ce9e0a342ea08cc30e90b914c0a55c2a3",
+   "url": "https://github.com/gordasgdc/zona-gdc/releases/download/v2.0.0/ZONA_GDC-2.0.0-macOS-icons.zip"
   }
  ],
- "checksums": "https://github.com/gordasgdc/zona-gdc/releases/download/v1.0.0/SHA256SUMS.txt"
+ "checksums": "https://github.com/gordasgdc/zona-gdc/releases/download/v2.0.0/SHA256SUMS.txt"
 }
