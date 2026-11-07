@@ -1,9 +1,9 @@
 {
-  "version": "2.16.0",
-  "app_version": "2.16.0",
-  "changes": "Instrument nou în Client: Optical Veil. Ia o parte din lumina zonelor strălucitoare și o împrăștie în jurul lor, cu energia conservată, în patru forme (Veil, Glow, Haze, Pearl), cu mărime proporțională cu înălțimea cadrului și vederi de control. Disponibil pe macOS. Documentația RO/EN/ES a fost completată, iar cuprinsul ghidurilor PDF arată acum toate instrumentele.",
+  "version": "2.17.0",
+  "app_version": "2.17.0",
+  "changes": "Instrumente noi în Client: Optical Vignette Master (vignetă optică fizică, cu hărți de intensitate, formă și protecție), Anamorphic Flare (reflexii și dungi anamorfice) și Bokeh Modeler (modelarea defocalizării, cu mască opțională). Disponibile pe macOS, în edițiile Demo și Full. Documentația RO/EN/ES a fost actualizată.",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.16.0.dmg"
+    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.17.0.dmg"
   },
   "mandatory": false
 }
