@@ -1,9 +1,9 @@
 {
-  "version": "2.17.0",
-  "app_version": "2.17.0",
-  "changes": "Instrumente noi în Client: Optical Vignette Master (vignetă optică fizică, cu hărți de intensitate, formă și protecție), Anamorphic Flare (reflexii și dungi anamorfice) și Bokeh Modeler (modelarea defocalizării, cu mască opțională). Disponibile pe macOS, în edițiile Demo și Full. Documentația RO/EN/ES a fost actualizată.",
+  "version": "2.18.0",
+  "app_version": "2.18.0",
+  "changes": "Instrumente noi în Client: Color Density Sculptor (densitate de culoare pe familii de nuanță, cu luminanța controlată și protecție de gamă) și Split-Tone & Color Contrast (tentă separată pe umbre și lumini, plus contrast de culoare). Disponibile pe macOS, în ediția Demo și în ediția Full pentru cine are dreptul. Documentația RO/EN/ES a fost completată.",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.17.0.dmg"
+    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.18.0.dmg"
   },
   "mandatory": false
 }
