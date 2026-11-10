@@ -1,9 +1,9 @@
 {
-  "version": "2.18.0",
-  "app_version": "2.18.0",
-  "changes": "Instrumente noi în Client: Color Density Sculptor (densitate de culoare pe familii de nuanță, cu luminanța controlată și protecție de gamă) și Split-Tone & Color Contrast (tentă separată pe umbre și lumini, plus contrast de culoare). Disponibile pe macOS, în ediția Demo și în ediția Full pentru cine are dreptul. Documentația RO/EN/ES a fost completată.",
+  "version": "2.20.0",
+  "app_version": "2.20.0",
+  "changes": "Instrument nou în Client: GDC Anamorfica — efect de obiectiv anamorfic (squeeze, flare, bokeh oval, difuzie, vinietă) ca plugin OFX, cu 34 de perechi gamut + codare la Working Space și Threshold Reference la flare. Disponibil pe macOS, în ediția Demo și în ediția Full pentru cine are dreptul. Documentația RO/EN/ES a fost completată.",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.18.0.dmg"
+    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.20.0.dmg"
   },
   "mandatory": false
 }
