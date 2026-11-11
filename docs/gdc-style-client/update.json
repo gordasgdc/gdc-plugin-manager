@@ -1,9 +1,9 @@
 {
-  "version": "2.21.1",
-  "app_version": "2.21.1",
-  "changes": "Aplicația nu mai îngheață la pornire și la navigarea prin pagini. Ghidurile și manualele (RO/EN/ES) au fost revizuite. Setările implicite ale instrumentelor de grading se păstrează corect la actualizare.",
+  "version": "2.21.2",
+  "app_version": "2.21.2",
+  "changes": "În GDC DRT, profilul „Asiatic” se numește acum „Skin”. Proiectele și presetările salvate se încarcă la fel ca înainte, cu același rezultat. Ghidurile și manualele (RO/EN/ES) au fost actualizate.",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.21.1.dmg"
+    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.21.2.dmg"
   },
   "mandatory": false
 }
