@@ -104,6 +104,22 @@
       "access" : {
         "group" : "gdc",
         "kind" : "free",
+        "note" : "1.0.0 · Gratuit, cu sursă deschisă (GPL-3.0-or-later). Fără cont, activare sau perioadă de probă. Doar macOS 13+.",
+        "tags" : [
+          "Foto"
+        ]
+      },
+      "coverImage" : "covers/FotoAsist GC.png?v=4be24ce8",
+      "downloadURL" : "https://github.com/gordasgdc/fotoasist-gc/releases/latest/download/FotoAsistGC.pkg",
+      "id" : "foto-asist-gc",
+      "name" : "FotoAsist GC",
+      "supportedOS" : "macOS",
+      "url" : "https://gordas.dev/foto-asist-gc/"
+    },
+    {
+      "access" : {
+        "group" : "gdc",
+        "kind" : "free",
         "tags" : [
           "Utilitare",
           "Securitate"
@@ -609,5 +625,5 @@
       "youtubeURL" : "https://www.youtube.com/watch?v=dnkUIGXIzIM"
     }
   ],
-  "updatedAt" : "2026-11-02"
+  "updatedAt" : "2026-11-11"
 }

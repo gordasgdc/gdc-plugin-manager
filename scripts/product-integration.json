@@ -15,6 +15,16 @@
         "Team ID": "8AR6XP8MG7",
         "manifest": "https://gordas.dev/sadrog/update.json"
       }
+    },
+    {
+      "id": "foto-asist-gc",
+      "name": "FotoAsist GC",
+      "os": "macOS",
+      "page": "https://gordas.dev/foto-asist-gc/",
+      "download": "https://github.com/gordasgdc/fotoasist-gc/releases/latest/download/FotoAsistGC.pkg",
+      "manifest": "https://gordas.dev/foto-asist-gc/update.json",
+      "noPricingProductID": true,
+      "noPublicPrice": true
     }
   ]
 }

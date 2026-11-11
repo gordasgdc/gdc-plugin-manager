@@ -1,0 +1,13 @@
+{
+  "version": "1.0.0",
+  "app_version": "1.0.0",
+  "build": "be187f6",
+  "download_url": "https://github.com/gordasgdc/fotoasist-gc/releases/download/v1.0.0/FotoAsistGC-1.0.0.pkg",
+  "page_url": "https://gordas.dev/foto-asist-gc/",
+  "source_url": "https://github.com/gordasgdc/fotoasist-gc",
+  "changes": {
+    "ro": "Prima versiune cu sursă deschisă (GPL-3.0-or-later): gratuită, fără cont, activare, perioadă de probă sau server de licențiere. Redarea folosește transformarea de afișare deschisă spre sRGB.",
+    "en": "First open-source release (GPL-3.0-or-later): free, with no account, activation, trial or licensing server. Output uses the open display transform to sRGB.",
+    "es": "Primera versión de código abierto (GPL-3.0-or-later): gratuita, sin cuenta, activación, periodo de prueba ni servidor de licencias. La salida usa la transformación de salida abierta a sRGB."
+  }
+}
