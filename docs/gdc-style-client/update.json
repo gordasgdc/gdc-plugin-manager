@@ -1,9 +1,9 @@
 {
-  "version": "2.21.0",
-  "app_version": "2.21.0",
-  "changes": "Actualizările se verifică acum printr-un manifest semnat digital înainte de instalare. Tone: corectat un caz rar cu valori invalide în umbre. Dialogul de instalare folosește singularul corect.",
+  "version": "2.21.1",
+  "app_version": "2.21.1",
+  "changes": "Aplicația nu mai îngheață la pornire și la navigarea prin pagini. Ghidurile și manualele (RO/EN/ES) au fost revizuite. Setările implicite ale instrumentelor de grading se păstrează corect la actualizare.",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.21.0.dmg"
+    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.21.1.dmg"
   },
   "mandatory": false
 }
