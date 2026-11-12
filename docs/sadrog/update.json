@@ -1,16 +1,16 @@
 {
-  "version": "1.6.0",
-  "app_version": "1.6.0",
-  "build": "203",
+  "version": "1.7.0",
+  "app_version": "1.7.0",
+  "build": "219",
   "changes": {
-    "ro": "Exporturi mult mai mici: videoul comprimat se scrie acum implicit la calitate constantă, cu un cadru cheie la 5 s în loc de 1 s (pe tutoriale 4K: aproximativ 0,9–2 Mb/s în loc de 15–19, cu textul mic încă lizibil). În Export avansat apare selectorul Control: Calitate, Rată medie sau Mărime țintă (estimare într-o singură trecere, nu garanție), iar estimarea de mărime se arată ca interval. Presetare nouă: Tutorial / captură de ecran. Reparat: presetarea Compact 720p și nivelul mediu exportau 568×320 în loc de mărimea anunțată, iar o blocare rară la export. Manualele și pagina au fost actualizate.",
-    "en": "Much smaller exports: compressed video is now written at constant quality by default, with a key frame every 5 s instead of every 1 s (on 4K tutorials about 0.9–2 Mb/s instead of 15–19, with small text still readable). Advanced export has a Control selector: Quality, Average rate or Target size (a one-pass estimate, not a guarantee), and the size estimate is shown as a range. New preset: Tutorial / screen capture. Fixed: the Compact 720p preset and the medium level exported 568×320 instead of the announced size, and a rare export stall. Manuals and page updated.",
-    "es": "Exportaciones mucho más pequeñas: el vídeo comprimido se escribe ahora por defecto a calidad constante, con un fotograma clave cada 5 s en lugar de cada 1 s (en tutoriales 4K: unos 0,9–2 Mb/s en lugar de 15–19, con el texto pequeño aún legible). La exportación avanzada incluye el selector Control: Calidad, Tasa media o Tamaño objetivo (estimación en una pasada, no una garantía), y la estimación de tamaño se muestra como intervalo. Nuevo preajuste: Tutorial / captura de pantalla. Corregido: el preajuste Compacto 720p y el nivel medio exportaban 568×320 en lugar del tamaño anunciado, y un bloqueo poco frecuente al exportar. Manuales y página actualizados."
+    "ro": "Culoare pe clip: strălucire, contrast și saturație în fila Video, la fel în previzualizare și în export. Fundalul din spatele persoanei filmate poate fi estompat sau eliminat la editare. Fila Cursor: evidențiere cu contur, halo sau disc, cu culoare, mărime și opacitate; inelele de clic deosebesc clicul stânga, clicul dreapta și dublul clic. Butonul cu căști schimbă doar volumul de ascultare din editor. Export mai simplu: rezoluția și calitatea se aleg direct, cu estimare de mărime; MP4 implicit pentru web. Reparat: exportul pe un disc extern putea fi refuzat deși era spațiu; evidențierea cursorului pe un clip decupat. Proiectele salvate cu 1.7.0 nu se deschid în versiuni mai vechi. Manualele și pagina au fost actualizate.",
+    "en": "Colour per clip: brightness, contrast and saturation in the Video tab, the same in the preview and in the export. The background behind a person on camera can be blurred or removed while editing. Pointer tab: highlight as an outline, a halo or a disc, with colour, size and opacity; click rings tell a left click, a right click and a double click apart. The headphones button changes only the listening volume of the editor. Simpler export: resolution and quality are chosen directly, with a size estimate; MP4 by default for the web. Fixed: an export to an external disk could be refused although there was room; the pointer highlight on a cropped clip. Projects saved by 1.7.0 do not open in earlier versions. Manuals and page updated.",
+    "es": "Color por clip: brillo, contraste y saturación en la pestaña Vídeo, igual en la vista previa y en la exportación. El fondo detrás de la persona grabada se puede desenfocar o eliminar al editar. Pestaña Cursor: resaltado con contorno, halo o disco, con color, tamaño y opacidad; los anillos de clic distinguen el clic izquierdo, el derecho y el doble clic. El botón de auriculares cambia solo el volumen de escucha del editor. Exportación más sencilla: la resolución y la calidad se eligen directamente, con estimación de tamaño; MP4 por defecto para la web. Corregido: una exportación a un disco externo podía rechazarse aunque hubiera espacio; el resaltado del cursor en un clip recortado. Los proyectos guardados con 1.7.0 no se abren en versiones anteriores. Manuales y página actualizados."
   },
   "download_url": {
-    "mac": "https://github.com/gordasgdc/sadrog/releases/download/v1.6.0/SADROG-1.6.0.dmg"
+    "mac": "https://github.com/gordasgdc/sadrog/releases/download/v1.7.0/SADROG-1.7.0.dmg"
   },
-  "sha256": "1be36fcfe3e6b42aa197eac4be9948e94a5813e8014d3bd6468d688f3167c2c8",
-  "size": 6600991,
+  "sha256": "cc385c4c77df8f724bcea91758e89babbef331930fee795b5c68517c2040014d",
+  "size": 6750907,
   "mandatory": false
 }
