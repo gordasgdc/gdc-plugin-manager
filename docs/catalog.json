@@ -183,6 +183,21 @@
         "group" : "gdc",
         "kind" : "free",
         "tags" : [
+          "Resolve"
+        ]
+      },
+      "coverImage" : "covers/SoundSFXPaste.png",
+      "downloadURL" : "https://github.com/gordasgdc/soundsfxpaste/releases/download/v0.2.0/SoundSFXPaste-0.2.0.pkg",
+      "id" : "soundsfxpaste",
+      "name" : "SoundSFXPaste",
+      "supportedOS" : "macOS",
+      "url" : "https://gordas.dev/soundsfxpaste/"
+    },
+    {
+      "access" : {
+        "group" : "gdc",
+        "kind" : "free",
+        "tags" : [
 
         ]
       },

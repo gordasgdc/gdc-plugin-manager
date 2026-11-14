@@ -1,0 +1,9 @@
+{
+  "product_id": "soundsfxpaste",
+  "version": "0.2.0",
+  "app_version": "0.2.0",
+  "download_url": "https://github.com/gordasgdc/soundsfxpaste/releases/download/v0.2.0/SoundSFXPaste-0.2.0.pkg",
+  "sha256": "102113a05d16a5dbe6105756d261758ced7aaa0e93d8ef8d79e58b2fc4d81dc8",
+  "changes": "New blue and gold look, clearer destination bar next to Place, better narrow-window layout, refreshed documentation.",
+  "signature": "eirjeTbp3jZ1X6uQ40zt8NZytKR9mR1LfTXzSkNbXZIBLuzBHQHY1eDbitVzNqf47/4ISeKM0cUMvchSH1RXAg=="
+}
