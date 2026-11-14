@@ -1,0 +1,12 @@
+{
+  "version": "0.2.0",
+  "app_version": "0.2.0",
+  "changes": "Farul 0.2.0: eșantionarea se oprește cât doarme Mac-ul, presiunea de memorie urmează sistemul, procentele proceselor sunt corecte, diagnostic exportabil, dezinstalare din Setări și actualizare verificată cu revenire automată.",
+  "download_url": {
+    "mac": "https://github.com/gordasgdc/farul/releases/download/v0.2.0/Farul-0.2.0.pkg"
+  },
+  "sha256": {
+    "mac": "0e8ff9db4275d4eff95c9905247d3ef78d1c3cbf1a2cb4c935c2d983d7dbef5f"
+  },
+  "mandatory": false
+}

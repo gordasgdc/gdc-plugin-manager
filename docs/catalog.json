@@ -137,6 +137,21 @@
         "group" : "gdc",
         "kind" : "free",
         "tags" : [
+          "Utilitare"
+        ]
+      },
+      "coverImage" : "covers/Farul.png",
+      "downloadURL" : "https://github.com/gordasgdc/farul/releases/download/v0.2.0/Farul-0.2.0.pkg",
+      "id" : "farul",
+      "name" : "Farul",
+      "supportedOS" : "macOS",
+      "url" : "https://gordas.dev/farul/"
+    },
+    {
+      "access" : {
+        "group" : "gdc",
+        "kind" : "free",
+        "tags" : [
 
         ]
       },
@@ -625,5 +640,5 @@
       "youtubeURL" : "https://www.youtube.com/watch?v=dnkUIGXIzIM"
     }
   ],
-  "updatedAt" : "2026-11-11"
+  "updatedAt" : "2026-11-14"
 }

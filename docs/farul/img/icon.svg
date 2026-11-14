@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Pictograma Farul — sursa vectorială unică.
+  PNG-urile din AppIcon.appiconset se generează din acest fișier cu
+  scripts/make-appicon.sh; nu se editează manual.
+
+  Geometrie, nu ilustrație: turnul e un trapez, felinarul un dreptunghi,
+  acoperișul un triunghi. Fasciculul e discret — patru linii subțiri, la
+  opacitate mică — fiindcă un far care orbește nu mai e un far, iar la
+  16 px un fascicul plin ar transforma toată pictograma într-o pată.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <linearGradient id="plate" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1B1F25"/>
+      <stop offset="1" stop-color="#0A0C0F"/>
+    </linearGradient>
+
+    <linearGradient id="mark" x1="0.15" y1="0" x2="0.85" y2="1">
+      <stop offset="0" stop-color="#FFC266"/>
+      <stop offset="0.55" stop-color="#FFB347"/>
+      <stop offset="1" stop-color="#C87F3E"/>
+    </linearGradient>
+
+    <linearGradient id="gloss" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.09"/>
+      <stop offset="0.5" stop-color="#FFFFFF" stop-opacity="0.02"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+
+    <!-- Halo-ul din jurul felinarului: singurul element non-geometric,
+         ținut sub 0.2 opacitate ca să sugereze lumina fără s-o deseneze. -->
+    <radialGradient id="halo">
+      <stop offset="0" stop-color="#FFC266" stop-opacity="0.30"/>
+      <stop offset="1" stop-color="#FFC266" stop-opacity="0"/>
+    </radialGradient>
+
+    <clipPath id="plateClip">
+      <rect x="100" y="100" width="824" height="824" rx="185" ry="185"/>
+    </clipPath>
+  </defs>
+
+  <!-- Placa, la raportul de colț folosit de macOS (824 / 185). -->
+  <rect x="100" y="100" width="824" height="824" rx="185" ry="185" fill="url(#plate)"/>
+  <g clip-path="url(#plateClip)">
+    <rect x="100" y="100" width="824" height="480" fill="url(#gloss)"/>
+    <circle cx="512" cy="408" r="230" fill="url(#halo)"/>
+  </g>
+  <rect x="100.5" y="100.5" width="823" height="823" rx="184.5" ry="184.5"
+        fill="none" stroke="#FFFFFF" stroke-opacity="0.10" stroke-width="1"/>
+
+  <!--
+    Farul. Desenat pe o grilă de 24 de unități și scalat o singură dată
+    (×26), ca toate grosimile de linie să rămână în raport la orice
+    dimensiune de export.
+  -->
+  <g transform="translate(200 200) scale(26)"
+     fill="none" stroke="url(#mark)"
+     stroke-linecap="round" stroke-linejoin="round">
+
+    <!-- Fasciculul: două evantaie simetrice, subțiri și palide. -->
+    <g stroke-width="0.85" stroke-opacity="0.38">
+      <path d="M10.3 7.3 3.1 5.2"/>
+      <path d="M10.3 8.7 3.1 10.8"/>
+      <path d="M13.7 7.3 20.9 5.2"/>
+      <path d="M13.7 8.7 20.9 10.8"/>
+    </g>
+
+    <g stroke-width="1.5">
+      <!-- Acoperișul și felinarul. -->
+      <path d="M10.15 6.6 12 4.35 13.85 6.6"/>
+      <path d="M10.6 6.6v2.9M13.4 6.6v2.9"/>
+      <!-- Galeria, adică platforma de sub felinar. -->
+      <path d="M9.6 9.5h4.8"/>
+      <!-- Turnul: un trapez, nu un dreptunghi — de aia se citește ca far. -->
+      <path d="M10.75 9.5 9.75 20.4M13.25 9.5 14.25 20.4"/>
+      <!-- Baza. -->
+      <path d="M7.2 20.5h9.6"/>
+    </g>
+
+    <!-- Sursa de lumină. Plină, ca să rămână vizibilă și la 16 px, unde
+         conturul felinarului se apropie de un singur pixel. -->
+    <circle cx="12" cy="8" r="0.72" fill="url(#mark)" stroke="none"/>
+  </g>
+</svg>
