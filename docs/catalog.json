@@ -368,17 +368,18 @@
   ],
   "educationalResources" : [
     {
-      "access" : {
-        "kind" : "free",
-        "tags" : [
-
-        ]
+      "coverImage" : "covers/De la Zero la Conversie.jpg?v=4be3dda3",
+      "description" : "Acum aproape doi ani, în decembrie 2023, profilul meu de Instagram era un dezastru.",
+      "externalURL" : "https://axintefilms.com/product/emNb5yxm",
+      "id" : "De la Zero la Conversie",
+      "kind" : "book",
+      "name" : "De la Zero la Conversie",
+      "socialLinks" : {
+        "facebookURL" : "https://www.facebook.com/axintefilms",
+        "instagramURL" : "https://www.instagram.com/axinte_films",
+        "youtubeURL" : "https://www.youtube.com/@Marius_Axinte"
       },
-      "description" : "575 de chart-uri EXR float32 3840×2160 în 23 de configurații colorimetrice, gratuite (CC BY 4.0), pentru a testa transformări de culoare, LUT-uri și OFX în DaVinci Resolve. Descărcare fără cont.",
-      "externalURL" : "https://gordas.dev/gdc-test-charts-4k/",
-      "id" : "gdc-test-charts-4k",
-      "kind" : "guide",
-      "name" : "GDC Test Charts 4K"
+      "youtubeURL" : "https://axintefilms.com/ro/de-la-0-la-conversie"
     },
     {
       "access" : {
@@ -400,25 +401,25 @@
 
         ]
       },
+      "coverImage" : "https://gordas.dev/gdc-test-charts-4k/img/GDC-TC-01A-1920.webp",
+      "description" : "575 de chart-uri EXR float32 3840×2160 în 23 de configurații colorimetrice, gratuite (CC BY 4.0), pentru a testa transformări de culoare, LUT-uri și OFX în DaVinci Resolve. Descărcare fără cont.",
+      "externalURL" : "https://gordas.dev/gdc-test-charts-4k/",
+      "id" : "gdc-test-charts-4k",
+      "kind" : "guide",
+      "name" : "GDC Test Charts 4K"
+    },
+    {
+      "access" : {
+        "kind" : "free",
+        "tags" : [
+
+        ]
+      },
       "description" : "112 LUT-uri .cube 33³ gratuite (CC BY 4.0), doar pentru monitorizare: hartă de expunere în fals-culori, o culoare pe treaptă față de grey 18%, calculată direct din semnalul log; compensare 0 … −1,5 EV pe 28 de profiluri log. Descărcare fără cont.",
       "externalURL" : "https://gordas.dev/zona-gdc/",
       "id" : "zona-gdc",
       "kind" : "guide",
       "name" : "ZONA GDC"
-    },
-    {
-      "coverImage" : "covers/De la Zero la Conversie.jpg?v=4be3dda3",
-      "description" : "Acum aproape doi ani, în decembrie 2023, profilul meu de Instagram era un dezastru.",
-      "externalURL" : "https://axintefilms.com/product/emNb5yxm",
-      "id" : "De la Zero la Conversie",
-      "kind" : "book",
-      "name" : "De la Zero la Conversie",
-      "socialLinks" : {
-        "facebookURL" : "https://www.facebook.com/axintefilms",
-        "instagramURL" : "https://www.instagram.com/axinte_films",
-        "youtubeURL" : "https://www.youtube.com/@Marius_Axinte"
-      },
-      "youtubeURL" : "https://axintefilms.com/ro/de-la-0-la-conversie"
     }
   ],
   "events" : [
