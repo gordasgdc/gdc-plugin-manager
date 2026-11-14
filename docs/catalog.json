@@ -187,7 +187,7 @@
         ]
       },
       "coverImage" : "covers/SoundSFXPaste.png",
-      "downloadURL" : "https://github.com/gordasgdc/soundsfxpaste/releases/download/v0.2.0/SoundSFXPaste-0.2.0.pkg",
+      "downloadURL" : "https://github.com/gordasgdc/soundsfxpaste/releases/download/v0.2.1/SoundSFXPaste-0.2.1.pkg",
       "id" : "soundsfxpaste",
       "name" : "SoundSFXPaste",
       "supportedOS" : "macOS",
