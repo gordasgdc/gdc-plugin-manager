@@ -150,3 +150,39 @@ section h2{font-size:clamp(24px,3.2vw,32px)}
 .hero{width:100%;min-width:0}
 .hero .cta{max-width:100%}
 @media (max-width:640px){.cmd.mini{flex-wrap:wrap;justify-content:center}.cmd.mini code{white-space:normal;overflow-wrap:anywhere;font-size:12px;text-align:center}.hero .note{max-width:100%}}
+/* synthetic windows: 300 x 256, scaled to the card */
+.card .face.shot{padding:0;background:#fff;position:relative}
+.swin{position:absolute;left:0;top:0;width:300px;height:256px;transform:scale(.5);transform-origin:0 0;display:block;font:12px/1.35 -apple-system,"SF Pro Text",sans-serif;color:#222;background:#fff;text-align:left}
+.swin .tb{display:flex;align-items:center;gap:6px;height:30px;padding:0 12px;background:#ececf0;border-bottom:1px solid #d8d8de}
+.swin .tb s{width:11px;height:11px;border-radius:50%;background:#ff5f57;display:block}.swin .tb s:nth-child(2){background:#febc2e}.swin .tb s:nth-child(3){background:#28c840}
+.swin .tb b{margin-left:10px;font-size:13px;font-weight:600;color:#444;white-space:nowrap}
+.swin .bd{padding:14px;height:226px;overflow:hidden}
+.swin .d0 .kp{display:flex;gap:10px}.swin .d0 .kp span{flex:1;background:#f3f5f8;border-radius:8px;padding:8px}.swin .d0 em{display:block;font-style:normal;font-size:11px;color:#777}.swin .d0 .kp b{font-size:20px}
+.swin .d0 .ch{display:flex;align-items:flex-end;gap:12px;height:110px;margin-top:16px;border-bottom:2px solid #ccd}.swin .d0 .ch i{flex:1;background:linear-gradient(#2f7a80,#1d4e53);border-radius:4px 4px 0 0}
+.swin .d1{background:#1d2528;color:#cfe0e0}.swin pre{margin:0;font:12.5px/1.55 ui-monospace,Menlo,monospace;white-space:pre}.swin .k{color:#e0a36b}.swin .s{color:#9ccf9c}.swin .f{color:#8cc3e8}.swin .c{color:#7d9190}.swin .n{color:#f0c987}
+.swin .d2 table{width:100%;border-collapse:collapse;font-size:13px}.swin .d2 th{text-align:left;color:#666;font-weight:600;border-bottom:2px solid #d0d6dc;padding:6px}.swin .d2 td{padding:8px 6px;border-bottom:1px solid #e8ecef}
+.swin .d3{background:#eef2f1;display:flex;flex-direction:column;gap:10px;justify-content:center}.swin .d3 p{margin:0;max-width:78%;padding:9px 12px;border-radius:14px;font-size:13px}.swin .d3 .in{background:#fff;align-self:flex-start}.swin .d3 .out{background:#2f7a80;color:#fff;align-self:flex-end}
+.swin .d4 .hr{height:78px;border-radius:8px;background:linear-gradient(135deg,#3c6e71,#d5a16f)}.swin .d4 h4{margin:12px 0 6px;font-size:18px}.swin .d4 .ln{height:8px;border-radius:4px;background:#dde3e6;margin:7px 0}.swin .d4 .ln.s{width:60%}.swin .d4 .bt{display:inline-block;margin-top:10px;padding:7px 16px;border-radius:999px;background:#b2641f;color:#fff;font-weight:600;font-size:13px}
+.swin .d5{background:#10181a;color:#d8e6e4}.swin .g{color:#8fd19e}
+.pvwin{position:relative;width:300px;height:256px;margin:0 auto 12px;border-radius:10px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.35);border:1px solid #ccd}.pvwin .swin{transform:none}
+@media (max-width:640px){.swin{transform:scale(.44)}}
+.toast{left:16px;right:auto;bottom:16px;transform:translateY(10px)}
+.toast.show{transform:none}
+@media (max-width:640px){.toast{bottom:84px}}
+/* the pointer that appears only in the scripted tour (clip and README animations) */
+#cur{position:absolute;left:0;top:0;z-index:60;pointer-events:none;will-change:transform}
+#cur svg{display:block;filter:drop-shadow(0 2px 3px rgba(0,0,0,.5))}
+#cur i{position:absolute;left:-9px;top:-9px;width:22px;height:22px;border-radius:50%;border:3px solid rgba(255,255,255,.9);opacity:0}
+#cur.click i{animation:ripple .45s ease-out}
+@keyframes ripple{0%{transform:scale(.3);opacity:.95}100%{transform:scale(1.6);opacity:0}}
+.tour .hotzone{pointer-events:none}
+.tourghost{width:120px;height:102px;overflow:hidden;background:#fff;border:1px solid rgba(255,255,255,.6);transform:rotate(-3deg)}
+.tourghost .swin{left:0;top:0}
+.clipbox{position:fixed;inset:0;z-index:200;background:rgba(6,12,14,.78);display:grid;place-items:center;padding:16px}
+.clipbox[hidden]{display:none}
+.clipin{position:relative;width:min(960px,100%);background:#0F1D21;border:1px solid rgba(255,255,255,.18);border-radius:16px;padding:16px;color:#EDEFF2}
+.clipin h2{margin:0 0 10px;font-size:18px}.clipin video{display:block;width:100%;border-radius:10px;background:#000;aspect-ratio:1200/700}
+.clipin .btn{position:absolute;top:10px;right:10px;padding:5px 14px;background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.25);color:#fff}
+.clipin .note{color:#A9BDBC;margin:10px 0 0}
+@media (max-width:640px){.scene .mac{min-height:940px;max-height:none}.stage{padding-top:262px;padding-bottom:150px}.dock{bottom:12px}}
+.notoast .toast{display:none}

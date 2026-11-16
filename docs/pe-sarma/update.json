@@ -9,5 +9,7 @@
     "en": "New identity with the copper clip on the wire, adapted menu bar symbol, site and documentation in Romanian, Spanish and English."
   },
   "download_url": "https://github.com/gordasgdc/pe-sarma/releases/download/v1.1.0/PeSarma-1.1.0.dmg",
-  "mandatory": false
+  "mandatory": false,
+  "sha256": "f64a02764e6da45cf70e476cd901fad84136926215f2ca1e9201b18e003c5b19",
+  "size": 3050881
 }
