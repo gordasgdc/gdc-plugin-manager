@@ -94,11 +94,13 @@ document.addEventListener('keydown',function(e){
   else if((e.metaKey||e.ctrlKey)&&e.code==='KeyZ'&&inDemo&&document.activeElement!==q){e.preventDefault();undoLast()}});
 function clock(){var d=new Date();$('clock').textContent=d.getHours()+':'+('0'+d.getMinutes()).slice(-2)}
 clock();setInterval(clock,20000);
-/* copy the Homebrew command */
-$('brew-copy').onclick=function(){var b=$('brew-copy'),txt=$('brew').textContent;
-  function done(){b.textContent=T('d.copied');setTimeout(function(){b.textContent=T('d.copy')},1500)}
-  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(done,function(){sel()})}else sel();
-  function sel(){var r=document.createRange();r.selectNodeContents($('brew'));var s=getSelection();s.removeAllRanges();s.addRange(r);done()}};
+/* copy the Homebrew command (the pill in the first scene and the one in the install section) */
+function bindCopy(btn,code){btn.onclick=function(){var txt=code.textContent;
+  function done(){btn.textContent=T('d.copied');setTimeout(function(){btn.textContent=T('d.copy')},1500)}
+  function sel(){var r=document.createRange();r.selectNodeContents(code);var s=getSelection();s.removeAllRanges();s.addRange(r);done()}
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(done,sel)}else sel()}}
+bindCopy($('brew-copy'),$('brew'));
+[].forEach.call(document.querySelectorAll('.brew-copy-btn'),function(b){bindCopy(b,b.parentNode.querySelector('code'))});
 add({kind:'note',welcome:true},true);
 add({kind:'shot',n:0},true);
 undo=[];
