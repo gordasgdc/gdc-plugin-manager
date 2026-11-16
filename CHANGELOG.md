@@ -1,5 +1,10 @@
 # Changelog — GDC Plugin Manager
 
+## v1.42.0 Client (2026-11-16) — Pe sârmă în Aplicații și în „Aplicațiile mele”
+- Catalog: Pe sârmă (capturi și clipboard agățate pe un fir sub bara de meniu, gratuită, cu sursă deschisă, doar macOS 14+) apare în Aplicații, cu pagină și descărcare.
+- „Aplicațiile mele” recunoaște Pe sârmă instalată direct din DMG sau prin Homebrew, după identitatea aplicației și semnătura Apple (GDC), cu versiunea citită din aplicație.
+- Un Manager mai vechi de 1.42.0 nu recunoaște Pe sârmă prin reîmprospătarea catalogului; recunoașterea vine odată cu această actualizare.
+
 ## v1.41.1 Client (2026-11-01) — „Aplicațiile mele”: acțiunea de actualizare spune ce face
 - Pentru o aplicație găsită pe disc (de exemplu SADROG), butonul de actualizare se numește acum „Deschide pagina de actualizare…” (RO/EN/ES): deschide pagina produsului, de unde descarci versiunea nouă; Managerul nu instalează și nu înlocuiește aplicația.
 - Insigna „Actualizare” apare doar când versiunea instalată (citită din aplicație) este mai veche decât cea publicată; dacă versiunea instalată sau manifestul nu pot fi citite, nu se afișează nicio actualizare.
