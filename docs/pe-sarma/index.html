@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pe sârmă — capturi și copieri pe un fir, pentru Mac</title>
+<meta name="description" content="Pe sârmă: aplicație gratuită pentru macOS. Capturile de ecran și tot ce copiezi se agață pe un fir sub bara de meniu, le cauți după conținut și le folosești cu gesturi directe.">
+<link rel="canonical" href="https://gordas.dev/pe-sarma/">
+<link rel="alternate" hreflang="ro" href="https://gordas.dev/pe-sarma/?lang=ro">
+<link rel="alternate" hreflang="es" href="https://gordas.dev/pe-sarma/?lang=es">
+<link rel="alternate" hreflang="en" href="https://gordas.dev/pe-sarma/?lang=en">
+<link rel="icon" href="img/favicon-32.png?v=1.0.0" type="image/png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png?v=1.0.0">
+<meta property="og:title" content="Pe sârmă — capturi și copieri pe un fir, pentru Mac">
+<meta property="og:description" content="Gratuită, cu sursă deschisă, în română, spaniolă și engleză. Capturile și ce copiezi se agață pe un fir sub bara de meniu.">
+<meta property="og:image" content="https://gordas.dev/pe-sarma/img/icon-512.png?v=1.0.0">
+<meta property="og:url" content="https://gordas.dev/pe-sarma/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="stylesheet" href="style.css?v=1.0.0">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 4v11"/><path d="m7 11 5 5 5-5"/><path d="M5 20h14"/></symbol>
+  <symbol id="i-code" viewBox="0 0 24 24"><path d="m8 8-4 4 4 4"/><path d="m16 8 4 4-4 4"/><path d="m14 5-4 14"/></symbol>
+  <symbol id="i-cam" viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="m20 20-4-4"/></symbol>
+  <symbol id="i-undo" viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></symbol>
+  <symbol id="i-wifi" viewBox="0 0 24 24"><path d="M3 9a14 14 0 0 1 18 0"/><path d="M6 12.5a9 9 0 0 1 12 0"/><path d="M9 16a4.5 4.5 0 0 1 6 0"/><path d="M12 19.5h.01"/></symbol>
+  <symbol id="i-term" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="m7 9 3 3-3 3"/><path d="M13 15h4"/></symbol>
+</svg>
+
+<div class="wrap">
+  <header class="top">
+    <img src="img/icon-512.png?v=1.0.0" alt="" width="36" height="36">
+    <b>Pe sârmă</b>
+    <nav data-ial="nav.label" aria-label="Secțiuni"><a href="#demo" data-i="nav.demo">Demonstrație</a><a href="#gesturi" data-i="nav.gestures">Gesturi</a><a href="#descarca" data-i="nav.download">Descărcare</a><a href="https://github.com/gordasgdc/pe-sarma" data-i="nav.source">Sursa</a></nav>
+    <div class="lang" role="group" data-ial="lang.label" aria-label="Limba"><button type="button" data-lang="ro" aria-pressed="true">RO</button><button type="button" data-lang="es" aria-pressed="false">ES</button><button type="button" data-lang="en" aria-pressed="false">EN</button></div>
+  </header>
+
+  <main>
+  <div class="hero">
+    <h1 data-ih="hero.h1">Capturile și ce copiezi stau <em>pe sârmă</em>, la un gest distanță.</h1>
+    <p data-i="hero.p">Fiecare captură de ecran și tot ce copiezi se agață pe un fir chiar sub bara de meniu. Le cauți după conținut și le folosești cu gesturi directe. Gratuită, cu sursă deschisă, pentru Mac.</p>
+    <div class="cta">
+      <a class="btn primary" href="https://github.com/gordasgdc/pe-sarma/releases/latest/download/PeSarma.dmg" id="dl"><svg class="i"><use href="#i-down"/></svg><span data-i="cta.download">Descarcă pentru Mac</span></a>
+      <a class="btn" href="https://github.com/gordasgdc/pe-sarma"><svg class="i"><use href="#i-code"/></svg><span data-i="cta.source">Codul sursă</span></a>
+    </div>
+    <span class="note" data-i="hero.note">Versiunea 1.0.0 · macOS 14 sau mai nou · Apple Silicon și Intel · semnată și notarizată de Apple</span>
+  </div>
+
+  <section id="demo" style="border:0;padding-top:6px">
+    <div class="demo">
+      <div class="demo-label"><b data-i="demo.title">Demonstrație în browser</b><span data-i="demo.sub">Nu este aplicația reală: doar simulează ce face. Aplicația se instalează pe Mac.</span></div>
+      <div class="mac" id="mac">
+        <div class="menubar" aria-hidden="true"><span></span><span data-i="mb.file">Fișier</span><span data-i="mb.edit">Editare</span><span data-i="mb.window">Fereastră</span><span class="sp"></span><svg viewBox="0 0 24 24"><use href="#i-wifi"/></svg><span id="clock">9:41</span></div>
+        <button class="hotzone" id="hot" data-ial="demo.hot" aria-label="Arată sau ascunde firul"></button>
+        <div class="stage" aria-hidden="true"><div class="hint" id="hint" data-i="demo.hint">Ține cursorul în mijlocul barei de meniu pentru a coborî firul, sau apasă „Arată firul”.</div></div>
+        <div class="line" id="line" data-ial="demo.lineRegion" aria-label="Firul cu elementele agățate" role="region">
+          <svg class="wire" viewBox="0 0 1000 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0 6 Q500 54 1000 6"/></svg>
+          <div class="cards" id="cards" role="list"></div>
+        </div>
+        <div class="search" id="search"><label class="sr" for="q" data-i="demo.searchLabel">Caută pe fir</label><input id="q" type="search" data-iph="demo.searchPh" placeholder="Caută pe fir…" autocomplete="off"></div>
+        <div class="folder" id="folder" aria-hidden="true"><div class="fi"></div><span data-i="demo.folder">Folder „Proiecte”</span></div>
+        <div class="flash" id="flash"></div>
+        <div class="toast" id="toast" role="status" aria-live="polite"></div>
+        <div class="preview" id="preview" role="dialog" aria-modal="false" aria-labelledby="pv-t"><button class="btn" id="pv-x" data-i="demo.close">Închide</button><h3 id="pv-t"></h3><div id="pv-b"></div></div>
+        <div class="dock">
+          <button class="btn" id="b-line" aria-pressed="false"></button>
+          <button class="btn" id="b-shot"><svg class="i"><use href="#i-cam"/></svg><span data-i="demo.shot">Fă o captură</span></button>
+          <button class="btn" id="b-copy"><svg class="i"><use href="#i-copy"/></svg><span data-i="demo.copy">Copiază text</span></button>
+          <button class="btn" id="b-find"><svg class="i"><use href="#i-search"/></svg><span data-i="demo.find">Caută</span></button>
+          <button class="btn" id="b-undo"><svg class="i"><use href="#i-undo"/></svg><span data-i="demo.undo">Anulează</span></button>
+        </div>
+      </div>
+    </div>
+    <p class="note" data-i="demo.note">Doar în demonstrație: captura este o ilustrație generată, „clipboardul” este simulat, iar tragerea într-un folder și previzualizarea sunt imitate. În aplicație, tot ce se întâmplă rămâne pe Mac-ul tău.</p>
+  </section>
+
+  <section id="gesturi">
+    <h2 data-i="g.h2">Un gest pentru fiecare lucru</h2>
+    <dl class="gest">
+      <div><dt data-i="g1.k">Clic</dt><dd data-i="g1.v">Copiază. O notă se copiază cu textul formatat.</dd></div>
+      <div><dt data-i="g2.k">Apăsare lungă</dt><dd data-i="g2.v">Deschide în Adnotare. O notă se deschide pentru editare.</dd></div>
+      <div><dt data-i="g3.k">Dublu clic</dt><dd data-i="g3.v">Deschide în Previzualizare. Un link se deschide în browser.</dd></div>
+      <div><dt data-i="g4.k">Tragere într-o aplicație</dt><dd data-i="g4.v">Trimite o copie; rămâne pe fir.</dd></div>
+      <div><dt data-i="g5.k">Tragere într-un folder</dt><dd data-i="g5.v">O păstrezi acolo; pleacă de pe fir.</dd></div>
+      <div><dt data-i="g6.k">Shift-clic</dt><dd data-ih="g6.v">Selectezi mai multe; meniul, <kbd>⌘</kbd><kbd>C</kbd>, <kbd>⌫</kbd> și tragerea acționează asupra tuturor.</dd></div>
+      <div><dt><kbd>⌘</kbd><kbd>Z</kbd> <span data-i="g7.k">pe fir</span></dt><dd data-i="g7.v">Anulează ce ai făcut: aruncare, fixare, salvare pe Desktop.</dd></div>
+      <div><dt data-i="g8.k">Clic dreapta</dt><dd data-i="g8.v">Partajează, fixează pe fir, ține în fața ferestrelor, arată în Finder.</dd></div>
+      <div><dt><kbd>⌃</kbd><kbd>⌥</kbd><kbd>T</kbd></dt><dd data-i="g9.v">Arată sau ascunde firul (se poate schimba).</dd></div>
+      <div><dt><kbd>⌃</kbd><kbd>⌥</kbd><kbd>F</kbd></dt><dd data-i="g10.v">Caută pe fir (se poate schimba).</dd></div>
+    </dl>
+  </section>
+
+  <section>
+    <h2 data-i="w.h2">Ce face</h2>
+    <ul class="clean">
+      <li data-ih="w1">Capturi.</li><li data-ih="w2">Copiat.</li><li data-ih="w3">Căutare.</li><li data-ih="w4">Privat.</li>
+    </ul>
+    <p class="note" data-i="w.note">Setări.</p>
+  </section>
+
+  <section id="descarca">
+    <h2 data-i="d.h2">Descărcare și instalare</h2>
+    <div class="facts">
+      <div><b data-i="f.price.k">Preț</b><span data-i="f.price.v">Gratuită</span></div>
+      <div><b data-i="f.sys.k">Sistem</b><span data-i="f.sys.v">macOS 14</span></div>
+      <div><b data-i="f.cpu.k">Procesor</b><span data-i="f.cpu.v">Apple Silicon și Intel</span></div>
+      <div><b data-i="f.lang.k">Limbi</b><span data-i="f.lang.v">RO, ES, EN</span></div>
+      <div><b data-i="f.perm.k">Permisiuni</b><span data-i="f.perm.v">Folder</span></div>
+      <div><b data-i="f.lic.k">Licență</b><span data-i="f.lic.v">MIT</span></div>
+    </div>
+    <h3 class="opt" data-i="d.opt1">Opțiunea 1: imaginea disc</h3>
+    <div class="cta">
+      <a class="btn primary" href="https://github.com/gordasgdc/pe-sarma/releases/latest/download/PeSarma.dmg"><svg class="i"><use href="#i-down"/></svg><span data-i="d.dmg">Descarcă imaginea disc (.dmg)</span></a>
+      <a class="btn" href="https://github.com/gordasgdc/pe-sarma/releases/latest" data-i="d.all">Toate versiunile</a>
+    </div>
+    <p class="note" data-i="d.dmgnote">Deschide imaginea disc și trage aplicația în Aplicații.</p>
+    <h3 class="opt" data-i="d.opt2">Opțiunea 2: Homebrew</h3>
+    <div class="cmd"><svg class="i"><use href="#i-term"/></svg><code id="brew">brew install --cask gordasgdc/tap/pe-sarma</code><button type="button" class="btn" id="brew-copy" data-i="d.copy">Copiază</button></div>
+    <p class="note" data-i="d.brewnote">Instalează aceeași aplicație, din același DMG notarizat din GitHub Releases.</p>
+  </section>
+
+  <section>
+    <h2 data-i="c.h2">Credite</h2>
+    <p><b data-i="c.edition">Pe sârmă — ediția în limba română, publicată și întreținută de Cristi Gordaș.</b></p>
+    <p class="note" data-ih="c.based">Bazată pe Tendedero.</p>
+  </section>
+  </main>
+
+  <footer>
+    <div data-i="foot.text">Platformă administrată de dezvoltatori independenți. Aplicația este oferită „așa cum este”, fără garanții. Proiect gratuit.</div>
+    <div class="row"><a href="https://gordas.dev/">gordas.dev</a><a href="https://gordas.dev/termeni" data-i="foot.terms">Termeni</a><a href="https://gordas.dev/confidentialitate" data-i="foot.priv">Confidențialitate</a><a href="https://github.com/gordasgdc/pe-sarma" data-i="foot.src">Cod sursă</a><a href="https://github.com/alejandrobujan/tendedero/blob/main/LICENSE" data-i="foot.lic">Licență MIT (Tendedero)</a></div>
+  </footer>
+</div>
+<script src="i18n.js?v=1.0.0"></script>
+<script src="demo.js?v=1.0.0"></script>
+</body>
+</html>
