@@ -1,9 +1,9 @@
 {
-  "version": "2.21.2",
-  "app_version": "2.21.2",
-  "changes": "În GDC DRT, profilul „Asiatic” se numește acum „Skin”. Proiectele și presetările salvate se încarcă la fel ca înainte, cu același rezultat. Ghidurile și manualele (RO/EN/ES) au fost actualizate.",
+  "version": "2.22.0",
+  "app_version": "2.22.0",
+  "changes": "Nou: GDC Viewer, un instrument de diagnostic pentru orice pipeline — scală de expunere în stopuri față de gri 18%, spoturi A/B trase direct pe imagine, citiri cu diferența B−A și patch de referință. Apare în lista de instrumente și se activează cu licența Full, fără pași în plus. Lista de instrumente se actualizează corect și când pe calculator există deja un catalog mai vechi.",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.21.2.dmg"
+    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.22.0.dmg"
   },
   "mandatory": false
 }
