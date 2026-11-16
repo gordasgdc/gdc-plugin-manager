@@ -91,6 +91,12 @@ let knownGDCApps: [MyAppEntry] = [
                iconSymbol: "record.circle", tint: .red,
                versionSource: .updateJSON(url: URL(string: "https://gordas.dev/sadrog/update.json")!),
                teamIdentifier: "8AR6XP8MG7", pageURL: URL(string: "https://gordas.dev/sadrog/")),
+    // 2026-11-16: Pe sârmă (aplicație gratuită, open source, macOS; ediția în limba română a Tendedero). Recunoscută după bundle ID și Team ID;
+    // versiunea publicată vine din `pe-sarma/update.json`. Instalată din DMG sau prin Homebrew (`gordasgdc/tap/pe-sarma`).
+    MyAppEntry(id: "pe-sarma", name: "Pe sârmă", bundleIdentifier: "dev.gordas.PeSarma",
+               iconSymbol: "photo.on.rectangle", tint: .orange,
+               versionSource: .updateJSON(url: URL(string: "https://gordas.dev/pe-sarma/update.json")!),
+               teamIdentifier: "8AR6XP8MG7", pageURL: URL(string: "https://gordas.dev/pe-sarma/")),
     MyAppEntry(id: "cgconvertor", name: "CGConvertor", bundleIdentifier: "com.cristigordas.CGConvertor",
                iconSymbol: "film.stack", tint: .purple,
                versionSource: .githubReleases(repo: "gordasgdc/CGConvertor")),

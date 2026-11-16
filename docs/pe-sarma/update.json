@@ -1,0 +1,13 @@
+{
+  "version": "1.1.0",
+  "app_version": "1.1.0",
+  "build": "2",
+  "release_date": "2026-11-16",
+  "changes": {
+    "ro": "Identitate nouă cu clema de cupru pe fir, simbol adaptat în bara de meniu, site și documentație în română, spaniolă și engleză.",
+    "es": "Nueva identidad con la pinza de cobre en el hilo, símbolo adaptado en la barra de menús, sitio y documentación en rumano, español e inglés.",
+    "en": "New identity with the copper clip on the wire, adapted menu bar symbol, site and documentation in Romanian, Spanish and English."
+  },
+  "download_url": "https://github.com/gordasgdc/pe-sarma/releases/download/v1.1.0/PeSarma-1.1.0.dmg",
+  "mandatory": false
+}

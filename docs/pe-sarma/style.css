@@ -93,3 +93,52 @@ h3.opt{margin:18px 0 8px;font-size:16px;color:var(--mute);font-weight:600}
 .cmd .btn{padding:6px 14px}
 .facts span{display:block}
 @media (max-width:640px){header.top nav{display:none}.lang{margin-left:auto}}
+
+/* ===== v1.1: the page opens on a desktop, like the app does ===== */
+body{background:#0E1A1D}
+.scene{padding:0;border:0;position:relative}
+.scene .mac{height:100svh;min-height:600px;max-height:980px;background:
+  radial-gradient(60% 50% at 18% 78%,rgba(212,150,98,.22),transparent 70%),
+  radial-gradient(55% 55% at 85% 20%,rgba(116,160,160,.28),transparent 70%),
+  linear-gradient(160deg,#0F1D21 0%,#1D3A3F 52%,#2D5558 100%)}
+.menubar{height:32px;gap:16px;padding:0 14px;background:rgba(10,20,22,.55);color:#EDEFF2}
+.menubar .mbi{filter:invert(1);width:15px;height:15px}
+.menubar .app{font-weight:700;margin-right:6px}
+.menubar .mbn{display:flex;gap:14px;margin-left:auto;margin-right:6px}
+.menubar .mbn a{color:#EDEFF2;text-decoration:none;opacity:.85;font-size:12.5px}.menubar .mbn a:hover{opacity:1}
+.menubar .sp{margin-left:0;flex:0}
+.menubar .lang{margin-left:0;gap:2px}
+.menubar .lang button{background:transparent;border:0;color:#EDEFF2;opacity:.7;padding:3px 7px;border-radius:6px;font-size:12px}
+.menubar .lang button[aria-pressed="true"]{background:rgba(255,255,255,.22);opacity:1;color:#fff}
+.hotzone{top:0;height:32px}
+.line{top:32px}
+.stage{top:32px;padding-top:190px;place-items:start center;align-content:center;padding-bottom:110px}
+.hero{display:grid;justify-items:center;gap:12px;text-align:center;max-width:720px;padding:0 20px;color:#F4F1EA}
+.hero .mark{width:84px;height:84px;filter:drop-shadow(0 10px 22px rgba(0,0,0,.45))}
+.hero h1{font-size:clamp(30px,5.2vw,56px);line-height:1.05;margin:0;letter-spacing:-.8px;color:#fff}
+.hero h1 em{font-style:normal;color:#F0B27A}
+.hero p{margin:0;color:#C9D6D4;font-size:clamp(16px,1.7vw,19px);max-width:56ch}
+.hero .cta{justify-content:center}
+.hero .note{color:#9FB3B2}
+.hero .hint{background:rgba(10,20,22,.45);padding:7px 13px;border-radius:12px;font-size:13px;color:#C9D6D4;margin-top:6px}
+.hero .btn:not(.primary){background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.22);color:#fff;backdrop-filter:blur(10px)}
+.wire path{stroke:#D5A16F;stroke-width:3.5;filter:drop-shadow(0 2px 2px rgba(0,0,0,.5))}
+.card .clip{width:20px;height:34px;margin-left:-10px;top:-16px;border-radius:9px;border:0;background:linear-gradient(135deg,#7B3F27,#C26E43 45%,#F2AE76);box-shadow:0 4px 8px rgba(0,0,0,.45),inset 0 0 0 1.5px rgba(255,214,170,.5)}
+.card .clip::after{content:"";position:absolute;left:5px;right:5px;bottom:7px;height:5px;border-radius:3px;background:#4b2a22}
+.dock{bottom:16px;padding:9px 11px;border-radius:20px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(18px)}
+.dock .btn{background:rgba(10,20,22,.45);border-color:rgba(255,255,255,.14);color:#fff}
+.dock .btn[aria-pressed="true"]{background:rgba(213,161,111,.35)}
+.scene-note{max-width:1040px;margin:10px auto 0;padding:0 16px}
+section{border-top:0}
+main > .wrap > section{padding:44px 0 6px}
+section h2{font-size:clamp(24px,3.2vw,32px)}
+@media (max-width:640px){.menubar .mbn,.menubar span[data-i]{display:none}.stage{padding-top:170px}.hero .mark{width:64px;height:64px}.scene .mac{min-height:660px}.dock{width:calc(100% - 20px)}}
+:root:not([data-theme="dark"]){color-scheme:dark light}
+.stage{padding-top:262px}
+.hero{max-width:860px;gap:10px}
+.hero .mark{width:68px;height:68px}
+.hero h1{font-size:clamp(30px,4.6vw,52px)}
+.search{top:252px}
+.dock{max-width:none;flex-wrap:nowrap;white-space:nowrap}
+.toast{bottom:92px}
+@media (max-width:900px){.dock{flex-wrap:wrap;white-space:normal;max-width:calc(100% - 20px)}.stage{padding-top:240px}}

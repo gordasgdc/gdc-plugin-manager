@@ -8,7 +8,7 @@ function fold(s){return String(s).normalize('NFD').replace(/[̀-ͯ]/g,'').replac
 function say(m){toast.textContent=m;toast.classList.add('show');clearTimeout(toastT);toastT=setTimeout(function(){toast.classList.remove('show')},2200)}
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 function lineBtn(){var on=line.classList.contains('open');$('b-line').setAttribute('aria-pressed',on);$('b-line').textContent=T(on?'demo.hideLine':'demo.showLine')}
-function setLine(on){line.classList.toggle('open',on);lineBtn();$('hint').parentNode.parentNode.style.opacity=on?0:1;if(!on)closeSearch()}
+function setLine(on){line.classList.toggle('open',on);lineBtn();$('hint').style.opacity=on?0:1;if(!on)closeSearch()}
 function shotFace(n){var w=['#E08E4A','#7b5ea7','#3b8c9e','#c0578a'][n%4];return '<span class="face shot"><span class="win"><i><s></s><s></s><s></s></i><span class="body"><u style="width:80%"></u><u style="width:55%"></u><span class="blk" style="background:linear-gradient(135deg,'+w+',#2b3038)"></span><u style="width:70%"></u></span></span></span>'}
 /* an item stores indexes, not words, so the language can change under it */
 function content(it){
@@ -102,6 +102,20 @@ $('brew-copy').onclick=function(){var b=$('brew-copy'),txt=$('brew').textContent
 add({kind:'note',welcome:true},true);
 add({kind:'shot',n:0},true);
 undo=[];
+
+/* ?tour=1 plays the whole sequence on its own; the README animations are frames of it */
+if(/[?&]tour=1/.test(location.search)){
+  var firstCard=function(){return items[0]};
+  setTimeout(function(){setLine(true)},600);
+  setTimeout(shot,1500);
+  setTimeout(function(){copyItem(firstCard())},2800);
+  setTimeout(function(){openSearch();q.value='sarma';applyFilter()},4000);
+  setTimeout(function(){closeSearch()},5400);
+  setTimeout(function(){remove(firstCard().id)},6000);
+  setTimeout(undoLast,6900);
+}
 window.I18N.listeners.push(function(){render();lineBtn()});
 render();lineBtn();
+/* the first scene: the line comes down by itself and a capture hangs, once */
+if(!/[?&]tour=1/.test(location.search))setTimeout(function(){setLine(true);if(!reduce)setTimeout(function(){if(items.length<3)shot()},900)},700);
 })();

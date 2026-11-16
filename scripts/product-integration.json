@@ -25,6 +25,21 @@
       "manifest": "https://gordas.dev/foto-asist-gc/update.json",
       "noPricingProductID": true,
       "noPublicPrice": true
+    },
+    {
+      "id": "pe-sarma",
+      "name": "Pe sârmă",
+      "os": "macOS",
+      "page": "https://gordas.dev/pe-sarma/",
+      "download": "https://github.com/gordasgdc/pe-sarma/releases/latest/download/PeSarma.dmg",
+      "manifest": "https://gordas.dev/pe-sarma/update.json",
+      "noPricingProductID": true,
+      "noPublicPrice": true,
+      "detect": {
+        "bundle id": "dev.gordas.PeSarma",
+        "Team ID": "8AR6XP8MG7",
+        "manifest": "https://gordas.dev/pe-sarma/update.json"
+      }
     }
   ]
 }

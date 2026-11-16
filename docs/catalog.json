@@ -288,6 +288,22 @@
     {
       "access" : {
         "group" : "gdc",
+        "kind" : "free",
+        "note" : "Gratuită, cu sursă deschisă, fără cont. RO, ES, EN. macOS 14+.",
+        "tags" : [
+          "Utilitare"
+        ]
+      },
+      "coverImage" : "covers/Pe sarma.png?v=60f0fc52",
+      "downloadURL" : "https://github.com/gordasgdc/pe-sarma/releases/latest/download/PeSarma.dmg",
+      "id" : "pe-sarma",
+      "name" : "Pe sârmă",
+      "supportedOS" : "macOS",
+      "url" : "https://gordas.dev/pe-sarma/"
+    },
+    {
+      "access" : {
+        "group" : "gdc",
         "kind" : "trial",
         "note" : "Evaluare de 5 zile, apoi licența se activează din aplicație. Doar macOS 15+, Apple Silicon.",
         "tags" : [
