@@ -1,15 +1,15 @@
 {
-  "version": "1.1.1",
-  "app_version": "1.1.1",
-  "build": "3",
+  "version": "1.1.2",
+  "app_version": "1.1.2",
+  "build": "4",
   "release_date": "2026-11-16",
   "changes": {
-    "ro": "Limba se alege acum din aplicație: în meniul pictogramei, Limbă → Română, Español, English sau Limba sistemului.",
-    "es": "El idioma se elige ahora desde la app: en el menú del icono, Idioma → Română, Español, English o Idioma del sistema.",
-    "en": "You can now choose the language in the app: in the menu bar icon menu, Language → Română, Español, English or System language."
+    "ro": "„Caută actualizări…” verifică acum în aplicație și arată rezultatul; pentru copiile din imaginea disc, „Actualizează acum” instalează versiunea nouă (cu verificarea semnăturii), iar pentru Homebrew apare comanda de actualizare, cu buton de copiere.",
+    "es": "«Buscar actualizaciones…» ahora comprueba dentro de la app y muestra el resultado; en las copias de la imagen de disco, «Actualizar ahora» instala la versión nueva (con comprobación de la firma) y con Homebrew aparece el comando de actualización, con botón de copiar.",
+    "en": "“Check for Updates…” now checks inside the app and shows the result; for copies from the disk image, “Update now” installs the new version (after checking its signature), and with Homebrew the update command is shown with a copy button."
   },
-  "download_url": "https://github.com/gordasgdc/pe-sarma/releases/download/v1.1.1/PeSarma-1.1.1.dmg",
+  "download_url": "https://github.com/gordasgdc/pe-sarma/releases/download/v1.1.2/PeSarma-1.1.2.dmg",
   "mandatory": false,
-  "sha256": "3df9fe0457da833122993ca8239dce698f5ce509e2700d53a30d7ed3bac6d4ee",
-  "size": 3048324
+  "sha256": "dcae135e6c00cb427d088dda0223897a284f28bfe884c5f749c657581f90f403",
+  "size": 3113729
 }

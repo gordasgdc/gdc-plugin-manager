@@ -111,6 +111,9 @@ function bindCopy(btn,code){btn.onclick=function(){var txt=code.textContent;
   function sel(){var r=document.createRange();r.selectNodeContents(code);var s=getSelection();s.removeAllRanges();s.addRange(r);done()}
   if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(done,sel)}else sel()}}
 bindCopy($('brew-copy'),$('brew'));
+bindCopy($('brew-up-copy'),$('brew-up'));
+/* the app's update check opens the page with ?update=<version>: go to the Update section */
+if(/[?&]update=/.test(location.search)&&$('update'))setTimeout(function(){$('update').scrollIntoView({behavior:'smooth',block:'start'})},400);
 [].forEach.call(document.querySelectorAll('.brew-copy-btn'),function(b){bindCopy(b,b.parentNode.querySelector('code'))});
 /* the short film, from the first scene */
 (function(){var box=$('clipbox'),v=$('clipv'),opener=null;
