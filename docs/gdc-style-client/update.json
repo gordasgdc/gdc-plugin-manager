@@ -1,9 +1,9 @@
 {
-  "version": "2.22.0",
-  "app_version": "2.22.0",
-  "changes": "Nou: GDC Viewer, un instrument de diagnostic pentru orice pipeline — scală de expunere în stopuri față de gri 18%, spoturi A/B trase direct pe imagine, citiri cu diferența B−A și patch de referință. Apare în lista de instrumente și se activează cu licența Full, fără pași în plus. Lista de instrumente se actualizează corect și când pe calculator există deja un catalog mai vechi.",
+  "version": "2.23.0",
+  "app_version": "2.23.0",
+  "changes": "Nou: Personal Film 0.5.0, ediția comercială — un selector compact cu 11 look-uri de film parametrice, plus opțiunea «None», pentru orice flux de lucru. Se activează cu licența Full, fără pași în plus. Documentația RO/EN/ES a fost actualizată.",
   "download_url": {
-    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.22.0.dmg"
+    "mac": "https://gordas.dev/gdc-style-client/GDCStyleClient-2.23.0.dmg"
   },
   "mandatory": false
 }
