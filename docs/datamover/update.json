@@ -1,7 +1,7 @@
 {
-  "version": "2.19.0",
-  "release_date": "2026-10-29",
-  "changes": "Licența se poate cere acum direct din aplicație: alegi oferta din lista publicată, scrii numele și adresa de e-mail și trimiți cererea; după aprobare, «Verifică aprobarea» preia și activează licența singură, fără cod de copiat. DataMover rămâne gratuit în modul Demo (cel mult 1 GB per transfer). Termenii și ghidurile au fost actualizate.",
+  "version": "2.20.0",
+  "release_date": "2026-11-17",
+  "changes": "Opțiune nouă, «Extrage metadatele»: după ce copia unui clip e verificată, DataMover scrie camera, obiectivul, gamutul, curba, balansul de alb și timecode-ul lângă clip (și, opțional, un CSV pentru DaVinci Resolve). ExifTool se obține separat; aplicația îl detectează sau te lasă să alegi executabilul și arată «ExifTool disponibil» sau «Extracție parțială» cu pașii de configurare. Până atunci extracția poate fi parțială, iar copia rămâne verificată. Ghidurile au fost actualizate.",
   "download_url": {
     "windows": "https://github.com/gordasgdc/datamover/releases/latest/download/DataMover-Windows.zip",
     "mac": "https://github.com/gordasgdc/datamover/releases/latest/download/DataMover.pkg",
