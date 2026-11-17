@@ -49,6 +49,15 @@ a{color:var(--accent)}.btn{color:var(--on)}footer{color:var(--mute);font-size:.8
 <li>Bara de jos spune câte clipuri au fost importate; dacă un fișier a fost respins, apasă „importate · respinse” pentru motivul fiecăruia.</li>
 <li>Clipurile cu același nume din foldere diferite rămân separate.</li>
 </ul>
+<h2>Fereastră largă, fereastră îngustă, cadru mare</h2>
+<p>La fereastră largă lista e un tabel: Clip (cu miniatură), Gamut / curbă, Cameră, Obiectiv, Balans de alb, Expunere, Timecode. La fereastră îngustă rămân Clip, Gamut / curbă și Timecode-ul complet. <strong>Mărește cadrul</strong> (sau dublu clic pe previzualizare) deschide un cadru static mare; <strong>Esc</strong> îl închide, iar selecția, clipul activ, filtrul și poziția în tabel rămân.</p>
+<h2>Exemplu: un lot Sony spre Resolve</h2>
+<ol>
+<li>Selectează două clipuri (clic, ⌘-clic; sau Tab pe tabel și Shift+↓). Bara arată „2 selectate din 3”.</li>
+<li><strong>Trimite 2 în Resolve</strong> → vezi pe fiecare rând câte câmpuri se scriu și câte se păstrează → <strong>Aplică în Media Pool</strong> (doar metadate informative).</li>
+<li>Separat: <strong>Setează spațiul de intrare…</strong> → confirmă pentru cele 2 clipuri (schimbă procesarea culorii).</li>
+<li>Salvează și redeschide proiectul în Resolve și compară.</li>
+</ol>
 <h2>Versiune și actualizări</h2>
 <ul>
 <li>Versiunea instalată e în bara de jos și în <strong>Despre GDC Metadata</strong> (versiune și build).</li>
@@ -59,4 +68,5 @@ a{color:var(--accent)}.btn{color:var(--on)}footer{color:var(--mute);font-size:.8
 <ul>
 <li>Manual PDF complet: butonul / meniul <strong>Ajutor</strong>, sau https://gordas.dev/gdc-metadata/GDC-Metadata-Manual-ro.pdf</li>
 </ul>
+<p><strong>Lot de clipuri (0.3.0).</strong> Selectează cu clic/Shift/⌘/⌘A, apasă <strong>Acceptă pentru export</strong> (fiecare clip își păstrează perechea; se poate anula), apoi <strong>Exportă N clipuri</strong> sau <strong>Trimite N în Resolve</strong> — exact pe selecție. <strong>Scoate din listă</strong> (⌘⌫) și <strong>Golește lista</strong> (⇧⌘⌫) afectează doar lista. Valorile necitite apar ca <strong>Nedetectat</strong>, nu ca „lipsă”. Sony: curba și gamutul se citesc din metadatele încorporate; S-Gamut3.Cine ≠ S-Gamut3.</p>
 <footer>© 2026 Cristi Gordaș · MIT</footer></main></body></html>

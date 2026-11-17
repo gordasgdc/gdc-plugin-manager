@@ -49,6 +49,15 @@ a{color:var(--accent)}.btn{color:var(--on)}footer{color:var(--mute);font-size:.8
 <li>The bottom bar says how many clips were imported; if any file was refused, click “imported · rejected” to see the reason for each.</li>
 <li>Same-name clips from different folders stay separate.</li>
 </ul>
+<h2>Wide window, narrow window, large frame</h2>
+<p>In a wide window the list is a table: Clip (with thumbnail), Gamut / curve, Camera, Lens, White balance, Exposure, Timecode. In a narrow window Clip, Gamut / curve and the full Timecode stay. <strong>Enlarge frame</strong> (or double-click the preview) opens a large static frame; <strong>Esc</strong> closes it and the selection, active clip, filter and table position are kept.</p>
+<h2>Example: a Sony batch to Resolve</h2>
+<ol>
+<li>Select two clips (click, ⌘-click; or Tab to the table and Shift+↓). The bar reads “2 selected of 3”.</li>
+<li><strong>Send 2 to Resolve</strong> → see per row how many fields are written and kept → <strong>Apply to Media Pool</strong> (informative metadata only).</li>
+<li>Separately: <strong>Set input colour space…</strong> → confirm for the 2 clips (changes colour processing).</li>
+<li>Save and reopen the project in Resolve and compare.</li>
+</ol>
 <h2>Version and updates</h2>
 <ul>
 <li>The installed version is in the bottom bar and in <strong>About GDC Metadata</strong> (version and build).</li>
@@ -59,4 +68,5 @@ a{color:var(--accent)}.btn{color:var(--on)}footer{color:var(--mute);font-size:.8
 <ul>
 <li>Complete PDF manual: Help button / menu <strong>Help</strong>, or https://gordas.dev/gdc-metadata/GDC-Metadata-Manual-en.pdf</li>
 </ul>
+<p><strong>Batches (0.3.0).</strong> Select with click/Shift/⌘/⌘A, press <strong>Accept for export</strong> (each clip keeps its own pair; reversible), then <strong>Export N clips</strong> or <strong>Send N to Resolve</strong> — exactly on the selection. <strong>Remove from list</strong> (⌘⌫) and <strong>Clear list</strong> (⇧⌘⌫) only affect the list. Values the readers did not find show as <strong>Not detected</strong>, not as “missing”. Sony: curve and gamut are read from the embedded metadata; S-Gamut3.Cine ≠ S-Gamut3.</p>
 <footer>© 2026 Cristi Gordaș · MIT</footer></main></body></html>

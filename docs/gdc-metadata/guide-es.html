@@ -49,6 +49,15 @@ a{color:var(--accent)}.btn{color:var(--on)}footer{color:var(--mute);font-size:.8
 <li>La barra inferior indica cuántos clips se importaron; si se rechazó algún archivo, pulsa «importados · rechazados» para ver el motivo de cada uno.</li>
 <li>Los clips con el mismo nombre de carpetas distintas siguen separados.</li>
 </ul>
+<h2>Ventana ancha, ventana estrecha, fotograma grande</h2>
+<p>En una ventana ancha la lista es una tabla: Clip (con miniatura), Gamut / curva, Cámara, Objetivo, Balance de blancos, Exposición, Timecode. En una ventana estrecha quedan Clip, Gamut / curva y el Timecode completo. <strong>Ampliar fotograma</strong> (o doble clic en la vista previa) abre un fotograma estático grande; <strong>Esc</strong> lo cierra y se conservan la selección, el clip activo, el filtro y la posición en la tabla.</p>
+<h2>Ejemplo: un lote Sony a Resolve</h2>
+<ol>
+<li>Selecciona dos clips (clic, ⌘-clic; o Tab hasta la tabla y Mayús+↓). La barra dice «2 seleccionados de 3».</li>
+<li><strong>Enviar 2 a Resolve</strong> → ves por fila cuántos campos se escriben y se conservan → <strong>Aplicar al Media Pool</strong> (solo metadatos informativos).</li>
+<li>Por separado: <strong>Establecer espacio de entrada…</strong> → confirma para los 2 clips (cambia el procesado del color).</li>
+<li>Guarda y reabre el proyecto en Resolve y compara.</li>
+</ol>
 <h2>Versión y actualizaciones</h2>
 <ul>
 <li>La versión instalada está en la barra inferior y en <strong>Acerca de GDC Metadata</strong> (versión y build).</li>
@@ -59,4 +68,5 @@ a{color:var(--accent)}.btn{color:var(--on)}footer{color:var(--mute);font-size:.8
 <ul>
 <li>Manual PDF completo: botón / menú <strong>Ayuda</strong>, o https://gordas.dev/gdc-metadata/GDC-Metadata-Manual-es.pdf</li>
 </ul>
+<p><strong>Lotes (0.3.0).</strong> Selecciona con clic/Mayús/⌘/⌘A, pulsa <strong>Aceptar para exportar</strong> (cada clip conserva su par; reversible), luego <strong>Exportar N clips</strong> o <strong>Enviar N a Resolve</strong>, exactamente sobre la selección. <strong>Quitar de la lista</strong> (⌘⌫) y <strong>Vaciar lista</strong> (⇧⌘⌫) solo afectan a la lista. Lo que los lectores no encuentran aparece como <strong>No detectado</strong>, no como «falta». Sony: curva y gamut se leen de los metadatos incrustados; S-Gamut3.Cine ≠ S-Gamut3.</p>
 <footer>© 2026 Cristi Gordaș · MIT</footer></main></body></html>

@@ -1,17 +1,17 @@
 {
-  "app_version" : "0.2.0",
-  "changes" : "Input gamut and transfer curve per clip (Canon Log 2 \/ Canon Log 3 with Cinema Gamut), separate confirmed Input Color Space action in Resolve; multi-clip import, app icon, in-app updates, PDF manual in RO\/EN\/ES.",
+  "app_version" : "0.3.0",
+  "changes" : "Wide comparison table for batches, enlarge-frame preview, multi-selection summary, separate informative-metadata and input-colour-space steps for Resolve, Sony A7 IV details, accessibility and manual updates.",
   "changes_i18n" : {
-    "en" : "Input gamut and transfer curve per clip (Canon Log 2 \/ Canon Log 3 with Cinema Gamut), separate confirmed Input Color Space action in Resolve; multi-clip import, app icon, in-app updates, PDF manual in RO\/EN\/ES.",
-    "es" : "Gamut de entrada y curva de transferencia por clip (Canon Log 2 \/ Canon Log 3 con Cinema Gamut), acción separada y confirmada para Input Color Space en Resolve; importación múltiple, icono, actualizaciones en la app, manual PDF en RO\/EN\/ES.",
-    "ro" : "Gamut de intrare și curbă de transfer per clip (Canon Log 2 \/ Canon Log 3 cu Cinema Gamut), acțiune separată și confirmată pentru Input Color Space în Resolve; import multiplu, pictogramă, actualizări în aplicație, manual PDF în RO\/EN\/ES."
+    "en" : "Wide comparison table for batches, enlarge-frame preview, multi-selection summary, separate informative-metadata and input-colour-space steps for Resolve, Sony A7 IV details, accessibility and manual updates.",
+    "es" : "Tabla ancha para lotes, vista previa con fotograma ampliado, resumen de selección múltiple, pasos separados de metadatos informativos y espacio de entrada en Resolve, detalles Sony A7 IV, accesibilidad y manuales actualizados.",
+    "ro" : "Tabel lat pentru loturi, previzualizare cu cadru mărit, rezumat la selecție multiplă, pași separați pentru metadate informative și spațiu de intrare în Resolve, detalii Sony A7 IV, accesibilitate și manuale actualizate."
   },
   "download_url" : {
-    "mac" : "https:\/\/github.com\/gordasgdc\/gdc-metadata\/releases\/download\/v0.2.0\/GDCMetadata-0.2.0.dmg"
+    "mac" : "https:\/\/github.com\/gordasgdc\/gdc-metadata\/releases\/download\/v0.3.0\/GDCMetadata-0.3.0.dmg"
   },
   "mandatory" : false,
-  "sha256" : "85cabddc98bb9a71f4c7419b94387a49d745f1cc992bec96d4810c3bb3de5133",
-  "signature" : "yG3qlkrbrsjthaIY3Q\/3gVbU\/tRlmWTCFzqvW1c4+RRo4XvqK8h0\/URFXqTFWanTVfxQtgwi5V9Ps2kcKFcqBg==",
-  "size" : 4685945,
-  "version" : "0.2.0"
+  "sha256" : "679517e9cd4096603b29fd6bb79f67a65a66b0791ec07548f776ec5d500e376d",
+  "signature" : "U3rWnMNqsZjo+iTT\/nCKXIEuEP6GajLtYXItbfuzCsFLhuctJacD9JBovUMwQoaDcJgJ8OFKffxI4fHA4NO0Dg==",
+  "size" : 7135104,
+  "version" : "0.3.0"
 }
