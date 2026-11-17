@@ -1,0 +1,17 @@
+{
+  "app_version" : "0.2.0",
+  "changes" : "Input gamut and transfer curve per clip (Canon Log 2 \/ Canon Log 3 with Cinema Gamut), separate confirmed Input Color Space action in Resolve; multi-clip import, app icon, in-app updates, PDF manual in RO\/EN\/ES.",
+  "changes_i18n" : {
+    "en" : "Input gamut and transfer curve per clip (Canon Log 2 \/ Canon Log 3 with Cinema Gamut), separate confirmed Input Color Space action in Resolve; multi-clip import, app icon, in-app updates, PDF manual in RO\/EN\/ES.",
+    "es" : "Gamut de entrada y curva de transferencia por clip (Canon Log 2 \/ Canon Log 3 con Cinema Gamut), acción separada y confirmada para Input Color Space en Resolve; importación múltiple, icono, actualizaciones en la app, manual PDF en RO\/EN\/ES.",
+    "ro" : "Gamut de intrare și curbă de transfer per clip (Canon Log 2 \/ Canon Log 3 cu Cinema Gamut), acțiune separată și confirmată pentru Input Color Space în Resolve; import multiplu, pictogramă, actualizări în aplicație, manual PDF în RO\/EN\/ES."
+  },
+  "download_url" : {
+    "mac" : "https:\/\/github.com\/gordasgdc\/gdc-metadata\/releases\/download\/v0.2.0\/GDCMetadata-0.2.0.dmg"
+  },
+  "mandatory" : false,
+  "sha256" : "85cabddc98bb9a71f4c7419b94387a49d745f1cc992bec96d4810c3bb3de5133",
+  "signature" : "yG3qlkrbrsjthaIY3Q\/3gVbU\/tRlmWTCFzqvW1c4+RRo4XvqK8h0\/URFXqTFWanTVfxQtgwi5V9Ps2kcKFcqBg==",
+  "size" : 4685945,
+  "version" : "0.2.0"
+}

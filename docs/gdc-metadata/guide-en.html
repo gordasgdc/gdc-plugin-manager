@@ -21,6 +21,8 @@ a{color:var(--accent)}.btn{color:var(--on)}footer{color:var(--mute);font-size:.8
 <li><strong>Send to Resolve.</strong> Open a project in Resolve first. The sheet previews, per clip, what will be written, kept and identical.</li>
 <li><strong>Apply to Media Pool</strong> writes the values.</li>
 </ol>
+<h2>Input gamut and transfer curve</h2>
+<p>The two values at the top of the inspector tell you which input to choose in colour management: e.g. a Canon C50 clip shows <strong>Cinema Gamut</strong> + <strong>Canon Log 2</strong> (read from the file's `cndm` track) — in Resolve pick *Canon Cinema Gamut / Canon Log 2*; a Canon Log 3 clip shows <strong>Canon Log 3</strong>. Each value has its source; with no evidence the row says <strong>Unavailable</strong> and nothing is assigned. Resolve detects many Canon clips by itself at import. <strong>Apply to Media Pool</strong> only writes informational notes (Gamma Notes / Color Space Notes); <strong>Set input colour space…</strong> is a separate confirmed action that changes colour processing, works in DaVinci YRGB Color Managed projects and never overwrites an existing choice. Manual path: Project Settings ▸ Color Management ▸ DaVinci YRGB Color Managed, then Media Pool ▸ right-click clip ▸ Input Color Space.</p>
 <h2>What Apply does (verified in Resolve, after closing and reopening the project)</h2>
 <ul>
 <li>Empty field → written.</li>
@@ -39,5 +41,22 @@ a{color:var(--accent)}.btn{color:var(--on)}footer{color:var(--mute);font-size:.8
 <ul>
 <li>The inspector lists detected motion data (in-clip telemetry, external logs, .gyroflow projects) with where each was found.</li>
 <li>Sources are shown as <strong>Gyroflow compatibility unverified</strong>. Stabilization is not offered: no before/after route has been demonstrated in Resolve yet.</li>
+</ul>
+<h2>Several clips, folders, second batch</h2>
+<ul>
+<li><strong>Drag clips or a folder</strong> onto the window, in one gesture and in any number. Or use <strong>Choose folder…</strong> (⌘O) and select several files and folders at once.</li>
+<li>A new import is <strong>added</strong> to the list; the first batch is kept. <strong>File → Clear list</strong> starts over.</li>
+<li>The bottom bar says how many clips were imported; if any file was refused, click “imported · rejected” to see the reason for each.</li>
+<li>Same-name clips from different folders stay separate.</li>
+</ul>
+<h2>Version and updates</h2>
+<ul>
+<li>The installed version is in the bottom bar and in <strong>About GDC Metadata</strong> (version and build).</li>
+<li><strong>Check for Updates…</strong> (app menu) always answers: new version, “You're up to date”, or “Could not check” with the reason. <strong>Update Now</strong> downloads, verifies and installs, then restarts the app.</li>
+<li>Coming from 0.1.0 (no updater): install the new DMG once; later updates are done from the app.</li>
+</ul>
+<h2>Full manual</h2>
+<ul>
+<li>Complete PDF manual: Help button / menu <strong>Help</strong>, or https://gordas.dev/gdc-metadata/GDC-Metadata-Manual-en.pdf</li>
 </ul>
 <footer>© 2026 Cristi Gordaș · MIT</footer></main></body></html>

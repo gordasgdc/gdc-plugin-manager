@@ -21,6 +21,8 @@ a{color:var(--accent)}.btn{color:var(--on)}footer{color:var(--mute);font-size:.8
 <li><strong>Trimite în Resolve.</strong> Deschideți întâi un proiect în Resolve. Fereastra previzualizează, pe clip, ce se scrie, ce se păstrează și ce e identic.</li>
 <li><strong>Aplică în Media Pool</strong> scrie valorile.</li>
 </ol>
+<h2>Gamut de intrare și curbă de transfer</h2>
+<p>Cele două valori de sus din inspector spun ce intrare alegi în color management: de exemplu un clip Canon C50 arată <strong>Cinema Gamut</strong> + <strong>Canon Log 2</strong> (citit din pista `cndm` a fișierului) — în Resolve alegi *Canon Cinema Gamut / Canon Log 2*; un clip Canon Log 3 arată <strong>Canon Log 3</strong>. Fiecare valoare are sursa ei; fără dovezi rândul spune <strong>Indisponibil</strong> și nu se atribuie nimic. Resolve detectează singur multe clipuri Canon la import. <strong>Aplică în Media Pool</strong> scrie doar note informative (Gamma Notes / Color Space Notes); <strong>Setează spațiul de intrare…</strong> este o acțiune separată, cu confirmare, care schimbă procesarea culorii, funcționează în proiecte DaVinci YRGB Color Managed și nu suprascrie o alegere existentă. Manual: Project Settings ▸ Color Management ▸ DaVinci YRGB Color Managed, apoi Media Pool ▸ clic dreapta pe clip ▸ Input Color Space.</p>
 <h2>Ce face «Aplică» (verificat în Resolve, după închiderea și redeschiderea proiectului)</h2>
 <ul>
 <li>Câmp gol → se scrie.</li>
@@ -39,5 +41,22 @@ a{color:var(--accent)}.btn{color:var(--on)}footer{color:var(--mute);font-size:.8
 <ul>
 <li>Inspectorul listează datele de mișcare detectate (telemetrie din clip, jurnale externe, proiecte .gyroflow) și unde au fost găsite.</li>
 <li>Sursele apar ca <strong>Compatibilitate Gyroflow neverificată</strong>. Stabilizarea nu este oferită: nu există încă un traseu demonstrat înainte/după în Resolve.</li>
+</ul>
+<h2>Mai multe clipuri, foldere, al doilea lot</h2>
+<ul>
+<li><strong>Trage clipuri sau un folder</strong> peste fereastră, într-un singur gest și oricâte. Sau <strong>Alege folderul…</strong> (⌘O) și selectează mai multe fișiere și foldere deodată.</li>
+<li>Un import nou se <strong>adaugă</strong> la listă; primul lot se păstrează. <strong>File → Golește lista</strong> o ia de la zero.</li>
+<li>Bara de jos spune câte clipuri au fost importate; dacă un fișier a fost respins, apasă „importate · respinse” pentru motivul fiecăruia.</li>
+<li>Clipurile cu același nume din foldere diferite rămân separate.</li>
+</ul>
+<h2>Versiune și actualizări</h2>
+<ul>
+<li>Versiunea instalată e în bara de jos și în <strong>Despre GDC Metadata</strong> (versiune și build).</li>
+<li><strong>Caută actualizări…</strong> (meniul aplicației) răspunde mereu: versiune nouă, „Ești la zi” sau „Nu am putut verifica” cu motivul. <strong>Actualizează acum</strong> descarcă, verifică, instalează și repornește aplicația.</li>
+<li>Vii de la 0.1.0 (fără actualizator): instalează o singură dată noul DMG; apoi actualizezi din aplicație.</li>
+</ul>
+<h2>Manual complet</h2>
+<ul>
+<li>Manual PDF complet: butonul / meniul <strong>Ajutor</strong>, sau https://gordas.dev/gdc-metadata/GDC-Metadata-Manual-ro.pdf</li>
 </ul>
 <footer>© 2026 Cristi Gordaș · MIT</footer></main></body></html>
