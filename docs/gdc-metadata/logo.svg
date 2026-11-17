@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="GDC Metadata">
+  <rect width="256" height="256" rx="56" fill="#1A1D22"/>
+  <rect x="52" y="60" width="152" height="136" rx="18" fill="none" stroke="#DB8C3D" stroke-width="10"/>
+  <rect x="76" y="92" width="52" height="10" rx="5" fill="#EDEFF2"/>
+  <rect x="76" y="118" width="104" height="10" rx="5" fill="#EDEFF2" opacity=".7"/>
+  <rect x="76" y="144" width="80" height="10" rx="5" fill="#EDEFF2" opacity=".45"/>
+  <path d="M164 92l20 5-6 20" fill="none" stroke="#DB8C3D" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

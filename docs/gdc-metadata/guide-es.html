@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>GDC Metadata — Guía de uso</title><link rel="icon" href="logo.svg"><style>
+:root{--bg:#14161A;--panel:#1A1D22;--text:#EDEFF2;--mute:#9AA0AA;--accent:#DB8C3D;--on:#14161A;--line:#2A2E35}
+@media (prefers-color-scheme:light){:root{--bg:#F5F3EF;--panel:#FFF;--text:#1A1D22;--mute:#5D6470;--accent:#B86F20;--on:#fff;--line:#DDD8CF}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.55 -apple-system,system-ui,sans-serif}
+main{max-width:1000px;margin:0 auto;padding:0 16px 48px}
+header{display:flex;align-items:center;gap:14px;padding:36px 0 12px;flex-wrap:wrap}header img{width:56px;height:56px}
+h1{font-size:2rem;margin:0}h2{font-size:1.25rem;margin:40px 0 8px}
+.lead{color:var(--mute);max-width:62ch;margin:6px 0 20px}nav{margin-left:auto;display:flex;gap:12px}
+.btn{display:inline-block;background:var(--accent);color:var(--on);padding:10px 18px;border-radius:10px;font-weight:600;text-decoration:none}
+figure{margin:16px 0;background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+figure img{display:block;width:100%;height:auto}figcaption{padding:10px 14px;color:var(--mute);font-size:.9rem}
+ul,ol{padding-left:1.2rem}li{margin:6px 0}.note{border-left:3px solid var(--accent);padding:4px 12px;color:var(--mute)}
+a{color:var(--accent)}.btn{color:var(--on)}footer{color:var(--mute);font-size:.85rem;margin-top:40px}code{background:var(--panel);padding:1px 5px;border-radius:5px}</style></head><body><main>
+<header><img src="logo.svg" alt=""><nav><a href="guide-en.html">English</a><a href="guide-ro.html">Română</a><a href="guide-es.html" aria-current=page>Español</a><a href="es.html">GDC Metadata</a></nav></header>
+<h1>GDC Metadata — Guía de uso</h1>
+<h2>Carpeta → inspector → Media Pool</h2>
+<ol>
+<li><strong>Abre una carpeta</strong> (botón de carpeta de la barra). La app la escanea en solo lectura y lista los clips: cámara, timecode y más.</li>
+<li><strong>Inspector.</strong> Selecciona un clip: cámara, objetivo, balance de blancos, exposición y perfil de imagen. Cada valor muestra su origen (etiqueta del clip, derivado, no disponible). Busca por campo o valor; el aviso explica por qué coincide un clip.</li>
+<li><strong>Enviar a Resolve.</strong> Abre antes un proyecto en Resolve. La hoja previsualiza, por clip, qué se escribe, qué se conserva y qué es idéntico.</li>
+<li><strong>Aplicar al Media Pool</strong> escribe los valores.</li>
+</ol>
+<h2>Qué hace «Aplicar» (verificado en Resolve, tras cerrar y reabrir el proyecto)</h2>
+<ul>
+<li>Campo vacío → se escribe.</li>
+<li>Campo que ya tiene valor → se conserva (no se sobrescribe).</li>
+<li>El mismo clip en más de un bin → ambiguo, no se aplica.</li>
+<li>Los clips se emparejan por la ruta real del archivo, así que también coinciden las carpetas alcanzadas mediante enlaces.</li>
+</ul>
+<h2>CSV como alternativa</h2>
+<ul>
+<li>Guarda el CSV desde la hoja y en Resolve: File → Import Metadata To → Media Pool…</li>
+<li>Opciones verificadas: marca <strong>Match using filename</strong>; deja sin marcar <strong>Match using clip start and end Timecode</strong> (marcada, Resolve no encontró coincidencias con nuestro CSV); Reel Name sin marcar; en la fusión <strong>Only update metadata items with entries in the source file</strong>.</li>
+<li><strong>Aviso:</strong> la importación sobrescribe los valores existentes.</li>
+<li><strong>Nombres de archivo duplicados:</strong> Resolve empareja por nombre, así que todos los clips con ese nombre (en cualquier bin, incluso de carpetas distintas) reciben los mismos valores. Usa «Aplicar al Media Pool» para evitarlo.</li>
+</ul>
+<h2>Movimiento y estabilización</h2>
+<ul>
+<li>El inspector lista los datos de movimiento detectados (telemetría en el clip, registros externos, proyectos .gyroflow) y dónde se encontró cada uno.</li>
+<li>Las fuentes se muestran como <strong>Compatibilidad con Gyroflow sin verificar</strong>. No se ofrece estabilización: aún no hay una ruta antes/después demostrada en Resolve.</li>
+</ul>
+<footer>© 2026 Cristi Gordaș · MIT</footer></main></body></html>

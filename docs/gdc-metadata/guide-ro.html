@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ro"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>GDC Metadata — Ghid de utilizare</title><link rel="icon" href="logo.svg"><style>
+:root{--bg:#14161A;--panel:#1A1D22;--text:#EDEFF2;--mute:#9AA0AA;--accent:#DB8C3D;--on:#14161A;--line:#2A2E35}
+@media (prefers-color-scheme:light){:root{--bg:#F5F3EF;--panel:#FFF;--text:#1A1D22;--mute:#5D6470;--accent:#B86F20;--on:#fff;--line:#DDD8CF}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.55 -apple-system,system-ui,sans-serif}
+main{max-width:1000px;margin:0 auto;padding:0 16px 48px}
+header{display:flex;align-items:center;gap:14px;padding:36px 0 12px;flex-wrap:wrap}header img{width:56px;height:56px}
+h1{font-size:2rem;margin:0}h2{font-size:1.25rem;margin:40px 0 8px}
+.lead{color:var(--mute);max-width:62ch;margin:6px 0 20px}nav{margin-left:auto;display:flex;gap:12px}
+.btn{display:inline-block;background:var(--accent);color:var(--on);padding:10px 18px;border-radius:10px;font-weight:600;text-decoration:none}
+figure{margin:16px 0;background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+figure img{display:block;width:100%;height:auto}figcaption{padding:10px 14px;color:var(--mute);font-size:.9rem}
+ul,ol{padding-left:1.2rem}li{margin:6px 0}.note{border-left:3px solid var(--accent);padding:4px 12px;color:var(--mute)}
+a{color:var(--accent)}.btn{color:var(--on)}footer{color:var(--mute);font-size:.85rem;margin-top:40px}code{background:var(--panel);padding:1px 5px;border-radius:5px}</style></head><body><main>
+<header><img src="logo.svg" alt=""><nav><a href="guide-en.html">English</a><a href="guide-ro.html" aria-current=page>Română</a><a href="guide-es.html">Español</a><a href="ro.html">GDC Metadata</a></nav></header>
+<h1>GDC Metadata — Ghid de utilizare</h1>
+<h2>Folder → inspector → Media Pool</h2>
+<ol>
+<li><strong>Deschideți un folder</strong> (butonul folder din bară). Aplicația îl scanează doar pentru citire și listează clipurile: cameră, timecode etc.</li>
+<li><strong>Inspector.</strong> Selectați un clip: cameră, obiectiv, balans de alb, expunere, profil de imagine. Fiecare valoare își arată sursa (etichetă din clip, derivată, indisponibilă). Căutați după câmp sau valoare; bannerul explică de ce se potrivește un clip.</li>
+<li><strong>Trimite în Resolve.</strong> Deschideți întâi un proiect în Resolve. Fereastra previzualizează, pe clip, ce se scrie, ce se păstrează și ce e identic.</li>
+<li><strong>Aplică în Media Pool</strong> scrie valorile.</li>
+</ol>
+<h2>Ce face «Aplică» (verificat în Resolve, după închiderea și redeschiderea proiectului)</h2>
+<ul>
+<li>Câmp gol → se scrie.</li>
+<li>Câmp care are deja valoare → se păstrează (nu se suprascrie).</li>
+<li>Același clip în mai multe bin-uri → ambiguu, nu se aplică.</li>
+<li>Clipurile se potrivesc după calea reală a fișierului, deci și folderele accesate prin legături.</li>
+</ul>
+<h2>CSV ca alternativă</h2>
+<ul>
+<li>Salvați CSV-ul din fereastră, apoi în Resolve: File → Import Metadata To → Media Pool…</li>
+<li>Opțiuni verificate: bifați <strong>Match using filename</strong>; lăsați <strong>Match using clip start and end Timecode</strong> nebifat (bifat, Resolve a raportat că nu găsește potriviri pentru CSV-ul nostru); Reel Name nebifat; la îmbinare <strong>Only update metadata items with entries in the source file</strong>.</li>
+<li><strong>Atenție:</strong> importul suprascrie valorile existente.</li>
+<li><strong>Nume de fișier duplicate:</strong> Resolve potrivește după nume, deci fiecare clip cu acel nume (în orice bin, chiar din foldere diferite) primește aceleași valori. Folosiți «Aplică în Media Pool» ca să evitați asta.</li>
+</ul>
+<h2>Mișcare și stabilizare</h2>
+<ul>
+<li>Inspectorul listează datele de mișcare detectate (telemetrie din clip, jurnale externe, proiecte .gyroflow) și unde au fost găsite.</li>
+<li>Sursele apar ca <strong>Compatibilitate Gyroflow neverificată</strong>. Stabilizarea nu este oferită: nu există încă un traseu demonstrat înainte/după în Resolve.</li>
+</ul>
+<footer>© 2026 Cristi Gordaș · MIT</footer></main></body></html>

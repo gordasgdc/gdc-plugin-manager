@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>GDC Metadata — User guide</title><link rel="icon" href="logo.svg"><style>
+:root{--bg:#14161A;--panel:#1A1D22;--text:#EDEFF2;--mute:#9AA0AA;--accent:#DB8C3D;--on:#14161A;--line:#2A2E35}
+@media (prefers-color-scheme:light){:root{--bg:#F5F3EF;--panel:#FFF;--text:#1A1D22;--mute:#5D6470;--accent:#B86F20;--on:#fff;--line:#DDD8CF}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.55 -apple-system,system-ui,sans-serif}
+main{max-width:1000px;margin:0 auto;padding:0 16px 48px}
+header{display:flex;align-items:center;gap:14px;padding:36px 0 12px;flex-wrap:wrap}header img{width:56px;height:56px}
+h1{font-size:2rem;margin:0}h2{font-size:1.25rem;margin:40px 0 8px}
+.lead{color:var(--mute);max-width:62ch;margin:6px 0 20px}nav{margin-left:auto;display:flex;gap:12px}
+.btn{display:inline-block;background:var(--accent);color:var(--on);padding:10px 18px;border-radius:10px;font-weight:600;text-decoration:none}
+figure{margin:16px 0;background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+figure img{display:block;width:100%;height:auto}figcaption{padding:10px 14px;color:var(--mute);font-size:.9rem}
+ul,ol{padding-left:1.2rem}li{margin:6px 0}.note{border-left:3px solid var(--accent);padding:4px 12px;color:var(--mute)}
+a{color:var(--accent)}.btn{color:var(--on)}footer{color:var(--mute);font-size:.85rem;margin-top:40px}code{background:var(--panel);padding:1px 5px;border-radius:5px}</style></head><body><main>
+<header><img src="logo.svg" alt=""><nav><a href="guide-en.html" aria-current=page>English</a><a href="guide-ro.html">Română</a><a href="guide-es.html">Español</a><a href="index.html">GDC Metadata</a></nav></header>
+<h1>GDC Metadata — User guide</h1>
+<h2>Folder → inspector → Media Pool</h2>
+<ol>
+<li><strong>Open a folder</strong> (toolbar folder button). The app scans it read-only and lists clips: camera, timecode and more.</li>
+<li><strong>Inspector.</strong> Select a clip to see camera, lens, white balance, exposure and image profile. Each value shows its source (embedded tag, derived, unavailable). Search by field or value; the banner explains why a clip matches.</li>
+<li><strong>Send to Resolve.</strong> Open a project in Resolve first. The sheet previews, per clip, what will be written, kept and identical.</li>
+<li><strong>Apply to Media Pool</strong> writes the values.</li>
+</ol>
+<h2>What Apply does (verified in Resolve, after closing and reopening the project)</h2>
+<ul>
+<li>Empty field → written.</li>
+<li>Field that already has a value → kept (not overwritten).</li>
+<li>Same clip present in more than one bin → ambiguous, not applied.</li>
+<li>Clips are matched by real file path, so folders reached through links still match.</li>
+</ul>
+<h2>CSV as an alternative</h2>
+<ul>
+<li>Save the CSV from the sheet, then in Resolve: File → Import Metadata To → Media Pool…</li>
+<li>Options verified: tick <strong>Match using filename</strong>; leave <strong>Match using clip start and end Timecode</strong> unticked (with it ticked Resolve reported no matching entries for our CSV); leave Reel Name unticked; merge option <strong>Only update metadata items with entries in the source file</strong>.</li>
+<li><strong>Warning:</strong> the import overwrites existing values.</li>
+<li><strong>Duplicate file names:</strong> Resolve matches by file name, so every clip with that name (in any bin, even from different folders) receives the same values. Use Apply to Media Pool to avoid this.</li>
+</ul>
+<h2>Motion &amp; stabilization</h2>
+<ul>
+<li>The inspector lists detected motion data (in-clip telemetry, external logs, .gyroflow projects) with where each was found.</li>
+<li>Sources are shown as <strong>Gyroflow compatibility unverified</strong>. Stabilization is not offered: no before/after route has been demonstrated in Resolve yet.</li>
+</ul>
+<footer>© 2026 Cristi Gordaș · MIT</footer></main></body></html>
