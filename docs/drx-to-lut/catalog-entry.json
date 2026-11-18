@@ -1,0 +1,15 @@
+{
+ "access": {
+  "group": "gdc",
+  "kind": "free",
+  "tags": [
+   "Utilitare"
+  ]
+ },
+ "coverImage": "covers/DRX to LUT.png",
+ "downloadURL": "https://github.com/gordasgdc/drx-to-lut/releases/download/v1.0.0/DRXtoLUT-1.0.0.pkg",
+ "id": "drx-to-lut",
+ "name": "DRX to LUT",
+ "supportedOS": "macOS",
+ "url": "https://gordas.dev/drx-to-lut/"
+}

@@ -1,0 +1,12 @@
+{
+  "version": "1.0.0",
+  "app_version": "1.0.0",
+  "changes": "DRX to LUT 1.0.0: prima versiune. Transformă un grading DaVinci Resolve exportat ca DRX într-un LUT .cube 65³, cu noduri vizibile, avertismente clare despre ce nu poate intra într-un LUT, proiect de lucru separat, anulare sigură, ghid și interfață în română, engleză și spaniolă.",
+  "download_url": {
+    "mac": "https://github.com/gordasgdc/drx-to-lut/releases/download/v1.0.0/DRXtoLUT-1.0.0.pkg"
+  },
+  "sha256": {
+    "mac": "10c649520bad589a80e9c294039eb5ce4ff90ad846ae514d62dd354fff6f0731"
+  },
+  "mandatory": false
+}
