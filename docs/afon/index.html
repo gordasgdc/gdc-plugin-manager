@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AFON — sunetul filmului tău, pregătit pe Mac</title>
+<meta name="description" content="AFON pregătește și mixează sunetul unui video pe Mac: curățarea dialogului, echilibrul cu muzica și efectele, loudness, export WAV și integrare cu DaVinci Resolve Studio.">
+<meta property="og:title" content="AFON — audio pentru video, pe Mac">
+<meta property="og:description" content="Pregătirea și mixajul sunetului pentru video, cu integrare DaVinci Resolve Studio.">
+<meta property="og:image" content="https://gordas.dev/afon/assets/og-icon-512.png">
+<meta property="og:url" content="https://gordas.dev/afon/">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<style>
+:root{--ink:#17181a;--muted:#62656a;--line:#dcdedc;--paper:#fff;--warm:#efebe6;--warm2:#e9ddd1;--accent:#a8591f;--dark:#1d1f22}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}button{font:inherit;cursor:pointer}
+header{height:86px;display:flex;align-items:center;justify-content:space-between;max-width:1380px;padding:0 48px;margin:auto}
+.brand{display:flex;align-items:center;gap:12px;font-size:21px;font-weight:650;letter-spacing:.06em}
+.brand img{width:34px;height:34px;border-radius:8px}
+nav{display:flex;align-items:center;gap:28px;font-size:13px}
+nav .nav-cta{border:1px solid var(--ink);border-radius:40px;padding:11px 18px}
+.lang{display:flex;border:1px solid var(--line);border-radius:30px;overflow:hidden}
+.lang button{border:0;background:none;padding:8px 11px;font-size:11px;letter-spacing:.08em;color:var(--muted)}
+.lang button[aria-pressed=true]{background:var(--ink);color:#fff}
+.label{font-size:11px;letter-spacing:.2em;text-transform:uppercase;font-weight:600}
+.intro{max-width:1280px;padding:64px 48px 0;margin:auto;display:grid;grid-template-columns:1.4fr 1fr;gap:80px;align-items:end}
+.intro h1{font-size:clamp(44px,5.2vw,78px);font-weight:400;line-height:1.04;letter-spacing:-.05em;margin:22px 0 0}
+.intro p{font-size:17px;line-height:1.65;max-width:42ch;margin:0 0 22px;color:var(--muted)}
+.links{display:flex;gap:22px;align-items:center;font-size:13px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:22px;background:var(--ink);color:#fff;padding:15px 22px;border-radius:40px}
+.text-link{border-bottom:1px solid #999;padding:5px 0}
+.product{background:var(--warm);padding:64px 0 0;margin-top:64px;overflow:hidden}
+.product-head{max-width:1184px;padding:0 20px;margin:auto;display:flex;justify-content:space-between;align-items:end;gap:36px}
+.product h2{font-size:46px;font-weight:400;line-height:1.1;letter-spacing:-.04em;margin:16px 0 24px}
+.product-head p{color:var(--muted);font-size:15px;line-height:1.7;max-width:38ch;margin:0 0 28px}
+.editor{margin:20px auto 0;max-width:1320px;padding:0 40px}
+.editor img{display:block;width:100%;height:auto;border-radius:10px;box-shadow:0 24px 70px #2a201826}
+.editor figcaption{font-size:12px;color:#5f5d5a;padding:16px 0 26px;text-align:center;line-height:1.5}
+.journey{max-width:1184px;padding:0 20px;margin:auto;display:flex;border-bottom:1px solid var(--line)}
+.journey button{flex:1;border:0;border-bottom:2px solid transparent;background:#fff;padding:26px 5px;font-size:13px;text-align:left;color:var(--muted)}
+.journey button[aria-selected=true]{color:var(--ink);border-bottom-color:var(--accent)}
+.journey-detail{max-width:1184px;margin:0 auto;padding:34px 20px 76px;display:grid;grid-template-columns:1fr 1fr;gap:80px}
+.journey-detail h3{font-size:29px;line-height:1.2;font-weight:400;letter-spacing:-.025em;margin:0}
+.journey-detail p{font-size:15px;line-height:1.75;color:var(--muted);margin:0}
+.features{max-width:1184px;margin:0 auto 90px;padding:0 20px;display:grid;grid-template-columns:.8fr 1.2fr;gap:90px;align-items:start}
+.features h2{font-size:42px;font-weight:400;line-height:1.1;letter-spacing:-.04em;margin:18px 0 22px}
+.features>div>p{font-size:15px;line-height:1.7;color:var(--muted);max-width:36ch}
+.flist{list-style:none;margin:0;padding:0}
+.flist li{border-bottom:1px solid var(--line);padding:20px 0;display:grid;grid-template-columns:200px 1fr;gap:24px}
+.flist h3{font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;margin:3px 0 0}
+.flist p{font-size:15px;line-height:1.65;margin:0;color:var(--muted)}
+.resolve{max-width:1184px;margin:auto;padding:64px 20px 84px;border-top:1px solid var(--line);display:grid;grid-template-columns:1fr 1fr;gap:80px}
+.resolve h2{font-size:38px;font-weight:400;letter-spacing:-.035em;line-height:1.15;margin:16px 0}
+.resolve p{font-size:15px;line-height:1.8;color:var(--muted)}
+.resolve small{font-size:12px;line-height:1.7;color:var(--muted);display:block;margin-top:18px}
+.limits{background:var(--dark);color:#eceae6;padding:70px 20px}
+.limits .in{max-width:1184px;margin:auto;display:grid;grid-template-columns:1fr 1fr;gap:80px}
+.limits h2{font-size:36px;font-weight:400;letter-spacing:-.03em;margin:16px 0}
+.limits ul{margin:0;padding-left:18px}.limits li{font-size:15px;line-height:1.75;color:#c9c6c0;margin-bottom:8px}
+.access{background:var(--warm2);text-align:center;padding:76px 20px}
+.access h2{font-size:44px;font-weight:400;letter-spacing:-.04em;margin:18px 0}
+.access p{max-width:64ch;margin:0 auto 22px;color:#5a514a;font-size:15px;line-height:1.75}
+.access h3{font-weight:600;font-size:15px;margin:34px 0 10px}
+.soon{display:inline-block;border:1px solid #8b7a6b;border-radius:40px;padding:14px 22px;font-size:13px;color:#4b4038}
+footer{max-width:1280px;margin:auto;padding:44px 48px;font-size:12px;display:flex;justify-content:space-between;gap:30px;color:var(--muted);line-height:1.6}
+footer div{display:flex;gap:22px;flex-wrap:wrap}footer span{max-width:70ch}
+button:focus-visible,a:focus-visible{outline:2px solid #2468a5;outline-offset:4px}
+@media(max-width:900px){nav>a.hide{display:none}}
+@media(max-width:760px){header{height:auto;min-height:68px;padding:12px 18px;gap:10px;flex-wrap:wrap}.brand{font-size:18px}nav{gap:10px}nav .nav-cta{font-size:12px;padding:9px 13px}
+.intro{padding:34px 20px 0;grid-template-columns:1fr;gap:24px}.intro h1{font-size:44px}.intro p{font-size:15px}
+.product{padding-top:42px;margin-top:40px}.product-head{padding:0 20px;display:block}.product h2{font-size:34px}.editor{padding:0 10px}
+.journey{overflow-x:auto;padding:0 16px}.journey button{min-width:130px;white-space:nowrap;padding:20px 6px}
+.journey-detail{grid-template-columns:1fr;gap:16px;padding:24px 20px 50px}.journey-detail h3{font-size:25px}
+.features{grid-template-columns:1fr;gap:16px;margin-bottom:56px}.features h2{font-size:34px}.flist li{grid-template-columns:1fr;gap:6px}
+.resolve{grid-template-columns:1fr;gap:10px;padding:44px 20px 50px}.resolve h2{font-size:31px}
+.limits .in{grid-template-columns:1fr;gap:10px}.limits h2{font-size:30px}
+.access{padding:52px 20px}.access h2{font-size:34px}footer{padding:34px 20px;display:block}footer div{margin-top:18px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header>
+  <a class="brand" href="#" aria-label="AFON"><img src="assets/afon-icon-256.png" alt="" width="34" height="34">AFON</a>
+  <nav>
+    <a class="hide" href="#aplicatia" data-i18n="nav_app">Aplicația</a>
+    <a class="hide" href="#resolve" data-i18n="nav_resolve">Resolve</a>
+    <a class="hide" href="#cerinte" data-i18n="nav_req">Cerințe</a>
+    <a class="nav-cta" href="#disponibilitate" data-i18n="nav_cta">Disponibilitate ↓</a>
+    <div class="lang" role="group" aria-label="Limba / Language / Idioma"><button data-lang="ro" aria-pressed="true">RO</button><button data-lang="en" aria-pressed="false">EN</button><button data-lang="es" aria-pressed="false">ES</button></div>
+  </nav>
+</header>
+<main>
+<section class="intro">
+  <div><span class="label" data-i18n="kicker">AFON / AUDIO PENTRU VIDEO / MAC</span><h1 data-i18n="h1">Sunetul filmului tău,<br>limpede și echilibrat.</h1></div>
+  <div><p data-i18n="lead">AFON pregătește și mixează sunetul unui video pe Mac: curăță dialogul, așază muzica și efectele sub voce, aduce mixul la loudness-ul ales și îl exportă — sau îl trimite înapoi în DaVinci Resolve Studio.</p>
+  <div class="links"><a class="pill" href="#aplicatia" data-i18n="cta_app">Descoperă aplicația <span>↘</span></a><a class="text-link" href="#disponibilitate" data-i18n="cta_status">Când e disponibil</a></div></div>
+</section>
+
+<section class="product" id="aplicatia">
+  <div class="product-head"><div><span class="label" data-i18n="p_label">UN SINGUR LOC PENTRU SUNET</span><h2 data-i18n="p_h">Dialog, muzică, efecte.<br>Fiecare la locul lui.</h2></div><p data-i18n="p_p">Imporți pistele, le dai un rol și asculți imediat diferența dintre original și procesat, la niveluri egalate — ca judecata să nu fie păcălită de volum.</p></div>
+  <figure class="editor"><img src="assets/afon-interface-ro.jpg" width="2000" height="1186" alt="" data-i18n-alt="shot_alt"><figcaption data-i18n="shot_cap">Captură reală a ferestrei AFON 0.6.0 (interfața în română; aplicația este și în engleză și spaniolă) · pistele sunt fișiere demonstrative sintetice.</figcaption></figure>
+</section>
+
+<div class="journey" role="tablist" aria-label="AFON">
+  <button role="tab" data-step="0" aria-selected="true" data-i18n="t0">01 Import și roluri</button>
+  <button role="tab" data-step="1" aria-selected="false" data-i18n="t1">02 Curățare</button>
+  <button role="tab" data-step="2" aria-selected="false" data-i18n="t2">03 Mix</button>
+  <button role="tab" data-step="3" aria-selected="false" data-i18n="t3">04 Livrare</button>
+</div>
+<div class="journey-detail" role="tabpanel" aria-live="polite"><h3 id="step-title"></h3><p id="step-body"></p></div>
+
+<section class="features">
+  <div><span class="label" data-i18n="f_label">CE FACE AFON</span><h2 data-i18n="f_h">Funcții disponibile<br>în versiunea actuală.</h2><p data-i18n="f_p">Doar ce există și a fost verificat în aplicație. Originalele tale nu sunt modificate niciodată.</p></div>
+  <ul class="flist">
+    <li><h3 data-i18n="f1_t">Procesare pe pistă</h3><p data-i18n="f1_b">Reducerea zgomotului de fond (local, fără rețea), tăierea frecvențelor joase, uniformizarea nivelului, egalizare și controlul vârfurilor — fiecare cu propriul comutator.</p></li>
+    <li><h3 data-i18n="f2_t">Master</h3><p data-i18n="f2_b">Muzica scade cât se vorbește, echilibru între roluri, loudness-ul mixului exportat (LUFS) și plafon de vârf (dBTP), cu rezultatul măsurat afișat.</p></li>
+    <li><h3 data-i18n="f3_t">Comparare cinstită</h3><p data-i18n="f3_b">Original / Procesat la niveluri egalate, variante A/B pe pistă și previzualizare rapidă de 20 de secunde de la cursor.</p></li>
+    <li><h3 data-i18n="f4_t">Video de referință</h3><p data-i18n="f4_b">Imaginea sincronizată la cadru, monitor integrat sau detașat și extragerea sunetului video ca pistă.</p></li>
+    <li><h3 data-i18n="f5_t">Formate</h3><p data-i18n="f5_b">WAV (PCM 16/24/32 sau float 32) și AIFF/AIFC; fișiere multicanal până la 64 de canale, păstrate sincron. Fade-in / fade-out pe pistă.</p></li>
+    <li><h3 data-i18n="f6_t">Export</h3><p data-i18n="f6_b">Fișier WAV cu raportul de măsurători alături și, opțional, stem-urile procesate — scrise ca o singură operație: dacă ceva eșuează, exportul anterior rămâne neatins.</p></li>
+    <li><h3 data-i18n="f7_t">RO · EN · ES</h3><p data-i18n="f7_b">Interfață și manual de utilizare în română, engleză și spaniolă; teme Sistem / Luminos / Întunecat și două stiluri vizuale.</p></li>
+  </ul>
+</section>
+
+<section class="resolve" id="resolve">
+  <div><span class="label" data-i18n="r_label">DAVINCI RESOLVE STUDIO</span><h2 data-i18n="r_h">Din cronologie în AFON.<br>Și înapoi.</h2></div>
+  <div><p data-i18n="r_p1">Fereastra AFON din Resolve (Workspace › Workflow Integrations) trimite montajul în aplicație. Acolo atribui rolurile, procesezi și asculți; apoi „Trimite în DaVinci Resolve” adaugă rezultatul pe piste noi, sincron, fără să atingă pistele originale.</p>
+  <p data-i18n="r_p2">În Resolve compari Original și AFON, restabilești stările de ascultare și poți reveni la o variantă anterioară a rezultatului.</p>
+  <small data-i18n="r_note">AFON este un produs GDC independent. Nu este dezvoltat, aprobat sau susținut de Blackmagic Design. DaVinci Resolve este marca deținătorului său.</small></div>
+</section>
+
+<section class="limits">
+  <div class="in"><div><span class="label" data-i18n="l_label">CE NU ESTE</span><h2 data-i18n="l_h">Clar de la început.</h2></div>
+  <ul>
+    <li data-i18n="l1">Nu este un DAW complet: fără înregistrare, tăiere de clipuri, automatizări sau pluginuri terțe.</li>
+    <li data-i18n="l2">Din Resolve nu se preiau nivelul, panoramarea, EQ, procesarea Fairlight, tranzițiile sau automatizările.</li>
+    <li data-i18n="l3">Premiere Pro și Final Cut Pro nu au integrare directă: exporți audio, îl procesezi în AFON și reimporți WAV-ul.</li>
+    <li data-i18n="l4">Valorile de loudness sunt setări AFON, nu standarde de livrare universale: verifică cerințele platformei tale.</li>
+  </ul></div>
+</section>
+
+<section class="access" id="disponibilitate">
+  <span class="label" data-i18n="a_label">AFON · DISPONIBILITATE</span>
+  <h2 data-i18n="a_h">În pregătire pentru lansare.</h2>
+  <p data-i18n="a_p1">AFON este în etapa finală de verificare. Descărcarea va apărea pe această pagină după încheierea verificărilor de lansare.</p>
+  <p data-i18n="a_p2">La lansare vei putea încerca toate funcțiile timp de 5 zile, apoi poți cere continuarea direct din aplicație.</p>
+  <p><span class="soon" data-i18n="a_soon">Descărcarea nu este încă disponibilă</span></p>
+  <p data-i18n="a_contact">Întrebări sau interes pentru lansare? Scrie-ne pe <a href="https://wa.me/34643109970?text=Salut!%20Ma%20intereseaza%20AFON." rel="noopener" target="_blank" style="border-bottom:1px solid #8b7a6b">WhatsApp</a>.</p>
+  <div id="cerinte"><h3 data-i18n="req_h">Cerințe</h3>
+  <p data-i18n="req_p">macOS 14 (Sonoma) sau mai nou · Mac cu Apple silicon (M1 sau mai nou). Integrarea cere DaVinci Resolve Studio pe același Mac; aplicația funcționează și fără Resolve. Spațiu liber pe disc pentru rezultatele procesării.</p></div>
+</section>
+</main>
+<footer>
+  <span data-i18n="foot">AFON · Cristi Gordaș (GDC). Platformă administrată de dezvoltatori independenți; software oferit „ca atare” (AS IS); susținerea proiectelor se face prin contribuții opționale și donații.</span>
+  <div><a href="https://gordas.dev/termeni" data-i18n="foot_t">Termeni</a><a href="https://gordas.dev/confidentialitate" data-i18n="foot_c">Confidențialitate</a><a href="https://gordas.dev/cookie" data-i18n="foot_k">Cookie</a></div>
+</footer>
+<script>
+const T={
+ro:{},
+en:{nav_app:"The app",nav_resolve:"Resolve",nav_req:"Requirements",nav_cta:"Availability ↓",kicker:"AFON / AUDIO FOR VIDEO / MAC",h1:"Your film's sound,<br>clear and balanced.",lead:"AFON prepares and mixes the sound of a video on your Mac: it cleans the dialogue, sets music and effects under the voice, brings the mix to the loudness you choose and exports it — or sends it back to DaVinci Resolve Studio.",cta_app:"Discover the app <span>↘</span>",cta_status:"When it's available",p_label:"ONE PLACE FOR SOUND",p_h:"Dialogue, music, effects.<br>Each in its place.",p_p:"Import the tracks, give each a role and hear the difference between original and processed right away, at matched levels — so your judgement isn't fooled by volume.",shot_cap:"Real capture of the AFON 0.6.0 window (interface in Romanian; the app is also in English and Spanish) · the tracks are synthetic demo files.",shot_alt:"AFON window with three tracks — dialogue, music, effects — and the track processing inspector",t0:"01 Import and roles",t1:"02 Clean-up",t2:"03 Mix",t3:"04 Delivery",f_label:"WHAT AFON DOES",f_h:"Features available<br>in the current version.",f_p:"Only what exists and has been verified in the app. Your original files are never modified.",f1_t:"Track processing",f1_b:"Background noise reduction (local, no network), low-frequency cut, level evening, equalization and peak control — each with its own switch.",f2_t:"Master",f2_b:"Music lowers while speech plays, balance between roles, loudness of the exported mix (LUFS) and a peak ceiling (dBTP), with the measured result shown.",f3_t:"Fair comparison",f3_b:"Original / Processed at matched levels, A/B variants per track and a quick 20-second preview from the cursor.",f4_t:"Reference video",f4_b:"Frame-accurate picture sync, docked or detached monitor, and extraction of the video's sound as a track.",f5_t:"Formats",f5_b:"WAV (PCM 16/24/32 or 32-bit float) and AIFF/AIFC; multichannel files up to 64 channels, kept in sync. Track fade-in / fade-out.",f6_t:"Export",f6_b:"A WAV file with its measurement report and, optionally, the processed stems — written as one operation: if anything fails, the previous export stays untouched.",f7_t:"RO · EN · ES",f7_b:"Interface and user manual in Romanian, English and Spanish; System / Light / Dark themes and two visual styles.",r_label:"DAVINCI RESOLVE STUDIO",r_h:"From the timeline to AFON.<br>And back.",r_p1:"The AFON window in Resolve (Workspace › Workflow Integrations) sends the edit to the app. There you assign roles, process and listen; then “Send to DaVinci Resolve” adds the result on new tracks, in sync, without touching the original tracks.",r_p2:"In Resolve you compare Original and AFON, restore the listening states and can go back to a previous version of the result.",r_note:"AFON is an independent GDC product. It is not developed, approved or supported by Blackmagic Design. DaVinci Resolve is a trademark of its owner.",l_label:"WHAT IT IS NOT",l_h:"Clear from the start.",l1:"It is not a full DAW: no recording, clip cutting, automation or third-party plug-ins.",l2:"From Resolve it does not take level, pan, EQ, Fairlight processing, transitions or automation.",l3:"Premiere Pro and Final Cut Pro have no direct integration: export the audio, process it in AFON and re-import the WAV.",l4:"Loudness values are AFON settings, not universal delivery standards: check your platform's requirements.",a_label:"AFON · AVAILABILITY",a_h:"Getting ready for launch.",a_p1:"AFON is in its final verification stage. The download will appear on this page once the release checks are complete.",a_p2:"At launch you will be able to try every feature for 5 days, then ask to continue directly from the app.",a_soon:"Download not available yet",a_contact:'Questions or interested in the launch? Write to us on <a href="https://wa.me/34643109970?text=Hi!%20I%27m%20interested%20in%20AFON." rel="noopener" target="_blank" style="border-bottom:1px solid #8b7a6b">WhatsApp</a>.',req_h:"Requirements",req_p:"macOS 14 (Sonoma) or later · Mac with Apple silicon (M1 or later). The integration needs DaVinci Resolve Studio on the same Mac; the app also works without Resolve. Free disk space for processing results.",foot:"AFON · Cristi Gordaș (GDC). Platform run by independent developers; software provided “as is”; projects are supported through optional contributions and donations.",foot_t:"Terms",foot_c:"Privacy",foot_k:"Cookies",
+steps:[["Your tracks, with clear roles.","Import WAV or AIFF files, or receive the edit from Resolve. Multichannel files become synchronized tracks; you choose Dialogue, Music or Effects for each, and the processing follows the role."],["Clean dialogue, without surprises.","Noise reduction, low-frequency cut, level evening, EQ and peak control. Each module shows what was actually applied, and the comparison with the original is level-matched."],["A mix that holds together.","Music lowers under speech, the balance between roles is set in LU, and the whole mix is brought to the chosen loudness with a true-peak ceiling. Warnings say plainly when a target can't be reached."],["WAV or straight back to Resolve.","Export a WAV with its report and, optionally, the stems — or send the result to the Resolve timeline on new tracks, in sync with the originals."]]},
+es:{nav_app:"La app",nav_resolve:"Resolve",nav_req:"Requisitos",nav_cta:"Disponibilidad ↓",kicker:"AFON / AUDIO PARA VÍDEO / MAC",h1:"El sonido de tu película,<br>claro y equilibrado.",lead:"AFON prepara y mezcla el sonido de un vídeo en tu Mac: limpia el diálogo, coloca la música y los efectos bajo la voz, lleva la mezcla a la sonoridad elegida y la exporta — o la devuelve a DaVinci Resolve Studio.",cta_app:"Descubre la app <span>↘</span>",cta_status:"Cuándo estará disponible",p_label:"UN SOLO LUGAR PARA EL SONIDO",p_h:"Diálogo, música, efectos.<br>Cada uno en su sitio.",p_p:"Importas las pistas, les das un rol y escuchas al momento la diferencia entre original y procesado, con niveles igualados — para que el volumen no engañe a tu juicio.",shot_cap:"Captura real de la ventana de AFON 0.6.0 (interfaz en rumano; la app también está en inglés y español) · las pistas son archivos de demostración sintéticos.",shot_alt:"Ventana de AFON con tres pistas — diálogo, música, efectos — y el inspector de procesado de pista",t0:"01 Importar y roles",t1:"02 Limpieza",t2:"03 Mezcla",t3:"04 Entrega",f_label:"QUÉ HACE AFON",f_h:"Funciones disponibles<br>en la versión actual.",f_p:"Solo lo que existe y se ha verificado en la app. Tus archivos originales nunca se modifican.",f1_t:"Procesado por pista",f1_b:"Reducción del ruido de fondo (local, sin red), corte de graves, nivelación, ecualización y control de picos — cada uno con su interruptor.",f2_t:"Máster",f2_b:"La música baja mientras se habla, equilibrio entre roles, sonoridad de la mezcla exportada (LUFS) y techo de picos (dBTP), con el resultado medido a la vista.",f3_t:"Comparación honesta",f3_b:"Original / Procesado con niveles igualados, variantes A/B por pista y una vista previa rápida de 20 segundos desde el cursor.",f4_t:"Vídeo de referencia",f4_b:"Imagen sincronizada al fotograma, monitor integrado o separado y extracción del sonido del vídeo como pista.",f5_t:"Formatos",f5_b:"WAV (PCM 16/24/32 o float 32) y AIFF/AIFC; archivos multicanal de hasta 64 canales, sincronizados. Fundido de entrada / salida por pista.",f6_t:"Exportación",f6_b:"Un archivo WAV con su informe de mediciones y, opcionalmente, los stems procesados — escritos como una sola operación: si algo falla, la exportación anterior queda intacta.",f7_t:"RO · EN · ES",f7_b:"Interfaz y manual de usuario en rumano, inglés y español; temas Sistema / Claro / Oscuro y dos estilos visuales.",r_label:"DAVINCI RESOLVE STUDIO",r_h:"De la línea de tiempo a AFON.<br>Y de vuelta.",r_p1:"La ventana de AFON en Resolve (Workspace › Workflow Integrations) envía el montaje a la app. Allí asignas roles, procesas y escuchas; después «Enviar a DaVinci Resolve» añade el resultado en pistas nuevas, sincronizadas, sin tocar las pistas originales.",r_p2:"En Resolve comparas Original y AFON, restableces los estados de escucha y puedes volver a una versión anterior del resultado.",r_note:"AFON es un producto independiente de GDC. No está desarrollado, aprobado ni respaldado por Blackmagic Design. DaVinci Resolve es una marca de su titular.",l_label:"LO QUE NO ES",l_h:"Claro desde el principio.",l1:"No es un DAW completo: sin grabación, corte de clips, automatización ni plugins de terceros.",l2:"De Resolve no se toman nivel, paneo, EQ, procesado Fairlight, transiciones ni automatizaciones.",l3:"Premiere Pro y Final Cut Pro no tienen integración directa: exportas el audio, lo procesas en AFON y reimportas el WAV.",l4:"Los valores de sonoridad son ajustes de AFON, no estándares de entrega universales: consulta los requisitos de tu plataforma.",a_label:"AFON · DISPONIBILIDAD",a_h:"Preparándose para el lanzamiento.",a_p1:"AFON está en la fase final de verificación. La descarga aparecerá en esta página cuando terminen las comprobaciones de lanzamiento.",a_p2:"En el lanzamiento podrás probar todas las funciones durante 5 días y después pedir la continuación desde la propia app.",a_soon:"La descarga aún no está disponible",a_contact:'¿Preguntas o interés en el lanzamiento? Escríbenos por <a href="https://wa.me/34643109970?text=Hola!%20Me%20interesa%20AFON." rel="noopener" target="_blank" style="border-bottom:1px solid #8b7a6b">WhatsApp</a>.',req_h:"Requisitos",req_p:"macOS 14 (Sonoma) o posterior · Mac con Apple silicon (M1 o posterior). La integración requiere DaVinci Resolve Studio en el mismo Mac; la app también funciona sin Resolve. Espacio libre en disco para los resultados del procesado.",foot:"AFON · Cristi Gordaș (GDC). Plataforma gestionada por desarrolladores independientes; software ofrecido «tal cual»; los proyectos se apoyan con contribuciones opcionales y donaciones.",foot_t:"Términos",foot_c:"Privacidad",foot_k:"Cookies",
+steps:[["Tus pistas, con roles claros.","Importa archivos WAV o AIFF, o recibe el montaje desde Resolve. Los archivos multicanal se convierten en pistas sincronizadas; eliges Diálogo, Música o Efectos para cada una y el procesado sigue al rol."],["Diálogo limpio, sin sorpresas.","Reducción de ruido, corte de graves, nivelación, EQ y control de picos. Cada módulo muestra lo que se aplicó realmente y la comparación con el original se hace con niveles igualados."],["Una mezcla que se sostiene.","La música baja bajo la voz, el equilibrio entre roles se ajusta en LU y toda la mezcla se lleva a la sonoridad elegida con un techo de pico real. Los avisos dicen claramente cuándo un objetivo no se alcanza."],["WAV o de vuelta a Resolve.","Exporta un WAV con su informe y, opcionalmente, los stems — o envía el resultado a la línea de tiempo de Resolve en pistas nuevas, sincronizadas con las originales."]]}};
+T.ro.steps=[["Pistele tale, cu roluri clare.","Imporți fișiere WAV sau AIFF ori primești montajul din Resolve. Fișierele multicanal devin piste sincronizate; alegi Dialog, Muzică sau Efecte pentru fiecare, iar procesarea urmează rolul."],["Dialog curat, fără surprize.","Reducerea zgomotului, frecvențe joase, uniformizare, egalizare și controlul vârfurilor. Fiecare modul arată ce s-a aplicat efectiv, iar comparația cu originalul se face la niveluri egalate."],["Un mix care se ține.","Muzica scade sub voce, echilibrul dintre roluri se reglează în LU, iar tot mixul e adus la loudness-ul ales, cu plafon de vârf real. Avertismentele spun clar când o țintă nu poate fi atinsă."],["WAV sau direct înapoi în Resolve.","Exporți un WAV cu raportul și, opțional, stem-urile — sau trimiți rezultatul în cronologia Resolve, pe piste noi, sincron cu originalele."]];
+document.querySelectorAll("[data-i18n]").forEach(e=>{T.ro[e.dataset.i18n]=e.innerHTML});
+T.ro.shot_alt="Fereastra AFON cu trei piste — dialog, muzică, efecte — și inspectorul de procesare a pistei";
+let lang="ro",step=0;
+function showStep(){const s=T[lang].steps[step];document.getElementById("step-title").textContent=s[0];document.getElementById("step-body").textContent=s[1];document.querySelectorAll("[data-step]").forEach(b=>{const on=Number(b.dataset.step)===step;b.setAttribute("aria-selected",on);b.tabIndex=on?0:-1})}
+function apply(){const t=T[lang];document.documentElement.lang=lang;document.querySelectorAll("[data-i18n]").forEach(e=>{const v=t[e.dataset.i18n];if(v!==undefined)e.innerHTML=v});document.querySelectorAll("[data-i18n-alt]").forEach(e=>{e.alt=t[e.dataset.i18nAlt]||""});document.querySelectorAll(".lang button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.lang===lang));showStep();try{localStorage.setItem("afon-lang",lang)}catch(e){}}
+document.querySelectorAll(".lang button").forEach(b=>b.addEventListener("click",()=>{lang=b.dataset.lang;apply()}));
+document.querySelectorAll("[data-step]").forEach(b=>{b.addEventListener("click",()=>{step=Number(b.dataset.step);showStep()});b.addEventListener("keydown",e=>{if(e.key==="ArrowRight"||e.key==="ArrowLeft"){e.preventDefault();step=(step+(e.key==="ArrowRight"?1:3))%4;showStep();document.querySelector('[data-step="'+step+'"]').focus()}})});
+(function(){let s=null;try{s=localStorage.getItem("afon-lang")}catch(e){}const q=new URLSearchParams(location.search).get("lang");const n=(navigator.language||"ro").slice(0,2);lang=[q,s,n].find(x=>x&&T[x])||"ro";apply()})();
+</script>
+</body>
+</html>
