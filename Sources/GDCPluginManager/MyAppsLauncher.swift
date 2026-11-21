@@ -97,6 +97,13 @@ let knownGDCApps: [MyAppEntry] = [
                iconSymbol: "photo.on.rectangle", tint: .orange,
                versionSource: .updateJSON(url: URL(string: "https://gordas.dev/pe-sarma/update.json")!),
                teamIdentifier: "8AR6XP8MG7", pageURL: URL(string: "https://gordas.dev/pe-sarma/")),
+    // 2026-11-21: Scaner GDC (aplicație gratuită, open source, macOS 14+; inventariază și gestionează resurse OFX/LUT/DCTL/VST3/AU). ID-urile tehnice rămân cele ale produsului
+    // (`dev.gordas.GDCEffectsLibrary`). Recunoscută după bundle ID și Team ID; versiunea publicată vine din `update.json` de pe pagina proprie (GitHub Pages) — singura autoritate.
+    // Instalată din DMG; de la 0.6.0 se actualizează și din aplicație. Managerul nu o înlocuiește: butonul „Actualizează" deschide pagina produsului.
+    MyAppEntry(id: "scaner-gdc", name: "Scaner GDC", bundleIdentifier: "dev.gordas.GDCEffectsLibrary",
+               iconSymbol: "magnifyingglass.circle", tint: .teal,
+               versionSource: .updateJSON(url: URL(string: "https://gordasgdc.github.io/scaner-gdc/update.json")!),
+               teamIdentifier: "8AR6XP8MG7", pageURL: URL(string: "https://gordasgdc.github.io/scaner-gdc/")),
     MyAppEntry(id: "cgconvertor", name: "CGConvertor", bundleIdentifier: "com.cristigordas.CGConvertor",
                iconSymbol: "film.stack", tint: .purple,
                versionSource: .githubReleases(repo: "gordasgdc/CGConvertor")),

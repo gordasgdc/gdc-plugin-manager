@@ -40,6 +40,21 @@
         "Team ID": "8AR6XP8MG7",
         "manifest": "https://gordas.dev/pe-sarma/update.json"
       }
+    },
+    {
+      "id": "scaner-gdc",
+      "name": "Scaner GDC",
+      "os": "macOS",
+      "page": "https://gordasgdc.github.io/scaner-gdc/",
+      "download": "https://github.com/gordasgdc/scaner-gdc/releases/latest/download/ScanerGDC-macOS.dmg",
+      "manifest": "https://gordasgdc.github.io/scaner-gdc/update.json",
+      "noPricingProductID": true,
+      "noPublicPrice": true,
+      "detect": {
+        "bundle id": "dev.gordas.GDCEffectsLibrary",
+        "Team ID": "8AR6XP8MG7",
+        "manifest": "https://gordasgdc.github.io/scaner-gdc/update.json"
+      }
     }
   ]
 }

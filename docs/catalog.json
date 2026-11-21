@@ -336,6 +336,22 @@
       "access" : {
         "group" : "gdc",
         "kind" : "free",
+        "note" : "Gratuită, cu sursă deschisă, fără cont. Inventariază și gestionează în siguranță resursele OFX, LUT, DCTL, VST3, Audio Unit și VST. Doar macOS 14+.",
+        "tags" : [
+          "Utilitare"
+        ]
+      },
+      "coverImage" : "covers/Scaner GDC.png?v=d0f0de5a",
+      "downloadURL" : "https://github.com/gordasgdc/scaner-gdc/releases/latest/download/ScanerGDC-macOS.dmg",
+      "id" : "scaner-gdc",
+      "name" : "Scaner GDC",
+      "supportedOS" : "macOS",
+      "url" : "https://gordasgdc.github.io/scaner-gdc/"
+    },
+    {
+      "access" : {
+        "group" : "gdc",
+        "kind" : "free",
         "tags" : [
           "Utilitare"
         ]
@@ -708,5 +724,5 @@
       "youtubeURL" : "https://www.youtube.com/watch?v=dnkUIGXIzIM"
     }
   ],
-  "updatedAt" : "2026-11-14"
+  "updatedAt" : "2026-11-21"
 }

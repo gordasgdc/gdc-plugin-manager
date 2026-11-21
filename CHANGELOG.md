@@ -1,5 +1,10 @@
 # Changelog — GDC Plugin Manager
 
+## v1.43.0 Client (2026-11-21) — Scaner GDC în Aplicații și în „Aplicațiile mele”
+- Catalog: Scaner GDC (inventariază, previzualizează și gestionează în siguranță resurse OFX, LUT, DCTL, VST3, Audio Unit și VST; gratuită, cu sursă deschisă, doar macOS 14+) apare în Aplicații, cu pagina proprie și descărcarea.
+- „Aplicațiile mele” recunoaște Scaner GDC instalată direct din DMG, după identitatea aplicației și semnătura Apple (GDC), cu versiunea citită din aplicație; versiunea publicată vine din manifestul produsului. Butonul de actualizare deschide pagina produsului; de la Scaner GDC 0.6.0 aplicația se poate actualiza și singură.
+- Un Manager mai vechi de 1.43.0 nu recunoaște Scaner GDC prin reîmprospătarea catalogului; recunoașterea vine odată cu această actualizare.
+
 ## v1.42.0 Client (2026-11-16) — Pe sârmă în Aplicații și în „Aplicațiile mele”
 - Catalog: Pe sârmă (capturi și clipboard agățate pe un fir sub bara de meniu, gratuită, cu sursă deschisă, doar macOS 14+) apare în Aplicații, cu pagină și descărcare.
 - „Aplicațiile mele” recunoaște Pe sârmă instalată direct din DMG sau prin Homebrew, după identitatea aplicației și semnătura Apple (GDC), cu versiunea citită din aplicație.
