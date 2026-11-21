@@ -10,14 +10,14 @@
   "mandatory": false,
   "min_version": "1.0.0",
   "mac": {
-    "version": "1.42.0",
-    "release_date": "2026-11-16",
-    "changes": "Pe sârmă (gratuită, doar macOS) apare în Aplicații și este recunoscută în „Aplicațiile mele”, cu versiunea citită din aplicație, după instalarea din DMG sau prin Homebrew.",
+    "version": "1.43.0",
+    "release_date": "2026-11-21",
+    "changes": "Scaner GDC (gratuită, doar macOS) apare în Aplicații și este recunoscută în „Aplicațiile mele”, cu versiunea citită din aplicație, după instalarea din DMG.",
     "download_url": "https://github.com/gordasgdc/gdc-plugin-manager/releases/latest/download/GDCPluginManager-Mac.zip",
     "mandatory": false,
     "min_version": "1.0.0",
-    "download_url_dmg": "https://github.com/gordasgdc/gdc-plugin-manager/releases/download/v1.42.0/GDCPluginManager-1.42.0.dmg",
-    "sha256": "093ac65b5a8e9919e761a539b43eedb97c78e8fb4b3a9149c40480c2441672a1"
+    "download_url_dmg": "https://github.com/gordasgdc/gdc-plugin-manager/releases/download/v1.43.0/GDCPluginManager-1.43.0.dmg",
+    "sha256": "d33d5a6d147abb8973d7089e3ca51fa6ce84686d1ebcfffebe18d7b3eec7490a"
   },
   "windows": {
     "version": "1.38.3",
