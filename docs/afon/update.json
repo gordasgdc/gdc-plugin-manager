@@ -1,0 +1,12 @@
+{
+ "app_version": "0.6.0",
+ "version": "0.6.0",
+ "changes": "Prima versiune AFON pentru Mac. / First AFON release for Mac. / Primera versión de AFON para Mac.",
+ "download_url": {
+  "mac": "https://gordas.dev/afon/downloads/AFON-0.6.0.pkg"
+ },
+ "sha256": {
+  "mac": "f729e389d7fc8322c43a80ba2e8bfc7814cd71050ded09fa3ee3a5a746fc3a0f"
+ },
+ "mandatory": false
+}
