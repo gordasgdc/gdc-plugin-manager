@@ -1,12 +1,12 @@
 {
- "app_version": "0.6.1",
- "version": "0.6.1",
- "changes": "Monitorul video desprins poate rămâne deasupra ferestrelor AFON (butonul «Menține deasupra»). / The detached video monitor can stay above AFON's windows (Keep on top button). / El monitor de vídeo separado puede quedarse sobre las ventanas de AFON (botón Mantener encima).",
+ "app_version": "0.6.2",
+ "version": "0.6.2",
+ "changes": "Actualizarea din aplicație funcționează și fără instrumentele de dezvoltare Apple. Dacă ai 0.6.0 sau 0.6.1 și actualizarea eșuează, descarcă 0.6.2 o singură dată de pe gordas.dev/afon și instaleaz-o peste versiunea existentă. / In-app updates now work without Apple's developer tools. On 0.6.0 or 0.6.1, if the update fails, download 0.6.2 once from gordas.dev/afon and install it over the existing version. / Las actualizaciones desde la app ya funcionan sin las herramientas de desarrollo de Apple. Con 0.6.0 o 0.6.1, si la actualización falla, descarga 0.6.2 una vez desde gordas.dev/afon e instálala sobre la versión existente.",
  "download_url": {
-  "mac": "https://gordas.dev/afon/downloads/AFON-0.6.1.pkg"
+  "mac": "https://gordas.dev/afon/downloads/AFON-0.6.2.pkg"
  },
  "sha256": {
-  "mac": "bc1434daa472fa27bee70f75a6b8d763dc0de0b604098609f6f7cde713572432"
+  "mac": "59896ce7190a03be6389da834499222df381d423a556928d82d30442a341338d"
  },
  "mandatory": false
 }
